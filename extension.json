@@ -1,0 +1,59 @@
+{
+	"name": "Interactive Data Maps",
+	"version": "0.1.0",
+
+	"author": [
+		"alex4401"
+	],
+	"url": "https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps",
+	"descriptionmsg": "data-maps-desc",
+	"license-name": "GPL-3.0-or-later",
+	"type": "parserhook",
+
+	"requires": {
+		"MediaWiki": ">= 1.37.0",
+		"platform": {
+			"php": ">= 7.4"
+		}
+	},
+
+	"MessagesDirs": {
+		"DataMaps.class": [
+			"i18n"
+		]
+	},
+
+	"ResourceFileModulePaths": {
+		"localBasePath": "resources",
+		"remoteExtPath": "DataMaps/resources"
+	},
+
+	"ResourceModules": {
+		"ext.datamaps.vendor.leaflet.core": {
+			"scripts": [
+				"vendor/leaflet/leaflet.js"
+			],
+			"styles": [
+				"vendor/leaflet/leaflet.css"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
+
+		"ext.maps.leaflet.loader": {
+			"dependencies": [
+				"ext.datamaps.vendor.leaflet.core"
+			],
+			"scripts": [
+			],
+			"targets": [ "desktop", "mobile" ]
+		}
+	},
+
+	"AutoloadClasses": {
+		"DataMapsHooks": "includes/Hooks.php"
+	},
+	"Hooks": {
+	},
+
+	"manifest_version": 2
+}
