@@ -50,7 +50,7 @@
 	},
 
 	"ContentHandlers": {
-		"DataMap": "DataMapContentHandler"
+		"datamap": "DataMapContentHandler"
 	},
 	"AutoloadClasses": {
 		"DataMapsHooks": "includes/Hooks.php",
