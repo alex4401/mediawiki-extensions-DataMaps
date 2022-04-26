@@ -49,10 +49,23 @@
 		}
 	},
 
+	"ContentHandlers": {
+		"DataMap": "DataMapContentHandler"
+	},
 	"AutoloadClasses": {
-		"DataMapsHooks": "includes/Hooks.php"
+		"DataMapsHooks": "includes/Hooks.php",
+		"ArkFormattedJsonContent": "includes/content/FormattedJsonContent.php",
+		"DataMapContent": "includes/content/DataMapContent.php",
+		"DataMapContentHandler": "includes/content/DataMapContentHandler.php"
 	},
 	"Hooks": {
+	},
+
+	"config": {
+		"ArkDataNamespace": {
+			"description": "",
+			"value": -1
+		}
 	},
 
 	"manifest_version": 2
