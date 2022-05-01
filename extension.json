@@ -46,6 +46,9 @@
 			"scripts": [
 				"loader.js"
 			],
+			"styles": [
+				"sizing.css"
+			],
 			"targets": [ "desktop", "mobile" ]
 		}
 	},

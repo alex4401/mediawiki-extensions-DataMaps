@@ -19,16 +19,20 @@
         $map.data('initialised', true);
 
         loadMapData(config.pageName, config.version).then(function(data) {
+            var halvedImageBounds = [config.imageBounds[0]/2, config.imageBounds[1]/2];
             var ctx = {
                 config: config,
                 data: data,
-                leaflet: L.map($map.get(0)),
+                leaflet: L.map($map.get(0), {
+                    center: [0, 0],
+                    zoom: 1,
+                }),
                 coordSpace: config.coordinateBounds,
-                backgroundBounds: [[config.coordinateBounds.top, config.coordinateBounds.left],
-                                   [config.coordinateBounds.bottom, config.coordinateBounds.right]],
+                backgroundBounds: [[-50,-50],[50,50]],
                 markerGroups: {},
             };
-    
+
+            ctx.leaflet.setMaxBounds([[-50,-50],[50,50]]);
             L.imageOverlay(config.image, ctx.backgroundBounds).addTo(ctx.leaflet);
     
             for (var groupName in data.markers) {
@@ -37,7 +41,7 @@
                 ctx.markerGroups[groupName] = group;
 
                 placements.forEach(function(coords) {
-                    L.marker([coords.lat, coords.long]).addTo(group);
+                    L.marker([coords.lat*10, coords.long*10]).addTo(group);
                 });
             }
         });

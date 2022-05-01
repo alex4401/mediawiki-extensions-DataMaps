@@ -4,10 +4,12 @@ use MediaWiki\MediaWikiServices;
 class DataMapEmbedRenderer {
     protected Title $title;
     public object $data;
+    protected File $image;
 
     public function __construct( Title $title, object $data ) {
         $this->title = $title;
         $this->data = $data;
+		$this->image = MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $this->data->image ) );
     }
 
     public function getId(): int {
@@ -15,9 +17,8 @@ class DataMapEmbedRenderer {
     }
 
     private function getImageUrl(): string {
-		$file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $this->data->image ) );
 		//if ( $file && $file->exists() ) {
-		return $file->getURL();
+		return $this->image->getURL();
     }
 
     public function getJsConfigVariables(): array {
@@ -25,6 +26,8 @@ class DataMapEmbedRenderer {
             'pageName' => $this->title->getPrefixedText(),
             'version' => $this->title->getLatestRevID(),
             'image' => $this->getImageUrl(),
+            'imageBounds' => [ $this->image->getWidth(), $this->image->getHeight() ],
+            'coordinateBounds' => $this->data->coordinateBounds,
         ];
     }
 
