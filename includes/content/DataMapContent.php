@@ -90,7 +90,11 @@ class DataMapContent extends JsonContent {
 
 		$embed = new DataMapEmbedRenderer($title, $this->getData()->getValue());
 		$output->addImage( $embed->data->image );
-		$output->addJsConfigVars( $embed->getJsConfigVariables() );
+		$output->addJsConfigVars( [
+			'dataMaps' => [
+				$embed->getId() => $embed->getJsConfigVariables()
+			]
+		] );
 		$output->addModules( $embed->getModules() );
 		$output->setText( $output->getRawText() . $embed->getHtml() );
 

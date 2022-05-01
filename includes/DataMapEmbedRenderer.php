@@ -10,6 +10,10 @@ class DataMapEmbedRenderer {
         $this->data = $data;
     }
 
+    public function getId(): int {
+        return $this->title->getArticleID();
+    }
+
     private function getImageUrl(): string {
 		$file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $this->data->image ) );
 		//if ( $file && $file->exists() ) {
@@ -32,8 +36,8 @@ class DataMapEmbedRenderer {
 		return Html::rawElement(
 			'div',
 			[
-				'id' => 'datamap-' . $this->title->getArticleID(),
-				'class' => 'datamap' . $serviceName
+				'id' => 'datamap-' . $this->getId(),
+				'class' => 'datamap'
 			],
             Html::element(
                 'noscript',
