@@ -1,10 +1,26 @@
 <?php
 use MediaWiki\MediaWikiServices;
 
-class DataMapContent extends ArkFormattedJsonContent {
+class DataMapContent extends JsonContent {
 
 	public function __construct( $text, $modelId = ARK_CONTENT_MODEL_DATAMAP ) {
 		parent::__construct( $text, $modelId );
+	}
+
+    const NUMBER_RE = '[+-]?\d+(\.\d+)?([eE][-+]?\d+)?|true|false';
+    # Join 2-line color (name, [r,g,b,e]) data onto one line
+    const JOIN_COLORS_RE = "\[\n\s+([\w\" ]+),\n\s+(.{,90})\n\s+\]";
+    # Reduce 2-12 numbers in an array onto a single line
+    const JOIN_MULTIPLE_NUMBERS_RE = '(\n\s+)(' . self::NUMBER_RE . '),(?:\n\s+(?:' . self::NUMBER_RE . '|null|"[^"\n\t]*"),?){1,12}';
+    # Reduce short arrays of strings onto a single line
+    const JOIN_MULTIPLE_STRINGS_RE = '\[((?:\n\s+".{1,30}",?\s*$){1,4})\n\s+\]';
+    # Reduces dict fields with only a single line of content (including previously joined multiple fields) to a single line
+    const COLLAPSE_SINGLE_LINE_DICT_RE = "\{\n\s+(\"\w+\": [^}\n\]]{1,120})\n\s+\}";
+    # Reduce arrays with only a single line of content (including previously joined multiple fields) to a single line
+    const COLLAPSE_SINGLE_LINE_ARRAY_RE = '\[\s+(.+)\s+\]';
+
+	public function beautifyJSON() {
+		return FormatJson::encode( $this->getData()->getValue(), true, FormatJson::UTF8_OK );
 	}
 
 	/**
@@ -27,9 +43,15 @@ class DataMapContent extends ArkFormattedJsonContent {
 
 		$text = $this->getText();
 
-		// Get documentation, if any
 		$output = new ParserOutput();
-		$doc = Scribunto::getDocPage( $title );
+
+		if ( !$generateHtml ) {
+			// We don't need the actual HTML
+			return $output;
+		}
+
+		// Get documentation, if any.
+		$doc = self::getDocPage( $title );
 		if ( $doc ) {
 			$msg = wfMessage(
 				$doc->exists() ? 'datamap-doc-page-show' : 'datamap-doc-page-does-not-exist',
@@ -52,8 +74,6 @@ class DataMapContent extends ArkFormattedJsonContent {
 						'dir' => $dir,
 						'class' => $dirClass,
 					],
-					// Line breaks are needed so that wikitext would be
-					// appropriately isolated for correct parsing. See Bug 60664.
 					"\n" . $msg->plain() . "\n"
 				);
 
@@ -68,18 +88,11 @@ class DataMapContent extends ArkFormattedJsonContent {
 			$output->addTemplate( $doc, $doc->getArticleID(), $doc->getLatestRevID() );
 		}
 
-		if ( !$generateHtml ) {
-			// We don't need the actual HTML
-			$output->setText( '' );
-			return $output;
-		}
-
-		// No GeSHi, or GeSHi can't parse it, use plain <pre>
-		$output->setText( $output->getRawText() .
-			"<pre class='mw-code mw-script' dir='ltr'>\n" .
-			htmlspecialchars( $text ) .
-			"\n</pre>\n"
-		);
+		$embed = new DataMapEmbedRenderer($title, $this->getData()->getValue());
+		$output->addImage( $embed->data->image );
+		$output->addJsConfigVars( $embed->getJsConfigVariables() );
+		$output->addModules( $embed->getModules() );
+		$output->setText( $output->getRawText() . $embed->getHtml() );
 
 		return $output;
 	}

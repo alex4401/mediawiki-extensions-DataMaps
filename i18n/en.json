@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+            "alex4401"
+		]
+	},
+	"datamap-doc-page-name": "$1:$2/doc",
+	"datamap-doc-page-does-not-exist": "''Documentation for this data page may be created at [[$1]]''",
+	"datamap-doc-page-show": "{{$1}}\n<hr />",
+	"datamap-doc-page-header": "'''This is the documentation page for [[$1]]'''"
+}

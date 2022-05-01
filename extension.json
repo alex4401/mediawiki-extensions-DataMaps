@@ -29,7 +29,7 @@
 	},
 
 	"ResourceModules": {
-		"ext.datamaps.vendor.leaflet.core": {
+		"ext.ark.datamaps.leaflet.core": {
 			"scripts": [
 				"vendor/leaflet/leaflet.js"
 			],
@@ -39,11 +39,12 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.maps.leaflet.loader": {
+		"ext.ark.datamaps.leaflet.loader": {
 			"dependencies": [
-				"ext.datamaps.vendor.leaflet.core"
+				"ext.ark.datamaps.leaflet.core"
 			],
 			"scripts": [
+				"loader.js"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
@@ -54,7 +55,7 @@
 	},
 	"AutoloadClasses": {
 		"DataMapsHooks": "includes/Hooks.php",
-		"ArkFormattedJsonContent": "includes/content/FormattedJsonContent.php",
+		"DataMapEmbedRenderer": "includes/DataMapEmbedRenderer.php",
 		"DataMapContent": "includes/content/DataMapContent.php",
 		"DataMapContentHandler": "includes/content/DataMapContentHandler.php"
 	},
