@@ -24,16 +24,16 @@
                 config: config,
                 data: data,
                 leaflet: L.map($map.get(0), {
-                    center: [0, 0],
+                    crs: L.CRS.Simple,
+                    center: [50, 100],
                     zoom: 1,
                 }),
                 coordSpace: config.coordinateBounds,
-                backgroundBounds: [[-50,-50],[50,50]],
                 markerGroups: {},
             };
 
-            ctx.leaflet.setMaxBounds([[-50,-50],[50,50]]);
-            L.imageOverlay(config.image, ctx.backgroundBounds).addTo(ctx.leaflet);
+            //ctx.leaflet.setMaxBounds([[0,0],[100, 100]]);
+            L.imageOverlay(config.image, [[0,0],[100,100]]).addTo(ctx.leaflet);
     
             for (var groupName in data.markers) {
                 var group = L.featureGroup().addTo(ctx.leaflet);
@@ -41,7 +41,7 @@
                 ctx.markerGroups[groupName] = group;
 
                 placements.forEach(function(coords) {
-                    L.marker([coords.lat*10, coords.long*10]).addTo(group);
+                    L.marker([100-coords.lat, coords.long]).addTo(group);
                 });
             }
         });

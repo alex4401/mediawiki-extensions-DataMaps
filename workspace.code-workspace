@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "maps",
+			"path": "."
+		},
+		{
+			"name": "arkdata",
+			"path": "../arkdata"
+		},
+		{
+			"name": "mediawiki",
+			"path": "../mediawiki"
+		}
+	],
+	"settings": {}
+}
