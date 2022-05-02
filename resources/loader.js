@@ -51,12 +51,12 @@
                 ctx.leafletLayers[markerType] = layer;
 
                 placements.forEach(function(coords) {
-                    L.marker([100-coords.lat, coords.long], {
+                    var marker = L.marker([100-coords.lat, coords.long], {
                         icon: ctx.leafletIcons[groupName]
                     }).addTo(layer);
+                    marker.bindPopup("<b>"+group.name+"</b><p>lat "+coords.lat+", lon "+coords.long+"</p>");
                 });
 
-                layer.bindPopup("<b>"+group.name+"</b>");
             }
         });
     }
