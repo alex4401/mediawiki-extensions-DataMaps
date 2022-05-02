@@ -25,9 +25,9 @@
                 data: data,
                 leaflet: L.map($map.get(0), {
                     crs: L.CRS.Simple,
-                    center: [50, 100],
+                    center: [50, 50],
                     zoom: 1,
-                }),
+                }).fitBounds([[0, 0], [100, 100]]),
                 coordSpace: config.coordinateBounds,
 
                 leafletIcons: {},
