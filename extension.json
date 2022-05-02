@@ -47,7 +47,7 @@
 				"loader.js"
 			],
 			"styles": [
-				"sizing.css"
+				"styles.less"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
