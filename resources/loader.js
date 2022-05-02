@@ -29,19 +29,29 @@
                     zoom: 1,
                 }),
                 coordSpace: config.coordinateBounds,
-                markerGroups: {},
+
+                leafletIcons: {},
+                leafletLayers: {},
             };
 
             //ctx.leaflet.setMaxBounds([[0,0],[100, 100]]);
             L.imageOverlay(config.image, [[0,0],[100,100]]).addTo(ctx.leaflet);
+
+            for (var groupName in config.groups) {
+                var group = config.groups[groupName];
+                ctx.leafletIcons[groupName] = L.icon({ iconUrl: group.icon, iconSize: [32, 32] });
+            }
     
-            for (var groupName in data.markers) {
-                var group = L.featureGroup().addTo(ctx.leaflet);
-                var placements = data.markers[groupName];
-                ctx.markerGroups[groupName] = group;
+            for (var markerType in data.markers) {
+                var groupName = markerType.split(' ', 1)[0];
+                var group = config.groups[group];
+                var placements = data.markers[markerType];
+
+                var layer = L.featureGroup().addTo(ctx.leaflet);
+                ctx.leafletLayers[markerType] = layer;
 
                 placements.forEach(function(coords) {
-                    L.marker([100-coords.lat, coords.long]).addTo(group);
+                    L.marker([100-coords.lat, coords.long], { icon: ctx.leafletIcons[groupName] }).addTo(layer);
                 });
             }
         });

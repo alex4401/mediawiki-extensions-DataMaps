@@ -16,9 +16,8 @@ class DataMapEmbedRenderer {
         return $this->title->getArticleID();
     }
 
-    private function getImageUrl(): string {
-		//if ( $file && $file->exists() ) {
-		return $this->image->getURL();
+    private function getIconUrl(string $title): string {
+		return MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $title ) )->getURL();
     }
 
     public function getJsConfigVariables(): array {
@@ -26,7 +25,7 @@ class DataMapEmbedRenderer {
         return [
             'pageName' => $this->title->getPrefixedText(),
             'version' => $this->title->getLatestRevID(),
-            'image' => $this->getImageUrl(),
+            'image' => $this->image->getURL(),
             'imageBounds' => [ $this->image->getWidth(), $this->image->getHeight() ],
             'coordinateBounds' => $this->data->coordinateBounds,
             'groups' => $this->getMarkerGroupsConfigsFor($usedGroups),
@@ -64,6 +63,7 @@ class DataMapEmbedRenderer {
         $info = $this->data->groups->$name;
         return array(
             'name' => $info->name,
+            'icon' => $this->getIconUrl($info->icon),
         );
     }
 
