@@ -26,7 +26,15 @@
                 leaflet: L.map($map.get(0), {
                     crs: L.CRS.Simple,
                     center: [50, 50],
-                    zoom: 1,
+                    zoomSnap: 0.25,
+                    zoomDelta: 0.25,
+                    minZoom: 2.5,
+                    maxZoom: 9,
+                    zoom: 2.75,
+                    maxBounds: [[-75,-75], [175, 175]],
+                    zoomAnimation: false,
+                    maxBoundsViscosity: 0.2,
+                    wheelPxPerZoomLevel: 240,
                 }).fitBounds([[0, 0], [100, 100]]),
                 coordSpace: config.coordinateBounds,
 
