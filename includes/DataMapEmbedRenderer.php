@@ -79,6 +79,23 @@ class DataMapEmbedRenderer {
     }
 
     public function getHtml(): string {
+		$panel = new OOUI\PanelLayout( [
+            'classes' => [ 'datamap-container' ],
+			'framed' => true,
+			'expanded' => false,
+			'padded' => true
+		] );
+        $panel->appendContent( new OOUI\LabelWidget( [
+            'label' => $this->data->title == null ? wfMessage('datamap-unnamed-map') : $this->data->title
+        ] ) );
+        $panel->appendContent( new OOUI\HorizontalLayout( [
+            'classes' => [ 'datamap-toolbar' ]
+        ] ) );
+        $panel->appendContent( new OOUI\HtmlSnippet( $this->getLeafletContainerHtml() ) );
+        return $panel;
+    }
+
+    public function getLeafletContainerHtml(): string {
 		return Html::rawElement(
 			'div',
 			[

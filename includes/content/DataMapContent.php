@@ -101,6 +101,10 @@ class DataMapContent extends JsonContent {
 			$output->addTemplate( $doc, $doc->getArticleID(), $doc->getLatestRevID() );
 		}
 
+		$output->setEnableOOUI(true);
+		OOUI\Theme::setSingleton( new OOUI\WikimediaUITheme() );
+		OOUI\Element::setDefaultDir( 'ltr' ); 
+
 		$embed = new DataMapEmbedRenderer($title, $this->getData()->getValue());
 		$output->addImage( $embed->data->image );
 		$output->addJsConfigVars( [
