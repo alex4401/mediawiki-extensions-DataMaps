@@ -37,13 +37,6 @@ class DataMapEmbedRenderer {
         ];
     }
 
-    private function array_map_kv(string $callback, array $array) {
-        return array_reduce($array, function (array $results, string $item) {
-            $results[$item] = $this->$callback($item);
-            return $results;
-        }, array());
-    }
-
     public function getUsedMarkerTypes(): array {
         $groups = array();
         $specifiers = array();
@@ -65,6 +58,10 @@ class DataMapEmbedRenderer {
 
     public function getMarkerGroupConfig(string $name): array {
         $info = $this->data->groups->$name;
+        if ($info == null) {
+            throw new InvalidArgumentException("Marker group not declared: $name");
+        }
+
         return array(
             'name' => $info->name,
             'icon' => $this->getIconUrl($info->icon),
