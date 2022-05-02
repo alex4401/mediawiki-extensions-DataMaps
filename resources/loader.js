@@ -44,15 +44,19 @@
     
             for (var markerType in data.markers) {
                 var groupName = markerType.split(' ', 1)[0];
-                var group = config.groups[group];
+                var group = config.groups[groupName];
                 var placements = data.markers[markerType];
 
                 var layer = L.featureGroup().addTo(ctx.leaflet);
                 ctx.leafletLayers[markerType] = layer;
 
                 placements.forEach(function(coords) {
-                    L.marker([100-coords.lat, coords.long], { icon: ctx.leafletIcons[groupName] }).addTo(layer);
+                    L.marker([100-coords.lat, coords.long], {
+                        icon: ctx.leafletIcons[groupName]
+                    }).addTo(layer);
                 });
+
+                layer.bindPopup("<b>"+group.name+"</b>");
             }
         });
     }
