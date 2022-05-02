@@ -88,10 +88,27 @@ class DataMapEmbedRenderer {
         $panel->appendContent( new OOUI\LabelWidget( [
             'label' => $this->data->title == null ? wfMessage('datamap-unnamed-map') : $this->data->title
         ] ) );
-        $panel->appendContent( new OOUI\HorizontalLayout( [
-            'classes' => [ 'datamap-toolbar' ]
+
+        $layout = new OOUI\Widget( [
+            'classes' => [ 'datamap-layout' ]
+        ] );
+        $panel->appendContent( $layout );
+
+        $legend = new OOUI\Widget( [
+            'classes' => [ 'datamap-legend' ]
+        ] );
+        $legend->appendContent( new OOUI\LabelWidget( [
+            'label' => wfMessage('datamap-legend-label')
         ] ) );
-        $panel->appendContent( new OOUI\HtmlSnippet( $this->getLeafletContainerHtml() ) );
+        $layout->appendContent( $legend );
+        
+		$mapPanel = new OOUI\PanelLayout( [
+			'framed' => true,
+			'expanded' => false,
+		] );
+        $mapPanel->appendContent( new OOUI\HtmlSnippet( $this->getLeafletContainerHtml() ) );
+        $layout->appendContent($mapPanel);
+
         return $panel;
     }
 
