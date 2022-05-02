@@ -17,7 +17,11 @@ class DataMapEmbedRenderer {
     }
 
     private function getIconUrl(string $title): string {
-		return MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $title ) )->getURL();
+        $file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $title ) );
+        if (!$file || !$file->exists()) {
+            throw new InvalidArgumentException("Icon specified for a marker group, but file does not exist: $title");
+        }
+		return $file->getURL();
     }
 
     public function getJsConfigVariables(): array {
