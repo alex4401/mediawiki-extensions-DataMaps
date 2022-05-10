@@ -114,13 +114,16 @@ class DataMapEmbedRenderer {
     public function getHtml(): string {
         $this->parser->startExternalParse($this->title, $this->parserOptions, Parser::OT_HTML);
 		$panel = new OOUI\PanelLayout( [
+            'id' => 'datamap-' . $this->getId(),
             'classes' => [ 'datamap-container' ],
 			'framed' => true,
 			'expanded' => false,
 			'padded' => true
 		] );
         $panel->appendContent( new OOUI\LabelWidget( [
-            'label' => new OOUI\HtmlSnippet( $this->parser->recursiveTagParseFully( ($this->data->title == null ? wfMessage('datamap-unnamed-map') : $this->data->title) ) )
+            'label' => new OOUI\HtmlSnippet(
+                $this->parser->recursiveTagParseFully( ($this->data->title == null ? wfMessage('datamap-unnamed-map') : $this->data->title) )
+            )
         ] ) );
 
         $layout = new OOUI\Widget( [
@@ -151,8 +154,7 @@ class DataMapEmbedRenderer {
 		return Html::rawElement(
 			'div',
 			[
-				'id' => 'datamap-' . $this->getId(),
-				'class' => 'datamap'
+				'class' => 'datamap-holder'
 			],
             Html::element(
                 'noscript',

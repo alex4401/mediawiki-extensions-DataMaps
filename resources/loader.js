@@ -53,36 +53,35 @@
 
         }
     }
+var button = OO.ui.ButtonWidget.static.infuse( $( '#my-button' ) );
 
-    function initialiseMap($map, config) {
-        if ($map.data('initialised')) {
-            return;
-        }
-        $map.data('initialised', true);
-
-        var ctx = {
-            config: config,
-            coordSpace: config.coordinateBounds,
-
-            leaflet: L.map($map.get(0), {
-                crs: L.CRS.Simple,
-                center: [50, 50],
-                zoomSnap: 0.25,
-                zoomDelta: 0.25,
-                minZoom: 2.5,
-                maxZoom: 9,
-                zoom: 2.75,
-                maxBounds: [[-75,-75], [175, 175]],
-                zoomAnimation: false,
-                maxBoundsViscosity: 0.2,
-                wheelPxPerZoomLevel: 240,
-                preferCanvas: true
-            }).fitBounds([[0, 0], [100, 100]]),
-
-            leafletIcons: {},
-            leafletLayers: {},
-        };
+    function buildLeafletMap(ctx, $holder) {
+        ctx.leaflet = L.map($holder.get(0), {
+            crs: L.CRS.Simple,
+            center: [50, 50],
+            zoomSnap: 0.25,
+            zoomDelta: 0.25,
+            minZoom: 2.5,
+            maxZoom: 5,
+            zoom: 2.75,
+            maxBounds: [[-75,-75], [175, 175]],
+            zoomAnimation: false,
+            maxBoundsViscosity: 0.2,
+            wheelPxPerZoomLevel: 240,
+            preferCanvas: true,
+            worldCopyJump: true,
+            markerZoomAnimation: false
+        }).fitBounds([[0, 0], [100, 100]]);
         ctx.background = L.imageOverlay(config.image, [[0,0],[100,100]]).addTo(ctx.leaflet);
+
+        for (var groupName in config.groups) {
+            var group = config.groups[groupName];
+            group.circleMarkers = [];
+
+            if (group.markerIcon) {
+                ctx.leafletIcons[groupName] = L.icon({ iconUrl: group.markerIcon, iconSize: [32, 32] });
+            }
+        }
 
         ctx.leaflet.on('zoomend', function() {
             for (var groupName in config.groups) {
@@ -93,15 +92,25 @@
                 });
             }
         });
+    }
 
-        for (var groupName in config.groups) {
-            var group = config.groups[groupName];
-            group.circleMarkers = [];
-
-            if (group.markerIcon) {
-                ctx.leafletIcons[groupName] = L.icon({ iconUrl: group.markerIcon, iconSize: [32, 32] });
-            }
+    function initialiseMap($container, config) {
+        if ($container.data('initialised')) {
+            return;
         }
+        $container.data('initialised', 'true');
+
+        var ctx = {
+            config: config,
+            coordSpace: config.coordinateBounds,
+
+            leaflet: null,
+            leafletIcons: {},
+            leafletLayers: {},
+        };
+
+        buildLegend(ctx);
+        buildLeafletMap(ctx, $container.find('.datamap-holder'));
 
         loadMapData(config.pageName, config.version).then(function(data) {
             loadMarkersChunk(ctx, data);
