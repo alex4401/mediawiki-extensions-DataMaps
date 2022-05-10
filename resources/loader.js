@@ -24,6 +24,7 @@
             var circleMarkerProps = {
                 radius: group.size/2,
                 fillColor: group.fillColor,
+                fillOpacity: 0.7,
                 color: group.strokeColor || group.fillColor,
                 weight: group.strokeWidth || 1,
             };
