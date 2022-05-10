@@ -6,10 +6,15 @@ class DataMapEmbedRenderer {
     public object $data;
     protected File $image;
 
-    public function __construct( Title $title, object $data ) {
+    protected Parser $parser;
+    protected ParserOptions $parserOptions;
+
+    public function __construct( Title $title, object $data, Parser $parser, ParserOptions $options ) {
         $this->title = $title;
         $this->data = $data;
 		$this->image = MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $this->data->image ) );
+        $this->parser = $parser;
+        $this->parserOptions = $options;
     }
 
     public function getId(): int {
@@ -107,6 +112,7 @@ class DataMapEmbedRenderer {
     }
 
     public function getHtml(): string {
+        $this->parser->startExternalParse($this->title, $this->parserOptions, Parser::OT_HTML);
 		$panel = new OOUI\PanelLayout( [
             'classes' => [ 'datamap-container' ],
 			'framed' => true,
@@ -114,7 +120,7 @@ class DataMapEmbedRenderer {
 			'padded' => true
 		] );
         $panel->appendContent( new OOUI\LabelWidget( [
-            'label' => $this->data->title == null ? wfMessage('datamap-unnamed-map') : $this->data->title
+            'label' => new OOUI\HtmlSnippet( $this->parser->recursiveTagParseFully( ($this->data->title == null ? wfMessage('datamap-unnamed-map') : $this->data->title) ) )
         ] ) );
 
         $layout = new OOUI\Widget( [
