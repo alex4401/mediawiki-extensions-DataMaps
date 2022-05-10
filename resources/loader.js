@@ -12,6 +12,12 @@
         });
     }
 
+    function getCircleRadiusAtCurrentZoom(ctx, baseSize) {
+        // Configured marker size is the diameter of a marker at lowest zoom level.
+        var scale = ctx.leaflet.getZoom() / ctx.leaflet.options.minZoom;
+        return scale * baseSize/2;
+    }
+
     function loadMarkersChunk(ctx, data) {
         for (var markerType in data.markers) {
             var groupName = markerType.split(' ', 1)[0];
@@ -38,7 +44,9 @@
                         icon: ctx.leafletIcons[groupName]
                     });
                 } else {
+                    // TODO: should refresh marker sizing per zoom
                     marker = L.circleMarker(position, circleMarkerProps);
+                    group.circleMarkers.push(marker);
                 }
 
                 marker
@@ -79,8 +87,20 @@
         };
         ctx.background = L.imageOverlay(config.image, [[0,0],[100,100]]).addTo(ctx.leaflet);
 
+        ctx.leaflet.on('zoomend', function() {
+            for (var groupName in config.groups) {
+                var group = config.groups[groupName];
+                // Configured marker size is the diameter of a marker at lowest zoom level.
+                group.circleMarkers.forEach(function(marker) {
+                    marker.setRadius(getCircleRadiusAtCurrentZoom(ctx, group.size));
+                });
+            }
+        });
+
         for (var groupName in config.groups) {
             var group = config.groups[groupName];
+            group.circleMarkers = [];
+
             if (group.markerIcon) {
                 ctx.leafletIcons[groupName] = L.icon({ iconUrl: group.markerIcon, iconSize: [32, 32] });
             }
