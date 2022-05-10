@@ -19,7 +19,7 @@ class DataMapEmbedRenderer {
     private function getIconUrl(string $title): string {
         $file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $title ) );
         if (!$file || !$file->exists()) {
-            throw new InvalidArgumentException("Icon specified for a marker group, but file does not exist: $title");
+            throw new InvalidArgumentException("Icon specified for a marker group, but file [[File:$title]] does not exist.");
         }
 		return $file->getURL();
     }
@@ -57,15 +57,39 @@ class DataMapEmbedRenderer {
     }
 
     public function getMarkerGroupConfig(string $name): array {
+        $out = array();
         $info = $this->data->groups->$name;
         if ($info == null) {
             throw new InvalidArgumentException("Marker group not declared: $name");
         }
 
-        return array(
-            'name' => $info->name,
-            'icon' => $this->getIconUrl($info->icon),
-        );
+        $out['name'] = $info->name == null ? wfMessage('datamap-unnamed-marker') : $info->name;
+        $out['size'] = $info->size == null ? 4 : $info->size;
+
+        if ($info->color != null) {
+            $out['color'] = $info->color;
+        }
+
+        $legendIconName = $info->legendIcon == null ? $info->icon : $info->legendIcon;
+        $markerIconName = $info->markerIcon == null ? $info->icon : $info->markerIcon;
+        $legendIconName = $legendIconName == null ? $markerIconName : $legendIconName;
+
+        if ($markerIconName != null) {
+            $out['markerIcon'] = $this->getIconUrl($markerIconName);
+        }
+        if ($legendIconName != null) {
+            $out['legendIcon'] = $this->getIconUrl($legendIconName);
+        }
+
+        if ($info->custom != null) {
+            $out['custom'] = $info->custom;
+        }
+
+        if (!array_key_exists('markerIcon', $out) && !array_key_exists('color', $out)) {
+            throw new InvalidArgumentException("No icon or color set for marker group $name.");
+        }
+
+        return $out;
     }
 
     public function getMarkerLayerConfig(string $name): array {
