@@ -126,7 +126,8 @@ class DataMapEmbedRenderer {
             'classes' => [ 'datamap-legend' ]
         ] );
         $legend->appendContent( new OOUI\LabelWidget( [
-            'label' => wfMessage('datamap-legend-label')
+            'label' => wfMessage('datamap-legend-label'),
+            'classes' => [ 'datamap-legend-label' ]
         ] ) );
         $layout->appendContent( $legend );
         
