@@ -63,10 +63,17 @@
             var checkbox = new OO.ui.CheckboxInputWidget({
                 selected: true
             });
-            new OO.ui.FieldLayout(checkbox, {
+            var field = new OO.ui.FieldLayout(checkbox, {
                 label: group.name,
                 align: 'inline'
-            }).$element.appendTo(ctx.$legendRoot);
+            });
+
+            if (group.legendIcon) {
+                field.$header.prepend(' ');
+                field.$header.prepend($('<img width=24 height=24/>').attr('src', group.legendIcon));
+            }
+
+            field.$element.appendTo(ctx.$legendRoot);
         }
     }
 
