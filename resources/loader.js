@@ -83,7 +83,7 @@
             center: [50, 50],
             zoomSnap: 0.25,
             zoomDelta: 0.25,
-            minZoom: 2.5,
+            minZoom: 2.75,
             maxZoom: 5,
             zoom: 2.75,
             maxBounds: [[-75,-75], [175, 175]],
@@ -91,10 +91,19 @@
             maxBoundsViscosity: 0.2,
             wheelPxPerZoomLevel: 240,
             preferCanvas: true,
-            worldCopyJump: true,
             markerZoomAnimation: false
         }).fitBounds([[0, 0], [100, 100]]);
-        ctx.background = L.imageOverlay(config.image, [[0,0],[100,100]]).addTo(ctx.leaflet);
+        ctx.background = L.imageOverlay(ctx.config.image, [[0,0],[100,100]]).addTo(ctx.leaflet);
+
+        ctx.leaflet.on('zoomend', function() {
+            for (var groupName in ctx.config.groups) {
+                var group = ctx.config.groups[groupName];
+                // Configured marker size is the diameter of a marker at lowest zoom level.
+                group.circleMarkers.forEach(function(marker) {
+                    marker.setRadius(getCircleRadiusAtCurrentZoom(ctx, group.size));
+                });
+            }
+        });
 
         for (var groupName in ctx.config.groups) {
             var group = ctx.config.groups[groupName];
@@ -104,16 +113,6 @@
                 ctx.leafletIcons[groupName] = L.icon({ iconUrl: group.markerIcon, iconSize: [32, 32] });
             }
         }
-
-        ctx.leaflet.on('zoomend', function() {
-            for (var groupName in config.groups) {
-                var group = config.groups[groupName];
-                // Configured marker size is the diameter of a marker at lowest zoom level.
-                group.circleMarkers.forEach(function(marker) {
-                    marker.setRadius(getCircleRadiusAtCurrentZoom(ctx, group.size));
-                });
-            }
-        });
     }
 
     function initialiseMap($container, config) {
@@ -137,6 +136,8 @@
 
         loadMapData(config.pageName, config.version).then(function(data) {
             loadMarkersChunk(ctx, data);
+        }).then(function() {
+            $container.find('.datamap-status').remove();
         });
 
         return ctx;
