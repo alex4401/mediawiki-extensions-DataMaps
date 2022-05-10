@@ -27,14 +27,6 @@
             var layer = L.featureGroup().addTo(ctx.leaflet);
             ctx.leafletLayers[markerType] = layer;
 
-            var circleMarkerProps = {
-                radius: group.size/2,
-                fillColor: group.fillColor,
-                fillOpacity: 0.7,
-                color: group.strokeColor || group.fillColor,
-                weight: group.strokeWidth || 1,
-            };
-
             placements.forEach(function(markerInfo) {
                 var position = [100-markerInfo.lat, markerInfo.long];
                 var marker;
@@ -44,8 +36,13 @@
                         icon: ctx.leafletIcons[groupName]
                     });
                 } else {
-                    // TODO: should refresh marker sizing per zoom
-                    marker = L.circleMarker(position, circleMarkerProps);
+                    marker = L.circleMarker(position, {
+                        radius: getCircleRadiusAtCurrentZoom(ctx, group.size),
+                        fillColor: group.fillColor,
+                        fillOpacity: 0.7,
+                        color: group.strokeColor || group.fillColor,
+                        weight: group.strokeWidth || 1,
+                    });
                     group.circleMarkers.push(marker);
                 }
 
