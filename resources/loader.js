@@ -24,8 +24,10 @@
             var group = ctx.config.groups[groupName];
             var placements = data.markers[markerType];
 
-            var layer = L.featureGroup().addTo(ctx.leaflet);
-            ctx.leafletLayers[markerType] = layer;
+            if (!ctx.leafletLayers[markerType]) {
+                ctx.leafletLayers[markerType] = L.featureGroup().addTo(ctx.leaflet);
+            }
+            var layer = ctx.leafletLayers[markerType];
 
             placements.forEach(function(markerInfo) {
                 var position = [100-markerInfo.lat, markerInfo.long];
@@ -54,6 +56,20 @@
         }
     }
 
+    function setLayerVisibility(ctx, targetName, newState) {
+        console.log(ctx);
+        console.log(targetName);
+        for (var layerName in ctx.leafletLayers) {
+            if (layerName.split(' ').indexOf(targetName) >= 0) {
+                if (newState) {
+                    ctx.leafletLayers[layerName].addTo(ctx.leaflet);
+                } else {
+                    ctx.leafletLayers[layerName].remove();
+                }
+            }
+        }
+    }
+
     function buildLegend(ctx) {
         ctx.$legendRoot = ctx.$root.find('.datamap-legend');
 
@@ -67,6 +83,10 @@
                 label: group.name,
                 align: 'inline'
             });
+
+            checkbox.on('change', (function(groupName, checkbox) {
+                setLayerVisibility(ctx, groupName, checkbox.isSelected());
+            }).bind(null, groupName, checkbox));
 
             if (group.legendIcon) {
                 field.$header.prepend(' ');
