@@ -63,6 +63,14 @@ class DataMapEmbedRenderer {
             throw new InvalidArgumentException("Marker group not declared: $name");
         }
 
+        // TODO: move to its own function, validation should be completely separate from rendering
+        if ($info->markerIcon == null && $info->icon == null && $info->color == null) {
+            throw new InvalidArgumentException("No icon or color set for marker group $name.");
+        }
+        if ($info->markerIcon != null && $info->color != null) {
+            throw new InvalidArgumentException("Marker group $name cannot have its markers configured to have both an icon and a color.");
+        }
+
         $out['name'] = $info->name == null ? wfMessage('datamap-unnamed-marker') : $info->name;
         $out['size'] = $info->size == null ? 4 : $info->size;
 
@@ -74,7 +82,7 @@ class DataMapEmbedRenderer {
         $markerIconName = $info->markerIcon == null ? $info->icon : $info->markerIcon;
         $legendIconName = $legendIconName == null ? $markerIconName : $legendIconName;
 
-        if ($markerIconName != null) {
+        if ($info->color == null && $markerIconName != null) {
             $out['markerIcon'] = $this->getIconUrl($markerIconName);
         }
         if ($legendIconName != null) {
@@ -83,10 +91,6 @@ class DataMapEmbedRenderer {
 
         if ($info->custom != null) {
             $out['custom'] = $info->custom;
-        }
-
-        if (!array_key_exists('markerIcon', $out) && !array_key_exists('color', $out)) {
-            throw new InvalidArgumentException("No icon or color set for marker group $name.");
         }
 
         return $out;
