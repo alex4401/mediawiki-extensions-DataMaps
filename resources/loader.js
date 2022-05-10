@@ -76,7 +76,7 @@
                 zoomAnimation: false,
                 maxBoundsViscosity: 0.2,
                 wheelPxPerZoomLevel: 240,
-                prefersCanvas: true
+                preferCanvas: true
             }).fitBounds([[0, 0], [100, 100]]),
 
             leafletIcons: {},
