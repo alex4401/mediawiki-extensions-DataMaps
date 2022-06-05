@@ -22,6 +22,9 @@
 			"i18n"
 		]
 	},
+	"ExtensionMessagesFiles": {
+		"DataMapsMagic": "DataMaps.magic.php"
+	},
 
 	"ResourceFileModulePaths": {
 		"localBasePath": "resources",
@@ -61,6 +64,7 @@
 	},
 	
 	"Hooks": {
+		"ParserFirstCallInit": "DataMapsHooks::onParserFirstCallInit"
 	},
 
 	"config": {
