@@ -102,6 +102,14 @@
             if (group.legendIcon) {
                 field.$header.prepend(' ');
                 field.$header.prepend($('<img width=24 height=24/>').attr('src', group.legendIcon));
+                
+                field.$header.prepend($('<div class="datamap-legend-circle-placeholder">').css({
+                    width: group.size+4,
+                    height: group.size+4,
+                    backgroundColor: group.fillColor,
+                    borderColor: group.strokeColor || group.fillColor,
+                    borderWidth: group.strokeWidth || 1,
+                }));
             }
 
             field.$element.appendTo(ctx.$legendRoot);
