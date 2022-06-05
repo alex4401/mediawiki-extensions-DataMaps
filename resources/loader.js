@@ -18,6 +18,19 @@
         return scale * baseSize/2;
     }
 
+    function getMarkerPopupContents(markerType, group, markerInfo) {
+        var title = group.name;
+        if (markerInfo.label) {
+            title += ": " + markerInfo.label;
+        }
+        var out = "<b>"+title+"</b>";
+        if (markerInfo.description) {
+            out += markerInfo.description;
+        }
+        out += "<p>lat "+markerInfo.lat+", lon "+markerInfo.long+"</p>";
+        return out;
+    }
+
     function loadMarkersChunk(ctx, data) {
         for (var markerType in data.markers) {
             var groupName = markerType.split(' ', 1)[0];
@@ -50,15 +63,13 @@
 
                 marker
                     .addTo(layer)
-                    .bindPopup("<b>"+group.name+"</b><p>lat "+markerInfo.lat+", lon "+markerInfo.long+"</p>");
+                    .bindPopup(getMarkerPopupContents(markerType, group, markerInfo));
             });
 
         }
     }
 
     function setLayerVisibility(ctx, targetName, newState) {
-        console.log(ctx);
-        console.log(targetName);
         for (var layerName in ctx.leafletLayers) {
             if (layerName.split(' ').indexOf(targetName) >= 0) {
                 if (newState) {
