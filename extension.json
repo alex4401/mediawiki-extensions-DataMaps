@@ -56,15 +56,16 @@
 		}
 	},
 
+	"callback": "Ark\\DataMaps\\DataMapsGlobals::onRegistration",
 	"ContentHandlers": {
-		"datamap": "DataMapContentHandler"
+		"datamap": "Ark\\DataMaps\\Content\\DataMapContentHandler"
 	},
 	"AutoloadNamespaces": {
 		"Ark\\DataMaps\\": "includes/"
 	},
 	
 	"Hooks": {
-		"ParserFirstCallInit": "DataMapsHooks::onParserFirstCallInit"
+		"ParserFirstCallInit": "Ark\\DataMaps\\DataMapsHooks::onParserFirstCallInit"
 	},
 
 	"config": {

@@ -28,16 +28,16 @@ class DataMapGroupSpec {
         return $info->size ?? self::DEFAULT_MARKER_SIZE;
     }
 
-    public function getFillColour(): string|null {
+    public function getFillColour(): ?string {
         // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
         return $this->raw->fillColor;
     }
 
-    public function getMarkerIcon(): string|null {
+    public function getMarkerIcon(): ?string {
         return $this->raw->markerIcon ?? $this->raw->icon;
     }
 
-    public function getLegendIcon(): string|null {
+    public function getLegendIcon(): ?string {
         return $this->raw->legendIcon ?? $this->raw->icon;
     }
 
@@ -45,7 +45,7 @@ class DataMapGroupSpec {
         return $this->getMarkerIcon() === null ? self::DM_CIRCLE : self::DM_ICON;
     }
 
-    public function validate(): string|null {
+    public function validate(): ?string {
         // TODO: switch from exceptions to DataMapValidationResult
         if ($this->getMarkerIcon() === null && $this->getFillColour() === null) {
             return wfMessage( 'datamap-error-validation-no-display', $this->id )->escaped();

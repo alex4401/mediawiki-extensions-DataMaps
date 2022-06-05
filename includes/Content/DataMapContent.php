@@ -1,5 +1,5 @@
 <?php
-namespace Ark\DataMaps;
+namespace Ark\DataMaps\Content;
 
 use MediaWiki\MediaWikiServices;
 use FormatJson;
@@ -8,6 +8,9 @@ use Parser;
 use ParserOptions;
 use ParserOutput;
 use Title;
+use Html;
+use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
+use Ark\DataMaps\Data\DataMapSpec;
 
 class DataMapContent extends JsonContent {
 
@@ -59,8 +62,8 @@ class DataMapContent extends JsonContent {
 		return Title::newFromText( $docPage->plain() );
 	}
 
-	public function getEmbedRenderer(Parser $parser): DataMapEmbedRenderer {
-		return new DataMapEmbedRenderer($title, $this->getData()->getValue(), $parser);
+	public function getEmbedRenderer(Title $title, Parser $parser): DataMapEmbedRenderer {
+		return new DataMapEmbedRenderer($title, new DataMapSpec($this->getData()->getValue()), $parser);
 	}
 
 	protected function fillParserOutput( Title $title, $revId, ParserOptions $options, $generateHtml, ParserOutput &$output ) {
@@ -110,7 +113,7 @@ class DataMapContent extends JsonContent {
 			$output->addTemplate( $doc, $doc->getArticleID(), $doc->getLatestRevID() );
 		}
 
-		$embed = $this->getEmbedRenderer($parser);
+		$embed = $this->getEmbedRenderer($title, $parser);
 		$embed->prepareOutputPage();
 		$output->setText( $output->getRawText() . $embed->getHtml() );
 

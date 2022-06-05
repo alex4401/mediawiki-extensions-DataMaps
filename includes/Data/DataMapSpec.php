@@ -4,8 +4,8 @@ namespace Ark\DataMaps\Data;
 class DataMapSpec {
     private object $raw;
 
-    private array? $cachedMarkerGroups = null;
-    private array? $cachedMarkerLayers = null;
+    private ?array $cachedMarkerGroups = null;
+    private ?array $cachedMarkerLayers = null;
 
     public function __construct(object $raw) {
         $this->raw = $raw;
@@ -23,7 +23,7 @@ class DataMapSpec {
         return $this->raw->coordinateBounds;
     }
 
-    public function getCustomData(): object|null {
+    public function getCustomData(): ?object {
         return $this->raw->custom;
     }
 
@@ -54,7 +54,7 @@ class DataMapSpec {
         return new DataMapGroupSpec($name, $this->data->groups->$name);
     }
 
-    public function getLayer(string $name): DataMapLayerSpec|null {
+    public function getLayer(string $name): DataMapLayerSpec {
         return null;//return new DataMapLayerSpec($this->data->layers->$name);
     }
 
@@ -65,7 +65,7 @@ class DataMapSpec {
         }
     }
 
-    public function validate(): string|null {
+    public function validate(): ?string {
         
         return null;
     }

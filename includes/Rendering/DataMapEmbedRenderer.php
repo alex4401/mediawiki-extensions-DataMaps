@@ -1,9 +1,15 @@
 <?php
-namespace Ark\DataMaps;
+namespace Ark\DataMaps\Rendering;
 
 use Ark\DataMaps\Data\DataMapSpec;
 use Ark\DataMaps\Data\DataMapGroupSpec;
 use MediaWiki\MediaWikiServices;
+use Title;
+use Parser;
+use ParserOutput;
+use ParserOptions;
+use Html;
+use File;
 
 class DataMapEmbedRenderer {
     public DataMapSpec $data;
@@ -27,19 +33,23 @@ class DataMapEmbedRenderer {
         return $this->title->getArticleID();
     }
 
-    private function getIconUrl(string $title): string {
+    private function getFile(string $title): File {
         $file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $title ) );
         if (!$file || !$file->exists()) {
             throw new InvalidArgumentException( "File [[File:$title]] does not exist." );
         }
-		return $file->getURL();
+		return $file;
+    }
+
+    private function getIconUrl(string $title): string {
+        return $this->getFile($title)->getURL();
     }
 
     public function prepareOutputPage() {
         // Enable and configure OOUI
 		$this->parserOutput->setEnableOOUI(true);
-		OOUI\Theme::setSingleton( new OOUI\WikimediaUITheme() );
-		OOUI\Element::setDefaultDir( 'ltr' );
+		\OOUI\Theme::setSingleton( new \OOUI\WikimediaUITheme() );
+		\OOUI\Element::setDefaultDir( 'ltr' );
 
         // Required modules
         $this->parserOutput->addModules( [
@@ -63,14 +73,15 @@ class DataMapEmbedRenderer {
 
     public function getJsConfigVariables(): array {
         $usedGroups = $this->data->getMarkerGroupNames();
+        $image = $this->getFile($this->data->getImageName());
         return [
             // Required to query the API for marker clusters
             'pageName' => $this->title->getPrefixedText(),
             'version' => $this->title->getLatestRevID(),
 
             'coordinateBounds' => $this->data->coordinateBounds,
-            'image' => $this->image->getURL(),
-            'imageBounds' => [ $this->image->getWidth(), $this->image->getHeight() ],
+            'image' => $image->getURL(),
+            'imageBounds' => [ $image->getWidth(), $image->getHeight() ],
             
             'groups' => $this->getMarkerGroupsConfigsFor($usedGroups),
 
@@ -118,20 +129,20 @@ class DataMapEmbedRenderer {
 
     public function getHtml(): string {
         $this->parser->startExternalParse($this->title, $this->parserOptions, Parser::OT_HTML);
-		$panel = new OOUI\PanelLayout( [
+		$panel = new \OOUI\PanelLayout( [
             'id' => 'datamap-' . $this->getId(),
             'classes' => [ 'datamap-container' ],
 			'framed' => true,
 			'expanded' => false,
 			'padded' => true
 		] );
-        $panel->appendContent( new OOUI\LabelWidget( [
-            'label' => new OOUI\HtmlSnippet(
+        $panel->appendContent( new \OOUI\LabelWidget( [
+            'label' => new \OOUI\HtmlSnippet(
                 $this->parser->recursiveTagParseFully( ($this->data->title == null ? wfMessage('datamap-unnamed-map') : $this->data->title) )
             )
         ] ) );
 
-        $layout = new OOUI\Widget( [
+        $layout = new \OOUI\Widget( [
             'classes' => [ 'datamap-layout' ]
         ] );
         $panel->appendContent( $layout );
@@ -139,11 +150,11 @@ class DataMapEmbedRenderer {
         $legend = $this->getLegendContainerWidget();
 
         
-		$mapPanel = new OOUI\PanelLayout( [
+		$mapPanel = new \OOUI\PanelLayout( [
 			'framed' => true,
 			'expanded' => false,
 		] );
-        $mapPanel->appendContent( new OOUI\HtmlSnippet( $this->getLeafletContainerHtml() ) );
+        $mapPanel->appendContent( new \OOUI\HtmlSnippet( $this->getLeafletContainerHtml() ) );
 
         $layout->appendContent( $legend );
         $layout->appendContent( $mapPanel );
@@ -151,12 +162,12 @@ class DataMapEmbedRenderer {
         return $panel;
     }
 
-    public function getLegendContainerWidget(): OOUI\Widget {
-        $legend = new OOUI\Widget( [
+    public function getLegendContainerWidget(): \OOUI\Widget {
+        $legend = new \OOUI\Widget( [
             'classes' => [ 'datamap-legend' ]
         ] );
 
-        $legend->appendContent( new OOUI\LabelWidget( [
+        $legend->appendContent( new \OOUI\LabelWidget( [
             'label' => wfMessage( 'datamap-legend-label' ),
             'classes' => [ 'datamap-legend-label' ]
         ] ) );
