@@ -1,4 +1,8 @@
 <?php
+namespace Ark\DataMaps;
+
+use JsonContentHandler;
+use Title;
 
 define( 'ARK_CONTENT_MODEL_DATAMAP', 'datamap' );
 

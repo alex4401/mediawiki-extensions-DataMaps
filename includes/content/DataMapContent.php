@@ -1,5 +1,13 @@
 <?php
+namespace Ark\DataMaps;
+
 use MediaWiki\MediaWikiServices;
+use FormatJson;
+use JsonContent;
+use Parser;
+use ParserOptions;
+use ParserOutput;
+use Title;
 
 class DataMapContent extends JsonContent {
 
@@ -51,19 +59,20 @@ class DataMapContent extends JsonContent {
 		return Title::newFromText( $docPage->plain() );
 	}
 
+	public function getEmbedRenderer(Parser $parser): DataMapEmbedRenderer {
+		return new DataMapEmbedRenderer($title, $this->getData()->getValue(), $parser);
+	}
+
 	protected function fillParserOutput( Title $title, $revId, ParserOptions $options, $generateHtml, ParserOutput &$output ) {
 		$parser = MediaWikiServices::getInstance()->getParser();
-
-		$text = $this->getText();
 
 		$output = new ParserOutput();
 
 		if ( !$generateHtml ) {
-			// We don't need the actual HTML
 			return $output;
 		}
 
-		// Get documentation, if any.
+		// Get documentation, if any
 		$doc = self::getDocPage( $title );
 		if ( $doc ) {
 			$msg = wfMessage(
@@ -101,21 +110,10 @@ class DataMapContent extends JsonContent {
 			$output->addTemplate( $doc, $doc->getArticleID(), $doc->getLatestRevID() );
 		}
 
-		$output->setEnableOOUI(true);
-		OOUI\Theme::setSingleton( new OOUI\WikimediaUITheme() );
-		OOUI\Element::setDefaultDir( 'ltr' ); 
-
-		$embed = new DataMapEmbedRenderer($title, $this->getData()->getValue(), $parser, $options);
-		$output->addImage( $embed->data->image );
-		$output->addJsConfigVars( [
-			'dataMaps' => [
-				$embed->getId() => $embed->getJsConfigVariables()
-			]
-		] );
-		$output->addModules( $embed->getModules() );
+		$embed = $this->getEmbedRenderer($parser);
+		$embed->prepareOutputPage();
 		$output->setText( $output->getRawText() . $embed->getHtml() );
 
 		return $output;
 	}
-
 }

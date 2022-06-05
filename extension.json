@@ -56,18 +56,16 @@
 	"ContentHandlers": {
 		"datamap": "DataMapContentHandler"
 	},
-	"AutoloadClasses": {
-		"DataMapsHooks": "includes/Hooks.php",
-		"DataMapEmbedRenderer": "includes/DataMapEmbedRenderer.php",
-		"DataMapContent": "includes/content/DataMapContent.php",
-		"DataMapContentHandler": "includes/content/DataMapContentHandler.php"
+	"AutoloadNamespaces": {
+		"Ark\\DataMaps\\": "includes/"
 	},
+	
 	"Hooks": {
 	},
 
 	"config": {
 		"ArkDataNamespace": {
-			"description": "",
+			"description": "Namespace where data maps will be stored.",
 			"value": -1
 		}
 	},
