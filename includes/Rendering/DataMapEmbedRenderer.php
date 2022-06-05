@@ -136,7 +136,7 @@ class DataMapEmbedRenderer {
 		] );
         $panel->appendContent( new \OOUI\LabelWidget( [
             'label' => new \OOUI\HtmlSnippet(
-                $this->parser->recursiveTagParseFully( ($this->data->title == null ? wfMessage('datamap-unnamed-map') : $this->data->title) )
+                $this->parser->recursiveTagParseFully( $this->data->getTitle() )
             )
         ] ) );
 

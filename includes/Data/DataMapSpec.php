@@ -12,7 +12,7 @@ class DataMapSpec {
     }
 
     public function getTitle(): string {
-        return $this->raw->title;
+        return $this->raw->title ?? wfMessage( 'datamap-unnamed-map' );
     }
 
     public function getImageName(): string {
