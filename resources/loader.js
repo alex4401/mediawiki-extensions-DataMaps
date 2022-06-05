@@ -53,7 +53,22 @@
 
         }
     }
-var button = OO.ui.ButtonWidget.static.infuse( $( '#my-button' ) );
+
+    function buildLegend(ctx) {
+        ctx.$legendRoot = ctx.$root.find('.datamap-legend');
+
+        for (var groupName in ctx.config.groups) {
+            var group = ctx.config.groups[groupName];
+
+            var checkbox = new OO.ui.CheckboxInputWidget({
+                selected: true
+            });
+            new OO.ui.FieldLayout(checkbox, {
+                label: group.name,
+                align: 'inline'
+            }).$element.appendTo(ctx.$legendRoot);
+        }
+    }
 
     function buildLeafletMap(ctx, $holder) {
         ctx.leaflet = L.map($holder.get(0), {
@@ -74,8 +89,8 @@ var button = OO.ui.ButtonWidget.static.infuse( $( '#my-button' ) );
         }).fitBounds([[0, 0], [100, 100]]);
         ctx.background = L.imageOverlay(config.image, [[0,0],[100,100]]).addTo(ctx.leaflet);
 
-        for (var groupName in config.groups) {
-            var group = config.groups[groupName];
+        for (var groupName in ctx.config.groups) {
+            var group = ctx.config.groups[groupName];
             group.circleMarkers = [];
 
             if (group.markerIcon) {
@@ -101,6 +116,7 @@ var button = OO.ui.ButtonWidget.static.infuse( $( '#my-button' ) );
         $container.data('initialised', 'true');
 
         var ctx = {
+            $root: $container,
             config: config,
             coordSpace: config.coordinateBounds,
 
@@ -109,7 +125,7 @@ var button = OO.ui.ButtonWidget.static.infuse( $( '#my-button' ) );
             leafletLayers: {},
         };
 
-        buildLegend(ctx);
+        mw.loader.using('oojs-ui-core', buildLegend.bind(null, ctx));
         buildLeafletMap(ctx, $container.find('.datamap-holder'));
 
         loadMapData(config.pageName, config.version).then(function(data) {
@@ -121,7 +137,7 @@ var button = OO.ui.ButtonWidget.static.infuse( $( '#my-button' ) );
 
     function onPageContent($content) {
         for (var id in mapConfigs) {
-            var map = initialiseMap($content.find('.datamap#datamap-' + id), mapConfigs[id]);
+            var map = initialiseMap($content.find('.datamap-container#datamap-' + id), mapConfigs[id]);
             mw.hook( 'ext.ark.datamaps.onMapInitialised' ).fire( map );
         }
     }
