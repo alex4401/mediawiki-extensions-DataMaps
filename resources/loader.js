@@ -119,17 +119,23 @@
     function buildLeafletMap(ctx, $holder) {
         ctx.leaflet = L.map($holder.get(0), {
             crs: L.CRS.Simple,
+            // Renderer - using canvas for performance with padding of 1/3rd (to draw some more markers outside of view for panning UX)
+            preferCanvas: true,
+            renderer: L.canvas({
+                padding: 1/3,
+            }),
+            // Boundaries
             center: [50, 50],
+            maxBounds: [[-75,-75], [175, 175]],
+            maxBoundsViscosity: 0.2,
+            // Zoom settings
             zoomSnap: 0.25,
             zoomDelta: 0.25,
             minZoom: 2.75,
             maxZoom: 5,
             zoom: 2.75,
-            maxBounds: [[-75,-75], [175, 175]],
             zoomAnimation: false,
-            maxBoundsViscosity: 0.2,
             wheelPxPerZoomLevel: 240,
-            preferCanvas: true,
             markerZoomAnimation: false
         }).fitBounds([[0, 0], [100, 100]]);
         ctx.background = L.imageOverlay(ctx.config.image, [[0,0],[100,100]]).addTo(ctx.leaflet);
