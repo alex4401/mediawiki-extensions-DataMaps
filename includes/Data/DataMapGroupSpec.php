@@ -7,6 +7,7 @@ class DataMapGroupSpec {
     // Display modes
     const DM_CIRCLE = 1;
     const DM_ICON = 2;
+    const DM_UNKNOWN = -1;
 
     private string $id;
     private object $raw;
@@ -24,7 +25,7 @@ class DataMapGroupSpec {
         return $this->raw->name ?? wfMessage('datamap-unnamed-marker');
     }
 
-    public function getSize(): string {
+    public function getSize(): int {
         return $info->size ?? self::DEFAULT_MARKER_SIZE;
     }
 
@@ -42,7 +43,12 @@ class DataMapGroupSpec {
     }
 
     public function getDisplayMode(): int {
-        return $this->getMarkerIcon() === null ? self::DM_CIRCLE : self::DM_ICON;
+        if ($this->getFillColour() !== null) {
+            return self::DM_CIRCLE;
+        } else if ($this->getMarkerIcon() !== null) {
+            return self::DM_ICON;
+        }
+        return self::DM_UNKNOWN;
     }
 
     public function validate(): ?string {

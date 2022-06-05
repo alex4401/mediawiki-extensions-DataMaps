@@ -10,6 +10,7 @@ use ParserOutput;
 use ParserOptions;
 use Html;
 use File;
+use InvalidArgumentException;
 
 class DataMapEmbedRenderer {
     public DataMapSpec $data;
@@ -102,7 +103,7 @@ class DataMapEmbedRenderer {
 
         switch ( $spec->getDisplayMode() ) {
             case DataMapGroupSpec::DM_CIRCLE:
-                $out['fillColor'] = $this->getIconUrl( $spec->getFillColor() );
+                $out['fillColor'] = $spec->getFillColour();
                 break;
             case DataMapGroupSpec::DM_ICON:
                 $out['markerIcon'] = $this->getIconUrl( $spec->getMarkerIcon() );
