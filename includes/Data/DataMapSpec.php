@@ -34,7 +34,7 @@ class DataMapSpec {
     private function warmUpUsedMarkerTypes() {
         $groups = array();
         $specifiers = array();
-        foreach (array_keys(get_object_vars($this->data->markers)) as &$name) {
+        foreach (array_keys(get_object_vars($this->raw->markers)) as &$name) {
             $parts = explode(' ', $name);
             $groups[] = array_shift($parts);
             $specifiers += $parts;
@@ -51,11 +51,11 @@ class DataMapSpec {
     }
 
     public function getGroup(string $name): DataMapGroupSpec {
-        return new DataMapGroupSpec($name, $this->data->groups->$name);
+        return new DataMapGroupSpec($name, $this->raw->groups->$name);
     }
 
     public function getLayer(string $name): DataMapLayerSpec {
-        return null;//return new DataMapLayerSpec($this->data->layers->$name);
+        return null;//return new DataMapLayerSpec($this->raw->layers->$name);
     }
 
     public function iterateGroups(callable $callback) {

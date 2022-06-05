@@ -72,9 +72,8 @@ class DataMapEmbedRenderer {
     }
 
     public function getJsConfigVariables(): array {
-        $usedGroups = $this->data->getMarkerGroupNames();
         $image = $this->getFile($this->data->getImageName());
-        return [
+        $out = [
             // Required to query the API for marker clusters
             'pageName' => $this->title->getPrefixedText(),
             'version' => $this->title->getLatestRevID(),
@@ -83,23 +82,21 @@ class DataMapEmbedRenderer {
             'image' => $image->getURL(),
             'imageBounds' => [ $image->getWidth(), $image->getHeight() ],
             
-            'groups' => $this->getMarkerGroupsConfigsFor($usedGroups),
+            'groups' => [],
 
             'custom' => $this->data->getCustomData(),
         ];
-    }
 
-    public function getMarkerGroupsConfigsFor($names): array {
-        $results = array();
-        foreach ($names as &$name) {
-            $results[$name] = $this->getMarkerGroupConfig($name);
-        }
-        return $results;
+        $this->data->iterateGroups( function(DataMapGroupSpec $spec) use (&$out) {
+            $out['groups'][$spec->getId()] = $this->getMarkerGroupConfig($spec);
+        } );
+
+        return $out;
     }
 
     public function getMarkerGroupConfig(DataMapGroupSpec $spec): array {
         $out = array(
-            'name' => $spec->getTitle(),
+            'name' => $spec->getName(),
             'size' => $spec->getSize(),
         );
 
