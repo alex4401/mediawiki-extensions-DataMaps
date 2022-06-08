@@ -52,7 +52,6 @@ class DataMapGroupSpec {
     }
 
     public function validate(): ?string {
-        // TODO: switch from exceptions to DataMapValidationResult
         if ($this->getMarkerIcon() === null && $this->getFillColour() === null) {
             return wfMessage( 'datamap-error-validation-no-display', $this->id )->escaped();
         }

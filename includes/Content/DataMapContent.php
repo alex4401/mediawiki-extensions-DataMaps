@@ -47,6 +47,10 @@ class DataMapContent extends JsonContent {
 		return $out;
 	}
 
+	public function asModel(): DataMapSpec {
+		return new DataMapSpec($this->getData()->getValue());
+	}
+
 	/**
 	 * Return the Title for the documentation page
 	 *
@@ -63,7 +67,7 @@ class DataMapContent extends JsonContent {
 	}
 
 	public function getEmbedRenderer(Title $title, Parser $parser): DataMapEmbedRenderer {
-		return new DataMapEmbedRenderer($title, new DataMapSpec($this->getData()->getValue()), $parser);
+		return new DataMapEmbedRenderer( $title, $this->asModel(), $parser );
 	}
 
 	protected function fillParserOutput( Title $title, $revId, ParserOptions $options, $generateHtml, ParserOutput &$output ) {

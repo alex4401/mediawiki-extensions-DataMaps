@@ -55,6 +55,7 @@ class DataMapSpec {
     }
 
     public function getLayer(string $name): DataMapLayerSpec {
+        // TODO: implement layers for Genesis Part 2 resource map (asteroid cluster rotations)
         return null;//return new DataMapLayerSpec($this->raw->layers->$name);
     }
 
@@ -66,7 +67,7 @@ class DataMapSpec {
     }
 
     public function validate(): ?string {
-        
+        // TODO: implement. check validity of fields, and of descendants.
         return null;
     }
 }
