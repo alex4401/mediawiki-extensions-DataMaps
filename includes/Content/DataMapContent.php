@@ -7,8 +7,10 @@ use JsonContent;
 use Parser;
 use ParserOptions;
 use ParserOutput;
+use OutputPage;
 use Title;
 use Html;
+use PPFrame;
 use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use Ark\DataMaps\Data\DataMapSpec;
 
@@ -66,13 +68,12 @@ class DataMapContent extends JsonContent {
 		return Title::newFromText( $docPage->plain() );
 	}
 
-	public function getEmbedRenderer(Title $title, Parser $parser): DataMapEmbedRenderer {
-		return new DataMapEmbedRenderer( $title, $this->asModel(), $parser );
+	public function getEmbedRenderer( Title $title, Parser $parser, ?PPFrame $parserFrame = null ): DataMapEmbedRenderer {
+		return new DataMapEmbedRenderer( $title, $this->asModel(), $parser, $parserFrame );
 	}
 
 	protected function fillParserOutput( Title $title, $revId, ParserOptions $options, $generateHtml, ParserOutput &$output ) {
 		$parser = MediaWikiServices::getInstance()->getParser();
-
 		$output = new ParserOutput();
 
 		if ( !$generateHtml ) {
@@ -117,8 +118,8 @@ class DataMapContent extends JsonContent {
 			$output->addTemplate( $doc, $doc->getArticleID(), $doc->getLatestRevID() );
 		}
 
-		$embed = $this->getEmbedRenderer($title, $parser);
-		$embed->prepareOutputPage();
+		$embed = $this->getEmbedRenderer( $title, $parser );
+		$embed->prepareOutput( $output );
 		$output->setText( $output->getRawText() . $embed->getHtml() );
 
 		return $output;

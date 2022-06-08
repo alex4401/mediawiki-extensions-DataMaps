@@ -7,34 +7,35 @@ use MediaWiki\MediaWikiServices;
 use Title;
 use Parser;
 use ParserOutput;
+use OutputPage;
 use ParserOptions;
 use Html;
 use File;
 use InvalidArgumentException;
+use PPFrame;
 
 class DataMapEmbedRenderer {
     public DataMapSpec $data;
 
-    protected Title $title;
+    private Title $title;
+    private Parser $parser;
+    private ParserOptions $parserOptions;
+    private ?PPFrame $parserFrame;
 
-    protected Parser $parser;
-    protected ParserOutput $parserOutput;
-    protected ParserOptions $parserOptions;
-
-    public function __construct( Title $title, DataMapSpec $data, Parser $parser ) {
+    public function __construct( Title $title, DataMapSpec $data, Parser $parser, ?PPFrame $parserFrame = null ) {
         $this->title = $title;
         $this->data = $data;
 
         $this->parser = $parser;
-        $this->parserOutput = $parser->getOutput();
         $this->parserOptions = $parser->getOptions();
+        $this->parserFrame = $parserFrame;
     }
 
     public function getId(): int {
         return $this->title->getArticleID();
     }
 
-    private function getFile(string $title): File {
+    private function getFile( string $title ): File {
         $file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $title ) );
         if (!$file || !$file->exists()) {
             throw new InvalidArgumentException( "File [[File:$title]] does not exist." );
@@ -42,34 +43,34 @@ class DataMapEmbedRenderer {
 		return $file;
     }
 
-    private function getIconUrl(string $title): string {
-        return $this->getFile($title)->getURL();
+    private function getIconUrl( string $title ): string {
+        return $this->getFile( $title )->getURL();
     }
 
-    public function prepareOutputPage() {
+    public function prepareOutput(ParserOutput &$parserOutput) {
         // Enable and configure OOUI
-		$this->parserOutput->setEnableOOUI(true);
+        $parserOutput->setEnableOOUI( true );
 		\OOUI\Theme::setSingleton( new \OOUI\WikimediaUITheme() );
 		\OOUI\Element::setDefaultDir( 'ltr' );
 
         // Required modules
-        $this->parserOutput->addModules( [
+        $parserOutput->addModules( [
             'ext.ark.datamaps.leaflet.core', 'ext.ark.datamaps.leaflet.loader'
         ] );
 
-        // Register image dependencies
-		$this->parserOutput->addImage( $this->data->getImageName() );
-        $this->data->iterateGroups( function(DataMapGroupSpec $spec) {
-            $this->parserOutput->addImage( $spec->getMarkerIcon() );
-            $this->parserOutput->addImage( $spec->getLegendIcon() );
-        } );
-
         // Inject mw.config variables
-        $this->parserOutput->addJsConfigVars( [
+        $parserOutput->addJsConfigVars( [
             'dataMaps' => [
                 $this->getId() => $this->getJsConfigVariables()
             ]
         ] );
+
+        // Register image dependencies
+		$parserOutput->addImage( $this->data->getImageName() );
+        $this->data->iterateGroups( function(DataMapGroupSpec $spec) use (&$parserOutput) {
+            $parserOutput->addImage( $spec->getMarkerIcon() );
+            $parserOutput->addImage( $spec->getLegendIcon() );
+        } );
     }
 
     public function getJsConfigVariables(): array {
@@ -125,8 +126,14 @@ class DataMapEmbedRenderer {
         );
     }
 
+    private function expandWikitext(string $source): string {
+        if ($this->parserFrame !== null) {
+            return $this->parserFrame->expand( $source );
+        }
+        return $this->parser->parse( $source, $this->title, $this->parserOptions )->getText();
+    }
+
     public function getHtml(): string {
-        $this->parser->startExternalParse($this->title, $this->parserOptions, Parser::OT_HTML);
 		$panel = new \OOUI\PanelLayout( [
             'id' => 'datamap-' . $this->getId(),
             'classes' => [ 'datamap-container' ],
@@ -135,9 +142,7 @@ class DataMapEmbedRenderer {
 			'padded' => true
 		] );
         $panel->appendContent( new \OOUI\LabelWidget( [
-            'label' => new \OOUI\HtmlSnippet(
-                $this->parser->recursiveTagParseFully( $this->data->getTitle() )
-            )
+            'label' => new \OOUI\HtmlSnippet( $this->expandWikitext( $this->data->getTitle() ) )
         ] ) );
 
         $layout = new \OOUI\Widget( [
