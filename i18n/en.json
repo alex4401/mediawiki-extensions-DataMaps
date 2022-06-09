@@ -12,6 +12,8 @@
 	"datamap-doc-page-show": "{{$1}}\n<hr />",
 	"datamap-doc-page-header": "'''This is the documentation page for [[$1]]'''",
 
+	"datamap-category-pages-including-maps": "Pages including data maps",
+
 	"datamap-error-validation-no-display": "Group \"$1\" has no icon or color specified.",
 	"datamap-error-validation-ambiguous-display": "Group \"$1\" cannot have its markers configured to have both an icon and a color.",
 	"datamap-error-render-unsupported-displaymode": "Marker has a display mode ($1) that an implementation of which is missing from the extension",

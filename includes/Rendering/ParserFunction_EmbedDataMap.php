@@ -32,6 +32,9 @@ final class ParserFunction_EmbedDataMap {
 
         $embed = $content->getEmbedRenderer( $title, $parser, $frame );
 		$embed->prepareOutput( $parser->getOutput() );
+
+        $parser->addTrackingCategory( 'datamap-category-pages-including-maps' );
+
 		return [ $embed->getHtml(), 'noparse' => true, 'isHTML' => true ];
     }
 }
