@@ -1,0 +1,129 @@
+diff --git a/dist/leaflet.css b/dist/leaflet.css
+index 2366a578..088d7659 100644
+--- a/dist/leaflet.css
++++ b/dist/leaflet.css
+@@ -65,7 +65,6 @@
+ 	touch-action: pan-x pan-y;
+ 	}
+ .leaflet-container.leaflet-touch-drag {
+-	-ms-touch-action: pinch-zoom;
+ 	/* Fallback for FF which doesn't support pinch-zoom */
+ 	touch-action: none;
+ 	touch-action: pinch-zoom;
+@@ -267,7 +266,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
+ 
+ /* general typography */
+ .leaflet-container {
+-	font-size: 12px;
+ 	font-size: 0.75rem;
+ 	line-height: 1.5;
+ 	}
+@@ -290,12 +288,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
+ 	text-decoration: none;
+ 	color: black;
+ 	}
+-.leaflet-bar a,
++.leaflet-bar a/*,
+ .leaflet-control-layers-toggle {
+ 	background-position: 50% 50%;
+ 	background-repeat: no-repeat;
+ 	display: block;
+-	}
++	}*/
+ .leaflet-bar a:hover,
+ .leaflet-bar a:focus {
+ 	background-color: #f4f4f4;
+@@ -343,7 +341,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
+ 
+ 
+ /* layers control */
+-
++/*
+ .leaflet-control-layers {
+ 	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+ 	background: #fff;
+@@ -387,14 +385,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
+ 	}
+ .leaflet-control-layers label {
+ 	display: block;
+-	font-size: 13px;
+ 	font-size: 1.08333em;
+ 	}
+ .leaflet-control-layers-separator {
+ 	height: 0;
+ 	border-top: 1px solid #ddd;
+ 	margin: 5px -10px 5px -6px;
+-	}
++	}*/
+ 
+ /* Default icon URLs */
+ .leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+@@ -409,8 +406,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
+ 	background: rgba(255, 255, 255, 0.8);
+ 	margin: 0;
+ 	}
+-.leaflet-control-attribution,
+-.leaflet-control-scale-line {
++.leaflet-control-attribution/*,
++.leaflet-control-scale-line*/ {
+ 	padding: 0 5px;
+ 	color: #333;
+ 	line-height: 1.4;
+@@ -425,7 +422,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
+ .leaflet-control-attribution svg {
+ 	display: inline !important;
+ 	}
+-.leaflet-left .leaflet-control-scale {
++/*.leaflet-left .leaflet-control-scale {
+ 	margin-left: 5px;
+ 	}
+ .leaflet-bottom .leaflet-control-scale {
+@@ -451,18 +448,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
+ 	}
+ .leaflet-control-scale-line:not(:first-child):not(:last-child) {
+ 	border-bottom: 2px solid #777;
+-	}
++	}*/
+ 
+-.leaflet-touch .leaflet-control-attribution,
++.leaflet-touch .leaflet-control-attribution/*,
+ .leaflet-touch .leaflet-control-layers,
+-.leaflet-touch .leaflet-bar {
++.leaflet-touch .leaflet-bar*/ {
+ 	box-shadow: none;
+ 	}
+-.leaflet-touch .leaflet-control-layers,
++/*.leaflet-touch .leaflet-control-layers,
+ .leaflet-touch .leaflet-bar {
+ 	border: 2px solid rgba(0,0,0,0.2);
+ 	background-clip: padding-box;
+-	}
++	}*/
+ 
+ 
+ /* popup */
+@@ -536,24 +533,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
+ 	border-top: 1px solid #ddd;
+ 	}
+ 
+-.leaflet-oldie .leaflet-popup-content-wrapper {
+-	-ms-zoom: 1;
+-	}
+-.leaflet-oldie .leaflet-popup-tip {
+-	width: 24px;
+-	margin: 0 auto;
+-
+-	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+-	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+-	}
+-
+-.leaflet-oldie .leaflet-control-zoom,
+-.leaflet-oldie .leaflet-control-layers,
+-.leaflet-oldie .leaflet-popup-content-wrapper,
+-.leaflet-oldie .leaflet-popup-tip {
+-	border: 1px solid #999;
+-	}
+-
+ 
+ /* div icon */
+ 

@@ -1,0 +1,106 @@
+diff --git a/src/control/index.js b/src/control/index.js
+index 92d5205a..f4600bfb 100644
+--- a/src/control/index.js
++++ b/src/control/index.js
+@@ -1,17 +1,17 @@
+ import {Control, control} from './Control';
+-import {Layers, layers} from './Control.Layers';
++//import {Layers, layers} from './Control.Layers';
+ import {Zoom, zoom} from './Control.Zoom';
+-import {Scale, scale} from './Control.Scale';
+-import {Attribution, attribution} from './Control.Attribution';
++//import {Scale, scale} from './Control.Scale';
++//import {Attribution, attribution} from './Control.Attribution';
+ 
+-Control.Layers = Layers;
++//Control.Layers = Layers;
+ Control.Zoom = Zoom;
+-Control.Scale = Scale;
+-Control.Attribution = Attribution;
++//Control.Scale = Scale;
++//Control.Attribution = Attribution;
+ 
+-control.layers = layers;
++//control.layers = layers;
+ control.zoom = zoom;
+-control.scale = scale;
+-control.attribution = attribution;
++//control.scale = scale;
++//control.attribution = attribution;
+ 
+ export {Control, control};
+diff --git a/src/geo/crs/index.js b/src/geo/crs/index.js
+index c0370baf..9e7349d8 100644
+--- a/src/geo/crs/index.js
++++ b/src/geo/crs/index.js
+@@ -1,15 +1,15 @@
+ import {CRS} from './CRS';
+-import {Earth} from './CRS.Earth';
+-import {EPSG3395} from './CRS.EPSG3395';
+-import {EPSG3857, EPSG900913} from './CRS.EPSG3857';
+-import {EPSG4326} from './CRS.EPSG4326';
++//import {Earth} from './CRS.Earth';
++//import {EPSG3395} from './CRS.EPSG3395';
++//import {EPSG3857, EPSG900913} from './CRS.EPSG3857';
++//import {EPSG4326} from './CRS.EPSG4326';
+ import {Simple} from './CRS.Simple';
+ 
+-CRS.Earth = Earth;
+-CRS.EPSG3395 = EPSG3395;
+-CRS.EPSG3857 = EPSG3857;
+-CRS.EPSG900913 = EPSG900913;
+-CRS.EPSG4326 = EPSG4326;
++//CRS.Earth = Earth;
++//CRS.EPSG3395 = EPSG3395;
++//CRS.EPSG3857 = EPSG3857;
++//CRS.EPSG900913 = EPSG900913;
++//CRS.EPSG4326 = EPSG4326;
+ CRS.Simple = Simple;
+ 
+ export {CRS};
+diff --git a/src/layer/index.js b/src/layer/index.js
+index 198f8a6e..4b6fda85 100644
+--- a/src/layer/index.js
++++ b/src/layer/index.js
+@@ -1,18 +1,18 @@
+ export {Layer} from './Layer';
+ export {LayerGroup, layerGroup} from './LayerGroup';
+ export {FeatureGroup, featureGroup} from './FeatureGroup';
+-import {GeoJSON, geoJSON, geoJson, geometryToLayer, coordsToLatLng, coordsToLatLngs, latLngToCoords, latLngsToCoords, getFeature, asFeature} from './GeoJSON';
+-GeoJSON.geometryToLayer = geometryToLayer;
+-GeoJSON.coordsToLatLng = coordsToLatLng;
+-GeoJSON.coordsToLatLngs = coordsToLatLngs;
+-GeoJSON.latLngToCoords = latLngToCoords;
+-GeoJSON.latLngsToCoords = latLngsToCoords;
+-GeoJSON.getFeature = getFeature;
+-GeoJSON.asFeature = asFeature;
+-export {GeoJSON, geoJSON, geoJson};
++//import {GeoJSON, geoJSON, geoJson, geometryToLayer, coordsToLatLng, coordsToLatLngs, latLngToCoords, latLngsToCoords, getFeature, asFeature} from './GeoJSON';
++//GeoJSON.geometryToLayer = geometryToLayer;
++//GeoJSON.coordsToLatLng = coordsToLatLng;
++//GeoJSON.coordsToLatLngs = coordsToLatLngs;
++//GeoJSON.latLngToCoords = latLngToCoords;
++//GeoJSON.latLngsToCoords = latLngsToCoords;
++//GeoJSON.getFeature = getFeature;
++//GeoJSON.asFeature = asFeature;
++//export {GeoJSON, geoJSON, geoJson};
+ 
+ export {ImageOverlay, imageOverlay} from './ImageOverlay';
+-export {VideoOverlay, videoOverlay} from './VideoOverlay';
++//export {VideoOverlay, videoOverlay} from './VideoOverlay';
+ export {SVGOverlay, svgOverlay} from './SVGOverlay';
+ 
+ export {DivOverlay} from './DivOverlay';
+diff --git a/src/layer/tile/index.js b/src/layer/tile/index.js
+index da98979a..1b8ad4b8 100644
+--- a/src/layer/tile/index.js
++++ b/src/layer/tile/index.js
+@@ -1,6 +1,6 @@
+-export {GridLayer, gridLayer} from './GridLayer';
++/*export {GridLayer, gridLayer} from './GridLayer';
+ import {TileLayer, tileLayer} from './TileLayer';
+ import {TileLayerWMS, tileLayerWMS} from './TileLayer.WMS';
+ TileLayer.WMS = TileLayerWMS;
+ tileLayer.wms = tileLayerWMS;
+-export {TileLayer, tileLayer};
++export {TileLayer, tileLayer};*/
