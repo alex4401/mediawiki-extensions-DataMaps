@@ -1,4 +1,10 @@
 # DataMaps extension
+
+This is free software licensed under the GNU General Public License. Please
+see http://www.gnu.org/copyleft/gpl.html for further details, including the
+full text and terms of the license.
+
+## Overview
 A more modern, prototype replacement for ARK Wiki's [interactive maps on DOM nodes](https://ark.wiki.gg/wiki/Module:ResourceMap).
 Built on top of [Leaflet](https://leafletjs.com/). If frontend is unproven due to performance issues, stack can be rewritten onto
 the old display while keeping the benefits - which are speed, reduced server load (same work in hacky Lua is done in PHP), better
