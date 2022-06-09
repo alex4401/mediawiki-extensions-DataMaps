@@ -136,7 +136,9 @@
             zoom: 2.75,
             zoomAnimation: false,
             wheelPxPerZoomLevel: 240,
-            markerZoomAnimation: false
+            markerZoomAnimation: false,
+            // Pan settings
+            inertia: false
         }).fitBounds([[0, 0], [100, 100]]);
         ctx.background = L.imageOverlay(ctx.config.image, [[0,0],[100,100]]).addTo(ctx.leaflet);
 
