@@ -26,7 +26,7 @@ class DataMapEmbedRenderer {
         $this->title = $title;
         $this->data = $data;
 
-        $this->parser = $parser;
+        $this->parser = $parser->getFreshParser();
         $this->parserOptions = $parser->getOptions();
         $this->parserFrame = $parserFrame;
     }
@@ -127,9 +127,6 @@ class DataMapEmbedRenderer {
     }
 
     private function expandWikitext(string $source): string {
-        if ($this->parserFrame !== null) {
-            return $this->parserFrame->expand( $source );
-        }
         return $this->parser->parse( $source, $this->title, $this->parserOptions )->getText();
     }
 
