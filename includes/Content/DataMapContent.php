@@ -12,6 +12,7 @@ use Title;
 use Html;
 use PPFrame;
 use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
+use Ark\DataMaps\Rendering\DataMapRenderOptions;
 use Ark\DataMaps\Data\DataMapSpec;
 
 class DataMapContent extends JsonContent {
