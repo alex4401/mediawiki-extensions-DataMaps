@@ -77,12 +77,7 @@
 
 
     function isLayerUsed(ctx, name) {
-        for (var layerName in ctx.leafletLayers) {
-            if (layerName.split(' ').indexOf(name) >= 0) {
-                return true;
-            }
-        }
-        return false;
+        return ctx.config.layerIds.indexOf(name) >= 0;
     }
 
 

@@ -48,10 +48,21 @@ class DataMapSpec {
     }
 
     public function getMarkerGroupNames(): array {
+        return $this->getGroupNames();
+    }
+
+    public function getGroupNames(): array {
         if ($this->cachedMarkerGroups == null) {
             $this->warmUpUsedMarkerTypes();
         }
         return $this->cachedMarkerGroups;
+    }
+
+    public function getLayerNames(): array {
+        if ($this->cachedMarkerLayers == null) {
+            $this->warmUpUsedMarkerTypes();
+        }
+        return $this->cachedMarkerLayers;
     }
 
     public function getGroup(string $name): DataMapGroupSpec {

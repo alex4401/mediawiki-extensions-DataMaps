@@ -88,6 +88,7 @@ class DataMapEmbedRenderer {
             'imageBounds' => [ $image->getWidth(), $image->getHeight() ],
             
             'groups' => [],
+            'layerIds' => $this->data->getLayerNames(),
             'leafletSettings' => $this->data->getInjectedLeafletSettings(),
 
             'custom' => $this->data->getCustomData()
