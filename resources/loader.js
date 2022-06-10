@@ -230,6 +230,21 @@
                 ctx.leafletIcons[groupName] = L.icon({ iconUrl: group.markerIcon, iconSize: [32, 32] });
             }
         }
+
+        // Create a coordinate-under-cursor display
+        ctx.$coordTracker = $('<div class="leaflet-control leaflet-control-attribution">')
+                            .appendTo(ctx.$root.find('.leaflet-control-container .leaflet-bottom.leaflet-left'));
+        ctx.coordTrackingMsg = mw.msg('datamap-coordinate-control-text');
+        ctx.leaflet.on('mousemove', function(event) {
+            var lat = event.latlng.lat;
+            var lon = event.latlng.lng;
+            if (lat >= -5 && lat <= 105 && lon >= -5 && lon <= 105) {
+                lat = 100 - lat;
+                ctx.$coordTracker.text(ctx.coordTrackingMsg
+                                       .replace('$1', lat.toFixed(2))
+                                       .replace('$2', lon.toFixed(2)));
+            }
+        });
     }
 
 
@@ -248,6 +263,8 @@
             leaflet: null,
             leafletIcons: {},
             leafletLayers: {},
+
+            $coordTracker: null,
 
             legendGroupToggles: [],
             groupVisibilityMask: {},

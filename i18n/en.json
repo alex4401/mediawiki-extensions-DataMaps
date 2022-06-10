@@ -26,5 +26,6 @@
     "datamap-placeholder-loading": "Data is being loaded",
     "datamap-toggle-show-all": "Show all",
     "datamap-toggle-hide-all": "Hide all",
-    "datamap-toggle-caves": "Toggle caves"
+    "datamap-toggle-caves": "Toggle caves",
+    "datamap-coordinate-control-text": "lat $1, lon $2"
 }

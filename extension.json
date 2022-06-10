@@ -56,7 +56,8 @@
 			"messages": [
 				"datamap-toggle-show-all",
 				"datamap-toggle-hide-all",
-				"datamap-toggle-caves"
+				"datamap-toggle-caves",
+				"datamap-coordinate-control-text"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
