@@ -29,6 +29,8 @@ class DataMapEmbedRenderer {
         $this->parser = $parser->getFreshParser();
         $this->parserOptions = $parser->getOptions();
         $this->parserFrame = $parserFrame;
+
+        $parser->getOptions()->enableLimitReport(false);
     }
 
     public function getId(): int {
