@@ -55,7 +55,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         global $wgArkDataNamespace;
 
         // Retrieve latest revision by title
-        $title = Title::makeTitleSafe( $wgArkDataNamespace, $params['title'] );
+        $title = Title::newFromText( $params['title'], $wgArkDataNamespace );
         if ( !$title->exists() ) {
             $this->dieWithError( [ 'apierror-invalidtitle', $params['title'] ] );
         }
