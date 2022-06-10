@@ -135,7 +135,7 @@ class DataMapEmbedRenderer {
         return $this->parser->parse( $source, $this->title, $this->parserOptions )->getText();
     }
 
-    public function getHtml(): string {
+    public function getHtml( DataMapRenderOptions $options ): string {
         // Primary slots
 		$containerMain = new \OOUI\PanelLayout( [
             'id' => 'datamap-' . $this->getId(),
@@ -163,9 +163,12 @@ class DataMapEmbedRenderer {
         $containerMain->appendContent( $containerContent );
 
         // Bar at the top with map title
-        $containerTop->appendContent( new \OOUI\LabelWidget( [
-            'label' => new \OOUI\HtmlSnippet( $this->expandWikitext( $this->data->getTitle() ) )
-        ] ) );
+        if ( $options->displayTitle ) {
+            $titleText = $options->titleOverride ?? $this->data->getTitle();
+            $containerTop->appendContent( new \OOUI\LabelWidget( [
+                'label' => new \OOUI\HtmlSnippet( $this->expandWikitext( $titleText ) )
+            ] ) );
+        }
 
         // Left-side legend
         $containerContent->appendContent( $this->getLegendContainerWidget() );

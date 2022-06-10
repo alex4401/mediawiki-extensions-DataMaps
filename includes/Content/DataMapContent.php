@@ -120,7 +120,7 @@ class DataMapContent extends JsonContent {
 
 		$embed = $this->getEmbedRenderer( $title, $parser );
 		$embed->prepareOutput( $output );
-		$output->setText( $output->getRawText() . $embed->getHtml() );
+		$output->setText( $output->getRawText() . $embed->getHtml( new DataMapRenderOptions() ) );
 
 		return $output;
 	}

@@ -9,7 +9,7 @@ use MediaWiki\Revision\RevisionRecord;
 use Ark\DataMaps\Content\DataMapContent;
 
 final class ParserFunction_EmbedDataMap {
-    public function run( Parser $parser, PPFrame $frame, array $args ): array {
+    public static function run( Parser $parser, PPFrame $frame, array $args ): array {
 		global $wgOut;
 		global $wgArkDataNamespace;
 
@@ -30,11 +30,28 @@ final class ParserFunction_EmbedDataMap {
             return '<strong class="error">' . $msg . '</strong>';
         } 
 
+        $options = self::getRenderOptions( $frame, $args );
+
         $embed = $content->getEmbedRenderer( $title, $parser, $frame );
 		$embed->prepareOutput( $parser->getOutput() );
 
         $parser->addTrackingCategory( 'datamap-category-pages-including-maps' );
 
-		return [ $embed->getHtml(), 'noparse' => true, 'isHTML' => true ];
+		return [ $embed->getHtml( $options ), 'noparse' => true, 'isHTML' => true ];
+    }
+
+    public static function getRenderOptions( PPFrame $frame, array $args ): DataMapRenderOptions {
+        $result = new DataMapRenderOptions();
+
+        $title = $frame->getArgument( 'title' );
+        if ($title !== false) {
+            if ($title == 'none') {
+                $result->displayTitle = false;
+            } else {
+                $result->titleOverride = $title;
+            }
+        }
+
+        return $result;
     }
 }
