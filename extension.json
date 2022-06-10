@@ -44,6 +44,7 @@
 
 		"ext.ark.datamaps.loader": {
 			"dependencies": [
+				"mediawiki.api",
 				"ext.ark.datamaps.leaflet.core"
 			],
 			"scripts": [
