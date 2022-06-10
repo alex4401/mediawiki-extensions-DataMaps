@@ -16,7 +16,7 @@ final class ParserFunction_EmbedDataMap {
         $title = Title::makeTitleSafe( $wgArkDataNamespace, $args[0] );
 
         if ( !$title->exists() ) {
-            $msg = wfMessage( 'datamap-error-pf-page-does-not-exist', $title->getFullText() )
+            $msg = wfMessage( 'datamap-error-pf-page-does-not-exist', wfEscapeWikiText( $title->getFullText() ) )
                 ->inContentLanguage()->escaped();
             return '<strong class="error">' . $msg . '</strong>';
         }
@@ -25,7 +25,7 @@ final class ParserFunction_EmbedDataMap {
         $content = $mapPage->getContent( RevisionRecord::RAW );
 
         if ( !($content instanceof DataMapContent) ) {
-            $msg = wfMessage( 'datamap-error-pf-page-invalid-content-model', $title->getFullText() )
+            $msg = wfMessage( 'datamap-error-pf-page-invalid-content-model', wfEscapeWikiText( $title->getFullText() ) )
                 ->inContentLanguage()->escaped();
             return '<strong class="error">' . $msg . '</strong>';
         } 

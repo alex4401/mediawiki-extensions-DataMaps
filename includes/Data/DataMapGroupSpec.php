@@ -22,7 +22,7 @@ class DataMapGroupSpec {
     }
 
     public function getName(): string {
-        return $this->raw->name ?? wfMessage('datamap-unnamed-marker');
+        return $this->raw->name ?? wfMessage( 'datamap-unnamed-marker' );
     }
 
     public function getSize(): int {
@@ -52,12 +52,12 @@ class DataMapGroupSpec {
     }
 
     public function validate(): ?string {
-        if ($this->getMarkerIcon() === null && $this->getFillColour() === null) {
-            return wfMessage( 'datamap-error-validation-no-display', $this->id )->escaped();
+        if ( $this->getMarkerIcon() === null && $this->getFillColour() === null ) {
+            return wfMessage( 'datamap-error-validation-no-display', wfEscapeWikiText( $this->id ) )->escaped();
         }
 
-        if ($this->getMarkerIcon() !== null && $this->getFillColour() !== null) {
-            return wfMessage( 'datamap-error-validation-ambiguous-display', $this->id )->escaped();
+        if ( $this->getMarkerIcon() !== null && $this->getFillColour() !== null ) {
+            return wfMessage( 'datamap-error-validation-ambiguous-display', wfEscapeWikiText( $this->id ) )->escaped();
         }
 
         return null;
