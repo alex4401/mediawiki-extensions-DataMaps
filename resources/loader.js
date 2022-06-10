@@ -102,7 +102,6 @@
             if (group.legendIcon) {
                 field.$header.prepend(' ');
                 field.$header.prepend($('<img width=24 height=24/>').attr('src', group.legendIcon));
-                
                 field.$header.prepend($('<div class="datamap-legend-circle-placeholder">').css({
                     width: group.size+4,
                     height: group.size+4,
@@ -145,7 +144,7 @@
         ctx.leaflet.on('zoomend', function() {
             for (var groupName in ctx.config.groups) {
                 var group = ctx.config.groups[groupName];
-                // Configured marker size is the diameter of a marker at lowest zoom level.
+                // Configured marker size is the diameter of a marker at lowest zoom level
                 group.circleMarkers.forEach(function(marker) {
                     marker.setRadius(getCircleRadiusAtCurrentZoom(ctx, group.size));
                 });
@@ -157,12 +156,14 @@
             group.circleMarkers = [];
 
             if (group.markerIcon) {
+                // Prepare the icon objects for Leaflet markers
                 ctx.leafletIcons[groupName] = L.icon({ iconUrl: group.markerIcon, iconSize: [32, 32] });
             }
         }
     }
 
     function initialiseMap($container, config) {
+        // Do not run this method further if map has been already marked as initialised
         if ($container.data('initialised')) {
             return;
         }
@@ -178,9 +179,12 @@
             leafletLayers: {},
         };
 
+        // Request OOUI to be loaded and build the legend
         mw.loader.using('oojs-ui-core', buildLegend.bind(null, ctx));
+        // Prepare the Leaflet map view
         buildLeafletMap(ctx, $container.find('.datamap-holder'));
 
+        // Request markers from the API
         loadMapData(config.pageName, config.version).then(function(data) {
             loadMarkersChunk(ctx, data);
         }).then(function() {
@@ -191,11 +195,13 @@
     }
 
     function onPageContent($content) {
+        // Run initialisation for every map, followed by an `onMapInitialised` event for gadgets to listen to
         for (var id in mapConfigs) {
             var map = initialiseMap($content.find('.datamap-container#datamap-' + id), mapConfigs[id]);
             mw.hook( 'ext.ark.datamaps.onMapInitialised' ).fire( map );
         }
     }
 
+    // Begin initialisation once the document is loaded
 	mw.hook('wikipage.content').add(onPageContent);
 })(window.jQuery, window.mediaWiki);

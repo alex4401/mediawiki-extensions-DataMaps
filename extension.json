@@ -42,7 +42,7 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.ark.datamaps.leaflet.loader": {
+		"ext.ark.datamaps.loader": {
 			"dependencies": [
 				"ext.ark.datamaps.leaflet.core"
 			],
@@ -51,6 +51,10 @@
 			],
 			"styles": [
 				"styles.less"
+			],
+			"messages": [
+				"datamap-toggle-all",
+				"datamap-toggle-caves"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
