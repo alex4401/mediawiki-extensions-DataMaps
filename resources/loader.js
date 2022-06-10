@@ -1,22 +1,14 @@
 (function($, mw) {
     var mapConfigs = mw.config.get('dataMaps');
+    var api = new mw.Api();
 
-    function loadMapData(pageName, version) {
-        var url = mw.util.getUrl(pageName, {
-            action: 'raw',
-            ctype: 'application/json',
-            version: version,
-        });
-        return fetch(url).then(function (response) {
-            return response.json();
-        });
-    }
 
     function getCircleRadiusAtCurrentZoom(ctx, baseSize) {
         // Configured marker size is the diameter of a marker at lowest zoom level.
         var scale = ctx.leaflet.getZoom() / ctx.leaflet.options.minZoom;
         return scale * baseSize/2;
     }
+
 
     function getMarkerPopupContents(markerType, group, markerInfo) {
         var title = group.name;
@@ -30,6 +22,7 @@
         out += "<p>lat "+markerInfo.lat+", lon "+markerInfo.long+"</p>";
         return out;
     }
+
 
     function loadMarkersChunk(ctx, data) {
         for (var markerType in data.markers) {
@@ -69,6 +62,7 @@
         }
     }
 
+
     function setLayerVisibility(ctx, targetName, newState) {
         for (var layerName in ctx.leafletLayers) {
             if (layerName.split(' ').indexOf(targetName) >= 0) {
@@ -80,6 +74,7 @@
             }
         }
     }
+
 
     function buildLegend(ctx) {
         ctx.$legendRoot = ctx.$root.find('.datamap-legend');
@@ -114,6 +109,7 @@
             field.$element.appendTo(ctx.$legendRoot);
         }
     }
+
 
     function buildLeafletMap(ctx, $holder) {
         ctx.leaflet = L.map($holder.get(0), {
@@ -162,6 +158,7 @@
         }
     }
 
+
     function initialiseMap($container, config) {
         // Do not run this method further if map has been already marked as initialised
         if ($container.data('initialised')) {
@@ -185,14 +182,19 @@
         buildLeafletMap(ctx, $container.find('.datamap-holder'));
 
         // Request markers from the API
-        loadMapData(config.pageName, config.version).then(function(data) {
-            loadMarkersChunk(ctx, data);
+        api.get({
+            action: 'queryDataMap',
+            title: config.pageName,
+            revid: config.version
+        }).then(function(data) {
+            loadMarkersChunk(ctx, data.query);
         }).then(function() {
             $container.find('.datamap-status').remove();
         });
 
         return ctx;
     }
+
 
     function onPageContent($content) {
         // Run initialisation for every map, followed by an `onMapInitialised` event for gadgets to listen to
@@ -201,6 +203,7 @@
             mw.hook( 'ext.ark.datamaps.onMapInitialised' ).fire( map );
         }
     }
+
 
     // Begin initialisation once the document is loaded
 	mw.hook('wikipage.content').add(onPageContent);
