@@ -20,15 +20,13 @@ class DataMapEmbedRenderer {
     private Title $title;
     private Parser $parser;
     private ParserOptions $parserOptions;
-    private ?PPFrame $parserFrame;
 
-    public function __construct( Title $title, DataMapSpec $data, Parser $parser, ?PPFrame $parserFrame = null ) {
+    public function __construct( Title $title, DataMapSpec $data, Parser $parser ) {
         $this->title = $title;
         $this->data = $data;
 
         $this->parser = $parser->getFreshParser();
         $this->parserOptions = $parser->getOptions();
-        $this->parserFrame = $parserFrame;
 
         $parser->getOptions()->enableLimitReport(false);
     }

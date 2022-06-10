@@ -69,8 +69,8 @@ class DataMapContent extends JsonContent {
 		return Title::newFromText( $docPage->plain() );
 	}
 
-	public function getEmbedRenderer( Title $title, Parser $parser, ?PPFrame $parserFrame = null ): DataMapEmbedRenderer {
-		return new DataMapEmbedRenderer( $title, $this->asModel(), $parser, $parserFrame );
+	public function getEmbedRenderer( Title $title, Parser $parser ): DataMapEmbedRenderer {
+		return new DataMapEmbedRenderer( $title, $this->asModel(), $parser );
 	}
 
 	protected function fillParserOutput( Title $title, $revId, ParserOptions $options, $generateHtml, ParserOutput &$output ) {
