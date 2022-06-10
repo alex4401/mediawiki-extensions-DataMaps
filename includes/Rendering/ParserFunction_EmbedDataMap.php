@@ -18,7 +18,7 @@ final class ParserFunction_EmbedDataMap {
         if ( !$title->exists() ) {
             $msg = wfMessage( 'datamap-error-pf-page-does-not-exist', wfEscapeWikiText( $title->getFullText() ) )
                 ->inContentLanguage()->escaped();
-            return '<strong class="error">' . $msg . '</strong>';
+            return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true ];
         }
 
         $mapPage = WikiPage::factory( $title );
@@ -27,7 +27,7 @@ final class ParserFunction_EmbedDataMap {
         if ( !($content instanceof DataMapContent) ) {
             $msg = wfMessage( 'datamap-error-pf-page-invalid-content-model', wfEscapeWikiText( $title->getFullText() ) )
                 ->inContentLanguage()->escaped();
-            return '<strong class="error">' . $msg . '</strong>';
+            return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true ];
         } 
 
         $options = self::getRenderOptions( $frame, $args );
@@ -48,6 +48,7 @@ final class ParserFunction_EmbedDataMap {
             if ($title == 'none') {
                 $result->displayTitle = false;
             } else {
+                $result->displayTitle = true;
                 $result->titleOverride = $title;
             }
         }
