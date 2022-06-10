@@ -82,7 +82,7 @@
 
 
     function buildLegend(ctx) {
-        ctx.$legendRoot = ctx.$root.find('.datamap-legend');
+        ctx.$legendRoot = ctx.$root.find('.datamap-container-legend');
 
         var buttonGroup = new OO.ui.ButtonGroupWidget({ });
         buttonGroup.$element.appendTo(ctx.$legendRoot);

@@ -1,14 +1,19 @@
 .datamap-container {
-    > .oo-ui-labelWidget {
-        font-weight: 600;
+    .datamap-container-top {
+        padding: 3px 16px;
+        border-bottom: 1px solid #a2a9b1;
+
+        > .oo-ui-labelWidget {
+            font-weight: 600;
+        }
     }
 
-    .datamap-layout {
+    .datamap-container-content {
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
 
-        .datamap-legend {
+        .datamap-container-legend {
             width: 300px;
 
             .datamap-legend-label {
@@ -23,6 +28,10 @@
                 vertical-align: middle;
                 margin-right: 6px;
                 box-shadow: 0 0 1px 1px #0002;
+            }
+
+            .oo-ui-buttonGroupWidget {
+                display: block;
             }
         }
 

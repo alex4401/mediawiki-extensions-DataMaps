@@ -136,40 +136,54 @@ class DataMapEmbedRenderer {
     }
 
     public function getHtml(): string {
-		$panel = new \OOUI\PanelLayout( [
+        // Primary slots
+		$containerMain = new \OOUI\PanelLayout( [
             'id' => 'datamap-' . $this->getId(),
             'classes' => [ 'datamap-container' ],
 			'framed' => true,
 			'expanded' => false,
+			'padded' => false
+		] );
+		$containerTop = new \OOUI\PanelLayout( [
+            'classes' => [ 'datamap-container-top' ],
+			'framed' => false,
+			'expanded' => false,
+			'padded' => false
+		] );
+		$containerContent = new \OOUI\PanelLayout( [
+            'id' => 'datamap-' . $this->getId(),
+            'classes' => [ 'datamap-container-content' ],
+			'framed' => false,
+			'expanded' => false,
 			'padded' => true
 		] );
-        $panel->appendContent( new \OOUI\LabelWidget( [
+
+        // Stack the containers
+        $containerMain->appendContent( $containerTop );
+        $containerMain->appendContent( $containerContent );
+
+        // Bar at the top with map title
+        $containerTop->appendContent( new \OOUI\LabelWidget( [
             'label' => new \OOUI\HtmlSnippet( $this->expandWikitext( $this->data->getTitle() ) )
         ] ) );
 
-        $layout = new \OOUI\Widget( [
-            'classes' => [ 'datamap-layout' ]
-        ] );
-        $panel->appendContent( $layout );
+        // Left-side legend
+        $containerContent->appendContent( $this->getLegendContainerWidget() );
 
-        $legend = $this->getLegendContainerWidget();
-
-        
-		$mapPanel = new \OOUI\PanelLayout( [
+        // Leaflet area
+		$containerMap = new \OOUI\PanelLayout( [
 			'framed' => true,
 			'expanded' => false,
 		] );
-        $mapPanel->appendContent( new \OOUI\HtmlSnippet( $this->getLeafletContainerHtml() ) );
+        $containerMap->appendContent( new \OOUI\HtmlSnippet( $this->getLeafletContainerHtml() ) );
+        $containerContent->appendContent( $containerMap );
 
-        $layout->appendContent( $legend );
-        $layout->appendContent( $mapPanel );
-
-        return $panel;
+        return $containerMain;
     }
 
     public function getLegendContainerWidget(): \OOUI\Widget {
         $legend = new \OOUI\Widget( [
-            'classes' => [ 'datamap-legend' ]
+            'classes' => [ 'datamap-container-legend' ]
         ] );
 
         $legend->appendContent( new \OOUI\LabelWidget( [
