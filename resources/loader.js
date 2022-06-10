@@ -112,13 +112,10 @@
 
 
     function buildLeafletMap(ctx, $holder) {
-        ctx.leaflet = L.map($holder.get(0), {
-            crs: L.CRS.Simple,
-            // Renderer - using canvas for performance with padding of 1/3rd (to draw some more markers outside of view for panning UX)
-            preferCanvas: true,
-            renderer: L.canvas({
-                padding: 1/3,
-            }),
+        var rendererSettings = {
+            padding: 1/3
+        };
+        var leafletConfig = {
             // Boundaries
             center: [50, 50],
             maxBounds: [[-75,-75], [175, 175]],
@@ -134,7 +131,17 @@
             markerZoomAnimation: false,
             // Pan settings
             inertia: false
-        }).fitBounds([[0, 0], [100, 100]]);
+        };
+        leafletConfig = $.extend(leafletConfig, ctx.config.leafletSettings);
+        rendererSettings = $.extend(rendererSettings, leafletConfig.rendererSettings);
+        leafletConfig = $.extend(leafletConfig, {
+            crs: L.CRS.Simple,
+            // Renderer - using canvas for performance with padding of 1/3rd (to draw some more markers outside of view for panning UX)
+            preferCanvas: true,
+            renderer: L.canvas(rendererSettings)
+        });
+
+        ctx.leaflet = L.map($holder.get(0), leafletConfig).fitBounds([[0, 0], [100, 100]]);
         ctx.background = L.imageOverlay(ctx.config.image, [[0,0],[100,100]]).addTo(ctx.leaflet);
 
         ctx.leaflet.on('zoomend', function() {

@@ -88,8 +88,9 @@ class DataMapEmbedRenderer {
             'imageBounds' => [ $image->getWidth(), $image->getHeight() ],
             
             'groups' => [],
+            'leafletSettings' => $this->data->getInjectedLeafletSettings(),
 
-            'custom' => $this->data->getCustomData(),
+            'custom' => $this->data->getCustomData()
         ];
 
         $this->data->iterateGroups( function(DataMapGroupSpec $spec) use (&$out) {

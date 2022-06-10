@@ -23,6 +23,10 @@ class DataMapSpec {
         return $this->raw->coordinateBounds;
     }
 
+    public function getInjectedLeafletSettings(): object {
+        return $this->raw->leafletSettings;
+    }
+
     public function getCustomData(): ?object {
         return $this->raw->custom;
     }
