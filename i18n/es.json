@@ -1,0 +1,26 @@
+{
+    "@metadata": {
+        "authors": [
+            "Mirageionova"
+        ]
+    },
+
+    "embedDataMap": "DataMap",
+
+    "datamap-doc-page-name": "$1:$2/doc",
+    "datamap-doc-page-does-not-exist": "''La documentación para esta página de datos puede crearse en [[$1]]''",
+    "datamap-doc-page-show": "{{$1}}\n<hr />",
+    "datamap-doc-page-header": "'''Esta es la página de documentación para [[$1]]'''",
+
+    "datamap-category-pages-including-maps": "Páginas incluyendo los mapas de datos",
+
+    "datamap-error-validation-no-display": "El grupo \"$1\" no tiene un icono o un color especificado.",
+    "datamap-error-validation-ambiguous-display": "El grupo \"$1\" no puede tener sus marcadores configurados para tener tanto un icono como un color.",
+    "datamap-error-render-unsupported-displaymode": "El modo de visualización $1 ha sido etiquetado como un marcador, pero no se encuentra el soporte asociado. Esto puede deberse a un error en el código de extensión.",
+    "datamap-error-pf-page-does-not-exist": "La página del mapa de datos \"[[$1]]\" no existe.",
+    "datamap-error-pf-page-invalid-content-model": "El modelo de contenido de la página \"[[$1]]\" no es <code>datamap</code>.",
+
+    "datamap-unnamed-map": "Mapa sin nombre",
+    "datamap-legend-label": "Leyenda",
+    "datamap-javascript-required": "Los mapas de datos interactivos requieren de la activación de JavaScript."
+}
