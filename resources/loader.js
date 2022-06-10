@@ -76,9 +76,36 @@
     }
 
 
+    function isLayerUsed(ctx, name) {
+        for (var layerName in ctx.leafletLayers) {
+            if (layerName.split(' ').indexOf(name) >= 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     function buildLegend(ctx) {
         ctx.$legendRoot = ctx.$root.find('.datamap-legend');
 
+        var buttonGroup = new OO.ui.ButtonGroupWidget({ });
+        buttonGroup.$element.appendTo(ctx.$legendRoot);
+
+        // Cave layer toggle
+        // TODO: rework into a generic layer system
+        if (isLayerUsed(ctx, 'cave')) {
+            var caveToggleButton = new OO.ui.ToggleButtonWidget( {
+                label: mw.msg('datamap-toggle-caves'),
+                value: true
+            });
+            caveToggleButton.on('click', function() {
+                setLayerVisibility(ctx, 'cave', caveToggleButton.getValue());
+            });
+            buttonGroup.addItems([ caveToggleButton ]);
+        }
+
+        // Individual group toggles
         for (var groupName in ctx.config.groups) {
             var group = ctx.config.groups[groupName];
 
