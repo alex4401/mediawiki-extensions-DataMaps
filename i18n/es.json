@@ -22,5 +22,9 @@
 
     "datamap-unnamed-map": "Mapa sin nombre",
     "datamap-legend-label": "Leyenda",
-    "datamap-javascript-required": "Los mapas de datos interactivos requieren de la activación de JavaScript."
+    "datamap-javascript-required": "Los mapas de datos interactivos requieren de la activación de JavaScript.",
+    "datamap-placeholder-loading": "Los datos se están cargando",
+    "datamap-toggle-show-all": "Mostrar todo",
+    "datamap-toggle-hide-all": "Ocultar todo",
+    "datamap-toggle-caves": "Mostrar/Ocultar cuevas"
 }

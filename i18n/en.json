@@ -1,30 +1,30 @@
 {
-	"@metadata": {
-		"authors": [
+    "@metadata": {
+        "authors": [
             "alex4401"
-		]
-	},
+        ]
+    },
 
-	"embedDataMap": "DataMap",
+    "embedDataMap": "DataMap",
 
-	"datamap-doc-page-name": "$1:$2/doc",
-	"datamap-doc-page-does-not-exist": "''Documentation for this data page may be created at [[$1]]''",
-	"datamap-doc-page-show": "{{$1}}\n<hr />",
-	"datamap-doc-page-header": "'''This is the documentation page for [[$1]]'''",
+    "datamap-doc-page-name": "$1:$2/doc",
+    "datamap-doc-page-does-not-exist": "''Documentation for this data page may be created at [[$1]]''",
+    "datamap-doc-page-show": "{{$1}}\n<hr />",
+    "datamap-doc-page-header": "'''This is the documentation page for [[$1]]'''",
 
-	"datamap-category-pages-including-maps": "Pages including data maps",
+    "datamap-category-pages-including-maps": "Pages including data maps",
 
-	"datamap-error-validation-no-display": "Group \"$1\" has no icon or color specified.",
-	"datamap-error-validation-ambiguous-display": "Group \"$1\" cannot have its markers configured to have both an icon and a color.",
-	"datamap-error-render-unsupported-displaymode": "Marker has a display mode ($1) that an implementation of which is missing from the extension",
-	"datamap-error-pf-page-does-not-exist": "Data map page \"[[$1]]\" does not exist.",
-	"datamap-error-pf-page-invalid-content-model": "Content model of page \"[[$1]]\" is not <code>datamap</code>.",
+    "datamap-error-validation-no-display": "Group \"$1\" has no icon or color specified.",
+    "datamap-error-validation-ambiguous-display": "Group \"$1\" cannot have its markers configured to have both an icon and a color.",
+    "datamap-error-render-unsupported-displaymode": "Display mode $1 has been reported for a marker, but support is missing for it. This is a bug in the extension's code.",
+    "datamap-error-pf-page-does-not-exist": "Data map page \"[[$1]]\" does not exist.",
+    "datamap-error-pf-page-invalid-content-model": "Content model of page \"[[$1]]\" is not <code>datamap</code>.",
 
-	"datamap-unnamed-map": "Unnamed map",
-	"datamap-legend-label": "Legend",
-	"datamap-javascript-required": "Interactive data maps require JavaScript to be enabled.",
-	"datamap-placeholder-loading": "Data is being loaded",
-	"datamap-toggle-show-all": "Show all",
-	"datamap-toggle-hide-all": "Hide all",
-	"datamap-toggle-caves": "Toggle caves"
+    "datamap-unnamed-map": "Unnamed map",
+    "datamap-legend-label": "Legend",
+    "datamap-javascript-required": "Interactive data maps require JavaScript to be enabled.",
+    "datamap-placeholder-loading": "Data is being loaded",
+    "datamap-toggle-show-all": "Show all",
+    "datamap-toggle-hide-all": "Hide all",
+    "datamap-toggle-caves": "Toggle caves"
 }
