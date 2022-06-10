@@ -1,13 +1,13 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.1.1",
+	"version": "0.1.2",
 
 	"author": [
 		"alex4401"
 	],
 	"url": "https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps",
 	"descriptionmsg": "data-maps-desc",
-	"license-name": "GPL-3.0-or-later",
+	"license-name": "GPL-2.0-or-later",
 	"type": "parserhook",
 
 	"requires": {
