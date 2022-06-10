@@ -54,7 +54,8 @@
 				"styles.less"
 			],
 			"messages": [
-				"datamap-toggle-all",
+				"datamap-toggle-show-all",
+				"datamap-toggle-hide-all",
 				"datamap-toggle-caves"
 			],
 			"targets": [ "desktop", "mobile" ]

@@ -63,9 +63,9 @@
     }
 
 
-    function setLayerVisibility(ctx, targetName, newState) {
+    function updateLayerVisibility(ctx, matcher, newState) {
         for (var layerName in ctx.leafletLayers) {
-            if (layerName.split(' ').indexOf(targetName) >= 0) {
+            if (matcher(layerName.split(' '))) {
                 if (newState) {
                     ctx.leafletLayers[layerName].addTo(ctx.leaflet);
                 } else {
@@ -87,6 +87,32 @@
         var buttonGroup = new OO.ui.ButtonGroupWidget({ });
         buttonGroup.$element.appendTo(ctx.$legendRoot);
 
+        // Toggle all layers
+        {
+            var showAllButton = new OO.ui.ButtonWidget( {
+                label: mw.msg('datamap-toggle-show-all')
+            });
+            showAllButton.on('click', function() {
+                ctx.legendGroupToggles.forEach(function(checkbox) {
+                    checkbox.setSelected(true);
+                });
+            });
+            buttonGroup.addItems([ showAllButton ]);
+        }
+
+        // Hide all layers
+        {
+            var hideAllButton = new OO.ui.ButtonWidget( {
+                label: mw.msg('datamap-toggle-hide-all')
+            });
+            hideAllButton.on('click', function() {
+                ctx.legendGroupToggles.forEach(function(checkbox) {
+                    checkbox.setSelected(false);
+                });
+            });
+            buttonGroup.addItems([ hideAllButton ]);
+        }
+
         // Cave layer toggle
         // TODO: rework into a generic layer system
         if (isLayerUsed(ctx, 'cave')) {
@@ -95,7 +121,13 @@
                 value: true
             });
             caveToggleButton.on('click', function() {
-                setLayerVisibility(ctx, 'cave', caveToggleButton.getValue());
+                var newState = caveToggleButton.getValue();
+                // Update visibility mask for caves
+                ctx.layerVisibilityMask.cave = newState;
+                // Update visibility for any marker of an unhidden group with `cave` layer
+                updateLayerVisibility(ctx, function(layerNames) {
+                    return layerNames.indexOf('cave') >= 0 && ctx.groupVisibilityMask[layerNames[0]];
+                }, newState);
             });
             buttonGroup.addItems([ caveToggleButton ]);
         }
@@ -113,7 +145,16 @@
             });
 
             checkbox.on('change', (function(groupName, checkbox) {
-                setLayerVisibility(ctx, groupName, checkbox.isSelected());
+                var newState = checkbox.isSelected();
+                // Update visibility mask for this group
+                ctx.groupVisibilityMask[groupName] = newState;
+                // Update visibility for any marker of this group with any visible layer
+                updateLayerVisibility(ctx, function(layerNames) {
+                    return layerNames[0] == groupName
+                        && layerNames.filter(function(x) {
+                            return ctx.layerVisibilityMask[x] === false;
+                        }).length == 0;
+                }, newState);
             }).bind(null, groupName, checkbox));
 
             if (group.legendIcon) {
@@ -129,6 +170,7 @@
             }
 
             field.$element.appendTo(ctx.$legendRoot);
+            ctx.legendGroupToggles.push(checkbox);
         }
     }
 
@@ -180,6 +222,9 @@
             var group = ctx.config.groups[groupName];
             group.circleMarkers = [];
 
+            // Set as visible in the visibility mask
+            ctx.groupVisibilityMask[groupName] = true;
+
             if (group.markerIcon) {
                 // Prepare the icon objects for Leaflet markers
                 ctx.leafletIcons[groupName] = L.icon({ iconUrl: group.markerIcon, iconSize: [32, 32] });
@@ -203,6 +248,12 @@
             leaflet: null,
             leafletIcons: {},
             leafletLayers: {},
+
+            legendGroupToggles: [],
+            groupVisibilityMask: {},
+            layerVisibilityMask: {
+                cave: true
+            },
         };
 
         // Request OOUI to be loaded and build the legend
