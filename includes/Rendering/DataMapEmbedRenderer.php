@@ -55,15 +55,17 @@ class DataMapEmbedRenderer {
 
         // Required modules
         $parserOutput->addModules( [
-            'ext.ark.datamaps.leaflet.core', 'ext.ark.datamaps.leaflet.loader'
+            'ext.ark.datamaps.leaflet.core', 'ext.ark.datamaps.loader'
         ] );
 
-        // Inject mw.config variables
-        $parserOutput->addJsConfigVars( [
-            'dataMaps' => [
-                $this->getId() => $this->getJsConfigVariables()
-            ]
-        ] );
+        // Inject mw.config variables via a `dataMaps` map from ID
+        $configsVar = [
+            $this->getId() => $this->getJsConfigVariables()
+        ];
+        if ( array_key_exists( 'dataMaps', $parserOutput->mJsConfigVars ) ) {
+            $configsVar = array_merge( $parserOutput->mJsConfigVars['dataMaps'], $configsVar );
+        }
+        $parserOutput->addJsConfigVars( 'dataMaps', $configsVar );
 
         // Register image dependencies
 		$parserOutput->addImage( $this->data->getImageName() );
@@ -184,7 +186,7 @@ class DataMapEmbedRenderer {
             Html::element(
                 'noscript',
                 null,
-                wfMessage( 'datamap-javascript-disabled' )
+                wfMessage( 'datamap-javascript-required' )
             )
             . Html::element(
 				'div',
