@@ -27,7 +27,7 @@ class DataMapSpec {
         return $this->raw->custom;
     }
 
-    public function getRawMarkers(): array {
+    public function getRawMarkers(): object {
         return $this->raw->markers;
     }
 
