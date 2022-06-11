@@ -302,8 +302,9 @@
     function onPageContent($content) {
         // Run initialisation for every map, followed by an `onMapInitialised` event for gadgets to listen to
         for (var id in mapConfigs) {
+            mw.hook( 'ext.ark.datamaps.beforeMapInitialisation' ).fire( mapConfigs[id] );
             var map = initialiseMap($content.find('.datamap-container#datamap-' + id), mapConfigs[id]);
-            mw.hook( 'ext.ark.datamaps.onMapInitialised' ).fire( map );
+            mw.hook( 'ext.ark.datamaps.afterMapInitialisation' ).fire( map );
         }
     }
 
