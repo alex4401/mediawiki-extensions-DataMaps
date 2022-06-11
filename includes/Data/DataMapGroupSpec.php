@@ -26,7 +26,7 @@ class DataMapGroupSpec {
     }
 
     public function getSize(): int {
-        return $info->size ?? self::DEFAULT_MARKER_SIZE;
+        return $this->raw->size ?? self::DEFAULT_MARKER_SIZE;
     }
 
     public function getFillColour(): ?string {
