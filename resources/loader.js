@@ -157,9 +157,11 @@
                 }, newState);
             }).bind(null, groupName, checkbox));
 
-            if (group.legendIcon) {
+            if (group.legendIcon || group.fillColor) {
                 field.$header.prepend(' ');
-                field.$header.prepend($('<img width=24 height=24/>').attr('src', group.legendIcon));
+            }
+
+            if (group.fillColor) {
                 field.$header.prepend($('<div class="datamap-legend-circle-placeholder">').css({
                     width: group.size+4,
                     height: group.size+4,
@@ -167,6 +169,10 @@
                     borderColor: group.strokeColor || group.fillColor,
                     borderWidth: group.strokeWidth || 1,
                 }));
+            }
+
+            if (group.legendIcon) {
+                field.$header.prepend($('<img width=24 height=24/>').attr('src', group.legendIcon));
             }
 
             field.$element.appendTo(ctx.$legendRoot);
