@@ -280,7 +280,7 @@
         };
 
         // Request OOUI to be loaded and build the legend
-        mw.loader.using('oojs-ui-core', buildLegend.bind(null, ctx));
+        mw.loader.using([ 'oojs-ui-core', 'oojs-ui-widgets' ], buildLegend.bind(null, ctx));
         // Prepare the Leaflet map view
         buildLeafletMap(ctx, $container.find('.datamap-holder'));
 
