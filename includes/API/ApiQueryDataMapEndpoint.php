@@ -141,31 +141,47 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             foreach ( $rawMarkerCollection as &$rawMarker ) {
                 $marker->reassignTo( $rawMarker );
 
+                // Coordinates
                 $converted = [
-                    'lat' => $marker->getLatitude(),
-                    'long' => $marker->getLongitude()
+                    $marker->getLatitude(),
+                    $marker->getLongitude()
                 ];
+                // Rich data
+                $slots = [];
 
+                // Popup title
                 if ( $marker->getLabel() != null ) {
-                    $converted['label'] = $marker->getLabel();
+                    $slots['label'] = $marker->getLabel();
+                    $requiresSlots = true;
                 }
 
+                // Popup description
                 if ( $marker->getDescription() != null ) {
                     if ( $marker->isDescriptionWikitext() ) {
-                        $converted['description'] =
+                        $slots['desc'] =
                             $parser->parse( $marker->getDescription(), $title, $parserOptions, false, true )
                                 ->getText( [ 'unwrap' => true ] );
                     } else {
-                        $converted['description'] = $marker->getDescription();
+                        $slots['desc'] = $marker->getDescription();
                     }
+                    $requiresSlots = true;
                 }
 
+                // Popup image thumbnail link
                 if ( $marker->getPopupImage() != null ) {
-                    $converted['image'] = DataMapEmbedRenderer::getIconUrl( $marker->getPopupImage(), self::POPUP_IMAGE_WIDTH );
+                    $slots['image'] = DataMapEmbedRenderer::getIconUrl( $marker->getPopupImage(), self::POPUP_IMAGE_WIDTH );
+                    $requiresSlots = true;
                 }
 
+                // Related article title
                 if ( $marker->getRelatedArticle() != null ) {
-                    $converted['article'] = $marker->getRelatedArticle();
+                    $slots['article'] = $marker->getRelatedArticle();
+                    $requiresSlots = true;
+                }
+
+                // Insert slots if any data has been added
+                if ( !empty( $slots ) ) {
+                    $converted[] = $slots;
                 }
 
                 $subResults[] = $converted;

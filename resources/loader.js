@@ -18,33 +18,34 @@
     */
     function buildMarkerPopup(type, group, instance) {
         var parts = [];
+        var slots = instance[2] || {};
 
         // Build the title
         var title = group.name;
-        if (instance.label) {
-            title += ": " + instance.label;
+        if (slots.label) {
+            title += ": " + slots.label;
         }
         parts.push('<b class="datamap-popup-title">' + title + '</b>');
 
         // Coordinates
-        parts.push('<div class="datamap-popup-coordinates">lat '+instance.lat+', lon '+instance.long+'</div>');
+        parts.push('<div class="datamap-popup-coordinates">lat '+instance[0]+', lon '+instance[1]+'</div>');
 
         // Description
-        if (instance.description) {
-            if (!instance.description.startsWith('<p>')) {
-                instance.description = '<p>'+instance.description+'</p>';
+        if (slots.desc) {
+            if (!slots.desc.startsWith('<p>')) {
+                slots.desc = '<p>'+slots.desc+'</p>';
             }
-            parts.push(instance.description);
+            parts.push(slots.desc);
         }
 
         // Image
-        if (instance.image) {
-            parts.push('<img class="datamap-popup-image" width=240 src="'+instance.image+'" />');
+        if (slots.image) {
+            parts.push('<img class="datamap-popup-image" width=240 src="'+slots.image+'" />');
         }
 
         // Related article
-        if (instance.article) {
-            parts.push('<div class="datamap-popup-seemore"><a href="' + mw.util.getUrl(instance.article) + '">'
+        if (slots.article) {
+            parts.push('<div class="datamap-popup-seemore"><a href="' + mw.util.getUrl(slots.article) + '">'
                         + mw.msg('datamap-popup-related-article') + '</a></div>');
         }
 
@@ -70,8 +71,8 @@
             var layer = ctx.leafletLayers[markerType];
 
             // Create markers for instances
-            placements.forEach(function(markerInfo) {
-                var position = [100-markerInfo.lat, markerInfo.long];
+            placements.forEach(function(instance) {
+                var position = [100-instance[0], instance[1]];
                 var marker;
                 
                 if (group.markerIcon) {
@@ -94,7 +95,7 @@
                 // Add to the layer and bind a popup
                 marker
                     .addTo(layer)
-                    .bindPopup(buildMarkerPopup(markerType, group, markerInfo));
+                    .bindPopup(buildMarkerPopup(markerType, group, instance));
             });
 
         }
