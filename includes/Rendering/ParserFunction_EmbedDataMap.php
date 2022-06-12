@@ -18,7 +18,7 @@ final class ParserFunction_EmbedDataMap {
 
         $title = Title::makeTitleSafe( $wgArkDataNamespace, $params[0] );
 
-        if ( !$title->exists() ) {
+        if ( !$title || !$title->exists() ) {
             $msg = wfMessage( 'datamap-error-pf-page-does-not-exist', wfEscapeWikiText( $title->getFullText() ) )
                 ->inContentLanguage()->escaped();
             return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true ];
@@ -38,7 +38,10 @@ final class ParserFunction_EmbedDataMap {
         $embed = $content->getEmbedRenderer( $title, $parser );
 		$embed->prepareOutput( $parser->getOutput() );
 
+        // Add the page to a tracking category
         $parser->addTrackingCategory( 'datamap-category-pages-including-maps' );
+        // Register page's dependency on the data map
+        $parser->getOutput()->addTemplate( $title, $title->getArticleId(), $parser->fetchCurrentRevisionRecordOfTitle( $title )->getId() );
 
 		return [ $embed->getHtml( $options ), 'noparse' => true, 'isHTML' => true ];
     }

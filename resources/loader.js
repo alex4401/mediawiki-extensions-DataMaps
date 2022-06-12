@@ -3,47 +3,85 @@
     var api = new mw.Api();
 
 
+    /*
+     * Returns circle radius adjusted for zoom level
+    */
     function getCircleRadiusAtCurrentZoom(ctx, baseSize) {
-        // Configured marker size is the diameter of a marker at lowest zoom level.
+        // Configured marker size is the diameter of a marker at lowest zoom level
         var scale = ctx.leaflet.getZoom() / ctx.leaflet.options.minZoom;
         return scale * baseSize/2;
     }
 
 
-    function getMarkerPopupContents(markerType, group, markerInfo) {
+    /*
+     * Builds popup contents for a marker instance
+    */
+    function buildMarkerPopup(type, group, instance) {
+        var parts = [];
+        var slots = instance[2] || {};
+
+        // Build the title
         var title = group.name;
-        if (markerInfo.label) {
-            title += ": " + markerInfo.label;
+        if (slots.label) {
+            title += ": " + slots.label;
         }
-        var out = "<b>"+title+"</b>";
-        if (markerInfo.description) {
-            out += markerInfo.description;
+        parts.push('<b class="datamap-popup-title">' + title + '</b>');
+
+        // Coordinates
+        parts.push('<div class="datamap-popup-coordinates">lat '+instance[0]+', lon '+instance[1]+'</div>');
+
+        // Description
+        if (slots.desc) {
+            if (!slots.desc.startsWith('<p>')) {
+                slots.desc = '<p>'+slots.desc+'</p>';
+            }
+            parts.push(slots.desc);
         }
-        out += "<p>lat "+markerInfo.lat+", lon "+markerInfo.long+"</p>";
-        return out;
+
+        // Image
+        if (slots.image) {
+            parts.push('<img class="datamap-popup-image" width=240 src="'+slots.image+'" />');
+        }
+
+        // Related article
+        if (slots.article) {
+            parts.push('<div class="datamap-popup-seemore"><a href="' + mw.util.getUrl(slots.article) + '">'
+                        + mw.msg('datamap-popup-related-article') + '</a></div>');
+        }
+
+
+        return parts.join('\n');
     }
 
 
+    /*
+     * Builds markers from a data object
+    */
     function loadMarkersChunk(ctx, data) {
         for (var markerType in data.markers) {
             var groupName = markerType.split(' ', 1)[0];
             var group = ctx.config.groups[groupName];
             var placements = data.markers[markerType];
 
+            // Initialise the Leaflet layer group if it hasn't been already
             if (!ctx.leafletLayers[markerType]) {
                 ctx.leafletLayers[markerType] = L.featureGroup().addTo(ctx.leaflet);
             }
+            // Retrieve the Leaflet layer
             var layer = ctx.leafletLayers[markerType];
 
-            placements.forEach(function(markerInfo) {
-                var position = [100-markerInfo.lat, markerInfo.long];
+            // Create markers for instances
+            placements.forEach(function(instance) {
+                var position = [100-instance[0], instance[1]];
                 var marker;
                 
                 if (group.markerIcon) {
+                    // Fancy icon marker
                     marker = L.marker(position, {
                         icon: ctx.leafletIcons[groupName]
                     });
                 } else {
+                    // Circular marker
                     marker = L.circleMarker(position, {
                         radius: getCircleRadiusAtCurrentZoom(ctx, group.size),
                         fillColor: group.fillColor,
@@ -54,9 +92,10 @@
                     group.circleMarkers.push(marker);
                 }
 
+                // Add to the layer and bind a popup
                 marker
                     .addTo(layer)
-                    .bindPopup(getMarkerPopupContents(markerType, group, markerInfo));
+                    .bindPopup(buildMarkerPopup(markerType, group, instance));
             });
 
         }
@@ -157,16 +196,18 @@
                 }, newState);
             }).bind(null, groupName, checkbox));
 
-            if (group.legendIcon) {
-                field.$header.prepend(' ');
-                field.$header.prepend($('<img width=24 height=24/>').attr('src', group.legendIcon));
-                field.$header.prepend($('<div class="datamap-legend-circle-placeholder">').css({
+            if (group.fillColor) {
+                field.$header.prepend($('<div class="datamap-legend-circle">').css({
                     width: group.size+4,
                     height: group.size+4,
                     backgroundColor: group.fillColor,
                     borderColor: group.strokeColor || group.fillColor,
                     borderWidth: group.strokeWidth || 1,
                 }));
+            }
+
+            if (group.legendIcon) {
+                field.$header.prepend($('<img width=24 height=24/>').attr('src', group.legendIcon));
             }
 
             field.$element.appendTo(ctx.$legendRoot);
@@ -232,7 +273,7 @@
         }
 
         // Create a coordinate-under-cursor display
-        ctx.$coordTracker = $('<div class="leaflet-control leaflet-control-attribution">')
+        ctx.$coordTracker = $('<div class="leaflet-control datamap-control-coords">')
                             .appendTo(ctx.$root.find('.leaflet-control-container .leaflet-bottom.leaflet-left'));
         ctx.coordTrackingMsg = mw.msg('datamap-coordinate-control-text');
         ctx.leaflet.on('mousemove', function(event) {
@@ -274,7 +315,7 @@
         };
 
         // Request OOUI to be loaded and build the legend
-        mw.loader.using('oojs-ui-core', buildLegend.bind(null, ctx));
+        mw.loader.using([ 'oojs-ui-core', 'oojs-ui-widgets' ], buildLegend.bind(null, ctx));
         // Prepare the Leaflet map view
         buildLeafletMap(ctx, $container.find('.datamap-holder'));
 
@@ -296,8 +337,9 @@
     function onPageContent($content) {
         // Run initialisation for every map, followed by an `onMapInitialised` event for gadgets to listen to
         for (var id in mapConfigs) {
+            mw.hook( 'ext.ark.datamaps.beforeMapInitialisation' ).fire( mapConfigs[id] );
             var map = initialiseMap($content.find('.datamap-container#datamap-' + id), mapConfigs[id]);
-            mw.hook( 'ext.ark.datamaps.onMapInitialised' ).fire( map );
+            mw.hook( 'ext.ark.datamaps.afterMapInitialisation' ).fire( map );
         }
     }
 
