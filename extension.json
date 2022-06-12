@@ -51,7 +51,10 @@
 				"loader.js"
 			],
 			"styles": [
-				"styles.less"
+				"main.less",
+				"legend.less",
+				"controls.less",
+				"popups.less"
 			],
 			"messages": [
 				"datamap-toggle-show-all",

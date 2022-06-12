@@ -39,7 +39,7 @@
 
         // Image
         if (instance.image) {
-            parts.push('<img class="datamap-popup-image" width=224 src="'+instance.image+'" />');
+            parts.push('<img class="datamap-popup-image" width=240 src="'+instance.image+'" />');
         }
 
         // Related article
@@ -195,12 +195,8 @@
                 }, newState);
             }).bind(null, groupName, checkbox));
 
-            if (group.legendIcon || group.fillColor) {
-                field.$header.prepend(' ');
-            }
-
             if (group.fillColor) {
-                field.$header.prepend($('<div class="datamap-legend-circle-placeholder">').css({
+                field.$header.prepend($('<div class="datamap-legend-circle">').css({
                     width: group.size+4,
                     height: group.size+4,
                     backgroundColor: group.fillColor,
@@ -276,7 +272,7 @@
         }
 
         // Create a coordinate-under-cursor display
-        ctx.$coordTracker = $('<div class="leaflet-control leaflet-control-attribution">')
+        ctx.$coordTracker = $('<div class="leaflet-control datamap-control-coords">')
                             .appendTo(ctx.$root.find('.leaflet-control-container .leaflet-bottom.leaflet-left'));
         ctx.coordTrackingMsg = mw.msg('datamap-coordinate-control-text');
         ctx.leaflet.on('mousemove', function(event) {

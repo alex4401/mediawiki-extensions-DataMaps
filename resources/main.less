@@ -1,0 +1,27 @@
+.datamap-container {
+    .datamap-container-top {
+        padding: 3px 16px;
+        border-bottom: 1px solid #a2a9b1;
+
+        &:empty {
+            display: none;
+        }
+
+        > .oo-ui-labelWidget {
+            font-weight: 600;
+        }
+    }
+
+    .datamap-container-content {
+        display: flex;
+        flex-wrap: wrap;
+
+        .oo-ui-panelLayout {
+            flex: 1 1;
+        }
+
+        .datamap-holder {
+            height: 750px;
+        }
+    }
+}
