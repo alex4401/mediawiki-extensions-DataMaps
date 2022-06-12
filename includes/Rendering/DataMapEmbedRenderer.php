@@ -64,7 +64,8 @@ class DataMapEmbedRenderer {
         // Required modules
         $parserOutput->addModules( [
             'ext.ark.datamaps.leaflet.core',
-            'ext.ark.datamaps.loader'
+            'ext.ark.datamaps.loader',
+            'ext.ark.datamaps.styles'
         ] );
 
         // Inject mw.config variables via a `dataMaps` map from ID
@@ -198,7 +199,7 @@ class DataMapEmbedRenderer {
 
         $legend->appendContent( new \OOUI\LabelWidget( [
             'label' => wfMessage( 'datamap-legend-label' ),
-            'classes' => [ 'datamap-legend-label' ]
+            'classes' => [ 'datamap-legend-label', 'oo-ui-tabSelectWidget-framed' ]
         ] ) );
 
         return $legend;
