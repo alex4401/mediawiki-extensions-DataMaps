@@ -1,0 +1,31 @@
+{
+    "@metadata": {
+        "authors": [
+            "Chatmaigre888"
+        ]
+    },
+
+    "embedDataMap": "DataMap",
+
+    "datamap-doc-page-name": "$1:$2/doc",
+    "datamap-doc-page-does-not-exist": "''La documentation pour la présente page de données peut être créée à [[$1]]''",
+    "datamap-doc-page-show": "{{$1}}\n<hr />",
+    "datamap-doc-page-header": "'''Ceci est la page de documentation pour [[$1]]'''",
+
+    "datamap-category-pages-including-maps": "Pages incluant des cartes de données",
+
+    "datamap-error-validation-no-display": "Le groupe \"$1\" n'a pas d'icône ou de couleur spécifiée.",
+    "datamap-error-validation-ambiguous-display": "Le groupe \"$1\" ne peut pas avoir des marqueurs configurés pour avoir à la fois une icône et une couleur.",
+    "datamap-error-render-unsupported-displaymode": "Le mode d'affichage de $1 a été donné pour un marqueur, mais il n'est pas soutenu. C'est un défaut du code de l'extension.",
+    "datamap-error-pf-page-does-not-exist": "La page de la carte de données de \"[[$1]]\" n'existe pas.",
+    "datamap-error-pf-page-invalid-content-model": "Le modèle de contenu de la page \"[[$1]]\" n'est pas <code>datamap</code>.",
+
+    "datamap-unnamed-map": "Carte non nommée",
+    "datamap-legend-label": "Légende",
+    "datamap-javascript-required": "Les cartes de données interactives nécessitent que JavaScript soit activé.",
+    "datamap-placeholder-loading": "Les données sont en chargement",
+    "datamap-toggle-show-all": "Tout montrer",
+    "datamap-toggle-hide-all": "Tout cacher",
+    "datamap-toggle-caves": "Basculer les grottes",
+    "datamap-coordinate-control-text": "lat $1, lon $2"
+}

@@ -12,7 +12,7 @@ class DataMapGroupSpec {
     private string $id;
     private object $raw;
 
-    public function __construct(string $id, object $raw) {
+    public function __construct( string $id, object $raw ) {
         $this->id = $id;
         $this->raw = $raw;
     }
@@ -26,7 +26,7 @@ class DataMapGroupSpec {
     }
 
     public function getSize(): int {
-        return $info->size ?? self::DEFAULT_MARKER_SIZE;
+        return $this->raw->size ?? self::DEFAULT_MARKER_SIZE;
     }
 
     public function getFillColour(): ?string {
@@ -43,9 +43,9 @@ class DataMapGroupSpec {
     }
 
     public function getDisplayMode(): int {
-        if ($this->getFillColour() !== null) {
+        if ( $this->getFillColour() !== null ) {
             return self::DM_CIRCLE;
-        } else if ($this->getMarkerIcon() !== null) {
+        } else if ( $this->getMarkerIcon() !== null ) {
             return self::DM_ICON;
         }
         return self::DM_UNKNOWN;

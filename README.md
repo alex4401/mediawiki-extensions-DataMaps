@@ -38,6 +38,9 @@ Content of the page should be a valid JSON with following structure:
 * * `long` (decimal, required): longitude.
 * * `label` (string, optional): text to append to marker's popup title.
 * * `description` (string, optional): text to add to the marker's popup.
+* * `isDescriptionWikitext` (boolean, optional): if true, `description` will be treated as wikitext. This is expensive, do not use for every marker.
+* * `popupImage` (file name, optional): if provided, marker's popup will display this image under the description.
+* * `relatedArticle` (page name, optional): name of an article the marker's popup should link to.
 * `custom` (map, optional): any arbitrary to be added to the client-side map config, for use with e.g. on-site gadgets.
 
 ## Parser functions

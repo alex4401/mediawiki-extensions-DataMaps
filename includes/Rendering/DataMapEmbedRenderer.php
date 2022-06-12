@@ -15,6 +15,9 @@ use InvalidArgumentException;
 use PPFrame;
 
 class DataMapEmbedRenderer {
+    const MARKER_ICON_WIDTH = 24;
+    const LEGEND_ICON_WIDTH = 24;
+
     public DataMapSpec $data;
 
     private Title $title;
@@ -35,16 +38,21 @@ class DataMapEmbedRenderer {
         return $this->title->getArticleID();
     }
 
-    private function getFile( string $title ): File {
+    public static function getFile( string $title, int $width = -1 ) {
         $file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $title ) );
         if (!$file || !$file->exists()) {
             throw new InvalidArgumentException( "File [[File:$title]] does not exist." );
         }
+        if ( $width > 0 ) {
+            $file = $file->transform( [
+                'width' => $width
+            ] );
+        }
 		return $file;
     }
 
-    private function getIconUrl( string $title ): string {
-        return $this->getFile( $title )->getURL();
+    public static function getIconUrl( string $title, int $width = -1 ): string {
+        return self::getFile( $title, $width )->getURL();
     }
 
     public function prepareOutput(ParserOutput &$parserOutput) {
@@ -112,14 +120,14 @@ class DataMapEmbedRenderer {
                 $out['fillColor'] = $spec->getFillColour();
                 break;
             case DataMapGroupSpec::DM_ICON:
-                $out['markerIcon'] = $this->getIconUrl( $spec->getMarkerIcon() );
+                $out['markerIcon'] = $this->getIconUrl( $spec->getMarkerIcon(), self::MARKER_ICON_WIDTH );
                 break;
             default:
                 throw new InvalidArgumentException( wfMessage( 'datamap-error-render-unsupported-displaymode', $spec->getDisplayMode() ) );
         }
 
         if ( $spec->getLegendIcon() !== null ) {
-            $out['legendIcon'] = $this->getIconUrl( $spec->getLegendIcon() );
+            $out['legendIcon'] = $this->getIconUrl( $spec->getLegendIcon(), self::LEGEND_ICON_WIDTH );
         }
 
         return $out;
@@ -132,7 +140,7 @@ class DataMapEmbedRenderer {
     }
 
     private function expandWikitext(string $source): string {
-        return $this->parser->parse( $source, $this->title, $this->parserOptions )->getText();
+        return $this->parser->parse( $source, $this->title, $this->parserOptions )->getText( [ 'unwrap' => true ] );
     }
 
     public function getHtml( DataMapRenderOptions $options ): string {
@@ -151,11 +159,10 @@ class DataMapEmbedRenderer {
 			'padded' => false
 		] );
 		$containerContent = new \OOUI\PanelLayout( [
-            'id' => 'datamap-' . $this->getId(),
             'classes' => [ 'datamap-container-content' ],
 			'framed' => false,
 			'expanded' => false,
-			'padded' => true
+			'padded' => false
 		] );
 
         // Stack the containers

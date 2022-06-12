@@ -7,22 +7,11 @@
 
     "embedDataMap": "DataMap",
 
-    "datamap-doc-page-name": "$1:$2/doc",
-    "datamap-doc-page-does-not-exist": "''Documentation for this data page may be created at [[$1]]''",
-    "datamap-doc-page-show": "{{$1}}\n<hr />",
-    "datamap-doc-page-header": "'''This is the documentation page for [[$1]]'''",
-
-    "datamap-category-pages-including-maps": "บทความที่มีแผนที่ข้อมูล",
-
-    "datamap-error-validation-no-display": "กลุ่ม \"$1\" ไม่มีไอคอนหรือสีที่ระบุ",
-    "datamap-error-validation-ambiguous-display": "กลุ่ม \"$1\" ไม่สามารถกำหนดเครื่องหมายให้มีทั้งไอคอนและสีได้",
-    "datamap-error-render-unsupported-displaymode": "เครื่องหมายมีโหมดการแสดงผล ($1) ไม่สามารถปรับใช้ได้",
-    "datamap-error-pf-page-does-not-exist": "แผนที่ข้อมูลนี้ \"[[$1]]\" ไม่มี",
-    "datamap-error-pf-page-invalid-content-model": "โมเดลเนื้อหาของเพจ \"[[$1]]\" ไม่ใช้ <code>แผนที่ข้อมูล</code>.",
-
     "datamap-unnamed-map": "แผนที่ไม่มีชื่อ",
-    "datamap-legend-label": "ตำนาน",
+    "datamap-legend-label": "ทรัพยากร",
     "datamap-javascript-required": "แผนที่ข้อมูลเชิงโต้ตอบจำเป็นต้องเปิดใช้งาน JavaScript",
-    "datamap-toggle-all": "เครื่องหมายทั้งหมด",
-    "datamap-toggle-caves": "ถ้ำทั้งหมด"
+    "datamap-placeholder-loading": "กำลังโหลดข้อมูล",
+    "datamap-toggle-show-all": "แสดงทั้งหมด",
+    "datamap-toggle-hide-all": "ซ่อนทั้งโหมด",
+    "datamap-toggle-caves": "แสดงถ้ำ"
 }

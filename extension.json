@@ -1,6 +1,6 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.1.2",
+	"version": "0.2.0",
 
 	"author": [
 		"alex4401"
@@ -51,13 +51,17 @@
 				"loader.js"
 			],
 			"styles": [
-				"styles.less"
+				"main.less",
+				"legend.less",
+				"controls.less",
+				"popups.less"
 			],
 			"messages": [
 				"datamap-toggle-show-all",
 				"datamap-toggle-hide-all",
 				"datamap-toggle-caves",
-				"datamap-coordinate-control-text"
+				"datamap-coordinate-control-text",
+				"datamap-popup-related-article"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
@@ -83,6 +87,18 @@
 		"ArkDataNamespace": {
 			"description": "Namespace where data maps will be stored.",
 			"value": -1
+		},
+		"ArkDataMapDebugApiProcessingTime": {
+			"description": "Attaches data map marker processing time in API requests.",
+			"value": false
+		},
+		"ArkDataMapCacheType": {
+			"description": "Cache type to use for queryDataMap API output. Defaults to CACHE_ANYTHING.",
+			"value": -1
+		},
+		"ArkDataMapCacheExpiryTime": {
+			"description": "Time for cached queryDataMap API (per title and revision) responses to be valid. Set to 0 to disable caching. Defaults to a day.",
+			"value": 86400
 		}
 	},
 
