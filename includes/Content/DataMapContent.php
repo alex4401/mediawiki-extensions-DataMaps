@@ -61,7 +61,7 @@ class DataMapContent extends JsonContent {
 	 * @return Title|null
 	 */
 	public static function getDocPage( Title $title ) {
-		$docPage = wfMessage( 'datamap-doc-page-name', $title->getText() )->inContentLanguage();
+		$docPage = wfMessage( 'datamap-doc-page-name', $title->getNsText(), $title->getText() )->inContentLanguage();
 		if ( $docPage->isDisabled() ) {
 			return null;
 		}
