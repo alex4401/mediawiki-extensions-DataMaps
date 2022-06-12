@@ -8,6 +8,10 @@ class DataMapMarkerSpec {
         $this->raw = $raw;
     }
 
+    public function reassignTo( object $newRaw ) {
+        $this->raw = $newRaw;
+    }
+
     public function getLatitude(): float {
         return $this->raw->lat;
     }

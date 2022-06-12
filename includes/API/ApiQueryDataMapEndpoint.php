@@ -95,9 +95,13 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
         $dataMap->iterateRawMarkerMap( function( string $layers, array $rawMarkerCollection ) use ( &$results ) {
             $subResults = [];
+            // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
+            // creating thousands of small, very short-lived (only one at a time) objects
+            $marker = new DataMapMarkerSpec( new \stdclass() );
 
             foreach ( $rawMarkerCollection as &$rawMarker ) {
-                $marker = new DataMapMarkerSpec( $rawMarker );
+                $marker->reassignTo( $rawMarker );
+
                 $converted = [
                     'lat' => $marker->getLatitude(),
                     'long' => $marker->getLongitude()
