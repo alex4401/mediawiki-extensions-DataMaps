@@ -151,7 +151,6 @@ class DataMapEmbedRenderer {
 			'padded' => false
 		] );
 		$containerContent = new \OOUI\PanelLayout( [
-            'id' => 'datamap-' . $this->getId(),
             'classes' => [ 'datamap-container-content' ],
 			'framed' => false,
 			'expanded' => false,
