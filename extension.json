@@ -83,6 +83,10 @@
 		"ArkDataNamespace": {
 			"description": "Namespace where data maps will be stored.",
 			"value": -1
+		},
+		"wgArkDataMapDebugApiProcessingTime": {
+			"description": "Attaches data map marker processing time in API requests.",
+			"value": false
 		}
 	},
 

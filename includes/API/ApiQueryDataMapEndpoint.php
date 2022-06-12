@@ -26,6 +26,12 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     public function execute() {
+        global $wgArkDataMapDebugApiProcessingTime;
+        $timeStart = 0;
+        if ( $wgArkDataMapDebugApiProcessingTime ) {
+            $timeStart = hrtime( true );
+        }
+
 		$this->getMain()->setCacheMode( 'public' );
         $this->getMain()->setCacheMaxAge( 24 * 60 * 60 );
 
@@ -49,6 +55,11 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $data = ApiResult::addMetadataToResultVars( $response, false );
 
         $this->getResult()->addValue( null, 'query', $response );
+
+        if ( $wgArkDataMapDebugApiProcessingTime ) {
+            $timeEnd = hrtime( true );
+            $this->getResult()->addValue( null, 'processingTime', $timeEnd - $timeStart );
+        }
     }
 
     private function getRevisionFromParams( $params ) {
