@@ -151,7 +151,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
                 // Popup title
                 if ( $marker->getLabel() != null ) {
-                    $slots['label'] = $marker->getLabel();
+                    $slots['label'] = wfEscapeWikiText( $marker->getLabel() );
                     $requiresSlots = true;
                 }
 
@@ -162,7 +162,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                             $parser->parse( $marker->getDescription(), $title, $parserOptions, false, true )
                                 ->getText( [ 'unwrap' => true ] );
                     } else {
-                        $slots['desc'] = $marker->getDescription();
+                        $slots['desc'] = wfEscapeWikiText( $marker->getDescription() );
                     }
                     $requiresSlots = true;
                 }
