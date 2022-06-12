@@ -10,6 +10,8 @@ use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use Wikimedia\ParamValidator\ParamValidator;
 use Ark\DataMaps\Content\DataMapContent;
+use Ark\DataMaps\Data\DataMapSpec;
+use Ark\DataMaps\Data\DataMapMarkerSpec;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
     public function getAllowedParams() {
@@ -44,15 +46,15 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             $this->dieWithError( [ 'contentmodel-mismatch', $content->getModel(), 'datamap' ] );
         }
 
-        $data = $content->asModel()->getRawMarkers();
+        $dataMap = $content->asModel();
         $response = [
             'title' => $title->getFullText(),
             'revisionId' => $revision->getId(),
-            'markers' => $data
+            'markers' => $this->processMarkers( $dataMap )
         ];
 
         // Armour any API metadata in $response
-        $data = ApiResult::addMetadataToResultVars( $response, false );
+        $response = ApiResult::addMetadataToResultVars( $response, false );
 
         $this->getResult()->addValue( null, 'query', $response );
 
@@ -86,5 +88,35 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         }
 
         return [ $title, $revision ];
+    }
+
+    private function processMarkers( DataMapSpec $dataMap ): array {
+        $results = [];
+
+        $dataMap->iterateRawMarkerMap( function( string $layers, array $rawMarkerCollection ) use ( &$results ) {
+            $subResults = [];
+
+            foreach ( $rawMarkerCollection as &$rawMarker ) {
+                $marker = new DataMapMarkerSpec( $rawMarker );
+                $converted = [
+                    'lat' => $marker->getLatitude(),
+                    'long' => $marker->getLongitude()
+                ];
+
+                if ( $marker->getLabel() != null ) {
+                    $converted['label'] = $marker->getLabel();
+                }
+
+                if ( $marker->getDescription() != null ) {
+                    $converted['description'] = $marker->getDescription();
+                }
+
+                $subResults[] = $converted;
+            }
+
+            $results[$layers] = $subResults;
+        } );
+
+        return $results;
     }
 }
