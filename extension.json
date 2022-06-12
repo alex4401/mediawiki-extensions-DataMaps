@@ -57,7 +57,8 @@
 				"datamap-toggle-show-all",
 				"datamap-toggle-hide-all",
 				"datamap-toggle-caves",
-				"datamap-coordinate-control-text"
+				"datamap-coordinate-control-text",
+				"datamap-popup-related-article"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}

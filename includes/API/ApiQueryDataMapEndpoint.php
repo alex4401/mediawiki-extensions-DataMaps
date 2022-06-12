@@ -12,6 +12,7 @@ use Wikimedia\ParamValidator\ParamValidator;
 use Ark\DataMaps\Content\DataMapContent;
 use Ark\DataMaps\Data\DataMapSpec;
 use Ark\DataMaps\Data\DataMapMarkerSpec;
+use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use ParserOptions;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
@@ -122,8 +123,21 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                 }
 
                 if ( $marker->getDescription() != null ) {
-                    $converted['description'] = $parser->parse( $marker->getDescription(), $title, $parserOptions, false, true )
-                        ->getText( [ 'unwrap' => true ] );
+                    if ( $marker->isDescriptionWikitext() ) {
+                        $converted['description'] =
+                            $parser->parse( $marker->getDescription(), $title, $parserOptions, false, true )
+                                ->getText( [ 'unwrap' => true ] );
+                    } else {
+                        $converted['description'] = $marker->getDescription();
+                    }
+                }
+
+                if ( $marker->getPopupImage() != null ) {
+                    $converted['image'] = DataMapEmbedRenderer::getIconUrl( $marker->getPopupImage() );
+                }
+
+                if ( $marker->getRelatedArticle() != null ) {
+                    $converted['article'] = $marker->getRelatedArticle();
                 }
 
                 $subResults[] = $converted;

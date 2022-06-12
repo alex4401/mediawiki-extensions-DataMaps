@@ -35,7 +35,7 @@ class DataMapEmbedRenderer {
         return $this->title->getArticleID();
     }
 
-    private function getFile( string $title ): File {
+    public static function getFile( string $title ): File {
         $file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $title ) );
         if (!$file || !$file->exists()) {
             throw new InvalidArgumentException( "File [[File:$title]] does not exist." );
@@ -43,8 +43,8 @@ class DataMapEmbedRenderer {
 		return $file;
     }
 
-    private function getIconUrl( string $title ): string {
-        return $this->getFile( $title )->getURL();
+    public static function getIconUrl( string $title ): string {
+        return self::getFile( $title )->getURL();
     }
 
     public function prepareOutput(ParserOutput &$parserOutput) {

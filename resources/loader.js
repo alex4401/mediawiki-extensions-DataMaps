@@ -3,47 +3,84 @@
     var api = new mw.Api();
 
 
+    /*
+     * Returns circle radius adjusted for zoom level
+    */
     function getCircleRadiusAtCurrentZoom(ctx, baseSize) {
-        // Configured marker size is the diameter of a marker at lowest zoom level.
+        // Configured marker size is the diameter of a marker at lowest zoom level
         var scale = ctx.leaflet.getZoom() / ctx.leaflet.options.minZoom;
         return scale * baseSize/2;
     }
 
 
-    function getMarkerPopupContents(markerType, group, markerInfo) {
+    /*
+     * Builds popup contents for a marker instance
+    */
+    function buildMarkerPopup(type, group, instance) {
+        var parts = [];
+
+        // Build the title
         var title = group.name;
-        if (markerInfo.label) {
-            title += ": " + markerInfo.label;
+        if (instance.label) {
+            title += ": " + instance.label;
         }
-        var out = "<b>"+title+"</b>";
-        if (markerInfo.description) {
-            out += markerInfo.description;
+        parts.push('<b class="datamap-popup-title">' + title + '</b>');
+
+        // Coordinates
+        parts.push('<div class="datamap-popup-coordinates">lat '+instance.lat+', lon '+instance.long+'</div>');
+
+        // Description
+        if (instance.description) {
+            if (!instance.description.startsWith('<p>')) {
+                instance.description = '<p>'+instance.description+'</p>';
+            }
+            parts.push(instance.description);
         }
-        out += "<p>lat "+markerInfo.lat+", lon "+markerInfo.long+"</p>";
-        return out;
+
+        // Image
+        if (instance.image) {
+            parts.push('<img class="datamap-popup-image" width=224 src="'+instance.image+'" />');
+        }
+
+        // Related article
+        if (instance.article) {
+            parts.push('<div class="datamap-popup-seemore"><a href="' + mw.util.getUrl(instance.article) + '">'
+                        + mw.msg('datamap-popup-related-article') + '</a></div>');
+        }
+
+
+        return parts.join('\n');
     }
 
 
+    /*
+     * Builds markers from a data object
+    */
     function loadMarkersChunk(ctx, data) {
         for (var markerType in data.markers) {
             var groupName = markerType.split(' ', 1)[0];
             var group = ctx.config.groups[groupName];
             var placements = data.markers[markerType];
 
+            // Initialise the Leaflet layer group if it hasn't been already
             if (!ctx.leafletLayers[markerType]) {
                 ctx.leafletLayers[markerType] = L.featureGroup().addTo(ctx.leaflet);
             }
+            // Retrieve the Leaflet layer
             var layer = ctx.leafletLayers[markerType];
 
+            // Create markers for instances
             placements.forEach(function(markerInfo) {
                 var position = [100-markerInfo.lat, markerInfo.long];
                 var marker;
                 
                 if (group.markerIcon) {
+                    // Fancy icon marker
                     marker = L.marker(position, {
                         icon: ctx.leafletIcons[groupName]
                     });
                 } else {
+                    // Circular marker
                     marker = L.circleMarker(position, {
                         radius: getCircleRadiusAtCurrentZoom(ctx, group.size),
                         fillColor: group.fillColor,
@@ -54,9 +91,10 @@
                     group.circleMarkers.push(marker);
                 }
 
+                // Add to the layer and bind a popup
                 marker
                     .addTo(layer)
-                    .bindPopup(getMarkerPopupContents(markerType, group, markerInfo));
+                    .bindPopup(buildMarkerPopup(markerType, group, markerInfo));
             });
 
         }

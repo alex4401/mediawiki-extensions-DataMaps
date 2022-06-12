@@ -28,6 +28,18 @@ class DataMapMarkerSpec {
         return $this->raw->description;
     }
 
+    public function isDescriptionWikitext(): bool {
+        return $this->raw->isDescriptionWikitext ?? false;
+    }
+
+    public function getPopupImage(): ?string {
+        return $this->raw->popupImage;
+    }
+
+    public function getRelatedArticle(): ?string {
+        return $this->raw->relatedArticle;
+    }
+
     public function validate(): ?string {
         // TODO: implement
         return null;
