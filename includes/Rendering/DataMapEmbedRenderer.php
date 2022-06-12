@@ -154,7 +154,7 @@ class DataMapEmbedRenderer {
             'classes' => [ 'datamap-container-content' ],
 			'framed' => false,
 			'expanded' => false,
-			'padded' => true
+			'padded' => false
 		] );
 
         // Stack the containers
