@@ -12,6 +12,7 @@ use Wikimedia\ParamValidator\ParamValidator;
 use Ark\DataMaps\Content\DataMapContent;
 use Ark\DataMaps\Data\DataMapSpec;
 use Ark\DataMaps\Data\DataMapMarkerSpec;
+use ParserOptions;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
     public function getAllowedParams() {
@@ -39,7 +40,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
         $params = $this->extractRequestParams();
 
-        list( $title, $revision ) = $this->getRevisionFromParams($params);
+        list( $title, $revision ) = $this->getRevisionFromParams( $params );
         $content = $revision->getContent( SlotRecord::MAIN, RevisionRecord::FOR_PUBLIC, null );
 
         if ( !($content instanceof DataMapContent) ) {
@@ -50,7 +51,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $response = [
             'title' => $title->getFullText(),
             'revisionId' => $revision->getId(),
-            'markers' => $this->processMarkers( $dataMap )
+            'markers' => $this->processMarkers( $title, $dataMap )
         ];
 
         // Armour any API metadata in $response
@@ -90,14 +91,23 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         return [ $title, $revision ];
     }
 
-    private function processMarkers( DataMapSpec $dataMap ): array {
+    private function processMarkers( Title $title, DataMapSpec $dataMap ): array {
         $results = [];
+		$parser = MediaWikiServices::getInstance()->getParser();
 
-        $dataMap->iterateRawMarkerMap( function( string $layers, array $rawMarkerCollection ) use ( &$results ) {
+        $dataMap->iterateRawMarkerMap( function( string $layers, array $rawMarkerCollection ) use ( &$results, &$title, &$parser ) {
             $subResults = [];
             // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
             // creating thousands of small, very short-lived (only one at a time) objects
             $marker = new DataMapMarkerSpec( new \stdclass() );
+
+            // Prepare the wikitext parser
+            $parserOptions = ParserOptions::newCanonical( 'canonical' );
+            $parserOptions->enableLimitReport( false );
+            $parserOptions->setAllowSpecialInclusion( false );
+            $parserOptions->setExpensiveParserFunctionLimit( 0 );
+            $parserOptions->setInterwikiMagic( false );
+            $parserOptions->setMaxIncludeSize( 800 );
 
             foreach ( $rawMarkerCollection as &$rawMarker ) {
                 $marker->reassignTo( $rawMarker );
@@ -112,7 +122,8 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                 }
 
                 if ( $marker->getDescription() != null ) {
-                    $converted['description'] = $marker->getDescription();
+                    $converted['description'] = $parser->parse( $marker->getDescription(), $title, $parserOptions, false, true )
+                        ->getText( [ 'unwrap' => true ] );
                 }
 
                 $subResults[] = $converted;

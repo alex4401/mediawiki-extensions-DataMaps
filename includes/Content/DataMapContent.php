@@ -51,7 +51,7 @@ class DataMapContent extends JsonContent {
 	}
 
 	public function asModel(): DataMapSpec {
-		return new DataMapSpec($this->getData()->getValue());
+		return new DataMapSpec( $this->getData()->getValue() );
 	}
 
 	/**
