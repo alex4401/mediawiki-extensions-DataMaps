@@ -140,7 +140,7 @@ class DataMapEmbedRenderer {
     }
 
     private function expandWikitext(string $source): string {
-        return $this->parser->parse( $source, $this->title, $this->parserOptions )->getText();
+        return $this->parser->parse( $source, $this->title, $this->parserOptions )->getText( [ 'unwrap' => true ] );
     }
 
     public function getHtml( DataMapRenderOptions $options ): string {
