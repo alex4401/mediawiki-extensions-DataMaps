@@ -17,6 +17,8 @@ use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use ParserOptions;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
+    const POPUP_IMAGE_WIDTH = 240;
+
     public function getAllowedParams() {
         return [
             'title' => [
@@ -159,7 +161,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                 }
 
                 if ( $marker->getPopupImage() != null ) {
-                    $converted['image'] = DataMapEmbedRenderer::getIconUrl( $marker->getPopupImage() );
+                    $converted['image'] = DataMapEmbedRenderer::getIconUrl( $marker->getPopupImage(), self::POPUP_IMAGE_WIDTH );
                 }
 
                 if ( $marker->getRelatedArticle() != null ) {
