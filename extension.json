@@ -88,9 +88,17 @@
 			"description": "Namespace where data maps will be stored.",
 			"value": -1
 		},
-		"wgArkDataMapDebugApiProcessingTime": {
+		"ArkDataMapDebugApiProcessingTime": {
 			"description": "Attaches data map marker processing time in API requests.",
 			"value": false
+		},
+		"ArkDataMapCacheType": {
+			"description": "Cache type to use for queryDataMap API output. Defaults to CACHE_ANYTHING.",
+			"value": -1
+		},
+		"ArkDataMapCacheExpiryTime": {
+			"description": "Time for cached queryDataMap API (per title and revision) responses to be valid. Set to 0 to disable caching. Defaults to a day.",
+			"value": 86400
 		}
 	},
 

@@ -9,6 +9,7 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use Wikimedia\ParamValidator\ParamValidator;
+use ObjectCache;
 use Ark\DataMaps\Content\DataMapContent;
 use Ark\DataMaps\Data\DataMapSpec;
 use Ark\DataMaps\Data\DataMapMarkerSpec;
@@ -30,7 +31,10 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     public function execute() {
+        global $wgArkDataMapCacheType;
+        global $wgArkDataMapCacheExpiryTime;
         global $wgArkDataMapDebugApiProcessingTime;
+
         $timeStart = 0;
         if ( $wgArkDataMapDebugApiProcessingTime ) {
             $timeStart = hrtime( true );
@@ -41,23 +45,24 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
         $params = $this->extractRequestParams();
 
-        list( $title, $revision ) = $this->getRevisionFromParams( $params );
-        $content = $revision->getContent( SlotRecord::MAIN, RevisionRecord::FOR_PUBLIC, null );
-
-        if ( !($content instanceof DataMapContent) ) {
-            $this->dieWithError( [ 'contentmodel-mismatch', $content->getModel(), 'datamap' ] );
+        $response = null;
+        if ($wgArkDataMapCacheExpiryTime <= 0) {
+            // Cache expiry time is zero or lower, bypass caching
+            $response = $this->executeInternal( $params );
+        } else {
+            // Retrieve the specified cache instance
+            $cache = ObjectCache::getInstance( $wgArkDataMapCacheType );
+            // Build the cache key from an identifier, title parameter and revision ID parameter
+            $cacheKey = $cache->makeKey( 'ARKDataMapQuery', $params['title'], $params['revid'] ?? -1 );
+            // Try to retrieve the response
+            $response = $cache->get( $cacheKey );
+            if ( $response === false ) {
+                // Response not cached, process the data in this request and write to cache
+                $response = $this->executeInternal( $params );
+                $cache->set( $cacheKey, $response, $wgArkDataMapCacheExpiryTime );
+            }
         }
-
-        $dataMap = $content->asModel();
-        $response = [
-            'title' => $title->getFullText(),
-            'revisionId' => $revision->getId(),
-            'markers' => $this->processMarkers( $title, $dataMap )
-        ];
-
-        // Armour any API metadata in $response
-        $response = ApiResult::addMetadataToResultVars( $response, false );
-
+		
         $this->getResult()->addValue( null, 'query', $response );
 
         if ( $wgArkDataMapDebugApiProcessingTime ) {
@@ -90,6 +95,27 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         }
 
         return [ $title, $revision ];
+    }
+
+    private function executeInternal( $params ): array {
+        list( $title, $revision ) = $this->getRevisionFromParams( $params );
+        $content = $revision->getContent( SlotRecord::MAIN, RevisionRecord::FOR_PUBLIC, null );
+
+        if ( !($content instanceof DataMapContent) ) {
+            $this->dieWithError( [ 'contentmodel-mismatch', $content->getModel(), 'datamap' ] );
+        }
+
+        $dataMap = $content->asModel();
+        $response = [
+            'title' => $title->getFullText(),
+            'revisionId' => $revision->getId(),
+            'markers' => $this->processMarkers( $title, $dataMap )
+        ];
+
+        // Armour any API metadata in $response
+        $response = ApiResult::addMetadataToResultVars( $response, false );
+
+        return $response;
     }
 
     private function processMarkers( Title $title, DataMapSpec $dataMap ): array {
