@@ -22,9 +22,14 @@ Currently no feature parity with the existing solution. [Roadmap (T75 on wiki's 
 ## Creating a map
 Create a page within the data namespace and assign it the `datamap` content model.
 
+### Structure
 Content of the page should be a valid JSON with following structure:
 * `title` (string, optional): label displayed above the map's legend.
-* `image` (file name, required): name of the file (with no namespace) to display as background.
+* `image` (file name, required unless `backgrounds` is specified): name of the file (with no namespace) to display as background. This translates to a single, nameless background.
+* `backgrounds` (array of objects): list of *backgrounds* this map has available and the user can choose between:
+* * `image` (file name, required): name of the file to display for this background.
+* * `at` (box, optional): location to place the background at.
+* * `name` (string, required if more than one background is specified): name of this background to display in the selection control.
 * `groups` (string to object map, required): map from name to a *marker group* specification:
 * * `name` (string, required): name of the group and each individual marker.
 * * `icon` (file name, optional): short-hand for `legendIcon`, and `markerIcon` if `fillColor` is not specified.
@@ -42,6 +47,12 @@ Content of the page should be a valid JSON with following structure:
 * * `popupImage` (file name, optional): if provided, marker's popup will display this image under the description.
 * * `relatedArticle` (page name, optional): name of an article the marker's popup should link to.
 * `custom` (map, optional): any arbitrary to be added to the client-side map config, for use with e.g. on-site gadgets.
+
+#### `Location`
+Two element decimal array, where first element is the latitude and second is the longitude.
+
+#### `Box`
+Box is a array of two locations, where first describes the start point of the box and second describes the end point.
 
 ## Parser functions
 * `DataMap`: used to embed a map in an article.
