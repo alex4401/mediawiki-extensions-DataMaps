@@ -1,6 +1,6 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.2.0",
+	"version": "0.3.0",
 
 	"author": [
 		"alex4401"
@@ -47,21 +47,26 @@
 				"mediawiki.api",
 				"ext.ark.datamaps.leaflet.core"
 			],
-			"scripts": [
-				"loader.js"
-			],
-			"styles": [
-				"main.less",
-				"legend.less",
-				"controls.less",
-				"popups.less"
+			"packageFiles": [
+				"loader/main.js"
 			],
 			"messages": [
+				"datamap-legend-tab-locations",
 				"datamap-toggle-show-all",
 				"datamap-toggle-hide-all",
 				"datamap-toggle-caves",
 				"datamap-coordinate-control-text",
 				"datamap-popup-related-article"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
+
+		"ext.ark.datamaps.styles": {
+			"styles": [
+				"main.less",
+				"legend.less",
+				"controls.less",
+				"popups.less"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
