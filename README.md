@@ -34,10 +34,12 @@ Content of the page should be a valid JSON with following structure:
 * * `name` (string, required): name of the group and each individual marker.
 * * `icon` (file name, optional): short-hand for `legendIcon`, and `markerIcon` if `fillColor` is not specified.
 * * `legendIcon` (file name, optional): name of the file (with no namespace) to display in the legend entry of the group.
-* * Exactly one of the following:
-* * * `fillColor` (hex string): colour of each circular marker belonging to the group. This makes all markers in group circular.
-* * * `markerIcon` (file name): name of the file (with no namespace) to show markers with. This makes all markers in group SVG-based. Current support is limited.
-* * `size` (integer, optional): size of each circular marker if `fillColor` is specified. Defaults to `4`.
+* * Circular markers:
+* * * `fillColor` (hex string, required): colour of each circular marker belonging to the group.
+* * * `size` (integer, optional): size of each circular marker. Defaults to `4`.
+* * Icon markers:
+* * * `markerIcon` (file name, required): name of the file (with no namespace) to show markers with. This makes all markers in group SVG-based. Current support is limited.
+* * * `size` (dimensions, optional): size of each icon marker. Defaults to `[ 32, 32 ]`.
 * `markers` (string to array of objects map, required): map from group name (and any secondary specifiers, i.e. "layers") to an array of *markers*:
 * * `lat` (decimal, required): latitude.
 * * `long` (decimal, required): longitude.
@@ -47,6 +49,9 @@ Content of the page should be a valid JSON with following structure:
 * * `popupImage` (file name, optional): if provided, marker's popup will display this image under the description.
 * * `relatedArticle` (page name, optional): name of an article the marker's popup should link to.
 * `custom` (map, optional): any arbitrary to be added to the client-side map config, for use with e.g. on-site gadgets.
+
+#### `Dimensions`
+Two element decimal array, where first element is the width and second is the height.
 
 #### `Location`
 Two element decimal array, where first element is the latitude and second is the longitude.
