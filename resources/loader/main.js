@@ -32,6 +32,15 @@ function initialiseMap( $container, config ) {
         },
     };
 
+
+    self.waitForLeaflet = function ( callback ) {
+        if ( self.leaflet == null ) {
+            setTimeout( self.waitForLeaflet.bind( null, callback ), 25 );
+        } else {
+            callback();
+        }
+    };
+
     
     self.isLayerUsed = function ( name ) {
         return config.layerIds.indexOf(name) >= 0;
@@ -395,7 +404,7 @@ function initialiseMap( $container, config ) {
     // Request OOUI to be loaded and build the legend
     mw.loader.using( [ 'oojs-ui-core', 'oojs-ui-widgets' ], buildLegend );
     // Prepare the Leaflet map view
-    buildLeafletMap( $container.find( '.datamap-holder' ) );
+    mw.loader.using( 'ext.ark.datamaps.leaflet.core', buildLeafletMap.bind( null, $container.find( '.datamap-holder' ) ) );
 
     // Request markers from the API
     api.get( {
@@ -403,7 +412,7 @@ function initialiseMap( $container, config ) {
         title: config.pageName,
         revid: config.version
     } ).then( function ( data ) {
-        self.instantiateMarkers( data.query.markers );
+        self.waitForLeaflet( self.instantiateMarkers.bind( null, data.query.markers ) );
     } ).then( function ( ) {
         $container.find( '.datamap-status' ).remove();
     } );
