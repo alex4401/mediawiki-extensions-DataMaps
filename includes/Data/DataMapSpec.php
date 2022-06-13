@@ -19,7 +19,7 @@ class DataMapSpec {
     public function getBackgrounds(): array {
         if ( $this->cachedBackgrounds == null ) {
             if ( $this->raw->backgrounds == null ) {
-                $fake = new stdClass();
+                $fake = new \stdClass();
                 $fake->image = $this->raw->image;
                 $this->cachedBackgrounds = [ new DataMapBackgroundSpec( $fake ) ];
             } else {
