@@ -6,6 +6,7 @@ class DataMapSpec {
 
     private ?array $cachedMarkerGroups = null;
     private ?array $cachedMarkerLayers = null;
+    private ?array $cachedBackgrounds = null;
 
     public function __construct( object $raw ) {
         $this->raw = $raw;
@@ -15,8 +16,17 @@ class DataMapSpec {
         return $this->raw->title ?? wfMessage( 'datamap-unnamed-map' );
     }
 
-    public function getImageName(): string {
-        return $this->raw->image;
+    public function getBackgrounds(): array {
+        if ( $this->cachedBackgrounds == null ) {
+            if ( $this->raw->backgrounds == null ) {
+                $fake = new stdClass();
+                $fake->image = $this->raw->image;
+                $this->cachedBackgrounds = [ new DataMapBackgroundSpec( $fake ) ];
+            } else {
+                $this->cachedBackgrounds = array_map( fn ( $raw ) => new DataMapBackgroundSpec( $raw ), $this->raw->backgrounds );
+            }
+        }
+        return $this->cachedBackgrounds;
     }
 
     public function getCoordinateSpace(): object {

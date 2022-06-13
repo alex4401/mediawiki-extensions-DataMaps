@@ -24,6 +24,7 @@
     "datamap-legend-label": "Legend",
     "datamap-javascript-required": "Interactive data maps require JavaScript to be enabled.",
     "datamap-placeholder-loading": "Data is being loaded",
+    "datamap-legend-tab-locations": "Markers",
     "datamap-toggle-show-all": "Show all",
     "datamap-toggle-hide-all": "Hide all",
     "datamap-toggle-caves": "Toggle caves",
