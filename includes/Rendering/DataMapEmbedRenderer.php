@@ -63,9 +63,9 @@ class DataMapEmbedRenderer {
 
         // Required modules
         $parserOutput->addModules( [
-            'ext.ark.datamaps.leaflet.core',
-            'ext.ark.datamaps.loader',
-            'ext.ark.datamaps.styles'
+            'ext.ark.datamaps.styles',
+            // ext.ark.datamaps.leaflet.core is loaded on demand by the loader in a separate request to not slow down site module
+            'ext.ark.datamaps.loader'
         ] );
 
         // Inject mw.config variables via a `dataMaps` map from ID
