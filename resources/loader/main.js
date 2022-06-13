@@ -11,6 +11,8 @@ function initialiseMap( $container, config ) {
         // Coordinate space (currently unused)
         coordSpace: config.coordinateBounds,
 
+        background: null,
+
         // Leaflet's Map instance
         leaflet: null,
         // Group to Leaflet's Icon instance map
@@ -148,6 +150,19 @@ function initialiseMap( $container, config ) {
 
 
     /*
+     * 
+    */
+    self.setCurrentBackground = function ( index ) {
+        if ( self.background ) {
+            self.background.overlay.remove();
+        }
+
+        self.background = self.config.backgrounds[ index ];
+        self.background.overlay.addTo( self.leaflet );
+    };
+
+
+    /*
      * Builds popup contents for a marker instance
     */
     self.addLegendTab = function ( name ) {
@@ -192,7 +207,12 @@ function initialiseMap( $container, config ) {
         } );
     
         self.leaflet = L.map( $holder.get( 0 ), leafletConfig ).fitBounds( [ [0, 0], [100, 100] ] );
-        self.background = L.imageOverlay( self.config.image, [ [0, 0], [100, 100] ] ).addTo( self.leaflet );
+
+        // Prepare image overlays for all backgrounds and switch to the first defined one
+        self.config.backgrounds.forEach( function ( background ) {
+            background.overlay = L.imageOverlay( background.image, ( background.at || [ [0, 0], [100, 100] ] ) );
+        } );
+        self.setCurrentBackground( 0 );
     
         self.leaflet.on( 'zoomend', function() {
             for ( var groupName in self.config.groups ) {
@@ -217,9 +237,14 @@ function initialiseMap( $container, config ) {
             }
         }
     
+        // Get control anchors
+        self.bottomLeftAnchor = self.$root.find( '.leaflet-control-container .leaflet-bottom.leaflet-left' );
+        self.topRightAnchor = self.$root.find( '.leaflet-control-container .leaflet-top.leaflet-right' );
+
+
         // Create a coordinate-under-cursor display
         self.$coordTracker = $( '<div class="leaflet-control datamap-control-coords">' )
-                            .appendTo( self.$root.find( '.leaflet-control-container .leaflet-bottom.leaflet-left' ) );
+                            .appendTo( self.bottomLeftAnchor );
         self.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
         self.leaflet.on( 'mousemove', function( event ) {
             var lat = event.latlng.lat;
@@ -231,6 +256,16 @@ function initialiseMap( $container, config ) {
                                        .replace( '$2', lon.toFixed( 2 ) ) );
             }
         } );
+
+        // Create a background toggle
+        if ( self.config.backgrounds.length > 1 ) {
+            var $switch = $( '<select class="leaflet-control datamap-control-backgrounds leaflet-bar">' ).on( 'change', function() {
+                self.setCurrentBackground( $(this).val() );
+            } ).appendTo( self.topRightAnchor );
+            self.config.backgrounds.forEach( function ( background, index ) {
+                $( '<option>' ).attr( 'value', index ).text( background.name ).appendTo( $switch );
+            } );
+        }
     };
 
 

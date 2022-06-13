@@ -78,23 +78,39 @@ class DataMapEmbedRenderer {
         $parserOutput->addJsConfigVars( 'dataMaps', $configsVar );
 
         // Register image dependencies
-		$parserOutput->addImage( $this->data->getImageName() );
-        $this->data->iterateGroups( function(DataMapGroupSpec $spec) use (&$parserOutput) {
+        foreach ( $this->data->getBackgrounds() as &$background ) {
+            $parserOutput->addImage( $background->getImageName() );
+        }
+        $this->data->iterateGroups( function( DataMapGroupSpec $spec ) use ( &$parserOutput ) {
             $parserOutput->addImage( $spec->getMarkerIcon() );
             $parserOutput->addImage( $spec->getLegendIcon() );
         } );
     }
 
     public function getJsConfigVariables(): array {
-        $image = $this->getFile($this->data->getImageName());
         $out = [
             // Required to query the API for marker clusters
             'pageName' => $this->title->getPrefixedText(),
             'version' => $this->title->getLatestRevID(),
 
             'coordinateBounds' => $this->data->coordinateBounds,
-            'image' => $image->getURL(),
-            'imageBounds' => [ $image->getWidth(), $image->getHeight() ],
+            'backgrounds' => array_map( function ( $background ) {
+                $image = $this->getFile( $background->getImageName() );
+                $out = [
+                    'image' => $image->getURL(),
+                    'bounds' => [ $image->getWidth(), $image->getHeight() ]
+                ];
+
+                if ( $background->getName() != null ) {
+                    $out['name'] = $background->getName();
+                }
+
+                if ( $background->getPlacementLocation() != null ) {
+                    $out['at'] = $background->getPlacementLocation();
+                }
+
+                return $out;
+            }, $this->data->getBackgrounds() ),
             
             'groups' => [],
             'layerIds' => $this->data->getLayerNames(),
