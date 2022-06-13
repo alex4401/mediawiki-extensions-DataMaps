@@ -2,7 +2,8 @@
 namespace Ark\DataMaps\Data;
 
 class DataMapGroupSpec {
-    const DEFAULT_MARKER_SIZE = 4;
+    const DEFAULT_CIRCLE_SIZE = 4;
+    const DEFAULT_ICON_SIZE = [ 32, 32 ];
 
     // Display modes
     const DM_CIRCLE = 1;
@@ -25,8 +26,25 @@ class DataMapGroupSpec {
         return $this->raw->name ?? wfMessage( 'datamap-unnamed-marker' );
     }
 
-    public function getSize(): int {
-        return $this->raw->size ?? self::DEFAULT_MARKER_SIZE;
+    public function getCircleSize(): int {
+        assert( $this->getDisplayMode() == self::DM_CIRCLE );
+        return $this->raw->size ?? self::DEFAULT_CIRCLE_SIZE;
+    }
+
+    public function getIconSize(): array {
+        assert( $this->getDisplayMode() == self::DM_ICON );
+        return $this->raw->size ?? self::DEFAULT_ICON_SIZE;
+    }
+
+    public function getSize() {
+        switch ( $this->getDisplayMode() ) {
+            case self::DM_CIRCLE:
+                return $this->getCircleSize();
+            case self::DM_ICON:
+                return $this->getIconSize();
+            default:
+                return null;
+        }
     }
 
     public function getFillColour(): ?string {

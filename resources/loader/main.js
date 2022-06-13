@@ -52,12 +52,10 @@ function initialiseMap( $container, config ) {
 
 
     /*
-     * Returns circle radius adjusted for zoom level
+     * Returns scale factor to adjust markers for zoom level
     */
-    self.getCircleRadiusAtCurrentZoom = function ( baseSize ) {
-        // Configured marker size is the diameter of a marker at lowest zoom level
-        var scale = self.leaflet.getZoom() / self.leaflet.options.minZoom;
-        return scale * baseSize/2;
+    self.getScaleFactorByZoom = function ( a ) {
+        return self.leaflet.getZoom() / self.leaflet.options[ a + 'Zoom' ];
     };
 
 
@@ -123,6 +121,7 @@ function initialiseMap( $container, config ) {
                 var position = [100-instance[0], instance[1]];
                 var marker;
 
+                // Construct the marker
                 if (group.markerIcon) {
                     // Fancy icon marker
                     marker = L.marker(position, {
@@ -131,14 +130,14 @@ function initialiseMap( $container, config ) {
                 } else {
                     // Circular marker
                     marker = L.circleMarker(position, {
-                        radius: self.getCircleRadiusAtCurrentZoom(group.size),
+                        radius: self.getScaleFactorByZoom( 'min' ) * group.size/2,
                         fillColor: group.fillColor,
                         fillOpacity: 0.7,
                         color: group.strokeColor || group.fillColor,
                         weight: group.strokeWidth || 1,
                     });
-                    group.circleMarkers.push(marker);
                 }
+                group.markers.push(marker);
 
                 // Add to the layer and bind a popup
                 marker
@@ -173,6 +172,29 @@ function initialiseMap( $container, config ) {
         } );
         self.legendTabLayout.addTabPanels( [ result ] );
         return result;
+    };
+
+
+    self.recalculateMarkerSizes = function () {
+        var scaleMin = self.getScaleFactorByZoom( 'min' ),
+            scaleMax = self.getScaleFactorByZoom( 'max' );
+        for ( var groupName in self.config.groups ) {
+            var group = self.config.groups[groupName];
+
+            if ( group.fillColor ) {
+                // Circle: configured marker size is the size of a marker at lowest zoom level
+                group.markers.forEach( function( marker ) {
+                    marker.setRadius( scaleMin * group.size/2 );
+                } );
+            } else if ( group.markerIcon ) {
+                // Icon: configured marker size is the size of a marker at the highest zoom level
+                self.leafletIcons[groupName].options.iconSize = [ group.size[0] * scaleMax, group.size[1] * scaleMax ];
+                // Update all existing markers to use the altered icon instance
+                group.markers.forEach( function( marker ) {
+                    marker.setIcon( self.leafletIcons[groupName] );
+                } );
+            }
+        }
     };
 
 
@@ -214,33 +236,26 @@ function initialiseMap( $container, config ) {
         } );
         self.setCurrentBackground( 0 );
     
-        self.leaflet.on( 'zoomend', function() {
-            for ( var groupName in self.config.groups ) {
-                var group = self.config.groups[groupName];
-                // Configured marker size is the diameter of a marker at lowest zoom level
-                group.circleMarkers.forEach( function( marker ) {
-                    marker.setRadius( self.getCircleRadiusAtCurrentZoom( group.size ) );
-                } );
-            }
-        } );
+        self.leaflet.on( 'zoomend', self.recalculateMarkerSizes );
     
         for ( var groupName in self.config.groups ) {
             var group = self.config.groups[groupName];
-            group.circleMarkers = [];
+            group.markers = [];
     
             // Set as visible in the visibility mask
             self.groupVisibilityMask[groupName] = true;
     
             if ( group.markerIcon ) {
                 // Prepare the icon objects for Leaflet markers
-                self.leafletIcons[groupName] = L.icon( { iconUrl: group.markerIcon, iconSize: [ 32, 32 ] } );
+                self.leafletIcons[groupName] = L.icon( { iconUrl: group.markerIcon, iconSize: group.size } );
             }
         }
+
+        self.recalculateMarkerSizes();
     
         // Get control anchors
         self.bottomLeftAnchor = self.$root.find( '.leaflet-control-container .leaflet-bottom.leaflet-left' );
         self.topRightAnchor = self.$root.find( '.leaflet-control-container .leaflet-top.leaflet-right' );
-
 
         // Create a coordinate-under-cursor display
         self.$coordTracker = $( '<div class="leaflet-control datamap-control-coords">' )
