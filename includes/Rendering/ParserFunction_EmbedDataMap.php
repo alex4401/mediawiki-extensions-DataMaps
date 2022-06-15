@@ -6,6 +6,7 @@ use PPFrame;
 use Title;
 use WikiPage;
 use MediaWiki\Revision\RevisionRecord;
+use Ark\DataMaps\Data\DataMapSpec;
 use Ark\DataMaps\Content\DataMapContent;
 
 final class ParserFunction_EmbedDataMap {
@@ -33,7 +34,7 @@ final class ParserFunction_EmbedDataMap {
             return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true ];
         } 
 
-        $options = self::getRenderOptions( $params );
+        $options = self::getRenderOptions( $content->asModel(), $params );
 
         $embed = $content->getEmbedRenderer( $title, $parser );
 		$embed->prepareOutput( $parser->getOutput() );
@@ -46,7 +47,7 @@ final class ParserFunction_EmbedDataMap {
 		return [ $embed->getHtml( $options ), 'noparse' => true, 'isHTML' => true ];
     }
 
-    public static function getRenderOptions( array $params ): DataMapRenderOptions {
+    public static function getRenderOptions( DataMapSpec $data, array $params ): DataMapRenderOptions {
         $result = new DataMapRenderOptions();
 
 		foreach ( $params as $param ) {
@@ -65,6 +66,9 @@ final class ParserFunction_EmbedDataMap {
                     $result->displayTitle = true;
                     $result->titleOverride = $value;
                 }
+            } else if ( $key == 'filter' ) {
+                $result->displayGroups = explode( ',', $value );
+                // TODO: verify the markers are present on map
             }
         }
         

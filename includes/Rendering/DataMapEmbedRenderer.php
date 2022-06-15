@@ -126,7 +126,7 @@ class DataMapEmbedRenderer {
         return $out;
     }
 
-    public function getMarkerGroupConfig(DataMapGroupSpec $spec): array {
+    public function getMarkerGroupConfig( DataMapGroupSpec $spec ): array {
         $out = array(
             'name' => $spec->getName(),
             'size' => $spec->getSize(),
@@ -185,6 +185,9 @@ class DataMapEmbedRenderer {
         // Stack the containers
         $containerMain->appendContent( $containerTop );
         $containerMain->appendContent( $containerContent );
+
+        // Set data attribute with filters if they are specified
+        $containerMain->setAttributes( [ 'data-filter-groups' => implode( '|', $options->displayGroups ) ] );
 
         // Bar at the top with map title
         if ( $options->displayTitle ) {
