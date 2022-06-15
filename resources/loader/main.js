@@ -147,7 +147,7 @@ function initialiseMap( id, $container, config ) {
                 .on( 'click', function () {
                     self.storage.toggleDismissal( type, instance );
                     self.readyMarker( type, group, instance, marker );
-                    $( this ).text( getDismissToolText( type, instance ) );
+                    self.leaflet.closePopup();
                 } );
             $( '<li class="datamap-popup-dismiss">' ).append( $link ).appendTo( $out );
         }
