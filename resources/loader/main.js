@@ -294,6 +294,12 @@ function initialiseMap( id, $container, config ) {
     };
 
 
+    self.restoreDefaultView = function () {
+        self.leaflet.setZoom( self.leaflet.options.minZoom );
+        self.leaflet.fitBounds( flipLatitudeBox( self.background.at ) );
+    };
+
+
     var buildLeafletMap = function ( $holder ) {
         var rendererSettings = {
             padding: 1/3
@@ -308,7 +314,6 @@ function initialiseMap( id, $container, config ) {
             zoomDelta: 0.25,
             minZoom: 2.75,
             maxZoom: 5,
-            zoom: 2.75,
             zoomAnimation: false,
             wheelPxPerZoomLevel: 240,
             markerZoomAnimation: false,
@@ -327,7 +332,7 @@ function initialiseMap( id, $container, config ) {
             renderer: L.canvas( rendererSettings )
         } );
     
-        self.leaflet = L.map( $holder.get( 0 ), leafletConfig ).fitBounds( [ [0, 0], [100, 100] ] );
+        self.leaflet = L.map( $holder.get( 0 ), leafletConfig );
 
         // Prepare all backgrounds
         self.config.backgrounds.forEach( function ( background ) {
@@ -335,7 +340,8 @@ function initialiseMap( id, $container, config ) {
 
             // Image overlay:
             // Latitude needs to be flipped as directions differ between Leaflet and ARK
-            L.imageOverlay( background.image, flipLatitudeBox( background.at || [ [100, 0], [0, 100] ] ) ).addTo( background.overlay );
+            background.at = background.at || [ [100, 0], [0, 100] ];
+            L.imageOverlay( background.image, flipLatitudeBox( background.at ) ).addTo( background.overlay );
 
             // Prepare overlay layers
             if ( background.overlays ) {
@@ -352,8 +358,8 @@ function initialiseMap( id, $container, config ) {
         } );
         // Switch to the last chosen one or first defined
         self.setCurrentBackground( self.storage.get( 'background' ) || 0 );
-    
-        self.leaflet.on( 'zoomend', self.recalculateMarkerSizes );
+        // Restore default view
+        self.restoreDefaultView();
     
         for ( var groupName in self.config.groups ) {
             var group = self.config.groups[groupName];
@@ -368,11 +374,14 @@ function initialiseMap( id, $container, config ) {
             }
         }
 
+        // Recalculate marker sizes when zoom ends
+        self.leaflet.on( 'zoomend', self.recalculateMarkerSizes );
         self.recalculateMarkerSizes();
     
         // Get control anchors
         self.bottomLeftAnchor = self.$root.find( '.leaflet-control-container .leaflet-bottom.leaflet-left' );
         self.topRightAnchor = self.$root.find( '.leaflet-control-container .leaflet-top.leaflet-right' );
+        self.topLeftAnchor = self.$root.find( '.leaflet-control-container .leaflet-top.leaflet-left' );
 
         // Create a coordinate-under-cursor display
         self.$coordTracker = $( '<div class="leaflet-control datamap-control-coords">' )
@@ -398,6 +407,16 @@ function initialiseMap( id, $container, config ) {
                 $( '<option>' ).attr( 'value', index ).text( background.name ).appendTo( $switch );
             } );
         }
+
+        // Extend zoom control to add a button to reset the view
+        $( '<a href="#" role="button" aria-disabled="false"></a>' )
+            .attr( {
+                title: mw.msg( 'datamap-control-reset-view' ),
+                'aria-label': mw.msg( 'datamap-control-reset-view' )
+            } )
+            .on( 'click', self.restoreDefaultView )
+            .appendTo( $( '<div class="leaflet-control leaflet-bar datamap-control-viewreset">' )
+                .appendTo( self.topLeftAnchor ) );
     };
 
 

@@ -33,5 +33,6 @@
     "datamap-popup-dismissed": "Collected",
     "datamap-popup-mark-as-dismissed": "Mark as collected",
 
-    "datamap-coordinate-control-text": "lat $1, lon $2"
+    "datamap-coordinate-control-text": "lat $1, lon $2",
+    "datamap-control-reset-view": "Restore default view"
 }

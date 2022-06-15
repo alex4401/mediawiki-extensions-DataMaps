@@ -58,7 +58,8 @@
 				"datamap-popup-related-article",
 				"datamap-popup-dismissed",
 				"datamap-popup-mark-as-dismissed",
-				"datamap-coordinate-control-text"
+				"datamap-coordinate-control-text",
+				"datamap-control-reset-view"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},
