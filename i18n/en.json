@@ -28,6 +28,11 @@
     "datamap-toggle-show-all": "Show all",
     "datamap-toggle-hide-all": "Hide all",
     "datamap-toggle-caves": "Toggle caves",
+
     "datamap-popup-related-article": "See more",
-    "datamap-coordinate-control-text": "lat $1, lon $2"
+    "datamap-popup-dismissed": "Collected",
+    "datamap-popup-mark-as-dismissed": "Mark as collected",
+
+    "datamap-coordinate-control-text": "lat $1, lon $2",
+    "datamap-control-reset-view": "Restore default view"
 }

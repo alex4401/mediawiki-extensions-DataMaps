@@ -34,11 +34,11 @@ class DataMapSpec {
     }
 
     public function getInjectedLeafletSettings(): ?object {
-        return $this->raw->leafletSettings;
+        return isset( $this->raw->leafletSettings ) ? $this->raw->leafletSettings : null;
     }
 
     public function getCustomData(): ?object {
-        return $this->raw->custom;
+        return isset( $this->raw->custom ) ? $this->raw->custom : null;
     }
 
     public function getRawMarkerMap(): object {

@@ -1,8 +1,6 @@
 <?php
 namespace Ark\DataMaps\Rendering;
 
-use Ark\DataMaps\Data\DataMapSpec;
-use Ark\DataMaps\Data\DataMapGroupSpec;
 use MediaWiki\MediaWikiServices;
 use Title;
 use Parser;
@@ -13,6 +11,12 @@ use Html;
 use File;
 use InvalidArgumentException;
 use PPFrame;
+
+use Ark\DataMaps\Data\DataMapSpec;
+use Ark\DataMaps\Data\DataMapGroupSpec;
+use Ark\DataMaps\Data\DataMapBackgroundSpec;
+use Ark\DataMaps\Data\DataMapBackgroundOverlaySpec;
+use Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 
 class DataMapEmbedRenderer {
     const MARKER_ICON_WIDTH = 24;
@@ -55,7 +59,7 @@ class DataMapEmbedRenderer {
         return self::getFile( $title, $width )->getURL();
     }
 
-    public function prepareOutput(ParserOutput &$parserOutput) {
+    public function prepareOutput( ParserOutput &$parserOutput ) {
         // Enable and configure OOUI
         $parserOutput->setEnableOOUI( true );
 		\OOUI\Theme::setSingleton( new \OOUI\WikimediaUITheme() );
@@ -73,7 +77,7 @@ class DataMapEmbedRenderer {
             $this->getId() => $this->getJsConfigVariables()
         ];
         if ( array_key_exists( 'dataMaps', $parserOutput->mJsConfigVars ) ) {
-            $configsVar = array_merge( $parserOutput->mJsConfigVars['dataMaps'], $configsVar );
+            $configsVar += $parserOutput->mJsConfigVars['dataMaps'];
         }
         $parserOutput->addJsConfigVars( 'dataMaps', $configsVar );
 
@@ -94,7 +98,7 @@ class DataMapEmbedRenderer {
             'version' => $this->title->getLatestRevID(),
 
             'coordinateBounds' => $this->data->coordinateBounds,
-            'backgrounds' => array_map( function ( $background ) {
+            'backgrounds' => array_map( function ( DataMapBackgroundSpec $background ) {
                 $image = $this->getFile( $background->getImageName() );
                 $out = [
                     'image' => $image->getURL(),
@@ -109,24 +113,39 @@ class DataMapEmbedRenderer {
                     $out['at'] = $background->getPlacementLocation();
                 }
 
+                if ( $background->hasOverlays() ) {
+                    $out['overlays'] = [];
+                    $background->iterateOverlays( function ( DataMapBackgroundOverlaySpec $overlay ) use ( &$out ) {
+                        $result = [ 'at' => $overlay->getPlacementLocation() ];
+                        if ( $overlay->getName() != null ) {
+                            $result['name'] = $overlay->getName();
+                        }
+                        $out['overlays'][] = $result;
+                    } );
+                }
+
                 return $out;
             }, $this->data->getBackgrounds() ),
             
             'groups' => [],
+            'layers' => [],
             'layerIds' => $this->data->getLayerNames(),
-            'leafletSettings' => $this->data->getInjectedLeafletSettings(),
 
             'custom' => $this->data->getCustomData()
         ];
 
-        $this->data->iterateGroups( function(DataMapGroupSpec $spec) use (&$out) {
-            $out['groups'][$spec->getId()] = $this->getMarkerGroupConfig($spec);
+        $this->data->iterateGroups( function( DataMapGroupSpec $spec ) use ( &$out ) {
+            $out['groups'][$spec->getId()] = $this->getMarkerGroupConfig( $spec );
         } );
+
+        if ( $this->data->getInjectedLeafletSettings() ) {
+            $out['leafletSettings'] = $this->data->getInjectedLeafletSettings();
+        }
 
         return $out;
     }
 
-    public function getMarkerGroupConfig(DataMapGroupSpec $spec): array {
+    public function getMarkerGroupConfig( DataMapGroupSpec $spec ): array {
         $out = array(
             'name' => $spec->getName(),
             'size' => $spec->getSize(),
@@ -134,7 +153,19 @@ class DataMapEmbedRenderer {
 
         switch ( $spec->getDisplayMode() ) {
             case DataMapGroupSpec::DM_CIRCLE:
-                $out['fillColor'] = $spec->getFillColour();
+                $out['fillColor'] = DataMapColourUtils::asHex( $spec->getFillColour() );
+
+                if ( $spec->getRawStrokeColour() != null ) {
+                    $out['strokeColor'] = DataMapColourUtils::asHex( $spec->getStrokeColour() );
+                }
+
+                if ( $spec->getStrokeWidth() != DataMapGroupSpec::DEFAULT_CIRCLE_STROKE_WIDTH ) {
+                    $out['strokeWidth'] = $spec->getStrokeWidth();
+                }
+
+                if ( $spec->getExtraMinZoomSize() != null ) {
+                    $out['extraMinZoomSize'] = $spec->getExtraMinZoomSize();
+                }
                 break;
             case DataMapGroupSpec::DM_ICON:
                 $out['markerIcon'] = $this->getIconUrl( $spec->getMarkerIcon(), self::MARKER_ICON_WIDTH );
@@ -145,6 +176,14 @@ class DataMapEmbedRenderer {
 
         if ( $spec->getLegendIcon() !== null ) {
             $out['legendIcon'] = $this->getIconUrl( $spec->getLegendIcon(), self::LEGEND_ICON_WIDTH );
+        }
+
+        if ( $spec->getSharedRelatedArticle() !== null ) {
+            $out['relatedArticle'] = $spec->getSharedRelatedArticle();
+        }
+
+        if ( $spec->canDismiss() ) {
+            $out['canDismiss'] = $spec->canDismiss();
         }
 
         return $out;
@@ -185,6 +224,9 @@ class DataMapEmbedRenderer {
         // Stack the containers
         $containerMain->appendContent( $containerTop );
         $containerMain->appendContent( $containerContent );
+
+        // Set data attribute with filters if they are specified
+        $containerMain->setAttributes( [ 'data-filter-groups' => implode( '|', $options->displayGroups ) ] );
 
         // Bar at the top with map title
         if ( $options->displayTitle ) {

@@ -1,6 +1,6 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.3.3",
+	"version": "0.4.0",
 
 	"author": [
 		"alex4401"
@@ -47,15 +47,19 @@
 				"mediawiki.api"
 			],
 			"packageFiles": [
-				"loader/main.js"
+				"loader/main.js",
+				"loader/storage.js"
 			],
 			"messages": [
 				"datamap-legend-tab-locations",
 				"datamap-toggle-show-all",
 				"datamap-toggle-hide-all",
 				"datamap-toggle-caves",
+				"datamap-popup-related-article",
+				"datamap-popup-dismissed",
+				"datamap-popup-mark-as-dismissed",
 				"datamap-coordinate-control-text",
-				"datamap-popup-related-article"
+				"datamap-control-reset-view"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},
