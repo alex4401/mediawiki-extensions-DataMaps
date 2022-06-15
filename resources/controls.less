@@ -1,14 +1,27 @@
 .datamap-container {
-    .datamap-control-coords {
+    .leaflet-control.datamap-control-coords {
         background: rgba(255,255,255,0.8);
         margin: 0;
         padding: 0 5px;
         color: #333;
         line-height: 1.4;
         font-size: 1.6em;
+        margin-left: 0;
+        margin-bottom: 0;
     }
 
     .datamap-control-backgrounds {
         opacity: 0.9;
+    }
+
+    .datamap-control-viewreset {
+        margin-top: 5px;
+        
+        a {
+            background-position: center;
+            background-size: 24px;
+            background-repeat: no-repeat;
+            /* @embed */ background-image: url(./images/ooui/fullScreen.svg);
+        }
     }
 }

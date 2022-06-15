@@ -21,11 +21,11 @@ class DataMapMarkerSpec {
     }
 
     public function getLabel(): ?string {
-        return $this->raw->label;
+        return isset( $this->raw->label ) ? $this->raw->label : null;
     }
 
     public function getDescription(): ?string {
-        return $this->raw->description;
+        return isset( $this->raw->description ) ? $this->raw->description : null;
     }
 
     public function isDescriptionWikitext(): bool {
@@ -33,11 +33,11 @@ class DataMapMarkerSpec {
     }
 
     public function getPopupImage(): ?string {
-        return $this->raw->popupImage;
+        return isset( $this->raw->popupImage ) ? $this->raw->popupImage : null;
     }
 
     public function getRelatedArticle(): ?string {
-        return $this->raw->relatedArticle;
+        return isset( $this->raw->relatedArticle ) ? $this->raw->relatedArticle : null;
     }
 
     public function validate(): ?string {

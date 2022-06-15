@@ -1,8 +1,11 @@
 <?php
 namespace Ark\DataMaps\Data;
 
+use Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
+
 class DataMapGroupSpec {
-    const DEFAULT_CIRCLE_SIZE = 4;
+    const DEFAULT_CIRCLE_SIZE = 5;
+    const DEFAULT_CIRCLE_STROKE_WIDTH = 1;
     const DEFAULT_ICON_SIZE = [ 32, 32 ];
 
     // Display modes
@@ -28,12 +31,12 @@ class DataMapGroupSpec {
 
     public function getCircleSize(): int {
         assert( $this->getDisplayMode() == self::DM_CIRCLE );
-        return $this->raw->size ?? self::DEFAULT_CIRCLE_SIZE;
+        return isset( $this->raw->size ) ? $this->raw->size : self::DEFAULT_CIRCLE_SIZE;
     }
 
     public function getIconSize(): array {
         assert( $this->getDisplayMode() == self::DM_ICON );
-        return $this->raw->size ?? self::DEFAULT_ICON_SIZE;
+        return isset( $this->raw->size ) ? $this->raw->size : self::DEFAULT_ICON_SIZE;
     }
 
     public function getSize() {
@@ -47,26 +50,66 @@ class DataMapGroupSpec {
         }
     }
 
-    public function getFillColour(): ?string {
+    public function getExtraMinZoomSize() {
+        // TODO: only supported for circle markers
+        return isset( $this->raw->extraMinZoomSize ) ? $this->raw->extraMinZoomSize : null;
+    }
+
+    public function getRawFillColour() /*: ?array|string*/ {
         // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
-        return $this->raw->fillColor;
+        return isset( $this->raw->fillColor ) ? $this->raw->fillColor : null;
+    }
+
+    public function getRawStrokeColour() /*: ?array|string*/ {
+        // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
+        return isset( $this->raw->borderColor ) ? $this->raw->borderColor : null;
+    }
+
+    public function getFillColour(): array {
+        // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
+        return DataMapColourUtils::decode( $this->getRawFillColour() );
+    }
+
+    public function getStrokeColour(): array {
+        // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
+        if ( $this->getRawStrokeColour() != null ) {
+            return DataMapColourUtils::decode( $this->getRawStrokeColour() );
+        }
+
+        return $this->getFillColour();
+    }
+
+    public function getStrokeWidth() /*: ?int|float */ {
+        return isset( $this->raw->borderWidth ) ? $this->raw->borderWidth : self::DEFAULT_CIRCLE_STROKE_WIDTH;
+    }
+
+    private function getUniversalIcon(): ?string {
+        return isset( $this->raw->icon ) ? $this->raw->icon : null;
     }
 
     public function getMarkerIcon(): ?string {
-        return $this->raw->markerIcon ?? $this->raw->icon;
+        return isset( $this->raw->markerIcon ) ? $this->raw->markerIcon : $this->getUniversalIcon();
     }
 
     public function getLegendIcon(): ?string {
-        return $this->raw->legendIcon ?? $this->raw->icon;
+        return isset( $this->raw->legendIcon ) ? $this->raw->legendIcon : $this->getUniversalIcon();
     }
 
     public function getDisplayMode(): int {
-        if ( $this->getFillColour() !== null ) {
+        if ( $this->getRawFillColour() !== null ) {
             return self::DM_CIRCLE;
         } else if ( $this->getMarkerIcon() !== null ) {
             return self::DM_ICON;
         }
         return self::DM_UNKNOWN;
+    }
+
+    public function getSharedRelatedArticle(): ?string {
+        return isset( $this->raw->relatedArticle ) ? $this->raw->relatedArticle : null;
+    }
+
+    public function canDismiss(): bool {
+        return isset( $this->raw->canDismiss ) ? $this->raw->canDismiss : false;
     }
 
     public function validate(): ?string {
