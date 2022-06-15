@@ -58,6 +58,7 @@
 				"datamap-popup-related-article",
 				"datamap-popup-dismissed",
 				"datamap-popup-mark-as-dismissed",
+				"datamap-popup-inside-cave",
 				"datamap-coordinate-control-text",
 				"datamap-control-reset-view"
 			],

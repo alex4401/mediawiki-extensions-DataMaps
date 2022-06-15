@@ -100,7 +100,11 @@ function initialiseMap( id, $container, config ) {
         $( '<b class="datamap-popup-title">' ).text( title ).appendTo( $out );
     
         // Coordinates
-        $( '<div class="datamap-popup-coordinates">' ).text( self.getCoordLabel( instance[0], instance[1] ) ).appendTo( $out );
+        var coordText = self.getCoordLabel( instance[0], instance[1] );
+        if ( type.split( ' ' ).indexOf( 'cave' ) >= 0 ) {
+            coordText += mw.msg( 'datamap-popup-inside-cave' );
+        }
+        $( '<div class="datamap-popup-coordinates">' ).text( coordText ).appendTo( $out );
     
         // Description
         if ( slots.desc ) {
