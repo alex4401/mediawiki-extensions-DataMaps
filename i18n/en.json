@@ -29,6 +29,10 @@
     "datamap-toggle-hide-all": "Hide all",
     "datamap-toggle-caves": "Toggle caves",
 
+    "datamap-layer-control": "Layers",
+    "datamap-layer-surface": "Surface",
+    "datamap-layer-caves": "Caves",
+
     "datamap-popup-inside-cave": " (cave)",
     "datamap-popup-related-article": "See more",
     "datamap-popup-dismissed": "Collected",
