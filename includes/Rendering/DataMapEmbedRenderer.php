@@ -14,6 +14,8 @@ use PPFrame;
 
 use Ark\DataMaps\Data\DataMapSpec;
 use Ark\DataMaps\Data\DataMapGroupSpec;
+use Ark\DataMaps\Data\DataMapBackgroundSpec;
+use Ark\DataMaps\Data\DataMapBackgroundOverlaySpec;
 use Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 
 class DataMapEmbedRenderer {
@@ -57,7 +59,7 @@ class DataMapEmbedRenderer {
         return self::getFile( $title, $width )->getURL();
     }
 
-    public function prepareOutput(ParserOutput &$parserOutput) {
+    public function prepareOutput( ParserOutput &$parserOutput ) {
         // Enable and configure OOUI
         $parserOutput->setEnableOOUI( true );
 		\OOUI\Theme::setSingleton( new \OOUI\WikimediaUITheme() );
@@ -96,7 +98,7 @@ class DataMapEmbedRenderer {
             'version' => $this->title->getLatestRevID(),
 
             'coordinateBounds' => $this->data->coordinateBounds,
-            'backgrounds' => array_map( function ( $background ) {
+            'backgrounds' => array_map( function ( DataMapBackgroundSpec $background ) {
                 $image = $this->getFile( $background->getImageName() );
                 $out = [
                     'image' => $image->getURL(),
@@ -109,6 +111,17 @@ class DataMapEmbedRenderer {
 
                 if ( $background->getPlacementLocation() != null ) {
                     $out['at'] = $background->getPlacementLocation();
+                }
+
+                if ( $background->hasOverlays() ) {
+                    $out['overlays'] = [];
+                    $background->iterateOverlays( function ( DataMapBackgroundOverlaySpec $overlay ) use ( &$out ) {
+                        $result = [ 'at' => $overlay->getPlacementLocation() ];
+                        if ( $overlay->getName() != null ) {
+                            $result['name'] = $overlay->getName();
+                        }
+                        $out['overlays'][] = $result;
+                    } );
                 }
 
                 return $out;

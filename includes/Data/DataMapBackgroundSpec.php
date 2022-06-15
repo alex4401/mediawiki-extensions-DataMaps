@@ -21,6 +21,16 @@ class DataMapBackgroundSpec {
         return $this->raw->name;
     }
 
+    public function hasOverlays(): bool {
+        return isset( $this->raw->overlays );
+    }
+
+    public function iterateOverlays( callable $callback ) {
+        foreach ( $this->raw->overlays as &$raw ) {
+            $callback( new DataMapBackgroundOverlaySpec( $raw ) );
+        }
+    }
+
     public function validate(): ?string {
         // TODO: implement
         return null;

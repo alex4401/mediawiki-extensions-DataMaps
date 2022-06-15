@@ -68,6 +68,11 @@ function initialiseMap( id, $container, config ) {
     };
 
 
+    var flipLatitudeBox = function ( box ) {
+        return [ [100-box[0][0], box[0][1]], [100-box[1][0], box[1][1]] ];
+    };
+
+
     /*
      * Returns scale factor to adjust markers for zoom level
     */
@@ -237,9 +242,15 @@ function initialiseMap( id, $container, config ) {
             self.background.overlay.remove();
         }
 
+        // Check if index is valid, and fall back to first otherwise
+        if ( index < 0 || index >= self.config.backgrounds.length ) {
+            index = 0;
+        }
+
         self.background = self.config.backgrounds[ index ];
         self.backgroundIndex = index;
         self.background.overlay.addTo( self.leaflet );
+        self.background.overlay.bringToBack();
     };
 
 
@@ -314,12 +325,28 @@ function initialiseMap( id, $container, config ) {
     
         self.leaflet = L.map( $holder.get( 0 ), leafletConfig ).fitBounds( [ [0, 0], [100, 100] ] );
 
-        // Prepare image overlays for all backgrounds and switch to the first defined one
+        // Prepare all backgrounds
         self.config.backgrounds.forEach( function ( background ) {
+            background.overlay = L.featureGroup();
+
+            // Image overlay:
             // Latitude needs to be flipped as directions differ between Leaflet and ARK
-            var at = background.at || [ [100, 0], [0, 100] ];
-            background.overlay = L.imageOverlay( background.image, [ [100-at[0][0], at[0][1]], [100-at[1][0], at[1][1]] ] );
+            L.imageOverlay( background.image, flipLatitudeBox( background.at || [ [100, 0], [0, 100] ] ) ).addTo( background.overlay );
+
+            // Prepare overlay layers
+            if ( background.overlays ) {
+                background.overlays.forEach( function ( overlay ) {
+                    var rect = L.rectangle( flipLatitudeBox( overlay.at ), {
+                        fillOpacity: 0.05
+                    } ).addTo( background.overlay );
+
+                    if ( overlay.name ) {
+                        rect.bindTooltip( overlay.name );
+                    }
+                } );
+            }
         } );
+        // Switch to the first defined
         self.setCurrentBackground( 0 );
     
         self.leaflet.on( 'zoomend', self.recalculateMarkerSizes );
