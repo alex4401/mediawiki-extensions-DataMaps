@@ -114,7 +114,6 @@ class DataMapEmbedRenderer {
             
             'groups' => [],
             'layerIds' => $this->data->getLayerNames(),
-            'leafletSettings' => $this->data->getInjectedLeafletSettings(),
 
             'custom' => $this->data->getCustomData()
         ];
@@ -122,6 +121,10 @@ class DataMapEmbedRenderer {
         $this->data->iterateGroups( function(DataMapGroupSpec $spec) use (&$out) {
             $out['groups'][$spec->getId()] = $this->getMarkerGroupConfig($spec);
         } );
+
+        if ( $this->data->getInjectedLeafletSettings() ) {
+            $out['leafletSettings'] = $this->data->getInjectedLeafletSettings();
+        }
 
         return $out;
     }
