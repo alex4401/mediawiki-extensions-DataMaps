@@ -5,7 +5,7 @@ use Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 
 class DataMapGroupSpec {
     const DEFAULT_CIRCLE_SIZE = 5;
-    const DEFAULT_CIRCLE_STROKE_WIDTH = 0.85;
+    const DEFAULT_CIRCLE_STROKE_WIDTH = 1;
     const DEFAULT_ICON_SIZE = [ 32, 32 ];
 
     // Display modes
@@ -71,7 +71,7 @@ class DataMapGroupSpec {
             return DataMapColourUtils::decode( $this->getRawStrokeColour() );
         }
 
-        return DataMapColourUtils::getStrokeColour( $this->getFillColour() );
+        return $this->getFillColour();
     }
 
     public function getStrokeWidth() /*: ?int|float */ {

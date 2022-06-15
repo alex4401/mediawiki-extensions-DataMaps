@@ -141,7 +141,10 @@ class DataMapEmbedRenderer {
         switch ( $spec->getDisplayMode() ) {
             case DataMapGroupSpec::DM_CIRCLE:
                 $out['fillColor'] = DataMapColourUtils::asHex( $spec->getFillColour() );
-                $out['strokeColor'] = DataMapColourUtils::asHex( $spec->getStrokeColour() );
+
+                if ( $spec->getRawStrokeColour() != null ) {
+                    $out['strokeColor'] = DataMapColourUtils::asHex( $spec->getStrokeColour() );
+                }
 
                 if ( $spec->getStrokeWidth() != DataMapGroupSpec::DEFAULT_CIRCLE_STROKE_WIDTH ) {
                     $out['strokeWidth'] = $spec->getStrokeWidth();
