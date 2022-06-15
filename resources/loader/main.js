@@ -410,6 +410,7 @@ function initialiseMap( id, $container, config ) {
             self.config.backgrounds.forEach( function ( background, index ) {
                 $( '<option>' ).attr( 'value', index ).text( background.name ).appendTo( $switch );
             } );
+            $switch.val( self.backgroundIndex );
         }
 
         // Extend zoom control to add a button to reset the view
