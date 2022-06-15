@@ -100,7 +100,11 @@ function initialiseMap( id, $container, config ) {
         $( '<b class="datamap-popup-title">' ).text( title ).appendTo( $out );
     
         // Coordinates
-        $( '<div class="datamap-popup-coordinates">' ).text( self.getCoordLabel( instance[0], instance[1] ) ).appendTo( $out );
+        var coordText = self.getCoordLabel( instance[0], instance[1] );
+        if ( type.split( ' ' ).indexOf( 'cave' ) >= 0 ) {
+            coordText += mw.msg( 'datamap-popup-inside-cave' );
+        }
+        $( '<div class="datamap-popup-coordinates">' ).text( coordText ).appendTo( $out );
     
         // Description
         if ( slots.desc ) {
@@ -143,7 +147,7 @@ function initialiseMap( id, $container, config ) {
                 .on( 'click', function () {
                     self.storage.toggleDismissal( type, instance );
                     self.readyMarker( type, group, instance, marker );
-                    $( this ).text( getDismissToolText( type, instance ) );
+                    self.leaflet.closePopup();
                 } );
             $( '<li class="datamap-popup-dismiss">' ).append( $link ).appendTo( $out );
         }
@@ -177,9 +181,16 @@ function initialiseMap( id, $container, config ) {
     */
     self.instantiateMarkers = function ( data ) {
         for ( var markerType in data ) {
-            var groupName = markerType.split( ' ', 1 )[0];
+            var layers = markerType.split( ' ' );
+            var groupName = layers[0];
             var group = self.config.groups[groupName];
             var placements = data[markerType];
+
+            // Add a runtime "surface" layer if there is no "cave" layer
+            if ( layers.indexOf( 'cave' ) < 0 ) {
+                layers.push( 'surface' );
+                markerType += ' surface';
+            }
 
             // Initialise the Leaflet layer group if it hasn't been already
             if ( !self.leafletLayers[markerType] ) {
@@ -406,6 +417,7 @@ function initialiseMap( id, $container, config ) {
             self.config.backgrounds.forEach( function ( background, index ) {
                 $( '<option>' ).attr( 'value', index ).text( background.name ).appendTo( $switch );
             } );
+            $switch.val( self.backgroundIndex );
         }
 
         // Extend zoom control to add a button to reset the view
@@ -467,23 +479,65 @@ function initialiseMap( id, $container, config ) {
         // Cave layer toggle
         // TODO: rework into a generic layer system
         if ( self.isLayerUsed( 'cave' ) ) {
-            var caveToggleButton = new OO.ui.ToggleButtonWidget( {
-                label: mw.msg( 'datamap-toggle-caves' ),
-                value: true
+            var $layerPopup = $( '<div>' );
+
+            {
+                var checkbox = new OO.ui.CheckboxInputWidget( {
+                    selected: true
+                } );
+                var field = new OO.ui.FieldLayout( checkbox, {
+                    label: mw.msg( 'datamap-layer-surface' ),
+                    align: 'inline'
+                } );
+                field.$element.appendTo( $layerPopup );
+
+                checkbox.on( 'change', ( function ( checkbox ) {
+                    var newState = checkbox.isSelected();
+                    // Update visibility mask for surface
+                    self.layerVisibilityMask.surface = newState;
+                    // Update visibility for any marker of an unhidden group with no `cave` layer
+                    self.updateLayerVisibility( function( layerNames ) {
+                        return layerNames.indexOf( 'cave' ) < 0 && self.groupVisibilityMask[layerNames[0]];
+                    }, newState );
+                } ).bind( null, checkbox ) );
+            }
+
+            {
+                var checkbox = new OO.ui.CheckboxInputWidget( {
+                    selected: true
+                } );
+                var field = new OO.ui.FieldLayout( checkbox, {
+                    label: mw.msg( 'datamap-layer-caves' ),
+                    align: 'inline'
+                } );
+                field.$element.appendTo( $layerPopup );
+
+                checkbox.on( 'change', ( function ( checkbox ) {
+                    var newState = checkbox.isSelected();
+                    // Update visibility mask for caves
+                    self.layerVisibilityMask.cave = newState;
+                    // Update visibility for any marker of an unhidden group with `cave` layer
+                    self.updateLayerVisibility( function( layerNames ) {
+                        return layerNames.indexOf( 'cave' ) >= 0 && self.groupVisibilityMask[layerNames[0]];
+                    }, newState );
+                } ).bind( null, checkbox ) );
+            }
+
+            // Construct the dropdown button
+            var layerPopupButton = new OO.ui.PopupButtonWidget( { 
+                label: mw.msg( 'datamap-layer-control' ), 
+                popup: {
+                    $content: $layerPopup,
+                    padded: true,
+                    width: 220,
+                    align: 'forwards'
+                }
             } );
-            caveToggleButton.on( 'click', function() {
-                var newState = caveToggleButton.getValue();
-                // Update visibility mask for caves
-                self.layerVisibilityMask.cave = newState;
-                // Update visibility for any marker of an unhidden group with `cave` layer
-                self.updateLayerVisibility( function( layerNames ) {
-                    return layerNames.indexOf( 'cave' ) >= 0 && self.groupVisibilityMask[layerNames[0]];
-                }, newState );
-            } );
-            buttonGroup.addItems( [ caveToggleButton ] );
+            buttonGroup.addItems( [ layerPopupButton ] );
         }
     
         // Individual group toggles
+        var $groupContainer = $( '<div class="datamap-container-groups">' ).appendTo( $container );
         for ( var groupName in self.config.groups ) {
             var group = self.config.groups[groupName];
     
@@ -522,7 +576,7 @@ function initialiseMap( id, $container, config ) {
                 field.$header.prepend( $( '<img width=24 height=24/>' ).attr( 'src', group.legendIcon ) );
             }
     
-            field.$element.appendTo( $container );
+            field.$element.appendTo( $groupContainer );
             self.legendGroupToggles.push( checkbox );
         }
     };
