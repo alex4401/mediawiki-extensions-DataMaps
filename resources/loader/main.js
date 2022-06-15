@@ -68,6 +68,11 @@ function initialiseMap( $container, config ) {
     };
 
 
+    self.getCoordLabel = function ( lat, lon ) {
+        return self.coordTrackingMsg.replace( '$1', lat.toFixed( 2 ) ).replace( '$2', lon.toFixed( 2 ) );
+    };
+
+
     /*
      * Builds popup contents for a marker instance
     */
@@ -83,7 +88,7 @@ function initialiseMap( $container, config ) {
         parts.push( '<b class="datamap-popup-title">' + title + '</b>' );
     
         // Coordinates
-        parts.push( '<div class="datamap-popup-coordinates">lat '+instance[0]+', lon '+instance[1]+'</div>' );
+        parts.push( '<div class="datamap-popup-coordinates">' + self.getCoordLabel( instance[0], instance[1] ) + '</div>' );
     
         // Description
         if ( slots.desc ) {
@@ -276,9 +281,7 @@ function initialiseMap( $container, config ) {
             var lon = event.latlng.lng;
             if ( lat >= -5 && lat <= 105 && lon >= -5 && lon <= 105 ) {
                 lat = 100 - lat;
-                self.$coordTracker.text( self.coordTrackingMsg
-                                       .replace( '$1', lat.toFixed( 2 ) )
-                                       .replace( '$2', lon.toFixed( 2 ) ) );
+                self.$coordTracker.text( self.getCoordLabel( lat, lon ) );
             }
         } );
 
