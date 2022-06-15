@@ -75,7 +75,7 @@ class DataMapEmbedRenderer {
             $this->getId() => $this->getJsConfigVariables()
         ];
         if ( array_key_exists( 'dataMaps', $parserOutput->mJsConfigVars ) ) {
-            $configsVar = array_merge( $parserOutput->mJsConfigVars['dataMaps'], $configsVar );
+            $configsVar += $parserOutput->mJsConfigVars['dataMaps'];
         }
         $parserOutput->addJsConfigVars( 'dataMaps', $configsVar );
 
