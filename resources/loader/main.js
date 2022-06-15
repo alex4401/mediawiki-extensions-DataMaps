@@ -258,10 +258,9 @@ function initialiseMap( id, $container, config ) {
     self.recalculateMarkerSizes = function () {
         var scaleMin = self.getScaleFactorByZoom( 'min' ),
             scaleMax = self.getScaleFactorByZoom( 'max' );
-        var scaleCir = scaleMin + (1 - scaleMax) * 2;
+        var scaleCir = self.leaflet.options.dynamicMarkerSizing ? ( scaleMin + (1 - scaleMax) * 2 ) : scaleMin;
         for ( var groupName in self.config.groups ) {
             var group = self.config.groups[groupName];
-
             if ( group.fillColor ) {
                 // Circle: configured marker size is the size of a marker at lowest zoom level
                 group.markers.forEach( function( marker ) {
@@ -298,7 +297,9 @@ function initialiseMap( id, $container, config ) {
             wheelPxPerZoomLevel: 240,
             markerZoomAnimation: false,
             // Pan settings
-            inertia: false
+            inertia: false,
+            // Internal
+            dynamicMarkerSizing: true
         };
         leafletConfig = $.extend( leafletConfig, self.config.leafletSettings );
         rendererSettings = $.extend( rendererSettings, leafletConfig.rendererSettings );
