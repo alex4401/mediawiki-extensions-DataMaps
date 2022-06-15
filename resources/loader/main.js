@@ -99,8 +99,9 @@ function initialiseMap( $container, config ) {
         }
     
         // Related article
-        if ( slots.article ) {
-            parts.push( '<div class="datamap-popup-seemore"><a href="' + mw.util.getUrl( slots.article ) + '">'
+        var article = slots.article || group.article;
+        if ( article ) {
+            parts.push( '<div class="datamap-popup-seemore"><a href="' + mw.util.getUrl( article ) + '">'
                         + mw.msg( 'datamap-popup-related-article' ) + '</a></div>' );
         }
     

@@ -69,6 +69,10 @@ class DataMapGroupSpec {
         return self::DM_UNKNOWN;
     }
 
+    public function getSharedRelatedArticle(): ?string {
+        return $this->raw->relatedArticle;
+    }
+
     public function validate(): ?string {
         if ( $this->getMarkerIcon() === null && $this->getFillColour() === null ) {
             return wfMessage( 'datamap-error-validation-no-display', wfEscapeWikiText( $this->id ) )->escaped();

@@ -150,6 +150,10 @@ class DataMapEmbedRenderer {
             $out['legendIcon'] = $this->getIconUrl( $spec->getLegendIcon(), self::LEGEND_ICON_WIDTH );
         }
 
+        if ( $spec->getSharedRelatedArticle() ) {
+            $out['relatedArticle'] = $spec->getSharedRelatedArticle();
+        }
+
         return $out;
     }
 
