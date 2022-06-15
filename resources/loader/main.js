@@ -17,6 +17,7 @@ function initialiseMap( id, $container, config ) {
         storage: null,
 
         background: null,
+        backgroundIndex: 0,
 
         // Leaflet's Map instance
         leaflet: null,
@@ -237,6 +238,7 @@ function initialiseMap( id, $container, config ) {
         }
 
         self.background = self.config.backgrounds[ index ];
+        self.backgroundIndex = index;
         self.background.overlay.addTo( self.leaflet );
     };
 
@@ -314,7 +316,9 @@ function initialiseMap( id, $container, config ) {
 
         // Prepare image overlays for all backgrounds and switch to the first defined one
         self.config.backgrounds.forEach( function ( background ) {
-            background.overlay = L.imageOverlay( background.image, ( background.at || [ [0, 0], [100, 100] ] ) );
+            // Latitude needs to be flipped as directions differ between Leaflet and ARK
+            var at = background.at || [ [100, 0], [0, 100] ];
+            background.overlay = L.imageOverlay( background.image, [ [100-at[0][0], at[0][1]], [100-at[1][0], at[1][1]] ] );
         } );
         self.setCurrentBackground( 0 );
     
