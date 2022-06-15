@@ -1,8 +1,6 @@
 <?php
 namespace Ark\DataMaps\Rendering;
 
-use Ark\DataMaps\Data\DataMapSpec;
-use Ark\DataMaps\Data\DataMapGroupSpec;
 use MediaWiki\MediaWikiServices;
 use Title;
 use Parser;
@@ -13,6 +11,10 @@ use Html;
 use File;
 use InvalidArgumentException;
 use PPFrame;
+
+use Ark\DataMaps\Data\DataMapSpec;
+use Ark\DataMaps\Data\DataMapGroupSpec;
+use Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 
 class DataMapEmbedRenderer {
     const MARKER_ICON_WIDTH = 24;
@@ -113,13 +115,14 @@ class DataMapEmbedRenderer {
             }, $this->data->getBackgrounds() ),
             
             'groups' => [],
+            'layers' => [],
             'layerIds' => $this->data->getLayerNames(),
 
             'custom' => $this->data->getCustomData()
         ];
 
-        $this->data->iterateGroups( function(DataMapGroupSpec $spec) use (&$out) {
-            $out['groups'][$spec->getId()] = $this->getMarkerGroupConfig($spec);
+        $this->data->iterateGroups( function( DataMapGroupSpec $spec ) use ( &$out ) {
+            $out['groups'][$spec->getId()] = $this->getMarkerGroupConfig( $spec );
         } );
 
         if ( $this->data->getInjectedLeafletSettings() ) {
@@ -137,7 +140,12 @@ class DataMapEmbedRenderer {
 
         switch ( $spec->getDisplayMode() ) {
             case DataMapGroupSpec::DM_CIRCLE:
-                $out['fillColor'] = $spec->getFillColour();
+                $out['fillColor'] = DataMapColourUtils::asHex( $spec->getFillColour() );
+                $out['strokeColor'] = DataMapColourUtils::asHex( $spec->getStrokeColour() );
+
+                if ( $spec->getStrokeWidth() != DataMapGroupSpec::DEFAULT_CIRCLE_STROKE_WIDTH ) {
+                    $out['strokeWidth'] = $spec->getStrokeWidth();
+                }
                 break;
             case DataMapGroupSpec::DM_ICON:
                 $out['markerIcon'] = $this->getIconUrl( $spec->getMarkerIcon(), self::MARKER_ICON_WIDTH );
@@ -150,7 +158,7 @@ class DataMapEmbedRenderer {
             $out['legendIcon'] = $this->getIconUrl( $spec->getLegendIcon(), self::LEGEND_ICON_WIDTH );
         }
 
-        if ( $spec->getSharedRelatedArticle() ) {
+        if ( $spec->getSharedRelatedArticle() !== null ) {
             $out['relatedArticle'] = $spec->getSharedRelatedArticle();
         }
 

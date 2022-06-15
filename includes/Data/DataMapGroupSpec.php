@@ -1,8 +1,11 @@
 <?php
 namespace Ark\DataMaps\Data;
 
+use Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
+
 class DataMapGroupSpec {
     const DEFAULT_CIRCLE_SIZE = 5;
+    const DEFAULT_CIRCLE_STROKE_WIDTH = 0.85;
     const DEFAULT_ICON_SIZE = [ 32, 32 ];
 
     // Display modes
@@ -47,9 +50,32 @@ class DataMapGroupSpec {
         }
     }
 
-    public function getFillColour(): ?string {
+    public function getRawFillColour() /*: ?array|string*/ {
         // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
         return isset( $this->raw->fillColor ) ? $this->raw->fillColor : null;
+    }
+
+    public function getRawStrokeColour() /*: ?array|string*/ {
+        // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
+        return isset( $this->raw->borderColor ) ? $this->raw->borderColor : null;
+    }
+
+    public function getFillColour(): array {
+        // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
+        return DataMapColourUtils::decode( $this->getRawFillColour() );
+    }
+
+    public function getStrokeColour(): array {
+        // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
+        if ( $this->getRawStrokeColour() != null ) {
+            return DataMapColourUtils::decode( $this->getRawStrokeColour() );
+        }
+
+        return DataMapColourUtils::getStrokeColour( $this->getFillColour() );
+    }
+
+    public function getStrokeWidth() /*: ?int|float */ {
+        return isset( $this->raw->borderWidth ) ? $this->raw->borderWidth : self::DEFAULT_CIRCLE_STROKE_WIDTH;
     }
 
     private function getUniversalIcon(): ?string {
@@ -65,7 +91,7 @@ class DataMapGroupSpec {
     }
 
     public function getDisplayMode(): int {
-        if ( $this->getFillColour() !== null ) {
+        if ( $this->getRawFillColour() !== null ) {
             return self::DM_CIRCLE;
         } else if ( $this->getMarkerIcon() !== null ) {
             return self::DM_ICON;

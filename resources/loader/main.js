@@ -200,7 +200,7 @@ function initialiseMap( id, $container, config ) {
                         fillColor: group.fillColor,
                         fillOpacity: 0.7,
                         color: group.strokeColor || group.fillColor,
-                        weight: group.strokeWidth || 1,
+                        weight: group.strokeWidth || 0.8,
                     } );
                 }
                 group.markers.push( marker );
