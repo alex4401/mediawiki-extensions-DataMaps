@@ -271,11 +271,14 @@ function initialiseMap( id, $container, config ) {
     self.recalculateMarkerSizes = function () {
         var scaleMin = self.getScaleFactorByZoom( 'min' ),
             scaleMax = self.getScaleFactorByZoom( 'max' );
-        var scaleCir = self.leaflet.options.dynamicMarkerSizing ? ( scaleMin + (1 - scaleMax) * 2 ) : scaleMin;
         for ( var groupName in self.config.groups ) {
             var group = self.config.groups[groupName];
             if ( group.fillColor ) {
-                // Circle: configured marker size is the size of a marker at lowest zoom level
+                // Circle: configured marker size is the size of a marker at lowest zoom level, with an optional growth factor
+                //         inverse to the zoom level
+                var scaleCir = self.leaflet.options.scaleMarkersExtraForMinZoom
+                    ? ( scaleMin + ( 1 - scaleMax ) * ( group.extraMinZoomSize || self.leaflet.options.extraMinZoomSize ) )
+                    : scaleMin;
                 group.markers.forEach( function( marker ) {
                     marker.setRadius( ( group.size > 8 ? scaleMin : scaleCir ) * group.size/2 );
                 } );
@@ -312,7 +315,8 @@ function initialiseMap( id, $container, config ) {
             // Pan settings
             inertia: false,
             // Internal
-            dynamicMarkerSizing: true
+            scaleMarkersExtraForMinZoom: true,
+            extraMinZoomSize: 1.8,
         };
         leafletConfig = $.extend( leafletConfig, self.config.leafletSettings );
         rendererSettings = $.extend( rendererSettings, leafletConfig.rendererSettings );

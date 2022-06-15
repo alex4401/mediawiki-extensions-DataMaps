@@ -50,6 +50,11 @@ class DataMapGroupSpec {
         }
     }
 
+    public function getExtraMinZoomSize() {
+        // TODO: only supported for circle markers
+        return isset( $this->raw->extraMinZoomSize ) ? $this->raw->extraMinZoomSize : null;
+    }
+
     public function getRawFillColour() /*: ?array|string*/ {
         // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
         return isset( $this->raw->fillColor ) ? $this->raw->fillColor : null;

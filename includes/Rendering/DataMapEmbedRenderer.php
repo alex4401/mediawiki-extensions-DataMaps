@@ -162,6 +162,10 @@ class DataMapEmbedRenderer {
                 if ( $spec->getStrokeWidth() != DataMapGroupSpec::DEFAULT_CIRCLE_STROKE_WIDTH ) {
                     $out['strokeWidth'] = $spec->getStrokeWidth();
                 }
+
+                if ( $spec->getExtraMinZoomSize() != null ) {
+                    $out['extraMinZoomSize'] = $spec->getExtraMinZoomSize();
+                }
                 break;
             case DataMapGroupSpec::DM_ICON:
                 $out['markerIcon'] = $this->getIconUrl( $spec->getMarkerIcon(), self::MARKER_ICON_WIDTH );
