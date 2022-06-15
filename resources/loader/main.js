@@ -196,7 +196,7 @@ function initialiseMap( id, $container, config ) {
                 } else {
                     // Circular marker
                     marker = L.circleMarker( position, {
-                        radius: self.getScaleFactorByZoom( 'min' ) * group.size/2,
+                        radius: group.size/2,
                         fillColor: group.fillColor,
                         fillOpacity: 0.7,
                         color: group.strokeColor || group.fillColor,
@@ -222,6 +222,9 @@ function initialiseMap( id, $container, config ) {
                 } );
             } );
         }
+
+        // Rather inefficient if the data set is big and there's lots of chunks, but we don't support streaming yet
+        self.recalculateMarkerSizes();
     };
 
 
@@ -255,13 +258,14 @@ function initialiseMap( id, $container, config ) {
     self.recalculateMarkerSizes = function () {
         var scaleMin = self.getScaleFactorByZoom( 'min' ),
             scaleMax = self.getScaleFactorByZoom( 'max' );
+        var scaleCir = scaleMin + (1 - scaleMax) * 2;
         for ( var groupName in self.config.groups ) {
             var group = self.config.groups[groupName];
 
             if ( group.fillColor ) {
                 // Circle: configured marker size is the size of a marker at lowest zoom level
                 group.markers.forEach( function( marker ) {
-                    marker.setRadius( scaleMin * group.size/2 );
+                    marker.setRadius( ( group.size > 8 ? scaleMin : scaleCir ) * group.size/2 );
                 } );
             } else if ( group.markerIcon ) {
                 // Icon: configured marker size is the size of a marker at the highest zoom level
