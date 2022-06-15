@@ -2,7 +2,7 @@
 namespace Ark\DataMaps\Data;
 
 class DataMapGroupSpec {
-    const DEFAULT_CIRCLE_SIZE = 4;
+    const DEFAULT_CIRCLE_SIZE = 5;
     const DEFAULT_ICON_SIZE = [ 32, 32 ];
 
     // Display modes
