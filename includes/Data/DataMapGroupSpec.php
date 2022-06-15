@@ -49,15 +49,19 @@ class DataMapGroupSpec {
 
     public function getFillColour(): ?string {
         // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
-        return $this->raw->fillColor;
+        return isset( $this->raw->fillColor ) ? $this->raw->fillColor : null;
+    }
+
+    private function getUniversalIcon(): ?string {
+        return isset( $this->raw->icon ) ? $this->raw->icon : null;
     }
 
     public function getMarkerIcon(): ?string {
-        return $this->raw->markerIcon ?? $this->raw->icon;
+        return isset( $this->raw->markerIcon ) ? $this->raw->markerIcon : $this->getUniversalIcon();
     }
 
     public function getLegendIcon(): ?string {
-        return $this->raw->legendIcon ?? $this->raw->icon;
+        return isset( $this->raw->legendIcon ) ? $this->raw->legendIcon : $this->getUniversalIcon();
     }
 
     public function getDisplayMode(): int {
@@ -70,7 +74,7 @@ class DataMapGroupSpec {
     }
 
     public function getSharedRelatedArticle(): ?string {
-        return $this->raw->relatedArticle;
+        return isset( $this->raw->relatedArticle ) ? $this->raw->relatedArticle : null;
     }
 
     public function validate(): ?string {
