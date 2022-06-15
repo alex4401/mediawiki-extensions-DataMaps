@@ -47,15 +47,18 @@
 				"mediawiki.api"
 			],
 			"packageFiles": [
-				"loader/main.js"
+				"loader/main.js",
+				"loader/storage.js"
 			],
 			"messages": [
 				"datamap-legend-tab-locations",
 				"datamap-toggle-show-all",
 				"datamap-toggle-hide-all",
 				"datamap-toggle-caves",
-				"datamap-coordinate-control-text",
-				"datamap-popup-related-article"
+				"datamap-popup-related-article",
+				"datamap-popup-dismissed",
+				"datamap-popup-mark-as-dismissed",
+				"datamap-coordinate-control-text"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},

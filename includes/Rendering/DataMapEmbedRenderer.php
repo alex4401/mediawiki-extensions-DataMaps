@@ -154,6 +154,10 @@ class DataMapEmbedRenderer {
             $out['relatedArticle'] = $spec->getSharedRelatedArticle();
         }
 
+        if ( $spec->canDismiss() ) {
+            $out['canDismiss'] = $spec->canDismiss();
+        }
+
         return $out;
     }
 

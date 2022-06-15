@@ -77,6 +77,10 @@ class DataMapGroupSpec {
         return isset( $this->raw->relatedArticle ) ? $this->raw->relatedArticle : null;
     }
 
+    public function canDismiss(): bool {
+        return isset( $this->raw->canDismiss ) ? $this->raw->canDismiss : false;
+    }
+
     public function validate(): ?string {
         if ( $this->getMarkerIcon() === null && $this->getFillColour() === null ) {
             return wfMessage( 'datamap-error-validation-no-display', wfEscapeWikiText( $this->id ) )->escaped();
