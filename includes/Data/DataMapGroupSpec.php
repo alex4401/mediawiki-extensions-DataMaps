@@ -31,12 +31,12 @@ class DataMapGroupSpec {
 
     public function getCircleSize(): int {
         assert( $this->getDisplayMode() == self::DM_CIRCLE );
-        return $this->raw->size ?? self::DEFAULT_CIRCLE_SIZE;
+        return isset( $this->raw->size ) ? $this->raw->size : self::DEFAULT_CIRCLE_SIZE;
     }
 
     public function getIconSize(): array {
         assert( $this->getDisplayMode() == self::DM_ICON );
-        return $this->raw->size ?? self::DEFAULT_ICON_SIZE;
+        return isset( $this->raw->size ) ? $this->raw->size : self::DEFAULT_ICON_SIZE;
     }
 
     public function getSize() {

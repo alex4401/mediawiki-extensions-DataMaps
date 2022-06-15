@@ -13,12 +13,12 @@ class DataMapBackgroundSpec {
     }
 
     public function getPlacementLocation(): ?array {
-        return $this->raw->at;
+        return isset( $this->raw->at ) ? $this->raw->at : null;
     }
 
     public function getName(): ?string {
         // TODO: validate, this is required if there's more than 1 background
-        return $this->raw->name;
+        return isset( $this->raw->name ) ? $this->raw->name : null;
     }
 
     public function hasOverlays(): bool {
