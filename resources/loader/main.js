@@ -346,8 +346,8 @@ function initialiseMap( id, $container, config ) {
                 } );
             }
         } );
-        // Switch to the first defined
-        self.setCurrentBackground( 0 );
+        // Switch to the last chosen one or first defined
+        self.setCurrentBackground( self.storage.get( 'background' ) || 0 );
     
         self.leaflet.on( 'zoomend', self.recalculateMarkerSizes );
     
@@ -386,7 +386,9 @@ function initialiseMap( id, $container, config ) {
         // Create a background toggle
         if ( self.config.backgrounds.length > 1 ) {
             var $switch = $( '<select class="leaflet-control datamap-control-backgrounds leaflet-bar">' ).on( 'change', function() {
-                self.setCurrentBackground( $(this).val() );
+                self.setCurrentBackground( $( this ).val() );
+                // Remember the choice
+                self.storage.set( 'background', $( this ).val() );
             } ).appendTo( self.topRightAnchor );
             self.config.backgrounds.forEach( function ( background, index ) {
                 $( '<option>' ).attr( 'value', index ).text( background.name ).appendTo( $switch );
