@@ -13,5 +13,13 @@
     "datamap-placeholder-loading": "กำลังโหลดข้อมูล",
     "datamap-toggle-show-all": "แสดงทั้งหมด",
     "datamap-toggle-hide-all": "ซ่อนทั้งโหมด",
-    "datamap-toggle-caves": "แสดงถ้ำ"
+    "datamap-toggle-caves": "แสดงถ้ำ",
+
+    "datamap-layer-control": "ชั้น",
+    "datamap-layer-surface": "พื้นผิว",
+    "datamap-layer-temp-caves": "ถ้ำ",
+    "datamap-popup-inside-cave": " (ถ้ำ)",
+    "datamap-popup-dismissed": "เก็บแล้ว",
+    "datamap-popup-mark-as-dismissed": "ทำเครื่องหมายว่าเก็บแล้ว",
+    "datamap-control-reset-view": "คืนค่ากลับไปค่าเริ่มต้น"
 }
