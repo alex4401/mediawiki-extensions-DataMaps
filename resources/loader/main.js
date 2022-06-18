@@ -442,7 +442,7 @@ function initialiseMap( id, $container, config ) {
 
         buildMarkerSwitching( self.addLegendTab( mw.msg( 'datamap-legend-tab-locations' ) ).$element );
 
-        mw.hook( 'ext.ark.datamaps.afterLegendInitialisation' ).fire( self );
+        mw.hook( 'ext.ark.datamaps.afterLegendInitialisation.' + self.id ).fire( self );
     };
 
 
@@ -603,11 +603,14 @@ function initialiseMap( id, $container, config ) {
 
 
 function onPageContent( $content ) {
+    // Broadcast all map IDs so gadgets can register to 
+    mw.hook( 'ext.ark.datamaps.broadcastMaps' ).fire( Object.keys( mapConfigs ) );
+
     // Run initialisation for every map, followed by events for gadgets to listen to
     for ( var id in mapConfigs ) {
-        mw.hook( 'ext.ark.datamaps.beforeInitialisation' ).fire( mapConfigs[id] );
+        mw.hook( 'ext.ark.datamaps.beforeInitialisation.' + id ).fire( mapConfigs[id] );
         var map = initialiseMap( id, $content.find( '.datamap-container#datamap-' + id ), mapConfigs[id] );
-        mw.hook( 'ext.ark.datamaps.afterInitialisation' ).fire( map );
+        mw.hook( 'ext.ark.datamaps.afterInitialisation.' + id ).fire( map );
     }
 }
 
