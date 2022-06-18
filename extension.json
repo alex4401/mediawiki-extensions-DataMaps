@@ -73,7 +73,8 @@
 				"main.less",
 				"legend.less",
 				"controls.less",
-				"popups.less"
+				"popups.less",
+				"markers.less"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
