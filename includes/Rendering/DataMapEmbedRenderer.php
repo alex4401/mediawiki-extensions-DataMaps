@@ -179,7 +179,7 @@ class DataMapEmbedRenderer {
         }
 
         if ( $spec->getSharedRelatedArticle() !== null ) {
-            $out['relatedArticle'] = $spec->getSharedRelatedArticle();
+            $out['article'] = $spec->getSharedRelatedArticle();
         }
 
         if ( $spec->canDismiss() ) {
