@@ -289,11 +289,12 @@ var buildLeafletMap = function ( $holder ) {
         // Zoom settings
         zoomSnap: 0.25,
         zoomDelta: 0.25,
-        minZoom: 2.75,
         maxZoom: 5,
         zoomAnimation: false,
         wheelPxPerZoomLevel: 240,
         markerZoomAnimation: false,
+        // Minimum zoom is 1.75 on mobile, 2.5 otherwise
+        minZoom: ( window.matchMedia( 'screen and (max-width: 1000px)' ).matches ? 1.75 : 2.5 ),
         // Pan settings
         inertia: false,
         // Internal

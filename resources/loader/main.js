@@ -21,7 +21,7 @@ mw.hook( 'wikipage.content' ).add( function ( $content ) {
             title: config.pageName,
             revid: config.version
         };
-        if ( map.dataSetFilters.length > 0 ) {
+        if ( map.dataSetFilters ) {
             query.filter = map.dataSetFilters.join( '|' );
         }
         api.get( query ).then( function ( data ) {
