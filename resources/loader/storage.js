@@ -33,6 +33,9 @@ module.exports = function ( map ) {
 
 
     self.isDismissed = function ( type, instance ) {
+        if ( self.dismissed.length === 0 ) {
+            return false;
+        }
         return self.dismissed.indexOf( self.getMarkerKey( type, instance ) ) >= 0;
     };
 

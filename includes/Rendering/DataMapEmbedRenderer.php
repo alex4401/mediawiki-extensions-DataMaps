@@ -97,7 +97,6 @@ class DataMapEmbedRenderer {
             'pageName' => $this->title->getPrefixedText(),
             'version' => $this->title->getLatestRevID(),
 
-            'coordinateBounds' => $this->data->coordinateBounds,
             'backgrounds' => array_map( function ( DataMapBackgroundSpec $background ) {
                 $image = $this->getFile( $background->getImageName() );
                 $out = [
@@ -179,7 +178,7 @@ class DataMapEmbedRenderer {
         }
 
         if ( $spec->getSharedRelatedArticle() !== null ) {
-            $out['relatedArticle'] = $spec->getSharedRelatedArticle();
+            $out['article'] = $spec->getSharedRelatedArticle();
         }
 
         if ( $spec->canDismiss() ) {
@@ -226,7 +225,9 @@ class DataMapEmbedRenderer {
         $containerMain->appendContent( $containerContent );
 
         // Set data attribute with filters if they are specified
-        $containerMain->setAttributes( [ 'data-filter-groups' => implode( '|', $options->displayGroups ) ] );
+        if ( $options->displayGroups != null ) {
+            $containerMain->setAttributes( [ 'data-filter-groups' => implode( '|', $options->displayGroups ) ] );
+        }
 
         // Bar at the top with map title
         if ( $options->displayTitle ) {
