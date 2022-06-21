@@ -97,7 +97,6 @@ class DataMapEmbedRenderer {
             'pageName' => $this->title->getPrefixedText(),
             'version' => $this->title->getLatestRevID(),
 
-            'coordinateBounds' => $this->data->coordinateBounds,
             'backgrounds' => array_map( function ( DataMapBackgroundSpec $background ) {
                 $image = $this->getFile( $background->getImageName() );
                 $out = [
