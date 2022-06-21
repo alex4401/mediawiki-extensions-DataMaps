@@ -226,7 +226,9 @@ class DataMapEmbedRenderer {
         $containerMain->appendContent( $containerContent );
 
         // Set data attribute with filters if they are specified
-        $containerMain->setAttributes( [ 'data-filter-groups' => implode( '|', $options->displayGroups ) ] );
+        if ( $options->displayGroups != null ) {
+            $containerMain->setAttributes( [ 'data-filter-groups' => implode( '|', $options->displayGroups ) ] );
+        }
 
         // Bar at the top with map title
         if ( $options->displayTitle ) {
