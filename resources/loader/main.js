@@ -16,11 +16,15 @@ mw.hook( 'wikipage.content' ).add( function ( $content ) {
         var map = new DataMap( id, $content.find( '.datamap-container#datamap-' + id ), config );
 
         // Request markers from the API
-        api.get( {
+        var query = {
             action: 'queryDataMap',
             title: config.pageName,
             revid: config.version
-         } ).then( function ( data ) {
+        };
+        if ( map.dataSetFilters ) {
+            query.filter = map.dataSetFilters.join( '|' );
+        }
+        api.get( query ).then( function ( data ) {
             map.waitForLeaflet( map.instantiateMarkers.bind( map, data.query.markers ) );
         } ).then( function () {
             map.$root.find( '.datamap-status' ).remove();

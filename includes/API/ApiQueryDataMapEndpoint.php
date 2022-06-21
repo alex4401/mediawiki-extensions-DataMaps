@@ -60,7 +60,8 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             $cache = ObjectCache::getInstance( $wgArkDataMapCacheType );
             // Build the cache key from an identifier, title parameter and revision ID parameter
             $revid = isset( $params['revid'] ) ? $params['revid'] : -1;
-            $cacheKey = $cache->makeKey( 'ARKDataMapQuery', $params['title'], $revid );
+            $cacheKey = $cache->makeKey( 'ARKDataMapQuery', $params['title'], $revid,
+                isset( $params['filter'] ) ? $params['filter'] : '' );
             // Try to retrieve the response
             $response = $cache->get( $cacheKey );
             if ( $response === false ) {
@@ -131,7 +132,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
         // Extract filters from the request parameters
         $filter = null;
-        if ( isset( $params['filter'] ) ) {
+        if ( isset( $params['filter'] ) && !empty( $params['filter'] ) ) {
             $filter = explode( '|', $params['filter'] );
         }
         // Ignore filters if more than 9 are specified

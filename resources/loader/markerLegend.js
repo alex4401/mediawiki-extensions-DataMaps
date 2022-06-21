@@ -28,7 +28,8 @@ MarkerLegendPanel.prototype.createActionButton = function ( label, clickCallback
 MarkerLegendPanel.prototype.createPopupButton = function ( label ) {
     var $content = $( '<div>' );
     var button = new OO.ui.PopupButtonWidget( { 
-        label: label, 
+        label: label,
+        indicator: 'down',
         popup: {
             $content: $content,
             padded: true,

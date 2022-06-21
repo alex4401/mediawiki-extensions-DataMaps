@@ -32,9 +32,15 @@
     }
 
     .oo-ui-buttonGroupWidget {
-        display: block;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
         /* Needed for the popup button not to go under group toggles */
         z-index: 2;
+    }
+
+    .oo-ui-popupButtonWidget .oo-ui-indicator-down {
+        /* @embed */ background-image: url(./images/ooui/expand.svg);
     }
 
     .oo-ui-checkboxInputWidget {
