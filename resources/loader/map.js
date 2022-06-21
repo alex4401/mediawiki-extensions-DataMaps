@@ -122,7 +122,21 @@ DataMap.prototype.setMarkerOpacity = function ( marker, value ) {
  */
 DataMap.prototype.readyMarkerVisuals = function ( type, group, instance, marker ) {
     if ( group.canDismiss ) {
+        var isDismissed = this.storage.isDismissed( type, instance );
+        if(isDismissed) {
+            console.log(instance, type);
+        }
         this.setMarkerOpacity( marker, isDismissed ? DISMISSED_OPACITY : 1 );
+        if ( isDismissed && !marker.options.isDismissed ) {
+            console.log('shift ', instance, 'to dismissed')
+            marker.options.isDismissed = true;
+            this.transferMarkerTransient( marker, type + ' #dismissed' );
+        } else if ( !isDismissed && marker.options.isDismissed ) {
+            marker.options.isDismissed = false;
+            console.log('shift ', instance, 'to no dismissed')
+            console.log(instance, type);
+            this.transferMarkerTransient( marker, type );
+        }
     }
 };
 
@@ -132,6 +146,16 @@ DataMap.prototype.getLeafletLayer = function ( id ) {
         this.leafletLayers[id] = L.featureGroup().addTo( this.leaflet );
     }
     return this.leafletLayers[id];
+};
+
+
+DataMap.prototype.transferMarkerTransient = function ( leafletMarker, newType ) {
+    console.log('TRANSFER ', leafletMarker, newType)
+    this.leaflet.removeLayer(leafletMarker);
+    //leafletMarker.addTo( this.getLeafletLayer( newType ) );
+    this.getLeafletLayer( newType ).addLayer( leafletMarker );
+    console.log('DONE ', leafletMarker, newType)
+    
 };
 
 
@@ -391,12 +415,19 @@ var buildLegend = function () {
     this.markerLegend.addTotalToggles();
 
     var hasCaves = this.isLayerUsed( 'cave' );
-    if ( hasCaves ) {
+    var hasDismissables = Object.values( this.config.groups ).some( function ( x ) {
+        return x.canDismiss;
+    } );
+    if ( hasCaves || hasDismissables ) {
         this.markerLegend.initialiseLayersArea();
 
         if ( hasCaves ) {
             this.markerLegend.addMarkerLayerToggle( '#surface', mw.msg( 'datamap-layer-surface' ) );
             this.markerLegend.addMarkerLayerToggle( 'cave', mw.msg( 'datamap-layer-cave' ) );
+        }
+
+        if ( hasDismissables ) {
+            this.markerLegend.addMarkerLayerToggle( '#dismissed', mw.msg( 'datamap-layer-dismissed' ) );
         }
     }
 
