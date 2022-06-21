@@ -27,9 +27,8 @@
     "datamap-legend-tab-locations": "Markers",
     "datamap-toggle-show-all": "Show all",
     "datamap-toggle-hide-all": "Hide all",
-    "datamap-toggle-caves": "Toggle caves",
 
-    "datamap-layer-control": "Layers",
+    "datamap-layer-control": "Toggle",
     "datamap-layer-surface": "Surface",
     "datamap-layer-cave": "Caves",
 

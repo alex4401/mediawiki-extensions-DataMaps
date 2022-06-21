@@ -59,7 +59,7 @@ class DataMapEmbedRenderer {
         return self::getFile( $title, $width )->getURL();
     }
 
-    public function prepareOutput( ParserOutput &$parserOutput ) {
+    public function prepareOutput( ParserOutput $parserOutput ) {
         // Enable and configure OOUI
         $parserOutput->setEnableOOUI( true );
 		\OOUI\Theme::setSingleton( new \OOUI\WikimediaUITheme() );

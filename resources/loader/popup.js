@@ -22,11 +22,12 @@ MarkerPopup.prototype.getDismissToolText = function () {
  */
 MarkerPopup.prototype.build = function () {
     // Build the title
-    var title = this.markerGroup.name;
     if ( this.slots.label ) {
-        title += ": " + this.slots.label;
+        $( '<b class="datamap-popup-subtitle">' ).text( this.markerGroup.name ).appendTo( this.$content );
+        $( '<b class="datamap-popup-title">' ).text( this.slots.label ).appendTo( this.$content );
+    } else {
+        $( '<b class="datamap-popup-title">' ).text( this.markerGroup.name ).appendTo( this.$content );
     }
-    $( '<b class="datamap-popup-title">' ).text( title ).appendTo( this.$content );
 
     // Coordinates
     var coordText = this.map.getCoordLabel( this.coords[0], this.coords[1] );

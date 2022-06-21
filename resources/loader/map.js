@@ -16,6 +16,11 @@ function DataMap( id, $root, config ) {
     // Information of currently set background
     this.background = null;
     this.backgroundIndex = 0;
+    // Data set filters
+    this.dataSetFilters = this.$root.data( 'filter-groups' ) || null;
+    if (this.dataSetFilters) {
+        this.dataSetFilters = this.dataSetFilters.split( '|' );
+    }
     // MapLegend instance
     this.legend = null;
     // Leaflet.Map instance
@@ -284,11 +289,12 @@ var buildLeafletMap = function ( $holder ) {
         // Zoom settings
         zoomSnap: 0.25,
         zoomDelta: 0.25,
-        minZoom: 2.75,
         maxZoom: 5,
         zoomAnimation: false,
         wheelPxPerZoomLevel: 240,
         markerZoomAnimation: false,
+        // Minimum zoom is 1.75 on mobile, 2.5 otherwise
+        minZoom: ( window.matchMedia( 'screen and (max-width: 1000px)' ).matches ? 1.75 : 2.5 ),
         // Pan settings
         inertia: false,
         // Internal
@@ -428,7 +434,9 @@ var buildLegend = function () {
 
     // Build individual group toggles
     for ( var groupId in this.config.groups ) {
-        this.markerLegend.addMarkerGroupToggle( groupId, this.config.groups[groupId] );
+        if ( !this.dataSetFilters || this.dataSetFilters.indexOf( groupId ) >= 0 ) {
+            this.markerLegend.addMarkerGroupToggle( groupId, this.config.groups[groupId] );
+        }
     }
 
     mw.hook( 'ext.ark.datamaps.afterLegendInitialisation.' + this.id ).fire( this );
