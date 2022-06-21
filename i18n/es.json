@@ -26,5 +26,14 @@
     "datamap-placeholder-loading": "Los datos se están cargando",
     "datamap-toggle-show-all": "Mostrar todo",
     "datamap-toggle-hide-all": "Ocultar todo",
-    "datamap-toggle-caves": "Mostrar/Ocultar cuevas"
+    "datamap-toggle-cave": "Mostrar/Ocultar cuevas",
+    "datamap-legend-tab-locations": "Marcadores",
+    "datamap-popup-related-article": "Ver más",
+    "datamap-layer-control": "Capas",
+    "datamap-layer-surface": "Superficie",
+    "datamap-layer-cave": "Cuevas",
+    "datamap-popup-inside-cave": " (cueva)",
+    "datamap-popup-dismissed": "Recogidos",
+    "datamap-popup-mark-as-dismissed": "Marcar como recogidos",
+    "datamap-control-reset-view": "Modo por defecto"
 }

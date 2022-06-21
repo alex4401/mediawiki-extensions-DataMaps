@@ -27,5 +27,13 @@
     "datamap-toggle-show-all": "Tout montrer",
     "datamap-toggle-hide-all": "Tout cacher",
     "datamap-toggle-caves": "Basculer les grottes",
-    "datamap-coordinate-control-text": "lat $1, lon $2"
+    "datamap-legend-tab-locations": "Marqueurs",
+    "datamap-popup-related-article": "Voir plus",
+    "datamap-layer-control": "Calques",
+    "datamap-layer-surface": "Surface",
+    "datamap-layer-cave": "Grottes",
+    "datamap-popup-inside-cave": " (grotte)",
+    "datamap-popup-dismissed": "Récoltée",
+    "datamap-popup-mark-as-dismissed": "Marquer comme récoltée",
+    "datamap-control-reset-view": "Restaurer la vue par défaut"
 }

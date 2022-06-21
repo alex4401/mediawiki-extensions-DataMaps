@@ -29,6 +29,10 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                 ParamValidator::PARAM_TYPE => 'integer',
                 ParamValidator::PARAM_REQUIRED => false,
             ],
+            'filter' => [
+                ParamValidator::PARAM_TYPE => 'string',
+                ParamValidator::PARAM_REQUIRED => false,
+            ],
         ];
     }
 
@@ -55,7 +59,8 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             // Retrieve the specified cache instance
             $cache = ObjectCache::getInstance( $wgArkDataMapCacheType );
             // Build the cache key from an identifier, title parameter and revision ID parameter
-            $cacheKey = $cache->makeKey( 'ARKDataMapQuery', $params['title'], $params['revid'] ?? -1 );
+            $revid = isset( $params['revid'] ) ? $params['revid'] : -1;
+            $cacheKey = $cache->makeKey( 'ARKDataMapQuery', $params['title'], $revid );
             // Try to retrieve the response
             $response = $cache->get( $cacheKey );
             if ( $response === false ) {
@@ -103,7 +108,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         list( $title, $revision ) = $this->getRevisionFromParams( $params );
         $content = $revision->getContent( SlotRecord::MAIN, RevisionRecord::FOR_PUBLIC, null );
 
-        if ( !($content instanceof DataMapContent) ) {
+        if ( !( $content instanceof DataMapContent ) ) {
             $this->dieWithError( [ 'contentmodel-mismatch', $content->getModel(), 'datamap' ] );
         }
 
@@ -111,7 +116,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $response = [
             'title' => $title->getFullText(),
             'revisionId' => $revision->getId(),
-            'markers' => $this->processMarkers( $title, $dataMap )
+            'markers' => $this->processMarkers( $title, $dataMap, $params )
         ];
 
         // Armour any API metadata in $response
@@ -120,11 +125,28 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         return $response;
     }
 
-    private function processMarkers( Title $title, DataMapSpec $dataMap ): array {
+    private function processMarkers( Title $title, DataMapSpec $dataMap, $params ): array {
         $results = [];
 		$parser = MediaWikiServices::getInstance()->getParser();
 
-        $dataMap->iterateRawMarkerMap( function( string $layers, array $rawMarkerCollection ) use ( &$results, &$title, &$parser ) {
+        // Extract filters from the request parameters
+        $filter = null;
+        if ( isset( $params['filter'] ) ) {
+            $filter = explode( '|', $params['filter'] );
+        }
+        // Ignore filters if more than 9 are specified
+        if ( count( $filter ) > 9 ) {
+            $filter = null;
+        }
+
+        $dataMap->iterateRawMarkerMap( function( string $layers, array $rawMarkerCollection )
+            use ( &$results, &$title, &$parser, $filter ) {
+
+            // If filters were specified, check if there is any overlap between the filters list and skip the marker set
+            if ( $filter !== null && empty( array_intersect( $filter, explode( ' ', $layers ) ) ) ) {
+                return;
+            }
+
             $subResults = [];
             // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
             // creating thousands of small, very short-lived (only one at a time) objects
