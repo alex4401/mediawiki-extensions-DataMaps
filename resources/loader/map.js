@@ -16,6 +16,11 @@ function DataMap( id, $root, config ) {
     // Information of currently set background
     this.background = null;
     this.backgroundIndex = 0;
+    // Data set filters
+    this.dataSetFilters = this.$root.data( 'filter-groups' ) || null;
+    if (this.dataSetFilters) {
+        this.dataSetFilters = this.dataSetFilters.split( '|' );
+    }
     // MapLegend instance
     this.legend = null;
     // Leaflet.Map instance
@@ -428,7 +433,9 @@ var buildLegend = function () {
 
     // Build individual group toggles
     for ( var groupId in this.config.groups ) {
-        this.markerLegend.addMarkerGroupToggle( groupId, this.config.groups[groupId] );
+        if ( !this.dataSetFilters || this.dataSetFilters.indexOf( groupId ) >= 0 ) {
+            this.markerLegend.addMarkerGroupToggle( groupId, this.config.groups[groupId] );
+        }
     }
 
     mw.hook( 'ext.ark.datamaps.afterLegendInitialisation.' + this.id ).fire( this );
