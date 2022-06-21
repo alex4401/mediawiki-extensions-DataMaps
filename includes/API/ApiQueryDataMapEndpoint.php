@@ -55,7 +55,8 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             // Retrieve the specified cache instance
             $cache = ObjectCache::getInstance( $wgArkDataMapCacheType );
             // Build the cache key from an identifier, title parameter and revision ID parameter
-            $cacheKey = $cache->makeKey( 'ARKDataMapQuery', $params['title'], $params['revid'] ?? -1 );
+            $revid = isset( $params['revid'] ) ? $params['revid'] : -1;
+            $cacheKey = $cache->makeKey( 'ARKDataMapQuery', $params['title'], $revid );
             // Try to retrieve the response
             $response = $cache->get( $cacheKey );
             if ( $response === false ) {
@@ -103,7 +104,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         list( $title, $revision ) = $this->getRevisionFromParams( $params );
         $content = $revision->getContent( SlotRecord::MAIN, RevisionRecord::FOR_PUBLIC, null );
 
-        if ( !($content instanceof DataMapContent) ) {
+        if ( !( $content instanceof DataMapContent ) ) {
             $this->dieWithError( [ 'contentmodel-mismatch', $content->getModel(), 'datamap' ] );
         }
 
