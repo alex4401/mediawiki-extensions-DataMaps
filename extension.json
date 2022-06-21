@@ -67,7 +67,8 @@
 				"datamap-popup-mark-as-dismissed",
 				"datamap-popup-inside-cave",
 				"datamap-coordinate-control-text",
-				"datamap-control-reset-view"
+				"datamap-control-reset-view",
+				"datamap-control-centre-view"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},

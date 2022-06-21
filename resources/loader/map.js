@@ -253,6 +253,12 @@ DataMap.prototype.restoreDefaultView = function () {
 };
 
 
+DataMap.prototype.centreView = function () {
+    var box = flipLatitudeBox( this.background.at );
+    this.leaflet.setView( [ (box[1][0] + box[0][0])/2, (box[1][1] + box[0][1])/2 ] );
+};
+
+
 DataMap.prototype.anchors = {
     bottomLeft: '.leaflet-bottom.leaflet-left',
     topRight: '.leaflet-top.leaflet-right',
@@ -370,19 +376,30 @@ var buildLeafletMap = function ( $holder ) {
         $switch.val( this.backgroundIndex );
     }
 
-    // Extend zoom control to add a button to reset the view
-    this.addControl( this.anchors.topLeft,
-        $( '<div class="leaflet-control leaflet-bar datamap-control-viewreset">' ).append(
-            $( '<a role="button" aria-disabled="false"></a>' )
-            .attr( {
-                title: mw.msg( 'datamap-control-reset-view' ),
-                'aria-label': mw.msg( 'datamap-control-reset-view' )
-            } )
-            .on( 'click', function () {
-                // closures introduce their own context for `this`
-                self.restoreDefaultView();
-            } )
-        )
+    // Extend zoom control to add buttons to reset or centre the view
+    var $viewControls = this.addControl( this.anchors.topLeft,
+        $( '<div class="leaflet-control leaflet-bar datamap-control-viewcontrols">' ) );
+    $viewControls.append(
+        $( '<a role="button" class="datamap-control-viewreset" aria-disabled="false"></a>' )
+        .attr( {
+            title: mw.msg( 'datamap-control-reset-view' ),
+            'aria-label': mw.msg( 'datamap-control-reset-view' )
+        } )
+        .on( 'click', function () {
+            // closures introduce their own context for `this`
+            self.restoreDefaultView();
+        } )
+    );
+    $viewControls.append(
+        $( '<a role="button" class="datamap-control-viewcentre" aria-disabled="false"></a>' )
+        .attr( {
+            title: mw.msg( 'datamap-control-centre-view' ),
+            'aria-label': mw.msg( 'datamap-control-centre-view' )
+        } )
+        .on( 'click', function () {
+            // closures introduce their own context for `this`
+            self.centreView();
+        } )
     );
 };
 
