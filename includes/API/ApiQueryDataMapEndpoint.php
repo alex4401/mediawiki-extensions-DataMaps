@@ -134,10 +134,10 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $filter = null;
         if ( isset( $params['filter'] ) && !empty( $params['filter'] ) ) {
             $filter = explode( '|', $params['filter'] );
-        }
-        // Ignore filters if more than 9 are specified
-        if ( count( $filter ) > 9 ) {
-            $filter = null;
+            // Ignore filters if more than 9 are specified
+            if ( count( $filter ) > 9 ) {
+                $filter = null;
+            }
         }
 
         $dataMap->iterateRawMarkerMap( function( string $layers, array $rawMarkerCollection )
