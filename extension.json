@@ -43,6 +43,7 @@
 		},
 
 		"ext.ark.datamaps.loader": {
+			"es6": true,
 			"dependencies": [
 				"mediawiki.api"
 			],

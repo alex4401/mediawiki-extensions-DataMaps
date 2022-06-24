@@ -1,8 +1,8 @@
-var constructStorageInterface = require( './storage.js' ),
+const MapStorage = require( './storage.js' ),
     MarkerPopup = require( './popup.js' ),
     MapLegend = require( './legend.js' ),
     MarkerLegendPanel = require( './markerLegend.js' );
-var DISMISSED_OPACITY = 0.4;
+const DISMISSED_OPACITY = 0.4;
 
 
 function DataMap( id, $root, config ) {
@@ -12,7 +12,7 @@ function DataMap( id, $root, config ) {
     // Setup configuration
     this.config = config;
     // Local storage driver
-    this.storage = constructStorageInterface( this );
+    this.storage = new MapStorage( this );
     // Information of currently set background
     this.background = null;
     this.backgroundIndex = 0;
@@ -74,7 +74,7 @@ DataMap.prototype.isLayerUsed = function ( name ) {
  * Executes the matcher function on every layer, and if true, alters its visibility state to one provided.
  */
 DataMap.prototype.updateLayerVisibility = function ( matcher, newState ) {
-    for ( var layerName in this.leafletLayers ) {
+    for ( const layerName in this.leafletLayers ) {
         if ( matcher( layerName.split( ' ' ) ) ) {
             if ( newState ) {
                 this.leafletLayers[layerName].addTo( this.leaflet );
@@ -89,7 +89,7 @@ DataMap.prototype.updateLayerVisibility = function ( matcher, newState ) {
 /*
  * Inverts the latitude in box bounds, as our reference system differs from Leaflet's built-in
  */
-var flipLatitudeBox = function ( box ) {
+const flipLatitudeBox = function ( box ) {
     return [ [ 100-box[0][0], box[0][1] ], [ 100-box[1][0], box[1][1] ] ];
 };
 
@@ -128,7 +128,7 @@ DataMap.prototype.setMarkerOpacity = function ( marker, value ) {
 DataMap.prototype.readyMarkerVisuals = function ( type, group, instance, marker ) {
     // Dismissables
     if ( group.canDismiss ) {
-        var isDismissed = this.storage.isDismissed( type, instance );
+        const isDismissed = this.storage.isDismissed( type, instance );
         this.setMarkerOpacity( marker, isDismissed ? DISMISSED_OPACITY : 1 );
     }
 };
@@ -146,11 +146,11 @@ DataMap.prototype.getLeafletLayer = function ( id ) {
  * Builds markers from a data object
  */
 DataMap.prototype.instantiateMarkers = function ( data ) {
-    for ( var markerType in data ) {
-        var layers = markerType.split( ' ' );
-        var groupName = layers[0];
-        var group = this.config.groups[groupName];
-        var placements = data[markerType];
+    for ( let markerType in data ) {
+        const layers = markerType.split( ' ' );
+        const groupName = layers[0];
+        const group = this.config.groups[groupName];
+        const placements = data[markerType];
 
         // Add a runtime "surface" layer if there is no "cave" layer
         if ( layers.indexOf( 'cave' ) < 0 ) {
@@ -159,19 +159,18 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
         }
 
         // Retrieve the Leaflet layer
-        var layer = this.getLeafletLayer( markerType );
+        const layer = this.getLeafletLayer( markerType );
 
         // Create markers for instances
-        var self = this; // closures introduce their own context for `this`
-        placements.forEach( function ( instance ) {
-            var position = [ 100-instance[0], instance[1] ];
-            var leafletMarker;
+        placements.forEach( instance => {
+            const position = [ 100-instance[0], instance[1] ];
+            let leafletMarker;
 
             // Construct the marker
             if ( group.markerIcon ) {
                 // Fancy icon marker
                 leafletMarker = L.marker( position, {
-                    icon: self.leafletIcons[groupName]
+                    icon: this.leafletIcons[groupName]
                 } );
             } else {
                 // Circular marker
@@ -186,17 +185,15 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             group.markers.push( leafletMarker );
 
             // Prepare marker for display
-            self.readyMarkerVisuals( markerType, group, instance, leafletMarker );
+            this.readyMarkerVisuals( markerType, group, instance, leafletMarker );
 
             // Add marker to the layer
             leafletMarker.addTo( layer );
 
             // Bind a popup building closure (this is more efficient than binds)
-            var mType = markerType;
-            var mInstance = instance;
-            leafletMarker.bindPopup( function () {
-                return new MarkerPopup( self, mType, mInstance, ( mInstance[2] || {} ), leafletMarker ).build().get( 0 );
-            } );
+            const mType = markerType;
+            leafletMarker.bindPopup( () =>
+                new MarkerPopup( this, mType, instance, ( instance[2] || {} ), leafletMarker ).build().get( 0 ) );
         } );
     }
 
@@ -226,27 +223,23 @@ DataMap.prototype.setCurrentBackground = function ( index ) {
 
 
 DataMap.prototype.recalculateMarkerSizes = function () {
-    var scaleMin = this.getScaleFactorByZoom( 'min' ),
+    const scaleMin = this.getScaleFactorByZoom( 'min' ),
         scaleMax = this.getScaleFactorByZoom( 'max' );
-    var self = this; // closures introduce their own context for `this`
-    for ( var groupName in this.config.groups ) {
-        var group = this.config.groups[groupName];
+    let scaleCir;
+    for ( const groupName in this.config.groups ) {
+        const group = this.config.groups[groupName];
         if ( group.fillColor ) {
             // Circle: configured marker size is the size of a marker at lowest zoom level, with an optional growth factor
             //         inverse to the zoom level
-            var scaleCir = this.leaflet.options.scaleMarkersExtraForMinZoom
+            scaleCir = this.leaflet.options.scaleMarkersExtraForMinZoom
                 ? ( scaleMin + ( 1 - scaleMax ) * ( group.extraMinZoomSize || this.leaflet.options.extraMinZoomSize ) )
                 : scaleMin;
-            group.markers.forEach( function ( marker ) {
-                marker.setRadius( ( group.size > 8 ? scaleMin : scaleCir ) * group.size/2 );
-            } );
+            group.markers.forEach( marker => marker.setRadius( ( group.size > 8 ? scaleMin : scaleCir ) * group.size/2 ) );
         } else if ( group.markerIcon ) {
             // Icon: configured marker size is the size of a marker at the highest zoom level
             this.leafletIcons[groupName].options.iconSize = [ group.size[0] * scaleMax, group.size[1] * scaleMax ];
             // Update all existing markers to use the altered icon instance
-            group.markers.forEach( function ( marker ) {
-                marker.setIcon( self.leafletIcons[groupName] );
-            } );
+            group.markers.forEach( marker => marker.setIcon( this.leafletIcons[groupName] ) );
         }
     }
 };
@@ -259,7 +252,7 @@ DataMap.prototype.restoreDefaultView = function () {
 
 
 DataMap.prototype.centreView = function () {
-    var box = flipLatitudeBox( this.background.at );
+    const box = flipLatitudeBox( this.background.at );
     this.leaflet.setView( [ (box[1][0] + box[0][0])/2, (box[1][1] + box[0][1])/2 ] );
 };
 
@@ -277,11 +270,11 @@ DataMap.prototype.addControl = function ( anchor, $element ) {
 };
 
 
-var buildLeafletMap = function ( $holder ) {
-    var rendererSettings = {
+const buildLeafletMap = function ( $holder ) {
+    let rendererSettings = {
         padding: 1/3
     };
-    var leafletConfig = {
+    let leafletConfig = {
         // Boundaries
         center: [50, 50],
         maxBounds: [[-75,-75], [175, 175]],
@@ -313,7 +306,7 @@ var buildLeafletMap = function ( $holder ) {
     this.leaflet = L.map( $holder.get( 0 ), leafletConfig );
 
     // Prepare all backgrounds
-    this.config.backgrounds.forEach( function ( background ) {
+    this.config.backgrounds.forEach( background => {
         background.overlay = L.featureGroup();
 
         // Image overlay:
@@ -323,8 +316,8 @@ var buildLeafletMap = function ( $holder ) {
 
         // Prepare overlay layers
         if ( background.overlays ) {
-            background.overlays.forEach( function ( overlay ) {
-                var rect = L.rectangle( flipLatitudeBox( overlay.at ), {
+            background.overlays.forEach( overlay => {
+                const rect = L.rectangle( flipLatitudeBox( overlay.at ), {
                     fillOpacity: 0.05
                 } ).addTo( background.overlay );
 
@@ -339,8 +332,8 @@ var buildLeafletMap = function ( $holder ) {
     // Restore default view
     this.restoreDefaultView();
 
-    for ( var groupName in this.config.groups ) {
-        var group = this.config.groups[groupName];
+    for ( const groupName in this.config.groups ) {
+        const group = this.config.groups[groupName];
         group.markers = [];
 
         // Set as visible in the visibility mask
@@ -353,37 +346,36 @@ var buildLeafletMap = function ( $holder ) {
     }
 
     // Recalculate marker sizes when zoom ends
-    var self = this; // closures introduce their own context for `this`
-    this.leaflet.on( 'zoomend', function() {
-        self.recalculateMarkerSizes();
-    } );
+    this.leaflet.on( 'zoomend', () => this.recalculateMarkerSizes() );
 
     // Create a coordinate-under-cursor display
     this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
-    this.leaflet.on( 'mousemove', function ( event ) {
-        var lat = event.latlng.lat;
-        var lon = event.latlng.lng;
+    this.leaflet.on( 'mousemove', event => {
+        const lat = event.latlng.lat;
+        const lon = event.latlng.lng;
         if ( lat >= -5 && lat <= 105 && lon >= -5 && lon <= 105 ) {
-            self.$coordTracker.text( self.getCoordLabel( 100 - lat, lon ) );
+            this.$coordTracker.text( this.getCoordLabel( 100 - lat, lon ) );
         }
     } );
 
     // Create a background toggle
     if ( this.config.backgrounds.length > 1 ) {
-        var $switch = $( '<select class="leaflet-control datamap-control-backgrounds leaflet-bar">' ).on( 'change', function() {
-            self.setCurrentBackground( $( this ).val() );
-            // Remember the choice
-            self.storage.set( 'background', $( this ).val() );
+        this.$backgroundSwitch = this.addControl( this.anchors.topRight,
+            $( '<select class="leaflet-control datamap-control-backgrounds leaflet-bar">' )
+            .on( 'change', () => {
+                this.setCurrentBackground( $( this ).val() );
+                // Remember the choice
+                this.storage.set( 'background', $( this ).val() );
+            } )
+        );
+        this.config.backgrounds.forEach( ( background, index ) => {
+            $( '<option>' ).attr( 'value', index ).text( background.name ).appendTo( this.$backgroundSwitch );
         } );
-        this.addControl( this.anchors.topRight, $switch );
-        this.config.backgrounds.forEach( function ( background, index ) {
-            $( '<option>' ).attr( 'value', index ).text( background.name ).appendTo( $switch );
-        } );
-        $switch.val( this.backgroundIndex );
+        this.$backgroundSwitch.val( this.backgroundIndex );
     }
 
     // Extend zoom control to add buttons to reset or centre the view
-    var $viewControls = this.addControl( this.anchors.topLeft,
+    const $viewControls = this.addControl( this.anchors.topLeft,
         $( '<div class="leaflet-control leaflet-bar datamap-control-viewcontrols">' ) );
     $viewControls.append(
         $( '<a role="button" class="datamap-control-viewreset" aria-disabled="false"></a>' )
@@ -391,10 +383,7 @@ var buildLeafletMap = function ( $holder ) {
             title: mw.msg( 'datamap-control-reset-view' ),
             'aria-label': mw.msg( 'datamap-control-reset-view' )
         } )
-        .on( 'click', function () {
-            // closures introduce their own context for `this`
-            self.restoreDefaultView();
-        } )
+        .on( 'click', () => this.restoreDefaultView() )
     );
     $viewControls.append(
         $( '<a role="button" class="datamap-control-viewcentre" aria-disabled="false"></a>' )
@@ -402,23 +391,18 @@ var buildLeafletMap = function ( $holder ) {
             title: mw.msg( 'datamap-control-centre-view' ),
             'aria-label': mw.msg( 'datamap-control-centre-view' )
         } )
-        .on( 'click', function () {
-            // closures introduce their own context for `this`
-            self.centreView();
-        } )
+        .on( 'click', () => this.centreView() )
     );
 };
 
 
-var buildLegend = function () {
+const buildLegend = function () {
     this.legend = new MapLegend( this );
     this.markerLegend = new MarkerLegendPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ) );
     this.markerLegend.addTotalToggles();
 
-    var hasCaves = this.isLayerUsed( 'cave' );
-    var hasDismissables = Object.values( this.config.groups ).some( function ( x ) {
-        return x.canDismiss;
-    } );
+    const hasCaves = this.isLayerUsed( 'cave' );
+    const hasDismissables = Object.values( this.config.groups ).some( x => x.canDismiss );
     if ( hasCaves || hasDismissables ) {
         this.markerLegend.initialiseLayersArea();
 
@@ -433,7 +417,7 @@ var buildLegend = function () {
     }
 
     // Build individual group toggles
-    for ( var groupId in this.config.groups ) {
+    for ( const groupId in this.config.groups ) {
         if ( !this.dataSetFilters || this.dataSetFilters.indexOf( groupId ) >= 0 ) {
             this.markerLegend.addMarkerGroupToggle( groupId, this.config.groups[groupId] );
         }
