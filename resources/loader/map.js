@@ -363,9 +363,9 @@ const buildLeafletMap = function ( $holder ) {
         this.$backgroundSwitch = this.addControl( this.anchors.topRight,
             $( '<select class="leaflet-control datamap-control-backgrounds leaflet-bar">' )
             .on( 'change', () => {
-                this.setCurrentBackground( $( this ).val() );
+                this.setCurrentBackground( this.$backgroundSwitch.val() );
                 // Remember the choice
-                this.storage.set( 'background', $( this ).val() );
+                this.storage.set( 'background', this.$backgroundSwitch.val() );
             } )
         );
         this.config.backgrounds.forEach( ( background, index ) => {
