@@ -44,7 +44,11 @@ class DataMapGroupSpec {
             case self::DM_CIRCLE:
                 return $this->getCircleSize();
             case self::DM_ICON:
-                return $this->getIconSize();
+                $dim = $this->getIconSize();
+                if ( is_numeric( $dim ) ) {
+                    $dim = [ $dim, $dim ];
+                }
+                return $dim;
             default:
                 return null;
         }
