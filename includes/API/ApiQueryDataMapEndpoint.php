@@ -174,13 +174,19 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
                 // Popup title
                 if ( $marker->getLabel() != null ) {
-                    $slots['label'] = wfEscapeWikiText( $marker->getLabel() );
+                    if ( $marker->isWikitext() ) {
+                        $slots['label'] =
+                            $parser->parse( $marker->getLabel(), $title, $parserOptions, false, true )
+                                ->getText( [ 'unwrap' => true ] );
+                    } else {
+                        $slots['label'] = wfEscapeWikiText( $marker->getLabel() );
+                    }
                     $requiresSlots = true;
                 }
 
                 // Popup description
                 if ( $marker->getDescription() != null ) {
-                    if ( $marker->isDescriptionWikitext() ) {
+                    if ( $marker->isWikitext() ) {
                         $slots['desc'] =
                             $parser->parse( $marker->getDescription(), $title, $parserOptions, false, true )
                                 ->getText( [ 'unwrap' => true ] );

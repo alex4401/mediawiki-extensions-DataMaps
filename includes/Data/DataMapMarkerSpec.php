@@ -28,8 +28,11 @@ class DataMapMarkerSpec {
         return isset( $this->raw->description ) ? $this->raw->description : null;
     }
 
-    public function isDescriptionWikitext(): bool {
-        return $this->raw->isDescriptionWikitext ?? false;
+    public function isWikitext(): bool {
+        return isset( $this->raw->isWikitext ) ? $this->raw->isWikitext : (
+            // DEPRECATED(v0.7.0:v0.9.0): switch to `isWikitext`, inclusive of title
+            isset( $this->raw->isDescriptionWikitext ) ? $this->raw->isDescriptionWikitext : null
+        );
     }
 
     public function getPopupImage(): ?string {
