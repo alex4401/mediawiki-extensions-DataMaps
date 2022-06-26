@@ -105,7 +105,10 @@ class DataMapGroupSpec {
     }
 
     public function getSharedRelatedArticle(): ?string {
-        return isset( $this->raw->relatedArticle ) ? $this->raw->relatedArticle : null;
+        return isset( $this->raw->article ) ? $this->raw->article : (
+            // DEPRECATED(v0.7.0:v0.9.0): switch to `article`, more intuitive
+            isset( $this->raw->relatedArticle ) ? $this->raw->relatedArticle : null
+        );
     }
 
     public function canDismiss(): bool {
