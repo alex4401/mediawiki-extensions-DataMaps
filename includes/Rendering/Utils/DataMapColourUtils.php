@@ -5,20 +5,21 @@ class DataMapColourUtils {
     public static function decode( /*string|array*/ $input ): ?array {
         if ( is_array( $input ) ) {
             return $input;
+        } elseif ( is_string( $input ) ) {
+            $input = ltrim( $input, '#' );
+            $len = strlen( $input );
+            if ( $len === 3 ) {
+                $input = str_split( $input, 1 );
+            } else if ( $len === 6 ) {
+                $input = str_split( $input, 2 );
+            } else {
+                return null;
+            }
+        
+            list( $r, $g, $b ) = array_map( fn ( $c ) => hexdec( str_pad( $c, 2, $c ) ), $input );
+            return [ $r, $g, $b ];
         }
-
-        $input = ltrim( $input, '#' );
-        $len = strlen( $input );
-        if ( $len === 3 ) {
-            $input = str_split( $input, 1 );
-        } else if ( $len === 6 ) {
-            $input = str_split( $input, 2 );
-        } else {
-            return null;
-        }
-
-        list( $r, $g, $b ) = array_map( fn ( $c ) => hexdec( str_pad( $c, 2, $c ) ), $input );
-        return [ $r, $g, $b ];
+        return null;
     }
 
     public static function asHex( array $input ): string {

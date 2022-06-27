@@ -2,8 +2,11 @@
 namespace Ark\DataMaps\Data;
 
 use Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
+use Status;
 
-class DataMapGroupSpec {
+class DataMapGroupSpec extends DataModel {
+    protected static string $publicName = 'MarkerGroupSpec';
+
     const DEFAULT_CIRCLE_SIZE = 5;
     const DEFAULT_CIRCLE_STROKE_WIDTH = 1;
     const DEFAULT_ICON_SIZE = [ 32, 32 ];
@@ -14,11 +17,10 @@ class DataMapGroupSpec {
     const DM_UNKNOWN = -1;
 
     private string $id;
-    private object $raw;
 
     public function __construct( string $id, object $raw ) {
+        parent::__construct( $raw );
         $this->id = $id;
-        $this->raw = $raw;
     }
 
     public function getId(): string {
@@ -26,7 +28,7 @@ class DataMapGroupSpec {
     }
 
     public function getName(): string {
-        return $this->raw->name ?? wfMessage( 'datamap-unnamed-marker' );
+        return $this->raw->name;
     }
 
     public function getCircleSize(): int {
@@ -44,34 +46,33 @@ class DataMapGroupSpec {
             case self::DM_CIRCLE:
                 return $this->getCircleSize();
             case self::DM_ICON:
-                return $this->getIconSize();
+                $dim = $this->getIconSize();
+                if ( is_numeric( $dim ) ) {
+                    $dim = [ $dim, $dim ];
+                }
+                return $dim;
             default:
                 return null;
         }
     }
 
     public function getExtraMinZoomSize() {
-        // TODO: only supported for circle markers
         return isset( $this->raw->extraMinZoomSize ) ? $this->raw->extraMinZoomSize : null;
     }
 
     public function getRawFillColour() /*: ?array|string*/ {
-        // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
         return isset( $this->raw->fillColor ) ? $this->raw->fillColor : null;
     }
 
     public function getRawStrokeColour() /*: ?array|string*/ {
-        // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
         return isset( $this->raw->borderColor ) ? $this->raw->borderColor : null;
     }
 
     public function getFillColour(): array {
-        // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
         return DataMapColourUtils::decode( $this->getRawFillColour() );
     }
 
     public function getStrokeColour(): array {
-        // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
         if ( $this->getRawStrokeColour() != null ) {
             return DataMapColourUtils::decode( $this->getRawStrokeColour() );
         }
@@ -83,44 +84,60 @@ class DataMapGroupSpec {
         return isset( $this->raw->borderWidth ) ? $this->raw->borderWidth : self::DEFAULT_CIRCLE_STROKE_WIDTH;
     }
 
-    private function getUniversalIcon(): ?string {
+    public function getIcon(): ?string {
         return isset( $this->raw->icon ) ? $this->raw->icon : null;
-    }
-
-    public function getMarkerIcon(): ?string {
-        return isset( $this->raw->markerIcon ) ? $this->raw->markerIcon : $this->getUniversalIcon();
-    }
-
-    public function getLegendIcon(): ?string {
-        return isset( $this->raw->legendIcon ) ? $this->raw->legendIcon : $this->getUniversalIcon();
     }
 
     public function getDisplayMode(): int {
         if ( $this->getRawFillColour() !== null ) {
             return self::DM_CIRCLE;
-        } else if ( $this->getMarkerIcon() !== null ) {
+        } else if ( $this->getIcon() !== null ) {
             return self::DM_ICON;
         }
         return self::DM_UNKNOWN;
     }
 
     public function getSharedRelatedArticle(): ?string {
-        return isset( $this->raw->relatedArticle ) ? $this->raw->relatedArticle : null;
+        return isset( $this->raw->article ) ? $this->raw->article : (
+            // DEPRECATED(v0.7.0:v0.9.0): switch to `article`, more intuitive
+            isset( $this->raw->relatedArticle ) ? $this->raw->relatedArticle : null
+        );
     }
 
     public function canDismiss(): bool {
         return isset( $this->raw->canDismiss ) ? $this->raw->canDismiss : false;
     }
 
-    public function validate(): ?string {
-        if ( $this->getMarkerIcon() === null && $this->getFillColour() === null ) {
-            return wfMessage( 'datamap-error-validation-no-display', wfEscapeWikiText( $this->id ) )->escaped();
+    public function validate( Status $status ) {
+        $this->requireField( $status, 'name', DataModel::TYPE_STRING );
+
+        switch ( $this->getDisplayMode() ) {
+            case self::DM_CIRCLE:
+                $this->requireField( $status, 'fillColor', DataModel::TYPE_COLOUR );
+                $this->expectField( $status, 'borderColor', DataModel::TYPE_COLOUR );
+                $this->expectField( $status, 'borderWidth', DataModel::TYPE_NUMBER );
+                $this->expectField( $status, 'size', DataModel::TYPE_NUMBER );
+                $this->expectField( $status, 'extraMinZoomSize', DataModel::TYPE_NUMBER );
+                $this->expectField( $status, 'icon', DataModel::TYPE_STRING );
+                break;
+            case self::DM_ICON:
+                $this->requireField( $status, 'icon', DataModel::TYPE_STRING );
+                $this->expectField( $status, 'size', DataModel::TYPE_VECTOR2 );
+                break;
+            case self::DM_UNKNOWN:
+                $status->fatal( 'datamap-error-validatespec-group-no-display', wfEscapeWikiText( $this->id ) );
+                return;
         }
 
-        if ( $this->getMarkerIcon() !== null && $this->getFillColour() !== null ) {
-            return wfMessage( 'datamap-error-validation-ambiguous-display', wfEscapeWikiText( $this->id ) )->escaped();
-        }
+        $this->expectField( $status, 'article', DataModel::TYPE_STRING );
+        $this->expectField( $status, 'canDismiss', DataModel::TYPE_BOOL );
 
-        return null;
+        $this->disallowOtherFields( $status );
+
+        if ( $this->validationAreRequiredFieldsPresent ) {
+            if ( $this->getIcon() !== null ) {
+                $this->requireFile( $status, $this->getIcon() );
+            }
+        }
     }
 }

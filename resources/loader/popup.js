@@ -30,7 +30,7 @@ MarkerPopup.prototype.build = function () {
     }
 
     // Coordinates
-    var coordText = this.map.getCoordLabel( this.coords[0], this.coords[1] );
+    let coordText = this.map.getCoordLabel( this.coords[0], this.coords[1] );
     if ( this.markerLayers.indexOf( 'cave' ) >= 0 ) {
         coordText += mw.msg( 'datamap-popup-inside-cave' );
     }
@@ -63,7 +63,7 @@ MarkerPopup.prototype.addTool = function ( cssClass, $child ) {
 
 MarkerPopup.prototype.buildTools = function () {
     // Related article
-    var article = this.slots.article || this.markerGroup.article;
+    const article = this.slots.article || this.markerGroup.article;
     if ( article ) {
         this.addTool( 'datamap-popup-seemore',
             $( '<a>' ).attr( 'href', mw.util.getUrl( article ) ).text( mw.msg( 'datamap-popup-related-article' ) ) );
@@ -71,14 +71,13 @@ MarkerPopup.prototype.buildTools = function () {
 
     // Dismissables
     if ( this.markerGroup.canDismiss ) {
-        var self = this; // closures introduce their own context for `this`
         this.addTool( 'datamap-popup-dismiss',
             $( '<a>' )
                 .text( this.getDismissToolText() )
-                .on( 'click', function () {
-                    self.map.storage.toggleDismissal( self.markerType, self.coords );
-                    self.map.readyMarkerVisuals( self.markerType, self.markerGroup, self.coords, self.leafletMarker );
-                    self.map.leaflet.closePopup();
+                .on( 'click', () => {
+                    this.map.storage.toggleDismissal( this.markerType, this.coords );
+                    this.map.readyMarkerVisuals( this.markerType, this.markerGroup, this.coords, this.leafletMarker );
+                    this.map.leaflet.closePopup();
                 } )
         );
     }

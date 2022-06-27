@@ -7,6 +7,8 @@
 
     "embedDataMap": "DataMap",
 
+	"content-model-datamap": "Interactive Data Map",
+
     "datamap-doc-page-name": "$1:$2/doc",
     "datamap-doc-page-does-not-exist": "''Documentation for this data page may be created at [[$1]]''",
     "datamap-doc-page-show": "{{$1}}\n<hr />",
@@ -14,8 +16,23 @@
 
     "datamap-category-pages-including-maps": "Pages including data maps",
 
+    "datamap-error-validate-check-docs": "Check the [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps extension's documentation] for information about the proper structure.",
+    "datamap-error-validate-invalid-json": "This is not a valid JSON document.",
+    "datamap-error-validate-unexpected-fields": "Found unknown field(s) in structure $1: $2.",
+    "datamap-error-validate-field-no-value": "Field <code>$1</code> in structure $2 requires a value.",
+    "datamap-error-validate-field-required": "Field <code>$2</code> is required in structure $1. $3",
+    "datamap-error-validate-wrong-field-type": "Field <code>$2</code> has an incorrect value for structure $1. $3",
+    "datamap-error-validate-field-required-either": "$1 requires only one of these two fields: <code>$2</code> or <code>$3</code>. Both cannot be specified at the same time.",
+    "datamap-error-validate-exclusive-fields": "$1 requires only one of these two fields: <code>$2</code> or <code>$3</code>. Both cannot be specified at the same time.",
+    "datamap-error-validate-no-file": "File [[File:$1]] linked, but it has not been uploaded yet to the wiki.",
+    "datamap-error-validatespec-group-no-display": "Marker group \"$1\" has no display settings. Add the <code>icon</code> and/or <code>fillColor</code> properties.",
+    "datamap-error-validatespec-map-no-group-name": "A marker group with no (or an empty) name has been defined. Assign it a unique name.",
+    "datamap-error-validatespec-map-missing-group": "Markers have been added to group \"$1\", which is not defined.",
+
     "datamap-error-validation-no-display": "Group \"$1\" has no icon or color specified.",
     "datamap-error-validation-ambiguous-display": "Group \"$1\" cannot have its markers configured to have both an icon and a color.",
+    
+    "datamap-error-internal-unknown-field-type": "No validation support implemented for field type with ID of $1. This is a bug in the extension's code.",
     "datamap-error-render-unsupported-displaymode": "Display mode $1 has been reported for a marker, but support is missing for it. This is a bug in the extension's code.",
     "datamap-error-pf-page-does-not-exist": "Data map page \"[[$1]]\" does not exist.",
     "datamap-error-pf-page-invalid-content-model": "Content model of page \"[[$1]]\" is not <code>datamap</code>.",
@@ -24,11 +41,13 @@
     "datamap-legend-label": "Legend",
     "datamap-javascript-required": "Interactive data maps require JavaScript to be enabled.",
     "datamap-placeholder-loading": "Data is being loaded",
+    "datamap-lazy-click-to-load": "Click to load the data map",
+
     "datamap-legend-tab-locations": "Markers",
     "datamap-toggle-show-all": "Show all",
     "datamap-toggle-hide-all": "Hide all",
-
     "datamap-layer-control": "Toggle",
+
     "datamap-layer-surface": "Surface",
     "datamap-layer-cave": "Caves",
 

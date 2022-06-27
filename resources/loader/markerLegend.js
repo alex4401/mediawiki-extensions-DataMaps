@@ -18,7 +18,7 @@ function MarkerLegendPanel( legend, name ) {
 
 
 MarkerLegendPanel.prototype.createActionButton = function ( label, clickCallback ) {
-    var button = new OO.ui.ButtonWidget( { label: label } );
+    const button = new OO.ui.ButtonWidget( { label: label } );
     button.on( 'click', clickCallback );
     this.buttonGroup.addItems( [ button ] );
     return button;
@@ -26,8 +26,8 @@ MarkerLegendPanel.prototype.createActionButton = function ( label, clickCallback
 
 
 MarkerLegendPanel.prototype.createPopupButton = function ( label ) {
-    var $content = $( '<div>' );
-    var button = new OO.ui.PopupButtonWidget( { 
+    const $content = $( '<div>' );
+    const button = new OO.ui.PopupButtonWidget( { 
         label: label,
         indicator: 'down',
         popup: {
@@ -43,9 +43,7 @@ MarkerLegendPanel.prototype.createPopupButton = function ( label ) {
 
 
 MarkerLegendPanel.prototype.toggleAllGroups = function ( state ) {
-    this.groupToggles.forEach( function ( checkbox ) {
-        checkbox.setSelected( state );
-    } );
+    this.groupToggles.forEach( checkbox => checkbox.setSelected( state ) );
 };
 
 
@@ -61,32 +59,28 @@ MarkerLegendPanel.prototype.initialiseLayersArea = function () {
 
 
 MarkerLegendPanel.prototype.addMarkerLayerToggle = function ( layerId, layerName ) {
-    var self = this; // closures introduce their own context for `this`
-    this.legend.createCheckboxField( this.$layersPopup, layerName, true, function ( state ) {
+    this.legend.createCheckboxField( this.$layersPopup, layerName, true, state => {
         // Update visibility mask for this group
-        self.map.layerVisibilityMask[layerId] = state;
+        this.map.layerVisibilityMask[layerId] = state;
         // Update visibility for any marker of this group with any visible layer
-        self.map.updateLayerVisibility( function ( layerNames ) {
-            return layerNames.indexOf( layerId ) >= 0 && self.map.groupVisibilityMask[layerNames[0]];
+        this.map.updateLayerVisibility( layerNames => {
+            return layerNames.indexOf( layerId ) >= 0 && this.map.groupVisibilityMask[layerNames[0]];
         }, state );
     } );
 };
 
 
 MarkerLegendPanel.prototype.addMarkerGroupToggle = function ( groupId, group ) {
-    var self = this; // closures introduce their own context for `this`
-    var pair = this.legend.createCheckboxField( this.$groupContainer, group.name, true, function ( state ) {
+    const pair = this.legend.createCheckboxField( this.$groupContainer, group.name, true, state => {
         // Update visibility mask for this group
-        self.map.groupVisibilityMask[groupId] = state;
+        this.map.groupVisibilityMask[groupId] = state;
         // Update visibility for any marker of this group with any visible layer
-        self.map.updateLayerVisibility( function ( layerNames ) {
+        this.map.updateLayerVisibility( layerNames => {
             return layerNames[0] == groupId
-                && layerNames.filter( function ( x ) {
-                    return self.map.layerVisibilityMask[x] === false;
-                } ).length == 0;
+                && layerNames.filter( x => this.map.layerVisibilityMask[x] === false ).length == 0;
         }, state );
     } );
-    var field = pair[1];
+    const field = pair[1];
 
     if ( group.fillColor ) {
         $( '<div class="datamap-legend-circle">' ).css( {

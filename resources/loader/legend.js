@@ -16,7 +16,7 @@ function MapLegend( map ) {
  * 
  */
 MapLegend.prototype.addTab = function ( name ) {
-    var result = new OO.ui.TabPanelLayout( {
+    const result = new OO.ui.TabPanelLayout( {
         name: name,
         label: name,
         expanded: false
@@ -27,14 +27,12 @@ MapLegend.prototype.addTab = function ( name ) {
 
 
 MapLegend.prototype.createCheckboxField = function ( $parent, label, defaultState, changeCallback ) {
-    var checkbox = new OO.ui.CheckboxInputWidget( { selected: defaultState } );
-    var field = new OO.ui.FieldLayout( checkbox, {
+    const checkbox = new OO.ui.CheckboxInputWidget( { selected: defaultState } );
+    const field = new OO.ui.FieldLayout( checkbox, {
         label: label,
         align: 'inline'
     } );
-    checkbox.on( 'change', function () {
-        return changeCallback( checkbox.isSelected() );
-    } );
+    checkbox.on( 'change', () => changeCallback( checkbox.isSelected() ) );
     field.$element.appendTo( $parent );
     return [ checkbox, field ];
 };
