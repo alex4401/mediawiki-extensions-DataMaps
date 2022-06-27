@@ -87,22 +87,14 @@ class DataMapGroupSpec {
         return isset( $this->raw->borderWidth ) ? $this->raw->borderWidth : self::DEFAULT_CIRCLE_STROKE_WIDTH;
     }
 
-    private function getUniversalIcon(): ?string {
+    public function getIcon(): ?string {
         return isset( $this->raw->icon ) ? $this->raw->icon : null;
-    }
-
-    public function getMarkerIcon(): ?string {
-        return isset( $this->raw->markerIcon ) ? $this->raw->markerIcon : $this->getUniversalIcon();
-    }
-
-    public function getLegendIcon(): ?string {
-        return isset( $this->raw->legendIcon ) ? $this->raw->legendIcon : $this->getUniversalIcon();
     }
 
     public function getDisplayMode(): int {
         if ( $this->getRawFillColour() !== null ) {
             return self::DM_CIRCLE;
-        } else if ( $this->getMarkerIcon() !== null ) {
+        } else if ( $this->getIcon() !== null ) {
             return self::DM_ICON;
         }
         return self::DM_UNKNOWN;

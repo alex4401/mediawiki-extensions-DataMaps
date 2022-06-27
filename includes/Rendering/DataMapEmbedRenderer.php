@@ -86,8 +86,7 @@ class DataMapEmbedRenderer {
             $parserOutput->addImage( $background->getImageName() );
         }
         $this->data->iterateGroups( function( DataMapGroupSpec $spec ) use ( &$parserOutput ) {
-            $parserOutput->addImage( $spec->getMarkerIcon() );
-            $parserOutput->addImage( $spec->getLegendIcon() );
+            $parserOutput->addImage( $spec->getIcon() );
         } );
     }
 
@@ -167,14 +166,14 @@ class DataMapEmbedRenderer {
                 }
                 break;
             case DataMapGroupSpec::DM_ICON:
-                $out['markerIcon'] = $this->getIconUrl( $spec->getMarkerIcon(), self::MARKER_ICON_WIDTH );
+                $out['markerIcon'] = $this->getIconUrl( $spec->getIcon(), self::MARKER_ICON_WIDTH );
                 break;
             default:
                 throw new InvalidArgumentException( wfMessage( 'datamap-error-render-unsupported-displaymode', $spec->getDisplayMode() ) );
         }
 
-        if ( $spec->getLegendIcon() !== null ) {
-            $out['legendIcon'] = $this->getIconUrl( $spec->getLegendIcon(), self::LEGEND_ICON_WIDTH );
+        if ( $spec->getIcon() !== null ) {
+            $out['legendIcon'] = $this->getIconUrl( $spec->getIcon(), self::LEGEND_ICON_WIDTH );
         }
 
         if ( $spec->getSharedRelatedArticle() !== null ) {
