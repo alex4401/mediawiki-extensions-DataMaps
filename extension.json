@@ -90,7 +90,7 @@
 		"Ark\\DataMaps\\": "includes/"
 	},
 
-	"callback": "Ark\\DataMaps\\DataMapsGlobals::onRegistration",
+	"callback": "Ark\\DataMaps\\DataMapsHooks::onRegistration",
 	"APIModules": {
 		"queryDataMap": "Ark\\DataMaps\\API\\ApiQueryDataMapEndpoint"
 	},
