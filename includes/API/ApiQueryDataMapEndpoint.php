@@ -14,6 +14,7 @@ use Ark\DataMaps\Content\DataMapContent;
 use Ark\DataMaps\Data\DataMapSpec;
 use Ark\DataMaps\Data\DataMapMarkerSpec;
 use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
+use Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 use ParserOptions;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
@@ -198,7 +199,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
                 // Popup image thumbnail link
                 if ( $marker->getPopupImage() != null ) {
-                    $slots['image'] = DataMapEmbedRenderer::getIconUrl( $marker->getPopupImage(), self::POPUP_IMAGE_WIDTH );
+                    $slots['image'] = DataMapFileUtils::getFileUrl( $marker->getPopupImage(), self::POPUP_IMAGE_WIDTH );
                     $requiresSlots = true;
                 }
 

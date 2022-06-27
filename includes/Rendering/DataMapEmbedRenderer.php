@@ -17,6 +17,7 @@ use Ark\DataMaps\Data\DataMapGroupSpec;
 use Ark\DataMaps\Data\DataMapBackgroundSpec;
 use Ark\DataMaps\Data\DataMapBackgroundOverlaySpec;
 use Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
+use Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 
 class DataMapEmbedRenderer {
     const MARKER_ICON_WIDTH = 24;
@@ -40,23 +41,6 @@ class DataMapEmbedRenderer {
 
     public function getId(): int {
         return $this->title->getArticleID();
-    }
-
-    public static function getFile( string $title, int $width = -1 ) {
-        $file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $title ) );
-        if (!$file || !$file->exists()) {
-            throw new InvalidArgumentException( "File [[File:$title]] does not exist." );
-        }
-        if ( $width > 0 ) {
-            $file = $file->transform( [
-                'width' => $width
-            ] );
-        }
-		return $file;
-    }
-
-    public static function getIconUrl( string $title, int $width = -1 ): string {
-        return self::getFile( $title, $width )->getURL();
     }
 
     public function prepareOutput( ParserOutput $parserOutput ) {
@@ -97,7 +81,7 @@ class DataMapEmbedRenderer {
             'version' => $this->title->getLatestRevID(),
 
             'backgrounds' => array_map( function ( DataMapBackgroundSpec $background ) {
-                $image = $this->getFile( $background->getImageName() );
+                $image = DataMapFileUtils::getRequiredFile( $background->getImageName() );
                 $out = [
                     'image' => $image->getURL(),
                     'bounds' => [ $image->getWidth(), $image->getHeight() ]
@@ -166,14 +150,14 @@ class DataMapEmbedRenderer {
                 }
                 break;
             case DataMapGroupSpec::DM_ICON:
-                $out['markerIcon'] = $this->getIconUrl( $spec->getIcon(), self::MARKER_ICON_WIDTH );
+                $out['markerIcon'] = DataMapFileUtils::getFileUrl( $spec->getIcon(), self::MARKER_ICON_WIDTH );
                 break;
             default:
                 throw new InvalidArgumentException( wfMessage( 'datamap-error-render-unsupported-displaymode', $spec->getDisplayMode() ) );
         }
 
         if ( $spec->getIcon() !== null ) {
-            $out['legendIcon'] = $this->getIconUrl( $spec->getIcon(), self::LEGEND_ICON_WIDTH );
+            $out['legendIcon'] = DataMapFileUtils::getFileUrl( $spec->getIcon(), self::LEGEND_ICON_WIDTH );
         }
 
         if ( $spec->getSharedRelatedArticle() !== null ) {
