@@ -18,10 +18,13 @@ use MediaWiki\Revision\RevisionRecord;
 use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use Ark\DataMaps\Rendering\DataMapRenderOptions;
 use Ark\DataMaps\Data\DataMapSpec;
+use Ark\DataMaps\Data\DataModelMixinTransformer;
 
 class DataMapContent extends DataMapContentBase {
 	const LERR_NOT_FOUND = 1;
 	const LERR_NOT_DATAMAP = 2;
+
+	private ?DataMapSpec $modelCached = null;
 
 	public function __construct( $text, $modelId = ARK_CONTENT_MODEL_DATAMAP ) {
 		parent::__construct( $text, $modelId );
@@ -42,8 +45,40 @@ class DataMapContent extends DataMapContentBase {
 		return $content;
 	}
 
+	private function mergeMixins( stdClass $main ) {
+		global $wgArkDataNamespace;
+
+		if ( !isset( $main->mixins ) ) {
+			return $main;
+		}
+
+		$finalMixin = null;
+		foreach ( $main->mixins as &$mixinName ) {
+			$title = Title::makeTitleSafe( $wgArkDataNamespace, $mixinName );
+        	$mixin = DataMapContent::loadPage( $title )->getData()->getValue();
+			
+			if ( $finalMixin === null ) {
+				// First mixin, keep unmodified
+				$finalMixin = $mixin;
+			} else {
+				// Nth mixin, merge onto collective
+				$finalMixin = DataModelMixinTransformer::mergeTwoObjects( $finalMixin, $mixin );
+			}
+		}
+
+		if ( $finalMixin !== null ) {
+			// Merge main onto collective
+			$main = DataModelMixinTransformer::mergeTwoObjects( $finalMixin, $main );
+		}
+
+		return $main;
+	}
+
 	public function asModel(): DataMapSpec {
-		return new DataMapSpec( $this->getData()->getValue() );
+		if ( $this->modelCached === null ) {
+			$this->modelCached = new DataMapSpec( $this->mergeMixins( $this->getData()->getValue() ) );
+		}
+		return $this->modelCached;
 	}
 
 	public function isMixin(): bool {

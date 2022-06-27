@@ -25,7 +25,10 @@ class DataModel {
     private array $validationCheckedFields = [];
     protected bool $validationAreRequiredFieldsPresent = true;
 
-    public function __construct( stdClass $raw ) {
+    public function __construct( /*array|stdClass*/ $raw ) {
+        if ( is_array( $raw ) ) {
+            $raw = (object) $raw;
+        }
         $this->raw = $raw;
     }
 
@@ -114,6 +117,18 @@ class DataModel {
             return false;
         }
         return true;
+    }
+
+    protected function expectEitherField( Status $status, string $nameA, int $typeIdA, string $nameB, int $typeIdB ): bool {
+        $this->trackField( $nameA );
+        $this->trackField( $nameB );
+        $existsA = isset( $this->raw->$nameA );
+        $existsB = isset( $this->raw->$nameB );
+        if ( $existsA && $existsB ) {
+            $status->fatal( 'datamap-error-validate-exclusive-fields', static::$publicName, $nameA, $nameB );
+        } else {
+            return $this->expectField( $status, $existsA ? $nameA : $nameB, $existsA ? $typeIdA : $typeIdB );
+        }
     }
 
     protected function requireFile( Status $status, ?string $name ): bool {

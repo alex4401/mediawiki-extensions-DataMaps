@@ -18,7 +18,7 @@ class DataMapGroupSpec extends DataModel {
 
     private string $id;
 
-    public function __construct( string $id, object $raw ) {
+    public function __construct( string $id, /*array|object*/ $raw ) {
         parent::__construct( $raw );
         $this->id = $id;
     }
