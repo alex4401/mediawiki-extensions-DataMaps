@@ -32,13 +32,24 @@ abstract class DataMapContentBase extends JsonContent {
 		'left|right|top|bottom',
 		// Backgrounds
 		'name|image',
-		// Groups
+		// Marker groups
+		'fillColor|size',
+		'fillColor|borderColor',
+		'fillColor|borderColor|size',
+		'fillColor|borderColor|borderWidth',
+		'fillColor|borderColor|borderWidth|size',
+		'icon|size',
 		'name|icon',
 		'name|icon|size',
-		'name|markerIcon|size',
 		'name|fillColor|size',
+		'name|fillColor|size|icon',
+		'article|canDismiss',
 		// Markers
-		'lat|long'
+		'lat|long',
+		'article|popupImage',
+		'lat|long|article',
+		'lat|long|article|popupImage',
+		'lat|long|popupImage'
 	];
 
 	public function beautifyJSON() {
