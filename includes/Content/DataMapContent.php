@@ -11,6 +11,7 @@ use OutputPage;
 use Title;
 use Html;
 use PPFrame;
+use Status;
 use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use Ark\DataMaps\Rendering\DataMapRenderOptions;
 use Ark\DataMaps\Data\DataMapSpec;
@@ -26,6 +27,11 @@ class DataMapContent extends DataMapContentBase {
 
 	public function isMixin(): bool {
 		return !isset( $this->getData()->getValue()->markers );
+	}
+	
+	public function validateBeforeSave( Status $status ) {
+		parent::validateBeforeSave( $status );
+		$this->asModel()->validate( $status );
 	}
 
 	public function getEmbedRenderer( Title $title, Parser $parser ): DataMapEmbedRenderer {

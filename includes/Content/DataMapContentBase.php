@@ -11,6 +11,9 @@ use OutputPage;
 use Title;
 use Html;
 use PPFrame;
+use WikiPage;
+use User;
+use Status;
 use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use Ark\DataMaps\Rendering\DataMapRenderOptions;
 use Ark\DataMaps\Data\DataMapSpec;
@@ -59,6 +62,18 @@ abstract class DataMapContentBase extends JsonContent {
 		$out = preg_replace(self::COLLAPSE_SINGLE_LINE_ARRAY_RE, '[ $1 ]', $out);
 
 		return $out;
+	}
+	
+	public function validateBeforeSave( Status $status ) {
+		if ( !$this->isValid() ) {
+			$status->fatal( 'datamap-error-validate-invalid-json' );
+		}
+	}
+
+	public function prepareSave( WikiPage $page, $flags, $parentRevId, User $user ) {
+		$status = new Status();
+		$this->validateBeforeSave( $status );
+		return $status;
 	}
 
 	/**

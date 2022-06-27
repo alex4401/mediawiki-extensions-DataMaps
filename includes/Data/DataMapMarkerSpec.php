@@ -1,13 +1,11 @@
 <?php
 namespace Ark\DataMaps\Data;
 
-class DataMapMarkerSpec {
-    private object $raw;
+use Status;
 
-    public function __construct( object $raw ) {
-        $this->raw = $raw;
-    }
-
+class DataMapMarkerSpec extends DataModel {
+    protected static string $publicName = 'MarkerSpec';
+    
     public function reassignTo( object $newRaw ) {
         $this->raw = $newRaw;
     }
@@ -46,8 +44,18 @@ class DataMapMarkerSpec {
         );
     }
 
-    public function validate(): ?string {
-        // TODO: implement
-        return null;
+    public function validate( Status $status ) {
+        $this->requireField( $status, 'lat', DataModel::TYPE_NUMBER );
+        $this->requireField( $status, 'long', DataModel::TYPE_NUMBER );
+        $this->expectField( $status, 'label', DataModel::TYPE_STRING );
+        $this->expectField( $status, 'description', DataModel::TYPE_STRING );
+        $this->expectField( $status, 'isWikitext', DataModel::TYPE_BOOL );
+        $this->expectField( $status, 'article', DataModel::TYPE_STRING );
+        $this->expectField( $status, 'popupImage', DataModel::TYPE_STRING );
+        $this->disallowOtherFields( $status );
+
+        if ( $this->validationAreRequiredFieldsPresent ) {
+            $this->requireFile( $status, $this->getPopupImage() );
+        }
     }
 }

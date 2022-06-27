@@ -2,8 +2,11 @@
 namespace Ark\DataMaps\Data;
 
 use Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
+use Status;
 
-class DataMapGroupSpec {
+class DataMapGroupSpec extends DataModel {
+    protected static string $publicName = 'MarkerGroupSpec';
+
     const DEFAULT_CIRCLE_SIZE = 5;
     const DEFAULT_CIRCLE_STROKE_WIDTH = 1;
     const DEFAULT_ICON_SIZE = [ 32, 32 ];
@@ -14,11 +17,10 @@ class DataMapGroupSpec {
     const DM_UNKNOWN = -1;
 
     private string $id;
-    private object $raw;
 
     public function __construct( string $id, object $raw ) {
+        parent::__construct( $raw );
         $this->id = $id;
-        $this->raw = $raw;
     }
 
     public function getId(): string {
@@ -26,7 +28,7 @@ class DataMapGroupSpec {
     }
 
     public function getName(): string {
-        return $this->raw->name ?? wfMessage( 'datamap-unnamed-marker' );
+        return $this->raw->name;
     }
 
     public function getCircleSize(): int {
@@ -55,27 +57,22 @@ class DataMapGroupSpec {
     }
 
     public function getExtraMinZoomSize() {
-        // TODO: only supported for circle markers
         return isset( $this->raw->extraMinZoomSize ) ? $this->raw->extraMinZoomSize : null;
     }
 
     public function getRawFillColour() /*: ?array|string*/ {
-        // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
         return isset( $this->raw->fillColor ) ? $this->raw->fillColor : null;
     }
 
     public function getRawStrokeColour() /*: ?array|string*/ {
-        // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
         return isset( $this->raw->borderColor ) ? $this->raw->borderColor : null;
     }
 
     public function getFillColour(): array {
-        // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
         return DataMapColourUtils::decode( $this->getRawFillColour() );
     }
 
     public function getStrokeColour(): array {
-        // TODO: validate if this is actually a colour (RGB (consider arrays?) or HEX)
         if ( $this->getRawStrokeColour() != null ) {
             return DataMapColourUtils::decode( $this->getRawStrokeColour() );
         }
@@ -111,15 +108,36 @@ class DataMapGroupSpec {
         return isset( $this->raw->canDismiss ) ? $this->raw->canDismiss : false;
     }
 
-    public function validate(): ?string {
-        if ( $this->getMarkerIcon() === null && $this->getFillColour() === null ) {
-            return wfMessage( 'datamap-error-validation-no-display', wfEscapeWikiText( $this->id ) )->escaped();
+    public function validate( Status $status ) {
+        $this->requireField( $status, 'name', DataModel::TYPE_STRING );
+
+        switch ( $this->getDisplayMode() ) {
+            case self::DM_CIRCLE:
+                $this->requireField( $status, 'fillColor', DataModel::TYPE_COLOUR );
+                $this->expectField( $status, 'borderColor', DataModel::TYPE_COLOUR );
+                $this->expectField( $status, 'borderWidth', DataModel::TYPE_NUMBER );
+                $this->expectField( $status, 'size', DataModel::TYPE_NUMBER );
+                $this->expectField( $status, 'extraMinZoomSize', DataModel::TYPE_NUMBER );
+                $this->expectField( $status, 'icon', DataModel::TYPE_STRING );
+                break;
+            case self::DM_ICON:
+                $this->requireField( $status, 'icon', DataModel::TYPE_STRING );
+                $this->expectField( $status, 'size', DataModel::TYPE_VECTOR2 );
+                break;
+            case self::DM_UNKNOWN:
+                $status->fatal( 'datamap-error-validatespec-group-no-display', wfEscapeWikiText( $this->id ) );
+                return;
         }
 
-        if ( $this->getMarkerIcon() !== null && $this->getFillColour() !== null ) {
-            return wfMessage( 'datamap-error-validation-ambiguous-display', wfEscapeWikiText( $this->id ) )->escaped();
-        }
+        $this->expectField( $status, 'article', DataModel::TYPE_STRING );
+        $this->expectField( $status, 'canDismiss', DataModel::TYPE_BOOL );
 
-        return null;
+        $this->disallowOtherFields( $status );
+
+        if ( $this->validationAreRequiredFieldsPresent ) {
+            if ( $this->getIcon() !== null ) {
+                $this->requireFile( $status, $this->getIcon() );
+            }
+        }
     }
 }

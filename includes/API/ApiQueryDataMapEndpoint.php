@@ -141,7 +141,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             }
         }
 
-        $dataMap->iterateRawMarkerMap( function( string $layers, array $rawMarkerCollection )
+        $dataMap->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection )
             use ( &$results, &$title, &$parser, $filter ) {
 
             // If filters were specified, check if there is any overlap between the filters list and skip the marker set
