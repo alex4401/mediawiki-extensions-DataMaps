@@ -12,13 +12,34 @@ use Title;
 use Html;
 use PPFrame;
 use Status;
+use stdClass;
+use WikiPage;
+use MediaWiki\Revision\RevisionRecord;
 use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use Ark\DataMaps\Rendering\DataMapRenderOptions;
 use Ark\DataMaps\Data\DataMapSpec;
 
 class DataMapContent extends DataMapContentBase {
+	const LERR_NOT_FOUND = 1;
+	const LERR_NOT_DATAMAP = 2;
+
 	public function __construct( $text, $modelId = ARK_CONTENT_MODEL_DATAMAP ) {
 		parent::__construct( $text, $modelId );
+	}
+
+	public static function loadPage( Title $title ) {
+        if ( !$title || !$title->exists() ) {
+			return self::LERR_NOT_FOUND;
+        }
+
+        $mapPage = WikiPage::factory( $title );
+        $content = $mapPage->getContent( RevisionRecord::RAW );
+
+        if ( !( $content instanceof DataMapContent ) ) {
+			return self::LERR_NOT_DATAMAP;
+        }
+
+		return $content;
 	}
 
 	public function asModel(): DataMapSpec {
