@@ -14,6 +14,7 @@ use Ark\DataMaps\Content\DataMapContent;
 use Ark\DataMaps\Data\DataMapSpec;
 use Ark\DataMaps\Data\DataMapMarkerSpec;
 use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
+use Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 use ParserOptions;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
@@ -140,7 +141,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             }
         }
 
-        $dataMap->iterateRawMarkerMap( function( string $layers, array $rawMarkerCollection )
+        $dataMap->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection )
             use ( &$results, &$title, &$parser, $filter ) {
 
             // If filters were specified, check if there is any overlap between the filters list and skip the marker set
@@ -174,13 +175,19 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
                 // Popup title
                 if ( $marker->getLabel() != null ) {
-                    $slots['label'] = wfEscapeWikiText( $marker->getLabel() );
+                    if ( $marker->isWikitext() ) {
+                        $slots['label'] =
+                            $parser->parse( $marker->getLabel(), $title, $parserOptions, false, true )
+                                ->getText( [ 'unwrap' => true ] );
+                    } else {
+                        $slots['label'] = wfEscapeWikiText( $marker->getLabel() );
+                    }
                     $requiresSlots = true;
                 }
 
                 // Popup description
                 if ( $marker->getDescription() != null ) {
-                    if ( $marker->isDescriptionWikitext() ) {
+                    if ( $marker->isWikitext() ) {
                         $slots['desc'] =
                             $parser->parse( $marker->getDescription(), $title, $parserOptions, false, true )
                                 ->getText( [ 'unwrap' => true ] );
@@ -192,7 +199,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
                 // Popup image thumbnail link
                 if ( $marker->getPopupImage() != null ) {
-                    $slots['image'] = DataMapEmbedRenderer::getIconUrl( $marker->getPopupImage(), self::POPUP_IMAGE_WIDTH );
+                    $slots['image'] = DataMapFileUtils::getFileUrl( $marker->getPopupImage(), self::POPUP_IMAGE_WIDTH );
                     $requiresSlots = true;
                 }
 

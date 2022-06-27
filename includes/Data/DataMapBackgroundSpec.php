@@ -1,12 +1,10 @@
 <?php
 namespace Ark\DataMaps\Data;
 
-class DataMapBackgroundSpec {
-    private object $raw;
+use Status;
 
-    public function __construct( object $raw ) {
-        $this->raw = $raw;
-    }
+class DataMapBackgroundSpec extends DataModel {
+    protected static string $publicName = 'MapBackgroundSpec';
 
     public function getImageName(): string {
         return $this->raw->image;
@@ -17,7 +15,6 @@ class DataMapBackgroundSpec {
     }
 
     public function getName(): ?string {
-        // TODO: validate, this is required if there's more than 1 background
         return isset( $this->raw->name ) ? $this->raw->name : null;
     }
 
@@ -31,8 +28,19 @@ class DataMapBackgroundSpec {
         }
     }
 
-    public function validate(): ?string {
-        // TODO: implement
-        return null;
+    public function validate( Status $status, bool $isSingle = true ) {
+        if ( $isSingle ) {
+            $this->expectField( $status, 'name', DataModel::TYPE_STRING );
+        } else {
+            $this->requireField( $status, 'name', DataModel::TYPE_STRING );
+        }
+        $this->requireField( $status, 'image', DataModel::TYPE_STRING );
+        $this->expectField( $status, 'at', DataModel::TYPE_BOUNDS );
+        $this->expectField( $status, 'overlays', DataModel::TYPE_ARRAY );
+        $this->disallowOtherFields( $status );
+
+        if ( $this->validationAreRequiredFieldsPresent ) {
+            $this->requireFile( $status, $this->getImageName() );
+        }
     }
 }

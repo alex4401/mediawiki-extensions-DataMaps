@@ -1,58 +1,54 @@
-module.exports = function ( map ) {
-    var self = {
-        map: map,
-    };
+function MapStorage( map ) {
+    this.map = map;
+    this.dismissed = this.getArray( 'dismissed' );
+}
 
 
-    self.get = function ( name ) {
-        return localStorage.getItem( 'ext.ark.datamaps.' + self.map.id + ':' + name );
-    };
-
-    
-    self.set = function ( name, data ) {
-        localStorage.setItem( 'ext.ark.datamaps.' + self.map.id + ':' + name, data );
-    };
-
-    
-    self.getArray = function ( name ) {
-        return JSON.parse( self.get( name ) || '[]' );
-    };
-
-    
-    self.setObject = function ( name, data ) {
-        self.set( name, JSON.stringify(data) );
-    };
-
-
-    /*
-     * Generates an identifier of a marker to use with local storage.
-     */
-    self.getMarkerKey = function ( type, instance ) {
-        return 'M' + type + '@' + instance[0] + ':' + instance[1];
-    };
-
-
-    self.isDismissed = function ( type, instance ) {
-        if ( self.dismissed.length === 0 ) {
-            return false;
-        }
-        return self.dismissed.indexOf( self.getMarkerKey( type, instance ) ) >= 0;
-    };
-
-
-    self.toggleDismissal = function ( type, instance ) {
-        var key = self.getMarkerKey( type, instance );
-        if ( self.isDismissed( type, instance ) ) {
-            self.dismissed = self.dismissed.filter( function ( x ) {
-                return x != key;
-            } );
-        } else {
-            self.dismissed.push( key );
-        }
-        self.setObject( 'dismissed', self.dismissed );
-    };
-
-    self.dismissed = self.getArray( 'dismissed' );
-    
-    return self;
+MapStorage.prototype.get = function ( name ) {
+    return localStorage.getItem( 'ext.ark.datamaps.' + this.map.id + ':' + name );
 };
+
+
+MapStorage.prototype.set = function ( name, data ) {
+    localStorage.setItem( 'ext.ark.datamaps.' + this.map.id + ':' + name, data );
+};
+
+    
+MapStorage.prototype.getArray = function ( name ) {
+    return JSON.parse( this.get( name ) || '[]' );
+};
+
+    
+MapStorage.prototype.setObject = function ( name, data ) {
+    this.set( name, JSON.stringify(data) );
+};
+
+
+/*
+ * Generates an identifier of a marker to use with local storage.
+ */
+MapStorage.prototype.getMarkerKey = function ( type, instance ) {
+    return 'M' + type + '@' + instance[0] + ':' + instance[1];
+};
+
+
+MapStorage.prototype.isDismissed = function ( type, instance ) {
+    if ( this.dismissed.length === 0 ) {
+        return false;
+    }
+    return this.dismissed.indexOf( this.getMarkerKey( type, instance ) ) >= 0;
+};
+
+
+MapStorage.prototype.toggleDismissal = function ( type, instance ) {
+    const key = this.getMarkerKey( type, instance );
+    if ( this.isDismissed( type, instance ) ) {
+        this.dismissed = this.dismissed.filter( x => x != key );
+    } else {
+        this.dismissed.push( key );
+    }
+    this.setObject( 'dismissed', this.dismissed );
+};
+
+    
+module.exports = MapStorage;

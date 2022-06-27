@@ -11,73 +11,48 @@ use OutputPage;
 use Title;
 use Html;
 use PPFrame;
+use Status;
+use stdClass;
+use WikiPage;
+use MediaWiki\Revision\RevisionRecord;
 use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use Ark\DataMaps\Rendering\DataMapRenderOptions;
 use Ark\DataMaps\Data\DataMapSpec;
 
-class DataMapContent extends JsonContent {
+class DataMapContent extends DataMapContentBase {
+	const LERR_NOT_FOUND = 1;
+	const LERR_NOT_DATAMAP = 2;
 
 	public function __construct( $text, $modelId = ARK_CONTENT_MODEL_DATAMAP ) {
 		parent::__construct( $text, $modelId );
 	}
 
-    const NUMBER_RE = '[+-]?\d+(\.\d+)?([eE][-+]?\d+)?|true|false';
-    # Reduce 2-12 numbers in an array onto a single line
-    const JOIN_MULTIPLE_NUMBERS_RE = '/(\n\s+)(' . self::NUMBER_RE . '),(?:\n\s+(?:' . self::NUMBER_RE . '|null|"[^"\n\t]*"),?){1,12}/';
-    # Reduce short arrays of strings onto a single line
-    const JOIN_MULTIPLE_STRINGS_RE = '/\[((?:\n\s+".{1,30}",?\s*$){1,4})\n\s+\]/';
-    # Reduces dict fields with only a single line of content (including previously joined multiple fields) to a single line
-    const COLLAPSE_SINGLE_LINE_DICT_RE = '/\{\n\s+("\w+": [^}\n\]]{1,120})\n\s+\}/';
-    # Reduce arrays with only a single line of content (including previously joined multiple fields) to a single line
-    const COLLAPSE_SINGLE_LINE_ARRAY_RE = '/\[\s+(.+)\s+\]/';
-	# Sets of named fields that should be combined onto a single line
-	const JOIN_LINE_FIELDS = [
-		'left|right|top|bottom',
-		// Backgrounds
-		'name|image',
-		// Groups
-		'name|icon',
-		'name|icon|size',
-		'name|markerIcon|size',
-		'name|fillColor|size',
-		// Markers
-		'lat|long'
-	];
+	public static function loadPage( Title $title ) {
+        if ( !$title || !$title->exists() ) {
+			return self::LERR_NOT_FOUND;
+        }
 
-	public function beautifyJSON() {
-		$out = FormatJson::encode( $this->getData()->getValue(), true, FormatJson::UTF8_OK );
+        $mapPage = WikiPage::factory( $title );
+        $content = $mapPage->getContent( RevisionRecord::RAW );
 
-		foreach (self::JOIN_LINE_FIELDS as $term) {
-			$part = '(?:("(?:' . $term . ')": [^,\n]+,?))';
-			$fieldCount = substr_count($term, '|') + 1;
-			$full = '/' . join('\s+', array_fill(0, $fieldCount, $part)) . '(\s+)/';
-			$subs = join(' ', array_map(fn($n) => '$' . $n, range(1, $fieldCount))) . "$" . ($fieldCount+1);
-			$out = preg_replace($full, $subs, $out);
-		}
+        if ( !( $content instanceof DataMapContent ) ) {
+			return self::LERR_NOT_DATAMAP;
+        }
 
-		$out = preg_replace(self::COLLAPSE_SINGLE_LINE_DICT_RE, '{ $1 }', $out);
-		$out = preg_replace(self::COLLAPSE_SINGLE_LINE_ARRAY_RE, '[ $1 ]', $out);
-
-		return $out;
+		return $content;
 	}
 
 	public function asModel(): DataMapSpec {
 		return new DataMapSpec( $this->getData()->getValue() );
 	}
 
-	/**
-	 * Return the Title for the documentation page
-	 *
-	 * @param Title $title
-	 * @return Title|null
-	 */
-	public static function getDocPage( Title $title ) {
-		$docPage = wfMessage( 'datamap-doc-page-name', $title->getNsText(), $title->getText() )->inContentLanguage();
-		if ( $docPage->isDisabled() ) {
-			return null;
-		}
-
-		return Title::newFromText( $docPage->plain() );
+	public function isMixin(): bool {
+		return !isset( $this->getData()->getValue()->markers );
+	}
+	
+	public function validateBeforeSave( Status $status ) {
+		parent::validateBeforeSave( $status );
+		$this->asModel()->validate( $status );
 	}
 
 	public function getEmbedRenderer( Title $title, Parser $parser ): DataMapEmbedRenderer {
@@ -85,54 +60,18 @@ class DataMapContent extends JsonContent {
 	}
 
 	protected function fillParserOutput( Title $title, $revId, ParserOptions $options, $generateHtml, ParserOutput &$output ) {
-		$parser = MediaWikiServices::getInstance()->getParser();
-		$output = new ParserOutput();
+		$output = parent::fillParserOutput( $title, $revId, $options, $generateHtml, $output );
 
 		if ( !$generateHtml ) {
 			return $output;
 		}
 
-		// Get documentation, if any
-		$doc = self::getDocPage( $title );
-		if ( $doc ) {
-			$msg = wfMessage(
-				$doc->exists() ? 'datamap-doc-page-show' : 'datamap-doc-page-does-not-exist',
-				$doc->getPrefixedText()
-			)->inContentLanguage();
-
-			if ( !$msg->isDisabled() ) {
-				// We need the ParserOutput for categories and such, so we can't use $msg->parse().
-				$docViewLang = $doc->getPageViewLanguage();
-				$dir = $docViewLang->getDir();
-
-				// Code is forced to be ltr, but the documentation can be rtl. Correct direction class is needed for correct
-				// formatting. The possible classes are mw-content-ltr or mw-content-rtl
-				$dirClass = "mw-content-$dir";
-
-				$docWikitext = Html::rawElement(
-					'div',
-					[
-						'lang' => $docViewLang->getHtmlCode(),
-						'dir' => $dir,
-						'class' => $dirClass,
-					],
-					"\n" . $msg->plain() . "\n"
-				);
-
-				if ( $options->getTargetLanguage() === null ) {
-					$options->setTargetLanguage( $doc->getPageLanguage() );
-				}
-
-				$output = $parser->parse( $docWikitext, $title, $options, true, true, $revId );
-			}
-
-			// Mark the doc page as a transclusion, so we get purged when it changes.
-			$output->addTemplate( $doc, $doc->getArticleID(), $doc->getLatestRevID() );
+		if ( !$this->isMixin() ) {
+			$parser = MediaWikiServices::getInstance()->getParser();
+			$embed = $this->getEmbedRenderer( $title, $parser );
+			$embed->prepareOutput( $output );
+			$output->setText( $output->getRawText() . $embed->getHtml( new DataMapRenderOptions() ) );
 		}
-
-		$embed = $this->getEmbedRenderer( $title, $parser );
-		$embed->prepareOutput( $output );
-		$output->setText( $output->getRawText() . $embed->getHtml( new DataMapRenderOptions() ) );
 
 		return $output;
 	}

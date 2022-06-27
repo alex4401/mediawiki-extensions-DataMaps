@@ -1,6 +1,6 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.5.3",
+	"version": "0.6.0",
 
 	"author": [
 		"alex4401"
@@ -43,6 +43,7 @@
 		},
 
 		"ext.ark.datamaps.loader": {
+			"es6": true,
 			"dependencies": [
 				"mediawiki.api"
 			],
@@ -89,7 +90,7 @@
 		"Ark\\DataMaps\\": "includes/"
 	},
 
-	"callback": "Ark\\DataMaps\\DataMapsGlobals::onRegistration",
+	"callback": "Ark\\DataMaps\\DataMapsHooks::onRegistration",
 	"APIModules": {
 		"queryDataMap": "Ark\\DataMaps\\API\\ApiQueryDataMapEndpoint"
 	},

@@ -18,21 +18,16 @@ final class ParserFunction_EmbedDataMap {
 		array_shift( $params ); // we know the parser already
 
         $title = Title::makeTitleSafe( $wgArkDataNamespace, $params[0] );
-
-        if ( !$title || !$title->exists() ) {
+        $content = DataMapContent::loadPage( $title );
+        if ( $content === DataMapContent::LERR_NOT_FOUND ) {
             $msg = wfMessage( 'datamap-error-pf-page-does-not-exist', wfEscapeWikiText( $title->getFullText() ) )
                 ->inContentLanguage()->escaped();
             return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true ];
-        }
-
-        $mapPage = WikiPage::factory( $title );
-        $content = $mapPage->getContent( RevisionRecord::RAW );
-
-        if ( !($content instanceof DataMapContent) ) {
+        } elseif ( $content === DataMapContent::LERR_NOT_DATAMAP ) {
             $msg = wfMessage( 'datamap-error-pf-page-invalid-content-model', wfEscapeWikiText( $title->getFullText() ) )
                 ->inContentLanguage()->escaped();
             return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true ];
-        } 
+        }
 
         $options = self::getRenderOptions( $content->asModel(), $params );
 
@@ -42,7 +37,8 @@ final class ParserFunction_EmbedDataMap {
         // Add the page to a tracking category
         $parser->addTrackingCategory( 'datamap-category-pages-including-maps' );
         // Register page's dependency on the data map
-        $parser->getOutput()->addTemplate( $title, $title->getArticleId(), $parser->fetchCurrentRevisionRecordOfTitle( $title )->getId() );
+        $parser->getOutput()->addTemplate( $title, $title->getArticleId(),
+            $parser->fetchCurrentRevisionRecordOfTitle( $title )->getId() );
 
 		return [ $embed->getHtml( $options ), 'noparse' => true, 'isHTML' => true ];
     }
