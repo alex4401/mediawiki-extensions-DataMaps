@@ -150,7 +150,13 @@ class DataMapEmbedRenderer {
                 }
                 break;
             case DataMapGroupSpec::DM_ICON:
-                $out['markerIcon'] = DataMapFileUtils::getFileUrl( $spec->getIcon(), self::MARKER_ICON_WIDTH );
+                // Upsize by 50% to mitigate quality loss at max zoom
+                $size = floor(self::MARKER_ICON_WIDTH * 1.5);
+                // Ensure it's a multiple of 2
+                if ( $size % 2 !== 0 ) {
+                    $size++;
+                }
+                $out['markerIcon'] = DataMapFileUtils::getFileUrl( $spec->getIcon(), $size );
                 break;
             default:
                 throw new InvalidArgumentException( wfMessage( 'datamap-error-render-unsupported-displaymode', $spec->getDisplayMode() ) );
