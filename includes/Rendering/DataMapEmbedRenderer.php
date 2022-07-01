@@ -34,9 +34,13 @@ class DataMapEmbedRenderer {
         $this->data = $data;
 
         $this->parser = $parser->getFreshParser();
-        $this->parserOptions = $parser->getOptions();
 
-        $parser->getOptions()->enableLimitReport(false);
+        $this->parserOptions = ParserOptions::newCanonical( 'canonical' );
+        $this->parserOptions->enableLimitReport( false );
+        $this->parserOptions->setAllowSpecialInclusion( false );
+        $this->parserOptions->setExpensiveParserFunctionLimit( 4 );
+        $this->parserOptions->setInterwikiMagic( false );
+        $this->parserOptions->setMaxIncludeSize( 800 );
     }
 
     public function getId(): int {
