@@ -141,8 +141,16 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             }
         }
 
+        // Prepare the wikitext parser
+        $parserOptions = ParserOptions::newCanonical( 'canonical' );
+        $parserOptions->enableLimitReport( false );
+        $parserOptions->setAllowSpecialInclusion( false );
+        $parserOptions->setExpensiveParserFunctionLimit( 0 );
+        $parserOptions->setInterwikiMagic( false );
+        $parserOptions->setMaxIncludeSize( 800 );
+
         $dataMap->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection )
-            use ( &$results, &$title, &$parser, $filter ) {
+            use ( &$results, &$title, &$parser, $filter, &$parserOptions ) {
 
             // If filters were specified, check if there is any overlap between the filters list and skip the marker set
             if ( $filter !== null && empty( array_intersect( $filter, explode( ' ', $layers ) ) ) ) {
@@ -153,14 +161,6 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
             // creating thousands of small, very short-lived (only one at a time) objects
             $marker = new DataMapMarkerSpec( new \stdclass() );
-
-            // Prepare the wikitext parser
-            $parserOptions = ParserOptions::newCanonical( 'canonical' );
-            $parserOptions->enableLimitReport( false );
-            $parserOptions->setAllowSpecialInclusion( false );
-            $parserOptions->setExpensiveParserFunctionLimit( 0 );
-            $parserOptions->setInterwikiMagic( false );
-            $parserOptions->setMaxIncludeSize( 800 );
 
             foreach ( $rawMarkerCollection as &$rawMarker ) {
                 $marker->reassignTo( $rawMarker );
