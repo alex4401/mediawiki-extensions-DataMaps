@@ -10,6 +10,10 @@ class DataMapSpec extends DataModel {
     private ?array $cachedMarkerLayers = null;
     private ?array $cachedBackgrounds = null;
 
+    public function getMixins(): ?array {
+        return isset( $this->raw->mixins ) ? $this->raw->mixins : null;
+    }
+
     public function getTitle(): string {
         return $this->raw->title ?? wfMessage( 'datamap-unnamed-map' );
     }
@@ -100,49 +104,66 @@ class DataMapSpec extends DataModel {
     }
 
     public function validate( Status $status ) {
-        $this->requireField( $status, 'title', DataModel::TYPE_STRING );
-        $this->requireEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
-        $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
-        $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );
-        $this->expectField( $status, 'custom', DataModel::TYPE_OBJECT );
-        $this->expectField( $status, 'markers', DataModel::TYPE_OBJECT );
+        $isFull = isset( $this->raw->markers );
+        if ( $isFull ) {
+            // Perform full strict validation, this is a full map
+            $this->expectField( $status, 'mixins', DataModel::TYPE_ARRAY );
+            $this->expectField( $status, 'title', DataModel::TYPE_STRING );
+            $this->requireEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
+            $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
+            $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );
+            $this->expectField( $status, 'custom', DataModel::TYPE_OBJECT );
+            $this->expectField( $status, 'markers', DataModel::TYPE_OBJECT );
+        } else {
+            // Perform limited, permissive validation, this is a mixin
+            $this->expectEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
+            $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
+            $this->expectField( $status, 'groups', DataModel::TYPE_OBJECT );
+            $this->expectField( $status, 'custom', DataModel::TYPE_OBJECT );
+        }
         $this->disallowOtherFields( $status );
 
         if ( $this->validationAreRequiredFieldsPresent ) {
             // Validate backgrounds by the DataMapBackgroundSpec class
-            $multipleBgs = count( $this->getBackgrounds() ) > 1;
-            foreach ( $this->getBackgrounds() as &$spec ) {
-                $spec->validate( $status, !$multipleBgs );
+            if ( isset( $this->raw->image ) || isset( $this->raw->backgrounds ) ) {
+                $multipleBgs = count( $this->getBackgrounds() ) > 1;
+                foreach ( $this->getBackgrounds() as &$spec ) {
+                    $spec->validate( $status, !$multipleBgs );
+                }
             }
     
             // Validate marker groups by the DataMapGroupSpec class
-            foreach ( $this->getRawMarkerGroupMap() as $name => $group ) {
-                if ( empty( $name ) ) {
-                    $status->fatal( 'datamap-error-validatespec-map-no-group-name' );
+            if ( isset( $this->raw->groups ) ) {
+                foreach ( $this->getRawMarkerGroupMap() as $name => $group ) {
+                    if ( empty( $name ) ) {
+                        $status->fatal( 'datamap-error-validatespec-map-no-group-name' );
+                    }
+                
+                    $spec = new DataMapGroupSpec( $name, $group );
+                    $spec->validate( $status );
                 }
-    
-                $spec = new DataMapGroupSpec( $name, $group );
-                $spec->validate( $status );
             }
 
             // Validate markers by the DataMapMarkerSpec class
-            $this->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection ) use ( &$status ) {
-                // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
-                // creating thousands of small, very short-lived (only one at a time) objects
-                $marker = new DataMapMarkerSpec( new \stdclass() );
-
-                $layers = explode( ' ', $layers );
-                $groupName = $layers[0];
-                if ( !isset( $this->raw->groups->$groupName ) ) {
-                    $status->fatal( 'datamap-error-validatespec-map-missing-group', $groupName );
-                    return;
-                }
-
-                foreach ( $rawMarkerCollection as &$rawMarker ) {
-                    $marker->reassignTo( $rawMarker );
-                    $marker->validate( $status );
-                }
-            } );
+            if ( $isFull ) {
+                $this->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection ) use ( &$status ) {
+                    // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
+                    // creating thousands of small, very short-lived (only one at a time) objects
+                    $marker = new DataMapMarkerSpec( new \stdclass() );
+                
+                    $layers = explode( ' ', $layers );
+                    $groupName = $layers[0];
+                    if ( !isset( $this->raw->groups->$groupName ) ) {
+                        $status->fatal( 'datamap-error-validatespec-map-missing-group', $groupName );
+                        return;
+                    }
+                
+                    foreach ( $rawMarkerCollection as &$rawMarker ) {
+                        $marker->reassignTo( $rawMarker );
+                        $marker->validate( $status );
+                    }
+                } );
+            }
         }
     }
 }
