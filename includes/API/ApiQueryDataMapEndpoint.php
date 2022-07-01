@@ -175,7 +175,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
                 // Popup title
                 if ( $marker->getLabel() != null ) {
-                    if ( $marker->isWikitext() ) {
+                    if ( $this->shouldParseString( $marker, $marker->getLabel() ) ) {
                         $slots['label'] =
                             $parser->parse( $marker->getLabel(), $title, $parserOptions, false, true )
                                 ->getText( [ 'unwrap' => true ] );
@@ -187,7 +187,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
                 // Popup description
                 if ( $marker->getDescription() != null ) {
-                    if ( $marker->isWikitext() ) {
+                    if ( $this->shouldParseString( $marker, $marker->getDescription() ) ) {
                         $slots['desc'] =
                             $parser->parse( $marker->getDescription(), $title, $parserOptions, false, true )
                                 ->getText( [ 'unwrap' => true ] );
@@ -221,5 +221,14 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         } );
 
         return $results;
+    }
+
+    private function shouldParseString( DataMapMarkerSpec $marker, string $text ): bool {
+        $mIsWikitext = $marker->isWikitext();
+        if ( $mIsWikitext === false ) {
+            return false;
+        }
+
+        return $mIsWikitext || preg_match( "/\{\{|\[\[|\'\'|<\w+|&[\d\w]+/", $text ) === 1;
     }
 }
