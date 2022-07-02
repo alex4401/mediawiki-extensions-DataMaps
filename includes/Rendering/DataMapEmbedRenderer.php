@@ -265,15 +265,20 @@ class DataMapEmbedRenderer {
 			],
             Html::element(
                 'noscript',
-                null,
+                [
+                    'class' => 'datamap-overlay-status'
+                ],
                 wfMessage( 'datamap-javascript-required' )
             )
-            . Html::element(
+            . Html::rawElement(
 				'div',
 				[
-					'class' => 'datamap-status'
+					'class' => 'datamap-status datamap-overlay-status'
 				],
 				wfMessage( 'datamap-placeholder-loading' )
+                . ( new \OOUI\ProgressBarWidget( [
+                    'progress' => false
+                ] ) )->toString()
 			)
 		);
     }
