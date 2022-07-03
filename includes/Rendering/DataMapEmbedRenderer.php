@@ -275,7 +275,7 @@ class DataMapEmbedRenderer {
 				[
 					'class' => 'datamap-status datamap-overlay-status'
 				],
-				wfMessage( 'datamap-placeholder-loading' )
+				wfMessage( 'datamap-loading-data' )
                 . ( new \OOUI\ProgressBarWidget( [
                     'progress' => false
                 ] ) )->toString()
