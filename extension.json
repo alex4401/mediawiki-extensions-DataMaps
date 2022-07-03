@@ -104,7 +104,8 @@
 	
 	"Hooks": {
 		"ParserFirstCallInit": "Ark\\DataMaps\\DataMapsHooks::onParserFirstCallInit",
-		"ContentHandlerDefaultModelFor": "Ark\\DataMaps\\DataMapsHooks::contentHandlerDefaultModelFor"
+		"ContentHandlerDefaultModelFor": "Ark\\DataMaps\\DataMapsHooks::contentHandlerDefaultModelFor",
+		"CodeEditorGetPageLanguage": "Ark\\DataMaps\\DataMapsHooks::getCodeLanguage"
 	},
 
 	"config": {

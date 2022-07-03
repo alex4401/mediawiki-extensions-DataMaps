@@ -53,4 +53,12 @@ class DataMapsHooks {
 		}
 		return true;
 	}
+
+	public static function getCodeLanguage( Title $title, &$languageCode ) {
+		if ( $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
+			$languageCode = 'json';
+		}
+
+		return true;
+	}
 }
