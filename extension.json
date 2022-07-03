@@ -26,6 +26,10 @@
 		"DataMapsMagic": "DataMaps.magic.php"
 	},
 
+	"TrackingCategories": [
+		"datamap-category-pages-including-maps"
+	],
+
 	"ResourceFileModulePaths": {
 		"localBasePath": "resources",
 		"remoteExtPath": "DataMaps/resources"
