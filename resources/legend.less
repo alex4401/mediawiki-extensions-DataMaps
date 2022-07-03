@@ -16,6 +16,12 @@
     
     .datamap-container-groups {
         margin-top: 12px;
+
+        @media screen and (min-width: 1200px) {
+            .oo-ui-fieldLayout.oo-ui-fieldLayout-align-inline {
+                margin-top: 8px;
+            }
+        }
     }
 
     .datamap-legend-circle {
@@ -35,7 +41,7 @@
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
-        /* Needed for the popup button not to go under group toggles */
+        /* Needed for the popup button to not go under group toggles */
         z-index: 2;
     }
 

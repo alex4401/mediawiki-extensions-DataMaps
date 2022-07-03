@@ -24,34 +24,39 @@ Create a page within the data namespace and assign it the `datamap` content mode
 
 ### Structure
 Content of the page should be a valid JSON with following structure:
+* `mixins` (array of page names, optional): *experimental*, list of other pages with the `datamap` content model that'll be loaded first.
 * `title` (string, optional): label displayed above the map's legend.
 * `image` (file name, required unless `backgrounds` is specified): name of the file (with no namespace) to display as background. This translates to a single, nameless background.
 * `backgrounds` (array of objects): list of *backgrounds* this map has available and the user can choose between:
+* * `name` (string, required if more than one background is specified): name of this background to display in the selection control.
 * * `image` (file name, required): name of the file to display for this background.
 * * `at` (box, optional): location to place the background at.
-* * `name` (string, required if more than one background is specified): name of this background to display in the selection control.
+* * `overlays` (array of objects, optional): list of *background overlay* specifications:
+* * * `name` (string, optional): name shown in a tooltip when the mouse cursor is over the overlay.
+* * * `at` (dimensions, required): bounds of the rectangle.
 * `groups` (string to object map, required): map from name to a *marker group* specification:
 * * `name` (string, required): name of the group and each individual marker.
-* * `icon` (file name, optional): short-hand for `legendIcon`, and `markerIcon` if `fillColor` is not specified.
-* * `legendIcon` (file name, optional): name of the file (with no namespace) to display in the legend entry of the group.
-* * Circular markers:
+* * **Circular markers:** if `fillColor` is specified
 * * * `fillColor` (hex string, required): colour of each circular marker belonging to the group.
+* * * `icon` (file name, optional): icon to show in the legend
 * * * `size` (integer, optional): size of each circular marker. Defaults to `4`.
-* * Icon markers:
-* * * `markerIcon` (file name, required): name of the file (with no namespace) to show markers with. This makes all markers in group SVG-based. Current support is limited.
+* * **Icon markers:** if `fillColor` is **not** specified
+* * * `icon` (file name, required): name of the file (with no namespace) to show markers with. This makes all markers in group SVG-based. Current support is limited.
 * * * `size` (dimensions, optional): size of each icon marker. Defaults to `[ 32, 32 ]`.
+* * `article` (page name, optional): name of an article every marker's popup should link to. Can be overridden on a marker.
 * `markers` (string to array of objects map, required): map from group name (and any secondary specifiers, i.e. "layers") to an array of *markers*:
 * * `lat` (decimal, required): latitude.
-* * `long` (decimal, required): longitude.
+* * `lon` (decimal, required): longitude.
 * * `label` (string, optional): text to append to marker's popup title.
 * * `description` (string, optional): text to add to the marker's popup.
-* * `isDescriptionWikitext` (boolean, optional): if true, `description` will be treated as wikitext. This is expensive, do not use for every marker.
+* * `isWikitext` (boolean, optional): if true, `label` and `description` will be treated as wikitext. This is expensive, do not use for every marker. If unset, the backend will guess based on the presence of some patterns.
 * * `popupImage` (file name, optional): if provided, marker's popup will display this image under the description.
-* * `relatedArticle` (page name, optional): name of an article the marker's popup should link to.
+* * `article` (page name, optional): name of an article the marker's popup should link to.
 * `custom` (map, optional): any arbitrary to be added to the client-side map config, for use with e.g. on-site gadgets.
 
 #### `Dimensions`
-Two element decimal array, where first element is the width and second is the height.
+Two element decimal array, where first element is the width and second is the height. Alternatively, a number, which will be
+used for both axes.
 
 #### `Location`
 Two element decimal array, where first element is the latitude and second is the longitude.

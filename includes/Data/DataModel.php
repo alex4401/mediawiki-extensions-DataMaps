@@ -131,6 +131,14 @@ class DataModel {
         }
     }
 
+    protected function allowReplacedField( Status $status, string $nameOld, int $typeId, string $nameNew, string $since,
+        string $until ) {
+        if ( isset( $this->raw->$nameOld ) ) {
+            $status->warning( 'datamap-error-validate-replaced-field', static::$publicName, $nameOld, $nameNew, $since, $until );
+            $this->expectField( $status, $nameOld, $typeId );
+        }
+    }
+
     protected function requireFile( Status $status, ?string $name ): bool {
         if ( $name !== null ) {
             if ( empty( $name ) ) {
