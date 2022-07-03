@@ -99,7 +99,8 @@
 	},
 	
 	"Hooks": {
-		"ParserFirstCallInit": "Ark\\DataMaps\\DataMapsHooks::onParserFirstCallInit"
+		"ParserFirstCallInit": "Ark\\DataMaps\\DataMapsHooks::onParserFirstCallInit",
+		"ContentHandlerDefaultModelFor": "Ark\\DataMaps\\DataMapsHooks::contentHandlerDefaultModelFor"
 	},
 
 	"config": {
