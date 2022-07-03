@@ -15,7 +15,8 @@ class DataMapMarkerSpec extends DataModel {
     }
 
     public function getLongitude(): float {
-        return $this->raw->long;
+        // DEPRECATED(v0.6.0:v0.9.0): switch to `lon`, same length as `lat`
+        return isset( $this->raw->long ) ? $this->raw->long : $this->raw->lon;
     }
 
     public function getLabel(): ?string {
@@ -46,7 +47,7 @@ class DataMapMarkerSpec extends DataModel {
 
     public function validate( Status $status ) {
         $this->requireField( $status, 'lat', DataModel::TYPE_NUMBER );
-        $this->requireField( $status, 'long', DataModel::TYPE_NUMBER );
+        $this->requireField( $status, 'lon', DataModel::TYPE_NUMBER );
         $this->expectField( $status, 'label', DataModel::TYPE_STRING );
         $this->expectField( $status, 'description', DataModel::TYPE_STRING );
         $this->expectField( $status, 'isWikitext', DataModel::TYPE_BOOL );

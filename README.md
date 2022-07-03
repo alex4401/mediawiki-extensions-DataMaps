@@ -46,7 +46,7 @@ Content of the page should be a valid JSON with following structure:
 * * `article` (page name, optional): name of an article every marker's popup should link to. Can be overridden on a marker.
 * `markers` (string to array of objects map, required): map from group name (and any secondary specifiers, i.e. "layers") to an array of *markers*:
 * * `lat` (decimal, required): latitude.
-* * `long` (decimal, required): longitude.
+* * `lon` (decimal, required): longitude.
 * * `label` (string, optional): text to append to marker's popup title.
 * * `description` (string, optional): text to add to the marker's popup.
 * * `isWikitext` (boolean, optional): if true, `label` and `description` will be treated as wikitext. This is expensive, do not use for every marker. If unset, the backend will guess based on the presence of some patterns.
