@@ -130,6 +130,7 @@ class DataMapGroupSpec extends DataModel {
         }
 
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
+        $this->allowReplacedField( $status, 'relatedArticle', DataModel::TYPE_STRING, 'article', 'v0.7.0', 'v0.9.0' );
         $this->expectField( $status, 'canDismiss', DataModel::TYPE_BOOL );
 
         $this->disallowOtherFields( $status );
