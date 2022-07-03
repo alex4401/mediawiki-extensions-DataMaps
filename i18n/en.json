@@ -30,9 +30,6 @@
     "datamap-error-validatespec-map-no-group-name": "A marker group with no (or an empty) name has been defined. Assign it a unique name.",
     "datamap-error-validatespec-map-missing-group": "Markers have been added to group \"$1\", which is not defined.",
 
-    "datamap-error-validation-no-display": "Group \"$1\" has no icon or color specified.",
-    "datamap-error-validation-ambiguous-display": "Group \"$1\" cannot have its markers configured to have both an icon and a color.",
-    
     "datamap-error-internal-unknown-field-type": "No validation support implemented for field type with ID of $1. This is a bug in the extension's code.",
     "datamap-error-render-unsupported-displaymode": "Display mode $1 has been reported for a marker, but support is missing for it. This is a bug in the extension's code.",
     "datamap-error-pf-page-does-not-exist": "Data map page \"[[$1]]\" does not exist.",
@@ -41,7 +38,8 @@
     "datamap-unnamed-map": "Unnamed map",
     "datamap-legend-label": "Legend",
     "datamap-javascript-required": "Interactive data maps require JavaScript to be enabled.",
-    "datamap-placeholder-loading": "Data is being loaded",
+    "datamap-loading-data": "Please wait, loading data",
+    "datamap-error-dataload": "<b>Couldn't load data</b><br/>please refresh or try again later",
     "datamap-lazy-click-to-load": "Click to load the data map",
 
     "datamap-legend-tab-locations": "Markers",

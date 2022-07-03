@@ -15,6 +15,9 @@ function initialiseMapFromStore( id, $root ) {
     // Push onto internal tracking list
     initialisedMaps.push( map );
 
+    // Status overlay DOM element
+    const $status = $root.find( '.datamap-status' );
+
     // Request markers from the API
     const query = {
         action: 'queryDataMap',
@@ -25,8 +28,13 @@ function initialiseMapFromStore( id, $root ) {
         query.filter = map.dataSetFilters.join( '|' );
     }
     api.get( query )
-        .then( data => map.waitForLeaflet( map.instantiateMarkers.bind( map, data.query.markers ) ) )
-        .then( () => map.$root.find( '.datamap-status' ).remove() );
+        .then(
+            data => {
+                map.waitForLeaflet( map.instantiateMarkers.bind( map, data.query.markers ) );
+                $status.remove();
+            },
+            () => $status.html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' )
+        );
 
     // Broadcast `afterInitialisation` event
     mw.hook( 'ext.ark.datamaps.afterInitialisation.' + id ).fire( map );

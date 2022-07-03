@@ -60,6 +60,7 @@
 				"loader/popup.js"
 			],
 			"messages": [
+				"datamap-error-dataload",
 				"datamap-legend-tab-locations",
 				"datamap-toggle-show-all",
 				"datamap-toggle-hide-all",
