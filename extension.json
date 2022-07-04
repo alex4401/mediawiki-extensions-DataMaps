@@ -6,7 +6,7 @@
 		"alex4401"
 	],
 	"url": "https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps",
-	"descriptionmsg": "data-maps-desc",
+	"descriptionmsg": "datamap-desc",
 	"license-name": "GPL-2.0-or-later",
 	"type": "parserhook",
 
