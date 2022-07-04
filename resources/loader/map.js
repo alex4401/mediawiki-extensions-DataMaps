@@ -194,9 +194,6 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             const mType = markerType;
             leafletMarker.bindPopup( () =>
                 new MarkerPopup( this, mType, instance, ( instance[2] || {} ), leafletMarker ).build().get( 0 ) );
-            // Bind events to update current URL to quickly restore or link to specific markers
-            leafletMarker.on( 'popupopen', () => window.history.replaceState( null, "",
-                history.replaceState( null, null, this.storage.getMarkerKey( mType, instance ) ) ) );
         } );
     }
 
