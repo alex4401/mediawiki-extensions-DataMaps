@@ -283,7 +283,7 @@ const buildLeafletMap = function ( $holder ) {
         zoomSnap: 0.25,
         zoomDelta: 0.25,
         maxZoom: 5,
-        zoomAnimation: false,
+        zoomAnimation: true,
         wheelPxPerZoomLevel: 240,
         markerZoomAnimation: false,
         // Minimum zoom is 1.75 on mobile, 2.5 otherwise
