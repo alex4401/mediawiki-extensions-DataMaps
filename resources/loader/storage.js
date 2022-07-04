@@ -5,12 +5,12 @@ function MapStorage( map ) {
 
 
 MapStorage.prototype.get = function ( name ) {
-    return localStorage.getItem( 'ext.ark.datamaps.' + this.map.id + ':' + name );
+    return localStorage.getItem( `ext.ark.datamaps.${this.map.id}:${name}` );
 };
 
 
 MapStorage.prototype.set = function ( name, data ) {
-    localStorage.setItem( 'ext.ark.datamaps.' + this.map.id + ':' + name, data );
+    localStorage.setItem( `ext.ark.datamaps.${this.map.id}:${name}`, data );
 };
 
     
@@ -28,7 +28,7 @@ MapStorage.prototype.setObject = function ( name, data ) {
  * Generates an identifier of a marker to use with local storage.
  */
 MapStorage.prototype.getMarkerKey = function ( type, instance ) {
-    return 'M' + type + '@' + instance[0] + ':' + instance[1];
+    return `M${type}@${instance[0]}:${instance[1]}`;
 };
 
 

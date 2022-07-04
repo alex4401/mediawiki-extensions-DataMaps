@@ -98,7 +98,7 @@ const flipLatitudeBox = function ( box ) {
  * Returns scale factor to adjust markers for zoom level
  */
 DataMap.prototype.getScaleFactorByZoom = function ( a ) {
-   return this.leaflet.getZoom() / this.leaflet.options[ a + 'Zoom' ];
+   return this.leaflet.getZoom() / this.leaflet.options[ `${a}Zoom` ];
 };
 
 
@@ -268,7 +268,7 @@ DataMap.prototype.anchors = {
 
 
 DataMap.prototype.addControl = function ( anchor, $element ) {
-    this.$root.find( '.leaflet-control-container ' + anchor ).append( $element );
+    this.$root.find( `.leaflet-control-container ${anchor}` ).append( $element );
     return $element;
 };
 
@@ -426,7 +426,7 @@ const buildLegend = function () {
         }
     }
 
-    mw.hook( 'ext.ark.datamaps.afterLegendInitialisation.' + this.id ).fire( this );
+    mw.hook( `ext.ark.datamaps.afterLegendInitialisation.${this.id}` ).fire( this );
 };
 
 
