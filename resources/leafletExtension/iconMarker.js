@@ -6,6 +6,13 @@ module.exports = L.Marker.extend( {
         dismissed: false
 	},
 
+	_initIcon: function () {
+		L.Marker.prototype._initIcon.call( this );
+		if ( this.options.dismissed ) {
+			this._updateOpacity();
+		}
+	},
+
 	setDismissed: function ( state ) {
 		this.options.dismissed = state;
 		if ( this._map ) {
