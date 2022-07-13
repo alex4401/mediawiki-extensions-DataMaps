@@ -1,4 +1,5 @@
 const MapStorage = require( './storage.js' ),
+    MarkerLayerManager = require( './layerManager.js' ),
     MarkerPopup = require( './popup.js' ),
     MapLegend = require( './legend.js' ),
     MarkerLegendPanel = require( './markerLegend.js' );
@@ -12,6 +13,8 @@ function DataMap( id, $root, config ) {
     this.config = config;
     // Local storage driver
     this.storage = new MapStorage( this );
+    // Layering driver
+    this.layerManager = new MarkerLayerManager( this );
     // Information of currently set background
     this.background = null;
     this.backgroundIndex = 0;
@@ -26,18 +29,10 @@ function DataMap( id, $root, config ) {
     this.leaflet = null;
     // Collection of Leaflet.Icons by group
     this.leafletIcons = {};
-    // Collection of Leaflet.FeatureGroups by layer
-    this.leafletLayers = {};
     // DOM element of the coordinates display control
     this.$coordTracker = null;
     // Collection of group visibility toggles
     this.legendGroupToggles = [];
-    // Mask of visible groups (boolean map)
-    this.groupVisibilityMask = {};
-    // Mask of visible layers (boolean map)
-    this.layerVisibilityMask = {
-        cave: true
-    };
     // Cached value of the 'datamap-coordinate-control-text' message
     this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
 
@@ -72,22 +67,6 @@ DataMap.prototype.waitForLeaflet = function ( callback ) {
  */
 DataMap.prototype.isLayerUsed = function ( name ) {
     return this.config.layerIds.indexOf( name ) >= 0;
-};
-
-
-/*
- * Executes the matcher function on every layer, and if true, alters its visibility state to one provided.
- */
-DataMap.prototype.updateLayerVisibility = function ( matcher, newState ) {
-    for ( const layerName in this.leafletLayers ) {
-        if ( matcher( layerName.split( ' ' ) ) ) {
-            if ( newState ) {
-                this.leafletLayers[layerName].addTo( this.leaflet );
-            } else {
-                this.leafletLayers[layerName].remove();
-            }
-        }
-    }
 };
 
 
@@ -133,32 +112,21 @@ DataMap.prototype.setMarkerOpacity = function ( marker, value ) {
 DataMap.prototype.readyMarkerVisuals = function ( type, group, instance, marker ) { };
 
 
-DataMap.prototype.getLeafletLayer = function ( id ) {
-    if ( !this.leafletLayers[id] ) {
-        this.leafletLayers[id] = L.featureGroup().addTo( this.leaflet );
-    }
-    return this.leafletLayers[id];
-};
-
-
 /*
  * Builds markers from a data object
  */
 DataMap.prototype.instantiateMarkers = function ( data ) {
-    for ( let markerType in data ) {
+    // Register all layers in this package
+    for ( const markerType in data ) {
+        markerType.split( ' ' ).forEach( name => this.layerManager.register( name ) );
+    }
+    
+    // Unpack markers
+    for ( const markerType in data ) {
         const layers = markerType.split( ' ' );
         const groupName = layers[0];
         const group = this.config.groups[groupName];
         const placements = data[markerType];
-
-        // Add a runtime "surface" layer if there is no "cave" layer
-        if ( layers.indexOf( 'cave' ) < 0 ) {
-            layers.push( '#surface' );
-            markerType += ' #surface';
-        }
-
-        // Retrieve the Leaflet layer
-        const layer = this.getLeafletLayer( markerType );
 
         // Create markers for instances
         placements.forEach( instance => {
@@ -188,7 +156,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             this.readyMarkerVisuals( markerType, group, instance, leafletMarker );
 
             // Add marker to the layer
-            leafletMarker.addTo( layer );
+            this.layerManager.addMember( markerType, leafletMarker );
 
             // Bind a popup building closure (this is more efficient than binds)
             const mType = markerType;
@@ -338,8 +306,8 @@ const buildLeafletMap = function ( $holder ) {
         const group = this.config.groups[groupName];
         group.markers = [];
 
-        // Set as visible in the visibility mask
-        this.groupVisibilityMask[groupName] = true;
+        // Register with the layer manager
+        this.layerManager.register( groupName );
 
         if ( group.markerIcon ) {
             // Prepare the icon objects for Leaflet markers

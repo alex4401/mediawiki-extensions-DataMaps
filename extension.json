@@ -65,6 +65,7 @@
 			"packageFiles": [
 				"loader/main.js",
 				"loader/storage.js",
+				"loader/layerManager.js",
 				"loader/map.js",
 				"loader/legend.js",
 				"loader/markerLegend.js",
