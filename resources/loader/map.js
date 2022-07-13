@@ -279,8 +279,12 @@ const buildLeafletMap = function ( $holder ) {
         zoomSnap: 0.25,
         zoomDelta: 0.25,
         maxZoom: 5,
-        zoomAnimation: true,
         wheelPxPerZoomLevel: 240,
+        minZoom: 1.75,
+        // Zoom animation causes some awkward locking as Leaflet waits for the animation to finish before processing more zoom
+        // requests, but disabling it causes some updates to be distorted (for example, the canvas renderer will drift).
+        // We include a patch in our Leaflet builds to disable animations on desktop-style zooms.
+        zoomAnimation: true,
         markerZoomAnimation: false,
         // Minimum zoom is 1.75 on mobile, 2.5 otherwise
         minZoom: ( window.matchMedia( 'screen and (max-width: 1000px)' ).matches ? 1.75 : 2.5 ),
