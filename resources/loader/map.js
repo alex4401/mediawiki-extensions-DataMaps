@@ -286,8 +286,6 @@ const buildLeafletMap = function ( $holder ) {
         // We include a patch in our Leaflet builds to disable animations on desktop-style zooms.
         zoomAnimation: true,
         markerZoomAnimation: false,
-        // Minimum zoom is 1.75 on mobile, 2.5 otherwise
-        minZoom: ( window.matchMedia( 'screen and (max-width: 1000px)' ).matches ? 1.75 : 2.5 ),
         // Pan settings
         inertia: false,
         // Internal
