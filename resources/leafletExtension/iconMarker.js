@@ -21,7 +21,7 @@ module.exports = L.Marker.extend( {
         }
 
 		if ( this._icon ) {
-			DomUtil.setOpacity( this._icon, opacity );
+			L.DomUtil.setOpacity( this._icon, opacity );
 		}
 	}
 } );

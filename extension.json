@@ -45,6 +45,17 @@
 			],
 			"targets": [ "desktop", "mobile" ]
 		},
+		"ext.ark.datamaps.leaflet.extra": {
+			"es6": true,
+			"dependencies": [
+				"ext.ark.datamaps.leaflet.core"
+			],
+			"packageFiles": [
+				"leafletExtension/index.js",
+				"leafletExtension/iconMarker.js"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
 
 		"ext.ark.datamaps.loader": {
 			"es6": true,
@@ -55,7 +66,6 @@
 				"loader/main.js",
 				"loader/storage.js",
 				"loader/map.js",
-				"loader/iconMarker.js",
 				"loader/legend.js",
 				"loader/markerLegend.js",
 				"loader/popup.js"

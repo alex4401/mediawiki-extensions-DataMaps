@@ -1,9 +1,7 @@
 const MapStorage = require( './storage.js' ),
     MarkerPopup = require( './popup.js' ),
     MapLegend = require( './legend.js' ),
-    MarkerLegendPanel = require( './markerLegend.js' ),
-    IconMarker = require( './iconMarker.js' );
-const DISMISSED_OPACITY = 0.4;
+    MarkerLegendPanel = require( './markerLegend.js' );
 
 
 function DataMap( id, $root, config ) {
@@ -44,9 +42,15 @@ function DataMap( id, $root, config ) {
     this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
 
     // Request OOUI to be loaded and build the legend
-    mw.loader.using( [ 'oojs-ui-core', 'oojs-ui-widgets' ], buildLegend.bind( this ) );
+    mw.loader.using( [
+        'oojs-ui-core',
+        'oojs-ui-widgets'
+    ], buildLegend.bind( this ) );
     // Prepare the Leaflet map view
-    mw.loader.using( 'ext.ark.datamaps.leaflet.core', buildLeafletMap.bind( this, this.$root.find( '.datamap-holder' ) ) );
+    mw.loader.using( [
+        'ext.ark.datamaps.leaflet.core',
+        'ext.ark.datamaps.leaflet.extra'
+    ], buildLeafletMap.bind( this, this.$root.find( '.datamap-holder' ) ) );
 }
 
 
@@ -164,7 +168,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             // Construct the marker
             if ( group.markerIcon ) {
                 // Fancy icon marker
-                leafletMarker = new IconMarker( position, {
+                leafletMarker = new L.Ark.IconMarker( position, {
                     icon: this.leafletIcons[groupName],
                     dismissed: group.canDismiss ? this.storage.isDismissed( markerType, instance ) : false
                 } );
