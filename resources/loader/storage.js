@@ -1,7 +1,11 @@
 function MapStorage( map ) {
     this.map = map;
+    this.migrate();
     this.dismissed = this.getArray( 'dismissed' );
 }
+
+
+MapStorage.prototype.LATEST_VERSION = 20220713;
 
 
 MapStorage.prototype.get = function ( name ) {
@@ -21,6 +25,24 @@ MapStorage.prototype.getArray = function ( name ) {
     
 MapStorage.prototype.setObject = function ( name, data ) {
     this.set( name, JSON.stringify(data) );
+};
+
+
+MapStorage.prototype.migrate = function () {
+    const schemaVersion = this.get( 'schemaVersion' ) || -1;
+    let shouldUpdateVersion = false;
+
+    switch ( schemaVersion ) {
+        case -1:
+            shouldUpdateVersion = true;
+            // Drop the #surface layer from memorised dismissed markers
+            this.setObject( 'dismissed', this.getArray( 'dismissed' ).map( x => x.replace( ' #surface', '' ) ) );
+            break;
+    }
+
+    if ( shouldUpdateVersion ) {
+        this.set( 'schemaVersion', MapStorage.prototype.LATEST_VERSION );
+    }
 };
 
 
