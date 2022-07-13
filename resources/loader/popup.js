@@ -75,8 +75,8 @@ MarkerPopup.prototype.buildTools = function () {
             $( '<a>' )
                 .text( this.getDismissToolText() )
                 .on( 'click', () => {
-                    this.map.storage.toggleDismissal( this.markerType, this.coords );
-                    this.map.readyMarkerVisuals( this.markerType, this.markerGroup, this.coords, this.leafletMarker );
+                    var state = this.map.storage.toggleDismissal( this.markerType, this.coords );
+                    this.leafletMarker.setDismissed( state );
                     this.map.leaflet.closePopup();
                 } )
         );

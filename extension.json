@@ -55,6 +55,7 @@
 				"loader/main.js",
 				"loader/storage.js",
 				"loader/map.js",
+				"loader/iconMarker.js",
 				"loader/legend.js",
 				"loader/markerLegend.js",
 				"loader/popup.js"

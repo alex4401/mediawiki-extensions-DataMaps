@@ -42,12 +42,16 @@ MapStorage.prototype.isDismissed = function ( type, instance ) {
 
 MapStorage.prototype.toggleDismissal = function ( type, instance ) {
     const key = this.getMarkerKey( type, instance );
+    let out;
     if ( this.isDismissed( type, instance ) ) {
         this.dismissed = this.dismissed.filter( x => x != key );
+        out = false;
     } else {
         this.dismissed.push( key );
+        out = true;
     }
     this.setObject( 'dismissed', this.dismissed );
+    return out;
 };
 
     

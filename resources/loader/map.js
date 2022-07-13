@@ -1,7 +1,8 @@
 const MapStorage = require( './storage.js' ),
     MarkerPopup = require( './popup.js' ),
     MapLegend = require( './legend.js' ),
-    MarkerLegendPanel = require( './markerLegend.js' );
+    MarkerLegendPanel = require( './markerLegend.js' ),
+    IconMarker = require( './iconMarker.js' );
 const DISMISSED_OPACITY = 0.4;
 
 
@@ -125,13 +126,7 @@ DataMap.prototype.setMarkerOpacity = function ( marker, value ) {
 /*
  * Refreshes marker's visual properties
  */
-DataMap.prototype.readyMarkerVisuals = function ( type, group, instance, marker ) {
-    // Dismissables
-    if ( group.canDismiss ) {
-        const isDismissed = this.storage.isDismissed( type, instance );
-        this.setMarkerOpacity( marker, isDismissed ? DISMISSED_OPACITY : 1 );
-    }
-};
+DataMap.prototype.readyMarkerVisuals = function ( type, group, instance, marker ) { };
 
 
 DataMap.prototype.getLeafletLayer = function ( id ) {
@@ -169,8 +164,9 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             // Construct the marker
             if ( group.markerIcon ) {
                 // Fancy icon marker
-                leafletMarker = L.marker( position, {
-                    icon: this.leafletIcons[groupName]
+                leafletMarker = new IconMarker( position, {
+                    icon: this.leafletIcons[groupName],
+                    dismissed: group.canDismiss ? this.storage.isDismissed( markerType, instance ) : false
                 } );
             } else {
                 // Circular marker
