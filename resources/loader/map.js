@@ -225,7 +225,7 @@ const buildLeafletMap = function ( $holder ) {
         zoomDelta: 0.25,
         maxZoom: 5,
         wheelPxPerZoomLevel: 240,
-        minZoom: 1.75,
+        minZoom: L.Browser.mobile ? ( L.Browser.retina ? 1 : 1.75 ) : 2,
         // Zoom animation causes some awkward locking as Leaflet waits for the animation to finish before processing more zoom
         // requests, but disabling it causes some updates to be distorted (for example, the canvas renderer will drift).
         // We include a patch in our Leaflet builds to disable animations on desktop-style zooms.
@@ -352,7 +352,7 @@ const buildLegend = function () {
         this.markerLegend.initialiseLayersArea();
 
         if ( hasCaves ) {
-            this.markerLegend.addMarkerLayerToggleInclusive( 'cave', mw.msg( 'datamap-layer-surface' ), false );
+            this.markerLegend.addMarkerLayerToggleInclusive( 'cave', mw.msg( 'datamap-layer-surface' ) );
             this.markerLegend.addMarkerLayerToggleExclusive( 'cave', mw.msg( 'datamap-layer-cave' ) );
         }
 
