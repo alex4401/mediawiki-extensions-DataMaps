@@ -47,7 +47,7 @@ MarkerLegendPanel.prototype.toggleAllGroups = function ( state ) {
 };
 
 
-MarkerLegendPanel.prototype.addTotalToggles = function () {
+MarkerLegendPanel.prototype.usingTotalToggles = function () {
     this.createActionButton( mw.msg( 'datamap-toggle-show-all' ), this.toggleAllGroups.bind( this, true ) );
     this.createActionButton( mw.msg( 'datamap-toggle-hide-all' ), this.toggleAllGroups.bind( this, false ) );
 };
@@ -58,9 +58,14 @@ MarkerLegendPanel.prototype.initialiseLayersArea = function () {
 };
 
 
-MarkerLegendPanel.prototype.addMarkerLayerToggle = function ( layerId, layerName ) {
+MarkerLegendPanel.prototype.addMarkerLayerToggleExclusive = function ( layerId, layerName ) {
     this.legend.createCheckboxField( this.$layersPopup, layerName, true,
         state => this.map.layerManager.setExclusion( layerId, !state ) );
+};
+
+MarkerLegendPanel.prototype.addMarkerLayerToggleInclusive = function ( layerId, layerName, invert ) {
+    this.legend.createCheckboxField( this.$layersPopup, layerName, true,
+        state => this.map.layerManager.setInclusion( layerId, ( invert ? state : !state ) ) );
 };
 
 

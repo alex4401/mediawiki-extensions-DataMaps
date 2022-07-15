@@ -341,7 +341,7 @@ const buildLeafletMap = function ( $holder ) {
 const buildLegend = function () {
     this.legend = new MapLegend( this );
     this.markerLegend = new MarkerLegendPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ) );
-    this.markerLegend.addTotalToggles();
+    this.markerLegend.usingTotalToggles();
 
     const hasCaves = this.isLayerUsed( 'cave' );
     const hasDismissables = Object.values( this.config.groups ).some( x => x.canDismiss );
@@ -349,8 +349,8 @@ const buildLegend = function () {
         this.markerLegend.initialiseLayersArea();
 
         if ( hasCaves ) {
-            this.markerLegend.addMarkerLayerToggle( '#surface', mw.msg( 'datamap-layer-surface' ) );
-            this.markerLegend.addMarkerLayerToggle( 'cave', mw.msg( 'datamap-layer-cave' ) );
+            this.markerLegend.addMarkerLayerToggleInclusive( 'cave', mw.msg( 'datamap-layer-surface' ), false );
+            this.markerLegend.addMarkerLayerToggleExclusive( 'cave', mw.msg( 'datamap-layer-cave' ) );
         }
 
         if ( hasDismissables ) {

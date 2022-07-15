@@ -70,27 +70,33 @@ MarkerLayerManager.prototype.updateMember = function ( leafletMarker ) {
 
 
 MarkerLayerManager.prototype.updateMembers = function ( layerName ) {
-    this.byLayer[layerName].forEach( leafletMarker => this.updateMember( leafletMarker ) );
+    ( layerName ? this.byLayer[layerName] : this.markers ).forEach( m => this.updateMember( m ) );
 };
 
 
-var modifyLayerState = function ( set, layerName, state ) {
+/*
+ * Sets a layer as required for a marker to be displayed. This updates ALL markers.
+ */
+MarkerLayerManager.prototype.setInclusion = function ( layerName, state ) {
     if ( state )
-        set.add( layerName );
+        this.includeMask.add( layerName );
     else
-        set.delete( layerName );
+        this.includeMask.delete( layerName );
+    this.clearCache();
+    this.updateMembers();
+};
+
+
+/*
+ * Sets a layer as preventing marker display. This updates only markers within the layer.
+ */
+MarkerLayerManager.prototype.setExclusion = function ( layerName, state ) {
+    if ( state )
+        this.excludeMask.add( layerName );
+    else
+        this.excludeMask.delete( layerName );
     this.clearCache();
     this.updateMembers( layerName );
-}
-
-
-MarkerLayerManager.prototype.setInclusion = function ( layerName, state ) {
-    modifyLayerState.call( this, this.includeMask, layerName, state );
-};
-
-
-MarkerLayerManager.prototype.setExclusion = function ( layerName, state ) {
-    modifyLayerState.call( this, this.excludeMask, layerName, state );
 };
 
 
