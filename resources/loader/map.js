@@ -231,6 +231,8 @@ const buildLeafletMap = function ( $holder ) {
         // We include a patch in our Leaflet builds to disable animations on desktop-style zooms.
         zoomAnimation: true,
         markerZoomAnimation: false,
+        // Do not allow pinch-zooming to surpass max zoom even temporarily. This seems to cause a mispositioning.
+        bounceAtZoomLimits: false,
         // Pan settings
         inertia: false,
         // Zoom-based marker scaling
