@@ -31,6 +31,11 @@
     .datamap-holder {
         height: 750px;
 
+        @media screen and (max-width: 720px) and (max-height: 900px) {
+            min-height: 300px;
+            height: 75vh;
+        }
+
         .datamap-overlay-status {
             height: 100%;
             z-index: 5000;
