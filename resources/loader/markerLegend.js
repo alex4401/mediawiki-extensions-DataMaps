@@ -1,3 +1,6 @@
+const DIM_HOVER_DELAY = 750;
+
+
 function MarkerLegendPanel( legend, name ) {
     this.legend = legend;
     this.map = this.legend.map;
@@ -87,6 +90,26 @@ MarkerLegendPanel.prototype.addMarkerGroupToggle = function ( groupId, group ) {
     if ( group.legendIcon ) {
         field.$header.prepend( $( '<img width=24 height=24/>' ).attr( 'src', group.legendIcon ) );
     }
+
+    // Set up handlers to dim map and highlight this group
+    field.$element.hover( () => {
+        // Mouse entered
+        field.timeoutId = setTimeout( () => {
+            field.timeoutId = null;
+            field.$element.attr( 'data-dimming', true );
+            console.log(field.$element);
+            this.map.layerManager.setDim( groupId, true );
+        }, DIM_HOVER_DELAY );
+    }, () => {
+        // Mouse left
+        if ( field.timeoutId ) {
+            clearTimeout( field.timeoutId );
+            field.timeoutId = null;
+        } else {
+            field.$element.attr( 'data-dimming', null );
+            this.map.layerManager.setDim( groupId, false );
+        }
+    } );
 
     this.groupToggles.push( pair[0] );
 };

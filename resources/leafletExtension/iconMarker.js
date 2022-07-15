@@ -1,9 +1,10 @@
-const DISMISSED_MARKER_OPACITY = 0.4;
+const Common = require('./common.js');
 
 
 module.exports = L.Marker.extend( {
 	options: {
-        dismissed: false
+        dismissed: false,
+		dimmed: false
 	},
 
 	_initIcon: function () {
@@ -11,6 +12,14 @@ module.exports = L.Marker.extend( {
 		if ( this.options.dismissed ) {
 			this._updateOpacity();
 		}
+	},
+
+	setDimmed: function ( state ) {
+		this.options.dimmed = state;
+		if ( this._map ) {
+			this._updateOpacity();
+		}
+		return this;
 	},
 
 	update: function () {
@@ -30,12 +39,17 @@ module.exports = L.Marker.extend( {
 	},
 
 	_updateOpacity: function () {
-		var opacity = this.options.opacity;
-        if ( this.options.dismissed ) {
-            opacity *= DISMISSED_MARKER_OPACITY;
-        }
-
 		if ( this._icon ) {
+			// Include dismissal
+			var opacity = this.options.opacity;
+			if ( this.options.dismissed ) {
+				opacity *= Common.DISMISS_OPACITY_MUL;
+			}
+			// Include dim
+			if ( this.options.dimmed ) {
+				opacity *= Common.DIM_OPACITY_MUL;
+			}
+			// Super behaviour
 			L.DomUtil.setOpacity( this._icon, opacity );
 		}
 	}

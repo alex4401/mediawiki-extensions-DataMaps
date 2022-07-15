@@ -4,6 +4,7 @@ function MarkerLayerManager( map ) {
     this.byLayer = {};
     this.includeMask = new Set();
     this.excludeMask = new Set();
+    this.dimMask = new Set();
     this.clearCache();
 }
 
@@ -97,6 +98,22 @@ MarkerLayerManager.prototype.setExclusion = function ( layerName, state ) {
         this.excludeMask.delete( layerName );
     this.clearCache();
     this.updateMembers( layerName );
+};
+
+
+MarkerLayerManager.prototype.updateDimming = function () {
+    this.map.leaflet.options.isDimming = this.dimMask.size > 0;
+    this.markers.forEach( leafletMarker => leafletMarker.setDimmed( this.dimMask.size > 0
+        && !leafletMarker.arkAttachedLayers.some( layer => this.dimMask.has( layer ) ) ) );
+};
+
+
+MarkerLayerManager.prototype.setDim = function ( layerName, state ) {
+    if ( state )
+        this.dimMask.add( layerName );
+    else
+        this.dimMask.delete( layerName );
+    this.updateDimming();
 };
 
 

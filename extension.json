@@ -52,6 +52,7 @@
 			],
 			"packageFiles": [
 				"leafletExtension/index.js",
+				"leafletExtension/common.js",
 				"leafletExtension/iconMarker.js",
 				"leafletExtension/circleMarker.js"
 			],
