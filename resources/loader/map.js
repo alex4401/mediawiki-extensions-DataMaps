@@ -86,6 +86,18 @@ DataMap.prototype.getCoordLabel = function ( lat, lon ) {
 };
 
 
+DataMap.prototype.setMarkerOpacity = function ( marker, value ) {
+    if ( marker instanceof L.Marker ) {
+        marker.setOpacity( value );
+    } else {
+        marker.setStyle( {
+            opacity: value,
+            fillOpacity: value
+        } );
+    }
+};
+
+
 /*
  * Refreshes marker's visual properties
  */
@@ -126,7 +138,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
                     baseRadius: group.size/2,
                     expandZoomInvEx: group.extraMinZoomSize,
                     fillColor: group.fillColor,
-                    baseFillOpacity: 0.7,
+                    fillOpacity: 0.7,
                     color: group.strokeColor || group.fillColor,
                     weight: group.strokeWidth || 1,
                 } );
