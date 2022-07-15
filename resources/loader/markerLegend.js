@@ -47,7 +47,7 @@ MarkerLegendPanel.prototype.toggleAllGroups = function ( state ) {
 };
 
 
-MarkerLegendPanel.prototype.addTotalToggles = function () {
+MarkerLegendPanel.prototype.usingTotalToggles = function () {
     this.createActionButton( mw.msg( 'datamap-toggle-show-all' ), this.toggleAllGroups.bind( this, true ) );
     this.createActionButton( mw.msg( 'datamap-toggle-hide-all' ), this.toggleAllGroups.bind( this, false ) );
 };
@@ -58,28 +58,20 @@ MarkerLegendPanel.prototype.initialiseLayersArea = function () {
 };
 
 
-MarkerLegendPanel.prototype.addMarkerLayerToggle = function ( layerId, layerName ) {
-    this.legend.createCheckboxField( this.$layersPopup, layerName, true, state => {
-        // Update visibility mask for this group
-        this.map.layerVisibilityMask[layerId] = state;
-        // Update visibility for any marker of this group with any visible layer
-        this.map.updateLayerVisibility( layerNames => {
-            return layerNames.indexOf( layerId ) >= 0 && this.map.groupVisibilityMask[layerNames[0]];
-        }, state );
-    } );
+MarkerLegendPanel.prototype.addMarkerLayerToggleExclusive = function ( layerId, layerName ) {
+    this.legend.createCheckboxField( this.$layersPopup, layerName, true,
+        state => this.map.layerManager.setExclusion( layerId, !state ) );
+};
+
+MarkerLegendPanel.prototype.addMarkerLayerToggleInclusive = function ( layerId, layerName, invert ) {
+    this.legend.createCheckboxField( this.$layersPopup, layerName, true,
+        state => this.map.layerManager.setInclusion( layerId, ( invert ? state : !state ) ) );
 };
 
 
 MarkerLegendPanel.prototype.addMarkerGroupToggle = function ( groupId, group ) {
-    const pair = this.legend.createCheckboxField( this.$groupContainer, group.name, true, state => {
-        // Update visibility mask for this group
-        this.map.groupVisibilityMask[groupId] = state;
-        // Update visibility for any marker of this group with any visible layer
-        this.map.updateLayerVisibility( layerNames => {
-            return layerNames[0] == groupId
-                && layerNames.filter( x => this.map.layerVisibilityMask[x] === false ).length == 0;
-        }, state );
-    } );
+    const pair = this.legend.createCheckboxField( this.$groupContainer, group.name, true,
+        state => this.map.layerManager.setExclusion( groupId, !state ) );
     const field = pair[1];
 
     if ( group.fillColor ) {

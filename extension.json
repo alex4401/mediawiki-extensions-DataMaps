@@ -1,6 +1,6 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.6.3",
+	"version": "0.7.0",
 
 	"author": [
 		"alex4401"
@@ -45,6 +45,18 @@
 			],
 			"targets": [ "desktop", "mobile" ]
 		},
+		"ext.ark.datamaps.leaflet.extra": {
+			"es6": true,
+			"dependencies": [
+				"ext.ark.datamaps.leaflet.core"
+			],
+			"packageFiles": [
+				"leafletExtension/index.js",
+				"leafletExtension/iconMarker.js",
+				"leafletExtension/circleMarker.js"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
 
 		"ext.ark.datamaps.loader": {
 			"es6": true,
@@ -54,6 +66,7 @@
 			"packageFiles": [
 				"loader/main.js",
 				"loader/storage.js",
+				"loader/layerManager.js",
 				"loader/map.js",
 				"loader/legend.js",
 				"loader/markerLegend.js",

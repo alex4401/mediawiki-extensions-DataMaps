@@ -1,8 +1,8 @@
 const MapStorage = require( './storage.js' ),
+    MarkerLayerManager = require( './layerManager.js' ),
     MarkerPopup = require( './popup.js' ),
     MapLegend = require( './legend.js' ),
     MarkerLegendPanel = require( './markerLegend.js' );
-const DISMISSED_OPACITY = 0.4;
 
 
 function DataMap( id, $root, config ) {
@@ -13,6 +13,8 @@ function DataMap( id, $root, config ) {
     this.config = config;
     // Local storage driver
     this.storage = new MapStorage( this );
+    // Layering driver
+    this.layerManager = new MarkerLayerManager( this );
     // Information of currently set background
     this.background = null;
     this.backgroundIndex = 0;
@@ -27,25 +29,23 @@ function DataMap( id, $root, config ) {
     this.leaflet = null;
     // Collection of Leaflet.Icons by group
     this.leafletIcons = {};
-    // Collection of Leaflet.FeatureGroups by layer
-    this.leafletLayers = {};
     // DOM element of the coordinates display control
     this.$coordTracker = null;
     // Collection of group visibility toggles
     this.legendGroupToggles = [];
-    // Mask of visible groups (boolean map)
-    this.groupVisibilityMask = {};
-    // Mask of visible layers (boolean map)
-    this.layerVisibilityMask = {
-        cave: true
-    };
     // Cached value of the 'datamap-coordinate-control-text' message
     this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
 
     // Request OOUI to be loaded and build the legend
-    mw.loader.using( [ 'oojs-ui-core', 'oojs-ui-widgets' ], buildLegend.bind( this ) );
+    mw.loader.using( [
+        'oojs-ui-core',
+        'oojs-ui-widgets'
+    ], buildLegend.bind( this ) );
     // Prepare the Leaflet map view
-    mw.loader.using( 'ext.ark.datamaps.leaflet.core', buildLeafletMap.bind( this, this.$root.find( '.datamap-holder' ) ) );
+    mw.loader.using( [
+        'ext.ark.datamaps.leaflet.core',
+        'ext.ark.datamaps.leaflet.extra'
+    ], buildLeafletMap.bind( this, this.$root.find( '.datamap-holder' ) ) );
 }
 
 
@@ -71,34 +71,10 @@ DataMap.prototype.isLayerUsed = function ( name ) {
 
 
 /*
- * Executes the matcher function on every layer, and if true, alters its visibility state to one provided.
- */
-DataMap.prototype.updateLayerVisibility = function ( matcher, newState ) {
-    for ( const layerName in this.leafletLayers ) {
-        if ( matcher( layerName.split( ' ' ) ) ) {
-            if ( newState ) {
-                this.leafletLayers[layerName].addTo( this.leaflet );
-            } else {
-                this.leafletLayers[layerName].remove();
-            }
-        }
-    }
-};
-
-
-/*
  * Inverts the latitude in box bounds, as our reference system differs from Leaflet's built-in
  */
 const flipLatitudeBox = function ( box ) {
     return [ [ 100-box[0][0], box[0][1] ], [ 100-box[1][0], box[1][1] ] ];
-};
-
-
-/*
- * Returns scale factor to adjust markers for zoom level
- */
-DataMap.prototype.getScaleFactorByZoom = function ( a ) {
-   return this.leaflet.getZoom() / this.leaflet.options[ a + 'Zoom' ];
 };
 
 
@@ -125,41 +101,24 @@ DataMap.prototype.setMarkerOpacity = function ( marker, value ) {
 /*
  * Refreshes marker's visual properties
  */
-DataMap.prototype.readyMarkerVisuals = function ( type, group, instance, marker ) {
-    // Dismissables
-    if ( group.canDismiss ) {
-        const isDismissed = this.storage.isDismissed( type, instance );
-        this.setMarkerOpacity( marker, isDismissed ? DISMISSED_OPACITY : 1 );
-    }
-};
-
-
-DataMap.prototype.getLeafletLayer = function ( id ) {
-    if ( !this.leafletLayers[id] ) {
-        this.leafletLayers[id] = L.featureGroup().addTo( this.leaflet );
-    }
-    return this.leafletLayers[id];
-};
+DataMap.prototype.readyMarkerVisuals = function ( type, group, instance, marker ) { };
 
 
 /*
  * Builds markers from a data object
  */
 DataMap.prototype.instantiateMarkers = function ( data ) {
-    for ( let markerType in data ) {
+    // Register all layers in this package
+    for ( const markerType in data ) {
+        markerType.split( ' ' ).forEach( name => this.layerManager.register( name ) );
+    }
+    
+    // Unpack markers
+    for ( const markerType in data ) {
         const layers = markerType.split( ' ' );
         const groupName = layers[0];
         const group = this.config.groups[groupName];
         const placements = data[markerType];
-
-        // Add a runtime "surface" layer if there is no "cave" layer
-        if ( layers.indexOf( 'cave' ) < 0 ) {
-            layers.push( '#surface' );
-            markerType += ' #surface';
-        }
-
-        // Retrieve the Leaflet layer
-        const layer = this.getLeafletLayer( markerType );
 
         // Create markers for instances
         placements.forEach( instance => {
@@ -169,26 +128,27 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             // Construct the marker
             if ( group.markerIcon ) {
                 // Fancy icon marker
-                leafletMarker = L.marker( position, {
-                    icon: this.leafletIcons[groupName]
+                leafletMarker = new L.Ark.IconMarker( position, {
+                    icon: this.leafletIcons[groupName],
+                    dismissed: group.canDismiss ? this.storage.isDismissed( markerType, instance ) : false
                 } );
             } else {
                 // Circular marker
-                leafletMarker = L.circleMarker( position, {
-                    radius: group.size/2,
+                leafletMarker = new L.Ark.CircleMarker( position, {
+                    baseRadius: group.size/2,
+                    expandZoomInvEx: group.extraMinZoomSize,
                     fillColor: group.fillColor,
                     fillOpacity: 0.7,
                     color: group.strokeColor || group.fillColor,
                     weight: group.strokeWidth || 1,
                 } );
             }
-            group.markers.push( leafletMarker );
 
             // Prepare marker for display
             this.readyMarkerVisuals( markerType, group, instance, leafletMarker );
 
             // Add marker to the layer
-            leafletMarker.addTo( layer );
+            this.layerManager.addMember( markerType, leafletMarker );
 
             // Bind a popup building closure (this is more efficient than binds)
             const mType = markerType;
@@ -196,9 +156,6 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
                 new MarkerPopup( this, mType, instance, ( instance[2] || {} ), leafletMarker ).build().get( 0 ) );
         } );
     }
-
-    // Rather inefficient if the data set is big and there's lots of chunks, but we don't support streaming yet
-    this.recalculateMarkerSizes();
 };
 
 
@@ -222,26 +179,10 @@ DataMap.prototype.setCurrentBackground = function ( index ) {
 };
 
 
-DataMap.prototype.recalculateMarkerSizes = function () {
-    const scaleMin = this.getScaleFactorByZoom( 'min' ),
-        scaleMax = this.getScaleFactorByZoom( 'max' );
-    let scaleCir;
-    for ( const groupName in this.config.groups ) {
-        const group = this.config.groups[groupName];
-        if ( group.fillColor ) {
-            // Circle: configured marker size is the size of a marker at lowest zoom level, with an optional growth factor
-            //         inverse to the zoom level
-            scaleCir = this.leaflet.options.scaleMarkersExtraForMinZoom
-                ? ( scaleMin + ( 1 - scaleMax ) * ( group.extraMinZoomSize || this.leaflet.options.extraMinZoomSize ) )
-                : scaleMin;
-            group.markers.forEach( marker => marker.setRadius( ( group.size > 8 ? scaleMin : scaleCir ) * group.size/2 ) );
-        } else if ( group.markerIcon ) {
-            // Icon: configured marker size is the size of a marker at the highest zoom level
-            this.leafletIcons[groupName].options.iconSize = [ group.size[0] * scaleMax, group.size[1] * scaleMax ];
-            // Update all existing markers to use the altered icon instance
-            group.markers.forEach( marker => marker.setIcon( this.leafletIcons[groupName] ) );
-        }
-    }
+DataMap.prototype.updateMarkerScaling = function () {
+    const zoom = this.leaflet.getZoom();
+    this.leaflet.options.markerScaleI = zoom / this.leaflet.options.minZoom;
+    this.leaflet.options.markerScaleA = zoom / this.leaflet.options.maxZoom;
 };
 
 
@@ -265,16 +206,13 @@ DataMap.prototype.anchors = {
 
 
 DataMap.prototype.addControl = function ( anchor, $element ) {
-    this.$root.find( '.leaflet-control-container ' + anchor ).append( $element );
+    this.$root.find( `.leaflet-control-container ${anchor}` ).append( $element );
     return $element;
 };
 
 
 const buildLeafletMap = function ( $holder ) {
-    let rendererSettings = {
-        padding: 1/3
-    };
-    let leafletConfig = {
+    const leafletConfig = $.extend( true, {
         // Boundaries
         center: [50, 50],
         maxBounds: [[-75,-75], [175, 175]],
@@ -283,25 +221,30 @@ const buildLeafletMap = function ( $holder ) {
         zoomSnap: 0.25,
         zoomDelta: 0.25,
         maxZoom: 5,
-        zoomAnimation: true,
         wheelPxPerZoomLevel: 240,
-        markerZoomAnimation: false,
-        // Minimum zoom is 1.75 on mobile, 2.5 otherwise
-        minZoom: ( window.matchMedia( 'screen and (max-width: 1000px)' ).matches ? 1.75 : 2.5 ),
+        minZoom: L.Browser.mobile ? ( L.Browser.retina ? 1 : 1.75 ) : 2,
+        // Zoom animation causes some awkward locking as Leaflet waits for the animation to finish before processing more zoom
+        // requests, but disabling it causes some updates to be distorted (for example, the canvas renderer will drift).
+        // We include a patch in our Leaflet builds to disable animations on desktop-style zooms.
+        zoomAnimation: true,
+        markerZoomAnimation: true,
+        // Do not allow pinch-zooming to surpass max zoom even temporarily. This seems to cause a mispositioning.
+        bounceAtZoomLimits: false,
         // Pan settings
         inertia: false,
-        // Internal
-        scaleMarkersExtraForMinZoom: true,
-        extraMinZoomSize: 1.8,
-    };
-    leafletConfig = $.extend( leafletConfig, this.config.leafletSettings );
-    rendererSettings = $.extend( rendererSettings, leafletConfig.rendererSettings );
-    leafletConfig = $.extend( leafletConfig, {
-        crs: L.CRS.Simple,
-        // Renderer - using canvas for performance with padding of 1/3rd (to draw some more markers outside of view for panning UX)
+        // Zoom-based marker scaling
+        shouldExpandZoomInvEx: true,
+        expandZoomInvEx: 1.8,
+        // Canvas renderer settings - using canvas for performance with padding of 1/3rd (to draw some more markers outside of
+        // view for panning UX)
         preferCanvas: true,
-        renderer: L.canvas( rendererSettings )
-    } );
+        rendererSettings: {
+            padding: 1/3
+        },
+    }, this.config.leafletSettings );
+    // Specify the coordinate reference system and initialise the renderer
+    leafletConfig.crs = L.CRS.Simple;
+    leafletConfig.renderer = L.canvas( leafletConfig.rendererSettings );
 
     this.leaflet = L.map( $holder.get( 0 ), leafletConfig );
 
@@ -334,10 +277,9 @@ const buildLeafletMap = function ( $holder ) {
 
     for ( const groupName in this.config.groups ) {
         const group = this.config.groups[groupName];
-        group.markers = [];
 
-        // Set as visible in the visibility mask
-        this.groupVisibilityMask[groupName] = true;
+        // Register with the layer manager
+        this.layerManager.register( groupName );
 
         if ( group.markerIcon ) {
             // Prepare the icon objects for Leaflet markers
@@ -346,7 +288,8 @@ const buildLeafletMap = function ( $holder ) {
     }
 
     // Recalculate marker sizes when zoom ends
-    this.leaflet.on( 'zoomend', () => this.recalculateMarkerSizes() );
+    this.leaflet.on( 'zoom', () => this.updateMarkerScaling() );
+    this.updateMarkerScaling();
 
     // Create a coordinate-under-cursor display
     this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
@@ -399,7 +342,7 @@ const buildLeafletMap = function ( $holder ) {
 const buildLegend = function () {
     this.legend = new MapLegend( this );
     this.markerLegend = new MarkerLegendPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ) );
-    this.markerLegend.addTotalToggles();
+    this.markerLegend.usingTotalToggles();
 
     const hasCaves = this.isLayerUsed( 'cave' );
     const hasDismissables = Object.values( this.config.groups ).some( x => x.canDismiss );
@@ -407,8 +350,8 @@ const buildLegend = function () {
         this.markerLegend.initialiseLayersArea();
 
         if ( hasCaves ) {
-            this.markerLegend.addMarkerLayerToggle( '#surface', mw.msg( 'datamap-layer-surface' ) );
-            this.markerLegend.addMarkerLayerToggle( 'cave', mw.msg( 'datamap-layer-cave' ) );
+            this.markerLegend.addMarkerLayerToggleInclusive( 'cave', mw.msg( 'datamap-layer-surface' ) );
+            this.markerLegend.addMarkerLayerToggleExclusive( 'cave', mw.msg( 'datamap-layer-cave' ) );
         }
 
         if ( hasDismissables ) {
@@ -423,7 +366,7 @@ const buildLegend = function () {
         }
     }
 
-    mw.hook( 'ext.ark.datamaps.afterLegendInitialisation.' + this.id ).fire( this );
+    mw.hook( `ext.ark.datamaps.afterLegendInitialisation.${this.id}` ).fire( this );
 };
 
 
