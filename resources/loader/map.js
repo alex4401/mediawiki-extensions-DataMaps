@@ -289,6 +289,7 @@ const buildLeafletMap = function ( $holder ) {
 
     // Recalculate marker sizes when zoom ends
     this.leaflet.on( 'zoomend', () => this.updateMarkerScaling() );
+    this.updateMarkerScaling();
 
     // Create a coordinate-under-cursor display
     this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
