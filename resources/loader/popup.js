@@ -39,7 +39,7 @@ MarkerPopup.prototype.build = function () {
     // Description
     if ( this.slots.desc ) {
         if ( !this.slots.desc.startsWith( '<p>' ) ) {
-            this.slots.desc = '<p>'+this.slots.desc+'</p>';
+            this.slots.desc = `<p>${this.slots.desc}</p>`;
         }
         this.$content.append( this.slots.desc );
     }
@@ -57,7 +57,7 @@ MarkerPopup.prototype.build = function () {
 
 
 MarkerPopup.prototype.addTool = function ( cssClass, $child ) {
-    return $( '<li class="' + cssClass + '">' ).append( $child ).appendTo( this.$tools );
+    return $( `<li class="${cssClass}">` ).append( $child ).appendTo( this.$tools );
 };
 
 
@@ -75,8 +75,8 @@ MarkerPopup.prototype.buildTools = function () {
             $( '<a>' )
                 .text( this.getDismissToolText() )
                 .on( 'click', () => {
-                    this.map.storage.toggleDismissal( this.markerType, this.coords );
-                    this.map.readyMarkerVisuals( this.markerType, this.markerGroup, this.coords, this.leafletMarker );
+                    var state = this.map.storage.toggleDismissal( this.markerType, this.coords );
+                    this.leafletMarker.setDismissed( state );
                     this.map.leaflet.closePopup();
                 } )
         );

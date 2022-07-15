@@ -23,30 +23,18 @@
             flex: 1 1;
         }
 
-        .datamap-container-legend {
-            width: 23em;
-            max-height: 750px;
-            box-sizing: border-box;
-            overflow-y: auto;
-        }
-
         @media screen and (max-width: 1320px) {
             display: block;
-
-            .datamap-container-legend {
-                width: auto;
-                height: auto;
-                max-height: unset;
-
-                .datamap-container-groups {
-                    column-width: 13em;
-                }
-            }
         }
     }
 
     .datamap-holder {
         height: 750px;
+
+        @media screen and (max-width: 720px) and (max-height: 900px) {
+            min-height: 300px;
+            height: 75vh;
+        }
 
         .datamap-overlay-status {
             height: 100%;
