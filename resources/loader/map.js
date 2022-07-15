@@ -212,10 +212,7 @@ DataMap.prototype.addControl = function ( anchor, $element ) {
 
 
 const buildLeafletMap = function ( $holder ) {
-    let rendererSettings = {
-        padding: 1/3
-    };
-    let leafletConfig = {
+    const leafletConfig = $.extend( true, {
         // Boundaries
         center: [50, 50],
         maxBounds: [[-75,-75], [175, 175]],
@@ -238,15 +235,16 @@ const buildLeafletMap = function ( $holder ) {
         // Zoom-based marker scaling
         shouldExpandZoomInvEx: true,
         expandZoomInvEx: 1.8,
-    };
-    leafletConfig = $.extend( leafletConfig, this.config.leafletSettings );
-    rendererSettings = $.extend( rendererSettings, leafletConfig.rendererSettings );
-    leafletConfig = $.extend( leafletConfig, {
-        crs: L.CRS.Simple,
-        // Renderer - using canvas for performance with padding of 1/3rd (to draw some more markers outside of view for panning UX)
+        // Canvas renderer settings - using canvas for performance with padding of 1/3rd (to draw some more markers outside of
+        // view for panning UX)
         preferCanvas: true,
-        renderer: L.canvas( rendererSettings )
-    } );
+        rendererSettings: {
+            padding: 1/3
+        },
+    }, this.config.leafletSettings );
+    // Specify the coordinate reference system and initialise the renderer
+    leafletConfig.crs = L.CRS.Simple;
+    leafletConfig.renderer = L.canvas( leafletConfig.rendererSettings );
 
     this.leaflet = L.map( $holder.get( 0 ), leafletConfig );
 
