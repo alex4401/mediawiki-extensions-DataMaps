@@ -230,7 +230,7 @@ const buildLeafletMap = function ( $holder ) {
         // requests, but disabling it causes some updates to be distorted (for example, the canvas renderer will drift).
         // We include a patch in our Leaflet builds to disable animations on desktop-style zooms.
         zoomAnimation: true,
-        markerZoomAnimation: false,
+        markerZoomAnimation: true,
         // Do not allow pinch-zooming to surpass max zoom even temporarily. This seems to cause a mispositioning.
         bounceAtZoomLimits: false,
         // Pan settings
