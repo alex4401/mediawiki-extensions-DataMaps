@@ -13,6 +13,14 @@ module.exports = L.Marker.extend( {
 		}
 	},
 
+	update: function () {
+		if ( this._icon && this._map ) {
+			this._icon.style.width  = this.options.icon.options.iconSize[0] * this._map.options.markerScaleA + 'px';
+			this._icon.style.height = this.options.icon.options.iconSize[1] * this._map.options.markerScaleA + 'px';
+		}
+		return L.Marker.prototype.update.call( this );
+	},
+
 	setDismissed: function ( state ) {
 		this.options.dismissed = state;
 		if ( this._map ) {

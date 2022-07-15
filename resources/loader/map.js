@@ -79,14 +79,6 @@ const flipLatitudeBox = function ( box ) {
 
 
 /*
- * Returns scale factor to adjust markers for zoom level
- */
-DataMap.prototype.getScaleFactorByZoom = function ( a ) {
-   return this.leaflet.getZoom() / this.leaflet.options[ `${a}Zoom` ];
-};
-
-
-/*
  * Returns a formatted datamap-coordinate-control-text message.
  */
 DataMap.prototype.getCoordLabel = function ( lat, lon ) {
@@ -142,15 +134,15 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
                 } );
             } else {
                 // Circular marker
-                leafletMarker = L.circleMarker( position, {
-                    radius: group.size/2,
+                leafletMarker = new L.Ark.CircleMarker( position, {
+                    baseRadius: group.size/2,
+                    expandZoomInvEx: group.extraMinZoomSize,
                     fillColor: group.fillColor,
                     fillOpacity: 0.7,
                     color: group.strokeColor || group.fillColor,
                     weight: group.strokeWidth || 1,
                 } );
             }
-            group.markers.push( leafletMarker );
 
             // Prepare marker for display
             this.readyMarkerVisuals( markerType, group, instance, leafletMarker );
@@ -164,9 +156,6 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
                 new MarkerPopup( this, mType, instance, ( instance[2] || {} ), leafletMarker ).build().get( 0 ) );
         } );
     }
-
-    // Rather inefficient if the data set is big and there's lots of chunks, but we don't support streaming yet
-    this.recalculateMarkerSizes();
 };
 
 
@@ -190,26 +179,10 @@ DataMap.prototype.setCurrentBackground = function ( index ) {
 };
 
 
-DataMap.prototype.recalculateMarkerSizes = function () {
-    const scaleMin = this.getScaleFactorByZoom( 'min' ),
-        scaleMax = this.getScaleFactorByZoom( 'max' );
-    let scaleCir;
-    for ( const groupName in this.config.groups ) {
-        const group = this.config.groups[groupName];
-        if ( group.fillColor ) {
-            // Circle: configured marker size is the size of a marker at lowest zoom level, with an optional growth factor
-            //         inverse to the zoom level
-            scaleCir = this.leaflet.options.scaleMarkersExtraForMinZoom
-                ? ( scaleMin + ( 1 - scaleMax ) * ( group.extraMinZoomSize || this.leaflet.options.extraMinZoomSize ) )
-                : scaleMin;
-            group.markers.forEach( marker => marker.setRadius( ( group.size > 8 ? scaleMin : scaleCir ) * group.size/2 ) );
-        } else if ( group.markerIcon ) {
-            // Icon: configured marker size is the size of a marker at the highest zoom level
-            this.leafletIcons[groupName].options.iconSize = [ group.size[0] * scaleMax, group.size[1] * scaleMax ];
-            // Update all existing markers to use the altered icon instance
-            group.markers.forEach( marker => marker.setIcon( this.leafletIcons[groupName] ) );
-        }
-    }
+DataMap.prototype.updateMarkerScaling = function () {
+    const zoom = this.leaflet.getZoom();
+    this.leaflet.options.markerScaleI = zoom / this.leaflet.options.minZoom;
+    this.leaflet.options.markerScaleA = zoom / this.leaflet.options.maxZoom;
 };
 
 
@@ -260,9 +233,9 @@ const buildLeafletMap = function ( $holder ) {
         markerZoomAnimation: false,
         // Pan settings
         inertia: false,
-        // Internal
-        scaleMarkersExtraForMinZoom: true,
-        extraMinZoomSize: 1.8,
+        // Zoom-based marker scaling
+        shouldExpandZoomInvEx: true,
+        expandZoomInvEx: 1.8,
     };
     leafletConfig = $.extend( leafletConfig, this.config.leafletSettings );
     rendererSettings = $.extend( rendererSettings, leafletConfig.rendererSettings );
@@ -304,7 +277,6 @@ const buildLeafletMap = function ( $holder ) {
 
     for ( const groupName in this.config.groups ) {
         const group = this.config.groups[groupName];
-        group.markers = [];
 
         // Register with the layer manager
         this.layerManager.register( groupName );
@@ -316,7 +288,7 @@ const buildLeafletMap = function ( $holder ) {
     }
 
     // Recalculate marker sizes when zoom ends
-    this.leaflet.on( 'zoomend', () => this.recalculateMarkerSizes() );
+    this.leaflet.on( 'zoomend', () => this.updateMarkerScaling() );
 
     // Create a coordinate-under-cursor display
     this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
