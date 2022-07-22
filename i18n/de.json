@@ -1,0 +1,64 @@
+{
+    "@metadata": {
+        "authors": [
+            "TiiaAurora"
+        ]
+    },
+
+    "datamap-desc": "Erlaubt Einbettung von interaktiven Karten in Wiki Seiten.",
+
+    "embedDataMap": "DataMap",
+
+	"content-model-datamap": "Interaktive Daten Karte",
+    "datamap-standard-title-prefix": "Karten/",
+
+    "datamap-doc-page-name": "$1:$2/doc",
+    "datamap-doc-page-does-not-exist": "''Die Dokumentation for diese Daten-Seite kann unter [[$1]] erstellt werden''",
+    "datamap-doc-page-show": "{{$1}}\n<hr />",
+    "datamap-doc-page-header": "'''Dies ist die Dokumentation für [[$1]]'''",
+
+    "datamap-category-pages-including-maps": "Seite beinhaltet Daten-Karten",
+
+    "datamap-error-validate-check-docs": "Lies die Dokumentation for die [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps Erweiterung] für Informationen über die korrekte Struktur.",
+    "datamap-error-validate-invalid-json": "Dies ist ein ungültiges JSON Dokument.",
+    "datamap-error-validate-unexpected-fields": "Unbekannte(s) Feld(er) in Struktur gefunden unter $1: $2.",
+    "datamap-error-validate-field-no-value": "Feld <code>$1</code> in Struktur $2 benötigt einen Wert.",
+    "datamap-error-validate-field-required": "Feld <code>$2</code> wird in Struktur $1 benötigt. $3",
+    "datamap-error-validate-wrong-field-type": "Feld <code>$2</code> hat einen inkorrekten Wert für Struktur $1. $3",
+    "datamap-error-validate-field-required-either": "$1 benötigt nur eines dieser beiden Felder: <code>$2</code> oder <code>$3</code>. Beide dürfen nicht gleichzeitig spezifiziert sein.",
+    "datamap-error-validate-exclusive-fields": "$1 benötigt nur eines dieser beiden Felder: <code>$2</code> oder <code>$3</code>. Beide dürfen nicht gleichzeitig spezifiziert sein.",
+    "datamap-error-validate-replaced-field": "Feld <code>$2</code> in Struktur $1 wurde ersetzt mit <code>$3</code> in Version $4, und wird in Version $5 entfernt werden.",
+    "datamap-error-validate-no-file": "Datei [[File:$1]] verlinkt, aber sie wurde noch nicht ins Wiki hochgeladen.",
+    "datamap-error-validatespec-group-no-display": "Marker Gruppe \"$1\" hat keine Anzeige Einstellungen. Füge die <code>icon</code> und/oder <code>fillColor</code> Eigenschaften hinzu.",
+    "datamap-error-validatespec-map-no-group-name": "Eine Marker Gruppe ohne (oder leerem) Namen wurde definiert. Vergib einen einzigartigen Namen.",
+    "datamap-error-validatespec-map-missing-group": "Marker wurden der Gruppe  \"$1\" hinzugefügt, die nicht definiert wurde.",
+
+    "datamap-error-internal-unknown-field-type": "Es wurde keine Validierungsunterstützung für den Feld-Typen mit der ID $1 implementiert. Dies ist ein Fehler im Code der Erweiterung.",
+    "datamap-error-render-unsupported-displaymode": "Anzeige Modus $1 wurde ein Marker mitgeteilt, aber die Unterstützung fehlt. Dies ist ein Fehler im Code der Erweiterung.",
+    "datamap-error-pf-page-does-not-exist": "Die Seite der Daten-Karte \"[[$1]]\" existiert nicht.",
+    "datamap-error-pf-page-invalid-content-model": "Inhaltsmodell der Seite \"[[$1]]\" ist nicht <code>datamap</code>.",
+
+    "datamap-unnamed-map": "Unbenannte Karte",
+    "datamap-legend-label": "Legende",
+    "datamap-javascript-required": "Interaktive Daten-Karte benötigt aktiviertes JavaScript.",
+    "datamap-loading-data": "Bitte warten, Daten werden geladen",
+    "datamap-error-dataload": "<b>Konnte Daten nicht laden</b><br/>bitte neuladen oder später noch einmal probieren",
+    "datamap-lazy-click-to-load": "Klicke um Daten-Karte zu laden.",
+
+    "datamap-legend-tab-locations": "Marker",
+    "datamap-toggle-show-all": "Alle anzeigen",
+    "datamap-toggle-hide-all": "Alle verbergen",
+    "datamap-layer-control": "Schalter",
+
+    "datamap-layer-surface": "Oberfläche",
+    "datamap-layer-cave": "Höhlen",
+
+    "datamap-popup-inside-cave": " (Höhle)",
+    "datamap-popup-related-article": "Mehr anzeigen",
+    "datamap-popup-dismissed": "Gesammelt",
+    "datamap-popup-mark-as-dismissed": "Als gesammelt markieren",
+
+    "datamap-coordinate-control-text": "Breite $1, Länge $2",
+    "datamap-control-reset-view": "Auf Standard-Ansicht zurücksetzen",
+    "datamap-control-centre-view": "Zentriere Ansicht auf derzeitigen Zoomlevel"
+}
