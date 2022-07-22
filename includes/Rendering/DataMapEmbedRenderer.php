@@ -1,5 +1,5 @@
 <?php
-namespace Ark\DataMaps\Rendering;
+namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
 
 use MediaWiki\MediaWikiServices;
 use Title;
@@ -12,12 +12,12 @@ use File;
 use InvalidArgumentException;
 use PPFrame;
 
-use Ark\DataMaps\Data\DataMapSpec;
-use Ark\DataMaps\Data\DataMapGroupSpec;
-use Ark\DataMaps\Data\DataMapBackgroundSpec;
-use Ark\DataMaps\Data\DataMapBackgroundOverlaySpec;
-use Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
-use Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
+use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\DataMapGroupSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\DataMapBackgroundSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\DataMapBackgroundOverlaySpec;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 
 class DataMapEmbedRenderer {
     const MARKER_ICON_WIDTH = 24;

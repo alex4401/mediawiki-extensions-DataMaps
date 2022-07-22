@@ -1,5 +1,5 @@
 <?php
-namespace Ark\DataMaps\API;
+namespace MediaWiki\Extension\Ark\DataMaps\API;
 
 use ApiBase;
 use ApiResult;
@@ -10,11 +10,11 @@ use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use Wikimedia\ParamValidator\ParamValidator;
 use ObjectCache;
-use Ark\DataMaps\Content\DataMapContent;
-use Ark\DataMaps\Data\DataMapSpec;
-use Ark\DataMaps\Data\DataMapMarkerSpec;
-use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
-use Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
+use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
+use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\DataMapMarkerSpec;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 use ParserOptions;
 
 class ApiQueryDataMapEndpoint extends ApiBase {

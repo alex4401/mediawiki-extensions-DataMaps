@@ -105,21 +105,21 @@
 	},
 
 	"AutoloadNamespaces": {
-		"Ark\\DataMaps\\": "includes/"
+		"MediaWiki\\Extension\\Ark\\DataMaps\\": "includes/"
 	},
 
-	"callback": "Ark\\DataMaps\\DataMapsHooks::onRegistration",
+	"callback": "MediaWiki\\Extension\\Ark\\DataMaps\\DataMapsHooks::onRegistration",
 	"APIModules": {
-		"queryDataMap": "Ark\\DataMaps\\API\\ApiQueryDataMapEndpoint"
+		"queryDataMap": "MediaWiki\\Extension\\Ark\\DataMaps\\API\\ApiQueryDataMapEndpoint"
 	},
 	"ContentHandlers": {
-		"datamap": "Ark\\DataMaps\\Content\\DataMapContentHandler"
+		"datamap": "MediaWiki\\Extension\\Ark\\DataMaps\\Content\\DataMapContentHandler"
 	},
 	
 	"Hooks": {
-		"ParserFirstCallInit": "Ark\\DataMaps\\DataMapsHooks::onParserFirstCallInit",
-		"ContentHandlerDefaultModelFor": "Ark\\DataMaps\\DataMapsHooks::contentHandlerDefaultModelFor",
-		"CodeEditorGetPageLanguage": "Ark\\DataMaps\\DataMapsHooks::getCodeLanguage"
+		"ParserFirstCallInit": "MediaWiki\\Extension\\Ark\\DataMaps\\DataMapsHooks::onParserFirstCallInit",
+		"ContentHandlerDefaultModelFor": "MediaWiki\\Extension\\Ark\\DataMaps\\DataMapsHooks::contentHandlerDefaultModelFor",
+		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\DataMapsHooks::getCodeLanguage"
 	},
 
 	"config": {

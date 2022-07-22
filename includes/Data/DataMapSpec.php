@@ -1,5 +1,5 @@
 <?php
-namespace Ark\DataMaps\Data;
+namespace MediaWiki\Extension\Ark\DataMaps\Data;
 
 use Status;
 

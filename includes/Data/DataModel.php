@@ -1,10 +1,10 @@
 <?php
-namespace Ark\DataMaps\Data;
+namespace MediaWiki\Extension\Ark\DataMaps\Data;
 
 use Status;
 use stdClass;
-use Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
-use Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 
 class DataModel {
     protected static string $publicName = '???';

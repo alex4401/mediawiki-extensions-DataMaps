@@ -1,5 +1,5 @@
 <?php
-namespace Ark\DataMaps\Content;
+namespace MediaWiki\Extension\Ark\DataMaps\Content;
 
 use JsonContentHandler;
 use Title;
