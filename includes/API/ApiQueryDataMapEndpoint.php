@@ -18,6 +18,7 @@ use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 use ParserOptions;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
+    const GENERATION = 8;
     const POPUP_IMAGE_WIDTH = 240;
 
     public function getAllowedParams() {
@@ -61,7 +62,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             $cache = ObjectCache::getInstance( $wgArkDataMapCacheType );
             // Build the cache key from an identifier, title parameter and revision ID parameter
             $revid = isset( $params['revid'] ) ? $params['revid'] : -1;
-            $cacheKey = $cache->makeKey( 'ARKDataMapQuery', $params['title'], $revid,
+            $cacheKey = $cache->makeKey( 'ARKDataMapQuery', self::GENERATION, $params['title'], $revid,
                 isset( $params['filter'] ) ? $params['filter'] : '' );
             // Try to retrieve the response
             $response = $cache->get( $cacheKey );
