@@ -136,7 +136,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         if ( isset( $params['filter'] ) && !empty( $params['filter'] ) ) {
             $filter = explode( '|', $params['filter'] );
             // Ignore filters if more than 9 are specified
-            if ( count( $filter ) > 9 ) {
+            if ( count( $filter ) >= 9 ) {
                 $filter = null;
             }
         }
