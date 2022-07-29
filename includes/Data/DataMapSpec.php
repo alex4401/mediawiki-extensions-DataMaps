@@ -21,11 +21,9 @@ class DataMapSpec extends DataModel {
     public function getBackgrounds(): array {
         if ( $this->cachedBackgrounds == null ) {
             if ( $this->raw->backgrounds == null ) {
-                $fake = new \stdClass();
-                $fake->image = $this->raw->image;
-                $this->cachedBackgrounds = [ new DataMapBackgroundSpec( $fake ) ];
+                $this->cachedBackgrounds = [ MapBackgroundSpec::fromImageName( $this->raw->image ) ];
             } else {
-                $this->cachedBackgrounds = array_map( fn ( $raw ) => new DataMapBackgroundSpec( $raw ), $this->raw->backgrounds );
+                $this->cachedBackgrounds = array_map( fn ( $raw ) => new MapBackgroundSpec( $raw ), $this->raw->backgrounds );
             }
         }
         return $this->cachedBackgrounds;
@@ -81,8 +79,8 @@ class DataMapSpec extends DataModel {
         return $this->cachedMarkerLayers;
     }
 
-    public function getGroup( string $name ): DataMapGroupSpec {
-        return new DataMapGroupSpec( $name, $this->raw->groups->$name );
+    public function getGroup( string $name ): MarkerGroupSpec {
+        return new MarkerGroupSpec( $name, $this->raw->groups->$name );
     }
 
     public function getLayer( string $name ): DataMapLayerSpec {
@@ -124,7 +122,7 @@ class DataMapSpec extends DataModel {
         $this->disallowOtherFields( $status );
 
         if ( $this->validationAreRequiredFieldsPresent ) {
-            // Validate backgrounds by the DataMapBackgroundSpec class
+            // Validate backgrounds by the MapBackgroundSpec class
             if ( isset( $this->raw->image ) || isset( $this->raw->backgrounds ) ) {
                 $multipleBgs = count( $this->getBackgrounds() ) > 1;
                 foreach ( $this->getBackgrounds() as &$spec ) {
@@ -132,24 +130,27 @@ class DataMapSpec extends DataModel {
                 }
             }
     
-            // Validate marker groups by the DataMapGroupSpec class
+            // Validate marker groups by the MarkerGroupSpec class
             if ( isset( $this->raw->groups ) ) {
                 foreach ( $this->getRawMarkerGroupMap() as $name => $group ) {
                     if ( empty( $name ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-no-group-name' );
                     }
                 
-                    $spec = new DataMapGroupSpec( $name, $group );
+                    $spec = new MarkerGroupSpec( $name, $group );
+                    $spec->validate( $status );
+                }
+            }
                     $spec->validate( $status );
                 }
             }
 
-            // Validate markers by the DataMapMarkerSpec class
+            // Validate markers by the MarkerSpec class
             if ( $isFull ) {
                 $this->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection ) use ( &$status ) {
                     // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
                     // creating thousands of small, very short-lived (only one at a time) objects
-                    $marker = new DataMapMarkerSpec( new \stdclass() );
+                    $marker = new MarkerSpec( new \stdclass() );
                 
                     $layers = explode( ' ', $layers );
                     $groupName = $layers[0];

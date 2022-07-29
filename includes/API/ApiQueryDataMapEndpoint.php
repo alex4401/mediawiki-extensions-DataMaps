@@ -12,7 +12,7 @@ use Wikimedia\ParamValidator\ParamValidator;
 use ObjectCache;
 use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\DataMapMarkerSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 use ParserOptions;
@@ -161,7 +161,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             $subResults = [];
             // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
             // creating thousands of small, very short-lived (only one at a time) objects
-            $marker = new DataMapMarkerSpec( new \stdclass() );
+            $marker = new MarkerSpec( new \stdclass() );
 
             foreach ( $rawMarkerCollection as &$rawMarker ) {
                 $marker->reassignTo( $rawMarker );
@@ -224,7 +224,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         return $results;
     }
 
-    private function shouldParseString( DataMapMarkerSpec $marker, string $text ): bool {
+    private function shouldParseString( MarkerSpec $marker, string $text ): bool {
         $mIsWikitext = $marker->isWikitext();
         if ( $mIsWikitext === false ) {
             return false;

@@ -3,8 +3,9 @@ namespace MediaWiki\Extension\Ark\DataMaps\Data;
 
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 use Status;
+use stdclass;
 
-class DataMapGroupSpec extends DataModel {
+class MarkerGroupSpec extends DataModel {
     protected static string $publicName = 'MarkerGroupSpec';
 
     const DEFAULT_CIRCLE_SIZE = 5;
@@ -18,7 +19,7 @@ class DataMapGroupSpec extends DataModel {
 
     private string $id;
 
-    public function __construct( string $id, /*array|object*/ $raw ) {
+    public function __construct( string $id, stdclass $raw ) {
         parent::__construct( $raw );
         $this->id = $id;
     }
@@ -131,7 +132,9 @@ class DataMapGroupSpec extends DataModel {
 
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
         $this->allowReplacedField( $status, 'relatedArticle', DataModel::TYPE_STRING, 'article', 'v0.7.0', 'v0.9.0' );
-        $this->expectField( $status, 'canDismiss', DataModel::TYPE_BOOL );
+        if ( $this->getDisplayMode() == self::DM_ICON ) {
+            $this->expectField( $status, 'canDismiss', DataModel::TYPE_BOOL );
+        }
 
         $this->disallowOtherFields( $status );
 

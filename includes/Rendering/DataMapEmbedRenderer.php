@@ -13,9 +13,9 @@ use InvalidArgumentException;
 use PPFrame;
 
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\DataMapGroupSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\DataMapBackgroundSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\DataMapBackgroundOverlaySpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundOverlaySpec;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 
@@ -73,7 +73,7 @@ class DataMapEmbedRenderer {
         foreach ( $this->data->getBackgrounds() as &$background ) {
             $parserOutput->addImage( $background->getImageName() );
         }
-        $this->data->iterateGroups( function( DataMapGroupSpec $spec ) use ( &$parserOutput ) {
+        $this->data->iterateGroups( function( MarkerGroupSpec $spec ) use ( &$parserOutput ) {
             $parserOutput->addImage( $spec->getIcon() );
         } );
     }
@@ -84,7 +84,7 @@ class DataMapEmbedRenderer {
             'pageName' => $this->title->getPrefixedText(),
             'version' => $this->title->getLatestRevID(),
 
-            'backgrounds' => array_map( function ( DataMapBackgroundSpec $background ) {
+            'backgrounds' => array_map( function ( MapBackgroundSpec $background ) {
                 $image = DataMapFileUtils::getRequiredFile( $background->getImageName() );
                 $out = [
                     'image' => $image->getURL(),
@@ -101,7 +101,7 @@ class DataMapEmbedRenderer {
 
                 if ( $background->hasOverlays() ) {
                     $out['overlays'] = [];
-                    $background->iterateOverlays( function ( DataMapBackgroundOverlaySpec $overlay ) use ( &$out ) {
+                    $background->iterateOverlays( function ( MapBackgroundOverlaySpec $overlay ) use ( &$out ) {
                         $result = [ 'at' => $overlay->getPlacementLocation() ];
                         if ( $overlay->getName() != null ) {
                             $result['name'] = $overlay->getName();
@@ -120,7 +120,7 @@ class DataMapEmbedRenderer {
             'custom' => $this->data->getCustomData()
         ];
 
-        $this->data->iterateGroups( function( DataMapGroupSpec $spec ) use ( &$out ) {
+        $this->data->iterateGroups( function ( MarkerGroupSpec $spec ) use ( &$out ) {
             $out['groups'][$spec->getId()] = $this->getMarkerGroupConfig( $spec );
         } );
 
@@ -131,21 +131,21 @@ class DataMapEmbedRenderer {
         return $out;
     }
 
-    public function getMarkerGroupConfig( DataMapGroupSpec $spec ): array {
+    public function getMarkerGroupConfig( MarkerGroupSpec $spec ): array {
         $out = array(
             'name' => $spec->getName(),
             'size' => $spec->getSize(),
         );
 
         switch ( $spec->getDisplayMode() ) {
-            case DataMapGroupSpec::DM_CIRCLE:
+            case MarkerGroupSpec::DM_CIRCLE:
                 $out['fillColor'] = DataMapColourUtils::asHex( $spec->getFillColour() );
 
                 if ( $spec->getRawStrokeColour() != null ) {
                     $out['strokeColor'] = DataMapColourUtils::asHex( $spec->getStrokeColour() );
                 }
 
-                if ( $spec->getStrokeWidth() != DataMapGroupSpec::DEFAULT_CIRCLE_STROKE_WIDTH ) {
+                if ( $spec->getStrokeWidth() != MarkerGroupSpec::DEFAULT_CIRCLE_STROKE_WIDTH ) {
                     $out['strokeWidth'] = $spec->getStrokeWidth();
                 }
 
@@ -153,7 +153,7 @@ class DataMapEmbedRenderer {
                     $out['extraMinZoomSize'] = $spec->getExtraMinZoomSize();
                 }
                 break;
-            case DataMapGroupSpec::DM_ICON:
+            case MarkerGroupSpec::DM_ICON:
                 // Upsize by 50% to mitigate quality loss at max zoom
                 $size = floor(self::MARKER_ICON_WIDTH * 1.5);
                 // Ensure it's a multiple of 2
