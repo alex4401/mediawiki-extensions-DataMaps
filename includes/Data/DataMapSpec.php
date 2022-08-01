@@ -83,8 +83,10 @@ class DataMapSpec extends DataModel {
         return isset( $this->raw->layers->$name );
     }
 
-    public function getLayer( string $name ): ?DataMapLayerSpec {
-        return isset( $this->raw->layers->$name ) ? new DataMapLayerSpec( $name, $this->raw->layers->$name ) : null;
+    public function getLayer( string $name ): ?MarkerLayerSpec {
+        return isset( $this->raw->layers ) ? (
+            isset( $this->raw->layers->$name ) ? new MarkerLayerSpec( $name, $this->raw->layers->$name ) : null
+        ) : null;
     }
 
     public function iterateGroups( callable $callback ) {
@@ -124,6 +126,7 @@ class DataMapSpec extends DataModel {
             $this->requireEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
             $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
             $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );
+            $this->expectField( $status, 'layers', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'custom', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'markers', DataModel::TYPE_OBJECT );
         } else {
@@ -131,6 +134,7 @@ class DataMapSpec extends DataModel {
             $this->expectEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
             $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'groups', DataModel::TYPE_OBJECT );
+            $this->expectField( $status, 'layers', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'custom', DataModel::TYPE_OBJECT );
         }
         $this->disallowOtherFields( $status );

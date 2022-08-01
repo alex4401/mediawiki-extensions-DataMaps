@@ -30,7 +30,6 @@
     "datamap-error-validate-replaced-field": "Field <code>$2</code> in structure $1 has been replaced with <code>$3</code> in version $4, and will be removed in version $5.",
     "datamap-error-validate-no-file": "File [[File:$1]] linked, but it has not been uploaded yet to the wiki.",
     "datamap-error-validatespec-group-no-display": "Marker group \"$1\" has no display settings. Add the <code>icon</code> and/or <code>fillColor</code> properties.",
-    "datamap-error-validatespec-layer-bad-type": "Marker layer \"$1\" is of type <code>$1</code>, but that type is not known. Use <code>transparent</code>, <code>single</code> or <code>multiple</code>.",
 
     "datamap-error-validatespec-map-no-group-name": "A marker group with no (or an empty) name has been defined. Assign it a unique name.",
     "datamap-error-validatespec-map-missing-group": "Markers have been added to group \"$1\", which is not defined.",

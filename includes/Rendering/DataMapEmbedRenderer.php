@@ -14,6 +14,7 @@ use PPFrame;
 
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MarkerLayerSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundOverlaySpec;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
@@ -120,7 +121,7 @@ class DataMapEmbedRenderer {
             $out['groups'][$spec->getId()] = $this->getMarkerGroupConfig( $spec );
         } );
 
-        $this->data->iterateDefinedLayers( function ( DataMapLayerSpec $spec ) use ( &$out ) {
+        $this->data->iterateDefinedLayers( function ( MarkerLayerSpec $spec ) use ( &$out ) {
             $out['layers'][$spec->getId()] = $this->getMarkerLayerConfig( $spec );
         } );
 
@@ -191,21 +192,13 @@ class DataMapEmbedRenderer {
         return $out;
     }
 
-    public function getMarkerLayerConfig( DataMapLayerSpec $spec ): array {
+    public function getMarkerLayerConfig( MarkerLayerSpec $spec ): array {
         $out = array(
             'name' => $spec->getName(),
-            'type' => $spec->getType(),
         );
 
         if ( $spec->getPopupDiscriminator() !== null ) {
             $out['discrim'] = $spec->getPopupDiscriminator();
-        }
-
-        if ( $spec->hasOverlays() ) {
-            $out['overlays'] = [];
-            $spec->iterateOverlays( function ( MapBackgroundOverlaySpec $overlay ) use ( &$out ) {
-                $out['overlays'][] = $this->convertBackgroundOverlay( $overlay );
-            } );
         }
 
         return $out;
