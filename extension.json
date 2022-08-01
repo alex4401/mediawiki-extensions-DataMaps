@@ -92,6 +92,15 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
+		"ext.ark.datamaps.icons": {
+			"class": "ResourceLoaderOOUIIconPackModule",
+			"icons": [
+				"exitFullscreen",
+				"fullScreen",
+				"expand"
+			]
+		},
+
 		"ext.ark.datamaps.styles": {
 			"styles": [
 				"styles/main.less",

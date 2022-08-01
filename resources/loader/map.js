@@ -42,7 +42,8 @@ function DataMap( id, $root, config ) {
     // Request OOUI to be loaded and build the legend
     mw.loader.using( [
         'oojs-ui-core',
-        'oojs-ui-widgets'
+        'oojs-ui-widgets',
+        'ext.ark.datamaps.icons'
     ], buildLegend.bind( this ) );
     // Prepare the Leaflet map view
     mw.loader.using( [
@@ -371,7 +372,7 @@ const buildLeafletMap = function ( $holder ) {
     const $viewControls = this.addControl( this.anchors.topLeft,
         $( '<div class="leaflet-control leaflet-bar datamap-control-viewcontrols">' ) );
     $viewControls.append(
-        $( '<a role="button" class="datamap-control-viewreset" aria-disabled="false"></a>' )
+        $( '<a role="button" class="datamap-control-viewreset oo-ui-icon-fullScreen" aria-disabled="false"></a>' )
         .attr( {
             title: mw.msg( 'datamap-control-reset-view' ),
             'aria-label': mw.msg( 'datamap-control-reset-view' )
@@ -379,7 +380,7 @@ const buildLeafletMap = function ( $holder ) {
         .on( 'click', () => this.restoreDefaultView() )
     );
     $viewControls.append(
-        $( '<a role="button" class="datamap-control-viewcentre" aria-disabled="false"></a>' )
+        $( '<a role="button" class="datamap-control-viewcentre oo-ui-icon-exitFullscreen" aria-disabled="false"></a>' )
         .attr( {
             title: mw.msg( 'datamap-control-centre-view' ),
             'aria-label': mw.msg( 'datamap-control-centre-view' )
