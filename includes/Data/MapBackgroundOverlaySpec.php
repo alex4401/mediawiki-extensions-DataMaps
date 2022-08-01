@@ -22,6 +22,7 @@ class MapBackgroundOverlaySpec extends DataModel {
         $this->expectField( $status, 'name', DataModel::TYPE_STRING );
         $this->expectField( $status, 'image', DataModel::TYPE_STRING );
         $this->requireField( $status, 'at', DataModel::TYPE_BOUNDS );
+        $this->disallowOtherFields( $status );
 
         if ( isset( $this->raw->image ) ) {
             $this->requireFile( $status, $this->getImageName() );
