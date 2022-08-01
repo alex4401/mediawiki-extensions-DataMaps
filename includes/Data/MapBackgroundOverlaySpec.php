@@ -10,7 +10,7 @@ class MapBackgroundOverlaySpec extends DataModel {
         return isset( $this->raw->name ) ? $this->raw->name : null;
     }
 
-    public function getImageName(): string {
+    public function getImageName(): ?string {
         return $this->raw->image;
     }
 
