@@ -25,7 +25,7 @@ class DataModel {
     private array $validationCheckedFields = [];
     protected bool $validationAreRequiredFieldsPresent = true;
 
-    public function __construct( /*array|stdClass*/ $raw ) {
+    public function __construct( stdClass $raw ) {
         if ( is_array( $raw ) ) {
             $raw = (object) $raw;
         }
