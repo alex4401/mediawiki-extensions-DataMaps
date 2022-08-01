@@ -89,7 +89,6 @@ class DataMapEmbedRenderer {
                 $image = DataMapFileUtils::getRequiredFile( $background->getImageName() );
                 $out = [
                     'image' => $image->getURL(),
-                    'bounds' => [ $image->getWidth(), $image->getHeight() ]
                 ];
 
                 if ( $background->getName() != null ) {
@@ -138,6 +137,10 @@ class DataMapEmbedRenderer {
         ];
         if ( $spec->getName() != null ) {
             $result['name'] = $spec->getName();
+        }
+        if ( $spec->getImageName() != null ) {
+            $image = DataMapFileUtils::getRequiredFile( $spec->getImageName() );
+            $result['image'] = $image->getURL();
         }
         return $result;
     }

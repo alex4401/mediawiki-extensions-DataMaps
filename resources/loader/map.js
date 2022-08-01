@@ -218,6 +218,27 @@ DataMap.prototype.addControl = function ( anchor, $element ) {
 };
 
 
+DataMap.prototype.buildBackgroundOverlayObject = function ( overlay ) {
+    let result;
+
+    // Construct an image or rectangular layer
+    if ( overlay.image ) {
+        result = L.imageOverlay( overlay.image, flipLatitudeBox( overlay.at ) );
+    } else {
+        result = L.rectangle( flipLatitudeBox( overlay.at ), {
+            fillOpacity: 0.05
+        } );
+    }
+
+    // Bind name as tooltip
+    if ( overlay.name ) {
+        result.bindTooltip( overlay.name );
+    }
+
+    return result;
+};
+
+
 const buildLeafletMap = function ( $holder ) {
     const leafletConfig = $.extend( true, {
         // Boundaries
@@ -266,17 +287,7 @@ const buildLeafletMap = function ( $holder ) {
 
         // Prepare overlay layers
         if ( background.overlays ) {
-            background.overlays.forEach( overlay => {
-                const rect = L.rectangle( flipLatitudeBox( overlay.at ), {
-                    fillOpacity: 0.05
-                } );
-    
-                if ( overlay.name ) {
-                    rect.bindTooltip( overlay.name );
-                }
-
-                background.layers.push( rect );
-            } );
+            background.overlays.forEach( overlay => background.layers.push( this.buildBackgroundOverlayObject( overlay ) ) );
         }
     } );
     // Switch to the last chosen one or first defined
