@@ -38,4 +38,10 @@ mw.hook( 'wikipage.content' ).add( $content => {
 } );
 
 
+mw.subscribeDataMapsHook = function ( hookName, callback ) {
+    const ids = Object.keys( mw.config.get( 'dataMaps' ) );
+    ids.forEach( id => mw.hook( 'ext.ark.datamaps.' + hookName + '.' + id ).add( callback ) );
+};
+
+
 module.exports = initialiseMapFromStore;
