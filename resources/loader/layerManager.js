@@ -54,6 +54,11 @@ MarkerLayerManager.prototype.shouldBeVisible = function ( layers ) {
 
 
 MarkerLayerManager.prototype.updateMember = function ( leafletMarker ) {
+    // Exit early if updates are disabled
+    if ( this.doNotUpdate ) {
+        return;
+    }
+    // Get marker layers
     const layers = leafletMarker.arkAttachedLayers;
     // Request new visibility state from cache, or compute it if missed
     let shouldBeVisible = this.computeCache[layers];
@@ -70,6 +75,10 @@ MarkerLayerManager.prototype.updateMember = function ( leafletMarker ) {
 
 
 MarkerLayerManager.prototype.updateMembers = function ( layerName ) {
+    // Exit early if updates are disabled
+    if ( this.doNotUpdate ) {
+        return;
+    }
     // Exit early if layer does not exist
     if ( layerName && !this.byLayer[layerName] ) {
         return;
@@ -102,6 +111,16 @@ MarkerLayerManager.prototype.setExclusion = function ( layerName, state ) {
         this.excludeMask.delete( layerName );
     this.clearCache();
     this.updateMembers( layerName );
+};
+
+
+MarkerLayerManager.prototype.setDeferVisibilityUpdates = function ( state ) {
+    if ( !state && this.doNotUpdate !== state ) {
+        // Updates are being enabled back on, force a visibility update
+        this.doNotUpdate = state;
+        this.updateMembers();
+    }
+    this.doNotUpdate = state;
 };
 
 
