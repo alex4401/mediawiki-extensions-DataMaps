@@ -244,7 +244,7 @@ const buildLeafletMap = function ( $holder ) {
         // Boundaries
         center: [50, 50],
         maxBounds: [[-75,-75], [175, 175]],
-        maxBoundsViscosity: 0.2,
+        maxBoundsViscosity: 0.7,
         // Zoom settings
         zoomSnap: 0.25,
         zoomDelta: 0.25,
