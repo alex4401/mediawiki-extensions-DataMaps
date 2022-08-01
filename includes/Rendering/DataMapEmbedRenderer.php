@@ -198,7 +198,7 @@ class DataMapEmbedRenderer {
         );
 
         if ( $spec->getPopupDiscriminator() !== null ) {
-            $out['subtleText'] = $spec->getPopupDiscriminator();
+            $out['discrim'] = $spec->getPopupDiscriminator();
         }
 
         if ( $spec->hasOverlays() ) {
