@@ -31,7 +31,7 @@ mw.hook( 'wikipage.content' ).add( $content => {
     const ids = Object.keys( mw.config.get( 'dataMaps' ) );
 
     // Broadcast all map IDs so gadgets can register to 
-    mw.hook( 'ext.ark.datamaps.broadcastMaps' ).fire( Object.keys( ids ) );
+    mw.hook( 'ext.ark.datamaps.broadcastMaps' ).fire( ids );
 
     // Run initialisation for every map, followed by events for gadgets to listen to
     ids.forEach( id => initialiseMapFromStore( id, $content.find( `.datamap-container#datamap-${id}` ) ) );
