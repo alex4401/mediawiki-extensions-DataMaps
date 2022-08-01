@@ -79,6 +79,7 @@ DataMap.prototype.isLayerUsed = function ( name ) {
 const flipLatitudeBox = function ( box ) {
     return [ [ 100-box[0][0], box[0][1] ], [ 100-box[1][0], box[1][1] ] ];
 };
+DataMap.prototype.flipLatitudeBox = flipLatitudeBox;
 
 
 /*
