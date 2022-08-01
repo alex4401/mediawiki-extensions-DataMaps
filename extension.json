@@ -94,11 +94,11 @@
 
 		"ext.ark.datamaps.styles": {
 			"styles": [
-				"main.less",
-				"legend.less",
-				"controls.less",
-				"popups.less",
-				"markers.less"
+				"styles/main.less",
+				"styles/legend.less",
+				"styles/controls.less",
+				"styles/popups.less",
+				"styles/markers.less"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
