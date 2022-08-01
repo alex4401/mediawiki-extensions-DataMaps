@@ -78,3 +78,8 @@ ID for identification (`mw.config.get('dataMaps')[page ID]`) when multiple maps 
 Markers are not sent to the browser immediately, and have to be requested with the `DataMapMarkersEndpoint`. This allows
 initialisation to start while markers are being downloaded from the server, and decouples a large payload from the HTML document,
 which has been a problem previously.
+
+
+## Leaflet
+This repository only includes a static build of modified Leaflet. Source code including the modifications is found under
+[this link](https://github.com/alex4401/Leaflet/).
