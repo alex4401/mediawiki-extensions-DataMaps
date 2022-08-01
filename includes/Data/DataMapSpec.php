@@ -29,10 +29,6 @@ class DataMapSpec extends DataModel {
         return $this->cachedBackgrounds;
     }
 
-    public function getCoordinateSpace(): object {
-        return $this->raw->coordinateBounds;
-    }
-
     public function getInjectedLeafletSettings(): ?object {
         return isset( $this->raw->leafletSettings ) ? $this->raw->leafletSettings : null;
     }
@@ -49,6 +45,10 @@ class DataMapSpec extends DataModel {
         return $this->raw->groups;
     }
 
+    public function getRawMarkerLayerMap(): object {
+        return $this->raw->layers;
+    }
+
     private function warmUpUsedMarkerTypes() {
         $groups = array();
         $specifiers = array();
@@ -59,10 +59,6 @@ class DataMapSpec extends DataModel {
         }
         $this->cachedMarkerGroups = array_unique( $groups );
         $this->cachedMarkerLayers = array_unique( $specifiers );
-    }
-
-    public function getMarkerGroupNames(): array {
-        return $this->getGroupNames();
     }
 
     public function getGroupNames(): array {
@@ -83,21 +79,39 @@ class DataMapSpec extends DataModel {
         return new MarkerGroupSpec( $name, $this->raw->groups->$name );
     }
 
-    public function getLayer( string $name ): DataMapLayerSpec {
-        // TODO: implement layers for Genesis Part 2 resource map (asteroid cluster rotations)
-        return null;//return new DataMapLayerSpec($this->raw->layers->$name);
+    public function hasLayer( string $name ): bool {
+        return isset( $this->raw->layers->$name );
+    }
+
+    public function getLayer( string $name ): ?DataMapLayerSpec {
+        return isset( $this->raw->layers->$name ) ? new DataMapLayerSpec( $name, $this->raw->layers->$name ) : null;
     }
 
     public function iterateGroups( callable $callback ) {
-        foreach ( $this->getMarkerGroupNames() as &$name ) {
+        foreach ( $this->getGroupNames() as &$name ) {
             $data = $this->getGroup( $name );
             $callback( $data );
         }
     }
 
+    public function iterateDefinedLayers( callable $callback ) {
+        foreach ( $this->getLayerNames() as &$name ) {
+            $data = $this->getLayer( $name );
+            if ( $data !== null ) {
+                $callback( $data );
+            }
+        }
+    }
+
     public function iterateRawMarkerMap( callable $callback ) {
-        foreach ( get_object_vars( $this->getRawMarkerMap() ) as $layers => $markers ) {
-            $callback( $layers, $markers );
+        foreach ( get_object_vars( $this->getRawMarkerMap() ) as $id => $data ) {
+            $callback( $id, $data );
+        }
+    }
+
+    public function iterateRawLayerMap( callable $callback ) {
+        foreach ( get_object_vars( $this->getRawLayerMap() ) as $id => $data ) {
+            $callback( $id, $data );
         }
     }
 
@@ -141,9 +155,22 @@ class DataMapSpec extends DataModel {
                     $spec->validate( $status );
                 }
             }
+
+            // TODO: Validate there's no overlap between marker layer names and group names
+    
+            // Validate marker layers by the MarkerLayerSpec class
+            if ( isset( $this->raw->layers ) ) {
+                foreach ( $this->getRawMarkerLayerMap() as $name => $layer ) {
+                    if ( empty( $name ) ) {
+                        $status->fatal( 'datamap-error-validatespec-map-no-layer-name' );
+                    }
+                
+                    $spec = new MarkerLayerSpec( $name, $layer );
                     $spec->validate( $status );
                 }
             }
+
+            // TODO: validate sublayers can reference parent layers properly (causes a frontend error)
 
             // Validate markers by the MarkerSpec class
             if ( $isFull ) {
@@ -152,6 +179,8 @@ class DataMapSpec extends DataModel {
                     // creating thousands of small, very short-lived (only one at a time) objects
                     $marker = new MarkerSpec( new \stdclass() );
                 
+                    // Check if the group is defined. Don't check layers, as it's not required for any of them to be actually
+                    // defined - such layers will be treated as transparent by default.
                     $layers = explode( ' ', $layers );
                     $groupName = $layers[0];
                     if ( !isset( $this->raw->groups->$groupName ) ) {
@@ -159,6 +188,7 @@ class DataMapSpec extends DataModel {
                         return;
                     }
                 
+                    // Validate each marker
                     foreach ( $rawMarkerCollection as &$rawMarker ) {
                         $marker->reassignTo( $rawMarker );
                         $marker->validate( $status );

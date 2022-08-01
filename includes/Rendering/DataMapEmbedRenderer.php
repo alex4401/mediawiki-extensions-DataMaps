@@ -102,11 +102,7 @@ class DataMapEmbedRenderer {
                 if ( $background->hasOverlays() ) {
                     $out['overlays'] = [];
                     $background->iterateOverlays( function ( MapBackgroundOverlaySpec $overlay ) use ( &$out ) {
-                        $result = [ 'at' => $overlay->getPlacementLocation() ];
-                        if ( $overlay->getName() != null ) {
-                            $result['name'] = $overlay->getName();
-                        }
-                        $out['overlays'][] = $result;
+                        $out['overlays'][] = $this->convertBackgroundOverlay( $overlay );
                     } );
                 }
 
@@ -124,11 +120,25 @@ class DataMapEmbedRenderer {
             $out['groups'][$spec->getId()] = $this->getMarkerGroupConfig( $spec );
         } );
 
+        $this->data->iterateDefinedLayers( function ( DataMapLayerSpec $spec ) use ( &$out ) {
+            $out['layers'][$spec->getId()] = $this->getMarkerLayerConfig( $spec );
+        } );
+
         if ( $this->data->getInjectedLeafletSettings() ) {
             $out['leafletSettings'] = $this->data->getInjectedLeafletSettings();
         }
 
         return $out;
+    }
+
+    private function convertBackgroundOverlay( MapBackgroundOverlaySpec $spec ) {
+        $result = [
+            'at' => $spec->getPlacementLocation()
+        ];
+        if ( $spec->getName() != null ) {
+            $result['name'] = $spec->getName();
+        }
+        return $result;
     }
 
     public function getMarkerGroupConfig( MarkerGroupSpec $spec ): array {
@@ -181,10 +191,24 @@ class DataMapEmbedRenderer {
         return $out;
     }
 
-    public function getMarkerLayerConfig(string $name): array {
-        //$info = $this->data->groups->$name;
-        return array(
+    public function getMarkerLayerConfig( DataMapLayerSpec $spec ): array {
+        $out = array(
+            'name' => $spec->getName(),
+            'type' => $spec->getType(),
         );
+
+        if ( $spec->getPopupDiscriminator() !== null ) {
+            $out['subtleText'] = $spec->getPopupDiscriminator();
+        }
+
+        if ( $spec->hasOverlays() ) {
+            $out['overlays'] = [];
+            $spec->iterateOverlays( function ( MapBackgroundOverlaySpec $overlay ) use ( &$out ) {
+                $out['overlays'][] = $this->convertBackgroundOverlay( $overlay );
+            } );
+        }
+
+        return $out;
     }
 
     private function expandWikitext(string $source): string {
