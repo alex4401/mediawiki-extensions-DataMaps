@@ -163,8 +163,10 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
  * 
  */
 DataMap.prototype.setCurrentBackground = function ( index ) {
+    // Remove existing layers off the map
     if ( this.background ) {
-        this.background.overlay.remove();
+        this.background.layers.forEach( x => x.remove() );
+        this.background = null;
     }
 
     // Check if index is valid, and fall back to first otherwise
@@ -172,10 +174,15 @@ DataMap.prototype.setCurrentBackground = function ( index ) {
         index = 0;
     }
 
+    // Update state
     this.background = this.config.backgrounds[ index ];
     this.backgroundIndex = index;
-    this.background.overlay.addTo( this.leaflet );
-    this.background.overlay.bringToBack();
+
+    // Push layers back onto the map
+    this.background.layers.forEach( x => {
+        x.addTo( this.leaflet );
+        x.bringToBack();
+    } );
 };
 
 
@@ -250,23 +257,25 @@ const buildLeafletMap = function ( $holder ) {
 
     // Prepare all backgrounds
     this.config.backgrounds.forEach( background => {
-        background.overlay = L.featureGroup();
+        background.layers = [];
 
         // Image overlay:
         // Latitude needs to be flipped as directions differ between Leaflet and ARK
         background.at = background.at || [ [100, 0], [0, 100] ];
-        L.imageOverlay( background.image, flipLatitudeBox( background.at ) ).addTo( background.overlay );
+        background.layers.push( L.imageOverlay( background.image, flipLatitudeBox( background.at ) ) );
 
         // Prepare overlay layers
         if ( background.overlays ) {
             background.overlays.forEach( overlay => {
                 const rect = L.rectangle( flipLatitudeBox( overlay.at ), {
                     fillOpacity: 0.05
-                } ).addTo( background.overlay );
-
+                } );
+    
                 if ( overlay.name ) {
                     rect.bindTooltip( overlay.name );
                 }
+
+                background.layers.push( rect );
             } );
         }
     } );
