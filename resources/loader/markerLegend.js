@@ -56,13 +56,13 @@ MarkerLegendPanel.prototype.toggleAllGroups = function ( state ) {
 };
 
 
-MarkerLegendPanel.prototype.addMarkerLayerToggleExclusive = function ( $popup, layerId, layerName ) {
-    this.legend.createCheckboxField( $popup, layerName, true,
+MarkerLegendPanel.prototype.addMarkerLayerToggleExclusive = function ( $parent, layerId, layerName ) {
+    this.legend.createCheckboxField( $parent, layerName, true,
         state => this.map.layerManager.setExclusion( layerId, !state ) );
 };
 
-MarkerLegendPanel.prototype.addMarkerLayerToggleInclusive = function ( $popup, layerId, layerName, invert ) {
-    this.legend.createCheckboxField( $popup, layerName, true,
+MarkerLegendPanel.prototype.addMarkerLayerToggleInclusive = function ( $parent, layerId, layerName, invert ) {
+    this.legend.createCheckboxField( $parent, layerName, true,
         state => this.map.layerManager.setInclusion( layerId, ( invert ? state : !state ) ) );
 };
 

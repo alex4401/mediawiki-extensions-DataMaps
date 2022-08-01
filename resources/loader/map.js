@@ -398,8 +398,8 @@ const buildLegend = function () {
 
     // Build the surface and caves toggle
     if ( hasCaves ) {
-        this.markerLegend.addMarkerLayerToggleInclusive( this.$layersPopup, 'cave', mw.msg( 'datamap-layer-surface' ) );
-        this.markerLegend.addMarkerLayerToggleExclusive( this.$layersPopup, 'cave', mw.msg( 'datamap-layer-cave' ) );
+        this.markerLegend.addMarkerLayerToggleInclusive( this.markerLegend.$layersPopup, 'cave', mw.msg( 'datamap-layer-surface' ) );
+        this.markerLegend.addMarkerLayerToggleExclusive( this.markerLegend.$layersPopup, 'cave', mw.msg( 'datamap-layer-cave' ) );
     }
 
     // Build individual group toggles
