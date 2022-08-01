@@ -1,5 +1,5 @@
 <?php
-namespace Ark\DataMaps\Content;
+namespace MediaWiki\Extension\Ark\DataMaps\Content;
 
 use MediaWiki\MediaWikiServices;
 use FormatJson;
@@ -15,10 +15,10 @@ use Status;
 use stdClass;
 use WikiPage;
 use MediaWiki\Revision\RevisionRecord;
-use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
-use Ark\DataMaps\Rendering\DataMapRenderOptions;
-use Ark\DataMaps\Data\DataMapSpec;
-use Ark\DataMaps\Data\DataModelMixinTransformer;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapRenderOptions;
+use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\DataModelMixinTransformer;
 
 class DataMapContent extends DataMapContentBase {
 	const LERR_NOT_FOUND = 1;

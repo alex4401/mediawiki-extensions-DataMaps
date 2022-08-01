@@ -1,11 +1,17 @@
 <?php
-namespace Ark\DataMaps\Data;
+namespace MediaWiki\Extension\Ark\DataMaps\Data;
 
 use Status;
 
-class DataMapBackgroundSpec extends DataModel {
+class MapBackgroundSpec extends DataModel {
     protected static string $publicName = 'MapBackgroundSpec';
 
+    public static function fromImageName( string $file ) {
+        $fake = new \stdClass();
+        $fake->image = $file;
+        return new MapBackgroundSpec( $fake );
+    }
+    
     public function getImageName(): string {
         return $this->raw->image;
     }
@@ -24,7 +30,7 @@ class DataMapBackgroundSpec extends DataModel {
 
     public function iterateOverlays( callable $callback ) {
         foreach ( $this->raw->overlays as &$raw ) {
-            $callback( new DataMapBackgroundOverlaySpec( $raw ) );
+            $callback( new MapBackgroundOverlaySpec( $raw ) );
         }
     }
 

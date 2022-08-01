@@ -1,9 +1,9 @@
 <?php
-namespace Ark\DataMaps\Data;
+namespace MediaWiki\Extension\Ark\DataMaps\Data;
 
 use Status;
 
-class DataMapMarkerSpec extends DataModel {
+class MarkerSpec extends DataModel {
     protected static string $publicName = 'MarkerSpec';
     
     public function reassignTo( object $newRaw ) {

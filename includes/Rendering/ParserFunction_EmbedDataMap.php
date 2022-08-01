@@ -1,13 +1,13 @@
 <?php
-namespace Ark\DataMaps\Rendering;
+namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
 
 use Parser;
 use PPFrame;
 use Title;
 use WikiPage;
 use MediaWiki\Revision\RevisionRecord;
-use Ark\DataMaps\Data\DataMapSpec;
-use Ark\DataMaps\Content\DataMapContent;
+use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
 
 final class ParserFunction_EmbedDataMap {
     public static function run( Parser $parser ): array {

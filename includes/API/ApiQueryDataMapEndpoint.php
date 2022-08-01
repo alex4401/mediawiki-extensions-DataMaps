@@ -1,5 +1,5 @@
 <?php
-namespace Ark\DataMaps\API;
+namespace MediaWiki\Extension\Ark\DataMaps\API;
 
 use ApiBase;
 use ApiResult;
@@ -10,14 +10,15 @@ use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use Wikimedia\ParamValidator\ParamValidator;
 use ObjectCache;
-use Ark\DataMaps\Content\DataMapContent;
-use Ark\DataMaps\Data\DataMapSpec;
-use Ark\DataMaps\Data\DataMapMarkerSpec;
-use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
-use Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
+use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
+use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 use ParserOptions;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
+    const GENERATION = 8;
     const POPUP_IMAGE_WIDTH = 240;
 
     public function getAllowedParams() {
@@ -61,7 +62,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             $cache = ObjectCache::getInstance( $wgArkDataMapCacheType );
             // Build the cache key from an identifier, title parameter and revision ID parameter
             $revid = isset( $params['revid'] ) ? $params['revid'] : -1;
-            $cacheKey = $cache->makeKey( 'ARKDataMapQuery', $params['title'], $revid,
+            $cacheKey = $cache->makeKey( 'ARKDataMapQuery', self::GENERATION, $params['title'], $revid,
                 isset( $params['filter'] ) ? $params['filter'] : '' );
             // Try to retrieve the response
             $response = $cache->get( $cacheKey );
@@ -136,7 +137,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         if ( isset( $params['filter'] ) && !empty( $params['filter'] ) ) {
             $filter = explode( '|', $params['filter'] );
             // Ignore filters if more than 9 are specified
-            if ( count( $filter ) > 9 ) {
+            if ( count( $filter ) >= 9 ) {
                 $filter = null;
             }
         }
@@ -160,7 +161,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             $subResults = [];
             // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
             // creating thousands of small, very short-lived (only one at a time) objects
-            $marker = new DataMapMarkerSpec( new \stdclass() );
+            $marker = new MarkerSpec( new \stdclass() );
 
             foreach ( $rawMarkerCollection as &$rawMarker ) {
                 $marker->reassignTo( $rawMarker );
@@ -223,7 +224,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         return $results;
     }
 
-    private function shouldParseString( DataMapMarkerSpec $marker, string $text ): bool {
+    private function shouldParseString( MarkerSpec $marker, string $text ): bool {
         $mIsWikitext = $marker->isWikitext();
         if ( $mIsWikitext === false ) {
             return false;

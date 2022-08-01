@@ -1,5 +1,5 @@
 <?php
-namespace Ark\DataMaps\Rendering;
+namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
 
 use MediaWiki\MediaWikiServices;
 use Title;
@@ -12,12 +12,13 @@ use File;
 use InvalidArgumentException;
 use PPFrame;
 
-use Ark\DataMaps\Data\DataMapSpec;
-use Ark\DataMaps\Data\DataMapGroupSpec;
-use Ark\DataMaps\Data\DataMapBackgroundSpec;
-use Ark\DataMaps\Data\DataMapBackgroundOverlaySpec;
-use Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
-use Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
+use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MarkerLayerSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundOverlaySpec;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 
 class DataMapEmbedRenderer {
     const MARKER_ICON_WIDTH = 24;
@@ -73,7 +74,7 @@ class DataMapEmbedRenderer {
         foreach ( $this->data->getBackgrounds() as &$background ) {
             $parserOutput->addImage( $background->getImageName() );
         }
-        $this->data->iterateGroups( function( DataMapGroupSpec $spec ) use ( &$parserOutput ) {
+        $this->data->iterateGroups( function( MarkerGroupSpec $spec ) use ( &$parserOutput ) {
             $parserOutput->addImage( $spec->getIcon() );
         } );
     }
@@ -84,11 +85,10 @@ class DataMapEmbedRenderer {
             'pageName' => $this->title->getPrefixedText(),
             'version' => $this->title->getLatestRevID(),
 
-            'backgrounds' => array_map( function ( DataMapBackgroundSpec $background ) {
+            'backgrounds' => array_map( function ( MapBackgroundSpec $background ) {
                 $image = DataMapFileUtils::getRequiredFile( $background->getImageName() );
                 $out = [
                     'image' => $image->getURL(),
-                    'bounds' => [ $image->getWidth(), $image->getHeight() ]
                 ];
 
                 if ( $background->getName() != null ) {
@@ -101,12 +101,8 @@ class DataMapEmbedRenderer {
 
                 if ( $background->hasOverlays() ) {
                     $out['overlays'] = [];
-                    $background->iterateOverlays( function ( DataMapBackgroundOverlaySpec $overlay ) use ( &$out ) {
-                        $result = [ 'at' => $overlay->getPlacementLocation() ];
-                        if ( $overlay->getName() != null ) {
-                            $result['name'] = $overlay->getName();
-                        }
-                        $out['overlays'][] = $result;
+                    $background->iterateOverlays( function ( MapBackgroundOverlaySpec $overlay ) use ( &$out ) {
+                        $out['overlays'][] = $this->convertBackgroundOverlay( $overlay );
                     } );
                 }
 
@@ -120,8 +116,12 @@ class DataMapEmbedRenderer {
             'custom' => $this->data->getCustomData()
         ];
 
-        $this->data->iterateGroups( function( DataMapGroupSpec $spec ) use ( &$out ) {
+        $this->data->iterateGroups( function ( MarkerGroupSpec $spec ) use ( &$out ) {
             $out['groups'][$spec->getId()] = $this->getMarkerGroupConfig( $spec );
+        } );
+
+        $this->data->iterateDefinedLayers( function ( MarkerLayerSpec $spec ) use ( &$out ) {
+            $out['layers'][$spec->getId()] = $this->getMarkerLayerConfig( $spec );
         } );
 
         if ( $this->data->getInjectedLeafletSettings() ) {
@@ -131,21 +131,35 @@ class DataMapEmbedRenderer {
         return $out;
     }
 
-    public function getMarkerGroupConfig( DataMapGroupSpec $spec ): array {
+    private function convertBackgroundOverlay( MapBackgroundOverlaySpec $spec ) {
+        $result = [
+            'at' => $spec->getPlacementLocation()
+        ];
+        if ( $spec->getName() != null ) {
+            $result['name'] = $spec->getName();
+        }
+        if ( $spec->getImageName() != null ) {
+            $image = DataMapFileUtils::getRequiredFile( $spec->getImageName() );
+            $result['image'] = $image->getURL();
+        }
+        return $result;
+    }
+
+    public function getMarkerGroupConfig( MarkerGroupSpec $spec ): array {
         $out = array(
             'name' => $spec->getName(),
             'size' => $spec->getSize(),
         );
 
         switch ( $spec->getDisplayMode() ) {
-            case DataMapGroupSpec::DM_CIRCLE:
+            case MarkerGroupSpec::DM_CIRCLE:
                 $out['fillColor'] = DataMapColourUtils::asHex( $spec->getFillColour() );
 
                 if ( $spec->getRawStrokeColour() != null ) {
                     $out['strokeColor'] = DataMapColourUtils::asHex( $spec->getStrokeColour() );
                 }
 
-                if ( $spec->getStrokeWidth() != DataMapGroupSpec::DEFAULT_CIRCLE_STROKE_WIDTH ) {
+                if ( $spec->getStrokeWidth() != MarkerGroupSpec::DEFAULT_CIRCLE_STROKE_WIDTH ) {
                     $out['strokeWidth'] = $spec->getStrokeWidth();
                 }
 
@@ -153,7 +167,7 @@ class DataMapEmbedRenderer {
                     $out['extraMinZoomSize'] = $spec->getExtraMinZoomSize();
                 }
                 break;
-            case DataMapGroupSpec::DM_ICON:
+            case MarkerGroupSpec::DM_ICON:
                 // Upsize by 50% to mitigate quality loss at max zoom
                 $size = floor(self::MARKER_ICON_WIDTH * 1.5);
                 // Ensure it's a multiple of 2
@@ -181,10 +195,16 @@ class DataMapEmbedRenderer {
         return $out;
     }
 
-    public function getMarkerLayerConfig(string $name): array {
-        //$info = $this->data->groups->$name;
-        return array(
+    public function getMarkerLayerConfig( MarkerLayerSpec $spec ): array {
+        $out = array(
+            'name' => $spec->getName(),
         );
+
+        if ( $spec->getPopupDiscriminator() !== null ) {
+            $out['discrim'] = $spec->getPopupDiscriminator();
+        }
+
+        return $out;
     }
 
     private function expandWikitext(string $source): string {

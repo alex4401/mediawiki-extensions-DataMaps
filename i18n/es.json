@@ -44,7 +44,6 @@
     "datamap-layer-control": "Capas",
     "datamap-layer-surface": "Superficie",
     "datamap-layer-cave": "Cuevas",
-    "datamap-popup-inside-cave": " (cueva)",
     "datamap-popup-dismissed": "Recogidos",
     "datamap-popup-mark-as-dismissed": "Marcar como recogidos",
     "datamap-control-reset-view": "Modo por defecto"

@@ -28,12 +28,21 @@ MarkerPopup.prototype.build = function () {
     } else {
         $( '<b class="datamap-popup-title">' ).text( this.markerGroup.name ).appendTo( this.$content );
     }
+    
+    // Collect layer discriminators
+    const discrims = [];
+    this.markerLayers.forEach( ( layerId, index ) => {
+        if ( index > 0 && this.map.config.layers[layerId] ) {
+            discrims.push( this.map.config.layers[layerId].discrim );
+        }
+    } );
 
     // Coordinates
     let coordText = this.map.getCoordLabel( this.coords[0], this.coords[1] );
-    if ( this.markerLayers.indexOf( 'cave' ) >= 0 ) {
-        coordText += mw.msg( 'datamap-popup-inside-cave' );
+    if ( discrims.length > 0 ) {
+        coordText += ` (${ discrims.join( ', ' ) })`;
     }
+    
     $( '<div class="datamap-popup-coordinates">' ).text( coordText ).appendTo( this.$content );
 
     // Description

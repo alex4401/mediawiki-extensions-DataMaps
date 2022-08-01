@@ -1,5 +1,5 @@
 <?php
-namespace Ark\DataMaps\Rendering\Utils;
+namespace MediaWiki\Extension\Ark\DataMaps\Rendering\Utils;
 
 class DataMapColourUtils {
     public static function decode( /*string|array*/ $input ): ?array {

@@ -1,5 +1,5 @@
 <?php
-namespace Ark\DataMaps;
+namespace MediaWiki\Extension\Ark\DataMaps;
 
 use Title;
 use Parser;
