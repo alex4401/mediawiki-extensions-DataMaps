@@ -1,5 +1,5 @@
 <?php
-namespace Ark\DataMaps\Rendering;
+namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
 
 class DataMapRenderOptions {
     public bool $displayTitle = true;

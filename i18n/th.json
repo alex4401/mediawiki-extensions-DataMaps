@@ -18,7 +18,6 @@
     "datamap-layer-control": "สลับชั้น",
     "datamap-layer-surface": "พื้นผิว",
     "datamap-layer-cave": "ถ้ำ",
-    "datamap-popup-inside-cave": " (ถ้ำ)",
     "datamap-popup-dismissed": "เก็บแล้ว",
     "datamap-popup-mark-as-dismissed": "ทำเครื่องหมายว่าเก็บแล้ว",
     "datamap-control-reset-view": "คืนค่ากลับไปค่าเริ่มต้น"

@@ -1,10 +1,10 @@
 <?php
-namespace Ark\DataMaps\Data;
+namespace MediaWiki\Extension\Ark\DataMaps\Data;
 
 use Status;
 use stdClass;
-use Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
-use Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 
 class DataModel {
     protected static string $publicName = '???';
@@ -25,7 +25,7 @@ class DataModel {
     private array $validationCheckedFields = [];
     protected bool $validationAreRequiredFieldsPresent = true;
 
-    public function __construct( /*array|stdClass*/ $raw ) {
+    public function __construct( stdClass $raw ) {
         if ( is_array( $raw ) ) {
             $raw = (object) $raw;
         }

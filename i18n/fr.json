@@ -44,7 +44,6 @@
     "datamap-layer-control": "Calques",
     "datamap-layer-surface": "Surface",
     "datamap-layer-cave": "Grottes",
-    "datamap-popup-inside-cave": " (grotte)",
     "datamap-popup-dismissed": "Récoltée",
     "datamap-popup-mark-as-dismissed": "Marquer comme récoltée",
     "datamap-control-reset-view": "Restaurer la vue par défaut"

@@ -1,5 +1,5 @@
 <?php
-namespace Ark\DataMaps\Content;
+namespace MediaWiki\Extension\Ark\DataMaps\Content;
 
 use MediaWiki\MediaWikiServices;
 use FormatJson;
@@ -14,9 +14,9 @@ use PPFrame;
 use WikiPage;
 use User;
 use Status;
-use Ark\DataMaps\Rendering\DataMapEmbedRenderer;
-use Ark\DataMaps\Rendering\DataMapRenderOptions;
-use Ark\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapRenderOptions;
+use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 
 abstract class DataMapContentBase extends JsonContent {
     # Reduce 2-12 numbers in an array onto a single line

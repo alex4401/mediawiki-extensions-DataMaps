@@ -2,7 +2,8 @@ const MapStorage = require( './storage.js' ),
     MarkerLayerManager = require( './layerManager.js' ),
     MarkerPopup = require( './popup.js' ),
     MapLegend = require( './legend.js' ),
-    MarkerLegendPanel = require( './markerLegend.js' );
+    MarkerLegendPanel = require( './markerLegend.js' ),
+    mwApi = new mw.Api();
 
 
 function DataMap( id, $root, config ) {
@@ -23,6 +24,8 @@ function DataMap( id, $root, config ) {
     if (this.dataSetFilters) {
         this.dataSetFilters = this.dataSetFilters.split( '|' );
     }
+    //
+    this.$status = $root.find( '.datamap-status' );
     // MapLegend instance
     this.legend = null;
     // Leaflet.Map instance
@@ -39,7 +42,8 @@ function DataMap( id, $root, config ) {
     // Request OOUI to be loaded and build the legend
     mw.loader.using( [
         'oojs-ui-core',
-        'oojs-ui-widgets'
+        'oojs-ui-widgets',
+        'ext.ark.datamaps.icons'
     ], buildLegend.bind( this ) );
     // Prepare the Leaflet map view
     mw.loader.using( [
@@ -76,6 +80,7 @@ DataMap.prototype.isLayerUsed = function ( name ) {
 const flipLatitudeBox = function ( box ) {
     return [ [ 100-box[0][0], box[0][1] ], [ 100-box[1][0], box[1][1] ] ];
 };
+DataMap.prototype.flipLatitudeBox = flipLatitudeBox;
 
 
 /*
@@ -159,12 +164,40 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
 };
 
 
+DataMap.prototype.streamMarkersIn = function ( pageName, version, filter, successCallback, errorCallback ) {
+    const query = {
+        action: 'queryDataMap',
+        title: pageName
+    };
+    if ( version ) {
+        query.revid = version;
+    }
+    if ( filter ) {
+        query.filter = filter.join( '|' );
+    }
+    return mwApi.get( query ).then(
+        data => {
+            if ( data.error )
+                errorCallback();
+            else
+                this.waitForLeaflet( () => {
+                    this.instantiateMarkers( data.query.markers );
+                    successCallback();
+                } );
+        },
+        errorCallback
+    );
+};
+
+
 /*
  * 
  */
 DataMap.prototype.setCurrentBackground = function ( index ) {
+    // Remove existing layers off the map
     if ( this.background ) {
-        this.background.overlay.remove();
+        this.background.layers.forEach( x => x.remove() );
+        this.background = null;
     }
 
     // Check if index is valid, and fall back to first otherwise
@@ -172,10 +205,15 @@ DataMap.prototype.setCurrentBackground = function ( index ) {
         index = 0;
     }
 
+    // Update state
     this.background = this.config.backgrounds[ index ];
     this.backgroundIndex = index;
-    this.background.overlay.addTo( this.leaflet );
-    this.background.overlay.bringToBack();
+
+    // Push layers back onto the map
+    this.background.layers.forEach( x => {
+        x.addTo( this.leaflet );
+        x.bringToBack();
+    } );
 };
 
 
@@ -211,12 +249,33 @@ DataMap.prototype.addControl = function ( anchor, $element ) {
 };
 
 
+DataMap.prototype.buildBackgroundOverlayObject = function ( overlay ) {
+    let result;
+
+    // Construct an image or rectangular layer
+    if ( overlay.image ) {
+        result = L.imageOverlay( overlay.image, flipLatitudeBox( overlay.at ) );
+    } else {
+        result = L.rectangle( flipLatitudeBox( overlay.at ), {
+            fillOpacity: 0.05
+        } );
+    }
+
+    // Bind name as tooltip
+    if ( overlay.name ) {
+        result.bindTooltip( overlay.name );
+    }
+
+    return result;
+};
+
+
 const buildLeafletMap = function ( $holder ) {
     const leafletConfig = $.extend( true, {
         // Boundaries
         center: [50, 50],
         maxBounds: [[-75,-75], [175, 175]],
-        maxBoundsViscosity: 0.2,
+        maxBoundsViscosity: 0.7,
         // Zoom settings
         zoomSnap: 0.25,
         zoomDelta: 0.25,
@@ -250,24 +309,16 @@ const buildLeafletMap = function ( $holder ) {
 
     // Prepare all backgrounds
     this.config.backgrounds.forEach( background => {
-        background.overlay = L.featureGroup();
+        background.layers = [];
 
         // Image overlay:
         // Latitude needs to be flipped as directions differ between Leaflet and ARK
         background.at = background.at || [ [100, 0], [0, 100] ];
-        L.imageOverlay( background.image, flipLatitudeBox( background.at ) ).addTo( background.overlay );
+        background.layers.push( L.imageOverlay( background.image, flipLatitudeBox( background.at ) ) );
 
         // Prepare overlay layers
         if ( background.overlays ) {
-            background.overlays.forEach( overlay => {
-                const rect = L.rectangle( flipLatitudeBox( overlay.at ), {
-                    fillOpacity: 0.05
-                } ).addTo( background.overlay );
-
-                if ( overlay.name ) {
-                    rect.bindTooltip( overlay.name );
-                }
-            } );
+            background.overlays.forEach( overlay => background.layers.push( this.buildBackgroundOverlayObject( overlay ) ) );
         }
     } );
     // Switch to the last chosen one or first defined
@@ -321,7 +372,7 @@ const buildLeafletMap = function ( $holder ) {
     const $viewControls = this.addControl( this.anchors.topLeft,
         $( '<div class="leaflet-control leaflet-bar datamap-control-viewcontrols">' ) );
     $viewControls.append(
-        $( '<a role="button" class="datamap-control-viewreset" aria-disabled="false"></a>' )
+        $( '<a role="button" class="datamap-control-viewreset oo-ui-icon-fullScreen" aria-disabled="false"></a>' )
         .attr( {
             title: mw.msg( 'datamap-control-reset-view' ),
             'aria-label': mw.msg( 'datamap-control-reset-view' )
@@ -329,7 +380,7 @@ const buildLeafletMap = function ( $holder ) {
         .on( 'click', () => this.restoreDefaultView() )
     );
     $viewControls.append(
-        $( '<a role="button" class="datamap-control-viewcentre" aria-disabled="false"></a>' )
+        $( '<a role="button" class="datamap-control-viewcentre oo-ui-icon-exitFullscreen" aria-disabled="false"></a>' )
         .attr( {
             title: mw.msg( 'datamap-control-centre-view' ),
             'aria-label': mw.msg( 'datamap-control-centre-view' )
@@ -340,23 +391,18 @@ const buildLeafletMap = function ( $holder ) {
 
 
 const buildLegend = function () {
-    this.legend = new MapLegend( this );
-    this.markerLegend = new MarkerLegendPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ) );
-    this.markerLegend.usingTotalToggles();
-
+    // Determine if we'll need a layer dropdown
     const hasCaves = this.isLayerUsed( 'cave' );
-    const hasDismissables = Object.values( this.config.groups ).some( x => x.canDismiss );
-    if ( hasCaves || hasDismissables ) {
-        this.markerLegend.initialiseLayersArea();
+    const withLayerDropdown = hasCaves;
 
-        if ( hasCaves ) {
-            this.markerLegend.addMarkerLayerToggleInclusive( 'cave', mw.msg( 'datamap-layer-surface' ) );
-            this.markerLegend.addMarkerLayerToggleExclusive( 'cave', mw.msg( 'datamap-layer-cave' ) );
-        }
+    // Initialise legend objects
+    this.legend = new MapLegend( this );
+    this.markerLegend = new MarkerLegendPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ), true, withLayerDropdown );
 
-        if ( hasDismissables ) {
-            //this.markerLegend.addMarkerLayerToggle( '#dismissed', mw.msg( 'datamap-layer-dismissed' ) );
-        }
+    // Build the surface and caves toggle
+    if ( hasCaves ) {
+        this.markerLegend.addMarkerLayerToggleRequired( this.markerLegend.$layersPopup, 'cave', mw.msg( 'datamap-layer-surface' ) );
+        this.markerLegend.addMarkerLayerToggleExclusive( this.markerLegend.$layersPopup, 'cave', mw.msg( 'datamap-layer-cave' ) );
     }
 
     // Build individual group toggles
