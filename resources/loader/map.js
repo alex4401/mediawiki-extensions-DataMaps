@@ -166,9 +166,11 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
 DataMap.prototype.streamMarkersIn = function ( pageName, version, filter, successCallback, errorCallback ) {
     const query = {
         action: 'queryDataMap',
-        title: pageName,
-        revid: version
+        title: pageName
     };
+    if ( version ) {
+        query.revid = version;
+    }
     if ( filter ) {
         query.filter = filter.join( '|' );
     }
