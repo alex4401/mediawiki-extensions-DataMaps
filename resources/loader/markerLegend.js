@@ -1,4 +1,4 @@
-function MarkerLegendPanel( legend, name ) {
+function MarkerLegendPanel( legend, name, addTotalToggles, withLayerDropdown ) {
     this.legend = legend;
     this.map = this.legend.map;
     // Root DOM element
@@ -14,6 +14,15 @@ function MarkerLegendPanel( legend, name ) {
 
     // Prepend the button group to the root element
     this.buttonGroup.$element.prependTo( this.$root );
+
+    if ( addTotalToggles ) {
+        this.createActionButton( mw.msg( 'datamap-toggle-show-all' ), this.toggleAllGroups.bind( this, true ) );
+        this.createActionButton( mw.msg( 'datamap-toggle-hide-all' ), this.toggleAllGroups.bind( this, false ) );
+    }
+
+    if ( withLayerDropdown ) {
+        this.$layersPopup = this.createPopupButton( mw.msg( 'datamap-layer-control' ) )[1];
+    }
 }
 
 
@@ -47,24 +56,13 @@ MarkerLegendPanel.prototype.toggleAllGroups = function ( state ) {
 };
 
 
-MarkerLegendPanel.prototype.usingTotalToggles = function () {
-    this.createActionButton( mw.msg( 'datamap-toggle-show-all' ), this.toggleAllGroups.bind( this, true ) );
-    this.createActionButton( mw.msg( 'datamap-toggle-hide-all' ), this.toggleAllGroups.bind( this, false ) );
-};
-
-
-MarkerLegendPanel.prototype.initialiseLayersArea = function () {
-    this.$layersPopup = this.createPopupButton( mw.msg( 'datamap-layer-control' ) )[1];
-};
-
-
-MarkerLegendPanel.prototype.addMarkerLayerToggleExclusive = function ( layerId, layerName ) {
-    this.legend.createCheckboxField( this.$layersPopup, layerName, true,
+MarkerLegendPanel.prototype.addMarkerLayerToggleExclusive = function ( $popup, layerId, layerName ) {
+    this.legend.createCheckboxField( $popup, layerName, true,
         state => this.map.layerManager.setExclusion( layerId, !state ) );
 };
 
-MarkerLegendPanel.prototype.addMarkerLayerToggleInclusive = function ( layerId, layerName, invert ) {
-    this.legend.createCheckboxField( this.$layersPopup, layerName, true,
+MarkerLegendPanel.prototype.addMarkerLayerToggleInclusive = function ( $popup, layerId, layerName, invert ) {
+    this.legend.createCheckboxField( $popup, layerName, true,
         state => this.map.layerManager.setInclusion( layerId, ( invert ? state : !state ) ) );
 };
 

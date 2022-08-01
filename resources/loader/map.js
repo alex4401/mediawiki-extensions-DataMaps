@@ -349,23 +349,18 @@ const buildLeafletMap = function ( $holder ) {
 
 
 const buildLegend = function () {
-    this.legend = new MapLegend( this );
-    this.markerLegend = new MarkerLegendPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ) );
-    this.markerLegend.usingTotalToggles();
-
+    // Determine if we'll need a layer dropdown
     const hasCaves = this.isLayerUsed( 'cave' );
-    const hasDismissables = Object.values( this.config.groups ).some( x => x.canDismiss );
-    if ( hasCaves || hasDismissables ) {
-        this.markerLegend.initialiseLayersArea();
+    const withLayerDropdown = hasCaves;
 
-        if ( hasCaves ) {
-            this.markerLegend.addMarkerLayerToggleInclusive( 'cave', mw.msg( 'datamap-layer-surface' ) );
-            this.markerLegend.addMarkerLayerToggleExclusive( 'cave', mw.msg( 'datamap-layer-cave' ) );
-        }
+    // Initialise legend objects
+    this.legend = new MapLegend( this );
+    this.markerLegend = new MarkerLegendPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ), true, withLayerDropdown );
 
-        if ( hasDismissables ) {
-            //this.markerLegend.addMarkerLayerToggle( '#dismissed', mw.msg( 'datamap-layer-dismissed' ) );
-        }
+    // Build the surface and caves toggle
+    if ( hasCaves ) {
+        this.markerLegend.addMarkerLayerToggleInclusive( this.$layersPopup, 'cave', mw.msg( 'datamap-layer-surface' ) );
+        this.markerLegend.addMarkerLayerToggleExclusive( this.$layersPopup, 'cave', mw.msg( 'datamap-layer-cave' ) );
     }
 
     // Build individual group toggles
