@@ -66,6 +66,11 @@ MarkerLegendPanel.prototype.addMarkerLayerToggleInclusive = function ( $parent, 
         state => this.map.layerManager.setInclusion( layerId, ( invert ? state : !state ) ) );
 };
 
+MarkerLegendPanel.prototype.addMarkerLayerToggleRequired = function ( $parent, layerId, layerName, invert ) {
+    this.legend.createCheckboxField( $parent, layerName, true,
+        state => this.map.layerManager.setRequirement( layerId, ( invert ? state : !state ) ) );
+};
+
 
 MarkerLegendPanel.prototype.addMarkerGroupToggle = function ( groupId, group ) {
     const pair = this.legend.createCheckboxField( this.$groupContainer, group.name, true,

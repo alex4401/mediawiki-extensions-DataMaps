@@ -2,7 +2,8 @@ function MarkerLayerManager( map ) {
     this.map = map;
     this.markers = [];
     this.byLayer = {};
-    this.includeMask = new Set();
+    this.includeMaskHi = new Set();
+    this.includeMaskLo = new Set();
     this.excludeMask = new Set();
     this.clearCache();
 }
@@ -22,8 +23,15 @@ MarkerLayerManager.prototype.register = function ( layerName ) {
 
 MarkerLayerManager.prototype.addMember = function ( type, leafletMarker ) {
     leafletMarker.arkAttachedLayers = type.split(' ');
-    leafletMarker.arkAttachedLayers.forEach( layer => this.byLayer[ layer ].push( leafletMarker ) );
+    leafletMarker.arkAttachedLayers.forEach( layer => this.byLayer[layer].push( leafletMarker ) );
     this.markers.push( leafletMarker );
+    this.updateMember( leafletMarker );
+};
+
+
+MarkerLayerManager.prototype.addMarkerToLayer = function ( leafletMarker, layer ) {
+    leafletMarker.arkAttachedLayers.push( layer );
+    this.byLayer[layer].push( leafletMarker );
     this.updateMember( leafletMarker );
 };
 
@@ -39,8 +47,17 @@ MarkerLayerManager.prototype.removeMember = function ( leafletMarker ) {
 
 
 MarkerLayerManager.prototype.shouldBeVisible = function ( layers ) {
+    // If requirement mask is not empty, and there is a layer inside the list does not have, return invisible
+    if ( this.includeMaskHi.size > 0 && !( () => {
+        let result = true;
+        this.includeMaskHi.forEach( name => result &&= layers.indexOf( name ) > 0 );
+        return result;
+    } )() ) {
+        return false;
+    }
+
     // If inclusion mask is not empty, and there is no overlap between it and queried layers, return invisible
-    if ( this.includeMask.size > 0 && !layers.some( name => this.includeMask.has( name ) ) ) {
+    if ( this.includeMaskLo.size > 0 && !layers.some( name => this.includeMaskLo.has( name ) ) ) {
         return false;
     }
 
@@ -89,13 +106,26 @@ MarkerLayerManager.prototype.updateMembers = function ( layerName ) {
 
 
 /*
+ * Sets a layer as *absolutely* required for a marker to be displayed. This updates ALL markers.
+ */
+MarkerLayerManager.prototype.setRequirement = function ( layerName, state ) {
+    if ( state )
+        this.includeMaskHi.add( layerName );
+    else
+        this.includeMaskHi.delete( layerName );
+    this.clearCache();
+    this.updateMembers();
+};
+
+
+/*
  * Sets a layer as required for a marker to be displayed. This updates ALL markers.
  */
 MarkerLayerManager.prototype.setInclusion = function ( layerName, state ) {
     if ( state )
-        this.includeMask.add( layerName );
+        this.includeMaskLo.add( layerName );
     else
-        this.includeMask.delete( layerName );
+        this.includeMaskLo.delete( layerName );
     this.clearCache();
     this.updateMembers();
 };
