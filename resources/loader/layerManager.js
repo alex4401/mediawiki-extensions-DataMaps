@@ -70,6 +70,11 @@ MarkerLayerManager.prototype.updateMember = function ( leafletMarker ) {
 
 
 MarkerLayerManager.prototype.updateMembers = function ( layerName ) {
+    // Exit early if layer does not exist
+    if ( layerName && !this.byLayer[layerName] ) {
+        return;
+    }
+    // Run an update on every member of the layer
     ( layerName ? this.byLayer[layerName] : this.markers ).forEach( m => this.updateMember( m ) );
 };
 
