@@ -1,6 +1,5 @@
 const DataMap = require( './map.js' ),
-    initialisedMaps = [],
-    api = new mw.Api();
+    initialisedMaps = [];
 
 
 function initialiseMapFromStore( id, $root ) {
@@ -15,26 +14,10 @@ function initialiseMapFromStore( id, $root ) {
     // Push onto internal tracking list
     initialisedMaps.push( map );
 
-    // Status overlay DOM element
-    const $status = $root.find( '.datamap-status' );
-
     // Request markers from the API
-    const query = {
-        action: 'queryDataMap',
-        title: map.config.pageName,
-        revid: map.config.version
-    };
-    if ( map.dataSetFilters ) {
-        query.filter = map.dataSetFilters.join( '|' );
-    }
-    api.get( query )
-        .then(
-            data => {
-                map.waitForLeaflet( map.instantiateMarkers.bind( map, data.query.markers ) );
-                $status.remove();
-            },
-            () => $status.html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' )
-        );
+    map.streamMarkersIn( map.config.pageName, map.config.version, map.dataSetFilters,
+        () => map.$status.hide(),
+        () => map.$status.show().html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' ) );
 
     // Broadcast `afterInitialisation` event
     mw.hook( `ext.ark.datamaps.afterInitialisation.${id}` ).fire( map );

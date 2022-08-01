@@ -2,7 +2,8 @@ const MapStorage = require( './storage.js' ),
     MarkerLayerManager = require( './layerManager.js' ),
     MarkerPopup = require( './popup.js' ),
     MapLegend = require( './legend.js' ),
-    MarkerLegendPanel = require( './markerLegend.js' );
+    MarkerLegendPanel = require( './markerLegend.js' ),
+    mwApi = new mw.Api();
 
 
 function DataMap( id, $root, config ) {
@@ -23,6 +24,8 @@ function DataMap( id, $root, config ) {
     if (this.dataSetFilters) {
         this.dataSetFilters = this.dataSetFilters.split( '|' );
     }
+    //
+    this.$status = $root.find( '.datamap-status' );
     // MapLegend instance
     this.legend = null;
     // Leaflet.Map instance
@@ -156,6 +159,30 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
                 new MarkerPopup( this, mType, instance, ( instance[2] || {} ), leafletMarker ).build().get( 0 ) );
         } );
     }
+};
+
+
+DataMap.prototype.streamMarkersIn = function ( pageName, version, filter, successCallback, errorCallback ) {
+    const query = {
+        action: 'queryDataMap',
+        title: pageName,
+        revid: version
+    };
+    if ( filter ) {
+        query.filter = filter.join( '|' );
+    }
+    return mwApi.get( query ).then(
+        data => {
+            if ( data.error )
+                errorCallback();
+            else
+                this.waitForLeaflet( () => {
+                    this.instantiateMarkers( data.query.markers );
+                    successCallback();
+                } );
+        },
+        errorCallback
+    );
 };
 
 
