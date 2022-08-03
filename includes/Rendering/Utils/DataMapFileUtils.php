@@ -5,6 +5,8 @@ use MediaWiki\MediaWikiServices;
 use InvalidArgumentException;
 
 class DataMapFileUtils {
+    const SCALING_WIDTH_THRESHOLD = 64;
+
     public static function getFile( string $title ) {
         if ( substr( $title, 0, 5 ) == 'File:' ) {
             $title = substr( $title, 5 );
@@ -20,7 +22,7 @@ class DataMapFileUtils {
             throw new InvalidArgumentException( "File [[File:$title]] does not exist." );
         }
 
-        if ( $width > 0 ) {
+        if ( $width > 0 && $file->getWidth() > self::SCALING_WIDTH_THRESHOLD ) {
             $file = $file->transform( [
                 'width' => $width
             ] );
