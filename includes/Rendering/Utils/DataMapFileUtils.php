@@ -5,14 +5,17 @@ use MediaWiki\MediaWikiServices;
 use InvalidArgumentException;
 
 class DataMapFileUtils {
-    public static function getFile( string $title, int $width = -1 ) {
+    public static function getFile( string $title ) {
+        if ( substr( $title, 0, 5 ) == 'File:' ) {
+            $title = substr( $title, 5 );
+        } 
         return MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $title ) );
     }
 
     public static function getRequiredFile( string $title, int $width = -1 ) {
         $title = trim( $title );
 
-        $file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( $title );
+        $file = self::getFile( $title );
         if ( !$file || !$file->exists() ) {
             throw new InvalidArgumentException( "File [[File:$title]] does not exist." );
         }
