@@ -36,7 +36,7 @@ MarkerPopup.prototype.getDismissToolText = function () {
  */
 MarkerPopup.prototype.build = function () {
     // Build the title
-    if ( this.slots.label ) {
+    if ( this.slots.label && this.markerGroup.name !== this.slots.label ) {
         $( '<b class="datamap-popup-subtitle">' ).text( this.markerGroup.name ).appendTo( this.$content );
         $( '<b class="datamap-popup-title">' ).text( this.slots.label ).appendTo( this.$content );
     } else {
