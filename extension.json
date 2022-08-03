@@ -106,8 +106,7 @@
 				"styles/main.less",
 				"styles/legend.less",
 				"styles/controls.less",
-				"styles/popups.less",
-				"styles/markers.less"
+				"styles/popups.less"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
