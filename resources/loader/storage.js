@@ -1,5 +1,6 @@
 function MapStorage( map ) {
     this.map = map;
+    this.hasSchemaVersion = false;
     this.migrate();
     this.dismissed = this.getArray( 'dismissed' );
 }
@@ -14,7 +15,16 @@ MapStorage.prototype.get = function ( name ) {
 
 
 MapStorage.prototype.set = function ( name, data ) {
+    this.initialiseFirstWrite();
     localStorage.setItem( `ext.ark.datamaps.${this.map.id}:${name}`, data );
+};
+
+
+MapStorage.prototype.initialiseFirstWrite = function () {
+    if ( !this.hasSchemaVersion ) {
+        this.hasSchemaVersion = true;
+        this.set( 'schemaVersion', MapStorage.prototype.LATEST_VERSION );
+    }
 };
 
     
@@ -29,7 +39,13 @@ MapStorage.prototype.setObject = function ( name, data ) {
 
 
 MapStorage.prototype.migrate = function () {
+    // Check if any saved properties exist, and if not, abort
+    if ( !this.get( 'dismissed' ) ) {
+        return;
+    }
+
     const schemaVersion = this.get( 'schemaVersion' ) || -1;
+    this.hasSchemaVersion = true;
     let shouldUpdateVersion = false;
 
     switch ( schemaVersion ) {
