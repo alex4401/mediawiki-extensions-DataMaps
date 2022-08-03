@@ -91,18 +91,6 @@ DataMap.prototype.getCoordLabel = function ( lat, lon ) {
 };
 
 
-DataMap.prototype.setMarkerOpacity = function ( marker, value ) {
-    if ( marker instanceof L.Marker ) {
-        marker.setOpacity( value );
-    } else {
-        marker.setStyle( {
-            opacity: value,
-            fillOpacity: value
-        } );
-    }
-};
-
-
 /*
  * Refreshes marker's visual properties
  */
