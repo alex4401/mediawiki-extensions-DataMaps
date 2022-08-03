@@ -3,6 +3,7 @@ namespace MediaWiki\Extension\Ark\DataMaps\Content;
 
 use JsonContentHandler;
 use Title;
+use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
 
 class DataMapContentHandler extends JsonContentHandler {
 
@@ -23,8 +24,7 @@ class DataMapContentHandler extends JsonContentHandler {
 	 * @return bool
 	 */
 	public function canBeUsedOn( Title $title ) {
-		global $wgArkDataNamespace;
-		if ( $title->getNamespace() !== $wgArkDataNamespace ) {
+		if ( $title->getNamespace() !== DataMapsConfig::getNamespace() ) {
 			return false;
 		}
 

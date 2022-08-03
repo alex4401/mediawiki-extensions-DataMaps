@@ -15,6 +15,7 @@ use Status;
 use stdClass;
 use WikiPage;
 use MediaWiki\Revision\RevisionRecord;
+use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapRenderOptions;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
@@ -46,15 +47,13 @@ class DataMapContent extends DataMapContentBase {
 	}
 
 	private function mergeMixins( stdClass $main ) {
-		global $wgArkDataNamespace;
-
 		if ( !isset( $main->mixins ) ) {
 			return $main;
 		}
 
 		$finalMixin = null;
 		foreach ( $main->mixins as &$mixinName ) {
-			$title = Title::makeTitleSafe( $wgArkDataNamespace, $mixinName );
+			$title = Title::makeTitleSafe( DataMapsConfig::getNamespace(), $mixinName );
         	$mixin = DataMapContent::loadPage( $title )->getData()->getValue();
 			
 			if ( $finalMixin === null ) {

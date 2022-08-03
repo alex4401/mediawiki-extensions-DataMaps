@@ -18,8 +18,6 @@ class DataMapsHooks {
     }
 
 	private static function isDocPage( Title $title ) {
-        global $wgArkDataNamespace;
-
         // Based on Scribunto
 		$docPage = wfMessage( 'datamap-doc-page-name' )->inContentLanguage();
 		if ( $docPage->isDisabled() ) {
@@ -36,16 +34,14 @@ class DataMapsHooks {
 		// Make it into a regex, and match it against the input title
 		$docPage = str_replace( '\\$1', '(.+)', preg_quote( $docPage, '/' ) );
 		if ( preg_match( "/^$docPage$/", $title->getPrefixedText(), $m ) ) {
-			return Title::makeTitleSafe( $wgArkDataNamespace, $m[1] ) !== null;
+			return Title::makeTitleSafe( DataMapsConfig::getNamespace(), $m[1] ) !== null;
 		} else {
 			return false;
 		}
 	}
 
 	public static function contentHandlerDefaultModelFor( Title $title, &$model ) {
-        global $wgArkDataNamespace;
-
-		if ( $title->getNamespace() === $wgArkDataNamespace && !self::isDocPage( $title ) ) {
+		if ( $title->getNamespace() === DataMapsConfig::getNamespace() && !self::isDocPage( $title ) ) {
             $prefix = wfMessage( 'datamap-standard-title-prefix' )->text();
             if ( $prefix !== '-' && str_starts_with( $title->getText(), $prefix ) ) {
 			    $model = ARK_CONTENT_MODEL_DATAMAP;

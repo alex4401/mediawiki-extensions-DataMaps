@@ -132,23 +132,23 @@
 	},
 
 	"config": {
-		"ArkDataNamespace": {
+		"DataMapsNamespace": {
 			"description": "Namespace where data maps will be stored.",
 			"value": -1
 		},
-		"ArkDataMapDebugApiProcessingTime": {
+		"DataMapsDebugApiProcessingTime": {
 			"description": "Attaches data map marker processing time in API requests.",
 			"value": false
 		},
-		"ArkDataMapCacheType": {
+		"DataMapsCacheType": {
 			"description": "Cache type to use for queryDataMap API output. Defaults to CACHE_ANYTHING.",
 			"value": -1
 		},
-		"ArkDataMapCacheExpiryTime": {
+		"DataMapsCacheExpiryTime": {
 			"description": "Time for cached queryDataMap API (per title and revision) responses to be valid. Set to 0 to disable caching. Defaults to a day.",
 			"value": 86400
 		},
-		"DataMapMarkerParserExpansionLimit": {
+		"DataMapsMarkerParserExpansionLimit": {
 			"description": "Controls how big the parser output for a marker's description can get.",
 			"value": 800
 		}

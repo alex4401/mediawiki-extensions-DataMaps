@@ -40,12 +40,11 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     public function execute() {
-        global $wgArkDataMapCacheType;
-        global $wgArkDataMapCacheExpiryTime;
-        global $wgArkDataMapDebugApiProcessingTime;
+        $cacheExpiryTime = DataMapsConfig::getApiCacheExpiryTime();
+        $shouldReturnProcessingTime = DataMapsConfig::shouldApiReturnProcessingTime();
 
         $timeStart = 0;
-        if ( $wgArkDataMapDebugApiProcessingTime ) {
+        if ( $shouldReturnProcessingTime ) {
             $timeStart = hrtime( true );
         }
 
@@ -55,12 +54,12 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $params = $this->extractRequestParams();
 
         $response = null;
-        if ($wgArkDataMapCacheExpiryTime <= 0) {
+        if ( $cacheExpiryTime <= 0 ) {
             // Cache expiry time is zero or lower, bypass caching
             $response = $this->executeInternal( $params );
         } else {
             // Retrieve the specified cache instance
-            $cache = ObjectCache::getInstance( $wgArkDataMapCacheType );
+            $cache = ObjectCache::getInstance( DataMapsConfig::getApiCacheType() );
             // Build the cache key from an identifier, title parameter and revision ID parameter
             $revid = isset( $params['revid'] ) ? $params['revid'] : -1;
             $cacheKey = $cache->makeKey( 'ARKDataMapQuery', self::GENERATION, $params['title'], $revid,
@@ -70,23 +69,21 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             if ( $response === false ) {
                 // Response not cached, process the data in this request and write to cache
                 $response = $this->executeInternal( $params );
-                $cache->set( $cacheKey, $response, $wgArkDataMapCacheExpiryTime );
+                $cache->set( $cacheKey, $response, $cacheExpiryTime );
             }
         }
 		
         $this->getResult()->addValue( null, 'query', $response );
 
-        if ( $wgArkDataMapDebugApiProcessingTime ) {
+        if ( $shouldReturnProcessingTime ) {
             $timeEnd = hrtime( true );
             $this->getResult()->addValue( null, 'processingTime', $timeEnd - $timeStart );
         }
     }
 
     private function getRevisionFromParams( $params ) {
-        global $wgArkDataNamespace;
-
         // Retrieve latest revision by title
-        $title = Title::newFromText( $params['title'], $wgArkDataNamespace );
+        $title = Title::newFromText( $params['title'], DataMapsConfig::getNamespace() );
         if ( !$title->exists() ) {
             $this->dieWithError( [ 'apierror-invalidtitle', $params['title'] ] );
         }
