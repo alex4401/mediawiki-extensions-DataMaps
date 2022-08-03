@@ -39,6 +39,9 @@ function DataMap( id, $root, config ) {
     // Cached value of the 'datamap-coordinate-control-text' message
     this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
 
+    // Retrieve a `marker` parameter from the query string if one is present
+    this.markerIdToAutoOpen = new URLSearchParams( window.location.search ).get( MarkerPopup.URL_PARAMETER );
+
     // Request OOUI to be loaded and build the legend
     mw.loader.using( [
         'oojs-ui-core',
@@ -92,9 +95,14 @@ DataMap.prototype.getCoordLabel = function ( lat, lon ) {
 
 
 /*
- * Refreshes marker's visual properties
+ * Called whenever a marker is instantiated
  */
-DataMap.prototype.readyMarkerVisuals = function ( type, group, instance, marker ) { };
+DataMap.prototype.onMarkerReady = function ( type, group, instance, marker ) {
+    // Open this marker's popup if that's been requested via a `marker` query parameter
+    if ( this.markerIdToAutoOpen != null && this.storage.getMarkerKey( type, instance ) === this.markerIdToAutoOpen ) {
+        marker.openPopup();
+    }
+};
 
 
 /*
@@ -137,9 +145,6 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
                 } );
             }
 
-            // Prepare marker for display
-            this.readyMarkerVisuals( markerType, group, instance, leafletMarker );
-
             // Add marker to the layer
             this.layerManager.addMember( markerType, leafletMarker );
 
@@ -147,6 +152,14 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             const mType = markerType;
             leafletMarker.bindPopup( () =>
                 new MarkerPopup( this, mType, instance, ( instance[2] || {} ), leafletMarker ).build().get( 0 ) );
+            leafletMarker.on( 'popupopen', () => {
+                MarkerPopup.updateLocation( this.storage.getMarkerKey( mType, instance ) );
+            } );
+            leafletMarker.on( 'popupclose', () => {
+                MarkerPopup.updateLocation( null );
+            } );
+
+            this.onMarkerReady( markerType, group, instance, leafletMarker );
         } );
     }
 };

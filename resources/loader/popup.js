@@ -11,6 +11,20 @@ function MarkerPopup( map, markerType, coords, slots, leafletMarker ) {
 }
 
 
+MarkerPopup.URL_PARAMETER = 'marker';
+
+
+MarkerPopup.updateLocation = function ( persistentMarkerId ) {
+    const params = new URLSearchParams( window.location.search );
+    if ( persistentMarkerId ) {
+        params.set( MarkerPopup.URL_PARAMETER, persistentMarkerId );
+    } else {
+        params.delete( MarkerPopup.URL_PARAMETER );
+    }
+    history.replaceState( {}, '', decodeURIComponent( `${window.location.pathname}?${params}` ).replace( /\?$/, '' ) );
+};
+
+
 MarkerPopup.prototype.getDismissToolText = function () {
     return mw.msg( 'datamap-popup-' + ( this.map.storage.isDismissed( this.markerType, this.coords )
         ? 'dismissed' : 'mark-as-dismissed' ) );
