@@ -10,6 +10,7 @@ use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use Wikimedia\ParamValidator\ParamValidator;
 use ObjectCache;
+use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
 use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
@@ -148,7 +149,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $parserOptions->setAllowSpecialInclusion( false );
         $parserOptions->setExpensiveParserFunctionLimit( 0 );
         $parserOptions->setInterwikiMagic( false );
-        $parserOptions->setMaxIncludeSize( 800 );
+        $parserOptions->setMaxIncludeSize( DataMapsConfig::getParserExpansionLimit() );
 
         $dataMap->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection )
             use ( &$results, &$title, &$parser, $filter, &$parserOptions ) {

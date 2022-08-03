@@ -147,6 +147,10 @@
 		"ArkDataMapCacheExpiryTime": {
 			"description": "Time for cached queryDataMap API (per title and revision) responses to be valid. Set to 0 to disable caching. Defaults to a day.",
 			"value": 86400
+		},
+		"DataMapMarkerParserExpansionLimit": {
+			"description": "Controls how big the parser output for a marker's description can get.",
+			"value": 800
 		}
 	},
 
