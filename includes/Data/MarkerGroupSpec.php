@@ -32,26 +32,21 @@ class MarkerGroupSpec extends DataModel {
         return $this->raw->name;
     }
 
-    public function getCircleSize(): int {
-        assert( $this->getDisplayMode() == self::DM_CIRCLE );
-        return isset( $this->raw->size ) ? $this->raw->size : self::DEFAULT_CIRCLE_SIZE;
-    }
-
-    public function getIconSize(): array {
-        assert( $this->getDisplayMode() == self::DM_ICON );
-        return isset( $this->raw->size ) ? $this->raw->size : self::DEFAULT_ICON_SIZE;
+    private function getSizePropertyInternal() {
+        return isset( $this->raw->size ) ? $this->raw->size : null;
     }
 
     public function getSize() {
         switch ( $this->getDisplayMode() ) {
             case self::DM_CIRCLE:
-                return $this->getCircleSize();
+                return $this->getSizePropertyInternal() ?? self::DEFAULT_CIRCLE_SIZE;
             case self::DM_ICON:
-                $dim = $this->getIconSize();
-                if ( is_numeric( $dim ) ) {
-                    $dim = [ $dim, $dim ];
+                $out = $this->getSizePropertyInternal() ?? self::DEFAULT_ICON_SIZE;
+                // Ensure 2D
+                if ( is_numeric( $out ) ) {
+                    $out = [ $out, $out ];
                 }
-                return $dim;
+                return $out;
             default:
                 return null;
         }

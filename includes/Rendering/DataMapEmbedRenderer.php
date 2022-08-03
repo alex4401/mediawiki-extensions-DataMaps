@@ -21,7 +21,7 @@ use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 
 class DataMapEmbedRenderer {
-    const MARKER_ICON_WIDTH = 24;
+    const MARKER_ICON_WIDTH = MarkerGroupSpec::DEFAULT_ICON_SIZE[0];
     const LEGEND_ICON_WIDTH = 24;
 
     public DataMapSpec $data;
@@ -169,7 +169,7 @@ class DataMapEmbedRenderer {
                 break;
             case MarkerGroupSpec::DM_ICON:
                 // Upsize by 50% to mitigate quality loss at max zoom
-                $size = floor(self::MARKER_ICON_WIDTH * 1.5);
+                $size = floor($out['size'][0] * 1.5);
                 // Ensure it's a multiple of 2
                 if ( $size % 2 !== 0 ) {
                     $size++;
