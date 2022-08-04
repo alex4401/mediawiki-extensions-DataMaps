@@ -26,14 +26,6 @@ if request.status_code != 200:
 fimInput = request.json()
 
 
-dmOutput = dict(
-    title=fimTitle,
-    image=fimInput['mapImage'],
-    groups=dict(),
-    markers=defaultdict(lambda: list())
-)
-
-
 for prop in NO_CONVERSION_PROPS:
     value = fimInput.get(prop, None)
     if value:
@@ -50,21 +42,29 @@ fimMaxX, fimMaxY = coordSpace[1]
 coordOrigin = fimInput['origin']
 
 
+dmOutput = dict(
+    title=fimTitle,
+    crs=coordSpace,
+    image=fimInput['mapImage'],
+    groups=dict(),
+    markers=defaultdict(lambda: list())
+)
+
+
 print(f'Coordinate space is {coordSpace}')
-print(f'Coordinate space conversion will be done as currently Data Maps do not support custom coordinate spaces. This results in accuracy loss.')
 
 translateXy = coordOrder != 'yx'
-translateLat = coordOrigin != 'bottom-left'
 
 if not translateXy:
     print(f'Coordinate order is {coordOrder}, YX translation skipped')
 else:
     print(f'Coordinate order is {coordOrder}, YX translation required')
 
-if not translateLat:
+if coordOrigin == 'bottom-left':
     print(f'Coordinate origin is {coordOrigin}, latitude translation skipped')
 else:
     print(f'Coordinate origin is {coordOrigin}, latitude translation required')
+    dmOutput['crs'] = [ coordSpace[1], coordSpace[0] ]
 
 
 categoryMap = dict()
@@ -95,10 +95,10 @@ for fimMarker in fimInput['markers']:
     y, x = fimMarker['position']
     if translateXy:
         x, y = y, x
-    lat = round(y / fimMaxY * 100, 3)
-    lon = round(x / fimMaxX * 100, 3)
+    lat = round(y, 3)
+    lon = round(x, 3)
 
-    lat = 100 - lat
+    # lat = 100 - lat
 
     dmMarker = dict(id=fimMarker['id'], lat=lat, lon=lon)
 
