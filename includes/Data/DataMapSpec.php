@@ -126,11 +126,12 @@ class DataMapSpec extends DataModel {
 
     public function validate( Status $status ) {
         $isFull = isset( $this->raw->markers );
+        $hasCrs = false;
         if ( $isFull ) {
             // Perform full strict validation, this is a full map
             $this->expectField( $status, 'mixins', DataModel::TYPE_ARRAY );
             $this->expectField( $status, 'title', DataModel::TYPE_STRING );
-            $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
+            $hasCrs = $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
             $this->requireEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
             $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
             $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );
@@ -139,7 +140,7 @@ class DataMapSpec extends DataModel {
             $this->expectField( $status, 'markers', DataModel::TYPE_OBJECT );
         } else {
             // Perform limited, permissive validation, this is a mixin
-            $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
+            $hasCrs = $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
             $this->expectEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
             $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'groups', DataModel::TYPE_OBJECT );
@@ -149,6 +150,19 @@ class DataMapSpec extends DataModel {
         $this->disallowOtherFields( $status );
 
         if ( $this->validationAreRequiredFieldsPresent ) {
+            // Validate the coordinate system - only two supported schemes are [ lower lower higher higher ] (top-left), and
+            // [ higher higher lower lower ] (bottom-left).
+            if ( $hasCrs ) {
+                $crs = $this->getCoordinateReferenceSpace();
+                $first = $crs[0];
+                $second = $crs[1];
+                if ( !( ( $first[0] < $second[0] && $first[1] < $second[1] ) || ( $first[0] > $second[0]
+                    && $first[1] > $second[1] ) ) ) {
+                    $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, 'crs',
+                        wfMessage( 'datamap-error-validate-check-docs' ) );
+                }
+            }
+
             // Validate backgrounds by the MapBackgroundSpec class
             if ( isset( $this->raw->image ) || isset( $this->raw->backgrounds ) ) {
                 $multipleBgs = count( $this->getBackgrounds() ) > 1;
