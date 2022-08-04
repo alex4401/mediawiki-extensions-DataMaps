@@ -99,7 +99,9 @@ DataMap.prototype.getCoordLabel = function ( lat, lon ) {
  */
 DataMap.prototype.onMarkerReady = function ( type, group, instance, marker ) {
     // Open this marker's popup if that's been requested via a `marker` query parameter
-    if ( this.markerIdToAutoOpen != null && this.storage.getMarkerKey( type, instance ) === this.markerIdToAutoOpen ) {
+    if ( this.markerIdToAutoOpen != null
+        && ( ( instance[2] && instance[2].uid != null ) ? instance[2].uid : this.storage.getMarkerKey( type, instance ) )
+            === this.markerIdToAutoOpen ) {
         marker.openPopup();
     }
 };
@@ -153,7 +155,8 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             leafletMarker.bindPopup( () =>
                 new MarkerPopup( this, mType, instance, ( instance[2] || {} ), leafletMarker ).build().get( 0 ) );
             leafletMarker.on( 'popupopen', () => {
-                MarkerPopup.updateLocation( this.storage.getMarkerKey( mType, instance ) );
+                MarkerPopup.updateLocation( ( instance[2] && instance[2].uid != null ) ? instance[2].uid
+                    : this.storage.getMarkerKey( mType, instance ) );
             } );
             leafletMarker.on( 'popupclose', () => {
                 MarkerPopup.updateLocation( null );

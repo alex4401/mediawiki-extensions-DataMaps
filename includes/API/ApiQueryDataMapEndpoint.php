@@ -172,6 +172,11 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                 // Rich data
                 $slots = [];
 
+                // Custom persistent ID
+                if ( $marker->getCustomPersistentId() != null ) {
+                    $slots['uid'] = $marker->getCustomPersistentId();
+                }
+
                 // Popup title
                 if ( $marker->getLabel() != null ) {
                     if ( $this->shouldParseString( $marker, $marker->getLabel() ) ) {
