@@ -150,6 +150,18 @@ class DataMapSpec extends DataModel {
         $this->disallowOtherFields( $status );
 
         if ( $this->validationAreRequiredFieldsPresent ) {
+            // Make sure all mixins exist and are data maps
+            if ( $this->getMixins() !== null ) {
+                foreach ( $this->getMixins() as &$mixinName ) {
+                    $title = Title::makeTitleSafe( DataMapsConfig::getNamespace(), $mixinName );
+                    $mixinPage = DataMapContent::loadPage( $title );
+                    
+                    if ( is_numeric( $mixinPage ) || $mixinPage->getData()->getValue() == null ) {
+                        $status->fatal( 'datamap-error-validatespec-map-bad-mixin', $mixinName );
+                    }
+                }
+            }
+
             // Validate the coordinate system - only two supported schemes are [ lower lower higher higher ] (top-left), and
             // [ higher higher lower lower ] (bottom-left).
             if ( $hasCrs ) {

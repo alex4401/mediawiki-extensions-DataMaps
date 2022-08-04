@@ -54,7 +54,17 @@ class DataMapContent extends DataMapContentBase {
 		$finalMixin = null;
 		foreach ( $main->mixins as &$mixinName ) {
 			$title = Title::makeTitleSafe( DataMapsConfig::getNamespace(), $mixinName );
-        	$mixin = DataMapContent::loadPage( $title )->getData()->getValue();
+        	$mixinPage = DataMapContent::loadPage( $title );
+
+			// Mixin failed to load, skip it. There's no way for us to throw an error at this stage without crashing the whole
+			// request. However, validation can catch this most of the time.
+			if ( is_numeric( $mixinPage ) ) {
+				continue;
+			}
+			$mixin = $mixinPage->getData()->getValue();
+			if ( $mixin == null ) {
+				continue;
+			}
 			
 			if ( $finalMixin === null ) {
 				// First mixin, keep unmodified
