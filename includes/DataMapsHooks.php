@@ -24,8 +24,8 @@ class DataMapsHooks {
 
 	public static function contentHandlerDefaultModelFor( Title $title, &$model ) {
 		if ( $title->getNamespace() === DataMapsConfig::getNamespace() && !self::isDocPage( $title ) ) {
-            $prefix = wfMessage( 'datamap-standard-title-prefix' )->text();
-            if ( $prefix !== '-' && str_starts_with( $title->getText(), $prefix ) ) {
+            $prefix = wfMessage( 'datamap-standard-title-prefix' )->inContentLanguage();
+            if ( !$prefix->isDisabled() && str_starts_with( $title->getText(), $prefix->plain() ) ) {
 			    $model = ARK_CONTENT_MODEL_DATAMAP;
             }
 		}
