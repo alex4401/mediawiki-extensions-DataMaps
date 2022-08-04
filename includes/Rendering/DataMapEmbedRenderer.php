@@ -132,15 +132,18 @@ class DataMapEmbedRenderer {
     }
 
     private function convertBackgroundOverlay( MapBackgroundOverlaySpec $spec ) {
-        $result = [
-            'at' => $spec->getPlacementLocation()
-        ];
+        $result = [];
         if ( $spec->getName() != null ) {
             $result['name'] = $spec->getName();
         }
         if ( $spec->getImageName() != null ) {
             $image = DataMapFileUtils::getRequiredFile( $spec->getImageName() );
             $result['image'] = $image->getURL();
+        }
+        if ( $spec->getPath() != null ) {
+            $result['path'] = $spec->getPath();
+        } else {
+            $result['at'] = $spec->getPlacementLocation();
         }
         return $result;
     }
