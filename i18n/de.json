@@ -12,9 +12,7 @@
 	"content-model-datamap": "Interaktive Daten Karte",
     "datamap-standard-title-prefix": "Karten/",
 
-    "datamap-doc-page-name": "$1:$2/doc",
     "datamap-doc-page-does-not-exist": "''Die Dokumentation for diese Daten-Seite kann unter [[$1]] erstellt werden''",
-    "datamap-doc-page-show": "{{$1}}\n<hr />",
     "datamap-doc-page-header": "'''Dies ist die Dokumentation für [[$1]]'''",
 
     "datamap-category-pages-including-maps": "Seite beinhaltet Daten-Karten",

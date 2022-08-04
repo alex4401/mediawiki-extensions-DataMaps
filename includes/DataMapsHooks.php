@@ -18,26 +18,8 @@ class DataMapsHooks {
     }
 
 	private static function isDocPage( Title $title ) {
-        // Based on Scribunto
-		$docPage = wfMessage( 'datamap-doc-page-name' )->inContentLanguage();
-		if ( $docPage->isDisabled() ) {
-			return false;
-		}
-
-		// Canonicalize the input pseudo-title. The unreplaced "$1" shouldn't cause a problem.
-		$docTitle = Title::newFromText( $docPage->plain() );
-		if ( !$docTitle ) {
-			return false;
-		}
-		$docPage = $docTitle->getPrefixedText();
-
-		// Make it into a regex, and match it against the input title
-		$docPage = str_replace( '\\$1', '(.+)', preg_quote( $docPage, '/' ) );
-		if ( preg_match( "/^$docPage$/", $title->getPrefixedText(), $m ) ) {
-			return Title::makeTitleSafe( DataMapsConfig::getNamespace(), $m[1] ) !== null;
-		} else {
-			return false;
-		}
+		$docPage = wfMessage( 'datamap-doc-page-suffix' )->inContentLanguage();
+		return !$docPage->isDisabled() && str_ends_with( $title->getPrefixedText(), $docPage->plain() );
 	}
 
 	public static function contentHandlerDefaultModelFor( Title $title, &$model ) {
@@ -54,7 +36,6 @@ class DataMapsHooks {
 		if ( $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
 			$languageCode = 'json';
 		}
-
 		return true;
 	}
 }

@@ -96,12 +96,8 @@ abstract class DataMapContentBase extends JsonContent {
 	 * @return Title|null
 	 */
 	public static function getDocPage( Title $title ) {
-		$docPage = wfMessage( 'datamap-doc-page-name', $title->getNsText(), $title->getText() )->inContentLanguage();
-		if ( $docPage->isDisabled() ) {
-			return null;
-		}
-
-		return Title::newFromText( $docPage->plain() );
+		$docPage = wfMessage( 'datamap-doc-page-suffix' )->inContentLanguage();
+		return $docPage->isDisabled() ? null : Title::newFromText( $title->getPrefixedText() . $docPage->plain() );
 	}
 
 	protected function fillParserOutput( Title $title, $revId, ParserOptions $options, $generateHtml, ParserOutput &$output ) {

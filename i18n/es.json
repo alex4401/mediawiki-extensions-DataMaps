@@ -9,9 +9,7 @@
 
     "content-model-datamap": "Mapa de datos interactivo",
 
-    "datamap-doc-page-name": "$1:$2/doc",
     "datamap-doc-page-does-not-exist": "''La documentación para esta página de datos puede crearse en [[$1]]''",
-    "datamap-doc-page-show": "{{$1}}\n<hr />",
     "datamap-doc-page-header": "'''Esta es la página de documentación para [[$1]]'''",
 
     "datamap-category-pages-including-maps": "Páginas incluyendo los mapas de datos",
