@@ -7,6 +7,12 @@ const MapStorage = require( './storage.js' ),
     mwApi = new mw.Api();
 
 
+const CRSOrigin = {
+    TopLeft: 1,
+    BottomLeft: 2
+};
+
+
 function DataMap( id, $root, config ) {
     this.id = id;
     // Root DOM element of the data map
@@ -39,9 +45,17 @@ function DataMap( id, $root, config ) {
     this.legendGroupToggles = [];
     // Cached value of the 'datamap-coordinate-control-text' message
     this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
-
     // Retrieve a `marker` parameter from the query string if one is present
     this.markerIdToAutoOpen = new URLSearchParams( window.location.search ).get( MarkerPopup.URL_PARAMETER );
+
+    // Coordinate reference system
+    // If coordinate space spec is oriented [ lower lower upper upper ], assume top left corner as origin point (latitude will
+    // be flipped). If [ upper upper lower lower ], assume bottom left corner (latitude will be unchanged). Any other layout is
+    // invalid.
+    this.crsOrigin = ( this.config.crs[0][0] < this.config.crs[1][0] && this.config.crs[0][1] < this.config.crs[1][1] )
+        ? CRSOrigin.TopLeft : CRSOrigin.BottomLeft;
+    this.crsScaleY = 100 / Math.max( this.config.crs[0][0], this.config.crs[1][0] );
+    this.crsScaleX = 100 / Math.max( this.config.crs[0][1], this.config.crs[1][1] );
 
     // Request OOUI to be loaded and build the legend
     mw.loader.using( [
@@ -79,12 +93,22 @@ DataMap.prototype.isLayerUsed = function ( name ) {
 
 
 /*
- * Inverts the latitude in box bounds, as our reference system differs from Leaflet's built-in
+ * 
  */
-const flipLatitudeBox = function ( box ) {
-    return [ [ 100-box[0][0], box[0][1] ], [ 100-box[1][0], box[1][1] ] ];
+DataMap.prototype.translatePoint = function ( point ) {
+    return this.crsOrigin == CRSOrigin.TopLeft
+        ? [ ( this.config.crs[1][0] - point[0] ) * this.crsScaleY, point[1] * this.crsScaleX ]
+        : [ point[0] * this.crsScaleY, point[1] * this.crsScaleX ];
 };
-DataMap.prototype.flipLatitudeBox = flipLatitudeBox;
+
+
+DataMap.prototype.translateBox = function ( box ) {
+    return this.crsOrigin == CRSOrigin.TopLeft
+        ? [ [ ( this.config.crs[1][0] - box[0][0] ) * this.crsScaleY, box[0][1] * this.crsScaleX ],
+            [ ( this.config.crs[1][0] - box[1][0] ) * this.crsScaleY, box[1][1] * this.crsScaleX ] ]
+        : [ [ box[0][0] * this.crsScaleY, box[0][1] * this.crsScaleX ],
+            [ box[1][0] * this.crsScaleY, box[1][0] * this.crsScaleX ] ];
+};
 
 
 /*
@@ -126,7 +150,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
 
         // Create markers for instances
         placements.forEach( instance => {
-            const position = [ 100-instance[0], instance[1] ];
+            const position = this.translatePoint( [ instance[0], instance[1] ] );
             let leafletMarker;
 
             // Construct the marker
@@ -231,12 +255,12 @@ DataMap.prototype.updateMarkerScaling = function () {
 
 DataMap.prototype.restoreDefaultView = function () {
     this.leaflet.setZoom( this.leaflet.options.minZoom );
-    this.leaflet.fitBounds( flipLatitudeBox( this.background.at ) );
+    this.leaflet.fitBounds( this.translateBox( this.background.at ) );
 };
 
 
 DataMap.prototype.centreView = function () {
-    const box = flipLatitudeBox( this.background.at );
+    const box = this.translateBox( this.background.at );
     this.leaflet.setView( [ (box[1][0] + box[0][0])/2, (box[1][1] + box[0][1])/2 ] );
 };
 
@@ -259,11 +283,11 @@ DataMap.prototype.buildBackgroundOverlayObject = function ( overlay ) {
 
     // Construct an image or rectangular layer
     if ( overlay.image ) {
-        result = L.imageOverlay( overlay.image, flipLatitudeBox( overlay.at ) );
+        result = L.imageOverlay( overlay.image, this.translateBox( overlay.at ) );
     } else if ( overlay.path ) {
-        result = L.polyline( overlay.path.map( p => [ 100-p[0], p[1] ] ) );
+        result = L.polyline( overlay.path.map( p => this.translatePoint( p ) ) );
     } else {
-        result = L.rectangle( flipLatitudeBox( overlay.at ), {
+        result = L.rectangle( this.translateBox( overlay.at ), {
             fillOpacity: 0.05
         } );
     }
@@ -280,8 +304,8 @@ DataMap.prototype.buildBackgroundOverlayObject = function ( overlay ) {
 const buildLeafletMap = function ( $holder ) {
     const leafletConfig = $.extend( true, {
         // Boundaries
-        center: [50, 50],
-        maxBounds: [[-75,-75], [175, 175]],
+        center: [ 50, 50 ],
+        maxBounds: [ [ -85, -85 ], [ 185, 185 ] ],
         maxBoundsViscosity: 0.7,
         // Zoom settings
         zoomSnap: 0.25,
@@ -320,8 +344,8 @@ const buildLeafletMap = function ( $holder ) {
 
         // Image overlay:
         // Latitude needs to be flipped as directions differ between Leaflet and ARK
-        background.at = background.at || [ [100, 0], [0, 100] ];
-        background.layers.push( L.imageOverlay( background.image, flipLatitudeBox( background.at ) ) );
+        background.at = background.at || this.config.crs;
+        background.layers.push( L.imageOverlay( background.image, this.translateBox( background.at ) ) );
 
         // Prepare overlay layers
         if ( background.overlays ) {
@@ -353,10 +377,14 @@ const buildLeafletMap = function ( $holder ) {
     if ( config.DataMapsShowCoordinatesDefault ) {
         this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
         this.leaflet.on( 'mousemove', event => {
-            const lat = event.latlng.lat;
-            const lon = event.latlng.lng;
+            let lat = event.latlng.lat;
+            let lon = event.latlng.lng;
             if ( lat >= -5 && lat <= 105 && lon >= -5 && lon <= 105 ) {
-                this.$coordTracker.text( this.getCoordLabel( 100 - lat, lon ) );
+                lat /= this.crsScaleY;
+                lon /= this.crsScaleX;
+                if ( this.crsOrigin == CRSOrigin.TopLeft )
+                    lat = this.config.crs[1][0] - lat;
+                this.$coordTracker.text( this.getCoordLabel( lat, lon ) );
             }
         } );
     }

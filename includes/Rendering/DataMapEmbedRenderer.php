@@ -85,6 +85,8 @@ class DataMapEmbedRenderer {
             'pageName' => $this->title->getPrefixedText(),
             'version' => $this->title->getLatestRevID(),
 
+            'crs' => $this->data->getCoordinateReferenceSpace(),
+
             'backgrounds' => array_map( function ( MapBackgroundSpec $background ) {
                 $image = DataMapFileUtils::getRequiredFile( $background->getImageName() );
                 $out = [

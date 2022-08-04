@@ -6,9 +6,12 @@ use Status;
 class DataMapSpec extends DataModel {
     protected static string $publicName = 'DataMapSpec';
 
+    const DEFAULT_COORDINATE_SPACE = [ [ 0, 0 ], [ 100, 100 ] ];
+
     private ?array $cachedMarkerGroups = null;
     private ?array $cachedMarkerLayers = null;
     private ?array $cachedBackgrounds = null;
+    private ?CoordinateReferenceSystemSpec $cachedCrs = null;
 
     public function getMixins(): ?array {
         return isset( $this->raw->mixins ) ? $this->raw->mixins : null;
@@ -16,6 +19,10 @@ class DataMapSpec extends DataModel {
 
     public function getTitle(): string {
         return $this->raw->title ?? wfMessage( 'datamap-unnamed-map' );
+    }
+
+    public function getCoordinateReferenceSpace(): array {
+        return isset( $this->raw->crs ) ? $this->raw->crs : self::DEFAULT_COORDINATE_SPACE;
     }
 
     public function getBackgrounds(): array {
@@ -123,6 +130,7 @@ class DataMapSpec extends DataModel {
             // Perform full strict validation, this is a full map
             $this->expectField( $status, 'mixins', DataModel::TYPE_ARRAY );
             $this->expectField( $status, 'title', DataModel::TYPE_STRING );
+            $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
             $this->requireEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
             $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
             $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );
@@ -131,6 +139,7 @@ class DataMapSpec extends DataModel {
             $this->expectField( $status, 'markers', DataModel::TYPE_OBJECT );
         } else {
             // Perform limited, permissive validation, this is a mixin
+            $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
             $this->expectEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
             $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'groups', DataModel::TYPE_OBJECT );
