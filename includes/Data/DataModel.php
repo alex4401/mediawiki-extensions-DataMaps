@@ -116,7 +116,8 @@ class DataModel {
     protected function expectField( Status $status, string $name, int $typeId ): bool {
         $this->trackField( $name );
         if ( isset( $this->raw->$name ) && !$this->verifyType( $this->raw->$name, $typeId ) ) {
-            $status->fatal( 'datamap-error-validate-wrong-field-type', $name, static::$publicName );
+            $status->fatal( 'datamap-error-validate-wrong-field-type', $name, static::$publicName,
+                wfMessage( 'datamap-error-validate-check-docs' ) );
             return false;
         }
         return true;
