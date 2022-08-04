@@ -177,12 +177,14 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                     $slots['uid'] = $marker->getCustomPersistentId();
                 }
 
+                $isFirstParse = true;
                 // Popup title
                 if ( $marker->getLabel() != null ) {
                     if ( $this->shouldParseString( $marker, $marker->getLabel() ) ) {
                         $slots['label'] =
-                            $parser->parse( $marker->getLabel(), $title, $parserOptions, false, true )
+                            $parser->parse( $marker->getLabel(), $title, $parserOptions, false, $isFirstParse )
                                 ->getText( [ 'unwrap' => true ] );
+                        $isFirstParse = false;
                     } else {
                         $slots['label'] = wfEscapeWikiText( $marker->getLabel() );
                     }
@@ -193,8 +195,9 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                 if ( $marker->getDescription() != null ) {
                     if ( $this->shouldParseString( $marker, $marker->getDescription() ) ) {
                         $slots['desc'] =
-                            $parser->parse( $marker->getDescription(), $title, $parserOptions, false, true )
+                            $parser->parse( $marker->getDescription(), $title, $parserOptions, false, $isFirstParse )
                                 ->getText( [ 'unwrap' => true ] );
+                        $isFirstParse = false;
                     } else {
                         $slots['desc'] = wfEscapeWikiText( $marker->getDescription() );
                     }
