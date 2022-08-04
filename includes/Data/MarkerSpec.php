@@ -15,8 +15,7 @@ class MarkerSpec extends DataModel {
     }
 
     public function getLongitude(): float {
-        // DEPRECATED(v0.6.0:v0.9.0): switch to `lon`, same length as `lat`
-        return isset( $this->raw->long ) ? $this->raw->long : $this->raw->lon;
+        return $this->raw->lon;
     }
 
     public function getLabel(): ?string {
@@ -28,10 +27,7 @@ class MarkerSpec extends DataModel {
     }
 
     public function isWikitext(): ?bool {
-        return isset( $this->raw->isWikitext ) ? $this->raw->isWikitext : (
-            // DEPRECATED(v0.7.0:v0.9.0): switch to `isWikitext`, inclusive of title
-            isset( $this->raw->isDescriptionWikitext ) ? $this->raw->isDescriptionWikitext : null
-        );
+        return isset( $this->raw->isWikitext ) ? $this->raw->isWikitext : null;
     }
 
     public function getPopupImage(): ?string {
@@ -39,10 +35,7 @@ class MarkerSpec extends DataModel {
     }
 
     public function getRelatedArticle(): ?string {
-        return isset( $this->raw->article ) ? $this->raw->article : (
-            // DEPRECATED(v0.7.0:v0.9.0): switch to `article`, more intuitive
-            isset( $this->raw->relatedArticle ) ? $this->raw->relatedArticle : null
-        );
+        return isset( $this->raw->article ) ? $this->raw->article : null;
     }
 
     public function getCustomPersistentId() {
@@ -52,16 +45,11 @@ class MarkerSpec extends DataModel {
     public function validate( Status $status ) {
         $this->expectField( $status, 'id', DataModel::TYPE_STRING_OR_NUMBER );
         $this->requireField( $status, 'lat', DataModel::TYPE_NUMBER );
-        if ( !isset( $this->raw->long ) ) {
-            $this->requireField( $status, 'lon', DataModel::TYPE_NUMBER );
-        }
-        $this->allowReplacedField( $status, 'long', DataModel::TYPE_NUMBER, 'lon', 'v0.6.0', 'v0.9.0' );
+        $this->requireField( $status, 'lon', DataModel::TYPE_NUMBER );
         $this->expectField( $status, 'label', DataModel::TYPE_STRING );
         $this->expectField( $status, 'description', DataModel::TYPE_STRING );
         $this->expectField( $status, 'isWikitext', DataModel::TYPE_BOOL );
-        $this->allowReplacedField( $status, 'isDescriptionWikitext', DataModel::TYPE_BOOL, 'isWikitext', 'v0.7.0', 'v0.9.0' );
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
-        $this->allowReplacedField( $status, 'relatedArticle', DataModel::TYPE_STRING, 'article', 'v0.7.0', 'v0.9.0' );
         $this->expectField( $status, 'popupImage', DataModel::TYPE_STRING );
         $this->disallowOtherFields( $status );
 
