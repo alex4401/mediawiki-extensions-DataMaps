@@ -70,7 +70,11 @@
 				"loader/map.js",
 				"loader/legend.js",
 				"loader/markerLegend.js",
-				"loader/popup.js"
+				"loader/popup.js",
+				{
+					"name": "loader/config.json",
+					"config": [ "DataMapsShowCoordinatesDefault" ]
+				}
 			],
 			"messages": [
 				"datamap-error-dataload",
@@ -150,6 +154,10 @@
 		"DataMapsMarkerParserExpansionLimit": {
 			"description": "Controls how big the parser output for a marker's description can get.",
 			"value": 800
+		},
+		"DataMapsShowCoordinatesDefault": {
+			"description": "Whether to display coordinates to the user on data maps by default.",
+			"value": true
 		}
 	},
 

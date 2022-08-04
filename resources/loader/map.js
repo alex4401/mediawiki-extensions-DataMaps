@@ -3,6 +3,7 @@ const MapStorage = require( './storage.js' ),
     MarkerPopup = require( './popup.js' ),
     MapLegend = require( './legend.js' ),
     MarkerLegendPanel = require( './markerLegend.js' ),
+    config = require( './config.json' ),
     mwApi = new mw.Api();
 
 
@@ -347,14 +348,16 @@ const buildLeafletMap = function ( $holder ) {
     this.updateMarkerScaling();
 
     // Create a coordinate-under-cursor display
-    this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
-    this.leaflet.on( 'mousemove', event => {
-        const lat = event.latlng.lat;
-        const lon = event.latlng.lng;
-        if ( lat >= -5 && lat <= 105 && lon >= -5 && lon <= 105 ) {
-            this.$coordTracker.text( this.getCoordLabel( 100 - lat, lon ) );
-        }
-    } );
+    if ( config.DataMapsShowCoordinatesDefault ) {
+        this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
+        this.leaflet.on( 'mousemove', event => {
+            const lat = event.latlng.lat;
+            const lon = event.latlng.lng;
+            if ( lat >= -5 && lat <= 105 && lon >= -5 && lon <= 105 ) {
+                this.$coordTracker.text( this.getCoordLabel( 100 - lat, lon ) );
+            }
+        } );
+    }
 
     // Create a background toggle
     if ( this.config.backgrounds.length > 1 ) {

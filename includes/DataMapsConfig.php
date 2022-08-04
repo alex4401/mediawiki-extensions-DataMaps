@@ -27,4 +27,8 @@ class DataMapsConfig {
         return $wgDataMapsDebugApiProcessingTime;
     }
 
+    public static function shouldShowCoordinates(): bool {
+        global $wgDataMapsShowCoordinatesDefault;
+        return $wgDataMapsShowCoordinatesDefault;
+    }
 }

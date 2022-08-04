@@ -1,3 +1,6 @@
+const config = require( './config.json' );
+
+
 function MarkerPopup( map, markerType, coords, slots, leafletMarker ) {
     this.map = map;
     this.markerType = markerType;
@@ -57,7 +60,9 @@ MarkerPopup.prototype.build = function () {
         coordText += ` (${ discrims.join( ', ' ) })`;
     }
     
-    $( '<div class="datamap-popup-coordinates">' ).text( coordText ).appendTo( this.$content );
+    if ( config.DataMapsShowCoordinatesDefault ) {
+        $( '<div class="datamap-popup-coordinates">' ).text( coordText ).appendTo( this.$content );
+    }
 
     // Description
     if ( this.slots.desc ) {
