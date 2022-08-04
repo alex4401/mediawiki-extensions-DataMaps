@@ -281,14 +281,21 @@ DataMap.prototype.addControl = function ( anchor, $element ) {
 DataMap.prototype.buildBackgroundOverlayObject = function ( overlay ) {
     let result;
 
-    // Construct an image or rectangular layer
+    // Construct a layer
     if ( overlay.image ) {
+        // Construct an image
         result = L.imageOverlay( overlay.image, this.translateBox( overlay.at ) );
     } else if ( overlay.path ) {
-        result = L.polyline( overlay.path.map( p => this.translatePoint( p ) ) );
+        // Construct a polyline
+        result = L.polyline( overlay.path.map( p => this.translatePoint( p ) ), {
+            color: overlay.colour || L.Path.prototype.options.color,
+            weight: overlay.thickness || L.Path.prototype.options.weight
+        } );
     } else {
+        // Construct a rectangle
         result = L.rectangle( this.translateBox( overlay.at ), {
-            fillOpacity: 0.05
+            color: overlay.strokeColour || L.Path.prototype.options.color,
+            fillColor: overlay.colour || L.Path.prototype.options.fillColor
         } );
     }
 

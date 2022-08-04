@@ -147,6 +147,19 @@ class DataMapEmbedRenderer {
         } else {
             $result['at'] = $spec->getPlacementLocation();
         }
+
+        if ( $spec->supportsDrawProperties() ) {
+            if ( $spec->getRawFillColour() !== null ) {
+                $result['colour'] = DataMapColourUtils::asHex( $spec->getFillColour() );
+            }
+            if ( $spec->getPolylineThickness() !== null ) {
+                $result['thickness'] = $spec->getPolylineThickness();
+            }
+            if ( $spec->getRawRectStrokeColour() !== null ) {
+                $result['strokeColour'] = DataMapColourUtils::asHex( $spec->getRectStrokeColour() );
+            }
+        }
+
         return $result;
     }
 

@@ -106,8 +106,8 @@ class MarkerGroupSpec extends DataModel {
 
         switch ( $this->getDisplayMode() ) {
             case self::DM_CIRCLE:
-                $this->requireField( $status, 'fillColor', DataModel::TYPE_COLOUR );
-                $this->expectField( $status, 'borderColor', DataModel::TYPE_COLOUR );
+                $this->requireField( $status, 'fillColor', DataModel::TYPE_COLOUR3 );
+                $this->expectField( $status, 'borderColor', DataModel::TYPE_COLOUR3 );
                 $this->expectField( $status, 'borderWidth', DataModel::TYPE_NUMBER );
                 $this->expectField( $status, 'size', DataModel::TYPE_NUMBER );
                 $this->expectField( $status, 'extraMinZoomSize', DataModel::TYPE_NUMBER );
