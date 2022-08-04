@@ -260,6 +260,8 @@ DataMap.prototype.buildBackgroundOverlayObject = function ( overlay ) {
     // Construct an image or rectangular layer
     if ( overlay.image ) {
         result = L.imageOverlay( overlay.image, flipLatitudeBox( overlay.at ) );
+    } else if ( overlay.path ) {
+        result = L.polyline( overlay.path.map( p => [ 100-p[0], p[1] ] ) );
     } else {
         result = L.rectangle( flipLatitudeBox( overlay.at ), {
             fillOpacity: 0.05
