@@ -100,9 +100,11 @@ for fimMarker in fimInput['markers']:
 
     lat = 100 - lat
 
-    dmMarker = dict(lat=lat, lon=lon)
+    dmMarker = dict(id=fimMarker['id'], lat=lat, lon=lon)
 
     if fimMarker.get('popup', None):
+        if fimMarker['popup'].get('title', None) and fimMarker['popup']['title'] != dmOutput['groups'][dmCategory]['name']:
+            dmMarker['label'] = fimMarker['popup']['title']
         copyNonNull(fimMarker['popup'], 'title', dmMarker, 'label')
         copyNonNull(fimMarker['popup'], 'description', dmMarker, 'description')
 
