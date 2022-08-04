@@ -5,9 +5,12 @@
         ]
     },
 
+    "datamap-desc": "Permet l'intégration de cartes interactives dans les pages du wiki.",
+
     "embedDataMap": "DataMap",
 
     "content-model-datamap": "Carte de données interactive",
+    "datamap-standard-title-prefix": "Cartes/",
 
     "datamap-doc-page-does-not-exist": "''La documentation pour la présente page de données peut être créée à [[$1]]''",
     "datamap-doc-page-header": "'''Ceci est la page de documentation pour [[$1]]'''",
@@ -22,10 +25,17 @@
     "datamap-error-validate-wrong-field-type": "Le champ <code>$2</code> a une valeur incorrecte dans la structure $1. $3",
     "datamap-error-validate-field-required-either": "$1 nécessite seulement un des deux champs: <code>$2</code> ou <code>$3</code>. Les deux ne peuvent pas être spécifiés en même temps.",
     "datamap-error-validate-exclusive-fields": "$1 requiert seulement un des deux champs: <code>$2</code> ou <code>$3</code>. Les deux ne peuvent pas être spécifiés en même temps.",
+    "datamap-error-validate-replaced-field": "Le champ <code>$2</code> dans la structure $1 a été remplacé par <code>$3</code> dans la version $4, et sera supprimé dans la  version $5.",
     "datamap-error-validate-no-file": "Le fichier [[File:$1]] est lié, mais il n'a pas pu être téléchargé vers le wiki.",
+
     "datamap-error-validatespec-group-no-display": "Le groupe de marqueurs \"$1\" n'a pas de réglages d'affichage. Ajoutez les propriétés <code>icon</code> et/ou <code>fillColor</code>.",
     "datamap-error-validatespec-map-no-group-name": "Un groupe de marqueurs sans nom (ou avec un nom vide) a été défini. Assignez-lui un nom unique.",
     "datamap-error-validatespec-map-missing-group": "Des marqueurs ont été ajoutés au groupe \"$1\", qui n'a pas été défini.",
+
+    "datamap-error-render-unsupported-displaymode": "Le mode d'affichage $1 a été annoncé comme un marqueur, mais il n'est pas soutenu. Ceci est un défaut du code de l'extension.",
+    "datamap-error-internal-unknown-field-type": "Pas de soutien de validation implémenté pour le type de champ avec l'ID de $1. Ceci est un défaut du code de l'extension.",
+    "datamap-error-pf-page-does-not-exist": "La page de données de carte "[[$1]]" n'existe pas.",
+    "datamap-error-pf-page-invalid-content-model": "Le modèle de contenu de la page "[[$1]]" n'est pas <code>datamap</code>.",
 
     "datamap-unnamed-map": "Carte non nommée",
     "datamap-legend-label": "Légende",
@@ -34,15 +44,18 @@
     "datamap-error-dataload": "<b>Impossible de charger les données</b><br/>veuillez rafraîchir ou réessayer plus tard",
     "datamap-lazy-click-to-load": "Cliquez pour charger la carte de données",
     
+    "datamap-legend-tab-locations": "Marqueurs",
     "datamap-toggle-show-all": "Tout montrer",
     "datamap-toggle-hide-all": "Tout cacher",
-    "datamap-toggle-caves": "Basculer les grottes",
-    "datamap-legend-tab-locations": "Marqueurs",
-    "datamap-popup-related-article": "Voir plus",
     "datamap-layer-control": "Calques",
+
     "datamap-layer-surface": "Surface",
     "datamap-layer-cave": "Grottes",
+
+    "datamap-popup-related-article": "Voir plus",
     "datamap-popup-dismissed": "Récoltée",
     "datamap-popup-mark-as-dismissed": "Marquer comme récoltée",
-    "datamap-control-reset-view": "Restaurer la vue par défaut"
+
+    "datamap-control-reset-view": "Restaurer la vue par défaut",
+    "datamap-control-centre-view": "Centre la vue au grossissement actuel"
 }
