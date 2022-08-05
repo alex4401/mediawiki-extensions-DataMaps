@@ -4,13 +4,16 @@ namespace MediaWiki\Extension\Ark\DataMaps;
 use Title;
 use Parser;
 
-class DataMapsHooks {
+class HookHandler implements
+	\MediaWiki\Hook\ParserFirstCallInitHook,
+	\MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook
+{
     public static function onRegistration(): bool {
         define( 'ARK_CONTENT_MODEL_DATAMAP', 'datamap' );
         return true;
     }
     
-    public static function onParserFirstCallInit( Parser $parser ) {
+    public function onParserFirstCallInit( $parser ) {
         $parser->setFunctionHook(
             'pf-embed-data-map', [ Rendering\ParserFunction_EmbedDataMap::class, 'run' ],
             SFH_NO_HASH
@@ -22,7 +25,7 @@ class DataMapsHooks {
 		return !$docPage->isDisabled() && str_ends_with( $title->getPrefixedText(), $docPage->plain() );
 	}
 
-	public static function contentHandlerDefaultModelFor( Title $title, &$model ) {
+	public function onContentHandlerDefaultModelFor( $title, &$model ) {
 		if ( $title->getNamespace() === DataMapsConfig::getNamespace() && !self::isDocPage( $title ) ) {
             $prefix = wfMessage( 'datamap-standard-title-prefix' )->inContentLanguage();
             if ( !$prefix->isDisabled() && str_starts_with( $title->getText(), $prefix->plain() ) ) {
@@ -32,7 +35,7 @@ class DataMapsHooks {
 		return true;
 	}
 
-	public static function getCodeLanguage( Title $title, &$languageCode ) {
+	public static function onCodeEditorGetPageLanguage( Title $title, &$languageCode ) {
 		if ( $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
 			$languageCode = 'json';
 		}

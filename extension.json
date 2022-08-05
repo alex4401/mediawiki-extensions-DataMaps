@@ -120,7 +120,6 @@
 		"MediaWiki\\Extension\\Ark\\DataMaps\\": "includes/"
 	},
 
-	"callback": "MediaWiki\\Extension\\Ark\\DataMaps\\DataMapsHooks::onRegistration",
 	"APIModules": {
 		"queryDataMap": "MediaWiki\\Extension\\Ark\\DataMaps\\API\\ApiQueryDataMapEndpoint"
 	},
@@ -128,11 +127,17 @@
 		"datamap": "MediaWiki\\Extension\\Ark\\DataMaps\\Content\\DataMapContentHandler"
 	},
 	
+	"callback": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onRegistration",
 	"Hooks": {
-		"ParserFirstCallInit": "MediaWiki\\Extension\\Ark\\DataMaps\\DataMapsHooks::onParserFirstCallInit",
-		"ContentHandlerDefaultModelFor": "MediaWiki\\Extension\\Ark\\DataMaps\\DataMapsHooks::contentHandlerDefaultModelFor",
-		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\DataMapsHooks::getCodeLanguage"
+		"ParserFirstCallInit": "DataMapsHookHandler",
+		"ContentHandlerDefaultModelFor": "DataMapsHookHandler",
+		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
 	},
+    "HookHandlers": {
+        "DataMapsHookHandler": {
+            "class": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler"
+        }
+    },
 
 	"config": {
 		"DataMapsNamespace": {
