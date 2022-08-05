@@ -50,7 +50,7 @@ MarkerLayerManager.prototype.shouldBeVisible = function ( layers ) {
     // If requirement mask is not empty, and there is a layer inside the list does not have, return invisible
     if ( this.includeMaskHi.size > 0 && !( () => {
         let result = true;
-        this.includeMaskHi.forEach( name => result &&= layers.indexOf( name ) > 0 );
+        this.includeMaskHi.forEach( name => result = result && layers.indexOf( name ) > 0 );
         return result;
     } )() ) {
         return false;
