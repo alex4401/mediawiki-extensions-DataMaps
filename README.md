@@ -94,7 +94,8 @@ Box is a array of two locations, where first describes the start point of the bo
 ## Configuration
 * `$wgDataMapsNamespaceId`: namespace where data maps will be allowed. **Must be set.**
 * `$wgDataMapsCacheType`: cache type to use for `queryDataMap` API endpoint output. Defaults to `CACHE_ANYTHING`.
-* `$wgDataMapsCacheExpiryTime`: time after which cached `queryDataMap` API endpoint responses expire. Set to `0` to disable caching. Defaults to `86400` (a day).
+* `$wgDataMapsCacheTTL`: time after which cached `queryDataMap` API endpoint responses expire. Set to `0` to disable caching. Defaults to `86400` (a day).
+* `$wgDataMapsExtendCacheTTL`: if not `false`, extends TTL to `override` of cached maps on requests `threshold` seconds away from expiry. Defaults to `[ 'threshold' => 43200, 'override' => 57600 ]`.
 * `$wgDataMapsMarkerParserExpansionLimit`: controls wikitext parser expansion size limit for each marker. Defaults to `800`.
 * `$wgDataMapsShowCoordinatesDefault`: whether coordinates will be displayed in the user interface. Defaults to `true`.
 * `$wgDataMapsUseInProcessParserCache`: whether wikitext parsing requests will be cached within the process (up to 128 entries). This can save a significant amount of time if marker descriptions or labels repeat often, but increases memory usage. Defaults to `true`.

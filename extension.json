@@ -149,9 +149,16 @@
 			"description": "Cache type to use for queryDataMap API output. Defaults to CACHE_ANYTHING.",
 			"value": -1
 		},
-		"DataMapsCacheExpiryTime": {
-			"description": "Time for cached queryDataMap API (per title and revision) responses to be valid. Set to 0 to disable caching. Defaults to a day.",
+		"DataMapsCacheTTL": {
+			"description": "Time To Live for cached queryDataMap API (per title and revision) responses to be valid. Set to 0 to disable caching. Defaults to a day.",
 			"value": 86400
+		},
+		"DataMapsExtendCacheTTL": {
+			"description": "Settings to extend TTL of cached maps on requests close to expiry time. Set to false to disable.",
+			"value": {
+				"threshold": 43200,
+				"override": 57600
+			}
 		},
 		"DataMapsMarkerParserExpansionLimit": {
 			"description": "Controls how big the parser output for a marker's description can get.",

@@ -40,7 +40,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     public function execute() {
-        $cacheExpiryTime = DataMapsConfig::getApiCacheExpiryTime();
+        $cacheExpiryTime = DataMapsConfig::getApiCacheTTL();
 
         $timeStart = 0;
         if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
@@ -66,9 +66,27 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             // Try to retrieve the response
             $response = $cache->get( $cacheKey );
             if ( $response === false ) {
-                // Response not cached, process the data in this request and write to cache
+                // Response not cached, process the data in this request
                 $response = $this->executeInternal( $params );
+                // If TTL extension is allowed, store an internal timestamp
+                if ( DataMapsConfig::shouldExtendApiCacheTTL() ) {
+                    $response['refreshedAt'] = time();
+                }
+                // Write to cache
                 $cache->set( $cacheKey, $response, $cacheExpiryTime );
+            } else {
+                // Response cached, check if TTL should be extended and do it
+                if ( DataMapsConfig::shouldExtendApiCacheTTL() && isset( $response['refreshedAt'] ) ) {
+                    $ttlThreshold = $cacheExpiryTime - DataMapsConfig::getApiCacheTTLExtensionThreshold();
+                    if ( time() - $response['refreshedAt'] >= $ttlThreshold ) {
+                        $response['refreshedAt'] = time();
+                        $cache->set( $cacheKey, $response, DataMapsConfig::getApiCacheTTLExtensionValue() );
+                    }
+                }
+            }
+            // Remove the internal TTL extension timestamp
+            if ( isset( $response['refreshedAt'] ) && !DataMapsConfig::shouldApiReturnProcessingTime() ) {
+                unset( $response['refreshedAt'] );
             }
         }
 		

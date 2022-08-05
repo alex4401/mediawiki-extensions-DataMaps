@@ -17,9 +17,24 @@ class DataMapsConfig {
         return $wgDataMapsCacheType;
     }
 
-    public static function getApiCacheExpiryTime(): int {
-        global $wgDataMapsCacheExpiryTime;
-        return $wgDataMapsCacheExpiryTime;
+    public static function getApiCacheTTL(): int {
+        global $wgDataMapsCacheTTL;
+        return $wgDataMapsCacheTTL;
+    }
+
+    public static function shouldExtendApiCacheTTL(): bool {
+        global $wgDataMapsExtendCacheTTL;
+        return $wgDataMapsExtendCacheTTL != false;
+    }
+
+    public static function getApiCacheTTLExtensionThreshold(): int {
+        global $wgDataMapsExtendCacheTTL;
+        return $wgDataMapsExtendCacheTTL['threshold'];
+    }
+
+    public static function getApiCacheTTLExtensionValue(): int {
+        global $wgDataMapsExtendCacheTTL;
+        return $wgDataMapsExtendCacheTTL['override'];
     }
 
     public static function shouldApiReturnProcessingTime(): bool {
