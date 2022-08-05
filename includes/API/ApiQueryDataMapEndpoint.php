@@ -14,13 +14,13 @@ use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
 use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 use ParserOptions;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
     const GENERATION = 8;
-    const POPUP_IMAGE_WIDTH = 240;
 
     public function getAllowedParams() {
         return [
@@ -127,115 +127,14 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     private function processMarkers( Title $title, DataMapSpec $dataMap, $params ): array {
-        $results = [];
-		$parser = MediaWikiServices::getInstance()->getParser();
-
         // Extract filters from the request parameters
         $filter = null;
         if ( isset( $params['filter'] ) && !empty( $params['filter'] ) ) {
             $filter = explode( '|', $params['filter'] );
-            // Ignore filters if more than 9 are specified
-            if ( count( $filter ) >= 9 ) {
-                $filter = null;
-            }
         }
 
-        // Prepare the wikitext parser
-        $parserOptions = ParserOptions::newCanonical( 'canonical' );
-        $parserOptions->enableLimitReport( false );
-        $parserOptions->setAllowSpecialInclusion( false );
-        $parserOptions->setExpensiveParserFunctionLimit( 0 );
-        $parserOptions->setInterwikiMagic( false );
-        $parserOptions->setMaxIncludeSize( DataMapsConfig::getParserExpansionLimit() );
-
-        $dataMap->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection )
-            use ( &$results, &$title, &$parser, $filter, &$parserOptions ) {
-
-            // If filters were specified, check if there is any overlap between the filters list and skip the marker set
-            if ( $filter !== null && empty( array_intersect( $filter, explode( ' ', $layers ) ) ) ) {
-                return;
-            }
-
-            $subResults = [];
-            // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
-            // creating thousands of small, very short-lived (only one at a time) objects
-            $marker = new MarkerSpec( new \stdclass() );
-
-            foreach ( $rawMarkerCollection as &$rawMarker ) {
-                $marker->reassignTo( $rawMarker );
-
-                // Coordinates
-                $converted = [
-                    $marker->getLatitude(),
-                    $marker->getLongitude()
-                ];
-                // Rich data
-                $slots = [];
-
-                // Custom persistent ID
-                if ( $marker->getCustomPersistentId() != null ) {
-                    $slots['uid'] = $marker->getCustomPersistentId();
-                }
-
-                $isFirstParse = true;
-                // Popup title
-                if ( $marker->getLabel() != null ) {
-                    if ( $this->shouldParseString( $marker, $marker->getLabel() ) ) {
-                        $slots['label'] =
-                            $parser->parse( $marker->getLabel(), $title, $parserOptions, false, $isFirstParse )
-                                ->getText( [ 'unwrap' => true ] );
-                        $isFirstParse = false;
-                    } else {
-                        $slots['label'] = wfEscapeWikiText( $marker->getLabel() );
-                    }
-                    $requiresSlots = true;
-                }
-
-                // Popup description
-                if ( $marker->getDescription() != null ) {
-                    if ( $this->shouldParseString( $marker, $marker->getDescription() ) ) {
-                        $slots['desc'] =
-                            $parser->parse( $marker->getDescription(), $title, $parserOptions, false, $isFirstParse )
-                                ->getText( [ 'unwrap' => true ] );
-                        $isFirstParse = false;
-                    } else {
-                        $slots['desc'] = wfEscapeWikiText( $marker->getDescription() );
-                    }
-                    $requiresSlots = true;
-                }
-
-                // Popup image thumbnail link
-                if ( $marker->getPopupImage() != null ) {
-                    $slots['image'] = DataMapFileUtils::getFileUrl( $marker->getPopupImage(), self::POPUP_IMAGE_WIDTH );
-                    $requiresSlots = true;
-                }
-
-                // Related article title
-                if ( $marker->getRelatedArticle() != null ) {
-                    $slots['article'] = $marker->getRelatedArticle();
-                    $requiresSlots = true;
-                }
-
-                // Insert slots if any data has been added
-                if ( !empty( $slots ) ) {
-                    $converted[] = $slots;
-                }
-
-                $subResults[] = $converted;
-            }
-
-            $results[$layers] = $subResults;
-        } );
-
-        return $results;
-    }
-
-    private function shouldParseString( MarkerSpec $marker, string $text ): bool {
-        $mIsWikitext = $marker->isWikitext();
-        if ( $mIsWikitext === false ) {
-            return false;
-        }
-
-        return $mIsWikitext || preg_match( "/\{\{|\[\[|\'\'|<\w+|&[\d\w]+/", $text ) === 1;
+        // Have a MarkerProcessor convert the data
+        $processor = new MarkerProcessor( $title, $dataMap, $filter );
+        return $processor->processAll();
     }
 }
