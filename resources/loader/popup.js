@@ -64,14 +64,14 @@ MarkerPopup.prototype.getMarkerUID = function () {
 MarkerPopup.prototype.buildButtons = function () {
     const $getLink = $( '<a class="datamap-marker-link-button oo-ui-icon-link" role="button"></a>' )
         .attr( {
-            'aria-label': mw.msg( 'datamap-marker-link-get' ),
+            'aria-label': mw.msg( 'datamap-popup-marker-link-get' ),
             'href': getMarkerURL( this.map, this.getMarkerUID(), true )
         } )
         .appendTo( this.$buttons )
         .on( 'click', event => {
             event.preventDefault();
             navigator.clipboard.writeText( $getLink.attr( 'href' ) )
-                .then( () => mw.notify( mw.msg( 'datamap-marker-link-copied' ) ) );
+                .then( () => mw.notify( mw.msg( 'datamap-popup-marker-link-copied' ) ) );
         } );
 };
 

@@ -89,7 +89,8 @@
 				"datamap-popup-related-article",
 				"datamap-popup-dismissed",
 				"datamap-popup-mark-as-dismissed",
-				"datamap-popup-inside-cave",
+				"datamap-popup-marker-link-get",
+				"datamap-popup-marker-link-copied",
 				"datamap-coordinate-control-text",
 				"datamap-control-reset-view",
 				"datamap-control-centre-view"

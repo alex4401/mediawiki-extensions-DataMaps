@@ -61,6 +61,8 @@
     "datamap-popup-related-article": "See more",
     "datamap-popup-dismissed": "Collected",
     "datamap-popup-mark-as-dismissed": "Mark as collected",
+    "datamap-popup-marker-link-get": "Get shareable link",
+    "datamap-popup-marker-link-copied": "Link copied to your clipboard.",
 
     "datamap-coordinate-control-text": "lat $1, lon $2",
     "datamap-control-reset-view": "Restore default view",
