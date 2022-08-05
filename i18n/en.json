@@ -41,6 +41,8 @@
     "datamap-error-pf-page-does-not-exist": "Data map page \"[[$1]]\" does not exist.",
     "datamap-error-pf-page-invalid-content-model": "Content model of page \"[[$1]]\" is not <code>Interactive Data Map</code>.",
 
+    "tooltip-datamap-preview-unavailable": "Change previews for interactive data maps will be supported in a future version of the extension.",
+
     "datamap-unnamed-map": "Unnamed map",
     "datamap-legend-label": "Legend",
     "datamap-javascript-required": "Interactive data maps require JavaScript to be enabled.",
