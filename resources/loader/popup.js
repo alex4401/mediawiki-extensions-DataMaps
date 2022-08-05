@@ -1,37 +1,53 @@
-const config = require( './config.json' );
+const config = require( './config.json' ),
+    URL_PARAMETER = 'marker';
 
 
-function MarkerPopup( map, markerType, coords, slots, leafletMarker ) {
+var getMarkerUID = function ( map, markerType, instance ) {
+    return ( instance[2] && instance[2].uid != null ) ? instance[2].uid : map.storage.getMarkerKey( markerType, instance );
+};
+
+
+var getMarkerURL = function ( map, persistentMarkerId ) {
+    const params = new URLSearchParams( window.location.search );
+    if ( persistentMarkerId ) {
+        params.set( URL_PARAMETER, persistentMarkerId );
+    } else {
+        params.delete( URL_PARAMETER );
+    }
+
+    return decodeURIComponent( `${window.location.pathname}?${params}`.replace( /\?$/, '' ) + window.location.hash );
+};
+
+
+var updateLocation = function ( map, persistentMarkerId ) {
+    history.replaceState( {}, '', getMarkerURL( map, persistentMarkerId ) );
+};
+
+
+function MarkerPopup( map, markerType, instance, slots, leafletMarker ) {
     this.map = map;
     this.markerType = markerType;
     this.markerLayers = markerType.split( ' ' );
     this.markerGroup = map.config.groups[this.markerLayers[0]];
-    this.coords = coords;
+    this.instance = instance;
     this.slots = slots;
     this.leafletMarker = leafletMarker;
-    this.$content = $( '<div class="datamap-popup-content">' );
-    this.$tools = $( '<ul class="datamap-popup-tools">' );
+    // These two containers are provided by L.Ark.Popup
+    this.$content = null;
+    this.$tools = null;
 }
 
 
-MarkerPopup.URL_PARAMETER = 'marker';
+MarkerPopup.URL_PARAMETER = URL_PARAMETER;
 
 
-MarkerPopup.updateLocation = function ( persistentMarkerId ) {
-    const params = new URLSearchParams( window.location.search );
-    if ( persistentMarkerId ) {
-        params.set( MarkerPopup.URL_PARAMETER, persistentMarkerId );
-    } else {
-        params.delete( MarkerPopup.URL_PARAMETER );
-    }
-
-    history.replaceState( {}, '',
-        decodeURIComponent( `${window.location.pathname}?${params}`.replace( /\?$/, '' ) + window.location.hash ) );
+MarkerPopup.bindTo = function ( map, markerType, instance, slots, leafletMarker ) {
+    leafletMarker.bindPopup( () => new MarkerPopup( map, markerType, instance, slots, leafletMarker ), {}, L.Ark.Popup );
 };
 
 
 MarkerPopup.prototype.getDismissToolText = function () {
-    return mw.msg( 'datamap-popup-' + ( this.map.storage.isDismissed( this.markerType, this.coords )
+    return mw.msg( 'datamap-popup-' + ( this.map.storage.isDismissed( this.markerType, this.instance )
         ? 'dismissed' : 'mark-as-dismissed' ) );
 };
 
@@ -58,7 +74,7 @@ MarkerPopup.prototype.build = function () {
 
     // Coordinates
     // TODO: this is not displayed if coordinates are disabled
-    let coordText = this.map.getCoordLabel( this.coords[0], this.coords[1] );
+    let coordText = this.map.getCoordLabel( this.instance[0], this.instance[1] );
     if ( discrims.length > 0 ) {
         coordText += ` (${ discrims.join( ', ' ) })`;
     }
@@ -78,11 +94,6 @@ MarkerPopup.prototype.build = function () {
     if ( this.slots.image ) {
         $( '<img class="datamap-popup-image" width=240 />' ).attr( 'src', this.slots.image ).appendTo( this.$content );
     }
-
-    // Tools
-    this.buildTools().appendTo( this.$content );
-
-    return this.$content;
 };
 
 
@@ -105,13 +116,23 @@ MarkerPopup.prototype.buildTools = function () {
             $( '<a>' )
                 .text( this.getDismissToolText() )
                 .on( 'click', () => {
-                    this.map.toggleMarkerDismissal( this.markerType, this.coords, this.leafletMarker );
+                    this.map.toggleMarkerDismissal( this.markerType, this.instance, this.leafletMarker );
                     this.map.leaflet.closePopup();
                 } )
         );
     }
 
     return this.$tools;
+};
+
+
+MarkerPopup.prototype.onAdd = function () {
+    updateLocation( this.map, getMarkerUID( this.map, this.markerType, this.instance ) );
+};
+
+
+MarkerPopup.prototype.onRemove = function () {
+    updateLocation( this.map, null );
 };
 
 

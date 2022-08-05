@@ -204,15 +204,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
 
             // Bind a popup building closure (this is more efficient than binds)
             const mType = markerType;
-            leafletMarker.bindPopup( () =>
-                new MarkerPopup( this, mType, instance, ( instance[2] || {} ), leafletMarker ).build().get( 0 ) );
-            leafletMarker.on( 'popupopen', () => {
-                MarkerPopup.updateLocation( ( instance[2] && instance[2].uid != null ) ? instance[2].uid
-                    : this.storage.getMarkerKey( mType, instance ) );
-            } );
-            leafletMarker.on( 'popupclose', () => {
-                MarkerPopup.updateLocation( null );
-            } );
+            MarkerPopup.bindTo( this, mType, instance, ( instance[2] || {} ), leafletMarker );
 
             this.onMarkerReady( markerType, group, instance, leafletMarker );
         }

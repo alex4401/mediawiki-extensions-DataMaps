@@ -53,7 +53,8 @@
 			"packageFiles": [
 				"leafletExtension/index.js",
 				"leafletExtension/iconMarker.js",
-				"leafletExtension/circleMarker.js"
+				"leafletExtension/circleMarker.js",
+				"leafletExtension/popup.js"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},
