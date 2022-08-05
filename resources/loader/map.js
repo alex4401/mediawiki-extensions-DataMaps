@@ -44,7 +44,11 @@ function DataMap( id, $root, config ) {
     // Cached value of the 'datamap-coordinate-control-text' message
     this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
     // Retrieve a `marker` parameter from the query string if one is present
-    this.markerIdToAutoOpen = new URLSearchParams( window.location.search ).get( MarkerPopup.URL_PARAMETER );
+    this.markerIdToAutoOpen = null;
+    const tabberId = this.getParentTabberNeueId();
+    if ( tabberId && tabberId == window.location.hash.substr( 1 ) ) {
+        this.markerIdToAutoOpen = new URLSearchParams( window.location.search ).get( MarkerPopup.URL_PARAMETER );
+    }
 
     // Coordinate reference system
     // If coordinate space spec is oriented [ lower lower upper upper ], assume top left corner as origin point (latitude will
@@ -92,7 +96,8 @@ DataMap.prototype.waitForLegend = function ( callback ) {
 
 
 DataMap.prototype.getParentTabberNeueId = function () {
-    return this.$root.closest( 'article.tabber__panel[id]' ).attr( 'id' );
+    const $panel = this.$root.closest( 'article.tabber__panel' );
+    return $panel.length > 0 ? ( $panel.attr( 'id' ) || $panel.attr( 'title' ).replace( ' ', '_' ) ) : null;
 };
 
 
