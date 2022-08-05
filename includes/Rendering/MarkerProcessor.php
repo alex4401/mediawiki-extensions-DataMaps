@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
 use Title;
 use Parser;
 use ParserOptions;
+use MapCacheLRU;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
@@ -12,6 +13,7 @@ use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 
 class MarkerProcessor {
     const POPUP_IMAGE_WIDTH = 240;
+    const MAX_LRU_SIZE = 128;
     
     private Parser $parser;
     private ParserOptions $parserOptions;
@@ -20,6 +22,11 @@ class MarkerProcessor {
     private ?array $filter;
 
     private bool $isParserDirty = true;
+    private bool $useLocalParserCache = true;
+    private ?MapCacheLRU $localParserCache = null;
+
+    private bool $collectTimings = false;
+    public $timeInParser = 0;
 
     public function __construct( Title $title, DataMapSpec $dataMap, ?array $filter ) {
         $this->parser = MediaWikiServices::getInstance()->getParser();
@@ -27,6 +34,13 @@ class MarkerProcessor {
         $this->title = $title;
         $this->dataMap = $dataMap;
         $this->filter = $filter;
+        // Pull configuration options
+        $this->useLocalParserCache = DataMapsConfig::shouldCacheWikitextInProcess();
+        $this->collectTimings = DataMapsConfig::shouldApiReturnProcessingTime();
+        // Initialise the LRU
+        if ( $this->useLocalParserCache ) {
+            $this->localParserCache = new MapCacheLRU( self::MAX_LRU_SIZE );
+        }
         // Configure the wikitext parser
         $this->parserOptions->enableLimitReport( false );
         $this->parserOptions->setAllowSpecialInclusion( false );
@@ -112,9 +126,31 @@ class MarkerProcessor {
     }
 
     private function parseWikitext( string $text ): string {
+        // Look up in local cache if enabled
+        if ( $this->useLocalParserCache && $this->localParserCache->has( $text ) ) {
+            return $this->localParserCache->get( $text );
+        }
+
+        $timeStart = 0;
+        if ( $this->collectTimings ) {
+            $timeStart = hrtime( true );
+        }
+
+        // Call the parser
         $out = $this->parser->parse( $text, $this->title, $this->parserOptions, false, $this->isParserDirty )
             ->getText( [ 'unwrap' => true ] );
+        // Mark as clean to avoid clearing state again
         $this->isParserDirty = false;
+
+        if ( $this->collectTimings ) {
+            $this->timeInParser += hrtime( true ) - $timeStart;
+        }
+        
+        // Store in local cache if enabled
+        if ( $this->useLocalParserCache ) {
+            $this->localParserCache->set( $text, $out );
+        }
+
         return $out;
     }
 

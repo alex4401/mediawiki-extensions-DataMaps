@@ -79,10 +79,11 @@ Box is a array of two locations, where first describes the start point of the bo
 * `$wgDataMapsNamespaceId`: namespace where data maps will be allowed. **Must be set.**
 * `$wgDataMapsCacheType`: cache type to use for `queryDataMap` API endpoint output. Defaults to `CACHE_ANYTHING`.
 * `$wgDataMapsCacheExpiryTime`: time after which cached `queryDataMap` API endpoint responses expire. Set to `0` to disable caching. Defaults to `86400` (a day).
-* `$wgDataMapsMarkerParserExpansionLimit`: controls parser expansion size limit for each marker.
-* `$wgDataMapsShowCoordinatesDefault`: whether coordinates will be displayed in the user interface.
-* `$wgDataMapsDebugApiProcessingTime`: if set to `true`, marker processing time will be reported in API responses.
-* `$wgDataMapsAllowExperimentalFeatures`: if set to `true`, enables features listed below - all of which are in development and not ready for production.
+* `$wgDataMapsMarkerParserExpansionLimit`: controls wikitext parser expansion size limit for each marker. Defaults to `800`.
+* `$wgDataMapsShowCoordinatesDefault`: whether coordinates will be displayed in the user interface. Defaults to `true`.
+* `$wgDataMapsUseInProcessParserCache`: whether wikitext parsing requests will be cached within the process (up to 128 entries). This can save a significant amount of time if marker descriptions or labels repeat often, but increases memory usage. Defaults to `true`.
+* `$wgDataMapsReportTimingInfo`: if set to `true`, marker processing time will be reported in API responses. Defaults to `false`.
+* `$wgDataMapsAllowExperimentalFeatures`: if set to `true`, enables features listed below - all of which are in development and not ready for production. Defaults to `false`.
 * * Edit Previewing
 
 ## General architecture

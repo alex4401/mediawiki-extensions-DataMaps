@@ -145,10 +145,6 @@
 			"description": "Namespace where data maps will be stored.",
 			"value": -1
 		},
-		"DataMapsDebugApiProcessingTime": {
-			"description": "Attaches data map marker processing time in API requests.",
-			"value": false
-		},
 		"DataMapsCacheType": {
 			"description": "Cache type to use for queryDataMap API output. Defaults to CACHE_ANYTHING.",
 			"value": -1
@@ -164,6 +160,14 @@
 		"DataMapsShowCoordinatesDefault": {
 			"description": "Whether to display coordinates to the user on data maps by default.",
 			"value": true
+		},
+		"DataMapsUseInProcessParserCache": {
+			"description": "If enabled, uses a simple wikitext parser cache inside the process handling the request.",
+			"value": true
+		},
+		"DataMapsReportTimingInfo": {
+			"description": "Attaches data map marker processing time in API requests.",
+			"value": false
 		},
 		"DataMapsAllowExperimentalFeatures": {
 			"description": "Whether to enable experimental features.",

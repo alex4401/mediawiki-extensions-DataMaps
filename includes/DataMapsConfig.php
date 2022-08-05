@@ -23,13 +23,18 @@ class DataMapsConfig {
     }
 
     public static function shouldApiReturnProcessingTime(): bool {
-        global $wgDataMapsDebugApiProcessingTime;
-        return $wgDataMapsDebugApiProcessingTime;
+        global $wgDataMapsReportTimingInfo;
+        return $wgDataMapsReportTimingInfo;
     }
 
     public static function shouldShowCoordinates(): bool {
         global $wgDataMapsShowCoordinatesDefault;
         return $wgDataMapsShowCoordinatesDefault;
+    }
+
+    public static function shouldCacheWikitextInProcess(): bool {
+        global $wgDataMapsUseInProcessParserCache;
+        return $wgDataMapsUseInProcessParserCache;
     }
 
     public static function isBleedingEdge(): bool {

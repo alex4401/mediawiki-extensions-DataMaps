@@ -41,10 +41,9 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
     public function execute() {
         $cacheExpiryTime = DataMapsConfig::getApiCacheExpiryTime();
-        $shouldReturnProcessingTime = DataMapsConfig::shouldApiReturnProcessingTime();
 
         $timeStart = 0;
-        if ( $shouldReturnProcessingTime ) {
+        if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
             $timeStart = hrtime( true );
         }
 
@@ -75,9 +74,8 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 		
         $this->getResult()->addValue( null, 'query', $response );
 
-        if ( $shouldReturnProcessingTime ) {
-            $timeEnd = hrtime( true );
-            $this->getResult()->addValue( null, 'processingTime', $timeEnd - $timeStart );
+        if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
+            $this->getResult()->addValue( null, 'responseTime', hrtime( true ) - $timeStart );
         }
     }
 
@@ -106,6 +104,11 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     private function executeInternal( $params ): array {
+        $timeStart = 0;
+        if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
+            $timeStart = hrtime( true );
+        }
+
         list( $title, $revision ) = $this->getRevisionFromParams( $params );
         $content = $revision->getContent( SlotRecord::MAIN, RevisionRecord::FOR_PUBLIC, null );
 
@@ -116,17 +119,9 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $dataMap = $content->asModel();
         $response = [
             'title' => $title->getFullText(),
-            'revisionId' => $revision->getId(),
-            'markers' => $this->processMarkers( $title, $dataMap, $params )
+            'revisionId' => $revision->getId()
         ];
 
-        // Armour any API metadata in $response
-        $response = ApiResult::addMetadataToResultVars( $response, false );
-
-        return $response;
-    }
-
-    private function processMarkers( Title $title, DataMapSpec $dataMap, $params ): array {
         // Extract filters from the request parameters
         $filter = null;
         if ( isset( $params['filter'] ) && !empty( $params['filter'] ) ) {
@@ -135,6 +130,16 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
         // Have a MarkerProcessor convert the data
         $processor = new MarkerProcessor( $title, $dataMap, $filter );
-        return $processor->processAll();
+        $response['markers'] = $processor->processAll();
+
+        // Armour any API metadata in $response
+        $response = ApiResult::addMetadataToResultVars( $response, false );
+
+        if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
+            $response['processingTime'] = hrtime( true ) - $timeStart;
+            $response['parserTime'] = $processor->timeInParser;
+        }
+
+        return $response;
     }
 }
