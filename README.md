@@ -26,6 +26,7 @@ Create a page within the data namespace and assign it the `datamap` content mode
 Content of the page should be a valid JSON with following structure:
 * `mixins` (array of page names, optional): *experimental*, list of other pages with the `datamap` content model that'll be loaded first and stacked to share configuration.
 * `title` (string, optional): label displayed above the map's legend.
+* `crs` (box, optional): reference coordinate space, which also determines whether the system origin will be top-left or bottom-left. Defaults to `[ [0, 0], [100, 100] ]`, which is top-left - swap the points for bottom-left.
 * `image` (file name, required, allowed only if `backgrounds` is not specified): name of the file (with no namespace) to display as background. This translates to a single, nameless background.
 * `backgrounds` (array of objects): list of *backgrounds* this map has available and the user can choose between:
 * * `name` (string, required if more than one background is specified): name of this background to display in the selection control.
@@ -33,11 +34,20 @@ Content of the page should be a valid JSON with following structure:
 * * `at` (box, optional): location to place the background at.
 * * `overlays` (array of objects, optional): list of *background overlay* specifications:
 * * * `name` (string, optional): name shown in a tooltip when the mouse cursor is over the overlay.
-* * * `at` (dimensions, required): bounds of the rectangle.
+* * * Images:
+* * * * `image` (file name, required): name of an image to display.
+* * * * `at` (dimensions, required): bounds of the image.
+* * * Rectangles:
+* * * * `at` (dimensions, required): bounds of the rectangle.
+* * * * `color` (colour, supports transparency, optional): colour to fill the rectangle with.
+* * * Polylines:
+* * * * `path` (array of locations, required): list of points the path should go through sequentially.
+* * * * `color` (colour, supports transparency, optional): colour to display the line with.
+* * * * `thickness` (number, optional): thickness of the line.
 * `groups` (string to object map, required): map from name to a *marker group* specification:
 * * `name` (string, required): name of the group and each individual marker.
 * * **Circular markers:** if `fillColor` is specified
-* * * `fillColor` (hex string, required): colour of each circular marker belonging to the group.
+* * * `fillColor` (colour, required): colour of each circular marker belonging to the group.
 * * * `icon` (file name, optional): icon to show in the legend
 * * * `size` (integer, optional): size of each circular marker. Defaults to `4`.
 * * **Icon markers:** if `fillColor` is **not** specified
@@ -58,6 +68,12 @@ Content of the page should be a valid JSON with following structure:
 * * `popupImage` (file name, optional): if provided, marker's popup will display this image under the description.
 * * `article` (page name, optional): name of an article the marker's popup should link to.
 * `custom` (map, optional): any arbitrary to be added to the client-side map config, for use with e.g. on-site gadgets.
+
+#### `Colour`
+Either a three element array of integers in `0..255` range, or a 3- or 6-long hex string beginning with `#`, representing an RGB colour with no transparency.
+
+#### `Colour`, with transparency
+Either a four element array of integers in `0..255` range, or a 4- or 8-long hex string beginning with `#`, representing an RGBA colour (i.e. with an alpha channel).
 
 #### `Dimensions`
 Two element decimal array, where first element is the width and second is the height. Alternatively, a number, which will be
