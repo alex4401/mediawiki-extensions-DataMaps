@@ -2,6 +2,9 @@
 namespace MediaWiki\Extension\Ark\DataMaps\Data;
 
 use Status;
+use Title;
+use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
+use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
 
 class DataMapSpec extends DataModel {
     protected static string $publicName = 'DataMapSpec';
