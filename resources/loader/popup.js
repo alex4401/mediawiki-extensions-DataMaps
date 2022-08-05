@@ -15,7 +15,9 @@ var getMarkerURL = function ( map, persistentMarkerId ) {
         params.delete( URL_PARAMETER );
     }
 
-    return decodeURIComponent( `${window.location.pathname}?${params}`.replace( /\?$/, '' ) + window.location.hash );
+    const tabber = map.getParentTabberNeueId();
+    return decodeURIComponent( `${window.location.pathname}?${params}`.replace( /\?$/, '' )
+        + ( tabber ? ( '#' + tabber ) : window.location.hash ) );
 };
 
 

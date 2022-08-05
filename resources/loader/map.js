@@ -91,6 +91,11 @@ DataMap.prototype.waitForLegend = function ( callback ) {
 };
 
 
+DataMap.prototype.getParentTabberNeueId = function () {
+    return this.$root.closest( 'article.tabber__panel[id]' ).attr( 'id' );
+};
+
+
 /*
  * Returns true if a layer is used on the map.
  */
