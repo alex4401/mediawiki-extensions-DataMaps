@@ -41,8 +41,6 @@ function DataMap( id, $root, config ) {
     this.leafletIcons = {};
     // DOM element of the coordinates display control
     this.$coordTracker = null;
-    // Collection of group visibility toggles
-    this.legendGroupToggles = [];
     // Cached value of the 'datamap-coordinate-control-text' message
     this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
     // Retrieve a `marker` parameter from the query string if one is present
@@ -149,7 +147,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
         const placements = data[markerType];
 
         // Create markers for instances
-        placements.forEach( instance => {
+        for ( const instance of placements ) {
             const position = this.translatePoint( [ instance[0], instance[1] ] );
             let leafletMarker;
 
@@ -188,7 +186,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             } );
 
             this.onMarkerReady( markerType, group, instance, leafletMarker );
-        } );
+        }
     }
 };
 

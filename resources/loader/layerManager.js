@@ -23,7 +23,8 @@ MarkerLayerManager.prototype.register = function ( layerName ) {
 
 MarkerLayerManager.prototype.addMember = function ( type, leafletMarker ) {
     leafletMarker.arkAttachedLayers = type.split(' ');
-    leafletMarker.arkAttachedLayers.forEach( layer => this.byLayer[layer].push( leafletMarker ) );
+    for ( const layer of leafletMarker.arkAttachedLayers )
+        this.byLayer[layer].push( leafletMarker );
     this.markers.push( leafletMarker );
     this.updateMember( leafletMarker );
 };
@@ -38,9 +39,8 @@ MarkerLayerManager.prototype.addMarkerToLayer = function ( leafletMarker, layer 
 
 MarkerLayerManager.prototype.removeMember = function ( leafletMarker ) {
     this.map.leaflet.removeLayer( leafletMarker );
-    leafletMarker.arkAttachedLayers.forEach( layer => {
+    for ( const layer of leafletMarker.arkAttachedLayers )
         delete this.byLayer[layer][this.byLayer[layer].indexOf( leafletMarker )];
-    } );
     delete this.markers[this.markers.indexOf( leafletMarker )];
     leafletMarker.arkAttachedLayers = null;
 };
@@ -101,7 +101,8 @@ MarkerLayerManager.prototype.updateMembers = function ( layerName ) {
         return;
     }
     // Run an update on every member of the layer
-    ( layerName ? this.byLayer[layerName] : this.markers ).forEach( m => this.updateMember( m ) );
+    for ( const m of ( layerName ? this.byLayer[layerName] : this.markers ) )
+        this.updateMember( m );
 };
 
 
