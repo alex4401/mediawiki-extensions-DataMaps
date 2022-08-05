@@ -8,8 +8,8 @@ class DataMapsConfig {
     }
 
     public static function getNamespace(): int {
-        global $wgDataMapsNamespace;
-        return $wgDataMapsNamespace;
+        global $wgDataMapsNamespaceId;
+        return $wgDataMapsNamespaceId;
     }
 
     public static function getApiCacheType() {

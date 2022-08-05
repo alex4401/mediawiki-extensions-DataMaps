@@ -141,7 +141,7 @@
     },
 
 	"config": {
-		"DataMapsNamespace": {
+		"DataMapsNamespaceId": {
 			"description": "Namespace where data maps will be stored.",
 			"value": -1
 		},

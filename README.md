@@ -76,7 +76,7 @@ Box is a array of two locations, where first describes the start point of the bo
 * * Example: `{{DataMap:Maps/Resources/Aberration|filter=metal,crystal|title=Metal and crystal locations on [[Aberration]]}}`.
 
 ## Configuration
-* `$wgDataMapsNamespace`: namespace where data maps will be allowed. **Must be set.**
+* `$wgDataMapsNamespaceId`: namespace where data maps will be allowed. **Must be set.**
 * `$wgDataMapsCacheType`: cache type to use for `queryDataMap` API endpoint output. Defaults to `CACHE_ANYTHING`.
 * `$wgDataMapsCacheExpiryTime`: time after which cached `queryDataMap` API endpoint responses expire. Set to `0` to disable caching. Defaults to `86400` (a day).
 * `$wgDataMapsMarkerParserExpansionLimit`: controls parser expansion size limit for each marker.
