@@ -1,3 +1,37 @@
+function MarkerGroupToggleField( legendPanel, groupId, group ) {
+    this.legendPanel = legendPanel;
+    this.legend = this.legendPanel.legend;
+    this.map = this.legendPanel.map;
+    this.groupId = groupId;
+
+    // Create a backing checkbox field
+    const pair = this.legend.createCheckboxField( this.legendPanel.$groupContainer, group.name, true,
+        state => this.map.layerManager.setExclusion( this.groupId, !state ) );
+    this.field = pair[1];
+    this.checkbox = pair[0];
+
+    // Optional elements
+    this.$circle = null;
+    this.$icon = null;
+
+    // Add a coloured circle if circle marker group
+    if ( group.fillColor ) {
+        this.$circle = $( '<div class="datamap-legend-circle">' ).css( {
+            width: group.size+4,
+            height: group.size+4,
+            backgroundColor: group.fillColor,
+            borderColor: group.strokeColor || group.fillColor,
+            borderWidth: group.strokeWidth || 1,
+        } ).prependTo( this.field.$header );
+    }
+
+    // Add an icon if one is specified in the group
+    if ( group.legendIcon ) {
+        this.$icon = $( '<img width=24 height=24/>' ).attr( 'src', group.legendIcon ).prependTo( this.field.$header );
+    }
+}
+
+
 function MarkerLegendPanel( legend, name, addTotalToggles, withLayerDropdown ) {
     this.legend = legend;
     this.map = this.legend.map;
@@ -8,7 +42,7 @@ function MarkerLegendPanel( legend, name, addTotalToggles, withLayerDropdown ) {
     //
     this.$groupContainer = $( '<div class="datamap-container-groups">' ).appendTo( this.$root );
     //
-    this.groupToggles = [];
+    this.groupToggles = {};
     // 
     this.$layersPopup = null;
 
@@ -52,7 +86,8 @@ MarkerLegendPanel.prototype.createPopupButton = function ( label ) {
 
 
 MarkerLegendPanel.prototype.toggleAllGroups = function ( state ) {
-    this.groupToggles.forEach( checkbox => checkbox.setSelected( state ) );
+    for ( const toggle of Object.values( this.groupToggles ) )
+        toggle.checkbox.setSelected( state );
 };
 
 
@@ -61,10 +96,12 @@ MarkerLegendPanel.prototype.addMarkerLayerToggleExclusive = function ( $parent, 
         state => this.map.layerManager.setExclusion( layerId, !state ) );
 };
 
+
 MarkerLegendPanel.prototype.addMarkerLayerToggleInclusive = function ( $parent, layerId, layerName, invert ) {
     this.legend.createCheckboxField( $parent, layerName, true,
         state => this.map.layerManager.setInclusion( layerId, ( invert ? state : !state ) ) );
 };
+
 
 MarkerLegendPanel.prototype.addMarkerLayerToggleRequired = function ( $parent, layerId, layerName, invert ) {
     this.legend.createCheckboxField( $parent, layerName, true,
@@ -73,25 +110,7 @@ MarkerLegendPanel.prototype.addMarkerLayerToggleRequired = function ( $parent, l
 
 
 MarkerLegendPanel.prototype.addMarkerGroupToggle = function ( groupId, group ) {
-    const pair = this.legend.createCheckboxField( this.$groupContainer, group.name, true,
-        state => this.map.layerManager.setExclusion( groupId, !state ) );
-    const field = pair[1];
-
-    if ( group.fillColor ) {
-        $( '<div class="datamap-legend-circle">' ).css( {
-            width: group.size+4,
-            height: group.size+4,
-            backgroundColor: group.fillColor,
-            borderColor: group.strokeColor || group.fillColor,
-            borderWidth: group.strokeWidth || 1,
-        } ).prependTo( field.$header );
-    }
-
-    if ( group.legendIcon ) {
-        field.$header.prepend( $( '<img width=24 height=24/>' ).attr( 'src', group.legendIcon ) );
-    }
-
-    this.groupToggles.push( pair[0] );
+    this.groupToggles[groupId] = new MarkerGroupToggleField( this, groupId, group );
 };
 
 
