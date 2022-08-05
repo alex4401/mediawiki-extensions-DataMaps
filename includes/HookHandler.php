@@ -44,7 +44,7 @@ class HookHandler implements
 	}
 
 	public function onEditPageBeforeEditButtons( $editPage, &$buttons, &$tabIndex ) {
-		if ( $editPage->contentModel === ARK_CONTENT_MODEL_DATAMAP ) {
+		if ( !DataMapsConfig::isBleedingEdge() && $editPage->contentModel === ARK_CONTENT_MODEL_DATAMAP ) {
 			$buttons['preview']->setDisabled( true );
 			$buttons['preview']->setTitle( Linker::titleAttrib( 'datamap-preview-unavailable' ) );
 		}

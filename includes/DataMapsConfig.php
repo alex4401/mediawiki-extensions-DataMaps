@@ -31,4 +31,9 @@ class DataMapsConfig {
         global $wgDataMapsShowCoordinatesDefault;
         return $wgDataMapsShowCoordinatesDefault;
     }
+
+    public static function isBleedingEdge(): bool {
+        global $wgDataMapsAllowExperimentalFeatures;
+        return $wgDataMapsAllowExperimentalFeatures;
+    }
 }

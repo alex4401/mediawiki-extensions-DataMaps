@@ -164,6 +164,10 @@
 		"DataMapsShowCoordinatesDefault": {
 			"description": "Whether to display coordinates to the user on data maps by default.",
 			"value": true
+		},
+		"DataMapsAllowExperimentalFeatures": {
+			"description": "Whether to enable experimental features.",
+			"value": false
 		}
 	},
 

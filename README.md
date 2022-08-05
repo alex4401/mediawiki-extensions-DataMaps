@@ -82,6 +82,8 @@ Box is a array of two locations, where first describes the start point of the bo
 * `$wgDataMapsMarkerParserExpansionLimit`: controls parser expansion size limit for each marker.
 * `$wgDataMapsShowCoordinatesDefault`: whether coordinates will be displayed in the user interface.
 * `$wgDataMapsDebugApiProcessingTime`: if set to `true`, marker processing time will be reported in API responses.
+* `$wgDataMapsAllowExperimentalFeatures`: if set to `true`, enables features listed below - all of which are in development and not ready for production.
+* * Edit Previewing
 
 ## General architecture
 The `DataMapContent` class handles data validation (on write only), and customised source beautification.
