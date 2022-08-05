@@ -24,7 +24,9 @@ MarkerPopup.updateLocation = function ( persistentMarkerId ) {
     } else {
         params.delete( MarkerPopup.URL_PARAMETER );
     }
-    history.replaceState( {}, '', decodeURIComponent( `${window.location.pathname}?${params}#${window.location.hash}` ).replace( /[\?#]$/, '' ) );
+
+    history.replaceState( {}, '',
+        decodeURIComponent( `${window.location.pathname}?${params}`.replace( /\?$/, '' ) + window.location.hash ) );
 };
 
 
