@@ -82,6 +82,15 @@ DataMap.prototype.waitForLeaflet = function ( callback ) {
 };
 
 
+DataMap.prototype.waitForLegend = function ( callback ) {
+    if ( this.legend == null ) {
+        setTimeout( this.waitForLegend.bind( this, callback ), 25 );
+    } else {
+        callback();
+    }
+};
+
+
 /*
  * Returns true if a layer is used on the map.
  */
@@ -114,6 +123,26 @@ DataMap.prototype.translateBox = function ( box ) {
  */
 DataMap.prototype.getCoordLabel = function ( lat, lon ) {
     return this.coordTrackingMsg.replace( '$1', lat.toFixed( 2 ) ).replace( '$2', lon.toFixed( 2 ) );
+};
+
+
+DataMap.prototype.toggleMarkerDismissal = function ( markerType, coords, leafletMarker ) {
+    const state = this.storage.toggleDismissal( markerType, coords );
+    leafletMarker.setDismissed( state );
+    this.updateMarkerDismissalBadges();
+    return state;
+};
+
+
+DataMap.prototype.updateMarkerDismissalBadges = function () {
+    for ( const groupId in this.config.groups ) {
+        const group = this.config.groups[groupId];
+        if ( group.canDismiss ) {
+            const markers = this.layerManager.byLayer[groupId];
+            const count = markers.filter( x => x.options.dismissed ).length;
+            this.markerLegend.groupToggles[groupId].setBadge( `${count} / ${markers.length}` );
+        }
+    }
 };
 
 
@@ -188,6 +217,9 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             this.onMarkerReady( markerType, group, instance, leafletMarker );
         }
     }
+
+    // Refresh dismissal badges in the legend
+    this.waitForLegend( () => this.updateMarkerDismissalBadges() );
 };
 
 

@@ -12,6 +12,7 @@ function MarkerGroupToggleField( legendPanel, groupId, group ) {
 
     // Optional elements
     this.$circle = null;
+    this.$badge = null;
     this.$icon = null;
 
     // Add a coloured circle if circle marker group
@@ -30,6 +31,14 @@ function MarkerGroupToggleField( legendPanel, groupId, group ) {
         this.$icon = $( '<img width=24 height=24/>' ).attr( 'src', group.legendIcon ).prependTo( this.field.$header );
     }
 }
+
+
+MarkerGroupToggleField.prototype.setBadge = function ( text ) {
+    if ( this.$badge == null ) {
+        this.$badge = $( '<span class="datamap-legend-badge">' ).appendTo( this.field.$header );
+    }
+    this.$badge.text( text );
+};
 
 
 function MarkerLegendPanel( legend, name, addTotalToggles, withLayerDropdown ) {

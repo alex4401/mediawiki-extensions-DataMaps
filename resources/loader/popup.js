@@ -55,11 +55,11 @@ MarkerPopup.prototype.build = function () {
     } );
 
     // Coordinates
+    // TODO: this is not displayed if coordinates are disabled
     let coordText = this.map.getCoordLabel( this.coords[0], this.coords[1] );
     if ( discrims.length > 0 ) {
         coordText += ` (${ discrims.join( ', ' ) })`;
     }
-    
     if ( config.DataMapsShowCoordinatesDefault ) {
         $( '<div class="datamap-popup-coordinates">' ).text( coordText ).appendTo( this.$content );
     }
@@ -103,8 +103,7 @@ MarkerPopup.prototype.buildTools = function () {
             $( '<a>' )
                 .text( this.getDismissToolText() )
                 .on( 'click', () => {
-                    var state = this.map.storage.toggleDismissal( this.markerType, this.coords );
-                    this.leafletMarker.setDismissed( state );
+                    this.map.toggleMarkerDismissal( this.markerType, this.coords, this.leafletMarker );
                     this.map.leaflet.closePopup();
                 } )
         );
