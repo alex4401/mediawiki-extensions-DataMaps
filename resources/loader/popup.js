@@ -7,7 +7,7 @@ var getMarkerUID = function ( map, markerType, instance ) {
 };
 
 
-var getMarkerURL = function ( map, persistentMarkerId ) {
+var getMarkerURL = function ( map, persistentMarkerId, withHost ) {
     const params = new URLSearchParams( window.location.search );
     if ( persistentMarkerId ) {
         params.set( URL_PARAMETER, persistentMarkerId );
@@ -16,7 +16,8 @@ var getMarkerURL = function ( map, persistentMarkerId ) {
     }
 
     const tabber = map.getParentTabberNeueId();
-    return decodeURIComponent( `${window.location.pathname}?${params}`.replace( /\?$/, '' )
+    return ( withHost ? `https://${window.location.hostname}` : '' )
+        + decodeURIComponent( `${window.location.pathname}?${params}`.replace( /\?$/, '' )
         + ( tabber ? ( '#' + tabber ) : window.location.hash ) );
 };
 
@@ -35,6 +36,7 @@ function MarkerPopup( map, markerType, instance, slots, leafletMarker ) {
     this.slots = slots;
     this.leafletMarker = leafletMarker;
     // These two containers are provided by L.Ark.Popup
+    this.$buttons = null;
     this.$content = null;
     this.$tools = null;
 }
@@ -51,6 +53,26 @@ MarkerPopup.bindTo = function ( map, markerType, instance, slots, leafletMarker 
 MarkerPopup.prototype.getDismissToolText = function () {
     return mw.msg( 'datamap-popup-' + ( this.map.storage.isDismissed( this.markerType, this.instance )
         ? 'dismissed' : 'mark-as-dismissed' ) );
+};
+
+
+MarkerPopup.prototype.getMarkerUID = function () {
+    return getMarkerUID( this.map, this.markerType, this.instance );
+};
+
+
+MarkerPopup.prototype.buildButtons = function () {
+    const $getLink = $( '<a class="datamap-marker-link-button oo-ui-icon-link" role="button"></a>' )
+        .attr( {
+            'aria-label': mw.msg( 'datamap-marker-link-get' ),
+            'href': getMarkerURL( this.map, this.getMarkerUID(), true )
+        } )
+        .appendTo( this.$buttons )
+        .on( 'click', event => {
+            event.preventDefault();
+            navigator.clipboard.writeText( $getLink.attr( 'href' ) )
+                .then( () => mw.notify( mw.msg( 'datamap-marker-link-copied' ) ) );
+        } );
 };
 
 
@@ -129,7 +151,7 @@ MarkerPopup.prototype.buildTools = function () {
 
 
 MarkerPopup.prototype.onAdd = function () {
-    updateLocation( this.map, getMarkerUID( this.map, this.markerType, this.instance ) );
+    updateLocation( this.map, this.getMarkerUID() );
 };
 
 

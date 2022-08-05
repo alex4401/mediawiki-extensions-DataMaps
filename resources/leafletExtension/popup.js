@@ -9,12 +9,22 @@ module.exports = L.Popup.extend( {
     },
 
 	_updateContent: function () {
+        if ( !this._contentNode ) {
+            return;
+        }
+
         if ( !this._content ) {
             this._content = this.getContentManager();
         }
 
         // Grant content node reference
         this._content.$content = $( this._contentNode );
+        // Clear custom button area
+        this.$customButtonArea.children().remove();
+        // Grant custom button area reference
+        this._content.$buttons = this.$customButtonArea;
+        // Build custom buttons
+        this._content.buildButtons();
         // Clear the content node
         this._content.$content.children().remove();
         // Build content
@@ -26,6 +36,8 @@ module.exports = L.Popup.extend( {
 
 	_initLayout: function () {
 		L.Popup.prototype._initLayout.call( this );
+
+        this.$customButtonArea = $( '<div class="datamap-popup-buttons">' ).appendTo( this._container );
 	},
 
 	onAdd: function ( map ) {
