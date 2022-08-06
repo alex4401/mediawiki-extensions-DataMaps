@@ -6,6 +6,11 @@ use stdClass;
 class DataModelMixinTransformer {
     public static function mergeTwoObjects( stdClass $target, stdClass $overlay ): stdClass {
         foreach ( get_object_vars( $overlay ) as $name => $value ) {
+            // Do not copy metadata fields
+            if ( $name[0] == '$' ) {
+                continue;
+            }
+
             if ( !isset( $target->$name ) ) {
                 // Missing, copy
                 $target->$name = $value;

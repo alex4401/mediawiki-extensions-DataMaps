@@ -1,0 +1,1502 @@
+{
+	"title": "Deniz Temtem Spawn Map",
+	"crs": [
+		[
+			0,
+			0
+		],
+		[
+			3498,
+			3498
+		]
+	],
+    "backgrounds": [
+        {
+            "image": "Deniz Interactive Map-Background.png",
+            "overlays": [
+                {
+                    "path": [
+                        [ 20, 20 ],
+                        [ 50, 50 ],
+                        [ 90, 70 ],
+                        [ 90, 10 ]
+                    ]
+                }
+            ]
+        }
+    ],
+    "leafletSettings": { "maxZoom": 7 },
+	"groups": {
+		"Barnshe": {
+			"name": "Barnshe",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M053.png",
+			"article": "Barnshe"
+		},
+		"Fomu": {
+			"name": "Fomu",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M025.png",
+			"article": "Fomu"
+		},
+		"Ganki": {
+			"name": "Ganki",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M113.png",
+			"article": "Ganki"
+		},
+		"Hocus": {
+			"name": "Hocus",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M079.png",
+			"article": "Hocus"
+		},
+		"Kaku": {
+			"name": "Kaku",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M048.png",
+			"article": "Kaku"
+		},
+		"Kalazu": {
+			"name": "Kalazu",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M127.png",
+			"article": "Kalazu"
+		},
+		"Koish(Water)": {
+			"name": "Koish (Water)",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M143 Water.png",
+			"article": "Koish#Water"
+		},
+		"Koish(Wind)": {
+			"name": "Koish (Wind)",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M143 Wind.png",
+			"article": "Koish#Wind"
+		},
+		"Nessla": {
+			"name": "Nessla",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M123.png",
+			"article": "Nessla"
+		},
+		"Oceara": {
+			"name": "Oceara",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M115.png",
+			"article": "Ocaeara"
+		},
+		"Paharac": {
+			"name": "Paharac",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M017.png",
+			"article": "Paharac"
+		},
+		"Paharo": {
+			"name": "Paharo",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M016.png",
+			"article": "Paharo"
+		},
+		"Pewki": {
+			"name": "Pewki",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M060.png",
+			"article": "Pewki"
+		},
+		"Pigepic": {
+			"name": "Pigepic",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M141.png",
+			"article": "Pigepic"
+		},
+		"Platimous": {
+			"name": "Platimous",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M009.png",
+			"article": "Platimous"
+		},
+		"Platox": {
+			"name": "Platox",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M008.png",
+			"article": "Platox"
+		},
+		"Platypet": {
+			"name": "Platypet",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M007.png",
+			"article": "Platypet"
+		},
+		"Saipat": {
+			"name": "Saipat",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M069.png",
+			"article": "Saipat"
+		},
+		"Scarawatt": {
+			"name": "Scarawatt",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M062.png",
+			"article": "Scarawatt"
+		},
+		"Skail": {
+			"name": "Skail",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M027.png",
+			"article": "Skail"
+		},
+		"Skunch": {
+			"name": "Skunch",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M028.png",
+			"article": "Skunch"
+		},
+		"Swali": {
+			"name": "Swali",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M010.png",
+			"article": "Swali"
+		},
+		"Taifu": {
+			"name": "Taifu",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M024.png",
+			"article": "Taifu"
+		},
+		"Tateru": {
+			"name": "Tateru",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M012.png",
+			"article": "Tateru"
+		},
+		"Towly": {
+			"name": "Towly",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M051.png",
+			"article": "Towly"
+		},
+		"Tuwai": {
+			"name": "Tuwai",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M130.png",
+			"article": "Tuwai"
+		},
+		"Umishi": {
+			"name": "Umishi",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M088.png",
+			"article": "Umsihi"
+		},
+		"Wiplump": {
+			"name": "Wiplump",
+			"size": [
+				40,
+				40
+			],
+			"icon": "Map Marker M026.png",
+			"article": "Wiplumo"
+		}
+	},
+	"markers": {
+		"Tateru": [
+			{
+				"id": "01207",
+				"lat": 987.121,
+				"lon": 2777.515,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=30%\n|level=15-17\n|tv=2 STA\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "01208",
+				"lat": 681.674,
+				"lon": 2753.473,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=20%\n|level=15-18\n|tv=2 STA\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "01209",
+				"lat": 393.871,
+				"lon": 2946.513,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=20%\n|level=14-17\n|tv=2 STA\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "01210",
+				"lat": 731.148,
+				"lon": 2364.565,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=20%\n|level=14-17\n|tv=2 STA\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "01211",
+				"lat": 638.508,
+				"lon": 3154.496,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=30%\n|level=14-17\n|tv=2 STA\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "01212",
+				"lat": 748.824,
+				"lon": 3140.262,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=30%\n|level=14-18\n|tv=2 STA\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "01213",
+				"lat": 992,
+				"lon": 2300,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=30%\n|level=19-20\n|tv=2 STA\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "01214",
+				"lat": 984.999,
+				"lon": 3239.501,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=50%\n|level=15-17\n|tv=2 STA\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "01206",
+				"lat": 2022.325,
+				"lon": 2440.933,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=20%\n|level=12-13\n|tv=2 STA\n|location=Windward Fort\n}}"
+			},
+			{
+				"id": "01205",
+				"lat": 2486,
+				"lon": 845,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=40%\n|level=8-10\n|tv=2 STA\n|location=Gifted Bridges\n}}"
+			},
+			{
+				"id": "01204",
+				"lat": 1533.008,
+				"lon": 1043.69,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=70%\n|level=4-6\n|tv=2 STA\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "01215",
+				"lat": 961.665,
+				"lon": 709.935,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=50%\n|level=37-40\n|tv=2 STA\n|location=Saipark\n}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			},
+			{
+				"id": "01203",
+				"lat": 994,
+				"lon": 929,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=50%\n|level=3-5\n|tv=2 STA\n|location=Prasine Coast}}"
+			},
+			{
+				"id": "01202",
+				"lat": 468,
+				"lon": 957,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=30%\n|level=2-3\n|tv=2 STA\n|location=Prasine Coast}}"
+			},
+			{
+				"id": "01201",
+				"lat": 437,
+				"lon": 1077,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=30%\n|level=2\n|tv=2 STA\n|location=Prasine Coast}}"
+			},
+			{
+				"id": "01216",
+				"lat": 851.357,
+				"lon": 347.897,
+				"label": "Tateru",
+				"description": "{{Temtem Pin\n|temtem=Tateru\n|type1=Neutral\n|type2=\n|rate=50%\n|level=37-40\n|tv=2 STA\n|location=Saipark\n}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			}
+		],
+		"Paharo": [
+			{
+				"id": "01608",
+				"lat": 2491,
+				"lon": 787,
+				"label": "Paharo",
+				"description": "{{Temtem Pin\n|temtem=Paharo\n|type1=Wind\n|type2=\n|rate=30%\n|level=7-10\n|tv=1 HP\n|location=Gifted Bridges}}"
+			},
+			{
+				"id": "01607",
+				"lat": 2349,
+				"lon": 827,
+				"label": "Paharo",
+				"description": "{{Temtem Pin\n|temtem=Paharo\n|type1=Wind\n|type2=\n|rate=90%\n|level=7-8\n|tv=1 HP\n|location=Gifted Bridges}}"
+			},
+			{
+				"id": "01606",
+				"lat": 1609.375,
+				"lon": 838.629,
+				"label": "Paharo",
+				"description": "{{Temtem Pin\n|temtem=Paharo\n|type1=Wind\n|type2=\n|rate=90%\n|level=4-6\n|tv=1 HP\n|location=Thalassian Cliffs}}"
+			},
+			{
+				"id": "01605",
+				"lat": 1121.996,
+				"lon": 1032.999,
+				"label": "Paharo",
+				"description": "{{Temtem Pin\n|temtem=Paharo\n|type1=Wind\n|type2=\n|rate=90%\n|level=4-6\n|tv=1 HP\n|location=Prasine Coast}}"
+			},
+			{
+				"id": "01603",
+				"lat": 795.5,
+				"lon": 928,
+				"label": "Paharo",
+				"description": "{{Temtem Pin\n|temtem=Paharo\n|type1=Wind\n|type2=\n|rate=90%\n|level=4-7\n|tv=1 HP\n|location=Prasine Coast}}"
+			},
+			{
+				"id": "01604",
+				"lat": 886,
+				"lon": 1066,
+				"label": "Paharo",
+				"description": "{{Temtem Pin\n|temtem=Paharo\n|type1=Wind\n|type2=\n|rate=20%\n|level=3-5\n|tv=1 HP\n|location=Prasine Coast}}"
+			},
+			{
+				"id": "01601",
+				"lat": 468,
+				"lon": 927,
+				"label": "Paharo",
+				"description": "{{Temtem Pin\n|temtem=Paharo\n|type1=Wind\n|type2=\n|rate=35%\n|level=2\n|tv=1 HP\n|location=Prasine Coast}}"
+			},
+			{
+				"id": "01602",
+				"lat": 436,
+				"lon": 1005,
+				"label": "Paharo",
+				"description": "{{Temtem Pin\n|temtem=Paharo\n|type1=Wind\n|type2=\n|rate=35%\n|level=2\n|tv=1 HP\n|location=Prasine Coast}}"
+			}
+		],
+		"Saipat": [
+			{
+				"id": "06915",
+				"lat": 393.873,
+				"lon": 2865.903,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=20%\n|level=15-18\n|tv=3 HP\n|location=Aguamarina Caves}}"
+			},
+			{
+				"id": "06916",
+				"lat": 627.911,
+				"lon": 2476.288,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=20%\n|level=14-17\n|tv=3 HP\n|location=Aguamarina Caves}}"
+			},
+			{
+				"id": "06917",
+				"lat": 817.411,
+				"lon": 2252.135,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=35%\n|level=15-18\n|tv=3 HP\n|location=Aguamarina Caves}}"
+			},
+			{
+				"id": "06918",
+				"lat": 530.33,
+				"lon": 2845.398,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=35%\n|level=15-17\n|tv=3 HP\n|location=Aguamarina Caves}}"
+			},
+			{
+				"id": "06919",
+				"lat": 681.663,
+				"lon": 2845.391,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=20%\n|level=15-18\n|tv=3 HP\n|location=Aguamarina Caves}}"
+			},
+			{
+				"id": "06920",
+				"lat": 973.686,
+				"lon": 2353.251,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=40%\n|level=18-20\n|tv=3 HP\n|location=Aguamarina Caves}}"
+			},
+			{
+				"id": "06921",
+				"lat": 986.989,
+				"lon": 3279.499,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=40%\n|level=14-15\n|tv=3 HP\n|location=Aguamarina Caves}}"
+			},
+			{
+				"id": "06927",
+				"lat": 2232,
+				"lon": 3216,
+				"label": "Saipat (Fishing Spot)",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=35%\n|level=15-17\n|tv=3 HP\n|location=Arissola Dojo}}\n* Requires [[Fishing Rod]]."
+			},
+			{
+				"id": "06914",
+				"lat": 1767.767,
+				"lon": 2440.933,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=50%\n|level=11-14\n|tv=3 HP\n|location=Windward Fort}}"
+			},
+			{
+				"id": "06907",
+				"lat": 1893,
+				"lon": 2510,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=20%\n|level=9-12\n|tv=3 HP\n|location=Windward Fort}}"
+			},
+			{
+				"id": "06912",
+				"lat": 2562,
+				"lon": 552,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=100%\n|level=11-13\n|tv=3 HP\n|location=Gifted Bridges}}"
+			},
+			{
+				"id": "06911",
+				"lat": 2674.999,
+				"lon": 602,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=20%\n|level=12-14\n|tv=3 HP\n|location=Gifted Bridges}}"
+			},
+			{
+				"id": "06906",
+				"lat": 2840.458,
+				"lon": 697.912,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=15%\n|level=8-10\n|tv=3 HP\n|location=Gifted Bridges}}"
+			},
+			{
+				"id": "06905",
+				"lat": 1892,
+				"lon": 840,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=5%\n|level=7\n|tv=3 HP\n|location=Thalassian Cliffs}}"
+			},
+			{
+				"id": "06910",
+				"lat": 2852.469,
+				"lon": 1366.13,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=45%\n|level=13-14\n|tv=3 HP\n|location=Sillaro River}}\n* This location applies to all costal areas in northern Sillaro River."
+			},
+			{
+				"id": "06909",
+				"lat": 259,
+				"lon": 1349,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=100%\n|level=14-15\n|tv=3 HP\n|location=Sillaro River}}"
+			},
+			{
+				"id": "06908",
+				"lat": 1230.372,
+				"lon": 1150.462,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=45%\n|level=13-16\n|tv=3 HP\n|location=Sillaro River}}\n* This location applies to all costal areas in southern Sillaro River."
+			},
+			{
+				"id": "06922",
+				"lat": 1040.861,
+				"lon": 497.803,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=50%\n|level=38-41\n|tv=3 HP\n|location=Saipark}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			},
+			{
+				"id": "06923",
+				"lat": 964.494,
+				"lon": 613.769,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=50%\n|level=38-41\n|tv=3 HP\n|location=Saipark}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			},
+			{
+				"id": "06904",
+				"lat": 1121.998,
+				"lon": 1084.999,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=50%\n|level=3-6\n|tv=3 HP\n|location=Prasine Coast}}"
+			},
+			{
+				"id": "06903",
+				"lat": 995,
+				"lon": 962,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=50%\n|level=3-5\n|tv=3 HP\n|location=Prasine Coast}}"
+			},
+			{
+				"id": "06902",
+				"lat": 611.647,
+				"lon": 1045.104,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=20%\n|level=3-4\n|tv=3 HP\n|location=Prasine Coast}}"
+			},
+			{
+				"id": "06901",
+				"lat": 434,
+				"lon": 1040,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=35%\n|level=2\n|tv=3 HP\n|location=Prasine Coast}}"
+			},
+			{
+				"id": "06924",
+				"lat": 803.273,
+				"lon": 653.367,
+				"label": "Saipat (Fishing Spot)",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=50%\n|level=38-41\n|tv=3 HP\n|location=Saipark}}\n* Requires [[Fishing Rod]]."
+			},
+			{
+				"id": "06925",
+				"lat": 677.407,
+				"lon": 532.449,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=50%\n|level=38-41\n|tv=3 HP\n|location=Saipark}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			},
+			{
+				"id": "06926",
+				"lat": 851.357,
+				"lon": 285.671,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=50%\n|level=38-41\n|tv=3 HP\n|location=Saipark}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			},
+			{
+				"id": "06913",
+				"lat": 1766.75,
+				"lon": 2583.999,
+				"label": "Saipat",
+				"description": "{{Temtem Pin\n|temtem=Saipat\n|type1=Water\n|type2=Melee\n|rate=50%\n|level=11-14\n|tv=3 HP\n|location=Windward Fort}}"
+			}
+		],
+		"Barnshe": [
+			{
+				"id": "05301",
+				"lat": 2863.009,
+				"lon": 2522.242,
+				"label": "Barnshe",
+				"description": "{{Temtem Pin\n|temtem=Barnshe\n|type1=Wind\n|type2=Mental\n|rate=5%\n|level=12-14\n|tv=1 SPATK\n|location=Windward Fort\n}}"
+			}
+		],
+		"Fomu": [
+			{
+				"id": "02503",
+				"lat": 1968,
+				"lon": 1392,
+				"label": "Fomu",
+				"description": "{{Temtem Pin\n|temtem=Fomu\n|type1=Water\n|type2=\n|rate=100%\n|level=14-15\n|tv=2 SPDEF\n|location=Sillaro RIver\n}}"
+			},
+			{
+				"id": "02509",
+				"lat": 1824,
+				"lon": 2514,
+				"label": "Fomu",
+				"description": "{{Temtem Pin\n|temtem=Fomu\n|type1=Water\n|type2=\n|rate=100%\n|level=11-14\n|tv=2 SPDEF\n|location=Windward Fort\n}}"
+			},
+			{
+				"id": "02510",
+				"lat": 1780,
+				"lon": 2464,
+				"label": "Fomu",
+				"description": "{{Temtem Pin\n|temtem=Fomu\n|type1=Water\n|type2=\n|rate=50%\n|level=11-12\n|tv=2 SPDEF\n|location=WIndward Fort\n}}"
+			},
+			{
+				"id": "02501",
+				"lat": 1874,
+				"lon": 2478.5,
+				"label": "Fomu",
+				"description": "{{Temtem Pin\n|temtem=Fomu\n|type1=Water\n|type2=\n|rate=10%\n|level=9-11\n|tv=2 SPDEF\n|location=WIndward Fort\n}}"
+			},
+			{
+				"id": "02508",
+				"lat": 2758,
+				"lon": 596,
+				"label": "Fomu",
+				"description": "{{Temtem Pin\n|temtem=Fomu\n|type1=Water\n|type2=\n|rate=80%\n|level=12-15\n|tv=2 SPDEF\n|location=Gifted Bridges\n}}"
+			},
+			{
+				"id": "02504",
+				"lat": 2851,
+				"lon": 1392.5,
+				"label": "Fomu",
+				"description": "{{Temtem Pin\n|temtem=Fomu\n|type1=Water\n|type2=\n|rate=100%\n|level=14-15\n|tv=2 SPDEF\n|location=Sillaro RIver\n}}"
+			},
+			{
+				"id": "02506",
+				"lat": 2878,
+				"lon": 1366,
+				"label": "Fomu",
+				"description": "{{Temtem Pin\n|temtem=Fomu\n|type1=Water\n|type2=\n|rate=50%\n|level=13-14\n|tv=2 SPDEF\n|location=Sillaro RIver\n}}\n* This location applies to all costal areas in northern Sillaro River."
+			},
+			{
+				"id": "02507",
+				"lat": 1092,
+				"lon": 1412,
+				"label": "Fomu",
+				"description": "{{Temtem Pin\n|temtem=Fomu\n|type1=Water\n|type2=\n|rate=100%\n|level=14-15\n|tv=2 SPDEF\n|location=Sillaro RIver\n}}"
+			},
+			{
+				"id": "02502",
+				"lat": 1371.085,
+				"lon": 1149.048,
+				"label": "Fomu",
+				"description": "{{Temtem Pin\n|temtem=Fomu\n|type1=Water\n|type2=\n|rate=50%\n|level=13-14\n|tv=2 SPDEF\n|location=Sillaro RIver\n}}\n* This location applies to all costal areas in southern Sillaro River."
+			},
+			{
+				"id": "02505",
+				"lat": 171.12,
+				"lon": 1356.231,
+				"label": "Fomu",
+				"description": "{{Temtem Pin\n|temtem=Fomu\n|type1=Water\n|type2=\n|rate=90%\n|level=14-15\n|tv=2 SPDEF\n|location=Sillaro RIver\n}}"
+			},
+			{
+				"id": "14309",
+				"lat": 1781.002,
+				"lon": 2579.001,
+				"label": "Fomu",
+				"description": "{{Temtem Pin\n|temtem=Fomu\n|type1=Water\n|type2=\n|rate=50%\n|level=11-12\n|tv=2 SPDEF\n|location=Windward Fort\n}}"
+			}
+		],
+		"Ganki": [
+			{
+				"id": "11305",
+				"lat": 2727.007,
+				"lon": 2474.501,
+				"label": "Ganki",
+				"description": "{{Temtem Pin\n|temtem=Ganki\n|type1=Electric\n|type2=Wind\n|rate=50%\n|level=10-12\n|tv=1 ATK\n|location=WIndward Fort\n}}"
+			},
+			{
+				"id": "11304",
+				"lat": 2287,
+				"lon": 2551,
+				"label": "Ganki",
+				"description": "{{Temtem Pin\n|temtem=Ganki\n|type1=Electric\n|type2=Wind\n|rate=20%\n|level=12-13\n|tv=1 ATK\n|location=Windward Fort\n}}"
+			},
+			{
+				"id": "11303",
+				"lat": 2012.426,
+				"lon": 762.261,
+				"label": "Ganki",
+				"description": "{{Temtem Pin\n|temtem=Ganki\n|type1=Electric\n|type2=Wind\n|rate=80%\n|level=13-16\n|tv=1 ATK\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "11302",
+				"lat": 1754,
+				"lon": 974,
+				"label": "Ganki",
+				"description": "{{Temtem Pin\n|temtem=Ganki\n|type1=Electric\n|type2=Wind\n|rate=100%\n|level=6-8\n|tv=1 ATK\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "11301",
+				"lat": 1753.633,
+				"lon": 891.663,
+				"label": "Ganki",
+				"description": "{{Temtem Pin\n|temtem=Ganki\n|type1=Electric\n|type2=Wind\n|rate=100%\n|level=5-7\n|tv=1 ATK\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "11306",
+				"lat": 2863.075,
+				"lon": 2573.162,
+				"label": "Ganki",
+				"description": "{{Temtem Pin\n|temtem=Ganki\n|type1=Electric\n|type2=Wind\n|rate=90%\n|level=12-14\n|tv=1 ATK\n|location=WIndward Fort\n}}"
+			}
+		],
+		"Hocus": [
+			{
+				"id": "07901",
+				"lat": 2653.065,
+				"lon": 883.883,
+				"label": "Hocus",
+				"description": "{{Temtem Pin\n|temtem=Hocus\n|type1=Mental\n|type2=\n|rate=5%\n|level=30-40\n|tv=1 SPD\n|location=Gifted Bridges\n}}\n* Requires [[Gravitonic piolets]] to reach."
+			}
+		],
+		"Kaku": [
+			{
+				"id": "04805",
+				"lat": 2649,
+				"lon": 997,
+				"label": "Kaku",
+				"description": "{{Temtem Pin\n|temtem=Kaku\n|type1=Nature\n|type2=\n|rate=30%\n|level=7-11\n|tv=1 HP\n|location=Gifted Bridges\n}}"
+			},
+			{
+				"id": "04804",
+				"lat": 2626.001,
+				"lon": 697.998,
+				"label": "Kaku",
+				"description": "{{Temtem Pin\n|temtem=Kaku\n|type1=Nature\n|type2=\n|rate=30%\n|level=8-10\n|tv=1 HP\n|location=Gifted Bridges\n}}"
+			},
+			{
+				"id": "04803",
+				"lat": 1858,
+				"lon": 808,
+				"label": "Kaku",
+				"description": "{{Temtem Pin\n|temtem=Kaku\n|type1=Nature\n|type2=\n|rate=95%\n|level=6-8\n|tv=1 HP\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "04802",
+				"lat": 884,
+				"lon": 946,
+				"label": "Kaku",
+				"description": "{{Temtem Pin\n|temtem=Kaku\n|type1=Nature\n|type2=\n|rate=40%\n|level=3-5\n|tv=1 HP\n|location=Prasine Coast\n}}"
+			},
+			{
+				"id": "04801",
+				"lat": 611.647,
+				"lon": 995.606,
+				"label": "Kaku",
+				"description": "{{Temtem Pin\n|temtem=Kaku\n|type1=Nature\n|type2=\n|rate=40%\n|level=2-4\n|tv=1 HP\n|location=Prasine Coast\n}}"
+			}
+		],
+		"Kalazu": [
+			{
+				"id": "12703",
+				"lat": 820.948,
+				"lon": 2317.897,
+				"label": "Kalazu",
+				"description": "{{Temtem Pin\n|temtem=Kalazu\n|type1=Water\n|type2=\n|rate=65%\n|level=15-18\n|tv=1 DEF\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "12704",
+				"lat": 554.372,
+				"lon": 2914.694,
+				"label": "Kalazu",
+				"description": "{{Temtem Pin\n|temtem=Kalazu\n|type1=Water\n|type2=\n|rate=65%\n|level=15-18\n|tv=1 DEF\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "12705",
+				"lat": 1038.007,
+				"lon": 2378.497,
+				"label": "Kalazu",
+				"description": "{{Temtem Pin\n|temtem=Kalazu\n|type1=Water\n|type2=\n|rate=95%\n|level=19-22\n|tv=1 DEF\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "12706",
+				"lat": 1088.956,
+				"lon": 3261.174,
+				"label": "Kalazu",
+				"description": "{{Temtem Pin\n|temtem=Kalazu\n|type1=Water\n|type2=\n|rate=95%\n|level=15-17\n|tv=1 DEF\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "12709",
+				"lat": 2232,
+				"lon": 3100,
+				"label": "Kalazu (Fishing Spot)",
+				"description": "{{Temtem Pin\n|temtem=Kalazu\n|type1=Water\n|type2=\n|rate=65%\n|level=15-18\n|tv=1 DEF\n|location=Arissola Dojo\n}}\n* Requires [[Fishing Rod]]."
+			},
+			{
+				"id": "12708",
+				"lat": 1967.885,
+				"lon": 513.36,
+				"label": "Kalazu",
+				"description": "{{Temtem Pin\n|temtem=Kalazu\n|type1=Water\n|type2=\n|rate=35%\n|level=18-20\n|tv=1 DEF\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "12701",
+				"lat": 2823.477,
+				"lon": 1060.66,
+				"label": "Kalazu",
+				"description": "{{Temtem Pin\n|temtem=Kalazu\n|type1=Water\n|type2=\n|rate=30%\n|level=13-15\n|tv=1 DEF\n|location=Sillaro RIver\n}}"
+			},
+			{
+				"id": "12702",
+				"lat": 1479.267,
+				"lon": 1303.905,
+				"label": "Kalazu",
+				"description": "{{Temtem Pin\n|temtem=Kalazu\n|type1=Water\n|type2=\n|rate=30%\n|level=13-15\n|tv=1 DEF\n|location=Sillaro RIver\n}}"
+			},
+			{
+				"id": "12707",
+				"lat": 808.591,
+				"lon": 2456.588,
+				"label": "Kalazu",
+				"description": "{{Temtem Pin\n|temtem=Kalazu\n|type1=Water\n|type2=\n|rate=100%\n|level=15-18\n|tv=1 DEF\n|location=Aguamarina Caves\n}}"
+			}
+		],
+		"Koish(Water)": [
+			{
+				"id": "14301",
+				"lat": 2824.184,
+				"lon": 1110.158,
+				"label": "Koish (Water)",
+				"description": "{{Temtem Pin\n|temtem=Koish (Water)\n|type1=Water\n|type2=\n|rate=20%\n|level=13-14\n|tv=2 ATK\n|location=Sillaro River\n}}"
+			},
+			{
+				"id": "14302",
+				"lat": 1193.601,
+				"lon": 1296.831,
+				"label": "Koish (Water)",
+				"description": "{{Temtem Pin\n|temtem=Koish (Water)\n|type1=Water\n|type2=\n|rate=20%\n|level=13-14\n|tv=2 ATK\n|location=Sillaro River\n}}"
+			}
+		],
+		"Koish(Wind)": [
+			{
+				"id": "14303",
+				"lat": 1971.417,
+				"lon": 643.466,
+				"label": "Koish (Wind)",
+				"description": "{{Temtem Pin\n|temtem=Koish (Wind)\n|type1=Water\n|type2=Wind\n|rate=30%\n|level=18-20\n|tv=2 ATK\n|location=Thalassian Cliffs\n}}"
+			}
+		],
+		"Nessla": [
+			{
+				"id": "12301",
+				"lat": 1928.995,
+				"lon": 776.406,
+				"label": "Nessla",
+				"description": "{{Temtem Pin\n|temtem=Nessla\n|type1=Water\n|type2=Electric\n|rate=10%\n|level=17-18\n|tv=2 SPDEF\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "12302",
+				"lat": 172.534,
+				"lon": 1402.9,
+				"label": "Nessla",
+				"description": "{{Temtem Pin\n|temtem=Nessla\n|type1=Water\n|type2=Electric\n|rate=10%\n|level=14-16\n|tv=2 SPDEF\n|location=Sillaro River\n}}"
+			}
+		],
+		"Oceara": [
+			{
+				"id": "11501",
+				"lat": 1088.248,
+				"lon": 3183.396,
+				"label": "Oceara",
+				"description": "{{Temtem Pin\n|temtem=Oceara\n|type1=Water\n|type2=\n|rate=5%\n|level=15-17\n|tv=1 SPD<br>2 SPATK\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "11502",
+				"lat": 1037.507,
+				"lon": 2328.502,
+				"label": "Oceara",
+				"description": "{{Temtem Pin\n|temtem=Oceara\n|type1=Water\n|type2=\n|rate=5%\n|level=21-22\n|tv=1 SPD<br>2 SPATK\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "11503",
+				"lat": 3146.011,
+				"lon": 1262.002,
+				"label": "Oceara",
+				"description": "{{Temtem Pin\n|temtem=Oceara\n|type1=Water\n|type2=\n|rate=50%\n|level=1-100\n|tv=1 SPD<br>2 SPATK\n|location=Dojo Park\n}}\n* Requires completing the Dojo Park's Dojo Warrior battles. Limited together with Towly for 100 encounters per week. See [[Dojo Park]] for more information."
+			}
+		],
+		"Paharac": [
+			{
+				"id": "01706",
+				"lat": 2652.358,
+				"lon": 858.428,
+				"label": "Paharac",
+				"description": "{{Temtem Pin\n|temtem=Paharac\n|type1=Wind\n|type2=\n|rate=95%\n|level=30-40\n|tv=1 HP<br>1 SPD\n|location=GIfted Bridges\n}}\n* Requires [[Gravitonic piolets]] to reach."
+			},
+			{
+				"id": "01702",
+				"lat": 2367,
+				"lon": 900,
+				"label": "Paharac",
+				"description": "{{Temtem Pin\n|temtem=Paharac\n|type1=Wind\n|type2=\n|rate=5%\n|level=8-10\n|tv=1 HP<br>1 SPD\n|location=GIfted Bridges\n}}"
+			},
+			{
+				"id": "01701",
+				"lat": 2011.012,
+				"lon": 803.273,
+				"label": "Paharac",
+				"description": "{{Temtem Pin\n|temtem=Paharac\n|type1=Wind\n|type2=\n|rate=20%\n|level=16-17\n|tv=1 HP<br>1 SPD\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "01703",
+				"lat": 1076.217,
+				"lon": 636.396,
+				"label": "Paharac",
+				"description": "{{Temtem Pin\n|temtem=Paharac\n|type1=Wind\n|type2=\n|rate=50%\n|level=37-40\n|tv=1 HP<br>1 SPD\n|location=Saipark\n}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			},
+			{
+				"id": "01705",
+				"lat": 753,
+				"lon": 984.5,
+				"label": "Paharac",
+				"description": "{{Temtem Pin\n|temtem=Paharac\n|type1=Wind\n|type2=\n|rate=15%\n|level=40-45\n|tv=1 HP<br>1 SPD\n|location=Prasine Coast\n}}\n* Requires [[Gravitonic piolets]] to reach."
+			},
+			{
+				"id": "01704",
+				"lat": 690.136,
+				"lon": 291.328,
+				"label": "Paharac",
+				"description": "{{Temtem Pin\n|temtem=Paharac\n|type1=Wind\n|type2=\n|rate=50%\n|level=37-40\n|tv=1 HP<br>1 SPD\n|location=Saipark\n}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			}
+		],
+		"Pewki": [
+			{
+				"id": "06001",
+				"lat": 2831.963,
+				"lon": 1232.487,
+				"label": "Pewki",
+				"description": "{{Temtem Pin\n|temtem=Pewki\n|type1=Water\n|type2=\n|rate=25%\n|level=13-14\n|tv=1 HP\n|location=Sillaro RIver\n}}"
+			},
+			{
+				"id": "06002",
+				"lat": 1286.934,
+				"lon": 1303.905,
+				"label": "Pewki",
+				"description": "{{Temtem Pin\n|temtem=Pewki\n|type1=Water\n|type2=\n|rate=25%\n|level=13-14\n|tv=1 HP\n|location=Sillaro RIver\n}}"
+			},
+			{
+				"id": "06003",
+				"lat": 1158,
+				"lon": 949,
+				"label": "Pewki (Fishing Spot)",
+				"description": "{{Temtem Pin\n|temtem=Pewki\n|type1=Water\n|type2=\n|rate=100%\n|level=14-20\n|tv=1 HP\n|location=Prasine Coast\n}}\n*Requires [[Fishing Rod]]."
+			}
+		],
+		"Pigepic": [
+			{
+				"id": "14106",
+				"lat": 2839.752,
+				"lon": 649.125,
+				"label": "Pigepic",
+				"description": "{{Temtem Pin\n|temtem=Pigepic\n|type1=Wind\n|type2=\n|rate=85%\n|level=8-10\n|tv=1 STA<br>1 SPDEF\n|location=Gifted Bridges\n}}"
+			},
+			{
+				"id": "14105",
+				"lat": 1927.573,
+				"lon": 1063.489,
+				"label": "Pigepic",
+				"description": "{{Temtem Pin\n|temtem=Pigepic\n|type1=Wind\n|type2=\n|rate=50%\n|level=8-10\n|tv=1 STA<br>1 SPDEF\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "14104",
+				"lat": 1711.909,
+				"lon": 849.235,
+				"label": "Pigepic",
+				"description": "{{Temtem Pin\n|temtem=Pigepic\n|type1=Wind\n|type2=\n|rate=100%\n|level=7-8\n|tv=1 STA<br>1 SPDEF\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "14103",
+				"lat": 1630.588,
+				"lon": 1075.154,
+				"label": "Pigepic",
+				"description": "{{Temtem Pin\n|temtem=Pigepic\n|type1=Wind\n|type2=\n|rate=70%\n|level=5-7\n|tv=1 STA<br>1 SPDEF\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "14102",
+				"lat": 1607.961,
+				"lon": 808.93,
+				"label": "Pigepic",
+				"description": "{{Temtem Pin\n|temtem=Pigepic\n|type1=Wind\n|type2=\n|rate=10%\n|level=4-6\n|tv=1 STA<br>1 SPDEF\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "14107",
+				"lat": 1077.631,
+				"lon": 700.036,
+				"label": "Pigepic",
+				"description": "{{Temtem Pin\n|temtem=Pigepic\n|type1=Wind\n|type2=\n|rate=50%\n|level=38-41\n|tv=1 STA<br>1 SPDEF\n|location=Saipark\n}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			},
+			{
+				"id": "14101",
+				"lat": 796,
+				"lon": 953,
+				"label": "Pigepic",
+				"description": "{{Temtem Pin\n|temtem=Pigepic\n|type1=Wind\n|type2=\n|rate=5%\n|level=4-6\n|tv=1 STA<br>1 SPDEF\n|location=Prasine Coast\n}}"
+			},
+			{
+				"id": "14108",
+				"lat": 681.651,
+				"lon": 359.21,
+				"label": "Pigepic",
+				"description": "{{Temtem Pin\n|temtem=Pigepic\n|type1=Wind\n|type2=\n|rate=50%\n|level=38-41\n|tv=1 STA<br>1 SPDEF\n|location=Saipark\n}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			}
+		],
+		"Platimous": [
+			{
+				"id": "00901",
+				"lat": 1271.501,
+				"lon": 2374.498,
+				"label": "Platimous",
+				"description": "{{Temtem Pin\n|temtem=Platimous\n|type1=Water\n|type2=Toxic\n|rate=95%\n|level=70\n|tv=2 SPD<br>2 SPATK\n|location=Aguamarina Caves\n}}\n* Requires [[Gravitonic piolets]] to reach."
+			}
+		],
+		"Platox": [
+			{
+				"id": "00806",
+				"lat": 673.008,
+				"lon": 1500.498,
+				"label": "Platox",
+				"description": "{{Temtem Pin\n|temtem=Platox\n|type1=Water\n|type2=Toxic\n|rate=15%\n|level=40-45\n|tv=1 SPD<br>1 SPATK\n|location=SIllaro RIver}}\n* Requires [[Gravitonic piolets]] to reach."
+			},
+			{
+				"id": "00802",
+				"lat": 1172.383,
+				"lon": 294.156,
+				"label": "Platox",
+				"description": "{{Temtem Pin\n|temtem=Platox\n|type1=Water\n|type2=Toxic\n|rate=50%\n|level=37-40\n|tv=1 SPD<br>1 SPATK\n|location=Saipark}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			},
+			{
+				"id": "00803",
+				"lat": 1042.275,
+				"lon": 414.365,
+				"label": "Platox",
+				"description": "{{Temtem Pin\n|temtem=Platox\n|type1=Water\n|type2=Toxic\n|rate=50%\n|level=37-40\n|tv=1 SPD<br>1 SPATK\n|location=Saipark}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			},
+			{
+				"id": "00804",
+				"lat": 499.215,
+				"lon": 537.41,
+				"label": "Platox",
+				"description": "{{Temtem Pin\n|temtem=Platox\n|type1=Water\n|type2=Toxic\n|rate=50%\n|level=37-40\n|tv=1 SPD<br>1 SPATK\n|location=Saipark}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			},
+			{
+				"id": "00801",
+				"lat": 803.273,
+				"lon": 726.906,
+				"label": "Platox (Fishing Spot)",
+				"description": "{{Temtem Pin\n|temtem=Platox\n|type1=Water\n|type2=Toxic\n|rate=50%\n|level=37-40\n|tv=1 SPD<br>1 SPATK\n|location=Saipark}}\n* Requires [[Fishing Rod]]."
+			},
+			{
+				"id": "00805",
+				"lat": 661.852,
+				"lon": 599.627,
+				"label": "Platox",
+				"description": "{{Temtem Pin\n|temtem=Platox\n|type1=Water\n|type2=Toxic\n|rate=50%\n|level=37-40\n|tv=1 SPD<br>1 SPATK\n|location=Saipark}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			}
+		],
+		"Platypet": [
+			{
+				"id": "00702",
+				"lat": 2725,
+				"lon": 996,
+				"label": "Platypet",
+				"description": "{{Temtem Pin\n|temtem=Platypet\n|type1=Water\n|type2=Toxic\n|rate=70%\n|level=7-10\n|tv=1 SPATK\n|location=Gifted Bridges\n}}"
+			},
+			{
+				"id": "00701",
+				"lat": 2626.003,
+				"lon": 652.001,
+				"label": "Platypet",
+				"description": "{{Temtem Pin\n|temtem=Platypet\n|type1=Water\n|type2=Toxic\n|rate=70%\n|level=9-10\n|tv=1 SPATK\n|location=Gifted Bridges\n}}"
+			}
+		],
+		"Scarawatt": [
+			{
+				"id": "06204",
+				"lat": 2468.51,
+				"lon": 2573.869,
+				"label": "Scarawatt",
+				"description": "{{Temtem Pin\n|temtem=Scarawatt\n|type1=Electric\n|type2=\n|rate=30%\n|level=12-13\n|tv=2 HP\n|location=Windward Fort\n}}"
+			},
+			{
+				"id": "06202",
+				"lat": 2245.771,
+				"lon": 2446.589,
+				"label": "Scarawatt",
+				"description": "{{Temtem Pin\n|temtem=Scarawatt\n|type1=Electric\n|type2=\n|rate=30%\n|level=11-12\n|tv=2 HP\n|location=Windward Fort\n}}"
+			},
+			{
+				"id": "06203",
+				"lat": 2073,
+				"lon": 2571,
+				"label": "Scarawatt",
+				"description": "{{Temtem Pin\n|temtem=Scarawatt\n|type1=Electric\n|type2=\n|rate=30%\n|level=11-13\n|tv=2 HP\n|location=Windward Fort\n}}"
+			},
+			{
+				"id": "06201",
+				"lat": 2487.007,
+				"lon": 2442,
+				"label": "Scarawatt",
+				"description": "{{Temtem Pin\n|temtem=Scarawatt\n|type1=Electric\n|type2=\n|rate=30%\n|level=11-12\n|tv=2 HP\n|location=Windward Fort\n}}"
+			}
+		],
+		"Skail": [
+			{
+				"id": "02714",
+				"lat": 779.952,
+				"lon": 3174.911,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=65%\n|level=14-18\n|tv=1 SPD\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "02715",
+				"lat": 1001.263,
+				"lon": 2703.976,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=65%\n|level=15-17\n|tv=1 SPD\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "02716",
+				"lat": 393.168,
+				"lon": 2725.898,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=55%\n|level=14-17\n|tv=1 SPD\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "02717",
+				"lat": 654.781,
+				"lon": 2428.205,
+				"label": "Skail"
+			},
+			{
+				"id": "02718",
+				"lat": 641.511,
+				"lon": 3214.493,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=65%\n|level=14-17\n|tv=1 SPD\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "02719",
+				"lat": 762.989,
+				"lon": 2755.597,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=55%\n|level=15-18\n|tv=1 SPD\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "02720",
+				"lat": 990.657,
+				"lon": 2404.163,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=30%\n|level=18-20\n|tv=1 SPD\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "02721",
+				"lat": 985.707,
+				"lon": 3181.981,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=30%\n|level=15-17\n|tv=1 SPD\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "02713",
+				"lat": 2728.003,
+				"lon": 2558.498,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=50%\n|level=12-14\n|tv=1 SPD\n|location=Windward Fort\n}}"
+			},
+			{
+				"id": "02712",
+				"lat": 2467.096,
+				"lon": 2529.321,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=70%\n|level=12-13\n|tv=1 SPD\n|location=Windward Fort\n}}"
+			},
+			{
+				"id": "02711",
+				"lat": 2286.504,
+				"lon": 2506.499,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=80%\n|level=12-13\n|tv=1 SPD\n|location=Windward Fort\n}}"
+			},
+			{
+				"id": "02707",
+				"lat": 2293.854,
+				"lon": 2444.468,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=70%\n|level=11-12\n|tv=1 SPD\n|location=Windward Fort\n}}"
+			},
+			{
+				"id": "02710",
+				"lat": 2073,
+				"lon": 2523,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=70%\n|level=11-13\n|tv=1 SPD\n|location=Windward Fort\n}}"
+			},
+			{
+				"id": "02708",
+				"lat": 2072,
+				"lon": 2442,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=80%\n|level=11-12\n|tv=1 SPD\n|location=Windward Fort\n}}"
+			},
+			{
+				"id": "02709",
+				"lat": 1863.933,
+				"lon": 2445.175,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=70%\n|level=9-11\n|tv=1 SPD\n|location=Windward Fort\n}}"
+			},
+			{
+				"id": "02705",
+				"lat": 2491.844,
+				"lon": 905.097,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=30%\n|level=7-9\n|tv=1 SPD\n|location=Gifted Bridges\n}}"
+			},
+			{
+				"id": "02704",
+				"lat": 1926.159,
+				"lon": 1021.062,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=50%\n|level=7-9\n|tv=1 SPD\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "02703",
+				"lat": 1680,
+				"lon": 1006,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=80%\n|level=7-9\n|tv=1 SPD\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "02702",
+				"lat": 1535,
+				"lon": 1076,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=30%\n|level=4-6\n|tv=1 SPD\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "02722",
+				"lat": 1159.655,
+				"lon": 189.505,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=50%\n|level=38-41\n|tv=1 SPD\n|location=Saipark\n}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			},
+			{
+				"id": "02701",
+				"lat": 795.5,
+				"lon": 978,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=5%\n|level=4-6\n|tv=1 SPD\n|location=Prasine Coast\n}}"
+			},
+			{
+				"id": "02723",
+				"lat": 500.616,
+				"lon": 393.158,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=50%\n|level=38-41\n|tv=1 SPD\n|location=Saipark\n}}\n* The encounter rate may change if a Saipark weekly Temtem is featured in this area. See  [[Saipark]] for more information."
+			},
+			{
+				"id": "02706",
+				"lat": 2537.816,
+				"lon": 2441.642,
+				"label": "Skail",
+				"description": "{{Temtem Pin\n|temtem=Skail\n|type1=Neutral\n|type2=\n|rate=70%\n|level=11-12\n|tv=1 SPD\n|location=Windward Fort\n}}"
+			}
+		],
+		"Skunch": [
+			{
+				"id": "02801",
+				"lat": 767.235,
+				"lon": 2836.205,
+				"label": "Skunch",
+				"description": "{{Temtem Pin\n|temtem=Skunch\n|type1=Neutral\n|type2=Melee\n|rate=5%\n|level=15-18\n|tv=1 HP<br>1 SPD\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "02802",
+				"lat": 767.235,
+				"lon": 2836.205,
+				"label": "Skunch",
+				"description": "{{Temtem Pin\n|temtem=Skunch\n|type1=Neutral\n|type2=Melee\n|rate=5%\n|level=15-18\n|tv=1 HP<br>1 SPD\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "02803",
+				"lat": 395.284,
+				"lon": 2801.557,
+				"label": "Skunch",
+				"description": "{{Temtem Pin\n|temtem=Skunch\n|type1=Neutral\n|type2=Melee\n|rate=5%\n|level=19-20\n|tv=1 HP<br>1 SPD\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "02804",
+				"lat": 688.722,
+				"lon": 2398.506,
+				"label": "Skunch",
+				"description": "{{Temtem Pin\n|temtem=Skunch\n|type1=Neutral\n|type2=Melee\n|rate=5%\n|level=15-18\n|tv=1 HP<br>1 SPD\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "02805",
+				"lat": 635.693,
+				"lon": 3070.965,
+				"label": "Skunch",
+				"description": "{{Temtem Pin\n|temtem=Skunch\n|type1=Neutral\n|type2=Melee\n|rate=5%\n|level=14-18\n|tv=1 HP<br>1 SPD\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "02806",
+				"lat": 779.957,
+				"lon": 3095.01,
+				"label": "Skunch",
+				"description": "{{Temtem Pin\n|temtem=Skunch\n|type1=Neutral\n|type2=Melee\n|rate=5%\n|level=14-17\n|tv=1 HP<br>1 SPD\n|location=Aguamarina Caves\n}}"
+			},
+			{
+				"id": "02807",
+				"lat": 1010,
+				"lon": 2828,
+				"label": "Skunch",
+				"description": "{{Temtem Pin\n|temtem=Skunch\n|type1=Neutral\n|type2=Melee\n|rate=5%\n|level=15-17\n|tv=1 HP<br>1 SPD\n|location=Aguamarina Caves\n}}"
+			}
+		],
+		"Swali": [
+			{
+				"id": "01004",
+				"lat": 1682.207,
+				"lon": 1040.154,
+				"label": "Swali",
+				"description": "{{Temtem Pin\n|temtem=Swali\n|type1=Nature\n|type2=\n|rate=20%\n|level=6-8\n|tv=1 STA\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "01003",
+				"lat": 1631.649,
+				"lon": 1034.498,
+				"label": "Swali",
+				"description": "{{Temtem Pin\n|temtem=Swali\n|type1=Nature\n|type2=\n|rate=30%\n|level=5-7\n|tv=1 STA\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "01002",
+				"lat": 886,
+				"lon": 1004,
+				"label": "Swali",
+				"description": "{{Temtem Pin\n|temtem=Swali\n|type1=Nature\n|type2=\n|rate=40%\n|level=3-5\n|tv=1 STA\n|location=Prasine Coast\n}}"
+			},
+			{
+				"id": "01001",
+				"lat": 611.647,
+				"lon": 1020.355,
+				"label": "Swali",
+				"description": "{{Temtem Pin\n|temtem=Swali\n|type1=Nature\n|type2=\n|rate=40%\n|level=2-4\n|tv=1 STA\n|location=Prasine Coast\n}}"
+			}
+		],
+		"Taifu": [
+			{
+				"id": "02401",
+				"lat": 753.5,
+				"lon": 938,
+				"label": "Taifu",
+				"description": "{{Temtem Pin\n|temtem=Taifu\n|type1=Nature\n|type2=\n|rate=85%\n|level=40-45\n|tv=2 STA<br> 1 SPATK\n|location=Prasine Coast\n}}\n* Requires [[Gravitonic piolets]] to reach."
+			}
+		],
+		"Towly": [
+			{
+				"id": "05101",
+				"lat": 3146.009,
+				"lon": 1340.001,
+				"label": "Towly",
+				"description": "{{Temtem Pin\n|temtem=Towly\n|type1=Melee\n|type2=Mental\n|rate=50%\n|level=1-100\n|tv=1 SPD\n|location=Dojo Park\n}}\n* Requires completing the Dojo Park's Dojo Warrior battles. Limited together with Oceara for 100 encounters per week. See [[Dojo Park]] for more information."
+			}
+		],
+		"Tuwai": [
+			{
+				"id": "13001",
+				"lat": 1271.501,
+				"lon": 2327.503,
+				"label": "Tuwai",
+				"description": "{{Temtem Pin\n|temtem=Tuwai\n|type1=Wind\n|type2=\n|rate=5%\n|level=5-10\n|tv=1 ATK\n|location=Aguamarina Caves\n}}\n* Requires [[Gravitonic piolets]] to reach."
+			}
+		],
+		"Umishi": [
+			{
+				"id": "08804",
+				"lat": 1969.295,
+				"lon": 577.708,
+				"label": "Umishi",
+				"description": "{{Temtem Pin\n|temtem=Umishi\n|type1=Water\n|type2=\n|rate=35%\n|level=18-20\n|tv=1 SPD\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "08803",
+				"lat": 1903.519,
+				"lon": 749.529,
+				"label": "Umishi",
+				"description": "{{Temtem Pin\n|temtem=Umishi\n|type1=Water\n|type2=\n|rate=90%\n|level=17-18\n|tv=1 SPD\n|location=Thalassian Cliffs\n}}"
+			},
+			{
+				"id": "08801",
+				"lat": 2827.72,
+				"lon": 1173.797,
+				"label": "Umishi",
+				"description": "{{Temtem Pin\n|temtem=Umishi\n|type1=Water\n|type2=\n|rate=25%\n|level=13-15\n|tv=1 SPD\n|location=Sillaro River\n}}"
+			},
+			{
+				"id": "08802",
+				"lat": 1383.101,
+				"lon": 1306.733,
+				"label": "Umishi",
+				"description": "{{Temtem Pin\n|temtem=Umishi\n|type1=Water\n|type2=\n|rate=25%\n|level=13-15\n|tv=1 SPD\n|location=Sillaro River\n}}"
+			}
+		],
+		"Wiplump": [
+			{
+				"id": "02602",
+				"lat": 2818,
+				"lon": 1365,
+				"label": "Wiplump",
+				"description": "{{Temtem Pin\n|temtem=Wiplump\n|type1=Water\n|type2=Wind\n|rate=5%\n|level=14-15\n|tv=2 SPATK\n|location=Sillaro River\n}}\n* This location applies to all costal areas in northern Sillaro River."
+			},
+			{
+				"id": "02603",
+				"lat": 708.487,
+				"lon": 1462.0,
+				"label": "Wiplump",
+				"description": "{{Temtem Pin\n|temtem=Wiplump\n|type1=Water\n|type2=Wind\n|rate=85%\n|level=38-42\n|tv=2 SPATK\n|location=Sillaro River\n}}\n* Requires [[Gravitonic piolets]] to reach."
+			},
+			{
+				"id": "02601",
+				"lat": 1298.26,
+				"lon": 1157.533,
+				"label": "Wiplump",
+				"description": "{{Temtem Pin\n|temtem=Wiplump\n|type1=Water\n|type2=Wind\n|rate=5%\n|level=14-15\n|tv=2 SPATK\n|location=Sillaro River\n}}\n* This location applies to all costal areas in southern Sillaro River."
+			}
+		]
+	}
+}
