@@ -51,8 +51,11 @@ class DataMapContent extends DataMapContentBase {
 			return $main;
 		}
 
+		// Copy the mixins list to prevent bad behaviour when merging occurs. Mixins should be always stated explicitly.
+		$mixins = $main->mixins;
+
 		$finalMixin = null;
-		foreach ( $main->mixins as &$mixinName ) {
+		foreach ( $mixins as &$mixinName ) {
 			$title = Title::makeTitleSafe( DataMapsConfig::getNamespace(), $mixinName );
         	$mixinPage = DataMapContent::loadPage( $title );
 
@@ -91,7 +94,7 @@ class DataMapContent extends DataMapContentBase {
 	}
 
 	public function isMixin(): bool {
-		return !isset( $this->getData()->getValue()->markers );
+		return DataMapSpec::staticIsMixin( $this->getData()->getValue() );
 	}
 	
 	public function validateBeforeSave( Status $status ) {
