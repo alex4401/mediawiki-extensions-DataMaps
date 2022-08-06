@@ -16,6 +16,14 @@ class DataMapSpec extends DataModel {
     private ?array $cachedBackgrounds = null;
     private ?CoordinateReferenceSystemSpec $cachedCrs = null;
 
+    public static function staticIsMixin( \stdclass $raw ): bool {
+        return isset( $raw->{'$mixin'} ) ? $raw->{'$mixin'} : !isset( $raw->markers );
+    }
+
+    public function isMixin(): bool {
+        return self::staticIsMixin( $this->raw );
+    }
+
     public function getMixins(): ?array {
         return isset( $this->raw->mixins ) ? $this->raw->mixins : null;
     }
@@ -128,8 +136,9 @@ class DataMapSpec extends DataModel {
     }
 
     public function validate( Status $status ) {
-        $isFull = isset( $this->raw->markers );
+        $isFull = !$this->isMixin();
         $hasCrs = false;
+        $this->expectField( $status, '$mixin', DataModel::TYPE_BOOL );
         if ( $isFull ) {
             // Perform full strict validation, this is a full map
             $this->expectField( $status, 'mixins', DataModel::TYPE_ARRAY );
@@ -149,6 +158,7 @@ class DataMapSpec extends DataModel {
             $this->expectField( $status, 'groups', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'layers', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'custom', DataModel::TYPE_OBJECT );
+            $this->expectField( $status, 'markers', DataModel::TYPE_OBJECT );
         }
         $this->disallowOtherFields( $status );
 
