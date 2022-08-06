@@ -3,7 +3,14 @@ const MapStorage = require( './storage.js' ),
     MarkerPopup = require( './popup.js' ),
     MapLegend = require( './legend.js' ),
     MarkerLegendPanel = require( './markerLegend.js' ),
+    config = require( './config.json' ),
     mwApi = new mw.Api();
+
+
+const CRSOrigin = {
+    TopLeft: 1,
+    BottomLeft: 2
+};
 
 
 function DataMap( id, $root, config ) {
@@ -34,10 +41,23 @@ function DataMap( id, $root, config ) {
     this.leafletIcons = {};
     // DOM element of the coordinates display control
     this.$coordTracker = null;
-    // Collection of group visibility toggles
-    this.legendGroupToggles = [];
     // Cached value of the 'datamap-coordinate-control-text' message
     this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
+    // Retrieve a `marker` parameter from the query string if one is present
+    this.markerIdToAutoOpen = null;
+    const tabberId = this.getParentTabberNeueId();
+    if ( tabberId && tabberId == window.location.hash.substr( 1 ) ) {
+        this.markerIdToAutoOpen = new URLSearchParams( window.location.search ).get( MarkerPopup.URL_PARAMETER );
+    }
+
+    // Coordinate reference system
+    // If coordinate space spec is oriented [ lower lower upper upper ], assume top left corner as origin point (latitude will
+    // be flipped). If [ upper upper lower lower ], assume bottom left corner (latitude will be unchanged). Any other layout is
+    // invalid.
+    this.crsOrigin = ( this.config.crs[0][0] < this.config.crs[1][0] && this.config.crs[0][1] < this.config.crs[1][1] )
+        ? CRSOrigin.TopLeft : CRSOrigin.BottomLeft;
+    this.crsScaleY = 100 / Math.max( this.config.crs[0][0], this.config.crs[1][0] );
+    this.crsScaleX = 100 / Math.max( this.config.crs[0][1], this.config.crs[1][1] );
 
     // Request OOUI to be loaded and build the legend
     mw.loader.using( [
@@ -66,6 +86,21 @@ DataMap.prototype.waitForLeaflet = function ( callback ) {
 };
 
 
+DataMap.prototype.waitForLegend = function ( callback ) {
+    if ( this.legend == null ) {
+        setTimeout( this.waitForLegend.bind( this, callback ), 25 );
+    } else {
+        callback();
+    }
+};
+
+
+DataMap.prototype.getParentTabberNeueId = function () {
+    const $panel = this.$root.closest( 'article.tabber__panel' );
+    return $panel.length > 0 ? ( $panel.attr( 'id' ) || $panel.attr( 'title' ).replace( ' ', '_' ) ) : null;
+};
+
+
 /*
  * Returns true if a layer is used on the map.
  */
@@ -75,12 +110,22 @@ DataMap.prototype.isLayerUsed = function ( name ) {
 
 
 /*
- * Inverts the latitude in box bounds, as our reference system differs from Leaflet's built-in
+ * 
  */
-const flipLatitudeBox = function ( box ) {
-    return [ [ 100-box[0][0], box[0][1] ], [ 100-box[1][0], box[1][1] ] ];
+DataMap.prototype.translatePoint = function ( point ) {
+    return this.crsOrigin == CRSOrigin.TopLeft
+        ? [ ( this.config.crs[1][0] - point[0] ) * this.crsScaleY, point[1] * this.crsScaleX ]
+        : [ point[0] * this.crsScaleY, point[1] * this.crsScaleX ];
 };
-DataMap.prototype.flipLatitudeBox = flipLatitudeBox;
+
+
+DataMap.prototype.translateBox = function ( box ) {
+    return this.crsOrigin == CRSOrigin.TopLeft
+        ? [ [ ( this.config.crs[1][0] - box[0][0] ) * this.crsScaleY, box[0][1] * this.crsScaleX ],
+            [ ( this.config.crs[1][0] - box[1][0] ) * this.crsScaleY, box[1][1] * this.crsScaleX ] ]
+        : [ [ box[0][0] * this.crsScaleY, box[0][1] * this.crsScaleX ],
+            [ box[1][0] * this.crsScaleY, box[1][0] * this.crsScaleX ] ];
+};
 
 
 /*
@@ -91,22 +136,37 @@ DataMap.prototype.getCoordLabel = function ( lat, lon ) {
 };
 
 
-DataMap.prototype.setMarkerOpacity = function ( marker, value ) {
-    if ( marker instanceof L.Marker ) {
-        marker.setOpacity( value );
-    } else {
-        marker.setStyle( {
-            opacity: value,
-            fillOpacity: value
-        } );
+DataMap.prototype.toggleMarkerDismissal = function ( markerType, coords, leafletMarker ) {
+    const state = this.storage.toggleDismissal( markerType, coords );
+    leafletMarker.setDismissed( state );
+    this.updateMarkerDismissalBadges();
+    return state;
+};
+
+
+DataMap.prototype.updateMarkerDismissalBadges = function () {
+    for ( const groupId in this.config.groups ) {
+        const group = this.config.groups[groupId];
+        if ( group.canDismiss ) {
+            const markers = this.layerManager.byLayer[groupId];
+            const count = markers.filter( x => x.options.dismissed ).length;
+            this.markerLegend.groupToggles[groupId].setBadge( `${count} / ${markers.length}` );
+        }
     }
 };
 
 
 /*
- * Refreshes marker's visual properties
+ * Called whenever a marker is instantiated
  */
-DataMap.prototype.readyMarkerVisuals = function ( type, group, instance, marker ) { };
+DataMap.prototype.onMarkerReady = function ( type, group, instance, marker ) {
+    // Open this marker's popup if that's been requested via a `marker` query parameter
+    if ( this.markerIdToAutoOpen != null
+        && ( ( instance[2] && instance[2].uid != null ) ? instance[2].uid : this.storage.getMarkerKey( type, instance ) )
+            === this.markerIdToAutoOpen ) {
+        marker.openPopup();
+    }
+};
 
 
 /*
@@ -126,8 +186,8 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
         const placements = data[markerType];
 
         // Create markers for instances
-        placements.forEach( instance => {
-            const position = [ 100-instance[0], instance[1] ];
+        for ( const instance of placements ) {
+            const position = this.translatePoint( [ instance[0], instance[1] ] );
             let leafletMarker;
 
             // Construct the marker
@@ -149,18 +209,19 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
                 } );
             }
 
-            // Prepare marker for display
-            this.readyMarkerVisuals( markerType, group, instance, leafletMarker );
-
             // Add marker to the layer
             this.layerManager.addMember( markerType, leafletMarker );
 
             // Bind a popup building closure (this is more efficient than binds)
             const mType = markerType;
-            leafletMarker.bindPopup( () =>
-                new MarkerPopup( this, mType, instance, ( instance[2] || {} ), leafletMarker ).build().get( 0 ) );
-        } );
+            MarkerPopup.bindTo( this, mType, instance, ( instance[2] || {} ), leafletMarker );
+
+            this.onMarkerReady( markerType, group, instance, leafletMarker );
+        }
     }
+
+    // Refresh dismissal badges in the legend
+    this.waitForLegend( () => this.updateMarkerDismissalBadges() );
 };
 
 
@@ -226,12 +287,12 @@ DataMap.prototype.updateMarkerScaling = function () {
 
 DataMap.prototype.restoreDefaultView = function () {
     this.leaflet.setZoom( this.leaflet.options.minZoom );
-    this.leaflet.fitBounds( flipLatitudeBox( this.background.at ) );
+    this.leaflet.fitBounds( this.translateBox( this.background.at ) );
 };
 
 
 DataMap.prototype.centreView = function () {
-    const box = flipLatitudeBox( this.background.at );
+    const box = this.translateBox( this.background.at );
     this.leaflet.setView( [ (box[1][0] + box[0][0])/2, (box[1][1] + box[0][1])/2 ] );
 };
 
@@ -252,12 +313,21 @@ DataMap.prototype.addControl = function ( anchor, $element ) {
 DataMap.prototype.buildBackgroundOverlayObject = function ( overlay ) {
     let result;
 
-    // Construct an image or rectangular layer
+    // Construct a layer
     if ( overlay.image ) {
-        result = L.imageOverlay( overlay.image, flipLatitudeBox( overlay.at ) );
+        // Construct an image
+        result = L.imageOverlay( overlay.image, this.translateBox( overlay.at ) );
+    } else if ( overlay.path ) {
+        // Construct a polyline
+        result = L.polyline( overlay.path.map( p => this.translatePoint( p ) ), {
+            color: overlay.colour || L.Path.prototype.options.color,
+            weight: overlay.thickness || L.Path.prototype.options.weight
+        } );
     } else {
-        result = L.rectangle( flipLatitudeBox( overlay.at ), {
-            fillOpacity: 0.05
+        // Construct a rectangle
+        result = L.rectangle( this.translateBox( overlay.at ), {
+            color: overlay.strokeColour || L.Path.prototype.options.color,
+            fillColor: overlay.colour || L.Path.prototype.options.fillColor
         } );
     }
 
@@ -273,8 +343,8 @@ DataMap.prototype.buildBackgroundOverlayObject = function ( overlay ) {
 const buildLeafletMap = function ( $holder ) {
     const leafletConfig = $.extend( true, {
         // Boundaries
-        center: [50, 50],
-        maxBounds: [[-75,-75], [175, 175]],
+        center: [ 50, 50 ],
+        maxBounds: [ [ -85, -85 ], [ 185, 185 ] ],
         maxBoundsViscosity: 0.7,
         // Zoom settings
         zoomSnap: 0.25,
@@ -313,8 +383,8 @@ const buildLeafletMap = function ( $holder ) {
 
         // Image overlay:
         // Latitude needs to be flipped as directions differ between Leaflet and ARK
-        background.at = background.at || [ [100, 0], [0, 100] ];
-        background.layers.push( L.imageOverlay( background.image, flipLatitudeBox( background.at ) ) );
+        background.at = background.at || this.config.crs;
+        background.layers.push( L.imageOverlay( background.image, this.translateBox( background.at ) ) );
 
         // Prepare overlay layers
         if ( background.overlays ) {
@@ -343,14 +413,20 @@ const buildLeafletMap = function ( $holder ) {
     this.updateMarkerScaling();
 
     // Create a coordinate-under-cursor display
-    this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
-    this.leaflet.on( 'mousemove', event => {
-        const lat = event.latlng.lat;
-        const lon = event.latlng.lng;
-        if ( lat >= -5 && lat <= 105 && lon >= -5 && lon <= 105 ) {
-            this.$coordTracker.text( this.getCoordLabel( 100 - lat, lon ) );
-        }
-    } );
+    if ( config.DataMapsShowCoordinatesDefault ) {
+        this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
+        this.leaflet.on( 'mousemove', event => {
+            let lat = event.latlng.lat;
+            let lon = event.latlng.lng;
+            if ( lat >= -5 && lat <= 105 && lon >= -5 && lon <= 105 ) {
+                lat /= this.crsScaleY;
+                lon /= this.crsScaleX;
+                if ( this.crsOrigin == CRSOrigin.TopLeft )
+                    lat = this.config.crs[1][0] - lat;
+                this.$coordTracker.text( this.getCoordLabel( lat, lon ) );
+            }
+        } );
+    }
 
     // Create a background toggle
     if ( this.config.backgrounds.length > 1 ) {

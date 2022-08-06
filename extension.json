@@ -1,6 +1,6 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.8.1",
+	"version": "0.9.0",
 
 	"author": [
 		"alex4401"
@@ -53,7 +53,8 @@
 			"packageFiles": [
 				"leafletExtension/index.js",
 				"leafletExtension/iconMarker.js",
-				"leafletExtension/circleMarker.js"
+				"leafletExtension/circleMarker.js",
+				"leafletExtension/popup.js"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},
@@ -70,7 +71,11 @@
 				"loader/map.js",
 				"loader/legend.js",
 				"loader/markerLegend.js",
-				"loader/popup.js"
+				"loader/popup.js",
+				{
+					"name": "loader/config.json",
+					"config": [ "DataMapsShowCoordinatesDefault" ]
+				}
 			],
 			"messages": [
 				"datamap-error-dataload",
@@ -84,7 +89,8 @@
 				"datamap-popup-related-article",
 				"datamap-popup-dismissed",
 				"datamap-popup-mark-as-dismissed",
-				"datamap-popup-inside-cave",
+				"datamap-popup-marker-link-get",
+				"datamap-popup-marker-link-copied",
 				"datamap-coordinate-control-text",
 				"datamap-control-reset-view",
 				"datamap-control-centre-view"
@@ -97,7 +103,8 @@
 			"icons": [
 				"exitFullscreen",
 				"fullScreen",
-				"expand"
+				"expand",
+				"link"
 			]
 		},
 
@@ -106,8 +113,7 @@
 				"styles/main.less",
 				"styles/legend.less",
 				"styles/controls.less",
-				"styles/popups.less",
-				"styles/markers.less"
+				"styles/popups.less"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
@@ -117,7 +123,6 @@
 		"MediaWiki\\Extension\\Ark\\DataMaps\\": "includes/"
 	},
 
-	"callback": "MediaWiki\\Extension\\Ark\\DataMaps\\DataMapsHooks::onRegistration",
 	"APIModules": {
 		"queryDataMap": "MediaWiki\\Extension\\Ark\\DataMaps\\API\\ApiQueryDataMapEndpoint"
 	},
@@ -125,28 +130,58 @@
 		"datamap": "MediaWiki\\Extension\\Ark\\DataMaps\\Content\\DataMapContentHandler"
 	},
 	
+	"callback": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onRegistration",
 	"Hooks": {
-		"ParserFirstCallInit": "MediaWiki\\Extension\\Ark\\DataMaps\\DataMapsHooks::onParserFirstCallInit",
-		"ContentHandlerDefaultModelFor": "MediaWiki\\Extension\\Ark\\DataMaps\\DataMapsHooks::contentHandlerDefaultModelFor",
-		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\DataMapsHooks::getCodeLanguage"
+		"ParserFirstCallInit": "DataMapsHookHandler",
+		"ContentHandlerDefaultModelFor": "DataMapsHookHandler",
+		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage",
+		"EditPageBeforeEditButtons": "DataMapsHookHandler"
 	},
+    "HookHandlers": {
+        "DataMapsHookHandler": {
+            "class": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler"
+        }
+    },
 
 	"config": {
-		"ArkDataNamespace": {
+		"DataMapsNamespaceId": {
 			"description": "Namespace where data maps will be stored.",
 			"value": -1
 		},
-		"ArkDataMapDebugApiProcessingTime": {
-			"description": "Attaches data map marker processing time in API requests.",
-			"value": false
-		},
-		"ArkDataMapCacheType": {
+		"DataMapsCacheType": {
 			"description": "Cache type to use for queryDataMap API output. Defaults to CACHE_ANYTHING.",
 			"value": -1
 		},
-		"ArkDataMapCacheExpiryTime": {
-			"description": "Time for cached queryDataMap API (per title and revision) responses to be valid. Set to 0 to disable caching. Defaults to a day.",
+		"DataMapsCacheTTL": {
+			"description": "Time To Live for cached queryDataMap API (per title and revision) responses to be valid. Set to 0 to disable caching. Defaults to a day.",
 			"value": 86400
+		},
+		"DataMapsExtendCacheTTL": {
+			"description": "Settings to extend TTL of cached maps on requests close to expiry time. Set to false to disable.",
+			"value": {
+				"threshold": 43200,
+				"override": 57600
+			}
+		},
+		"DataMapsMarkerParserExpansionLimit": {
+			"description": "Controls how big the parser output for a marker's description can get.",
+			"value": 800
+		},
+		"DataMapsShowCoordinatesDefault": {
+			"description": "Whether to display coordinates to the user on data maps by default.",
+			"value": true
+		},
+		"DataMapsUseInProcessParserCache": {
+			"description": "If enabled, uses a simple wikitext parser cache inside the process handling the request.",
+			"value": true
+		},
+		"DataMapsReportTimingInfo": {
+			"description": "Attaches data map marker processing time in API requests.",
+			"value": false
+		},
+		"DataMapsAllowExperimentalFeatures": {
+			"description": "Whether to enable experimental features.",
+			"value": false
 		}
 	},
 

@@ -5,13 +5,14 @@
         ]
     },
 
+    "datamap-desc": "Permite insertar mapas interactivos en las páginas de la wiki.",
+
     "embedDataMap": "DataMap",
 
     "content-model-datamap": "Mapa de datos interactivo",
+    "datamap-standard-title-prefix": "Mapas/",
 
-    "datamap-doc-page-name": "$1:$2/doc",
     "datamap-doc-page-does-not-exist": "''La documentación para esta página de datos puede crearse en [[$1]]''",
-    "datamap-doc-page-show": "{{$1}}\n<hr />",
     "datamap-doc-page-header": "'''Esta es la página de documentación para [[$1]]'''",
 
     "datamap-category-pages-including-maps": "Páginas incluyendo los mapas de datos",
@@ -24,10 +25,17 @@
     "datamap-error-validate-wrong-field-type": "El campo <code>$2</code> tiene un valor incorrecto para la estructura $1. $3",
     "datamap-error-validate-field-required-either": "$1 solo necesita uno de estos dos campos: <code>$2</code> o <code>$3</code>. No pueden emplearse ambos simultáneamente.",
     "datamap-error-validate-exclusive-fields": "$1 solo necesita uno de estos dos campos: <code>$2</code> o <code>$3</code>. No pueden emplearse ambos simultáneamente.",
+    "datamap-error-validate-replaced-field": "El campo <code>$2</code> de la estructura $1 se ha sustituido por <code>$3</code> en la versión $4, y se eliminará en la versión $5.",
     "datamap-error-validate-no-file": "El archivo [[File:$1]] se ha enlazado, pero aún no se ha subido a la wiki.",
+
     "datamap-error-validatespec-group-no-display": "El grupo de marcadores \"$1\" no tiene ajustes de interfaz. Añade las propiedades <code>icon</code> y/o <code>fillColor</code> .",
     "datamap-error-validatespec-map-no-group-name": "Se ha definido un grupo de marcadores sin nombre (o con un nombre en blanco). Asígnale un nombre único.",
     "datamap-error-validatespec-map-missing-group": "Se han añadido los marcadores al grupo \"$1\", el cual no se ha definido.",
+
+    "datamap-error-internal-unknown-field-type": "No se ha implementado la compatibilidad para el tipo de campo con ID de $1. Esto se debe a un error en el código de extensión.",
+    "datamap-error-render-unsupported-displaymode": "El modo de pantalla $1 se ha identificado como un marcador, pero no existe compatibilidad para el mismo. Esto se debe a un error en el código de extensión.",
+    "datamap-error-pf-page-does-not-exist": "La página del mapa de datos "[[$1]]" no existe.",
+    "datamap-error-pf-page-invalid-content-model": "El modelo de contenido de la página "[[$1]]" no es <code>datamap</code>.",
 
     "datamap-unnamed-map": "Mapa sin nombre",
     "datamap-legend-label": "Leyenda",
@@ -36,15 +44,18 @@
     "datamap-error-dataload": "<b>No se ha podido cargar los datos</b><br/>Actualiza la página o prueba de nuevo más tarde",
     "datamap-lazy-click-to-load": "Haz clic para cargar el mapa de datos", 
     
+    "datamap-legend-tab-locations": "Marcadores",
     "datamap-toggle-show-all": "Mostrar todo",
     "datamap-toggle-hide-all": "Ocultar todo",
-    "datamap-toggle-cave": "Mostrar/Ocultar cuevas",
-    "datamap-legend-tab-locations": "Marcadores",
-    "datamap-popup-related-article": "Ver más",
     "datamap-layer-control": "Capas",
+
     "datamap-layer-surface": "Superficie",
     "datamap-layer-cave": "Cuevas",
+
+    "datamap-popup-related-article": "Ver más",
     "datamap-popup-dismissed": "Recogidos",
     "datamap-popup-mark-as-dismissed": "Marcar como recogidos",
-    "datamap-control-reset-view": "Modo por defecto"
+
+    "datamap-control-reset-view": "Modo por defecto",
+    "datamap-control-centre-view": "Centrar vista en el nivel de zoom actual"
 }

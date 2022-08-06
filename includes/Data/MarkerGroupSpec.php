@@ -32,26 +32,21 @@ class MarkerGroupSpec extends DataModel {
         return $this->raw->name;
     }
 
-    public function getCircleSize(): int {
-        assert( $this->getDisplayMode() == self::DM_CIRCLE );
-        return isset( $this->raw->size ) ? $this->raw->size : self::DEFAULT_CIRCLE_SIZE;
-    }
-
-    public function getIconSize(): array {
-        assert( $this->getDisplayMode() == self::DM_ICON );
-        return isset( $this->raw->size ) ? $this->raw->size : self::DEFAULT_ICON_SIZE;
+    private function getSizePropertyInternal() {
+        return isset( $this->raw->size ) ? $this->raw->size : null;
     }
 
     public function getSize() {
         switch ( $this->getDisplayMode() ) {
             case self::DM_CIRCLE:
-                return $this->getCircleSize();
+                return $this->getSizePropertyInternal() ?? self::DEFAULT_CIRCLE_SIZE;
             case self::DM_ICON:
-                $dim = $this->getIconSize();
-                if ( is_numeric( $dim ) ) {
-                    $dim = [ $dim, $dim ];
+                $out = $this->getSizePropertyInternal() ?? self::DEFAULT_ICON_SIZE;
+                // Ensure 2D
+                if ( is_numeric( $out ) ) {
+                    $out = [ $out, $out ];
                 }
-                return $dim;
+                return $out;
             default:
                 return null;
         }
@@ -99,10 +94,7 @@ class MarkerGroupSpec extends DataModel {
     }
 
     public function getSharedRelatedArticle(): ?string {
-        return isset( $this->raw->article ) ? $this->raw->article : (
-            // DEPRECATED(v0.7.0:v0.9.0): switch to `article`, more intuitive
-            isset( $this->raw->relatedArticle ) ? $this->raw->relatedArticle : null
-        );
+        return isset( $this->raw->article ) ? $this->raw->article : null;
     }
 
     public function canDismiss(): bool {
@@ -114,8 +106,8 @@ class MarkerGroupSpec extends DataModel {
 
         switch ( $this->getDisplayMode() ) {
             case self::DM_CIRCLE:
-                $this->requireField( $status, 'fillColor', DataModel::TYPE_COLOUR );
-                $this->expectField( $status, 'borderColor', DataModel::TYPE_COLOUR );
+                $this->requireField( $status, 'fillColor', DataModel::TYPE_COLOUR3 );
+                $this->expectField( $status, 'borderColor', DataModel::TYPE_COLOUR3 );
                 $this->expectField( $status, 'borderWidth', DataModel::TYPE_NUMBER );
                 $this->expectField( $status, 'size', DataModel::TYPE_NUMBER );
                 $this->expectField( $status, 'extraMinZoomSize', DataModel::TYPE_NUMBER );
@@ -131,7 +123,6 @@ class MarkerGroupSpec extends DataModel {
         }
 
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
-        $this->allowReplacedField( $status, 'relatedArticle', DataModel::TYPE_STRING, 'article', 'v0.7.0', 'v0.9.0' );
         if ( $this->getDisplayMode() == self::DM_ICON ) {
             $this->expectField( $status, 'canDismiss', DataModel::TYPE_BOOL );
         }

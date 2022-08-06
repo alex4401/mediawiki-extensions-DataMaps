@@ -15,6 +15,7 @@ use Status;
 use stdClass;
 use WikiPage;
 use MediaWiki\Revision\RevisionRecord;
+use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapRenderOptions;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
@@ -46,16 +47,24 @@ class DataMapContent extends DataMapContentBase {
 	}
 
 	private function mergeMixins( stdClass $main ) {
-		global $wgArkDataNamespace;
-
 		if ( !isset( $main->mixins ) ) {
 			return $main;
 		}
 
 		$finalMixin = null;
 		foreach ( $main->mixins as &$mixinName ) {
-			$title = Title::makeTitleSafe( $wgArkDataNamespace, $mixinName );
-        	$mixin = DataMapContent::loadPage( $title )->getData()->getValue();
+			$title = Title::makeTitleSafe( DataMapsConfig::getNamespace(), $mixinName );
+        	$mixinPage = DataMapContent::loadPage( $title );
+
+			// Mixin failed to load, skip it. There's no way for us to throw an error at this stage without crashing the whole
+			// request. However, validation can catch this most of the time.
+			if ( is_numeric( $mixinPage ) ) {
+				continue;
+			}
+			$mixin = $mixinPage->getData()->getValue();
+			if ( $mixin == null ) {
+				continue;
+			}
 			
 			if ( $finalMixin === null ) {
 				// First mixin, keep unmodified

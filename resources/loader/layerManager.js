@@ -23,7 +23,8 @@ MarkerLayerManager.prototype.register = function ( layerName ) {
 
 MarkerLayerManager.prototype.addMember = function ( type, leafletMarker ) {
     leafletMarker.arkAttachedLayers = type.split(' ');
-    leafletMarker.arkAttachedLayers.forEach( layer => this.byLayer[layer].push( leafletMarker ) );
+    for ( const layer of leafletMarker.arkAttachedLayers )
+        this.byLayer[layer].push( leafletMarker );
     this.markers.push( leafletMarker );
     this.updateMember( leafletMarker );
 };
@@ -38,9 +39,8 @@ MarkerLayerManager.prototype.addMarkerToLayer = function ( leafletMarker, layer 
 
 MarkerLayerManager.prototype.removeMember = function ( leafletMarker ) {
     this.map.leaflet.removeLayer( leafletMarker );
-    leafletMarker.arkAttachedLayers.forEach( layer => {
+    for ( const layer of leafletMarker.arkAttachedLayers )
         delete this.byLayer[layer][this.byLayer[layer].indexOf( leafletMarker )];
-    } );
     delete this.markers[this.markers.indexOf( leafletMarker )];
     leafletMarker.arkAttachedLayers = null;
 };
@@ -50,7 +50,7 @@ MarkerLayerManager.prototype.shouldBeVisible = function ( layers ) {
     // If requirement mask is not empty, and there is a layer inside the list does not have, return invisible
     if ( this.includeMaskHi.size > 0 && !( () => {
         let result = true;
-        this.includeMaskHi.forEach( name => result &&= layers.indexOf( name ) > 0 );
+        this.includeMaskHi.forEach( name => result = result && layers.indexOf( name ) > 0 );
         return result;
     } )() ) {
         return false;
@@ -101,7 +101,8 @@ MarkerLayerManager.prototype.updateMembers = function ( layerName ) {
         return;
     }
     // Run an update on every member of the layer
-    ( layerName ? this.byLayer[layerName] : this.markers ).forEach( m => this.updateMember( m ) );
+    for ( const m of ( layerName ? this.byLayer[layerName] : this.markers ) )
+        this.updateMember( m );
 };
 
 

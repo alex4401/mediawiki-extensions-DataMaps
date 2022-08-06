@@ -21,7 +21,7 @@ use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 
 class DataMapEmbedRenderer {
-    const MARKER_ICON_WIDTH = 24;
+    const MARKER_ICON_WIDTH = MarkerGroupSpec::DEFAULT_ICON_SIZE[0];
     const LEGEND_ICON_WIDTH = 24;
 
     public DataMapSpec $data;
@@ -85,6 +85,8 @@ class DataMapEmbedRenderer {
             'pageName' => $this->title->getPrefixedText(),
             'version' => $this->title->getLatestRevID(),
 
+            'crs' => $this->data->getCoordinateReferenceSpace(),
+
             'backgrounds' => array_map( function ( MapBackgroundSpec $background ) {
                 $image = DataMapFileUtils::getRequiredFile( $background->getImageName() );
                 $out = [
@@ -132,9 +134,7 @@ class DataMapEmbedRenderer {
     }
 
     private function convertBackgroundOverlay( MapBackgroundOverlaySpec $spec ) {
-        $result = [
-            'at' => $spec->getPlacementLocation()
-        ];
+        $result = [];
         if ( $spec->getName() != null ) {
             $result['name'] = $spec->getName();
         }
@@ -142,6 +142,24 @@ class DataMapEmbedRenderer {
             $image = DataMapFileUtils::getRequiredFile( $spec->getImageName() );
             $result['image'] = $image->getURL();
         }
+        if ( $spec->getPath() != null ) {
+            $result['path'] = $spec->getPath();
+        } else {
+            $result['at'] = $spec->getPlacementLocation();
+        }
+
+        if ( $spec->supportsDrawProperties() ) {
+            if ( $spec->getRawFillColour() !== null ) {
+                $result['colour'] = DataMapColourUtils::asHex( $spec->getFillColour() );
+            }
+            if ( $spec->getPolylineThickness() !== null ) {
+                $result['thickness'] = $spec->getPolylineThickness();
+            }
+            if ( $spec->getRawRectStrokeColour() !== null ) {
+                $result['strokeColour'] = DataMapColourUtils::asHex( $spec->getRectStrokeColour() );
+            }
+        }
+
         return $result;
     }
 
@@ -169,7 +187,7 @@ class DataMapEmbedRenderer {
                 break;
             case MarkerGroupSpec::DM_ICON:
                 // Upsize by 50% to mitigate quality loss at max zoom
-                $size = floor(self::MARKER_ICON_WIDTH * 1.5);
+                $size = floor($out['size'][0] * 1.5);
                 // Ensure it's a multiple of 2
                 if ( $size % 2 !== 0 ) {
                     $size++;

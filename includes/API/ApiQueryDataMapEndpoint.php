@@ -10,16 +10,17 @@ use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use Wikimedia\ParamValidator\ParamValidator;
 use ObjectCache;
+use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
 use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 use ParserOptions;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
     const GENERATION = 8;
-    const POPUP_IMAGE_WIDTH = 240;
 
     public function getAllowedParams() {
         return [
@@ -39,12 +40,10 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     public function execute() {
-        global $wgArkDataMapCacheType;
-        global $wgArkDataMapCacheExpiryTime;
-        global $wgArkDataMapDebugApiProcessingTime;
+        $cacheExpiryTime = DataMapsConfig::getApiCacheTTL();
 
         $timeStart = 0;
-        if ( $wgArkDataMapDebugApiProcessingTime ) {
+        if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
             $timeStart = hrtime( true );
         }
 
@@ -54,12 +53,12 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $params = $this->extractRequestParams();
 
         $response = null;
-        if ($wgArkDataMapCacheExpiryTime <= 0) {
+        if ( $cacheExpiryTime <= 0 ) {
             // Cache expiry time is zero or lower, bypass caching
             $response = $this->executeInternal( $params );
         } else {
             // Retrieve the specified cache instance
-            $cache = ObjectCache::getInstance( $wgArkDataMapCacheType );
+            $cache = ObjectCache::getInstance( DataMapsConfig::getApiCacheType() );
             // Build the cache key from an identifier, title parameter and revision ID parameter
             $revid = isset( $params['revid'] ) ? $params['revid'] : -1;
             $cacheKey = $cache->makeKey( 'ARKDataMapQuery', self::GENERATION, $params['title'], $revid,
@@ -67,25 +66,40 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             // Try to retrieve the response
             $response = $cache->get( $cacheKey );
             if ( $response === false ) {
-                // Response not cached, process the data in this request and write to cache
+                // Response not cached, process the data in this request
                 $response = $this->executeInternal( $params );
-                $cache->set( $cacheKey, $response, $wgArkDataMapCacheExpiryTime );
+                // If TTL extension is allowed, store an internal timestamp
+                if ( DataMapsConfig::shouldExtendApiCacheTTL() ) {
+                    $response['refreshedAt'] = time();
+                }
+                // Write to cache
+                $cache->set( $cacheKey, $response, $cacheExpiryTime );
+            } else {
+                // Response cached, check if TTL should be extended and do it
+                if ( DataMapsConfig::shouldExtendApiCacheTTL() && isset( $response['refreshedAt'] ) ) {
+                    $ttlThreshold = $cacheExpiryTime - DataMapsConfig::getApiCacheTTLExtensionThreshold();
+                    if ( time() - $response['refreshedAt'] >= $ttlThreshold ) {
+                        $response['refreshedAt'] = time();
+                        $cache->set( $cacheKey, $response, DataMapsConfig::getApiCacheTTLExtensionValue() );
+                    }
+                }
+            }
+            // Remove the internal TTL extension timestamp
+            if ( isset( $response['refreshedAt'] ) && !DataMapsConfig::shouldApiReturnProcessingTime() ) {
+                unset( $response['refreshedAt'] );
             }
         }
 		
         $this->getResult()->addValue( null, 'query', $response );
 
-        if ( $wgArkDataMapDebugApiProcessingTime ) {
-            $timeEnd = hrtime( true );
-            $this->getResult()->addValue( null, 'processingTime', $timeEnd - $timeStart );
+        if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
+            $this->getResult()->addValue( null, 'responseTime', hrtime( true ) - $timeStart );
         }
     }
 
     private function getRevisionFromParams( $params ) {
-        global $wgArkDataNamespace;
-
         // Retrieve latest revision by title
-        $title = Title::newFromText( $params['title'], $wgArkDataNamespace );
+        $title = Title::newFromText( $params['title'], DataMapsConfig::getNamespace() );
         if ( !$title->exists() ) {
             $this->dieWithError( [ 'apierror-invalidtitle', $params['title'] ] );
         }
@@ -108,6 +122,11 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     private function executeInternal( $params ): array {
+        $timeStart = 0;
+        if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
+            $timeStart = hrtime( true );
+        }
+
         list( $title, $revision ) = $this->getRevisionFromParams( $params );
         $content = $revision->getContent( SlotRecord::MAIN, RevisionRecord::FOR_PUBLIC, null );
 
@@ -118,118 +137,27 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $dataMap = $content->asModel();
         $response = [
             'title' => $title->getFullText(),
-            'revisionId' => $revision->getId(),
-            'markers' => $this->processMarkers( $title, $dataMap, $params )
+            'revisionId' => $revision->getId()
         ];
-
-        // Armour any API metadata in $response
-        $response = ApiResult::addMetadataToResultVars( $response, false );
-
-        return $response;
-    }
-
-    private function processMarkers( Title $title, DataMapSpec $dataMap, $params ): array {
-        $results = [];
-		$parser = MediaWikiServices::getInstance()->getParser();
 
         // Extract filters from the request parameters
         $filter = null;
         if ( isset( $params['filter'] ) && !empty( $params['filter'] ) ) {
             $filter = explode( '|', $params['filter'] );
-            // Ignore filters if more than 9 are specified
-            if ( count( $filter ) >= 9 ) {
-                $filter = null;
-            }
         }
 
-        // Prepare the wikitext parser
-        $parserOptions = ParserOptions::newCanonical( 'canonical' );
-        $parserOptions->enableLimitReport( false );
-        $parserOptions->setAllowSpecialInclusion( false );
-        $parserOptions->setExpensiveParserFunctionLimit( 0 );
-        $parserOptions->setInterwikiMagic( false );
-        $parserOptions->setMaxIncludeSize( 800 );
+        // Have a MarkerProcessor convert the data
+        $processor = new MarkerProcessor( $title, $dataMap, $filter );
+        $response['markers'] = $processor->processAll();
 
-        $dataMap->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection )
-            use ( &$results, &$title, &$parser, $filter, &$parserOptions ) {
+        // Armour any API metadata in $response
+        $response = ApiResult::addMetadataToResultVars( $response, false );
 
-            // If filters were specified, check if there is any overlap between the filters list and skip the marker set
-            if ( $filter !== null && empty( array_intersect( $filter, explode( ' ', $layers ) ) ) ) {
-                return;
-            }
-
-            $subResults = [];
-            // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
-            // creating thousands of small, very short-lived (only one at a time) objects
-            $marker = new MarkerSpec( new \stdclass() );
-
-            foreach ( $rawMarkerCollection as &$rawMarker ) {
-                $marker->reassignTo( $rawMarker );
-
-                // Coordinates
-                $converted = [
-                    $marker->getLatitude(),
-                    $marker->getLongitude()
-                ];
-                // Rich data
-                $slots = [];
-
-                // Popup title
-                if ( $marker->getLabel() != null ) {
-                    if ( $this->shouldParseString( $marker, $marker->getLabel() ) ) {
-                        $slots['label'] =
-                            $parser->parse( $marker->getLabel(), $title, $parserOptions, false, true )
-                                ->getText( [ 'unwrap' => true ] );
-                    } else {
-                        $slots['label'] = wfEscapeWikiText( $marker->getLabel() );
-                    }
-                    $requiresSlots = true;
-                }
-
-                // Popup description
-                if ( $marker->getDescription() != null ) {
-                    if ( $this->shouldParseString( $marker, $marker->getDescription() ) ) {
-                        $slots['desc'] =
-                            $parser->parse( $marker->getDescription(), $title, $parserOptions, false, true )
-                                ->getText( [ 'unwrap' => true ] );
-                    } else {
-                        $slots['desc'] = wfEscapeWikiText( $marker->getDescription() );
-                    }
-                    $requiresSlots = true;
-                }
-
-                // Popup image thumbnail link
-                if ( $marker->getPopupImage() != null ) {
-                    $slots['image'] = DataMapFileUtils::getFileUrl( $marker->getPopupImage(), self::POPUP_IMAGE_WIDTH );
-                    $requiresSlots = true;
-                }
-
-                // Related article title
-                if ( $marker->getRelatedArticle() != null ) {
-                    $slots['article'] = $marker->getRelatedArticle();
-                    $requiresSlots = true;
-                }
-
-                // Insert slots if any data has been added
-                if ( !empty( $slots ) ) {
-                    $converted[] = $slots;
-                }
-
-                $subResults[] = $converted;
-            }
-
-            $results[$layers] = $subResults;
-        } );
-
-        return $results;
-    }
-
-    private function shouldParseString( MarkerSpec $marker, string $text ): bool {
-        $mIsWikitext = $marker->isWikitext();
-        if ( $mIsWikitext === false ) {
-            return false;
+        if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
+            $response['processingTime'] = hrtime( true ) - $timeStart;
+            $response['parserTime'] = $processor->timeInParser;
         }
 
-        return $mIsWikitext || preg_match( "/\{\{|\[\[|\'\'|<\w+|&[\d\w]+/", $text ) === 1;
+        return $response;
     }
 }

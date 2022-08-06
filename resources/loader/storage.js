@@ -1,11 +1,12 @@
 function MapStorage( map ) {
     this.map = map;
+    this.hasSchemaVersion = false;
     this.migrate();
     this.dismissed = this.getArray( 'dismissed' );
 }
 
 
-MapStorage.prototype.LATEST_VERSION = 20220713;
+MapStorage.prototype.LATEST_VERSION = 20220803;
 
 
 MapStorage.prototype.get = function ( name ) {
@@ -14,7 +15,16 @@ MapStorage.prototype.get = function ( name ) {
 
 
 MapStorage.prototype.set = function ( name, data ) {
+    this.initialiseFirstWrite();
     localStorage.setItem( `ext.ark.datamaps.${this.map.id}:${name}`, data );
+};
+
+
+MapStorage.prototype.initialiseFirstWrite = function () {
+    if ( !this.hasSchemaVersion ) {
+        this.hasSchemaVersion = true;
+        this.set( 'schemaVersion', MapStorage.prototype.LATEST_VERSION );
+    }
 };
 
     
@@ -29,7 +39,13 @@ MapStorage.prototype.setObject = function ( name, data ) {
 
 
 MapStorage.prototype.migrate = function () {
+    // Check if any saved properties exist, and if not, abort
+    if ( !this.get( 'dismissed' ) ) {
+        return;
+    }
+
     const schemaVersion = this.get( 'schemaVersion' ) || -1;
+    this.hasSchemaVersion = true;
     let shouldUpdateVersion = false;
 
     switch ( schemaVersion ) {
@@ -37,6 +53,16 @@ MapStorage.prototype.migrate = function () {
             shouldUpdateVersion = true;
             // Drop the #surface layer from memorised dismissed markers
             this.setObject( 'dismissed', this.getArray( 'dismissed' ).map( x => x.replace( ' #surface', '' ) ) );
+        case '20220713':
+            shouldUpdateVersion = true;
+            // Parse dismissed marker IDs and use fixed precision on coordinates
+            this.setObject( 'dismissed', this.getArray( 'dismissed' ).map( x => {
+                const a = x.split( '@' );
+                const b = a[1].split( ':' );
+                const lat = parseFloat( b[0] );
+                const lon = parseFloat( b[1] );
+                return ( lat == NaN || lon == NaN ) ? x : ( a[0] + '@' + lat.toFixed( 3 ) + ':' + lon.toFixed( 3 ) );
+            } ) );
             break;
     }
 
@@ -50,7 +76,7 @@ MapStorage.prototype.migrate = function () {
  * Generates an identifier of a marker to use with local storage.
  */
 MapStorage.prototype.getMarkerKey = function ( type, instance ) {
-    return `M${type}@${instance[0]}:${instance[1]}`;
+    return `M${type}@${instance[0].toFixed(3)}:${instance[1].toFixed(3)}`;
 };
 
 
