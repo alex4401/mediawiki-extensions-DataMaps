@@ -17,7 +17,7 @@ Currently no feature parity with the existing solution. [Roadmap (T75 on wiki's 
 ## Installation
 1. Clone the repository to `extensions/DataMaps`.
 2. `wfLoadExtension` in site configuration.
-3. Set `$wgDataMapsNamespace` to the ID of the Data namespace (`10006` on ARK Wiki).
+3. Set `$wgDataMapsNamespaceId` to the ID of the Data namespace (`10006` on ARK Wiki).
 
 ## Creating a map
 Create a page within the data namespace and assign it the `datamap` content model.
