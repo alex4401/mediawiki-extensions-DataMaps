@@ -1,4 +1,29 @@
-.datamap-container {
+.datamap-popup {
+    .datamap-popup-buttons {
+        position: absolute;
+        top: 24px;
+        right: 0;
+        border: none;
+        text-align: center;
+        font: 16px/24px Tahoma,Verdana,sans-serif;
+        background: transparent;
+
+        a {
+            display: block;
+            width: 24px;
+            height: 24px;
+            background-size: 16px;
+            background-position: center center;
+            background-repeat: no-repeat;
+            text-decoration: none;
+            opacity: 0.7;
+
+            &:hover {
+                opacity: 0.85;
+            }
+        }
+    }
+
     .datamap-popup-subtitle {
         color: #666;
         font-size: 96%;
@@ -25,6 +50,13 @@
 
         li {
             margin-bottom: 0;
+        }
+    }
+
+    ul {
+        margin-left: 1em;
+        & + .datamap-popup-image {
+            margin-top: 0.5em;
         }
     }
 }

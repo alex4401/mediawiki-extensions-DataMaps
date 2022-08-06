@@ -19,7 +19,9 @@ class DataModel {
     const TYPE_DIMENSIONS = 12;
     const TYPE_VECTOR2x2 = 13;
     const TYPE_BOUNDS = self::TYPE_VECTOR2x2;
-    const TYPE_COLOUR = 14;
+    const TYPE_COLOUR3 = 14;
+    const TYPE_STRING_OR_NUMBER = 15;
+    const TYPE_COLOUR4 = 16;
 
     protected stdClass $raw;
     private array $validationCheckedFields = [];
@@ -59,9 +61,14 @@ class DataModel {
                 // [ [ Na, Nb ], [ Nc, Nd ] ]
                 return is_array( $var ) && count( $var ) == 2
                     && $this->verifyType( $var[0], self::TYPE_VECTOR2 ) && $this->verifyType( $var[1], self::TYPE_VECTOR2 );
-            case self::TYPE_COLOUR:
+            case self::TYPE_COLOUR3:
                 // S"#rrggbb" || S"#rgb" || [ Nr, Ng, Nb ]
                 return DataMapColourUtils::decode( $var ) !== null;
+            case self::TYPE_COLOUR4:
+                // S"#rrggbbaa" || S"#rgba" || [ Nr, Ng, Nb, Na ]
+                return DataMapColourUtils::decode4( $var ) !== null;
+            case self::TYPE_STRING_OR_NUMBER:
+                return is_string( $var ) || is_numeric( $var );
         }
         throw new InvalidArgumentException( wfMessage( 'datamap-error-internal-unknown-field-type', $typeId ) );
     }
@@ -113,7 +120,8 @@ class DataModel {
     protected function expectField( Status $status, string $name, int $typeId ): bool {
         $this->trackField( $name );
         if ( isset( $this->raw->$name ) && !$this->verifyType( $this->raw->$name, $typeId ) ) {
-            $status->fatal( 'datamap-error-validate-wrong-field-type', $name, static::$publicName );
+            $status->fatal( 'datamap-error-validate-wrong-field-type', $name, static::$publicName,
+                wfMessage( 'datamap-error-validate-check-docs' ) );
             return false;
         }
         return true;
