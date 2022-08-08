@@ -149,7 +149,7 @@ class DataMapSpec extends DataModel {
             $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'layers', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'custom', DataModel::TYPE_OBJECT );
-            $this->expectField( $status, 'markers', DataModel::TYPE_OBJECT );
+            $this->requireField( $status, 'markers', DataModel::TYPE_OBJECT );
         } else {
             // Perform limited, permissive validation, this is a mixin
             $hasCrs = $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
