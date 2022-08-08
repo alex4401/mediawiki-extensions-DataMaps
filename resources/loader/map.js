@@ -46,7 +46,7 @@ function DataMap( id, $root, config ) {
     // Retrieve a `marker` parameter from the query string if one is present
     this.markerIdToAutoOpen = null;
     const tabberId = this.getParentTabberNeueId();
-    if ( tabberId && tabberId == window.location.hash.substr( 1 ) ) {
+    if ( !tabberId || ( tabberId && tabberId == window.location.hash.substr( 1 ) ) ) {
         this.markerIdToAutoOpen = new URLSearchParams( window.location.search ).get( MarkerPopup.URL_PARAMETER );
     }
 
