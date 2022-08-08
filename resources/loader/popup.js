@@ -128,10 +128,17 @@ MarkerPopup.prototype.addTool = function ( cssClass, $child ) {
 
 MarkerPopup.prototype.buildTools = function () {
     // Related article
-    const article = this.slots.article || this.markerGroup.article;
+    let article = this.slots.article || this.markerGroup.article;
     if ( article ) {
+        let msg = mw.msg( 'datamap-popup-related-article' );
+        if ( article.indexOf( '|' ) >= 0 ) {
+            const split = article.split( '|', 2 );
+            msg = split[1];
+            article = split[0];
+        }
+
         this.addTool( 'datamap-popup-seemore',
-            $( '<a>' ).attr( 'href', mw.util.getUrl( article ) ).text( mw.msg( 'datamap-popup-related-article' ) ) );
+            $( '<a>' ).attr( 'href', mw.util.getUrl( article ) ).text( msg ) );
     }
 
     // Dismissables
