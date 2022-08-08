@@ -147,7 +147,7 @@ DataMap.prototype.toggleMarkerDismissal = function ( markerType, coords, leaflet
 DataMap.prototype.updateMarkerDismissalBadges = function () {
     for ( const groupId in this.config.groups ) {
         const group = this.config.groups[groupId];
-        if ( group.canDismiss ) {
+        if ( group.canDismiss && this.markerLegend.groupToggles[groupId] ) {
             const markers = this.layerManager.byLayer[groupId];
             const count = markers.filter( x => x.options.dismissed ).length;
             this.markerLegend.groupToggles[groupId].setBadge( `${count} / ${markers.length}` );
