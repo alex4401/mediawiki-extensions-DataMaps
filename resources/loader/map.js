@@ -344,7 +344,7 @@ const buildLeafletMap = function ( $holder ) {
     const leafletConfig = $.extend( true, {
         // Boundaries
         center: [ 50, 50 ],
-        maxBounds: [ [ -85, -85 ], [ 185, 185 ] ],
+        maxBounds: [ [ -100, -100 ], [ 200, 200 ] ],
         maxBoundsViscosity: 0.7,
         // Zoom settings
         zoomSnap: 0.25,
