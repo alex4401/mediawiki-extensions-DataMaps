@@ -3,7 +3,6 @@ const MapStorage = require( './storage.js' ),
     MarkerPopup = require( './popup.js' ),
     MapLegend = require( './legend.js' ),
     MarkerLegendPanel = require( './markerLegend.js' ),
-    config = require( './config.json' ),
     mwApi = new mw.Api();
 
 
@@ -71,6 +70,14 @@ function DataMap( id, $root, config ) {
         'ext.ark.datamaps.leaflet.extra'
     ], buildLeafletMap.bind( this, this.$root.find( '.datamap-holder' ) ) );
 }
+
+
+DataMap.prototype.FF_SHOW_COORDINATES = 1;
+
+
+DataMap.prototype.isFeatureBitSet = function ( mask ) {
+    return this.config.flags && this.config.flags & mask == mask;
+};
 
 
 /*
@@ -413,7 +420,7 @@ const buildLeafletMap = function ( $holder ) {
     this.updateMarkerScaling();
 
     // Create a coordinate-under-cursor display
-    if ( config.DataMapsShowCoordinatesDefault ) {
+    if ( this.isFeatureBitSet( this.FF_SHOW_COORDINATES ) ) {
         this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
         this.leaflet.on( 'mousemove', event => {
             let lat = event.latlng.lat;

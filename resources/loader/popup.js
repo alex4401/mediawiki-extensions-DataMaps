@@ -1,5 +1,4 @@
-const config = require( './config.json' ),
-    URL_PARAMETER = 'marker';
+const URL_PARAMETER = 'marker';
 
 
 var getMarkerUID = function ( map, markerType, instance ) {
@@ -102,7 +101,7 @@ MarkerPopup.prototype.build = function () {
     if ( discrims.length > 0 ) {
         coordText += ` (${ discrims.join( ', ' ) })`;
     }
-    if ( config.DataMapsShowCoordinatesDefault ) {
+    if ( this.map.isFeatureBitSet( this.map.FF_SHOW_COORDINATES ) ) {
         $( '<div class="datamap-popup-coordinates">' ).text( coordText ).appendTo( this.$content );
     }
 

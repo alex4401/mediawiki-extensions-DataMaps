@@ -86,6 +86,7 @@ class DataMapEmbedRenderer {
             'version' => $this->title->getLatestRevID(),
 
             'crs' => $this->data->getCoordinateReferenceSpace(),
+            'flags' => $this->getPublicFeatureBitMask(),
 
             'backgrounds' => array_map( function ( MapBackgroundSpec $background ) {
                 $image = DataMapFileUtils::getRequiredFile( $background->getImageName() );
@@ -130,6 +131,14 @@ class DataMapEmbedRenderer {
             $out['leafletSettings'] = $this->data->getInjectedLeafletSettings();
         }
 
+        return $out;
+    }
+
+    public function getPublicFeatureBitMask(): int {
+        $out = 0;
+        if ( $this->data->wantsCoordinatesShown() ) {
+            $out |= 1<<0;
+        }
         return $out;
     }
 
