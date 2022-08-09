@@ -59,6 +59,26 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
+		"ext.ark.datamaps.icons": {
+			"class": "ResourceLoaderOOUIIconPackModule",
+			"icons": [
+				"exitFullscreen",
+				"fullScreen",
+				"expand",
+				"link"
+			]
+		},
+
+		"ext.ark.datamaps.styles": {
+			"styles": [
+				"styles/main.less",
+				"styles/legend.less",
+				"styles/controls.less",
+				"styles/popups.less"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
+
 		"ext.ark.datamaps.loader": {
 			"es6": true,
 			"dependencies": [
@@ -94,22 +114,13 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.ark.datamaps.icons": {
-			"class": "ResourceLoaderOOUIIconPackModule",
-			"icons": [
-				"exitFullscreen",
-				"fullScreen",
-				"expand",
-				"link"
-			]
-		},
-
-		"ext.ark.datamaps.styles": {
-			"styles": [
-				"styles/main.less",
-				"styles/legend.less",
-				"styles/controls.less",
-				"styles/popups.less"
+		"ext.ark.datamaps.inlineloader": {
+			"es6": true,
+			"dependencies": [
+				"ext.ark.datamaps.loader"
+			],
+			"packageFiles": [
+				"inlineLoader/adapter.js"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}

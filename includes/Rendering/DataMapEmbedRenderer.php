@@ -11,6 +11,7 @@ use Html;
 use File;
 use InvalidArgumentException;
 use PPFrame;
+use FormatJson;
 
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
@@ -27,12 +28,14 @@ class DataMapEmbedRenderer {
     public DataMapSpec $data;
 
     private Title $title;
+    private bool $useInlineData;
     private Parser $parser;
     private ParserOptions $parserOptions;
 
-    public function __construct( Title $title, DataMapSpec $data, Parser $parser ) {
+    public function __construct( Title $title, DataMapSpec $data, Parser $parser, bool $useInlineData = false ) {
         $this->title = $title;
         $this->data = $data;
+        $this->useInlineData = $useInlineData;
 
         $this->parser = $parser->getFreshParser();
 
@@ -61,6 +64,21 @@ class DataMapEmbedRenderer {
             'ext.ark.datamaps.loader'
         ] );
 
+        if ( $this->useInlineData ) {
+            $parserOutput->addModules( [
+				'ext.ark.datamaps.inlineloader'
+			] );
+            $processor = new MarkerProcessor( $this->title, $this->data, null );
+            $parserOutput->setText( $parserOutput->getRawText() . Html::element(
+                'script',
+                [
+                    'type' => 'application/json+datamap',
+                    'id' => 'datamap-inline-data-' . $this->getId()
+                ],
+                FormatJson::encode( $processor->processAll(), false, FormatJson::UTF8_OK )
+            ) );
+        }
+
         // Inject mw.config variables via a `dataMaps` map from ID
         $configsVar = [
             $this->getId() => $this->getJsConfigVariables()
@@ -83,8 +101,10 @@ class DataMapEmbedRenderer {
         $out = [];
 
         // Required to query the API for marker clusters
-        $out['pageName'] = $this->title->getPrefixedText();
-        $out['version'] = $this->title->getLatestRevID();
+        if ( !$this->useInlineData ) {
+            $out['pageName'] = $this->title->getPrefixedText();
+            $out['version'] = $this->title->getLatestRevID();
+        }
         // Coordinate transformation
         $out['crs'] = $this->data->getCoordinateReferenceSpace();
         // Feature management

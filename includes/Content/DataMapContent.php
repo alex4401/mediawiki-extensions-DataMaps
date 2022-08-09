@@ -18,6 +18,7 @@ use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapRenderOptions;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataModelMixinTransformer;
 
@@ -102,8 +103,8 @@ class DataMapContent extends DataMapContentBase {
 		$this->asModel()->validate( $status );
 	}
 
-	public function getEmbedRenderer( Title $title, Parser $parser ): DataMapEmbedRenderer {
-		return new DataMapEmbedRenderer( $title, $this->asModel(), $parser );
+	public function getEmbedRenderer( Title $title, Parser $parser, bool $useInlineData = false ): DataMapEmbedRenderer {
+		return new DataMapEmbedRenderer( $title, $this->asModel(), $parser, $useInlineData );
 	}
 
 	protected function fillParserOutput( Title $title, $revId, ParserOptions $options, $generateHtml, ParserOutput &$output ) {
@@ -115,8 +116,9 @@ class DataMapContent extends DataMapContentBase {
 
 		if ( !$this->isMixin() ) {
 			$parser = MediaWikiServices::getInstance()->getParser();
-			$embed = $this->getEmbedRenderer( $title, $parser );
+			$embed = $this->getEmbedRenderer( $title, $parser, $options->getIsPreview() );
 			$embed->prepareOutput( $output );
+
 			$output->setText( $output->getRawText() . $embed->getHtml( new DataMapRenderOptions() ) );
 		}
 

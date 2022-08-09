@@ -101,7 +101,9 @@ abstract class DataMapContentBase extends JsonContent {
 	}
 
 	protected function fillParserOutput( Title $title, $revId, ParserOptions $options, $generateHtml, ParserOutput &$output ) {
-		$output = new ParserOutput();
+		if ( $output == null ) {
+			$output = new ParserOutput();
+		}
 
 		if ( !$generateHtml ) {
 			return $output;
