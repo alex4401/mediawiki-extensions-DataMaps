@@ -1,17 +1,29 @@
+.dmLegendAboveMap() {
+    width: auto;
+    height: auto;
+    max-height: unset;
+
+    .datamap-container-groups {
+        column-width: 13em;
+        
+        .oo-ui-fieldLayout.oo-ui-fieldLayout-align-inline:first-child {
+            margin-top: 0;
+        }
+    }
+}
+
+.datamap-legend-is-above .datamap-container-legend {
+    .dmLegendAboveMap();
+}
+
 .datamap-container-legend {
-    width: 23em;
+    width: 23.7em;
     max-height: 750px;
     box-sizing: border-box;
     overflow-y: auto;
 
     @media screen and (max-width: 1320px) {
-        width: auto;
-        height: auto;
-        max-height: unset;
-
-        .datamap-container-groups {
-            column-width: 13em;
-        }
+        .dmLegendAboveMap();
     }
 
     .datamap-legend-label {

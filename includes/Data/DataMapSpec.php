@@ -47,6 +47,16 @@ class DataMapSpec extends DataModel {
         return $this->cachedBackgrounds;
     }
 
+    public function wantsCoordinatesShown(): bool {
+        return isset( $this->raw->showCoordinates ) ? $this->raw->showCoordinates
+            : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SHOW_COORDINATES );
+    }
+
+    public function wantsLegendShownAbove(): bool {
+        return isset( $this->raw->showLegendAbove ) ? $this->raw->showLegendAbove
+            : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SHOW_LEGEND_ABOVE );
+    }
+
     public function getInjectedLeafletSettings(): ?object {
         return isset( $this->raw->leafletSettings ) ? $this->raw->leafletSettings : null;
     }
@@ -145,11 +155,13 @@ class DataMapSpec extends DataModel {
             $this->expectField( $status, 'title', DataModel::TYPE_STRING );
             $hasCrs = $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
             $this->requireEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
+            $this->expectField( $status, 'showCoordinates', DataModel::TYPE_BOOL );
+            $this->expectField( $status, 'showLegendAbove', DataModel::TYPE_BOOL );
             $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
             $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'layers', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'custom', DataModel::TYPE_OBJECT );
-            $this->expectField( $status, 'markers', DataModel::TYPE_OBJECT );
+            $this->requireField( $status, 'markers', DataModel::TYPE_OBJECT );
         } else {
             // Perform limited, permissive validation, this is a mixin
             $hasCrs = $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
@@ -170,7 +182,7 @@ class DataMapSpec extends DataModel {
                     $mixinPage = DataMapContent::loadPage( $title );
                     
                     if ( is_numeric( $mixinPage ) || $mixinPage->getData()->getValue() == null ) {
-                        $status->fatal( 'datamap-error-validatespec-map-bad-mixin', $mixinName );
+                        $status->fatal( 'datamap-error-validatespec-map-bad-mixin', wfEscapeWikiText( $mixinName ) );
                     }
                 }
             }
@@ -236,7 +248,7 @@ class DataMapSpec extends DataModel {
                     $layers = explode( ' ', $layers );
                     $groupName = $layers[0];
                     if ( !isset( $this->raw->groups->$groupName ) ) {
-                        $status->fatal( 'datamap-error-validatespec-map-missing-group', $groupName );
+                        $status->fatal( 'datamap-error-validatespec-map-missing-group', wfEscapeWikiText( $groupName ) );
                         return;
                     }
                 

@@ -1,6 +1,6 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.9.1",
+	"version": "0.9.2",
 
 	"author": [
 		"alex4401"
@@ -59,6 +59,26 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
+		"ext.ark.datamaps.icons": {
+			"class": "ResourceLoaderOOUIIconPackModule",
+			"icons": [
+				"exitFullscreen",
+				"fullScreen",
+				"expand",
+				"link"
+			]
+		},
+
+		"ext.ark.datamaps.styles": {
+			"styles": [
+				"styles/main.less",
+				"styles/legend.less",
+				"styles/controls.less",
+				"styles/popups.less"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
+
 		"ext.ark.datamaps.loader": {
 			"es6": true,
 			"dependencies": [
@@ -71,11 +91,7 @@
 				"loader/map.js",
 				"loader/legend.js",
 				"loader/markerLegend.js",
-				"loader/popup.js",
-				{
-					"name": "loader/config.json",
-					"config": [ "DataMapsShowCoordinatesDefault" ]
-				}
+				"loader/popup.js"
 			],
 			"messages": [
 				"datamap-error-dataload",
@@ -98,22 +114,13 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.ark.datamaps.icons": {
-			"class": "ResourceLoaderOOUIIconPackModule",
-			"icons": [
-				"exitFullscreen",
-				"fullScreen",
-				"expand",
-				"link"
-			]
-		},
-
-		"ext.ark.datamaps.styles": {
-			"styles": [
-				"styles/main.less",
-				"styles/legend.less",
-				"styles/controls.less",
-				"styles/popups.less"
+		"ext.ark.datamaps.inlineloader": {
+			"es6": true,
+			"dependencies": [
+				"ext.ark.datamaps.loader"
+			],
+			"packageFiles": [
+				"inlineLoader/adapter.js"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
@@ -134,8 +141,7 @@
 	"Hooks": {
 		"ParserFirstCallInit": "DataMapsHookHandler",
 		"ContentHandlerDefaultModelFor": "DataMapsHookHandler",
-		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage",
-		"EditPageBeforeEditButtons": "DataMapsHookHandler"
+		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
 	},
     "HookHandlers": {
         "DataMapsHookHandler": {
@@ -167,10 +173,6 @@
 			"description": "Controls how big the parser output for a marker's description can get.",
 			"value": 800
 		},
-		"DataMapsShowCoordinatesDefault": {
-			"description": "Whether to display coordinates to the user on data maps by default.",
-			"value": true
-		},
 		"DataMapsUseInProcessParserCache": {
 			"description": "If enabled, uses a simple wikitext parser cache inside the process handling the request.",
 			"value": true
@@ -178,6 +180,12 @@
 		"DataMapsReportTimingInfo": {
 			"description": "Attaches data map marker processing time in API requests.",
 			"value": false
+		},
+		"DataMapsDefaultFeatures": {
+			"value": {
+				"ShowCoordinates": true,
+				"ShowLegendAlwaysAbove": false
+			}
 		},
 		"DataMapsAllowExperimentalFeatures": {
 			"description": "Whether to enable experimental features.",

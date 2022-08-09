@@ -3,7 +3,6 @@ const MapStorage = require( './storage.js' ),
     MarkerPopup = require( './popup.js' ),
     MapLegend = require( './legend.js' ),
     MarkerLegendPanel = require( './markerLegend.js' ),
-    config = require( './config.json' ),
     mwApi = new mw.Api();
 
 
@@ -46,7 +45,7 @@ function DataMap( id, $root, config ) {
     // Retrieve a `marker` parameter from the query string if one is present
     this.markerIdToAutoOpen = null;
     const tabberId = this.getParentTabberNeueId();
-    if ( tabberId && tabberId == window.location.hash.substr( 1 ) ) {
+    if ( !tabberId || ( tabberId && tabberId == window.location.hash.substr( 1 ) ) ) {
         this.markerIdToAutoOpen = new URLSearchParams( window.location.search ).get( MarkerPopup.URL_PARAMETER );
     }
 
@@ -71,6 +70,14 @@ function DataMap( id, $root, config ) {
         'ext.ark.datamaps.leaflet.extra'
     ], buildLeafletMap.bind( this, this.$root.find( '.datamap-holder' ) ) );
 }
+
+
+DataMap.prototype.FF_SHOW_COORDINATES = 1;
+
+
+DataMap.prototype.isFeatureBitSet = function ( mask ) {
+    return this.config.flags && this.config.flags & mask == mask;
+};
 
 
 /*
@@ -147,7 +154,7 @@ DataMap.prototype.toggleMarkerDismissal = function ( markerType, coords, leaflet
 DataMap.prototype.updateMarkerDismissalBadges = function () {
     for ( const groupId in this.config.groups ) {
         const group = this.config.groups[groupId];
-        if ( group.canDismiss ) {
+        if ( group.canDismiss && this.markerLegend.groupToggles[groupId] ) {
             const markers = this.layerManager.byLayer[groupId];
             const count = markers.filter( x => x.options.dismissed ).length;
             this.markerLegend.groupToggles[groupId].setBadge( `${count} / ${markers.length}` );
@@ -344,7 +351,7 @@ const buildLeafletMap = function ( $holder ) {
     const leafletConfig = $.extend( true, {
         // Boundaries
         center: [ 50, 50 ],
-        maxBounds: [ [ -85, -85 ], [ 185, 185 ] ],
+        maxBounds: [ [ -100, -100 ], [ 200, 200 ] ],
         maxBoundsViscosity: 0.7,
         // Zoom settings
         zoomSnap: 0.25,
@@ -413,7 +420,7 @@ const buildLeafletMap = function ( $holder ) {
     this.updateMarkerScaling();
 
     // Create a coordinate-under-cursor display
-    if ( config.DataMapsShowCoordinatesDefault ) {
+    if ( this.isFeatureBitSet( this.FF_SHOW_COORDINATES ) ) {
         this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
         this.leaflet.on( 'mousemove', event => {
             let lat = event.latlng.lat;

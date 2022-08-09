@@ -2,6 +2,9 @@
 namespace MediaWiki\Extension\Ark\DataMaps;
 
 class DataMapsConfig {
+    const FF_SHOW_COORDINATES = 'ShowCoordinates';
+    const FF_SHOW_LEGEND_ABOVE = 'ShowLegendAlwaysAbove';
+
     public static function getParserExpansionLimit(): int {
         global $wgDataMapsMarkerParserExpansionLimit;
         return $wgDataMapsMarkerParserExpansionLimit;
@@ -42,14 +45,18 @@ class DataMapsConfig {
         return $wgDataMapsReportTimingInfo;
     }
 
-    public static function shouldShowCoordinates(): bool {
-        global $wgDataMapsShowCoordinatesDefault;
-        return $wgDataMapsShowCoordinatesDefault;
-    }
-
     public static function shouldCacheWikitextInProcess(): bool {
         global $wgDataMapsUseInProcessParserCache;
         return $wgDataMapsUseInProcessParserCache;
+    }
+
+    public static function getDefaultFeatureStates(): array {
+        global $wgDataMapsDefaultFeatures;
+        return $wgDataMapsDefaultFeatures;
+    }
+
+    public static function getDefaultFeatureState( string $feature ) {
+        return self::getDefaultFeatureStates()[$feature];
     }
 
     public static function isBleedingEdge(): bool {

@@ -76,7 +76,7 @@ class DataModel {
     protected function allowOnly( Status $status, array $fields ) {
         $unexpected = array_diff( array_keys( get_object_vars( $this->raw ) ), $fields );
         if ( !empty( $unexpected ) ) {
-            $status->fatal( 'datamap-error-validate-unexpected-fields', static::$publicName, implode( ', ', $unexpected ) );
+            $status->fatal( 'datamap-error-validate-unexpected-fields', static::$publicName, wfEscapeWikiText( implode( ', ', $unexpected ) ) );
         }
     }
 
@@ -156,7 +156,7 @@ class DataModel {
 
             $file = DataMapFileUtils::getFile( $name );
             if ( !$file || !$file->exists() ) {
-                $status->fatal( 'datamap-error-validate-no-file', trim( $name ) );
+                $status->fatal( 'datamap-error-validate-no-file', wfEscapeWikiText( trim( $name ) ) );
                 return false;
             }
         }
