@@ -53,6 +53,9 @@ function DataMap( id, $root, config ) {
     // If coordinate space spec is oriented [ lower lower upper upper ], assume top left corner as origin point (latitude will
     // be flipped). If [ upper upper lower lower ], assume bottom left corner (latitude will be unchanged). Any other layout is
     // invalid.
+    if ( !this.config.crs ) {
+        this.config.crs = [ [ 0, 0 ], [ 100, 100 ] ];
+    }
     this.crsOrigin = ( this.config.crs[0][0] < this.config.crs[1][0] && this.config.crs[0][1] < this.config.crs[1][1] )
         ? CRSOrigin.TopLeft : CRSOrigin.BottomLeft;
     this.crsScaleY = 100 / Math.max( this.config.crs[0][0], this.config.crs[1][0] );
