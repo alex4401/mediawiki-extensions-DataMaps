@@ -14,7 +14,6 @@ class DataMapSpec extends DataModel {
     private ?array $cachedMarkerGroups = null;
     private ?array $cachedMarkerLayers = null;
     private ?array $cachedBackgrounds = null;
-    private ?CoordinateReferenceSystemSpec $cachedCrs = null;
 
     public static function staticIsMixin( \stdclass $raw ): bool {
         return isset( $raw->{'$mixin'} ) ? $raw->{'$mixin'} : !isset( $raw->markers );

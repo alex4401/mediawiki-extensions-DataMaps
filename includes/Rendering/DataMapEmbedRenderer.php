@@ -106,7 +106,9 @@ class DataMapEmbedRenderer {
             $out['version'] = $this->title->getLatestRevID();
         }
         // Coordinate transformation
-        $out['crs'] = $this->data->getCoordinateReferenceSpace();
+        if ( $this->data->getCoordinateReferenceSpace() != DataMapSpec::DEFAULT_COORDINATE_SPACE ) {
+            $out['crs'] = $this->data->getCoordinateReferenceSpace();
+        }
         // Feature management
         $bitmask = $this->getPublicFeatureBitMask();
         if ( $bitmask != 0 ) {
