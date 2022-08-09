@@ -65,7 +65,7 @@ class DataMapSpec extends DataModel {
     }
 
     public function getRawMarkerMap(): object {
-        return $this->raw->markers;
+        return isset( $this->raw->markers ) ? $this->raw->markers : new \stdclass();
     }
 
     public function getRawMarkerGroupMap(): object {
@@ -160,7 +160,7 @@ class DataMapSpec extends DataModel {
             $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'layers', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'custom', DataModel::TYPE_OBJECT );
-            $this->requireField( $status, 'markers', DataModel::TYPE_OBJECT );
+            $this->expectField( $status, 'markers', DataModel::TYPE_OBJECT );
         } else {
             // Perform limited, permissive validation, this is a mixin
             $this->expectField( $status, 'title', DataModel::TYPE_STRING );
