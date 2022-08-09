@@ -40,6 +40,7 @@
     "datamap-error-render-unsupported-displaymode": "Display mode $1 has been reported for a marker, but support is missing for it. This is a bug in the extension's code.",
     "datamap-error-pf-page-does-not-exist": "Data map page \"[[$1]]\" does not exist.",
     "datamap-error-pf-page-invalid-content-model": "Content model of page \"[[$1]]\" is not <code>Interactive Data Map</code>.",
+    "datamap-error-cannot-preview-validation-errors": "<b>Edit preview not shown due to error(s) in map's source code:</b>",
 
     "tooltip-datamap-preview-unavailable": "Change previews for interactive data maps will be supported in a future version of the extension.",
 

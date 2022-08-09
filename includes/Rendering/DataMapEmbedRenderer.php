@@ -11,6 +11,7 @@ use Html;
 use File;
 use InvalidArgumentException;
 use PPFrame;
+use FormatJson;
 
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
@@ -27,12 +28,14 @@ class DataMapEmbedRenderer {
     public DataMapSpec $data;
 
     private Title $title;
+    private bool $useInlineData;
     private Parser $parser;
     private ParserOptions $parserOptions;
 
-    public function __construct( Title $title, DataMapSpec $data, Parser $parser ) {
+    public function __construct( Title $title, DataMapSpec $data, Parser $parser, bool $useInlineData = false ) {
         $this->title = $title;
         $this->data = $data;
+        $this->useInlineData = $useInlineData;
 
         $this->parser = $parser->getFreshParser();
 
@@ -61,6 +64,21 @@ class DataMapEmbedRenderer {
             'ext.ark.datamaps.loader'
         ] );
 
+        if ( $this->useInlineData ) {
+            $parserOutput->addModules( [
+				'ext.ark.datamaps.inlineloader'
+			] );
+            $processor = new MarkerProcessor( $this->title, $this->data, null );
+            $parserOutput->setText( $parserOutput->getRawText() . Html::element(
+                'script',
+                [
+                    'type' => 'application/json+datamap',
+                    'id' => 'datamap-inline-data-' . $this->getId()
+                ],
+                FormatJson::encode( $processor->processAll(), false, FormatJson::UTF8_OK )
+            ) );
+        }
+
         // Inject mw.config variables via a `dataMaps` map from ID
         $configsVar = [
             $this->getId() => $this->getJsConfigVariables()
@@ -80,56 +98,68 @@ class DataMapEmbedRenderer {
     }
 
     public function getJsConfigVariables(): array {
-        $out = [
-            // Required to query the API for marker clusters
-            'pageName' => $this->title->getPrefixedText(),
-            'version' => $this->title->getLatestRevID(),
+        $out = [];
 
-            'crs' => $this->data->getCoordinateReferenceSpace(),
+        // Required to query the API for marker clusters
+        if ( !$this->useInlineData ) {
+            $out['pageName'] = $this->title->getPrefixedText();
+            $out['version'] = $this->title->getLatestRevID();
+        }
+        // Coordinate transformation
+        $out['crs'] = $this->data->getCoordinateReferenceSpace();
+        // Feature management
+        $bitmask = $this->getPublicFeatureBitMask();
+        if ( $bitmask != 0 ) {
+            $out['flags'] = $bitmask;
+        }
+        // Backgrounds
+        $out['backgrounds'] = array_map( function ( MapBackgroundSpec $background ) {
+            $image = DataMapFileUtils::getRequiredFile( $background->getImageName() );
 
-            'backgrounds' => array_map( function ( MapBackgroundSpec $background ) {
-                $image = DataMapFileUtils::getRequiredFile( $background->getImageName() );
-                $out = [
-                    'image' => $image->getURL(),
-                ];
+            $out = [];
+            $out['image'] = $image->getURL();
+            if ( $background->getName() != null ) {
+                $out['name'] = $background->getName();
+            }
+            if ( $background->getPlacementLocation() != null ) {
+                $out['at'] = $background->getPlacementLocation();
+            }
+            if ( $background->hasOverlays() ) {
+                $out['overlays'] = [];
+                $background->iterateOverlays( function ( MapBackgroundOverlaySpec $overlay ) use ( &$out ) {
+                    $out['overlays'][] = $this->convertBackgroundOverlay( $overlay );
+                } );
+            }
 
-                if ( $background->getName() != null ) {
-                    $out['name'] = $background->getName();
-                }
-
-                if ( $background->getPlacementLocation() != null ) {
-                    $out['at'] = $background->getPlacementLocation();
-                }
-
-                if ( $background->hasOverlays() ) {
-                    $out['overlays'] = [];
-                    $background->iterateOverlays( function ( MapBackgroundOverlaySpec $overlay ) use ( &$out ) {
-                        $out['overlays'][] = $this->convertBackgroundOverlay( $overlay );
-                    } );
-                }
-
-                return $out;
-            }, $this->data->getBackgrounds() ),
-            
-            'groups' => [],
-            'layers' => [],
-            'layerIds' => $this->data->getLayerNames(),
-
-            'custom' => $this->data->getCustomData()
-        ];
-
+            return $out;
+        }, $this->data->getBackgrounds() );
+        // Marker groups
+        $out['groups'] = [];
         $this->data->iterateGroups( function ( MarkerGroupSpec $spec ) use ( &$out ) {
             $out['groups'][$spec->getId()] = $this->getMarkerGroupConfig( $spec );
         } );
-
+        // Marker layers
+        $out['layers'] = [];
+        $out['layerIds'] = $this->data->getLayerNames();
         $this->data->iterateDefinedLayers( function ( MarkerLayerSpec $spec ) use ( &$out ) {
             $out['layers'][$spec->getId()] = $this->getMarkerLayerConfig( $spec );
         } );
-
-        if ( $this->data->getInjectedLeafletSettings() ) {
+        // Settings and extensions
+        if ( $this->data->getInjectedLeafletSettings() != null ) {
             $out['leafletSettings'] = $this->data->getInjectedLeafletSettings();
         }
+        if ( $this->data->getCustomData() != null ) {
+            $out['custom'] = $this->data->getCustomData();
+        }
 
+        return $out;
+    }
+
+    public function getPublicFeatureBitMask(): int {
+        $out = 0;
+        if ( $this->data->wantsCoordinatesShown() ) {
+            $out |= 1<<0;
+        }
         return $out;
     }
 
@@ -214,9 +244,8 @@ class DataMapEmbedRenderer {
     }
 
     public function getMarkerLayerConfig( MarkerLayerSpec $spec ): array {
-        $out = array(
-            'name' => $spec->getName(),
-        );
+        $out = [];
+        $out['name'] = $spec->getName();
 
         if ( $spec->getPopupDiscriminator() !== null ) {
             $out['discrim'] = $spec->getPopupDiscriminator();
@@ -225,7 +254,7 @@ class DataMapEmbedRenderer {
         return $out;
     }
 
-    private function expandWikitext(string $source): string {
+    private function expandWikitext( string $source ): string {
         return $this->parser->parse( $source, $this->title, $this->parserOptions )->getText( [ 'unwrap' => true ] );
     }
 
@@ -250,10 +279,22 @@ class DataMapEmbedRenderer {
 			'expanded' => false,
 			'padded' => false
 		] );
+		$containerBottom = new \OOUI\PanelLayout( [
+            'classes' => [ 'datamap-container-bottom' ],
+			'framed' => false,
+			'expanded' => false,
+			'padded' => false
+		] );
 
         // Stack the containers
         $containerMain->appendContent( $containerTop );
         $containerMain->appendContent( $containerContent );
+        $containerMain->appendContent( $containerBottom );
+
+        // Expose FF_SHOW_LEGEND_ABOVE flag
+        if ( $this->data->wantsLegendShownAbove() ) {
+            $containerMain->addClasses( [ 'datamap-legend-is-above' ] );
+        }
 
         // Set data attribute with filters if they are specified
         if ( $options->displayGroups != null ) {

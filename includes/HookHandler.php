@@ -6,8 +6,7 @@ use Linker;
 
 class HookHandler implements
 	\MediaWiki\Hook\ParserFirstCallInitHook,
-	\MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook,
-	\MediaWiki\Hook\EditPageBeforeEditButtonsHook
+	\MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook
 {
     public static function onRegistration(): bool {
         define( 'ARK_CONTENT_MODEL_DATAMAP', 'datamap' );
@@ -41,12 +40,5 @@ class HookHandler implements
 			$languageCode = 'json';
 		}
 		return true;
-	}
-
-	public function onEditPageBeforeEditButtons( $editPage, &$buttons, &$tabIndex ) {
-		if ( !DataMapsConfig::isBleedingEdge() && $editPage->contentModel === ARK_CONTENT_MODEL_DATAMAP ) {
-			$buttons['preview']->setDisabled( true );
-			$buttons['preview']->setTitle( Linker::titleAttrib( 'datamap-preview-unavailable' ) );
-		}
 	}
 }
