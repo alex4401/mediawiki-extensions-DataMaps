@@ -115,6 +115,19 @@ class DataMapContent extends DataMapContentBase {
 		}
 
 		if ( !$this->isMixin() ) {
+			if ( $options->getIsPreview() ) {
+				// If previewing an edit, run validation and end early on failure
+				$status = new Status();
+				$this->validateBeforeSave( $status );
+				if ( !$status->isOK() ) {
+					$output->setText( $output->getRawText() . Html::errorBox(
+						wfMessage( 'datamap-error-cannot-preview-validation-errors' ) . "<br/>\n" . $status->getWikiText(
+							false, false )
+					) );
+					return $output;
+				}
+			}
+
 			$parser = MediaWikiServices::getInstance()->getParser();
 			$embed = $this->getEmbedRenderer( $title, $parser, $options->getIsPreview() );
 			$embed->prepareOutput( $output );
