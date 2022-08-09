@@ -250,10 +250,17 @@ class DataMapEmbedRenderer {
 			'expanded' => false,
 			'padded' => false
 		] );
+		$containerBottom = new \OOUI\PanelLayout( [
+            'classes' => [ 'datamap-container-bottom' ],
+			'framed' => false,
+			'expanded' => false,
+			'padded' => false
+		] );
 
         // Stack the containers
         $containerMain->appendContent( $containerTop );
         $containerMain->appendContent( $containerContent );
+        $containerMain->appendContent( $containerBottom );
 
         // Set data attribute with filters if they are specified
         if ( $options->displayGroups != null ) {
