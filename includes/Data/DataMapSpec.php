@@ -170,7 +170,7 @@ class DataMapSpec extends DataModel {
                     $mixinPage = DataMapContent::loadPage( $title );
                     
                     if ( is_numeric( $mixinPage ) || $mixinPage->getData()->getValue() == null ) {
-                        $status->fatal( 'datamap-error-validatespec-map-bad-mixin', $mixinName );
+                        $status->fatal( 'datamap-error-validatespec-map-bad-mixin', wfEscapeWikiText( $mixinName ) );
                     }
                 }
             }
@@ -236,7 +236,7 @@ class DataMapSpec extends DataModel {
                     $layers = explode( ' ', $layers );
                     $groupName = $layers[0];
                     if ( !isset( $this->raw->groups->$groupName ) ) {
-                        $status->fatal( 'datamap-error-validatespec-map-missing-group', $groupName );
+                        $status->fatal( 'datamap-error-validatespec-map-missing-group', wfEscapeWikiText( $groupName ) );
                         return;
                     }
                 
