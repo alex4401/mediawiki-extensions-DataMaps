@@ -141,8 +141,7 @@
 	"Hooks": {
 		"ParserFirstCallInit": "DataMapsHookHandler",
 		"ContentHandlerDefaultModelFor": "DataMapsHookHandler",
-		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage",
-		"EditPageBeforeEditButtons": "DataMapsHookHandler"
+		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
 	},
     "HookHandlers": {
         "DataMapsHookHandler": {
