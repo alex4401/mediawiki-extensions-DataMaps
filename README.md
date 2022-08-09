@@ -24,6 +24,7 @@ Create a page within the data namespace and assign it the `datamap` content mode
 
 ### Structure
 Content of the page should be a valid JSON with following structure:
+* `$mixin` (boolean, optional): if `true` forces the map to be recognised as a preset/mix-in and relaxes validation.
 * `mixins` (array of page names, optional): *experimental*, list of other pages with the `datamap` content model that'll be loaded first and stacked to share configuration.
 * `title` (string, optional): label displayed above the map's legend.
 * `crs` (box, optional): reference coordinate space, which also determines whether the system origin will be top-left or bottom-left. Defaults to `[ [0, 0], [100, 100] ]`, which is top-left - swap the points for bottom-left.
@@ -44,6 +45,11 @@ Content of the page should be a valid JSON with following structure:
 * * * * `path` (array of locations, required): list of points the path should go through sequentially.
 * * * * `color` (colour, supports transparency, optional): colour to display the line with.
 * * * * `thickness` (number, optional): thickness of the line.
+* `showCoordinates` (boolean, optional): if `true` displays coordinates on mouse move and inside popups. Controlled by `$wgDataMapsDefaultFeatures` identified by `ShowCoordinates`.
+* `showLegendAbove` (boolean, optional): if `true` always displays the legend above the map. Controlled by `$wgDataMapsDefaultFeatures` identified by `ShowLegendAlwaysAbove`.
+* `leafletSettings` (object, optional): settings to pass to Leaflet's map instance.
+* * [Check Leaflet's documentation for valid options.](https://leafletjs.com/reference.html#map-option) Only simple (strings, booleans and numbers) options are supported.
+* * `rendererSettings` (object, optional): options to pass to the canvas renderer. [Check Leaflet's documentation for valid options.](https://leafletjs.com/reference.html#canvas-option)
 * `groups` (string to object map, required): map from name to a *marker group* specification:
 * * `name` (string, required): name of the group and each individual marker.
 * * **Circular markers:** if `fillColor` is specified
@@ -97,8 +103,10 @@ Box is a array of two locations, where first describes the start point of the bo
 * `$wgDataMapsCacheTTL`: time after which cached `queryDataMap` API endpoint responses expire. Set to `0` to disable caching. Defaults to `86400` (a day).
 * `$wgDataMapsExtendCacheTTL`: if not `false`, extends TTL to `override` of cached maps on requests `threshold` seconds away from expiry. Defaults to `[ 'threshold' => 43200, 'override' => 57600 ]`.
 * `$wgDataMapsMarkerParserExpansionLimit`: controls wikitext parser expansion size limit for each marker. Defaults to `800`.
-* `$wgDataMapsShowCoordinatesDefault`: whether coordinates will be displayed in the user interface. Defaults to `true`.
 * `$wgDataMapsUseInProcessParserCache`: whether wikitext parsing requests will be cached within the process (up to 128 entries). This can save a significant amount of time if marker descriptions or labels repeat often, but increases memory usage. Defaults to `true`.
+* `$wgDataMapsDefaultFeatures`: controls whether certain features are enabled by default on a map without a specific override in its source.
+* * `$wgDataMapsDefaultFeatures['ShowCoordinates']`: whether coordinates will be displayed in the user interface. Defaults to `true`.
+* * `$wgDataMapsDefaultFeatures['ShowLegendAlwaysAbove']`: whether the legend will be displayed above the map. Defaults to `false`.
 * `$wgDataMapsReportTimingInfo`: if set to `true`, marker processing time will be reported in API responses. Defaults to `false`.
 * `$wgDataMapsAllowExperimentalFeatures`: if set to `true`, enables features listed below - all of which are in development and not ready for production. Defaults to `false`.
 * * Edit Previewing
