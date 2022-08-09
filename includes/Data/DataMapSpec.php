@@ -16,7 +16,7 @@ class DataMapSpec extends DataModel {
     private ?array $cachedBackgrounds = null;
 
     public static function staticIsMixin( \stdclass $raw ): bool {
-        return isset( $raw->{'$mixin'} ) ? $raw->{'$mixin'} : !isset( $raw->markers );
+        return isset( $raw->{'$mixin'} ) ? $raw->{'$mixin'} : false;
     }
 
     public function isMixin(): bool {
