@@ -75,6 +75,9 @@ Content of the page should be a valid JSON with following structure:
 * * `article` (page name, optional): article the marker's popup should link to. Follows either a format of `article title` or `article title|displayed label`.
 * `custom` (map, optional): any arbitrary to be added to the client-side map config, for use with e.g. on-site gadgets.
 
+#### File name
+A file name of an image. The image **must exist**. Currently `File:` prefix is not required, but supported only in its English form.
+
 #### `Colour`
 Either a three element array of integers in `0..255` range, or a 3- or 6-long hex string beginning with `#`, representing an RGB colour with no transparency.
 
