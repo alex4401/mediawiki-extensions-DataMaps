@@ -80,55 +80,56 @@ class DataMapEmbedRenderer {
     }
 
     public function getJsConfigVariables(): array {
-        $out = [
-            // Required to query the API for marker clusters
-            'pageName' => $this->title->getPrefixedText(),
-            'version' => $this->title->getLatestRevID(),
+        $out = [];
 
-            'crs' => $this->data->getCoordinateReferenceSpace(),
-            'flags' => $this->getPublicFeatureBitMask(),
+        // Required to query the API for marker clusters
+        $out['pageName'] = $this->title->getPrefixedText();
+        $out['version'] = $this->title->getLatestRevID();
+        // Coordinate transformation
+        $out['crs'] = $this->data->getCoordinateReferenceSpace();
+        // Feature management
+        $bitmask = $this->getPublicFeatureBitMask();
+        if ( $bitmask != 0 ) {
+            $out['flags'] = $bitmask;
+        }
+        // Backgrounds
+        $out['backgrounds'] = array_map( function ( MapBackgroundSpec $background ) {
+            $image = DataMapFileUtils::getRequiredFile( $background->getImageName() );
 
-            'backgrounds' => array_map( function ( MapBackgroundSpec $background ) {
-                $image = DataMapFileUtils::getRequiredFile( $background->getImageName() );
-                $out = [
-                    'image' => $image->getURL(),
-                ];
+            $out = [];
+            $out['image'] = $image->getURL();
+            if ( $background->getName() != null ) {
+                $out['name'] = $background->getName();
+            }
+            if ( $background->getPlacementLocation() != null ) {
+                $out['at'] = $background->getPlacementLocation();
+            }
+            if ( $background->hasOverlays() ) {
+                $out['overlays'] = [];
+                $background->iterateOverlays( function ( MapBackgroundOverlaySpec $overlay ) use ( &$out ) {
+                    $out['overlays'][] = $this->convertBackgroundOverlay( $overlay );
+                } );
+            }
 
-                if ( $background->getName() != null ) {
-                    $out['name'] = $background->getName();
-                }
-
-                if ( $background->getPlacementLocation() != null ) {
-                    $out['at'] = $background->getPlacementLocation();
-                }
-
-                if ( $background->hasOverlays() ) {
-                    $out['overlays'] = [];
-                    $background->iterateOverlays( function ( MapBackgroundOverlaySpec $overlay ) use ( &$out ) {
-                        $out['overlays'][] = $this->convertBackgroundOverlay( $overlay );
-                    } );
-                }
-
-                return $out;
-            }, $this->data->getBackgrounds() ),
-            
-            'groups' => [],
-            'layers' => [],
-            'layerIds' => $this->data->getLayerNames(),
-
-            'custom' => $this->data->getCustomData()
-        ];
-
+            return $out;
+        }, $this->data->getBackgrounds() );
+        // Marker groups
+        $out['groups'] = [];
         $this->data->iterateGroups( function ( MarkerGroupSpec $spec ) use ( &$out ) {
             $out['groups'][$spec->getId()] = $this->getMarkerGroupConfig( $spec );
         } );
-
+        // Marker layers
+        $out['layers'] = [];
+        $out['layerIds'] = $this->data->getLayerNames();
         $this->data->iterateDefinedLayers( function ( MarkerLayerSpec $spec ) use ( &$out ) {
             $out['layers'][$spec->getId()] = $this->getMarkerLayerConfig( $spec );
         } );
-
-        if ( $this->data->getInjectedLeafletSettings() ) {
+        // Settings and extensions
+        if ( $this->data->getInjectedLeafletSettings() != null ) {
             $out['leafletSettings'] = $this->data->getInjectedLeafletSettings();
+        }
+        if ( $this->data->getCustomData() != null ) {
+            $out['custom'] = $this->data->getCustomData();
         }
 
         return $out;
@@ -223,9 +224,8 @@ class DataMapEmbedRenderer {
     }
 
     public function getMarkerLayerConfig( MarkerLayerSpec $spec ): array {
-        $out = array(
-            'name' => $spec->getName(),
-        );
+        $out = [];
+        $out['name'] = $spec->getName();
 
         if ( $spec->getPopupDiscriminator() !== null ) {
             $out['discrim'] = $spec->getPopupDiscriminator();
