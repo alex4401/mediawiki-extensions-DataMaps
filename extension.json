@@ -173,7 +173,8 @@
 		},
 		"DataMapsDefaultFeatures": {
 			"value": {
-				"ShowCoordinates": true
+				"ShowCoordinates": true,
+				"ShowLegendAlwaysAbove": false
 			}
 		},
 		"DataMapsAllowExperimentalFeatures": {

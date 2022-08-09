@@ -234,7 +234,7 @@ class DataMapEmbedRenderer {
         return $out;
     }
 
-    private function expandWikitext(string $source): string {
+    private function expandWikitext( string $source ): string {
         return $this->parser->parse( $source, $this->title, $this->parserOptions )->getText( [ 'unwrap' => true ] );
     }
 
@@ -270,6 +270,11 @@ class DataMapEmbedRenderer {
         $containerMain->appendContent( $containerTop );
         $containerMain->appendContent( $containerContent );
         $containerMain->appendContent( $containerBottom );
+
+        // Expose FF_SHOW_LEGEND_ABOVE flag
+        if ( $this->data->wantsLegendShownAbove() ) {
+            $containerMain->addClasses( [ 'datamap-legend-is-above' ] );
+        }
 
         // Set data attribute with filters if they are specified
         if ( $options->displayGroups != null ) {

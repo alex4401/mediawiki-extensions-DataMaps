@@ -52,6 +52,11 @@ class DataMapSpec extends DataModel {
             : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SHOW_COORDINATES );
     }
 
+    public function wantsLegendShownAbove(): bool {
+        return isset( $this->raw->showLegendAbove ) ? $this->raw->showLegendAbove
+            : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SHOW_LEGEND_ABOVE );
+    }
+
     public function getInjectedLeafletSettings(): ?object {
         return isset( $this->raw->leafletSettings ) ? $this->raw->leafletSettings : null;
     }
@@ -151,6 +156,7 @@ class DataMapSpec extends DataModel {
             $hasCrs = $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
             $this->requireEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
             $this->expectField( $status, 'showCoordinates', DataModel::TYPE_BOOL );
+            $this->expectField( $status, 'showLegendAbove', DataModel::TYPE_BOOL );
             $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
             $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );
             $this->expectField( $status, 'layers', DataModel::TYPE_OBJECT );

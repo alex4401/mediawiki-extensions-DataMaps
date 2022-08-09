@@ -3,6 +3,8 @@ namespace MediaWiki\Extension\Ark\DataMaps;
 
 class DataMapsConfig {
     const FF_SHOW_COORDINATES = 'ShowCoordinates';
+    const FF_SHOW_LEGEND_ABOVE = 'ShowLegendAlwaysAbove';
+
     public static function getParserExpansionLimit(): int {
         global $wgDataMapsMarkerParserExpansionLimit;
         return $wgDataMapsMarkerParserExpansionLimit;
