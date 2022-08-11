@@ -84,6 +84,11 @@ class DataMapContent extends DataMapContentBase {
 			$main = DataModelMixinTransformer::mergeTwoObjects( $finalMixin, $main );
 		}
 
+		// Remove $mixin field
+		if ( isset( $main->{'$mixin'} ) ) {
+			unset( $main->{'$mixin'} );
+		}
+
 		return $main;
 	}
 
