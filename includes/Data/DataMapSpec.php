@@ -145,35 +145,31 @@ class DataMapSpec extends DataModel {
     }
 
     public function validate( Status $status ) {
+        // Perform full strict validation if this is a full map, otherwise limit it to certain fields and lenience
         $isFull = !$this->isMixin();
-        $hasCrs = false;
+
         $this->expectField( $status, '$mixin', DataModel::TYPE_BOOL );
         if ( $isFull ) {
-            // Perform full strict validation, this is a full map
             $this->expectField( $status, 'mixins', DataModel::TYPE_ARRAY );
-            $this->expectField( $status, 'title', DataModel::TYPE_STRING );
-            $hasCrs = $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
-            $this->requireEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
-            $this->expectField( $status, 'showCoordinates', DataModel::TYPE_BOOL );
-            $this->expectField( $status, 'showLegendAbove', DataModel::TYPE_BOOL );
-            $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
-            $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );
-            $this->expectField( $status, 'layers', DataModel::TYPE_OBJECT );
-            $this->expectField( $status, 'custom', DataModel::TYPE_OBJECT );
-            $this->expectField( $status, 'markers', DataModel::TYPE_OBJECT );
-        } else {
-            // Perform limited, permissive validation, this is a mixin
-            $this->expectField( $status, 'title', DataModel::TYPE_STRING );
-            $hasCrs = $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
-            $this->expectEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
-            $this->expectField( $status, 'showCoordinates', DataModel::TYPE_BOOL );
-            $this->expectField( $status, 'showLegendAbove', DataModel::TYPE_BOOL );
-            $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
-            $this->expectField( $status, 'groups', DataModel::TYPE_OBJECT );
-            $this->expectField( $status, 'layers', DataModel::TYPE_OBJECT );
-            $this->expectField( $status, 'custom', DataModel::TYPE_OBJECT );
-            $this->expectField( $status, 'markers', DataModel::TYPE_OBJECT );
         }
+        $this->expectField( $status, 'title', DataModel::TYPE_STRING );
+        $hasCrs = $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
+        if ( $isFull ) {
+            $this->requireEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
+        } else {
+            $this->expectEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
+        }
+        $this->expectField( $status, 'showCoordinates', DataModel::TYPE_BOOL );
+        $this->expectField( $status, 'showLegendAbove', DataModel::TYPE_BOOL );
+        $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
+        if ( $isFull ) {
+            $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );
+        } else {
+            $this->expectField( $status, 'groups', DataModel::TYPE_OBJECT );
+        }
+        $this->expectField( $status, 'layers', DataModel::TYPE_OBJECT );
+        $this->expectField( $status, 'custom', DataModel::TYPE_OBJECT );
+        $this->expectField( $status, 'markers', DataModel::TYPE_OBJECT );
         $this->disallowOtherFields( $status );
 
         if ( $this->validationAreRequiredFieldsPresent ) {
