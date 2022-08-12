@@ -63,6 +63,7 @@ MarkerPopup.prototype.getMarkerUID = function () {
 MarkerPopup.prototype.buildButtons = function () {
     const $getLink = $( '<a class="datamap-marker-link-button oo-ui-icon-link" role="button"></a>' )
         .attr( {
+            'title': mw.msg( 'datamap-popup-marker-link-get' ),
             'aria-label': mw.msg( 'datamap-popup-marker-link-get' ),
             'href': getMarkerURL( this.map, this.getMarkerUID(), true )
         } )
