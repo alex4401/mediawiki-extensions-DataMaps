@@ -7,8 +7,6 @@
 
     "datamap-desc": "Erlaubt Einbettung von interaktiven Karten in Wiki Seiten.",
 
-    "embedDataMap": "DataMap",
-
 	"content-model-datamap": "Interaktive Daten Karte",
     "datamap-standard-title-prefix": "Karten/",
 
@@ -46,8 +44,8 @@
     "datamap-legend-tab-locations": "Marker",
     "datamap-toggle-show-all": "Alle anzeigen",
     "datamap-toggle-hide-all": "Alle verbergen",
+    
     "datamap-layer-control": "Schalter",
-
     "datamap-layer-surface": "Oberfläche",
     "datamap-layer-cave": "Höhlen",
 

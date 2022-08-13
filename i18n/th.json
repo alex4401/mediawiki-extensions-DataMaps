@@ -7,8 +7,6 @@
 
     "datamap-desc": "อนุญาตให้ฝังแผนที่ข้อมูลแบบโต้ตอบตอบลงในหน้าวิกิ",
 
-    "embedDataMap": "DataMap",
-
 	"content-model-datamap": "แผนที่ข้อมูลแบบโต้ตอบ",
     "datamap-standard-title-prefix": "แผนที่/",
 
