@@ -63,6 +63,7 @@ MarkerPopup.prototype.getMarkerUID = function () {
 MarkerPopup.prototype.buildButtons = function () {
     const $getLink = $( '<a class="datamap-marker-link-button oo-ui-icon-link" role="button"></a>' )
         .attr( {
+            'title': mw.msg( 'datamap-popup-marker-link-get' ),
             'aria-label': mw.msg( 'datamap-popup-marker-link-get' ),
             'href': getMarkerURL( this.map, this.getMarkerUID(), true )
         } )
@@ -82,9 +83,9 @@ MarkerPopup.prototype.build = function () {
     // Build the title
     if ( this.slots.label && this.markerGroup.name !== this.slots.label ) {
         $( '<b class="datamap-popup-subtitle">' ).text( this.markerGroup.name ).appendTo( this.$content );
-        $( '<b class="datamap-popup-title">' ).text( this.slots.label ).appendTo( this.$content );
+        $( '<b class="datamap-popup-title">' ).html( this.slots.label ).appendTo( this.$content );
     } else {
-        $( '<b class="datamap-popup-title">' ).text( this.markerGroup.name ).appendTo( this.$content );
+        $( '<b class="datamap-popup-title">' ).html( this.markerGroup.name ).appendTo( this.$content );
     }
     
     // Collect layer discriminators
