@@ -48,18 +48,19 @@ Content of the page should be a valid JSON with following structure:
 * `showCoordinates` (boolean, optional): if `true` displays coordinates on mouse move and inside popups. Controlled by `$wgDataMapsDefaultFeatures` identified by `ShowCoordinates`.
 * `showLegendAbove` (boolean, optional): if `true` always displays the legend above the map. Controlled by `$wgDataMapsDefaultFeatures` identified by `ShowLegendAlwaysAbove`.
 * `leafletSettings` (object, optional): settings to pass to Leaflet's map instance.
-* * [Check Leaflet's documentation for valid options.](https://leafletjs.com/reference.html#map-option) Only simple (strings, booleans and numbers) options are supported.
+* * [Check Leaflet's documentation for valid options.](https://leafletjs.com/reference.html#map-option) Only simple (strings, booleans and numbers) options are supported. There is always a possibility of conflicts.
 * * `rendererSettings` (object, optional): options to pass to the canvas renderer. [Check Leaflet's documentation for valid options.](https://leafletjs.com/reference.html#canvas-option)
 * `groups` (string to object map, required): map from name to a *marker group* specification:
 * * `name` (string, required): name of the group and each individual marker.
 * * **Circular markers:** if `fillColor` is specified
 * * * `fillColor` (colour, required): colour of each circular marker belonging to the group.
-* * * `icon` (file name, optional): icon to show in the legend
+* * * `icon` (file name, optional): icon to show in the legend.
 * * * `size` (integer, optional): size of each circular marker. Defaults to `4`.
 * * **Icon markers:** if `fillColor` is **not** specified
 * * * `icon` (file name, required): name of the file (with no namespace) to show markers with. This makes all markers in group SVG-based. Current support is limited.
 * * * `size` (dimensions, optional): size of each icon marker. Defaults to `[ 32, 32 ]`.
 * * `article` (page name, optional): name of an article every marker's popup should link to. Can be overridden on a marker.
+* * `canDismiss` (boolean, optional): if true, markers in this group can be dismissed by the user.
 * `layers` (string to object map, optional): map from name to a *marker layer* specification:
 * * Marker layers can be used without an explicit declaration.
 * * `name` (string, required): currently unused.

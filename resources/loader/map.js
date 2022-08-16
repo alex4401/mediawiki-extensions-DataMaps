@@ -199,13 +199,14 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
         for ( const instance of placements ) {
             const position = this.translatePoint( [ instance[0], instance[1] ] );
             let leafletMarker;
+            const isDismissed = group.canDismiss ? this.storage.isDismissed( markerType, instance ) : false;
 
             // Construct the marker
             if ( group.markerIcon ) {
                 // Fancy icon marker
                 leafletMarker = new L.Ark.IconMarker( position, {
                     icon: this.leafletIcons[groupName],
-                    dismissed: group.canDismiss ? this.storage.isDismissed( markerType, instance ) : false
+                    dismissed: isDismissed
                 } );
             } else {
                 // Circular marker
@@ -216,6 +217,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
                     fillOpacity: 0.7,
                     color: group.strokeColor || group.fillColor,
                     weight: group.strokeWidth || 1,
+                    dismissed: isDismissed
                 } );
             }
 

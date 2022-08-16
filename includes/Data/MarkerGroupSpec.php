@@ -123,9 +123,7 @@ class MarkerGroupSpec extends DataModel {
         }
 
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
-        if ( $this->getDisplayMode() == self::DM_ICON ) {
-            $this->expectField( $status, 'canDismiss', DataModel::TYPE_BOOL );
-        }
+        $this->expectField( $status, 'canDismiss', DataModel::TYPE_BOOL );
 
         $this->disallowOtherFields( $status );
 
