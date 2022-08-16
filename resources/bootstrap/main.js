@@ -23,9 +23,6 @@ function initialiseMapFromStore( id, $root ) {
         map.$status.hide();
     }
 
-    // Broadcast `afterInitialisation` event
-    mw.hook( `ext.ark.datamaps.afterInitialisation.${id}` ).fire( map );
-
     return map;
 }
 

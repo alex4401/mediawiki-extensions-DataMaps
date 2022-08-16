@@ -61,6 +61,9 @@ function DataMap( id, $root, config ) {
     this.crsScaleY = 100 / Math.max( this.config.crs[0][0], this.config.crs[1][0] );
     this.crsScaleX = 100 / Math.max( this.config.crs[0][1], this.config.crs[1][1] );
 
+    // Broadcast `afterInitialisation` event
+    mw.hook( `ext.ark.datamaps.afterInitialisation.${id}` ).fire( this );
+
     // Request OOUI to be loaded and build the legend
     mw.loader.using( [
         'oojs-ui-core',
