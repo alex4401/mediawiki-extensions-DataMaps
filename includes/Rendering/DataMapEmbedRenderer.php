@@ -60,8 +60,11 @@ class DataMapEmbedRenderer {
         // Required modules
         $parserOutput->addModules( [
             'ext.ark.datamaps.styles',
-            // ext.ark.datamaps.leaflet.core is loaded on demand by the loader in a separate request to not slow down site module
-            'ext.ark.datamaps.loader'
+            // ext.ark.datamaps.leaflet.core is loaded on demand (when a DataMap is initialised) in a separate request
+            // to not delay the site module
+            'ext.ark.datamaps.core',
+            // Initialiser module to boot the maps
+            'ext.ark.datamaps.bootstrap'
         ] );
 
         if ( $this->useInlineData ) {

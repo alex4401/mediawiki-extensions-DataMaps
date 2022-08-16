@@ -79,13 +79,13 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.ark.datamaps.loader": {
+		"ext.ark.datamaps.core": {
 			"es6": true,
 			"dependencies": [
 				"mediawiki.api"
 			],
 			"packageFiles": [
-				"loader/main.js",
+				"loader/index.js",
 				"loader/storage.js",
 				"loader/layerManager.js",
 				"loader/map.js",
@@ -114,13 +114,25 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
+		"ext.ark.datamaps.bootstrap": {
+			"es6": true,
+			"dependencies": [
+				"ext.ark.datamaps.core"
+			],
+			"packageFiles": [
+				"bootstrap/main.js"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
+
 		"ext.ark.datamaps.inlineloader": {
 			"es6": true,
 			"dependencies": [
-				"ext.ark.datamaps.loader"
+				"ext.ark.datamaps.core",
+				"ext.ark.datamaps.bootstrap"
 			],
 			"packageFiles": [
-				"inlineLoader/adapter.js"
+				"inlineLoader/main.js"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
