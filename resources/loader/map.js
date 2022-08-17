@@ -436,6 +436,12 @@ const buildLeafletMap = function ( $holder ) {
     this.leaflet.on( 'zoom', () => this.updateMarkerScaling() );
     this.updateMarkerScaling();
 
+    // Build extra controls
+    buildControls.call( this );
+};
+
+
+const buildControls = function () {
     // Create a coordinate-under-cursor display
     if ( this.isFeatureBitSet( this.FF_SHOW_COORDINATES ) ) {
         this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
