@@ -196,7 +196,8 @@
 		"DataMapsDefaultFeatures": {
 			"value": {
 				"ShowCoordinates": true,
-				"ShowLegendAlwaysAbove": false
+				"ShowLegendAlwaysAbove": false,
+				"RequireCustomMarkerIDs": false
 			}
 		},
 		"DataMapsAllowExperimentalFeatures": {

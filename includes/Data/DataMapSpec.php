@@ -56,6 +56,11 @@ class DataMapSpec extends DataModel {
             : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SHOW_LEGEND_ABOVE );
     }
 
+    public function wantsCustomMarkerIDs(): bool {
+        return isset( $this->raw->requireCustomMarkerIDs ) ? $this->raw->requireCustomMarkerIDs
+            : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_REQUIRE_CUSTOM_MARKER_IDS );
+    }
+
     public function getInjectedLeafletSettings(): ?object {
         return isset( $this->raw->leafletSettings ) ? $this->raw->leafletSettings : null;
     }
@@ -161,6 +166,7 @@ class DataMapSpec extends DataModel {
         }
         $this->expectField( $status, 'showCoordinates', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'showLegendAbove', DataModel::TYPE_BOOL );
+        $this->expectField( $status, 'requireCustomMarkerIDs', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
         if ( $isFull ) {
             $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );
@@ -236,7 +242,9 @@ class DataMapSpec extends DataModel {
 
             // Validate markers by the MarkerSpec class
             if ( $isFull ) {
-                $this->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection ) use ( &$status ) {
+                $requireOwnIDs = $this->wantsCustomMarkerIDs();
+                $this->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection )
+                    use ( &$status, &$requireOwnIDs ) {
                     // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
                     // creating thousands of small, very short-lived (only one at a time) objects
                     $marker = new MarkerSpec( new \stdclass() );
@@ -253,7 +261,7 @@ class DataMapSpec extends DataModel {
                     // Validate each marker
                     foreach ( $rawMarkerCollection as &$rawMarker ) {
                         $marker->reassignTo( $rawMarker );
-                        $marker->validate( $status );
+                        $marker->validate( $status, $requireOwnIDs );
                     }
                 } );
             }

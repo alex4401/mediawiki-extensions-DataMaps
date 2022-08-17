@@ -42,8 +42,12 @@ class MarkerSpec extends DataModel {
         return isset( $this->raw->id ) ? $this->raw->id : null;
     }
 
-    public function validate( Status $status ) {
-        $this->expectField( $status, 'id', DataModel::TYPE_STRING_OR_NUMBER );
+    public function validate( Status $status, bool $requireOwnID = false ) {
+        if ( $requireOwnID ) {
+            $this->requireField( $status, 'id', DataModel::TYPE_STRING_OR_NUMBER );
+        } else {
+            $this->expectField( $status, 'id', DataModel::TYPE_STRING_OR_NUMBER );
+        }
         $this->requireField( $status, 'lat', DataModel::TYPE_NUMBER );
         $this->requireField( $status, 'lon', DataModel::TYPE_NUMBER );
         $this->expectField( $status, 'label', DataModel::TYPE_STRING );
