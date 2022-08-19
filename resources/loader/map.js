@@ -4,6 +4,7 @@ const MapStorage = require( './storage.js' ),
     MapLegend = require( './legend.js' ),
     MarkerLegendPanel = require( './markerLegend.js' ),
     EventEmitter = require( './events.js' ),
+    DismissableMarkersLegend = require( './dismissables.js' ),
     mwApi = new mw.Api();
 
 
@@ -66,7 +67,6 @@ function DataMap( id, $root, config ) {
 
     // Set up internal event handlers
     this.on( 'markerReady', this.tryOpenUriPopup, this );
-    this.on( 'markerDismissChange', this.updateMarkerDismissalBadges, this );
 
     // Broadcast `afterInitialisation` hook
     mw.hook( `ext.ark.datamaps.afterInitialisation.${id}` ).fire( this );
@@ -172,18 +172,6 @@ DataMap.prototype.toggleMarkerDismissal = function ( markerType, coords, leaflet
 };
 
 
-DataMap.prototype.updateMarkerDismissalBadges = function () {
-    for ( const groupId in this.config.groups ) {
-        const group = this.config.groups[groupId];
-        if ( group.canDismiss && this.markerLegend.groupToggles[groupId] ) {
-            const markers = this.layerManager.byLayer[groupId];
-            const count = markers.filter( x => x.options.dismissed ).length;
-            this.markerLegend.groupToggles[groupId].setBadge( `${count} / ${markers.length}` );
-        }
-    }
-};
-
-
 /*
  * Called whenever a marker is instantiated
  */
@@ -250,8 +238,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
         }
     }
 
-    // Refresh dismissal badges in the legend
-    this.waitForLegend( () => this.updateMarkerDismissalBadges() );
+    this.fire( 'streamingDone' );
 };
 
 
@@ -516,6 +503,11 @@ const buildLegend = function () {
         if ( !this.dataSetFilters || this.dataSetFilters.indexOf( groupId ) >= 0 ) {
             this.markerLegend.addMarkerGroupToggle( groupId, this.config.groups[groupId] );
         }
+    }
+
+    // Set up the dismissable marker interactions
+    if ( Object.values( this.config.groups ).some( x => x.canDismiss ) ) {
+        this.legend.dismissables = new DismissableMarkersLegend( this.legend );
     }
 
     mw.hook( `ext.ark.datamaps.afterLegendInitialisation.${this.id}` ).fire( this );
