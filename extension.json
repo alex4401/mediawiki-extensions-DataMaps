@@ -86,6 +86,7 @@
 			],
 			"packageFiles": [
 				"loader/index.js",
+				"loader/events.js",
 				"loader/storage.js",
 				"loader/layerManager.js",
 				"loader/map.js",

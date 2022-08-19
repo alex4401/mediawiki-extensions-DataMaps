@@ -1,4 +1,5 @@
 module.exports = mw.dataMaps = {
+    EventEmitter: require( './events.js' ),
     MapStorage: require( './storage.js' ),
     MarkerLayerManager: require( './layerManager.js' ),
     MarkerPopup: require( './popup.js' ),

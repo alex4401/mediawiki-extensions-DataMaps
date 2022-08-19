@@ -3,6 +3,7 @@ const MapStorage = require( './storage.js' ),
     MarkerPopup = require( './popup.js' ),
     MapLegend = require( './legend.js' ),
     MarkerLegendPanel = require( './markerLegend.js' ),
+    EventEmitter = require( './events.js' ),
     mwApi = new mw.Api();
 
 
@@ -13,6 +14,8 @@ const CRSOrigin = {
 
 
 function DataMap( id, $root, config ) {
+    EventEmitter.call( this );
+
     this.id = id;
     // Root DOM element of the data map
     this.$root = $root;
@@ -61,7 +64,11 @@ function DataMap( id, $root, config ) {
     this.crsScaleY = 100 / Math.max( this.config.crs[0][0], this.config.crs[1][0] );
     this.crsScaleX = 100 / Math.max( this.config.crs[0][1], this.config.crs[1][1] );
 
-    // Broadcast `afterInitialisation` event
+    // Set up internal event handlers
+    this.on( 'markerReady', this.tryOpenUriPopup, this );
+    this.on( 'markerDismissChange', this.updateMarkerDismissalBadges, this );
+
+    // Broadcast `afterInitialisation` hook
     mw.hook( `ext.ark.datamaps.afterInitialisation.${id}` ).fire( this );
 
     // Request OOUI to be loaded and build the legend
@@ -78,6 +85,14 @@ function DataMap( id, $root, config ) {
 }
 
 
+DataMap.prototype = Object.create( EventEmitter.prototype );
+
+
+DataMap.prototype.anchors = {
+    bottomLeft: '.leaflet-bottom.leaflet-left',
+    topRight: '.leaflet-top.leaflet-right',
+    topLeft: '.leaflet-top.leaflet-left'
+};
 DataMap.prototype.FF_SHOW_COORDINATES = 1;
 
 
@@ -152,7 +167,7 @@ DataMap.prototype.getCoordLabel = function ( lat, lon ) {
 DataMap.prototype.toggleMarkerDismissal = function ( markerType, coords, leafletMarker ) {
     const state = this.storage.toggleDismissal( markerType, coords );
     leafletMarker.setDismissed( state );
-    this.updateMarkerDismissalBadges();
+    this.fire( 'markerDismissChange', markerType, coords, leafletMarker );
     return state;
 };
 
@@ -172,7 +187,7 @@ DataMap.prototype.updateMarkerDismissalBadges = function () {
 /*
  * Called whenever a marker is instantiated
  */
-DataMap.prototype.onMarkerReady = function ( type, group, instance, marker ) {
+DataMap.prototype.tryOpenUriPopup = function ( type, group, instance, marker ) {
     // Open this marker's popup if that's been requested via a `marker` query parameter
     if ( this.markerIdToAutoOpen != null
         && ( ( instance[2] && instance[2].uid != null ) ? instance[2].uid : this.storage.getMarkerKey( type, instance ) )
@@ -231,7 +246,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             const mType = markerType;
             MarkerPopup.bindTo( this, mType, instance, ( instance[2] || {} ), leafletMarker );
 
-            this.onMarkerReady( markerType, group, instance, leafletMarker );
+            this.fire( 'markerReady', markerType, group, instance, leafletMarker );
         }
     }
 
@@ -312,13 +327,6 @@ DataMap.prototype.centreView = function () {
 };
 
 
-DataMap.prototype.anchors = {
-    bottomLeft: '.leaflet-bottom.leaflet-left',
-    topRight: '.leaflet-top.leaflet-right',
-    topLeft: '.leaflet-top.leaflet-left'
-};
-
-
 DataMap.prototype.addControl = function ( anchor, $element ) {
     this.$root.find( `.leaflet-control-container ${anchor}` ).append( $element );
     return $element;
@@ -390,6 +398,7 @@ const buildLeafletMap = function ( $holder ) {
     leafletConfig.crs = L.CRS.Simple;
     leafletConfig.renderer = L.canvas( leafletConfig.rendererSettings );
 
+    // Initialise the Leaflet map
     this.leaflet = L.map( $holder.get( 0 ), leafletConfig );
 
     // Prepare all backgrounds
