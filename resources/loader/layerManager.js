@@ -22,8 +22,8 @@ MarkerLayerManager.prototype.register = function ( layerName ) {
 
 
 MarkerLayerManager.prototype.addMember = function ( type, leafletMarker ) {
-    leafletMarker.arkAttachedLayers = type.split(' ');
-    for ( const layer of leafletMarker.arkAttachedLayers )
+    leafletMarker.attachedLayers = type.split(' ');
+    for ( const layer of leafletMarker.attachedLayers )
         this.byLayer[layer].push( leafletMarker );
     this.markers.push( leafletMarker );
     this.updateMember( leafletMarker );
@@ -31,7 +31,7 @@ MarkerLayerManager.prototype.addMember = function ( type, leafletMarker ) {
 
 
 MarkerLayerManager.prototype.addMarkerToLayer = function ( leafletMarker, layer ) {
-    leafletMarker.arkAttachedLayers.push( layer );
+    leafletMarker.attachedLayers.push( layer );
     this.byLayer[layer].push( leafletMarker );
     this.updateMember( leafletMarker );
 };
@@ -39,10 +39,10 @@ MarkerLayerManager.prototype.addMarkerToLayer = function ( leafletMarker, layer 
 
 MarkerLayerManager.prototype.removeMember = function ( leafletMarker ) {
     this.map.leaflet.removeLayer( leafletMarker );
-    for ( const layer of leafletMarker.arkAttachedLayers )
+    for ( const layer of leafletMarker.attachedLayers )
         delete this.byLayer[layer][this.byLayer[layer].indexOf( leafletMarker )];
     delete this.markers[this.markers.indexOf( leafletMarker )];
-    leafletMarker.arkAttachedLayers = null;
+    leafletMarker.attachedLayers = null;
 };
 
 
@@ -76,7 +76,7 @@ MarkerLayerManager.prototype.updateMember = function ( leafletMarker ) {
         return;
     }
     // Get marker layers
-    const layers = leafletMarker.arkAttachedLayers;
+    const layers = leafletMarker.attachedLayers;
     // Request new visibility state from cache, or compute it if missed
     let shouldBeVisible = this.computeCache[layers];
     if ( shouldBeVisible == null ) {
