@@ -229,6 +229,9 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
                 leafletMarker.setDismissed( this.storage.isDismissed( markerType, instance ) );
             }
 
+            // Persist original coordinates and state
+            leafletMarker.apiInstance = instance;
+
             // Add marker to the layer
             this.layerManager.addMember( markerType, leafletMarker );
 
