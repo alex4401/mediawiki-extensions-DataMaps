@@ -50,6 +50,7 @@
     "datamap-lazy-click-to-load": "Click to load the data map",
 
     "datamap-legend-tab-locations": "Markers",
+    "datamap-legend-tab-checklist": "Checklists",
     "datamap-toggle-show-all": "Show all",
     "datamap-toggle-hide-all": "Hide all",
     "datamap-layer-control": "Toggle",
