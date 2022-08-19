@@ -55,7 +55,7 @@ abstract class DataMapContentBase extends JsonContent {
 	];
 
 	public function beautifyJSON() {
-		$out = FormatJson::encode( $this->getData()->getValue(), true, FormatJson::UTF8_OK );
+		$out = FormatJson::encode( $this->getData()->getValue(), "\t", FormatJson::ALL_OK );
 
 		foreach (self::JOIN_LINE_FIELDS as $term) {
 			$part = '(?:("(?:' . $term . ')": [^,\n]+,?))';
