@@ -297,6 +297,9 @@ DataMap.prototype.setCurrentBackground = function ( index ) {
         x.addTo( this.leaflet );
         x.bringToBack();
     } );
+
+    // Hide any unmatching "bg" sub-layer
+    this.layerManager.setOptionalPropertyRequirement( 'bg', this.backgroundIndex );
 };
 
 

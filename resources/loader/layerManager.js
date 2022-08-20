@@ -5,6 +5,7 @@ function MarkerLayerManager( map ) {
     this.includeMaskHi = new Set();
     this.includeMaskLo = new Set();
     this.excludeMask = new Set();
+    this.includeMaskPr = {};
     this.clearCache();
 }
 
@@ -50,7 +51,9 @@ MarkerLayerManager.prototype.shouldBeVisible = function ( layers ) {
     // If requirement mask is not empty, and there is a layer inside the list does not have, return invisible
     if ( this.includeMaskHi.size > 0 && !( () => {
         let result = true;
-        this.includeMaskHi.forEach( name => result = result && layers.indexOf( name ) > 0 );
+        for ( const name of this.includeMaskHi ) {
+            result = result && layers.indexOf( name ) > 0;
+        }
         return result;
     } )() ) {
         return false;
@@ -64,6 +67,17 @@ MarkerLayerManager.prototype.shouldBeVisible = function ( layers ) {
     // If exclusion mask is not empty, and there is overlap between it and queried layers, return invisible
     if ( this.excludeMask.size > 0 && layers.some( name => this.excludeMask.has( name ) ) ) {
         return false;
+    }
+
+    // Compare against the property mask: if (and only if) there's a sub-layer with a differing value, return invisible
+    for ( const property in this.includeMaskPr ) {
+        // Check if this property is specified in the layers list
+        if ( layers.some( name => name.indexOf( property + ':' ) >= 0 ) ) {
+            // Check if the value is matched
+            if ( layers.indexOf( `${property}:${this.includeMaskPr[property]}` ) < 0 ) {
+                return false;
+            }
+        }
     }
 
     return true;
@@ -114,6 +128,20 @@ MarkerLayerManager.prototype.setRequirement = function ( layerName, state ) {
         this.includeMaskHi.add( layerName );
     else
         this.includeMaskHi.delete( layerName );
+    this.clearCache();
+    this.updateMembers();
+};
+
+
+/*
+ * Sets a layer as *absolutely* required for a marker to be displayed. This updates ALL markers.
+ */
+MarkerLayerManager.prototype.setOptionalPropertyRequirement = function ( propertyName, value ) {
+    if ( value == null && this.includeMaskPr[propertyName] ) {
+        delete this.includeMaskPr[propertyName];
+    } else if ( value != null ) {
+        this.includeMaskPr[propertyName] = value;
+    }
     this.clearCache();
     this.updateMembers();
 };
