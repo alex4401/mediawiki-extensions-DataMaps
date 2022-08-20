@@ -20,7 +20,7 @@ use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 use ParserOptions;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
-    const GENERATION = 8;
+    const GENERATION = 10;
 
     public function getAllowedParams() {
         return [
@@ -40,56 +40,27 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     public function execute() {
-        $cacheExpiryTime = DataMapsConfig::getApiCacheTTL();
-
         $timeStart = 0;
         if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
             $timeStart = hrtime( true );
         }
 
+        $params = $this->extractRequestParams();
+
+        // Configure browser-side caching recommendations
 		$this->getMain()->setCacheMode( 'public' );
         $this->getMain()->setCacheMaxAge( 24 * 60 * 60 );
 
-        $params = $this->extractRequestParams();
-
         $response = null;
-        if ( $cacheExpiryTime <= 0 ) {
+        if ( DataMapsConfig::getApiCacheTTL() <= 0 ) {
             // Cache expiry time is zero or lower, bypass caching
-            $response = $this->executeInternal( $params );
+            $response = $this->doProcessing( $params );
         } else {
-            // Retrieve the specified cache instance
-            $cache = ObjectCache::getInstance( DataMapsConfig::getApiCacheType() );
-            // Build the cache key from an identifier, title parameter and revision ID parameter
-            $revid = isset( $params['revid'] ) ? $params['revid'] : -1;
-            $cacheKey = $cache->makeKey( 'ARKDataMapQuery', self::GENERATION, $params['title'], $revid,
-                isset( $params['filter'] ) ? $params['filter'] : '' );
-            // Try to retrieve the response
-            $response = $cache->get( $cacheKey );
-            if ( $response === false ) {
-                // Response not cached, process the data in this request
-                $response = $this->executeInternal( $params );
-                // If TTL extension is allowed, store an internal timestamp
-                if ( DataMapsConfig::shouldExtendApiCacheTTL() ) {
-                    $response['refreshedAt'] = time();
-                }
-                // Write to cache
-                $cache->set( $cacheKey, $response, $cacheExpiryTime );
-            } else {
-                // Response cached, check if TTL should be extended and do it
-                if ( DataMapsConfig::shouldExtendApiCacheTTL() && isset( $response['refreshedAt'] ) ) {
-                    $ttlThreshold = $cacheExpiryTime - DataMapsConfig::getApiCacheTTLExtensionThreshold();
-                    if ( time() - $response['refreshedAt'] >= $ttlThreshold ) {
-                        $response['refreshedAt'] = time();
-                        $cache->set( $cacheKey, $response, DataMapsConfig::getApiCacheTTLExtensionValue() );
-                    }
-                }
-            }
-            // Remove the internal TTL extension timestamp
-            if ( isset( $response['refreshedAt'] ) && !DataMapsConfig::shouldApiReturnProcessingTime() ) {
-                unset( $response['refreshedAt'] );
-            }
+            $response = $this->doProcessingCached( $params );
         }
 		
+        $this->doPostProcessing( $params, $response );
+
         $this->getResult()->addValue( null, 'query', $response );
 
         if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
@@ -121,33 +92,85 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         return [ $title, $revision ];
     }
 
-    private function executeInternal( $params ): array {
+    private function getFiltersFromParams( $params ): ?array {
+        $filter = null;
+        if ( isset( $params['filter'] ) && !empty( $params['filter'] ) ) {
+            $filter = explode( '|', $params['filter'] );
+        }
+        if ( empty( $filter ) ) {
+            return null;
+        }
+        return $filter;
+    }
+
+    private function doProcessingCached( $params ): array {
+        $cacheExpiryTime = DataMapsConfig::getApiCacheTTL();
+
+        // Retrieve the specified cache instance
+        $cache = ObjectCache::getInstance( DataMapsConfig::getApiCacheType() );
+
+        // Build the cache key from an identifier, title parameter and revision ID parameter
+        $revid = isset( $params['revid'] ) ? $params['revid'] : -1;
+        $cacheKey = $cache->makeKey( 'ARKDataMapQuery', self::GENERATION, $params['title'], $revid );
+
+        // Try to retrieve the response
+        $response = $cache->get( $cacheKey );
+        if ( $response === false ) {
+            // Response not cached, process the data in this request
+            $response = $this->doProcessing( $params );
+
+            // If TTL extension is allowed, store an internal timestamp
+            if ( DataMapsConfig::shouldExtendApiCacheTTL() ) {
+                $response['refreshedAt'] = time();
+            }
+
+            // Write to cache
+            $cache->set( $cacheKey, $response, $cacheExpiryTime );
+        } else {
+            // Response cached, check if TTL should be extended and do it
+            if ( DataMapsConfig::shouldExtendApiCacheTTL() && isset( $response['refreshedAt'] ) ) {
+                $ttlThreshold = $cacheExpiryTime - DataMapsConfig::getApiCacheTTLExtensionThreshold();
+                if ( time() - $response['refreshedAt'] >= $ttlThreshold ) {
+                    $response['refreshedAt'] = time();
+                    $cache->set( $cacheKey, $response, DataMapsConfig::getApiCacheTTLExtensionValue() );
+                }
+            }
+        }
+
+        // Remove the internal TTL extension timestamp
+        if ( isset( $response['refreshedAt'] ) && !DataMapsConfig::shouldApiReturnProcessingTime() ) {
+            unset( $response['refreshedAt'] );
+        }
+
+        return $response;
+    }
+
+    private function doProcessing( $params ): array {
         $timeStart = 0;
         if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
             $timeStart = hrtime( true );
         }
 
+        // Retrieve the content
         list( $title, $revision ) = $this->getRevisionFromParams( $params );
         $content = $revision->getContent( SlotRecord::MAIN, RevisionRecord::FOR_PUBLIC, null );
 
+        // Make sure the page is a data map
         if ( !( $content instanceof DataMapContent ) ) {
             $this->dieWithError( [ 'contentmodel-mismatch', $content->getModel(), 'datamap' ] );
         }
 
+        // Cast content to a data model
         $dataMap = $content->asModel();
+
+        // Response skeleton
         $response = [
             'title' => $title->getFullText(),
             'revisionId' => $revision->getId()
         ];
 
-        // Extract filters from the request parameters
-        $filter = null;
-        if ( isset( $params['filter'] ) && !empty( $params['filter'] ) ) {
-            $filter = explode( '|', $params['filter'] );
-        }
-
         // Have a MarkerProcessor convert the data
-        $processor = new MarkerProcessor( $title, $dataMap, $filter );
+        $processor = new MarkerProcessor( $title, $dataMap, null );
         $response['markers'] = $processor->processAll();
 
         // Armour any API metadata in $response
@@ -160,4 +183,16 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
         return $response;
     }
+
+    private function doPostProcessing( $params, array &$data ) {
+        // Filter markers by layers
+        $filter = $this->getFiltersFromParams( $params );
+        if ( $filter != null ) {
+            foreach ( array_keys( $data['markers'] ) as &$layers ) {
+                if ( empty( array_intersect( $filter, explode( ' ', $layers ) ) ) ) {
+                    unset( $data['markers'][$layers] );
+                }
+            }
+        }
+    } 
 }
