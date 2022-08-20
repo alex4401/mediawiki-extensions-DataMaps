@@ -13,6 +13,7 @@ use InvalidArgumentException;
 use PPFrame;
 use FormatJson;
 
+use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerLayerSpec;
@@ -91,13 +92,24 @@ class DataMapEmbedRenderer {
         }
         $parserOutput->addJsConfigVars( 'dataMaps', $configsVar );
 
+        // Register page's dependency on the mix-ins
+        if ( $this->data->getMixins() !== null ) {
+            foreach ( $this->data->getMixins() as &$mixinName ) {
+                $mixin = Title::makeTitleSafe( DataMapsConfig::getNamespace(), $mixinName );
+                $parserOutput->addTemplate( $mixin, $mixin->getArticleId(),
+                    $this->parser->fetchCurrentRevisionRecordOfTitle( $mixin )->getId() );
+            }
+        }
+
         // Register image dependencies
         foreach ( $this->data->getBackgrounds() as &$background ) {
             $parserOutput->addImage( $background->getImageName() );
+            // TODO: register image overlays
         }
         $this->data->iterateGroups( function( MarkerGroupSpec $spec ) use ( &$parserOutput ) {
             $parserOutput->addImage( $spec->getIcon() );
         } );
+        // TODO: register popup images
     }
 
     public function getJsConfigVariables(): array {
