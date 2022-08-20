@@ -20,7 +20,17 @@ use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 use ParserOptions;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
-    const GENERATION = 10;
+    // This value is a part of every cache key produced by this endpoint. It should be raised only on API output changes and
+    // cache management changes, including changes to the MarkerProcessor class.
+    //
+    // Prior to v0.10.0, this has always been the last minor version number to require this procedure. If a bump was required in
+    // a patch, it was expected that this number is increased anyway (going out of sync with versioning).
+    //
+    // Since v0.10.0:
+    // - if major version becomes higher than zero, the first digit should be the major version;
+    // - next two digits should be the minor version;
+    // - next two digits should be the patch version, or two zeroes instead.
+    const GENERATION = 1000;
 
     public function getAllowedParams() {
         return [
