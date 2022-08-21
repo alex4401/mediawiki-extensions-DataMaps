@@ -19,8 +19,8 @@ class MarkerLayerSpec extends DataModel {
         return $this->id;
     }
 
-    public function getName(): string {
-        return $this->raw->name;
+    public function getName(): ?string {
+        return isset( $this->raw->name ) ? $this->raw->name : null;
     }
 
     public function getPopupDiscriminator(): ?string {
@@ -32,7 +32,7 @@ class MarkerLayerSpec extends DataModel {
     }
     
     public function validate( Status $status ) {
-        $this->requireField( $status, 'name', DataModel::TYPE_STRING );
+        $this->expectField( $status, 'name', DataModel::TYPE_STRING );
         $this->expectField( $status, 'subtleText', DataModel::TYPE_STRING );
         $this->expectField( $status, 'overrideIcon', DataModel::TYPE_STRING );
         $this->disallowOtherFields( $status );

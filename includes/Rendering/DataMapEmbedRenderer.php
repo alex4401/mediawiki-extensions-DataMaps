@@ -262,7 +262,10 @@ class DataMapEmbedRenderer {
 
     public function getMarkerLayerConfig( MarkerLayerSpec $spec ): array {
         $out = [];
-        $out['name'] = $spec->getName();
+
+        if ( $spec->getName() !== null ) {
+            $out['name'] = $spec->getName();
+        }
 
         if ( $spec->getPopupDiscriminator() !== null ) {
             $out['discrim'] = $spec->getPopupDiscriminator();
