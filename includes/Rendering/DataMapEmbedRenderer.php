@@ -17,6 +17,7 @@ use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerLayerSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundOverlaySpec;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
@@ -109,7 +110,18 @@ class DataMapEmbedRenderer {
         $this->data->iterateGroups( function( MarkerGroupSpec $spec ) use ( &$parserOutput ) {
             $parserOutput->addImage( $spec->getIcon() );
         } );
-        // TODO: register popup images
+
+        // Register image dependencies on marker popups
+        $marker = new MarkerSpec( new \stdclass() );
+        $this->data->iterateRawMarkerMap( function ( string $layers, array $rawCollection ) use ( &$marker, &$parserOutput ) {
+            foreach ( $rawCollection as &$rawMarker ) {
+                $marker->reassignTo( $rawMarker );
+                if ( $marker->getPopupImage() !== null ) {
+                    $parserOutput->addImage( $marker->getPopupImage() );
+                }
+            }
+        } );
+
     }
 
     public function getJsConfigVariables(): array {
