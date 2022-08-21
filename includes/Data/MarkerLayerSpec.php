@@ -26,10 +26,21 @@ class MarkerLayerSpec extends DataModel {
     public function getPopupDiscriminator(): ?string {
         return isset( $this->raw->subtleText ) ? $this->raw->subtleText : null;
     }
+
+    public function getIconOverride(): ?string {
+        return isset( $this->raw->overrideIcon ) ? $this->raw->overrideIcon : null;
+    }
     
     public function validate( Status $status ) {
         $this->requireField( $status, 'name', DataModel::TYPE_STRING );
         $this->expectField( $status, 'subtleText', DataModel::TYPE_STRING );
+        $this->expectField( $status, 'overrideIcon', DataModel::TYPE_STRING );
         $this->disallowOtherFields( $status );
+
+        if ( $this->validationAreRequiredFieldsPresent ) {
+            if ( $this->getIconOverride() !== null ) {
+                $this->requireFile( $status, $this->getIconOverride() );
+            }
+        }
     }
 }

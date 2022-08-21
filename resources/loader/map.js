@@ -41,7 +41,7 @@ function DataMap( id, $root, config ) {
     // Leaflet.Map instance
     this.leaflet = null;
     // Collection of Leaflet.Icons by group
-    this.leafletIcons = {};
+    this.iconCache = {};
     // DOM element of the coordinates display control
     this.$coordTracker = null;
     // Cached value of the 'datamap-coordinate-control-text' message
@@ -185,6 +185,23 @@ DataMap.prototype.tryOpenUriPopup = function ( type, group, instance, marker ) {
 };
 
 
+DataMap.prototype.getIconFromLayers = function ( markerType, layers ) {
+    if ( !this.iconCache[markerType] ) {
+        const group = this.config.groups[layers[0]];
+
+        let markerIcon = group.markerIcon;
+        const override = layers.find( x => this.config.layers[x] && this.config.layers[x].markerIcon );
+        if ( override ) {
+            markerIcon = this.config.layers[override].markerIcon;
+        }
+    
+        this.iconCache[markerType] = L.icon( { iconUrl: markerIcon, iconSize: group.size } );
+    }
+
+    return this.iconCache[markerType];
+};
+
+
 /*
  * Builds markers from a data object
  */
@@ -210,7 +227,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             if ( group.markerIcon ) {
                 // Fancy icon marker
                 leafletMarker = new L.Ark.IconMarker( position, {
-                    icon: this.leafletIcons[groupName]
+                    icon: this.getIconFromLayers( markerType, layers )
                 } );
             } else {
                 // Circular marker
@@ -420,11 +437,6 @@ const buildLeafletMap = function ( $holder ) {
 
         // Register with the layer manager
         this.layerManager.register( groupName );
-
-        if ( group.markerIcon ) {
-            // Prepare the icon objects for Leaflet markers
-            this.leafletIcons[groupName] = L.icon( { iconUrl: group.markerIcon, iconSize: group.size } );
-        }
     }
 
     // Recalculate marker sizes when zoom ends
