@@ -74,8 +74,7 @@ function DataMap( id, $root, config ) {
     // Request OOUI to be loaded and build the legend
     mw.loader.using( [
         'oojs-ui-core',
-        'oojs-ui-widgets',
-        'ext.ark.datamaps.icons'
+        'oojs-ui-widgets'
     ], buildLegend.bind( this ) );
     // Prepare the Leaflet map view
     mw.loader.using( [

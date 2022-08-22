@@ -70,6 +70,9 @@
 		},
 
 		"ext.ark.datamaps.styles": {
+			"dependencies": [
+				"ext.ark.datamaps.icons"
+			],
 			"styles": [
 				"styles/main.less",
 				"styles/legend.less",
