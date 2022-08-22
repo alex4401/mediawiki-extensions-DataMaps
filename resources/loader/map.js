@@ -108,9 +108,9 @@ DataMap.prototype.isFeatureBitSet = function ( mask ) {
  * Runs the callback function when the Leaflet map is initialised. This is required if a function/gadget depends on any
  * Leaflet code (global L) having been loaded.
  */
-DataMap.prototype.waitForLeaflet = function ( callback ) {
+DataMap.prototype.waitForLeaflet = function ( callback, context ) {
     if ( this.leaflet == null ) {
-        setTimeout( this.waitForLeaflet.bind( this, callback ), 25 );
+        this.on( 'leafletLoaded', callback, context );
     } else {
         callback();
     }
@@ -119,7 +119,7 @@ DataMap.prototype.waitForLeaflet = function ( callback ) {
 
 DataMap.prototype.waitForLegend = function ( callback ) {
     if ( this.legend == null ) {
-        setTimeout( this.waitForLegend.bind( this, callback ), 25 );
+        this.on( 'legendLoaded', callback, context );
     } else {
         callback();
     }
@@ -448,6 +448,8 @@ const buildLeafletMap = function ( $holder ) {
 
     // Build extra controls
     buildControls.call( this );
+
+    this.fire( 'leafletLoaded' );
 };
 
 
@@ -532,6 +534,8 @@ const buildLegend = function () {
     if ( Object.values( this.config.groups ).some( x => x.canDismiss ) ) {
         this.legend.dismissables = new DismissableMarkersLegend( this.legend );
     }
+
+    this.fire( 'legendLoaded' );
 
     mw.hook( `ext.ark.datamaps.afterLegendInitialisation.${this.id}` ).fire( this );
 };
