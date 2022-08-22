@@ -96,7 +96,7 @@ class MarkerProcessor {
 
         // Popup description
         if ( $marker->getDescription() != null ) {
-            $slots['desc'] = $this->parseText( $marker, $marker->getDescription() );
+            $slots['desc'] = $this->parseMultilineText( $marker, $marker->getDescription() );
         }
 
         // Popup image thumbnail link
@@ -159,5 +159,12 @@ class MarkerProcessor {
             return $this->parseWikitext( $text );
         }
         return wfEscapeWikiText( $text );
+    }
+
+    private function parseMultilineText( MarkerSpec $marker, /*array|string*/ $text ): string {
+        if ( is_array( $text ) ) {
+            $text = implode( "\n", $text );
+        }
+        return $this->parseText( $marker, $text );
     }
 }
