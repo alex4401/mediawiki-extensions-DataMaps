@@ -72,10 +72,13 @@ function DataMap( id, $root, config ) {
     mw.hook( `ext.ark.datamaps.afterInitialisation.${id}` ).fire( this );
 
     // Request OOUI to be loaded and build the legend
-    mw.loader.using( [
-        'oojs-ui-core',
-        'oojs-ui-widgets'
-    ], buildLegend.bind( this ) );
+    if ( !this.isFeatureBitSet( this.FF_HIDE_LEGEND ) ) {
+        mw.loader.using( [
+            'oojs-ui-core',
+            'oojs-ui-widgets'
+        ], buildLegend.bind( this ) );
+    }
+
     // Prepare the Leaflet map view
     mw.loader.using( [
         'ext.ark.datamaps.leaflet.core',
@@ -93,6 +96,7 @@ DataMap.prototype.anchors = {
     topLeft: '.leaflet-top.leaflet-left'
 };
 DataMap.prototype.FF_SHOW_COORDINATES = 1;
+DataMap.prototype.FF_HIDE_LEGEND = 2;
 
 
 DataMap.prototype.isFeatureBitSet = function ( mask ) {

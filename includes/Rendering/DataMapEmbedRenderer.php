@@ -186,9 +186,8 @@ class DataMapEmbedRenderer {
 
     public function getPublicFeatureBitMask(): int {
         $out = 0;
-        if ( $this->data->wantsCoordinatesShown() ) {
-            $out |= 1<<0;
-        }
+        $out |= $this->data->wantsCoordinatesShown() ? 1<<0 : 0;
+        $out |= $this->data->wantsLegendHidden() ? 1<<1 : 0;
         return $out;
     }
 
@@ -333,6 +332,11 @@ class DataMapEmbedRenderer {
         $containerMain->appendContent( $containerContent );
         $containerMain->appendContent( $containerBottom );
 
+        // Expose FF_HIDE_LEGEND flag
+        if ( $this->data->wantsLegendHidden() ) {
+            $containerMain->addClasses( [ 'datamap-legend-is-hidden' ] );
+        }
+
         // Expose FF_SHOW_LEGEND_ABOVE flag
         if ( $this->data->wantsLegendShownAbove() ) {
             $containerMain->addClasses( [ 'datamap-legend-is-above' ] );
@@ -351,8 +355,10 @@ class DataMapEmbedRenderer {
             ] ) );
         }
 
-        // Left-side legend
-        $containerContent->appendContent( $this->getLegendContainerWidget() );
+        // Legend
+        if ( !$this->data->wantsLegendHidden() ) {
+            $containerContent->appendContent( $this->getLegendContainerWidget() );
+        }
 
         // Leaflet area
 		$containerMap = new \OOUI\PanelLayout( [

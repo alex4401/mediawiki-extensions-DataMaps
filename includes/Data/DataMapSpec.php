@@ -51,6 +51,10 @@ class DataMapSpec extends DataModel {
             : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SHOW_COORDINATES );
     }
 
+    public function wantsLegendHidden(): bool {
+        return isset( $this->raw->hideLegend ) ? $this->raw->hideLegend : false;
+    }
+
     public function wantsLegendShownAbove(): bool {
         return isset( $this->raw->showLegendAbove ) ? $this->raw->showLegendAbove
             : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SHOW_LEGEND_ABOVE );
@@ -165,6 +169,7 @@ class DataMapSpec extends DataModel {
             $this->expectEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
         }
         $this->expectField( $status, 'showCoordinates', DataModel::TYPE_BOOL );
+        $this->expectField( $status, 'hideLegend', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'showLegendAbove', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'requireCustomMarkerIDs', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
