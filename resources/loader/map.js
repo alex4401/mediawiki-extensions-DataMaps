@@ -100,7 +100,7 @@ DataMap.prototype.FF_HIDE_LEGEND = 2;
 
 
 DataMap.prototype.isFeatureBitSet = function ( mask ) {
-    return this.config.flags && this.config.flags & mask == mask;
+    return this.config.flags && ( this.config.flags & mask ) == mask;
 };
 
 
