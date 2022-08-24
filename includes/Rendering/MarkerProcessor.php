@@ -109,6 +109,15 @@ class MarkerProcessor {
             $slots['article'] = $marker->getRelatedArticle();
         }
 
+        // Search keywords
+        if ( $marker->getSearchKeywords() != null ) {
+            $keywords = $marker->getSearchKeywords();
+            if ( is_array( $keywords ) ) {
+                $keywords = implode( ' ', $keywords );
+            }
+            $slots['search'] = $keywords;
+        }
+
         // Insert slots if any data has been added
         if ( !empty( $slots ) ) {
             $converted[] = $slots;

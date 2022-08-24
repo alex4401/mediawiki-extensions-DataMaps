@@ -42,6 +42,10 @@ class MarkerSpec extends DataModel {
         return isset( $this->raw->id ) ? $this->raw->id : null;
     }
 
+    public function getSearchKeywords()/*: ?array|string */ {
+        return isset( $this->raw->searchKeywords ) ? $this->raw->searchKeywords : null;
+    }
+
     public function validate( Status $status, bool $requireOwnID = false ) {
         if ( $requireOwnID ) {
             $this->requireField( $status, 'id', DataModel::TYPE_STRING_OR_NUMBER );
@@ -55,6 +59,7 @@ class MarkerSpec extends DataModel {
         $this->expectField( $status, 'isWikitext', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
         $this->expectField( $status, 'popupImage', DataModel::TYPE_STRING );
+        $this->expectField( $status, 'searchKeywords', DataModel::TYPE_ARRAY_OR_STRING );
         $this->disallowOtherFields( $status );
 
         if ( $this->validationAreRequiredFieldsPresent ) {
