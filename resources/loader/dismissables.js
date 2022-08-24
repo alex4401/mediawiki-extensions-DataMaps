@@ -1,18 +1,19 @@
 class DismissableMarkerEntry {
-    constructor( panel, markerType, group, apiInstance, leafletMarker ) {
+    constructor( panel, markerType, group, leafletMarker ) {
         this.panel = panel;
-        this.apiInstance = apiInstance;
+        this.apiInstance = leafletMarker.apiInstance;
+        this.slots = this.apiInstance[2] || {};
 
         const pair = this.panel.legend.createCheckboxField( this.panel.$root, '...', leafletMarker.options.dismissed,
-            _ => this.panel.map.toggleMarkerDismissal( markerType, apiInstance, leafletMarker ) );
+            _ => this.panel.map.toggleMarkerDismissal( markerType, leafletMarker ) );
         this.field = pair[1];
         this.checkbox = pair[0];
 
         this.$label = this.field.$label;
         this.$label.empty();
-        $( '<b>' ).text( this.panel.map.getCoordLabel( apiInstance[0], apiInstance[1] ) ).appendTo( this.$label );
-        if ( apiInstance[2] && apiInstance[2].label ) {
-            $( '<span>' ).text( apiInstance[2].label ).appendTo( this.$label );
+        $( '<b>' ).text( this.panel.map.getCoordLabel( this.apiInstance ) ).appendTo( this.$label );
+        if ( this.slots.label ) {
+            $( '<span>' ).text( this.slots.label ).appendTo( this.$label );
         }
 
         // Add an icon
@@ -54,7 +55,7 @@ class DismissableMarkersLegend {
             const group = this.map.config.groups[groupName];
             if ( group.canDismiss ) {
                 for ( const leafletMarker of ( this.map.layerManager.byLayer[groupName] || [] ) ) {
-                    this.pushMarker( leafletMarker.attachedLayers.join( ' ' ), group, leafletMarker.apiInstance, leafletMarker );
+                    this.pushMarker( leafletMarker.attachedLayers.join( ' ' ), group, leafletMarker );
                 }
             }
         }
@@ -67,9 +68,9 @@ class DismissableMarkersLegend {
     _initialisePanel() {}
 
 
-    pushMarker( markerType, group, instance, leafletMarker ) {
+    pushMarker( markerType, group, leafletMarker ) {
         if ( group.canDismiss ) {
-            this.markers.push( new DismissableMarkerEntry( this, markerType, group, instance, leafletMarker ) );
+            this.markers.push( new DismissableMarkerEntry( this, markerType, group, leafletMarker ) );
         }
     }
 

@@ -26,14 +26,12 @@ var updateLocation = function ( map, persistentMarkerId ) {
 };
 
 
-function MarkerPopup( map, markerType, instance, slots, leafletMarker ) {
+function MarkerPopup( map, markerType, leafletMarker ) {
     this.map = map;
     this.markerType = markerType;
-    this.markerLayers = markerType.split( ' ' );
-    this.markerGroup = map.config.groups[this.markerLayers[0]];
-    this.instance = instance;
-    this.slots = slots;
     this.leafletMarker = leafletMarker;
+    this.markerGroup = map.config.groups[this.leafletMarker.attachedLayers[0]];
+    this.slots = this.leafletMarker.apiInstance[2] || {};
     // These two containers are provided by L.Ark.Popup
     this.$buttons = null;
     this.$content = null;
@@ -44,19 +42,19 @@ function MarkerPopup( map, markerType, instance, slots, leafletMarker ) {
 MarkerPopup.URL_PARAMETER = URL_PARAMETER;
 
 
-MarkerPopup.bindTo = function ( map, markerType, instance, slots, leafletMarker ) {
-    leafletMarker.bindPopup( () => new MarkerPopup( map, markerType, instance, slots, leafletMarker ), {}, L.Ark.Popup );
+MarkerPopup.bindTo = function ( map, markerType, leafletMarker ) {
+    leafletMarker.bindPopup( () => new MarkerPopup( map, markerType, leafletMarker ), {}, L.Ark.Popup );
 };
 
 
 MarkerPopup.prototype.getDismissToolText = function () {
-    return mw.msg( 'datamap-popup-' + ( this.map.storage.isDismissed( this.markerType, this.instance )
+    return mw.msg( 'datamap-popup-' + ( this.map.storage.isDismissed( this.markerType, this.leafletMarker.apiInstance )
         ? 'dismissed' : 'mark-as-dismissed' ) );
 };
 
 
 MarkerPopup.prototype.getMarkerUID = function () {
-    return getMarkerUID( this.map, this.markerType, this.instance );
+    return getMarkerUID( this.map, this.markerType, this.leafletMarker.apiInstance );
 };
 
 
@@ -90,22 +88,23 @@ MarkerPopup.prototype.build = function () {
     
     // Collect layer discriminators
     const discrims = [];
-    this.markerLayers.forEach( ( layerId, index ) => {
-        if ( index > 0 && this.map.config.layers[layerId] ) {
-            discrims.push( this.map.config.layers[layerId].discrim );
+    this.leafletMarker.attachedLayers.forEach( ( layerId, index ) => {
+        const layer = this.map.config.layers[layerId];
+        if ( index > 0 && layer && layer.discrim ) {
+            discrims.push( layer.discrim );
         }
     } );
 
     // Coordinates
     // TODO: this is not displayed if coordinates are disabled
-    let coordText = this.map.getCoordLabel( this.instance[0], this.instance[1] );
+    let coordText = this.map.getCoordLabel( this.leafletMarker.apiInstance );
     if ( discrims.length > 0 ) {
         coordText += ` (${ discrims.join( ', ' ) })`;
     }
     if ( this.map.isFeatureBitSet( this.map.FF_SHOW_COORDINATES ) ) {
         $( '<div class="datamap-popup-coordinates">' ).text( coordText ).appendTo( this.$content );
     }
-
+    
     // Description
     if ( this.slots.desc ) {
         if ( !this.slots.desc.startsWith( '<p>' ) ) {
@@ -147,7 +146,7 @@ MarkerPopup.prototype.buildTools = function () {
             $( '<a>' )
                 .text( this.getDismissToolText() )
                 .on( 'click', () => {
-                    this.map.toggleMarkerDismissal( this.markerType, this.instance, this.leafletMarker );
+                    this.map.toggleMarkerDismissal( this.markerType, this.leafletMarker );
                     this.map.leaflet.closePopup();
                 } )
         );

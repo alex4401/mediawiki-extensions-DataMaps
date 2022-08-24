@@ -162,15 +162,19 @@ DataMap.prototype.translateBox = function ( box ) {
 /*
  * Returns a formatted datamap-coordinate-control-text message.
  */
-DataMap.prototype.getCoordLabel = function ( lat, lon ) {
-    return this.coordTrackingMsg.replace( '$1', lat.toFixed( 2 ) ).replace( '$2', lon.toFixed( 2 ) );
+DataMap.prototype.getCoordLabel = function ( latOrInstance, lon ) {
+    if ( Array.isArray( latOrInstance ) ) {
+        lon = latOrInstance[1];
+        latOrInstance = latOrInstance[0];
+    }
+    return this.coordTrackingMsg.replace( '$1', latOrInstance.toFixed( 2 ) ).replace( '$2', lon.toFixed( 2 ) );
 };
 
 
-DataMap.prototype.toggleMarkerDismissal = function ( markerType, coords, leafletMarker ) {
-    const state = this.storage.toggleDismissal( markerType, coords );
+DataMap.prototype.toggleMarkerDismissal = function ( markerType, leafletMarker ) {
+    const state = this.storage.toggleDismissal( markerType, leafletMarker.apiInstance );
     leafletMarker.setDismissed( state );
-    this.fire( 'markerDismissChange', markerType, coords, leafletMarker );
+    this.fire( 'markerDismissChange', markerType, leafletMarker );
     return state;
 };
 
@@ -178,11 +182,11 @@ DataMap.prototype.toggleMarkerDismissal = function ( markerType, coords, leaflet
 /*
  * Called whenever a marker is instantiated
  */
-DataMap.prototype.tryOpenUriPopup = function ( type, group, instance, marker ) {
+DataMap.prototype.tryOpenUriPopup = function ( type, group, marker ) {
     // Open this marker's popup if that's been requested via a `marker` query parameter
+    const uid = marker.apiInstance[2] && marker.apiInstance[2].uid;
     if ( this.markerIdToAutoOpen != null
-        && ( ( instance[2] && instance[2].uid != null ) ? instance[2].uid : this.storage.getMarkerKey( type, instance ) )
-            === this.markerIdToAutoOpen ) {
+        && ( ( uid != null ) ? uid : this.storage.getMarkerKey( type, instance ) ) === this.markerIdToAutoOpen ) {
         marker.openPopup();
     }
 };
@@ -223,7 +227,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
 
         // Create markers for instances
         for ( const instance of placements ) {
-            const position = this.translatePoint( [ instance[0], instance[1] ] );
+            const position = this.translatePoint( instance );
             let leafletMarker;
 
             // Construct the marker
@@ -257,9 +261,9 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
 
             // Bind a popup building closure (this is more efficient than binds)
             const mType = markerType;
-            MarkerPopup.bindTo( this, mType, instance, ( instance[2] || {} ), leafletMarker );
+            MarkerPopup.bindTo( this, mType, leafletMarker );
 
-            this.fire( 'markerReady', markerType, group, instance, leafletMarker );
+            this.fire( 'markerReady', markerType, group, leafletMarker );
         }
     }
 
