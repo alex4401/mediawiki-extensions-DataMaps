@@ -22,7 +22,7 @@ class MarkerSpec extends DataModel {
         return isset( $this->raw->label ) ? $this->raw->label : null;
     }
 
-    public function getDescription(): ?string {
+    public function getDescription()/*: ?array|string */ {
         return isset( $this->raw->description ) ? $this->raw->description : null;
     }
 
@@ -51,7 +51,7 @@ class MarkerSpec extends DataModel {
         $this->requireField( $status, 'lat', DataModel::TYPE_NUMBER );
         $this->requireField( $status, 'lon', DataModel::TYPE_NUMBER );
         $this->expectField( $status, 'label', DataModel::TYPE_STRING );
-        $this->expectField( $status, 'description', DataModel::TYPE_STRING );
+        $this->expectField( $status, 'description', DataModel::TYPE_ARRAY_OR_STRING );
         $this->expectField( $status, 'isWikitext', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
         $this->expectField( $status, 'popupImage', DataModel::TYPE_STRING );
