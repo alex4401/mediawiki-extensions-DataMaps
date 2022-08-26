@@ -22,22 +22,23 @@ class DataMapContentHandler extends JsonContentHandler {
 
 	public function makeEmptyContent() {
 		$datamap = new stdclass();
-		$datamap->title = wfMessage( 'datamap-unnamed-map' );
+		$datamap->title = wfMessage( 'datamap-unnamed-map' )->plain();
 		$datamap->crs = DataMapSpec::DEFAULT_COORDINATE_SPACE;
-		$datamap->image = 'Map background.jpg';
+		$datamap->image = wfMessage( 'datamap-defaultloadout-map-background' )->plain();
 		$datamap->groups = new stdclass();
 		$datamap->markers = [];
 
 		$group = new stdclass();
-		$group->name = wfMessage( 'datamap-defaultloadout-group-name' );
+		$group->name = wfMessage( 'datamap-defaultloadout-group-name' )->plain();
 		$group->fillColor = '#3246a8';
 		$group->size = 12;
-		$group->icon = 'Marker group icon in legend.png';
+		$group->icon = wfMessage( 'datamap-defaultloadout-group-icon' )->plain();
 		$datamap->groups->group = $group;
 
 		$marker = new stdclass();
 		$marker->lat = 50;
 		$marker->lon = 50;
+		$marker->label = wfMessage( 'datamap-defaultloadout-marker-label' )->plain();
 		$datamap->markers['group'] = [ $marker ];
 
 		$class = $this->getContentClass();
