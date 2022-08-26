@@ -14,6 +14,7 @@ use PPFrame;
 use WikiPage;
 use User;
 use Status;
+use stdclass;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapRenderOptions;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
@@ -54,27 +55,31 @@ abstract class DataMapContentBase extends JsonContent {
 		'article|popupImage'
 	];
 
-	public function beautifyJSON() {
-		$out = FormatJson::encode( $this->getData()->getValue(), "\t", FormatJson::ALL_OK );
+	public static function toJSON( stdclass $raw ) {
+		$out = FormatJson::encode( $raw, "\t", FormatJson::ALL_OK );
 
-		foreach (self::JOIN_LINE_FIELDS as $term) {
+		foreach ( self::JOIN_LINE_FIELDS as $term ) {
 			$part = '(?:("(?:' . $term . ')": [^,\n]+,?))';
-			$fieldCount = substr_count($term, '|') + 1;
-			$full = '/' . join('\s+', array_fill(0, $fieldCount, $part)) . '(\s+)/';
-			$subs = join(' ', array_map(fn($n) => '$' . $n, range(1, $fieldCount))) . "$" . ($fieldCount+1);
-			$out = preg_replace($full, $subs, $out);
+			$fieldCount = substr_count( $term, '|' ) + 1;
+			$full = '/' . join( '\s+', array_fill( 0, $fieldCount, $part ) ) . '(\s+)/';
+			$subs = join( ' ', array_map( fn ( $n ) => '$' . $n, range( 1, $fieldCount ) ) ) . "$" . ( $fieldCount + 1 );
+			$out = preg_replace( $full, $subs, $out );
 		}
 
-		$out = preg_replace_callback(self::JOIN_MULTIPLE_NUMBERS_RE, function ( array $matches ) {
+		$out = preg_replace_callback( self::JOIN_MULTIPLE_NUMBERS_RE, function ( array $matches ) {
 			$txt = $matches[0];
 			$txt = preg_replace( '/\s*\n\s+/', '', $txt );
 			$txt = str_replace( ',', ', ', $txt );
 			return $matches[1] . $txt;
-		}, $out);
-		$out = preg_replace(self::COLLAPSE_SINGLE_LINE_DICT_RE, '{ $1 }', $out);
-		$out = preg_replace(self::COLLAPSE_SINGLE_LINE_ARRAY_RE, '[ $1 ]', $out);
+		}, $out );
+		$out = preg_replace( self::COLLAPSE_SINGLE_LINE_DICT_RE, '{ $1 }', $out );
+		$out = preg_replace( self::COLLAPSE_SINGLE_LINE_ARRAY_RE, '[ $1 ]', $out );
 
 		return $out;
+	}
+
+	public function beautifyJSON() {
+		return self::toJSON( $this->getData()->getValue() );
 	}
 	
 	public function validateBeforeSave( Status $status ) {
