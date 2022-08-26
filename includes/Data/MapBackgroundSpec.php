@@ -24,6 +24,10 @@ class MapBackgroundSpec extends DataModel {
         return isset( $this->raw->name ) ? $this->raw->name : null;
     }
 
+    public function getBackgroundLayerName(): ?string {
+        return isset( $this->raw->associatedLayer ) ? $this->raw->associatedLayer : null;
+    }
+
     public function hasOverlays(): bool {
         return isset( $this->raw->overlays );
     }
@@ -43,6 +47,7 @@ class MapBackgroundSpec extends DataModel {
         $this->requireField( $status, 'image', DataModel::TYPE_STRING );
         $this->expectField( $status, 'at', DataModel::TYPE_BOUNDS );
         $this->expectField( $status, 'overlays', DataModel::TYPE_ARRAY );
+        $this->expectField( $status, 'associatedLayer', DataModel::TYPE_STRING );
         $this->disallowOtherFields( $status );
 
         if ( $this->validationAreRequiredFieldsPresent ) {

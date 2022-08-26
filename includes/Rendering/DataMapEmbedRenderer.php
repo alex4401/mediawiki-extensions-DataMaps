@@ -153,6 +153,9 @@ class DataMapEmbedRenderer {
             if ( $background->getPlacementLocation() != null ) {
                 $out['at'] = $background->getPlacementLocation();
             }
+            if ( $background->getBackgroundLayerName() !== null ) {
+                $out['layer'] = $background->getBackgroundLayerName();
+            }
             if ( $background->hasOverlays() ) {
                 $out['overlays'] = [];
                 $background->iterateOverlays( function ( MapBackgroundOverlaySpec $overlay ) use ( &$out ) {

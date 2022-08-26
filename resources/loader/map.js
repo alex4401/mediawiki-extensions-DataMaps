@@ -323,7 +323,7 @@ DataMap.prototype.setCurrentBackground = function ( index ) {
     } );
 
     // Hide any unmatching "bg" sub-layer
-    this.layerManager.setOptionalPropertyRequirement( 'bg', this.backgroundIndex );
+    this.layerManager.setOptionalPropertyRequirement( 'bg', this.background.layer );
 };
 
 
@@ -421,8 +421,11 @@ const buildLeafletMap = function ( $holder ) {
     this.leaflet = L.map( $holder.get( 0 ), leafletConfig );
 
     // Prepare all backgrounds
-    this.config.backgrounds.forEach( background => {
+    this.config.backgrounds.forEach( ( background, index ) => {
         background.layers = [];
+
+        // Set the associated layer name
+        background.layer = background.layer || index;
 
         // Image overlay:
         // Latitude needs to be flipped as directions differ between Leaflet and ARK
