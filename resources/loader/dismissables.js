@@ -1,4 +1,6 @@
-class DismissableMarkerEntry {
+const Util = require( './util.js' );
+
+class CollectibleMarkerEntry {
     constructor( panel, markerType, group, leafletMarker ) {
         this.panel = panel;
         this.apiInstance = leafletMarker.apiInstance;
@@ -32,30 +34,35 @@ class DismissableMarkerEntry {
 }
 
 
-class DismissableMarkersLegend {
+class CollectibleMarkersLegend {
     constructor( legend ) {
         this.legend = legend;
         this.map = this.legend.map;
-        // Root DOM element
-        this.$root = this.legend.addTab( mw.msg( 'datamap-legend-tab-checklist' ) ).$element;
-        //
-        this.markers = [];
 
-        // Register event handlers
-        this.map.on( 'markerDismissChange', this.onDismissalChange, this );
         this.map.on( 'markerDismissChange', this.updateGroupBadges, this );
-        this.map.on( 'markerReady', this.pushMarker, this );
         this.map.on( 'streamingDone', this.updateGroupBadges, this );
 
-        // Prepare the panel
-        this._initialisePanel();
+        if ( Util.isBleedingEdge ) {
+            // Root DOM element
+            this.$root = this.legend.addTab( mw.msg( 'datamap-legend-tab-checklist' ) ).$element;
+            //
+            this.markers = [];
+            this.groups = [];
 
-        // Import existing markers if any have been loaded
-        for ( const groupName in this.map.config.groups ) {
-            const group = this.map.config.groups[groupName];
-            if ( group.canDismiss ) {
-                for ( const leafletMarker of ( this.map.layerManager.byLayer[groupName] || [] ) ) {
-                    this.pushMarker( leafletMarker.attachedLayers.join( ' ' ), group, leafletMarker );
+            // Register event handlers
+            this.map.on( 'markerDismissChange', this.onDismissalChange, this );
+            this.map.on( 'markerReady', this.pushMarker, this );
+
+            // Prepare the panel
+            this._initialisePanel();
+
+            // Import existing markers if any have been loaded
+            for ( const groupName in this.map.config.groups ) {
+                const group = this.map.config.groups[groupName];
+                if ( group.canDismiss ) {
+                    for ( const leafletMarker of ( this.map.layerManager.byLayer[groupName] || [] ) ) {
+                        this.pushMarker( leafletMarker.attachedLayers.join( ' ' ), group, leafletMarker );
+                    }
                 }
             }
         }
@@ -65,17 +72,22 @@ class DismissableMarkersLegend {
     }
 
 
-    _initialisePanel() {}
+    _initialisePanel() {
+        for ( const groupName in this.map.config.groups ) {
+            const group = this.map.config.groups[groupName];
 
-
-    pushMarker( markerType, group, leafletMarker ) {
-        if ( group.canDismiss ) {
-            this.markers.push( new DismissableMarkerEntry( this, markerType, group, leafletMarker ) );
         }
     }
 
 
-    onDismissalChange() {
+    pushMarker( markerType, group, leafletMarker ) {
+        if ( group.canDismiss ) {
+            this.markers.push( new CollectibleMarkerEntry( this, markerType, group, leafletMarker ) );
+        }
+    }
+
+
+    onDismissalChange( markerType, leafletMarker ) {
 
     }
 
@@ -93,4 +105,4 @@ class DismissableMarkersLegend {
 };
 
 
-module.exports = DismissableMarkersLegend;
+module.exports = CollectibleMarkersLegend;
