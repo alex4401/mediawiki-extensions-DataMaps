@@ -16,7 +16,7 @@ class DataModelMixinTransformer {
                 $target->$name = $value;
             } else {
                 // Merge
-                $target->$name = self::mergeUnknown( $target->$name, $value , $name == 'markers' );
+                $target->$name = self::mergeUnknown( $target->$name, $value , $name != 'markers' );
             }
         }
         return $target;
