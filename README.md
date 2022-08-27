@@ -33,6 +33,7 @@ Content of the page should be a valid JSON with following structure:
 * * `name` (string, required if more than one background is specified): name of this background to display in the selection control.
 * * `image` (file name, required): name of the file to display for this background.
 * * `at` (box, optional): location to place the background at.
+* * `associatedLayer` (string, optional): if specified, the background will toggle on the `bg:VALUE` layer instead of `bg:INDEX`.
 * * `overlays` (array of objects, optional): list of *background overlay* specifications:
 * * * `name` (string, optional): name shown in a tooltip when the mouse cursor is over the overlay.
 * * * Images:
@@ -45,6 +46,7 @@ Content of the page should be a valid JSON with following structure:
 * * * * `path` (array of locations, required): list of points the path should go through sequentially.
 * * * * `color` (colour, supports transparency, optional): colour to display the line with.
 * * * * `thickness` (number, optional): thickness of the line.
+* `hideLegend` (boolean, optional): if `true` does not show or load the legend at all. Defaults to `false`.
 * `showCoordinates` (boolean, optional): if `true` displays coordinates on mouse move and inside popups. Controlled by `$wgDataMapsDefaultFeatures` identified by `ShowCoordinates`.
 * `showLegendAbove` (boolean, optional): if `true` always displays the legend above the map. Controlled by `$wgDataMapsDefaultFeatures` identified by `ShowLegendAlwaysAbove`.
 * `requireCustomMarkerIDs` (boolean, optional): if `true` requires the `id` property to be always present on markers. Controlled by `$wgDataMapsDefaultFeatures` identified by `RequireCustomMarkerIDs`.
@@ -61,20 +63,22 @@ Content of the page should be a valid JSON with following structure:
 * * * `icon` (file name, required): name of the file (with no namespace) to show markers with. This makes all markers in group SVG-based. Current support is limited.
 * * * `size` (dimensions, optional): size of each icon marker. Defaults to `[ 32, 32 ]`.
 * * `article` (page name, optional): name of an article every marker's popup should link to. Can be overridden on a marker.
-* * `canDismiss` (boolean, optional): if true, markers in this group can be dismissed by the user.
+* * `canDismiss` (boolean, optional): if true, markers in this group can be marked as collected by the user.
 * `layers` (string to object map, optional): map from name to a *marker layer* specification:
 * * Marker layers can be used without an explicit declaration.
 * * `name` (string, required): currently unused.
 * * `subtleText` (string, optional): text that will be displayed next to coordinates in a marker's popup. Coordinates must be enabled server-side for this.
+* * `overrideIcon` (file name, optional): if specified, this layer will override the icons of each marker assigned to it. If the marker has multiple of such layers, only the first one is used.
 * `markers` (string to array of objects map, required): map from group name (and any secondary specifiers, i.e. "layers") to an array of *markers*:
-* * `id` (string or number, optional): a persistent unique identifier to use for URL linking instead of re-using generated storage key.
+* * `id` (string or number, optional): a persistent unique identifier to use for collectibles and URL linking instead of a generated storage key.
 * * `lat` (decimal, required): latitude.
 * * `lon` (decimal, required): longitude.
 * * `label` (string, optional): text to append to marker's popup title.
-* * `description` (string, optional): text to add to the marker's popup.
+* * `description` (string or string array, optional): text to add to the marker's popup.
 * * `isWikitext` (boolean, optional): if true, `label` and `description` will be treated as wikitext. This is expensive, do not use for every marker. If unset, the backend will guess based on the presence of some patterns.
 * * `popupImage` (file name, optional): if provided, marker's popup will display this image under the description.
 * * `article` (page name, optional): article the marker's popup should link to. Follows either a format of `article title` or `article title|displayed label`.
+* * `searchKeywords` (string or string array, optional): specifies what keywords this marker will be suggested for. Search is however currently not implemented yet.
 * `custom` (map, optional): any arbitrary to be added to the client-side map config, for use with e.g. on-site gadgets.
 
 #### File name
@@ -115,7 +119,7 @@ Box is a array of two locations, where first describes the start point of the bo
 * * `$wgDataMapsDefaultFeatures['RequireCustomMarkerIDs']`: whether the `id` property will be required on markers. Defaults to `false`.
 * `$wgDataMapsReportTimingInfo`: if set to `true`, marker processing time will be reported in API responses. Defaults to `false`.
 * `$wgDataMapsAllowExperimentalFeatures`: if set to `true`, enables features listed below - all of which are in development and not ready for production. Defaults to `false`.
-* * None
+* * Collectible checklists
 
 ## General architecture
 The `DataMapContent` class handles data validation (on write only), and customised source beautification.
