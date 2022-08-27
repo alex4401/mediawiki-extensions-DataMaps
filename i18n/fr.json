@@ -7,8 +7,6 @@
 
     "datamap-desc": "Permet l'intégration de cartes interactives dans les pages du wiki.",
 
-    "embedDataMap": "DataMap",
-
     "content-model-datamap": "Carte de données interactive",
     "datamap-standard-title-prefix": "Cartes/",
 

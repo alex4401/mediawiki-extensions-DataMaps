@@ -1,6 +1,6 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.9.6",
+	"version": "0.10.0",
 
 	"author": [
 		"alex4401"
@@ -70,6 +70,9 @@
 		},
 
 		"ext.ark.datamaps.styles": {
+			"dependencies": [
+				"ext.ark.datamaps.icons"
+			],
 			"styles": [
 				"styles/main.less",
 				"styles/legend.less",
@@ -79,23 +82,33 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.ark.datamaps.loader": {
+		"ext.ark.datamaps.core": {
 			"es6": true,
 			"dependencies": [
 				"mediawiki.api"
 			],
 			"packageFiles": [
-				"loader/main.js",
+				"loader/index.js",
+				"loader/events.js",
 				"loader/storage.js",
 				"loader/layerManager.js",
 				"loader/map.js",
 				"loader/legend.js",
 				"loader/markerLegend.js",
-				"loader/popup.js"
+				"loader/popup.js",
+				"loader/dismissables.js",
+				{
+					"name": "loader/settings.json",
+					"config": [
+						"DataMapsAllowExperimentalFeatures"
+					]
+				},
+				"loader/util.js"
 			],
 			"messages": [
 				"datamap-error-dataload",
 				"datamap-legend-tab-locations",
+				"datamap-legend-tab-checklist",
 				"datamap-toggle-show-all",
 				"datamap-toggle-hide-all",
 				"datamap-toggle-caves",
@@ -114,13 +127,25 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
+		"ext.ark.datamaps.bootstrap": {
+			"es6": true,
+			"dependencies": [
+				"ext.ark.datamaps.core"
+			],
+			"packageFiles": [
+				"bootstrap/main.js"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
+
 		"ext.ark.datamaps.inlineloader": {
 			"es6": true,
 			"dependencies": [
-				"ext.ark.datamaps.loader"
+				"ext.ark.datamaps.core",
+				"ext.ark.datamaps.bootstrap"
 			],
 			"packageFiles": [
-				"inlineLoader/adapter.js"
+				"inlineLoader/main.js"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
@@ -184,7 +209,8 @@
 		"DataMapsDefaultFeatures": {
 			"value": {
 				"ShowCoordinates": true,
-				"ShowLegendAlwaysAbove": false
+				"ShowLegendAlwaysAbove": false,
+				"RequireCustomMarkerIDs": false
 			}
 		},
 		"DataMapsAllowExperimentalFeatures": {

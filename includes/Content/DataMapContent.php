@@ -105,7 +105,9 @@ class DataMapContent extends DataMapContentBase {
 	
 	public function validateBeforeSave( Status $status ) {
 		parent::validateBeforeSave( $status );
-		$this->asModel()->validate( $status );
+		if ( $this->isValid() ) {
+			$this->asModel()->validate( $status );
+		}
 	}
 
 	public function getEmbedRenderer( Title $title, Parser $parser, bool $useInlineData = false ): DataMapEmbedRenderer {

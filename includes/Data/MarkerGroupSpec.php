@@ -115,7 +115,7 @@ class MarkerGroupSpec extends DataModel {
                 break;
             case self::DM_ICON:
                 $this->requireField( $status, 'icon', DataModel::TYPE_STRING );
-                $this->expectField( $status, 'size', DataModel::TYPE_VECTOR2 );
+                $this->expectField( $status, 'size', DataModel::TYPE_DIMENSIONS );
                 break;
             case self::DM_UNKNOWN:
                 $status->fatal( 'datamap-error-validatespec-group-no-display', wfEscapeWikiText( $this->id ) );
@@ -123,9 +123,7 @@ class MarkerGroupSpec extends DataModel {
         }
 
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
-        if ( $this->getDisplayMode() == self::DM_ICON ) {
-            $this->expectField( $status, 'canDismiss', DataModel::TYPE_BOOL );
-        }
+        $this->expectField( $status, 'canDismiss', DataModel::TYPE_BOOL );
 
         $this->disallowOtherFields( $status );
 

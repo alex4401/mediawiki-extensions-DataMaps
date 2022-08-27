@@ -13,9 +13,11 @@ use InvalidArgumentException;
 use PPFrame;
 use FormatJson;
 
+use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerLayerSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundOverlaySpec;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
@@ -60,8 +62,11 @@ class DataMapEmbedRenderer {
         // Required modules
         $parserOutput->addModules( [
             'ext.ark.datamaps.styles',
-            // ext.ark.datamaps.leaflet.core is loaded on demand by the loader in a separate request to not slow down site module
-            'ext.ark.datamaps.loader'
+            // ext.ark.datamaps.leaflet.core is loaded on demand (when a DataMap is initialised) in a separate request
+            // to not delay the site module
+            'ext.ark.datamaps.core',
+            // Initialiser module to boot the maps
+            'ext.ark.datamaps.bootstrap'
         ] );
 
         if ( $this->useInlineData ) {
@@ -88,13 +93,35 @@ class DataMapEmbedRenderer {
         }
         $parserOutput->addJsConfigVars( 'dataMaps', $configsVar );
 
+        // Register page's dependency on the mix-ins
+        if ( $this->data->getMixins() !== null ) {
+            foreach ( $this->data->getMixins() as &$mixinName ) {
+                $mixin = Title::makeTitleSafe( DataMapsConfig::getNamespace(), $mixinName );
+                $parserOutput->addTemplate( $mixin, $mixin->getArticleId(),
+                    $this->parser->fetchCurrentRevisionRecordOfTitle( $mixin )->getId() );
+            }
+        }
+
         // Register image dependencies
         foreach ( $this->data->getBackgrounds() as &$background ) {
             $parserOutput->addImage( $background->getImageName() );
+            // TODO: register image overlays
         }
         $this->data->iterateGroups( function( MarkerGroupSpec $spec ) use ( &$parserOutput ) {
             $parserOutput->addImage( $spec->getIcon() );
         } );
+
+        // Register image dependencies on marker popups
+        $marker = new MarkerSpec( new \stdclass() );
+        $this->data->iterateRawMarkerMap( function ( string $layers, array $rawCollection ) use ( &$marker, &$parserOutput ) {
+            foreach ( $rawCollection as &$rawMarker ) {
+                $marker->reassignTo( $rawMarker );
+                if ( $marker->getPopupImage() !== null ) {
+                    $parserOutput->addImage( $marker->getPopupImage() );
+                }
+            }
+        } );
+
     }
 
     public function getJsConfigVariables(): array {
@@ -125,6 +152,9 @@ class DataMapEmbedRenderer {
             }
             if ( $background->getPlacementLocation() != null ) {
                 $out['at'] = $background->getPlacementLocation();
+            }
+            if ( $background->getBackgroundLayerName() !== null ) {
+                $out['layer'] = $background->getBackgroundLayerName();
             }
             if ( $background->hasOverlays() ) {
                 $out['overlays'] = [];
@@ -159,9 +189,8 @@ class DataMapEmbedRenderer {
 
     public function getPublicFeatureBitMask(): int {
         $out = 0;
-        if ( $this->data->wantsCoordinatesShown() ) {
-            $out |= 1<<0;
-        }
+        $out |= $this->data->wantsCoordinatesShown() ? 1<<0 : 0;
+        $out |= $this->data->wantsLegendHidden() ? 1<<1 : 0;
         return $out;
     }
 
@@ -247,10 +276,23 @@ class DataMapEmbedRenderer {
 
     public function getMarkerLayerConfig( MarkerLayerSpec $spec ): array {
         $out = [];
-        $out['name'] = $spec->getName();
+
+        if ( $spec->getName() !== null ) {
+            $out['name'] = $spec->getName();
+        }
 
         if ( $spec->getPopupDiscriminator() !== null ) {
             $out['discrim'] = $spec->getPopupDiscriminator();
+        }
+
+        if ( $spec->getIconOverride() !== null ) {
+            // Upsize by 50% to mitigate quality loss at max zoom
+            $size = floor($out['size'][0] * 1.5);
+            // Ensure it's a multiple of 2
+            if ( $size % 2 !== 0 ) {
+                $size++;
+            }
+            $out['markerIcon'] = DataMapFileUtils::getFileUrl( $spec->getIconOverride(), $size );
         }
 
         return $out;
@@ -293,6 +335,11 @@ class DataMapEmbedRenderer {
         $containerMain->appendContent( $containerContent );
         $containerMain->appendContent( $containerBottom );
 
+        // Expose FF_HIDE_LEGEND flag
+        if ( $this->data->wantsLegendHidden() ) {
+            $containerMain->addClasses( [ 'datamap-legend-is-hidden' ] );
+        }
+
         // Expose FF_SHOW_LEGEND_ABOVE flag
         if ( $this->data->wantsLegendShownAbove() ) {
             $containerMain->addClasses( [ 'datamap-legend-is-above' ] );
@@ -311,8 +358,10 @@ class DataMapEmbedRenderer {
             ] ) );
         }
 
-        // Left-side legend
-        $containerContent->appendContent( $this->getLegendContainerWidget() );
+        // Legend
+        if ( !$this->data->wantsLegendHidden() ) {
+            $containerContent->appendContent( $this->getLegendContainerWidget() );
+        }
 
         // Leaflet area
 		$containerMap = new \OOUI\PanelLayout( [

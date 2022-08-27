@@ -22,7 +22,7 @@ class MarkerSpec extends DataModel {
         return isset( $this->raw->label ) ? $this->raw->label : null;
     }
 
-    public function getDescription(): ?string {
+    public function getDescription()/*: ?array|string */ {
         return isset( $this->raw->description ) ? $this->raw->description : null;
     }
 
@@ -42,15 +42,24 @@ class MarkerSpec extends DataModel {
         return isset( $this->raw->id ) ? $this->raw->id : null;
     }
 
-    public function validate( Status $status ) {
-        $this->expectField( $status, 'id', DataModel::TYPE_STRING_OR_NUMBER );
+    public function getSearchKeywords()/*: ?array|string */ {
+        return isset( $this->raw->searchKeywords ) ? $this->raw->searchKeywords : null;
+    }
+
+    public function validate( Status $status, bool $requireOwnID = false ) {
+        if ( $requireOwnID ) {
+            $this->requireField( $status, 'id', DataModel::TYPE_STRING_OR_NUMBER );
+        } else {
+            $this->expectField( $status, 'id', DataModel::TYPE_STRING_OR_NUMBER );
+        }
         $this->requireField( $status, 'lat', DataModel::TYPE_NUMBER );
         $this->requireField( $status, 'lon', DataModel::TYPE_NUMBER );
         $this->expectField( $status, 'label', DataModel::TYPE_STRING );
-        $this->expectField( $status, 'description', DataModel::TYPE_STRING );
+        $this->expectField( $status, 'description', DataModel::TYPE_ARRAY_OR_STRING );
         $this->expectField( $status, 'isWikitext', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
         $this->expectField( $status, 'popupImage', DataModel::TYPE_STRING );
+        $this->expectField( $status, 'searchKeywords', DataModel::TYPE_ARRAY_OR_STRING );
         $this->disallowOtherFields( $status );
 
         if ( $this->validationAreRequiredFieldsPresent ) {

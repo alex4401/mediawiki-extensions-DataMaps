@@ -8,7 +8,7 @@ class DataMapFileUtils {
     const SCALING_WIDTH_THRESHOLD = 64;
 
     public static function getFile( string $title ) {
-        if ( substr( $title, 0, 5 ) == 'File:' ) {
+        if ( str_starts_with( strtolower( $title ), 'file:' ) ) {
             $title = substr( $title, 5 );
         } 
         return MediaWikiServices::getInstance()->getRepoGroup()->findFile( trim( $title ) );
@@ -22,7 +22,8 @@ class DataMapFileUtils {
             throw new InvalidArgumentException( "File [[File:$title]] does not exist." );
         }
 
-        if ( $width > 0 && $file->getWidth() > self::SCALING_WIDTH_THRESHOLD ) {
+        if ( $width > 0 && $file->getWidth() > self::SCALING_WIDTH_THRESHOLD
+            && !str_ends_with( strtolower( $title ), '.svg' ) ) {
             $file = $file->transform( [
                 'width' => $width
             ] );

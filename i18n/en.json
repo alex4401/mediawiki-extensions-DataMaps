@@ -7,8 +7,6 @@
 
     "datamap-desc": "Allows embedding of interactive maps into wiki pages.",
 
-    "embedDataMap": "DataMap",
-
 	"content-model-datamap": "Interactive Data Map",
     "datamap-standard-title-prefix": "Maps/",
 
@@ -45,6 +43,11 @@
     "tooltip-datamap-preview-unavailable": "Change previews for interactive data maps will be supported in a future version of the extension.",
 
     "datamap-unnamed-map": "Unnamed map",
+    "datamap-defaultloadout-map-background": "Map background.jpg",
+    "datamap-defaultloadout-group-name": "A marker group",
+    "datamap-defaultloadout-marker-label": "A marker",
+    "datamap-defaultloadout-group-icon": "Marker group icon in legend.png",
+
     "datamap-legend-label": "Legend",
     "datamap-javascript-required": "Interactive data maps require JavaScript to be enabled.",
     "datamap-loading-data": "Please wait, loading data",
@@ -52,6 +55,7 @@
     "datamap-lazy-click-to-load": "Click to load the data map",
 
     "datamap-legend-tab-locations": "Markers",
+    "datamap-legend-tab-checklist": "Checklists",
     "datamap-toggle-show-all": "Show all",
     "datamap-toggle-hide-all": "Hide all",
     "datamap-layer-control": "Toggle",
