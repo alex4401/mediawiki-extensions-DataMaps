@@ -14,3 +14,6 @@ module.exports.getMarkerId = function ( leafletMarker ) {
     return leafletMarker.apiInstance[2] && leafletMarker.apiInstance[2].uid
         || module.exports.getGeneratedMarkerId( leafletMarker );
 };
+
+
+module.exports.isBleedingEdge = require( './settings.json' ).DataMapsAllowExperimentalFeatures;
