@@ -12,7 +12,7 @@ automation possibilities with bots (extracted data imports), and less data trans
 
 Currently no feature parity with the existing solution. [Roadmap (T75 on wiki's Trello board)](https://trello.com/c/CiLfCspG/75-datamaps-extension-for-fjordurs-release).
 
-[Test installation link (may be broken)](https://ark-wcmove-sandbox.mglolenstine.xyz/wiki/Map_transclusion_01).
+[Test installation link (may be broken)](https://1.37.wiki-dev.mglolenstine.xyz/wiki/Map_transclusion_01).
 
 ## Installation
 1. Clone the repository to `extensions/DataMaps`.
