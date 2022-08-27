@@ -173,7 +173,7 @@ DataMap.prototype.getCoordLabel = function ( latOrInstance, lon ) {
 
 
 DataMap.prototype.toggleMarkerDismissal = function ( markerType, leafletMarker ) {
-    const state = this.storage.toggleDismissal( markerType, leafletMarker.apiInstance );
+    const state = this.storage.toggleDismissal( Util.getMarkerId( leafletMarker ) );
     leafletMarker.setDismissed( state );
     this.fire( 'markerDismissChange', markerType, leafletMarker );
     return state;
@@ -249,7 +249,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
 
             // Update dismissal status if storage says it's been dismissed
             if ( group.canDismiss ) {
-                leafletMarker.setDismissed( this.storage.isDismissed( markerType, instance ) );
+                leafletMarker.setDismissed( this.storage.isDismissed( Util.getMarkerId( leafletMarker ) ) );
             }
 
             // Persist original coordinates and state

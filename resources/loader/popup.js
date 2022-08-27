@@ -29,6 +29,7 @@ function MarkerPopup( map, markerType, leafletMarker ) {
     this.leafletMarker = leafletMarker;
     this.markerGroup = map.config.groups[this.leafletMarker.attachedLayers[0]];
     this.slots = this.leafletMarker.apiInstance[2] || {};
+    this.uid = Util.getMarkerId( this.leafletMarker );
     // These two containers are provided by L.Ark.Popup
     this.$buttons = null;
     this.$content = null;
@@ -45,8 +46,7 @@ MarkerPopup.bindTo = function ( map, markerType, leafletMarker ) {
 
 
 MarkerPopup.prototype.getDismissToolText = function () {
-    return mw.msg( 'datamap-popup-' + ( this.map.storage.isDismissed( this.markerType, this.leafletMarker.apiInstance )
-        ? 'dismissed' : 'mark-as-dismissed' ) );
+    return mw.msg( 'datamap-popup-' + ( this.map.storage.isDismissed( this.uid ) ? 'dismissed' : 'mark-as-dismissed' ) );
 };
 
 
@@ -55,7 +55,7 @@ MarkerPopup.prototype.buildButtons = function () {
         .attr( {
             'title': mw.msg( 'datamap-popup-marker-link-get' ),
             'aria-label': mw.msg( 'datamap-popup-marker-link-get' ),
-            'href': getMarkerURL( this.map, Util.getMarkerId( this.leafletMarker ), true )
+            'href': getMarkerURL( this.map, this.uid, true )
         } )
         .appendTo( this.$buttons )
         .on( 'click', event => {
@@ -149,7 +149,7 @@ MarkerPopup.prototype.buildTools = function () {
 
 
 MarkerPopup.prototype.onAdd = function () {
-    updateLocation( this.map, Util.getMarkerId( this.leafletMarker ) );
+    updateLocation( this.map, this.uid );
 };
 
 

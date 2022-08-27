@@ -72,30 +72,21 @@ MapStorage.prototype.migrate = function () {
 };
 
 
-/*
- * Generates an identifier of a marker to use with local storage.
- */
-MapStorage.prototype.getMarkerKey = function ( type, instance ) {
-    return `M${type}@${instance[0].toFixed(3)}:${instance[1].toFixed(3)}`;
-};
-
-
-MapStorage.prototype.isDismissed = function ( type, instance ) {
+MapStorage.prototype.isDismissed = function ( uid ) {
     if ( this.dismissed.length === 0 ) {
         return false;
     }
-    return this.dismissed.indexOf( this.getMarkerKey( type, instance ) ) >= 0;
+    return this.dismissed.indexOf( uid ) >= 0;
 };
 
 
-MapStorage.prototype.toggleDismissal = function ( type, instance ) {
-    const key = this.getMarkerKey( type, instance );
+MapStorage.prototype.toggleDismissal = function ( uid ) {
     let out;
-    if ( this.isDismissed( type, instance ) ) {
-        this.dismissed = this.dismissed.filter( x => x != key );
+    if ( this.isDismissed( uid ) ) {
+        this.dismissed = this.dismissed.filter( x => x != uid );
         out = false;
     } else {
-        this.dismissed.push( key );
+        this.dismissed.push( uid );
         out = true;
     }
     this.setObject( 'dismissed', this.dismissed );
