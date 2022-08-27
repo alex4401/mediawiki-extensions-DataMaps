@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\Ark\DataMaps;
 class DataMapsConfig {
     const FF_SHOW_COORDINATES = 'ShowCoordinates';
     const FF_SHOW_LEGEND_ABOVE = 'ShowLegendAlwaysAbove';
+    const FF_REQUIRE_CUSTOM_MARKER_IDS = 'RequireCustomMarkerIDs';
 
     public static function getParserExpansionLimit(): int {
         global $wgDataMapsMarkerParserExpansionLimit;

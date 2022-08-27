@@ -5,6 +5,7 @@ function MarkerLayerManager( map ) {
     this.includeMaskHi = new Set();
     this.includeMaskLo = new Set();
     this.excludeMask = new Set();
+    this.includeMaskPr = {};
     this.clearCache();
 }
 
@@ -22,8 +23,8 @@ MarkerLayerManager.prototype.register = function ( layerName ) {
 
 
 MarkerLayerManager.prototype.addMember = function ( type, leafletMarker ) {
-    leafletMarker.arkAttachedLayers = type.split(' ');
-    for ( const layer of leafletMarker.arkAttachedLayers )
+    leafletMarker.attachedLayers = type.split(' ');
+    for ( const layer of leafletMarker.attachedLayers )
         this.byLayer[layer].push( leafletMarker );
     this.markers.push( leafletMarker );
     this.updateMember( leafletMarker );
@@ -31,7 +32,7 @@ MarkerLayerManager.prototype.addMember = function ( type, leafletMarker ) {
 
 
 MarkerLayerManager.prototype.addMarkerToLayer = function ( leafletMarker, layer ) {
-    leafletMarker.arkAttachedLayers.push( layer );
+    leafletMarker.attachedLayers.push( layer );
     this.byLayer[layer].push( leafletMarker );
     this.updateMember( leafletMarker );
 };
@@ -39,10 +40,10 @@ MarkerLayerManager.prototype.addMarkerToLayer = function ( leafletMarker, layer 
 
 MarkerLayerManager.prototype.removeMember = function ( leafletMarker ) {
     this.map.leaflet.removeLayer( leafletMarker );
-    for ( const layer of leafletMarker.arkAttachedLayers )
+    for ( const layer of leafletMarker.attachedLayers )
         delete this.byLayer[layer][this.byLayer[layer].indexOf( leafletMarker )];
     delete this.markers[this.markers.indexOf( leafletMarker )];
-    leafletMarker.arkAttachedLayers = null;
+    leafletMarker.attachedLayers = null;
 };
 
 
@@ -50,7 +51,9 @@ MarkerLayerManager.prototype.shouldBeVisible = function ( layers ) {
     // If requirement mask is not empty, and there is a layer inside the list does not have, return invisible
     if ( this.includeMaskHi.size > 0 && !( () => {
         let result = true;
-        this.includeMaskHi.forEach( name => result = result && layers.indexOf( name ) > 0 );
+        for ( const name of this.includeMaskHi ) {
+            result = result && layers.indexOf( name ) > 0;
+        }
         return result;
     } )() ) {
         return false;
@@ -66,6 +69,17 @@ MarkerLayerManager.prototype.shouldBeVisible = function ( layers ) {
         return false;
     }
 
+    // Compare against the property mask: if (and only if) there's a sub-layer with a differing value, return invisible
+    for ( const property in this.includeMaskPr ) {
+        // Check if this property is specified in the layers list
+        if ( layers.some( name => name.indexOf( property + ':' ) >= 0 ) ) {
+            // Check if the value is matched
+            if ( layers.indexOf( `${property}:${this.includeMaskPr[property]}` ) < 0 ) {
+                return false;
+            }
+        }
+    }
+
     return true;
 };
 
@@ -76,7 +90,7 @@ MarkerLayerManager.prototype.updateMember = function ( leafletMarker ) {
         return;
     }
     // Get marker layers
-    const layers = leafletMarker.arkAttachedLayers;
+    const layers = leafletMarker.attachedLayers;
     // Request new visibility state from cache, or compute it if missed
     let shouldBeVisible = this.computeCache[layers];
     if ( shouldBeVisible == null ) {
@@ -114,6 +128,20 @@ MarkerLayerManager.prototype.setRequirement = function ( layerName, state ) {
         this.includeMaskHi.add( layerName );
     else
         this.includeMaskHi.delete( layerName );
+    this.clearCache();
+    this.updateMembers();
+};
+
+
+/*
+ * Sets a layer as *absolutely* required for a marker to be displayed. This updates ALL markers.
+ */
+MarkerLayerManager.prototype.setOptionalPropertyRequirement = function ( propertyName, value ) {
+    if ( value == null && this.includeMaskPr[propertyName] ) {
+        delete this.includeMaskPr[propertyName];
+    } else if ( value != null ) {
+        this.includeMaskPr[propertyName] = value;
+    }
     this.clearCache();
     this.updateMembers();
 };

@@ -29,20 +29,10 @@ module.exports = L.Marker.extend( {
 
 	setDismissed: function ( state ) {
 		this.options.dismissed = state;
+		this.opacityMult = state ? DISMISSED_MARKER_OPACITY : 1;
 		if ( this._map ) {
 			this._updateOpacity();
 		}
 		return this;
-	},
-
-	_updateOpacity: function () {
-		var opacity = this.options.opacity;
-        if ( this.options.dismissed ) {
-            opacity *= DISMISSED_MARKER_OPACITY;
-        }
-
-		if ( this._icon ) {
-			L.DomUtil.setOpacity( this._icon, opacity );
-		}
 	}
 } );

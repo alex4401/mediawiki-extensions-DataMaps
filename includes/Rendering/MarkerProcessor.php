@@ -96,7 +96,7 @@ class MarkerProcessor {
 
         // Popup description
         if ( $marker->getDescription() != null ) {
-            $slots['desc'] = $this->parseText( $marker, $marker->getDescription() );
+            $slots['desc'] = $this->parseMultilineText( $marker, $marker->getDescription() );
         }
 
         // Popup image thumbnail link
@@ -107,6 +107,15 @@ class MarkerProcessor {
         // Related article title
         if ( $marker->getRelatedArticle() != null ) {
             $slots['article'] = $marker->getRelatedArticle();
+        }
+
+        // Search keywords
+        if ( $marker->getSearchKeywords() != null ) {
+            $keywords = $marker->getSearchKeywords();
+            if ( is_array( $keywords ) ) {
+                $keywords = implode( ' ', $keywords );
+            }
+            $slots['search'] = $keywords;
         }
 
         // Insert slots if any data has been added
@@ -159,5 +168,12 @@ class MarkerProcessor {
             return $this->parseWikitext( $text );
         }
         return wfEscapeWikiText( $text );
+    }
+
+    private function parseMultilineText( MarkerSpec $marker, /*array|string*/ $text ): string {
+        if ( is_array( $text ) ) {
+            $text = implode( "\n", $text );
+        }
+        return $this->parseText( $marker, $text );
     }
 }

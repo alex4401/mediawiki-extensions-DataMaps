@@ -5,8 +5,6 @@
         ]
     },
 
-    "embedDataMap": "DataMap",
-
     "datamap-doc-page-does-not-exist": "''このデータページのドキュメントは、[[$1]]で作成できます''",
     "datamap-doc-page-header": "'''これは[[$1]]のドキュメントページです'''",
 
