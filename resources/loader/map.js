@@ -250,13 +250,13 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             // Persist original coordinates and state
             leafletMarker.apiInstance = instance;
 
+            // Add marker to the layer
+            this.layerManager.addMember( markerType, leafletMarker );
+
             // Update dismissal status if storage says it's been dismissed
             if ( group.canDismiss ) {
                 leafletMarker.setDismissed( this.storage.isDismissed( Util.getMarkerId( leafletMarker ) ) );
             }
-
-            // Add marker to the layer
-            this.layerManager.addMember( markerType, leafletMarker );
 
             // Bind a popup building closure (this is more efficient than binds)
             const mType = markerType;
