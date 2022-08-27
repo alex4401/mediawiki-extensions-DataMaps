@@ -1,9 +1,6 @@
+const Util = require( './util.js' );
+
 const URL_PARAMETER = 'marker';
-
-
-var getMarkerUID = function ( map, markerType, instance ) {
-    return ( instance[2] && instance[2].uid != null ) ? instance[2].uid : map.storage.getMarkerKey( markerType, instance );
-};
 
 
 var getMarkerURL = function ( map, persistentMarkerId, withHost ) {
@@ -53,17 +50,12 @@ MarkerPopup.prototype.getDismissToolText = function () {
 };
 
 
-MarkerPopup.prototype.getMarkerUID = function () {
-    return getMarkerUID( this.map, this.markerType, this.leafletMarker.apiInstance );
-};
-
-
 MarkerPopup.prototype.buildButtons = function () {
     const $getLink = $( '<a class="datamap-marker-link-button oo-ui-icon-link" role="button"></a>' )
         .attr( {
             'title': mw.msg( 'datamap-popup-marker-link-get' ),
             'aria-label': mw.msg( 'datamap-popup-marker-link-get' ),
-            'href': getMarkerURL( this.map, this.getMarkerUID(), true )
+            'href': getMarkerURL( this.map, Util.getMarkerId( this.leafletMarker ), true )
         } )
         .appendTo( this.$buttons )
         .on( 'click', event => {
@@ -157,7 +149,7 @@ MarkerPopup.prototype.buildTools = function () {
 
 
 MarkerPopup.prototype.onAdd = function () {
-    updateLocation( this.map, this.getMarkerUID() );
+    updateLocation( this.map, Util.getMarkerId( this.leafletMarker ) );
 };
 
 

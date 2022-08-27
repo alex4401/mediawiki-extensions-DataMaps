@@ -5,6 +5,7 @@ const MapStorage = require( './storage.js' ),
     MarkerLegendPanel = require( './markerLegend.js' ),
     EventEmitter = require( './events.js' ),
     DismissableMarkersLegend = require( './dismissables.js' ),
+    Util = require( './util.js' ),
     mwApi = new mw.Api();
 
 
@@ -182,12 +183,10 @@ DataMap.prototype.toggleMarkerDismissal = function ( markerType, leafletMarker )
 /*
  * Called whenever a marker is instantiated
  */
-DataMap.prototype.tryOpenUriPopup = function ( type, group, marker ) {
+DataMap.prototype.tryOpenUriPopup = function ( type, group, leafletMarker ) {
     // Open this marker's popup if that's been requested via a `marker` query parameter
-    const uid = marker.apiInstance[2] && marker.apiInstance[2].uid;
-    if ( this.markerIdToAutoOpen != null
-        && ( ( uid != null ) ? uid : this.storage.getMarkerKey( type, instance ) ) === this.markerIdToAutoOpen ) {
-        marker.openPopup();
+    if ( this.markerIdToAutoOpen != null && Util.getMarkerId( leafletMarker ) === this.markerIdToAutoOpen ) {
+        leafletMarker.openPopup();
     }
 };
 

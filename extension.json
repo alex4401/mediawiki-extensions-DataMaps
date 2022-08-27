@@ -96,7 +96,8 @@
 				"loader/legend.js",
 				"loader/markerLegend.js",
 				"loader/popup.js",
-				"loader/dismissables.js"
+				"loader/dismissables.js",
+				"loader/util.js"
 			],
 			"messages": [
 				"datamap-error-dataload",
