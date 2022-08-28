@@ -3,13 +3,10 @@ namespace MediaWiki\Extension\Ark\DataMaps;
 
 use Title;
 use Linker;
-use ResourceLoader;
-use ResourceLoaderFileModule;
 
 class HookHandler implements
 	\MediaWiki\Hook\ParserFirstCallInitHook,
-	\MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook,
-    \MediaWiki\ResourceLoader\Hook\ResourceLoaderRegisterModulesHook
+	\MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook
 {
     public static function onRegistration(): bool {
         define( 'ARK_CONTENT_MODEL_DATAMAP', 'datamap' );
@@ -43,19 +40,5 @@ class HookHandler implements
 			$languageCode = 'json';
 		}
 		return true;
-	}
-
-	public function onResourceLoaderRegisterModules( ResourceLoader $resourceLoader ): void {
-		global $wgDataMapsDebugLeafletJs;
-        $resourceLoader->register( 'ext.ark.datamaps.leaflet.core', [
-			'class' => ResourceLoaderFileModule::class,
-			'scripts' => [
-				'extensions/DataMaps/resources/vendor/leaflet/' . $wgDataMapsDebugLeafletJs . '.js'
-			],
-			'styles' => [
-				'extensions/DataMaps/resources/vendor/leaflet/leaflet.css'
-			],
-			'targets' => [ 'desktop', 'mobile' ]
-		] );
 	}
 }

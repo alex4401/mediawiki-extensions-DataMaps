@@ -36,6 +36,15 @@
 	},
 
 	"ResourceModules": {
+		"ext.ark.datamaps.leaflet.core": {
+			"scripts": [
+				"vendor/leaflet/leaflet.js"
+			],
+			"styles": [
+				"vendor/leaflet/leaflet.css"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
 		"ext.ark.datamaps.leaflet.extra": {
 			"es6": true,
 			"dependencies": [
@@ -160,8 +169,7 @@
 	"Hooks": {
 		"ParserFirstCallInit": "DataMapsHookHandler",
 		"ContentHandlerDefaultModelFor": "DataMapsHookHandler",
-		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage",
-		"ResourceLoaderRegisterModules": "DataMapsHookHandler"
+		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
 	},
     "HookHandlers": {
         "DataMapsHookHandler": {
@@ -211,9 +219,6 @@
 		"DataMapsAllowExperimentalFeatures": {
 			"description": "Whether to enable experimental features.",
 			"value": false
-		},
-		"DataMapsDebugLeafletJs": {
-			"value": "leaflet"
 		}
 	},
 
