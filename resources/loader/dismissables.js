@@ -107,6 +107,11 @@ class CollectibleMarkerEntry {
         if ( this.slots.label ) {
             $( '<span>' ).html( this.slots.label ).appendTo( this.$label );
         }
+
+        this.field.$header.on( 'click', event => {
+            this.leafletMarker.openPopup();
+            event.preventDefault( true );
+        } );
     }
 }
 
