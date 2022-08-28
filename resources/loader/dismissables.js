@@ -71,8 +71,7 @@ class CollectibleMarkerEntry {
         this.leafletMarker = leafletMarker;
 
         const pair = this.panel.legend.createCheckboxField( this.markerGroup.container.$element, '...',
-            leafletMarker.options.dismissed, _ => this.panel.map.toggleMarkerDismissal( leafletMarker.attachedLayers.join( ' ' ),
-            leafletMarker ) );
+            leafletMarker.options.dismissed, _ => this.panel.map.toggleMarkerDismissal( leafletMarker ) );
         this.field = pair[1];
         this.checkbox = pair[0];
 
@@ -116,7 +115,7 @@ class CollectiblesLegend {
                 const group = this.map.config.groups[groupName];
                 if ( group.canDismiss ) {
                     for ( const leafletMarker of ( this.map.layerManager.byLayer[groupName] || [] ) ) {
-                        this.pushMarker( leafletMarker.attachedLayers.join( ' ' ), leafletMarker );
+                        this.pushMarker( leafletMarker );
                     }
                 }
             }
@@ -140,7 +139,7 @@ class CollectiblesLegend {
     }
 
 
-    pushMarker( markerType, leafletMarker ) {
+    pushMarker( leafletMarker ) {
         if ( this.map.config.groups[leafletMarker.attachedLayers[0]].canDismiss )
             this.groups[leafletMarker.attachedLayers[0]].push( leafletMarker );
     }
@@ -153,7 +152,7 @@ class CollectiblesLegend {
     }
 
 
-    onDismissalChange( markerType, leafletMarker ) {
+    onDismissalChange( leafletMarker ) {
 
     }
 
