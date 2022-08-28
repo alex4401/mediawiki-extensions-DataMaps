@@ -55,10 +55,14 @@
     "datamap-lazy-click-to-load": "Click to load the data map",
 
     "datamap-legend-tab-locations": "Markers",
-    "datamap-legend-tab-checklist": "Checklists",
     "datamap-toggle-show-all": "Show all",
     "datamap-toggle-hide-all": "Hide all",
     "datamap-layer-control": "Toggle",
+
+    "datamap-legend-tab-checklist": "Checklists",
+    "datamap-checklist-prelude": "These are the locations that you can mark as visited:",
+    "datamap-checklist-collect-all": "Collect all",
+    "datamap-checklist-uncollect-all": "Reset all",
 
     "datamap-layer-surface": "Surface",
     "datamap-layer-cave": "Caves",

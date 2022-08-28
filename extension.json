@@ -122,7 +122,8 @@
 				"datamap-popup-marker-link-copied",
 				"datamap-coordinate-control-text",
 				"datamap-control-reset-view",
-				"datamap-control-centre-view"
+				"datamap-control-centre-view",
+				"datamap-checklist-prelude"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},
