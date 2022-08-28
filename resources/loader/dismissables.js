@@ -55,8 +55,16 @@ class CollectibleMarkerGroup {
             return a.apiInstance[0] > b.apiInstance[0];
         } );
         for ( const marker of this.markers ) {
-            marker.field.$element.remove();
             marker.field.$element.appendTo( this.container.$element );
+        }
+    }
+
+    replicateMarkerState( leafletMarker ) {
+        for ( const marker of this.markers ) {
+            if ( marker.leafletMarker == leafletMarker ) {
+                marker.checkbox.setSelected( leafletMarker.options.dismissed, true );
+                break;
+            }
         }
     }
 }
@@ -71,7 +79,7 @@ class CollectibleMarkerEntry {
         this.leafletMarker = leafletMarker;
 
         const pair = this.panel.legend.createCheckboxField( this.markerGroup.container.$element, '...',
-            leafletMarker.options.dismissed, _ => this.panel.map.toggleMarkerDismissal( leafletMarker ) );
+            leafletMarker.options.dismissed, _ => this.panel.map.toggleMarkerDismissal( this.leafletMarker ) );
         this.field = pair[1];
         this.checkbox = pair[0];
 
@@ -79,7 +87,7 @@ class CollectibleMarkerEntry {
         this.$label.empty();
         $( '<b>' ).text( this.panel.map.getCoordLabel( this.apiInstance ) ).appendTo( this.$label );
         if ( this.slots.label ) {
-            $( '<span>' ).text( this.slots.label ).appendTo( this.$label );
+            $( '<span>' ).html( this.slots.label ).appendTo( this.$label );
         }
     }
 }
@@ -153,7 +161,7 @@ class CollectiblesLegend {
 
 
     onDismissalChange( leafletMarker ) {
-
+        this.groups[leafletMarker.attachedLayers[0]].replicateMarkerState( leafletMarker );
     }
 
 
