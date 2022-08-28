@@ -60,7 +60,7 @@
     "datamap-layer-control": "Toggle",
 
     "datamap-legend-tab-checklist": "Checklists",
-    "datamap-checklist-prelude": "These are the locations that you can mark as visited:",
+    "datamap-checklist-prelude": "These are the items you can mark as collected:",
     "datamap-checklist-collect-all": "Collect all",
     "datamap-checklist-uncollect-all": "Reset all",
 

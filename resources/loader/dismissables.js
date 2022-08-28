@@ -1,4 +1,5 @@
-const Util = require( './util.js' );
+const Util = require( './util.js' ),
+    MarkerLegendPanel = require( './markerLegend.js' );
 
 
 class CollectibleMarkerGroup {
@@ -41,6 +42,23 @@ class CollectibleMarkerGroup {
                 this.container
             ]
         } ).$element;
+
+        this.buttonGroup = new OO.ui.ButtonGroupWidget( {} );
+        // Prepend the button group to the root element
+        this.buttonGroup.$element.prependTo( this.container.$element );
+
+        MarkerLegendPanel.prototype.createActionButton.call( this, mw.msg( 'datamap-checklist-collect-all' ),
+            this.toggleAll.bind( this, true ) );
+        MarkerLegendPanel.prototype.createActionButton.call( this, mw.msg( 'datamap-checklist-uncollect-all' ),
+            this.toggleAll.bind( this, false ) );
+    }
+
+    toggleAll( newState ) {
+        for ( const marker of this.markers ) {
+            if ( newState != marker.leafletMarker.options.dismissed ) {
+                this.panel.map.toggleMarkerDismissal( marker.leafletMarker );
+            }
+        }
     }
 
     push( leafletMarker ) {
