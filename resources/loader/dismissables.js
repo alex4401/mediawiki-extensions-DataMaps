@@ -124,38 +124,35 @@ class CollectiblesLegend {
         this.map.on( 'markerDismissChange', this.updateGroupBadges, this );
         this.map.on( 'streamingDone', this.updateGroupBadges, this );
 
-        if ( Util.isBleedingEdge ) {
-            // Root DOM element
-            this.$root = this.legend.addTab( mw.msg( 'datamap-legend-tab-checklist' ), 'datamap-container-collectibles' ).$element;
-            //
-            this.groups = {};
+        // Root DOM element
+        this.$root = this.legend.addTab( mw.msg( 'datamap-legend-tab-checklist' ), 'datamap-container-collectibles' ).$element;
+        //
+        this.groups = {};
 
-            // Insert an introduction paragraph
-            this.$root.append( mw.msg( 'datamap-checklist-prelude' ) );
+        // Insert an introduction paragraph
+        this.$root.append( mw.msg( 'datamap-checklist-prelude' ) );
 
-            // Register event handlers
-            this.map.on( 'markerDismissChange', this.onDismissalChange, this );
-            this.map.on( 'markerReady', this.pushMarker, this );
-            this.map.on( 'streamingDone', this.sort, this );
+        // Register event handlers
+        this.map.on( 'markerDismissChange', this.onDismissalChange, this );
+        this.map.on( 'markerReady', this.pushMarker, this );
+        this.map.on( 'streamingDone', this.sort, this );
 
-            // Prepare the panel
-            this._initialisePanel();
+        // Call updaters now to bring the main panel in sync
+        this.updateGroupBadges();
 
-            // Import existing markers if any have been loaded
-            for ( const groupName in this.map.config.groups ) {
-                const group = this.map.config.groups[groupName];
-                if ( group.canDismiss ) {
-                    for ( const leafletMarker of ( this.map.layerManager.byLayer[groupName] || [] ) ) {
-                        this.pushMarker( leafletMarker );
-                    }
+        // Prepare the checklist panel
+        this._initialisePanel();
+
+        // Import existing markers if any have been loaded
+        for ( const groupName in this.map.config.groups ) {
+            const group = this.map.config.groups[groupName];
+            if ( group.canDismiss ) {
+                for ( const leafletMarker of ( this.map.layerManager.byLayer[groupName] || [] ) ) {
+                    this.pushMarker( leafletMarker );
                 }
             }
-
-            this.sort();
         }
-
-        // Call updaters now to bring the panel in sync
-        this.updateGroupBadges();
+        this.sort();
     }
 
 
