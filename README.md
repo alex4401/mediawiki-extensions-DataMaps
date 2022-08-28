@@ -12,12 +12,25 @@ automation possibilities with bots (extracted data imports), and less data trans
 
 Currently no feature parity with the existing solution. [Roadmap (T75 on wiki's Trello board)](https://trello.com/c/CiLfCspG/75-datamaps-extension-for-fjordurs-release).
 
-[Test installation link (may be broken)](https://ark-wcmove-sandbox.mglolenstine.xyz/wiki/Map_transclusion_01).
+[Test installation link (may be broken)](https://1.37.wiki-dev.mglolenstine.xyz/wiki/Map_transclusion_01).
 
 ## Installation
+If your wiki is hosted on [wiki.gg](https://wiki.gg), simply request the extension via their representatives.
+
+Manual installation:
 1. Clone the repository to `extensions/DataMaps`.
 2. `wfLoadExtension` in site configuration.
 3. Set `$wgDataMapsNamespaceId` to the ID of the Data namespace (`10006` on ARK Wiki).
+
+### MediaWiki support schedule
+This extension's development tracks [wiki.gg](https://wiki.gg)'s platform - currently MediaWiki **1.37**. All versioned releases
+of DataMaps target this version, and only this version. Not much official support is provided for other versions of the platform.
+
+Branches targeting other versions of MediaWiki may end up being developed as a rolling release fork of the mainline. They'll be
+promoted when wiki.gg migrates to the corresponding version. No backports will be ever done.
+
+This is simply because of limited resources and the lack of external users. However, if you need the extension on newer MediaWiki
+outside of the schedule above, please [inform us](https://ark.wiki.gg/wiki/User_talk:Alex4401).
 
 ## Creating a map
 Create a page within the data namespace and assign it the `datamap` content model.

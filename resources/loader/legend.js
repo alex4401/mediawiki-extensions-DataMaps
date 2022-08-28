@@ -15,11 +15,12 @@ function MapLegend( map ) {
 /*
  * 
  */
-MapLegend.prototype.addTab = function ( name ) {
+MapLegend.prototype.addTab = function ( name, cssClass ) {
     const result = new OO.ui.TabPanelLayout( {
         name: name,
         label: name,
-        expanded: false
+        expanded: false,
+        classes: cssClass ? [ cssClass ] : []
     } );
     this.tabLayout.addTabPanels( [ result ] );
     return result;

@@ -138,7 +138,7 @@ MarkerPopup.prototype.buildTools = function () {
             $( '<a>' )
                 .text( this.getDismissToolText() )
                 .on( 'click', () => {
-                    this.map.toggleMarkerDismissal( this.markerType, this.leafletMarker );
+                    this.map.toggleMarkerDismissal( this.leafletMarker );
                     this.map.leaflet.closePopup();
                 } )
         );

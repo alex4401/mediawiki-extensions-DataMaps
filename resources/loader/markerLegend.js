@@ -28,7 +28,7 @@ function MarkerGroupToggleField( legendPanel, groupId, group ) {
 
     // Add an icon if one is specified in the group
     if ( group.legendIcon ) {
-        this.$icon = $( '<img width=24 height=24/>' ).attr( 'src', group.legendIcon ).prependTo( this.field.$header );
+        this.$icon = $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src', group.legendIcon ).prependTo( this.field.$header );
     }
 }
 

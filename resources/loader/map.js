@@ -172,10 +172,10 @@ DataMap.prototype.getCoordLabel = function ( latOrInstance, lon ) {
 };
 
 
-DataMap.prototype.toggleMarkerDismissal = function ( markerType, leafletMarker ) {
+DataMap.prototype.toggleMarkerDismissal = function ( leafletMarker ) {
     const state = this.storage.toggleDismissal( Util.getMarkerId( leafletMarker ) );
     leafletMarker.setDismissed( state );
-    this.fire( 'markerDismissChange', markerType, leafletMarker );
+    this.fire( 'markerDismissChange', leafletMarker );
     return state;
 };
 
@@ -183,7 +183,7 @@ DataMap.prototype.toggleMarkerDismissal = function ( markerType, leafletMarker )
 /*
  * Called whenever a marker is instantiated
  */
-DataMap.prototype.tryOpenUriPopup = function ( type, group, leafletMarker ) {
+DataMap.prototype.tryOpenUriPopup = function ( leafletMarker ) {
     // Open this marker's popup if that's been requested via a `marker` query parameter
     if ( this.markerIdToAutoOpen != null && Util.getMarkerId( leafletMarker ) === this.markerIdToAutoOpen ) {
         leafletMarker.openPopup();
@@ -262,7 +262,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             const mType = markerType;
             MarkerPopup.bindTo( this, mType, leafletMarker );
 
-            this.fire( 'markerReady', markerType, group, leafletMarker );
+            this.fire( 'markerReady', leafletMarker );
         }
     }
 
