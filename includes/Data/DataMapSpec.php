@@ -65,6 +65,10 @@ class DataMapSpec extends DataModel {
             : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_REQUIRE_CUSTOM_MARKER_IDS );
     }
 
+    public function wantsZoomDisabled(): bool {
+        return isset( $this->raw->disableZoom ) ? $this->raw->disableZoom : false;
+    }
+
     public function getInjectedLeafletSettings(): ?object {
         return isset( $this->raw->leafletSettings ) ? $this->raw->leafletSettings : null;
     }
@@ -171,6 +175,7 @@ class DataMapSpec extends DataModel {
         $this->expectField( $status, 'showCoordinates', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'hideLegend', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'showLegendAbove', DataModel::TYPE_BOOL );
+        $this->expectField( $status, 'disableZoom', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'requireCustomMarkerIDs', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
         if ( $isFull ) {

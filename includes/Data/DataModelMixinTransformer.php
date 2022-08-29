@@ -4,7 +4,7 @@ namespace MediaWiki\Extension\Ark\DataMaps\Data;
 use stdClass;
 
 class DataModelMixinTransformer {
-    public static function mergeTwoObjects( stdClass $target, stdClass $overlay ): stdClass {
+    public static function mergeTwoObjects( stdClass $target, stdClass $overlay, $allowObjectArrayMerge = true ): stdClass {
         foreach ( get_object_vars( $overlay ) as $name => $value ) {
             // Do not copy metadata fields
             if ( $name[0] == '$' ) {
@@ -16,7 +16,7 @@ class DataModelMixinTransformer {
                 $target->$name = $value;
             } else {
                 // Merge
-                $target->$name = self::mergeUnknown( $target->$name, $value , $name != 'markers' );
+                $target->$name = self::mergeUnknown( $target->$name, $value , $allowObjectArrayMerge && $name != 'markers' );
             }
         }
         return $target;
@@ -31,7 +31,7 @@ class DataModelMixinTransformer {
             if ( is_array( $overlay ) ) {
                 return self::mergeTwoObjectArrays( $target, $overlay, $allowObjectArrayMerge );
             } else {
-                return self::mergeTwoObjects( $target, $overlay );
+                return self::mergeTwoObjects( $target, $overlay, $allowObjectArrayMerge );
             }
         }
 
@@ -49,7 +49,7 @@ class DataModelMixinTransformer {
                     $target[$key] = $value;
                 } else {
                     // Merge
-                    $target[$key] = self::mergeUnknown( $target[$key], $value );
+                    $target[$key] = self::mergeUnknown( $target[$key], $value, $allowObjectArrayMerge );
                 }
             } else if ( $allowObjectMerge ) {
                 // Indexed
@@ -58,7 +58,7 @@ class DataModelMixinTransformer {
                     $target[$key] = $value;
                 } else if ( $allowObjectMerge ) {
                     // Merge
-                    $target[$key] = self::mergeUnknown( $target[$key], $value );
+                    $target[$key] = self::mergeUnknown( $target[$key], $value, $allowObjectArrayMerge );
                 }
             } else {
                 // Object merge disallowed, append

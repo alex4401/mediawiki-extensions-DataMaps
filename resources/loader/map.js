@@ -96,8 +96,9 @@ DataMap.prototype.anchors = {
     topRight: '.leaflet-top.leaflet-right',
     topLeft: '.leaflet-top.leaflet-left'
 };
-DataMap.prototype.FF_SHOW_COORDINATES = 1;
-DataMap.prototype.FF_HIDE_LEGEND = 2;
+DataMap.prototype.FF_SHOW_COORDINATES = 1<<0;
+DataMap.prototype.FF_HIDE_LEGEND = 1<<1;
+DataMap.prototype.FF_DISABLE_ZOOM = 1<<2;
 
 
 DataMap.prototype.isFeatureBitSet = function ( mask ) {
@@ -382,6 +383,21 @@ DataMap.prototype.buildBackgroundOverlayObject = function ( overlay ) {
 
 
 const buildLeafletMap = function ( $holder ) {
+    // If FF_DISABLE_ZOOM is set, prevent all kind of zooming
+    if ( this.isFeatureBitSet( this.FF_DISABLE_ZOOM ) ) {
+        this.config.leafletSettings = $.extend( {
+            zoomControl: false,
+            boxZoom: false,
+            doubleClickZoom: false,
+            scrollWheelZoom: false,
+            touchZoom: false,
+            maxZoom: 2.75,
+            minZoom: 2.75,
+            zoom: 2.75
+        }, this.config.leafletSettings || {} );
+    }
+
+    // Prepare settings for Leaflet
     const leafletConfig = $.extend( true, {
         // Boundaries
         center: [ 50, 50 ],
