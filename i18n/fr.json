@@ -32,8 +32,8 @@
 
     "datamap-error-render-unsupported-displaymode": "Le mode d'affichage $1 a été annoncé comme un marqueur, mais il n'est pas soutenu. Ceci est un défaut du code de l'extension.",
     "datamap-error-internal-unknown-field-type": "Pas de soutien de validation implémenté pour le type de champ avec l'ID de $1. Ceci est un défaut du code de l'extension.",
-    "datamap-error-pf-page-does-not-exist": "La page de données de carte "[[$1]]" n'existe pas.",
-    "datamap-error-pf-page-invalid-content-model": "Le modèle de contenu de la page "[[$1]]" n'est pas <code>datamap</code>.",
+    "datamap-error-pf-page-does-not-exist": "La page de données de carte \"[[$1]]\" n'existe pas.",
+    "datamap-error-pf-page-invalid-content-model": "Le modèle de contenu de la page \"[[$1]]\" n'est pas <code>datamap</code>.",
 
     "datamap-unnamed-map": "Carte non nommée",
     "datamap-legend-label": "Légende",
