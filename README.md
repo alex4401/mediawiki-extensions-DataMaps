@@ -62,6 +62,7 @@ Content of the page should be a valid JSON with following structure:
 * `hideLegend` (boolean, optional): if `true` does not show or load the legend at all. Defaults to `false`.
 * `showCoordinates` (boolean, optional): if `true` displays coordinates on mouse move and inside popups. Controlled by `$wgDataMapsDefaultFeatures` identified by `ShowCoordinates`.
 * `showLegendAbove` (boolean, optional): if `true` always displays the legend above the map. Controlled by `$wgDataMapsDefaultFeatures` identified by `ShowLegendAlwaysAbove`.
+* `disableZoom` (boolean, optional): if `true` locks the map into zoom level of `2.75` (adjustable with `leafletSettings`), disables the zoom control and zoom interactions.
 * `requireCustomMarkerIDs` (boolean, optional): if `true` requires the `id` property to be always present on markers. Controlled by `$wgDataMapsDefaultFeatures` identified by `RequireCustomMarkerIDs`.
 * `leafletSettings` (object, optional): settings to pass to Leaflet's map instance.
 * * [Check Leaflet's documentation for valid options.](https://leafletjs.com/reference.html#map-option) Only simple (strings, booleans and numbers) options are supported. There is always a possibility of conflicts.
