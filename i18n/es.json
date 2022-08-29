@@ -32,8 +32,8 @@
 
     "datamap-error-internal-unknown-field-type": "No se ha implementado la compatibilidad para el tipo de campo con ID de $1. Esto se debe a un error en el código de extensión.",
     "datamap-error-render-unsupported-displaymode": "El modo de pantalla $1 se ha identificado como un marcador, pero no existe compatibilidad para el mismo. Esto se debe a un error en el código de extensión.",
-    "datamap-error-pf-page-does-not-exist": "La página del mapa de datos "[[$1]]" no existe.",
-    "datamap-error-pf-page-invalid-content-model": "El modelo de contenido de la página "[[$1]]" no es <code>datamap</code>.",
+    "datamap-error-pf-page-does-not-exist": "La página del mapa de datos \"[[$1]]\" no existe.",
+    "datamap-error-pf-page-invalid-content-model": "El modelo de contenido de la página \"[[$1]]\" no es <code>datamap</code>.",
 
     "datamap-unnamed-map": "Mapa sin nombre",
     "datamap-legend-label": "Leyenda",
