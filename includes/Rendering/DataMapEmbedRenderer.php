@@ -46,7 +46,10 @@ class DataMapEmbedRenderer {
         $this->parserOptions->setAllowSpecialInclusion( false );
         $this->parserOptions->setExpensiveParserFunctionLimit( 4 );
         $this->parserOptions->setInterwikiMagic( false );
-        $this->parserOptions->setMaxIncludeSize( 800 );
+        $this->parserOptions->setMaxIncludeSize( 800 );        
+        $this->parserOptions->setCurrentRevisionRecordCallback( $parser->getOptions()->getCurrentRevisionRecordCallback() );
+
+        $this->parser->setOptions( $this->parserOptions );
     }
 
     public function getId(): int {
