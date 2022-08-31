@@ -73,8 +73,11 @@ class CollectibleMarkerGroup {
             return a.apiInstance[0] > b.apiInstance[0];
         } );
         for ( let index = 0; index < this.markers.length; index++ ) {
-            this.markers[index].field.$element.appendTo( this.container.$element );
-            this.markers[index].setIndex( index+1 );
+            const marker = this.markers[index];
+            marker.field.$element.appendTo( this.container.$element );
+            if ( marker.$index ) {
+                marker.setIndex( index+1 );
+            }
         }
     }
 
