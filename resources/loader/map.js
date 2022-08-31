@@ -114,16 +114,16 @@ DataMap.prototype.waitForLeaflet = function ( callback, context ) {
     if ( this.leaflet == null ) {
         this.on( 'leafletLoaded', callback, context );
     } else {
-        callback();
+        callback.call( context );
     }
 };
 
 
-DataMap.prototype.waitForLegend = function ( callback ) {
+DataMap.prototype.waitForLegend = function ( callback, context ) {
     if ( this.legend == null ) {
         this.on( 'legendLoaded', callback, context );
     } else {
-        callback();
+        callback.call( context );
     }
 };
 
