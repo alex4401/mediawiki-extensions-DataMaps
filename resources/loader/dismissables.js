@@ -103,7 +103,10 @@ class CollectibleMarkerEntry {
 
         this.$label = this.field.$label;
         this.$label.empty();
-        $( '<b>' ).text( this.panel.map.getCoordLabel( this.apiInstance ) ).appendTo( this.$label );
+
+        if ( this.panel.map.isFeatureBitSet( this.panel.map.FF_SHOW_COORDINATES ) ) {
+            $( '<b>' ).text( this.panel.map.getCoordLabel( this.apiInstance ) ).appendTo( this.$label );
+        }
         if ( this.slots.label ) {
             $( '<span>' ).html( this.slots.label ).appendTo( this.$label );
         }
