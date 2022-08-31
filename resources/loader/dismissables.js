@@ -72,8 +72,9 @@ class CollectibleMarkerGroup {
             }
             return a.apiInstance[0] > b.apiInstance[0];
         } );
-        for ( const marker of this.markers ) {
-            marker.field.$element.appendTo( this.container.$element );
+        for ( let index = 0; index < this.markers.length; index++ ) {
+            this.markers[index].field.$element.appendTo( this.container.$element );
+            this.markers[index].setIndex( index+1 );
         }
     }
 
@@ -104,17 +105,31 @@ class CollectibleMarkerEntry {
         this.$label = this.field.$label;
         this.$label.empty();
 
-        if ( this.panel.map.isFeatureBitSet( this.panel.map.FF_SHOW_COORDINATES ) ) {
-            $( '<b>' ).text( this.panel.map.getCoordLabel( this.apiInstance ) ).appendTo( this.$label );
+        // Build the label
+        const areCoordsEnabled = this.panel.map.isFeatureBitSet( this.panel.map.FF_SHOW_COORDINATES );
+        // Coordinates
+        if ( areCoordsEnabled ) {
+            this.$coordLabel = $( '<b>' ).text( this.panel.map.getCoordLabel( this.apiInstance ) ).appendTo( this.$label );
         }
+        // Marker label
+        this.$labelText = $( '<span>' ).appendTo( this.$label );
         if ( this.slots.label ) {
-            $( '<span>' ).html( this.slots.label ).appendTo( this.$label );
+            this.$labelText.html( this.slots.label );
+        }
+
+        if ( this.markerGroup.group.checklistNumbering ) {
+            this.$index = $( '<span class="datamap-collapsible-index">' ).appendTo( this.$labelText );
+            this.setIndex( this.markerGroup.markers.length + 1 );
         }
 
         this.field.$header.on( 'click', event => {
             this.leafletMarker.openPopup();
             event.preventDefault( true );
         } );
+    }
+
+    setIndex( index ) {
+        this.$index.text( ' #' + index );
     }
 }
 

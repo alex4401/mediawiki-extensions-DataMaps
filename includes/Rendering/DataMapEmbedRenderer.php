@@ -274,6 +274,9 @@ class DataMapEmbedRenderer {
         if ( $spec->getCollectibleMode() !== null ) {
             $out['collectible'] = $spec->getCollectibleMode();
         }
+
+        if ( $spec->wantsChecklistNumbering() ) {
+            $out['checklistNumbering'] = $spec->wantsChecklistNumbering();
         }
 
         return $out;

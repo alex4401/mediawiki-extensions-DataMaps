@@ -78,6 +78,7 @@ Content of the page should be a valid JSON with following structure:
 * * * `size` (dimensions, optional): size of each icon marker. Defaults to `[ 32, 32 ]`.
 * * `article` (page name, optional): name of an article every marker's popup should link to. Can be overridden on a marker.
 * * `canDismiss` (boolean, optional): if true, markers in this group can be marked as collected by the user.
+* * `autoNumberInChecklist` (boolean, optional): if collectible and true, markers in the checklist will have their index number added to the name.
 * `layers` (string to object map, optional): map from name to a *marker layer* specification:
 * * Marker layers can be used without an explicit declaration.
 * * `name` (string, required): currently unused.

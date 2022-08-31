@@ -118,6 +118,10 @@ class MarkerGroupSpec extends DataModel {
         return null;
     }
 
+    public function wantsChecklistNumbering(): bool {
+        return isset( $this->raw->autoNumberInChecklist ) ? $this->raw->autoNumberInChecklist : false;
+    }
+
     public function validate( Status $status ) {
         $this->requireField( $status, 'name', DataModel::TYPE_STRING );
 
@@ -142,6 +146,7 @@ class MarkerGroupSpec extends DataModel {
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
         $this->allowReplacedField( $status, 'canDismiss', DataModel::TYPE_BOOL, 'isCollectible', '0.10.7', '0.12.0' );
         $this->expectField( $status, 'isCollectible', DataModel::TYPE_BOOL_OR_STRING );
+        $this->expectField( $status, 'autoNumberInChecklist', DataModel::TYPE_BOOL );
 
         if ( $this->getCollectibleMode() === self::CM_UNKNOWN ) {
             $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, 'isCollectible',
