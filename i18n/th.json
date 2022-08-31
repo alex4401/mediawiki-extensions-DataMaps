@@ -8,7 +8,6 @@
     "datamap-desc": "อนุญาตให้ฝังแผนที่ข้อมูลแบบโต้ตอบตอบลงในหน้าวิกิ",
 
 	"content-model-datamap": "แผนที่ข้อมูลแบบโต้ตอบ",
-    "datamap-standard-title-prefix": "แผนที่/",
 
     "datamap-doc-page-suffix": "/เอกสาร",
     "datamap-doc-page-does-not-exist": "''เอกสารประกอบสำหรับหน้านี้ถูกสร้างขึ้นที่ [[$1]]''",

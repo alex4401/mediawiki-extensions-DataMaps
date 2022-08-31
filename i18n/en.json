@@ -8,7 +8,7 @@
     "datamap-desc": "Allows embedding of interactive maps into wiki pages.",
 
 	"content-model-datamap": "Interactive Data Map",
-    "datamap-standard-title-prefix": "Maps/",
+    "datamap-standard-title-prefix": "",
 
     "datamap-doc-page-suffix": "/doc",
     "datamap-doc-page-does-not-exist": "''Documentation for this data page may be created at [[$1]]''",

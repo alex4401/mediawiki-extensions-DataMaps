@@ -8,7 +8,6 @@
     "datamap-desc": "Permite insertar mapas interactivos en las páginas de la wiki.",
 
     "content-model-datamap": "Mapa de datos interactivo",
-    "datamap-standard-title-prefix": "Mapas/",
 
     "datamap-doc-page-does-not-exist": "''La documentación para esta página de datos puede crearse en [[$1]]''",
     "datamap-doc-page-header": "'''Esta es la página de documentación para [[$1]]'''",
