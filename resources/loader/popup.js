@@ -133,7 +133,7 @@ MarkerPopup.prototype.buildTools = function () {
     }
 
     // Dismissables
-    if ( this.markerGroup.canDismiss ) {
+    if ( this.markerGroup.collectible ) {
         this.addTool( 'datamap-popup-dismiss',
             $( '<a>' )
                 .text( this.getDismissToolText() )

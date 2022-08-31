@@ -17,6 +17,11 @@ class MarkerGroupSpec extends DataModel {
     const DM_ICON = 2;
     const DM_UNKNOWN = -1;
 
+    // Collectible modes
+    const CM_INDIVIDUAL = 1;
+    const CM_AS_ONE = 2;
+    const CM_UNKNOWN = -1;
+
     private string $id;
 
     public function __construct( string $id, stdclass $raw ) {
@@ -97,8 +102,20 @@ class MarkerGroupSpec extends DataModel {
         return isset( $this->raw->article ) ? $this->raw->article : null;
     }
 
-    public function canDismiss(): bool {
-        return isset( $this->raw->canDismiss ) ? $this->raw->canDismiss : false;
+    public function getCollectibleMode(): ?int {
+        if ( isset( $this->raw->canDismiss ) ) {
+            return $this->raw->canDismiss ? self::CM_INDIVIDUAL : null;
+        }
+        if ( isset( $this->raw->isCollectible ) ) {
+            switch ( $this->raw->isCollectible ) {
+                case true:
+                case "individual":
+                    return self::CM_INDIVIDUAL;
+                case "asOne":
+                    return self::CM_AS_ONE;
+            }
+        }
+        return null;
     }
 
     public function validate( Status $status ) {
@@ -123,7 +140,13 @@ class MarkerGroupSpec extends DataModel {
         }
 
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
-        $this->expectField( $status, 'canDismiss', DataModel::TYPE_BOOL );
+        $this->allowReplacedField( $status, 'canDismiss', DataModel::TYPE_BOOL, 'isCollectible', '0.10.7', '0.12.0' );
+        $this->expectField( $status, 'isCollectible', DataModel::TYPE_BOOL_OR_STRING );
+
+        if ( $this->getCollectibleMode() === self::CM_UNKNOWN ) {
+            $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, 'isCollectible',
+                wfMessage( 'datamap-error-validate-check-docs' ) );
+        }
 
         $this->disallowOtherFields( $status );
 

@@ -60,13 +60,13 @@ class DataMapSpec extends DataModel {
             : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SHOW_LEGEND_ABOVE );
     }
 
+    public function wantsZoomDisabled(): bool {
+        return isset( $this->raw->disableZoom ) ? $this->raw->disableZoom : false;
+    }
+
     public function wantsCustomMarkerIDs(): bool {
         return isset( $this->raw->requireCustomMarkerIDs ) ? $this->raw->requireCustomMarkerIDs
             : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_REQUIRE_CUSTOM_MARKER_IDS );
-    }
-
-    public function wantsZoomDisabled(): bool {
-        return isset( $this->raw->disableZoom ) ? $this->raw->disableZoom : false;
     }
 
     public function getInjectedLeafletSettings(): ?object {

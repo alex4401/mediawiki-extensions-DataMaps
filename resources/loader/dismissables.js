@@ -149,7 +149,7 @@ class CollectiblesLegend {
         // Import existing markers if any have been loaded
         for ( const groupName in this.map.config.groups ) {
             const group = this.map.config.groups[groupName];
-            if ( group.canDismiss ) {
+            if ( group.collectible ) {
                 for ( const leafletMarker of ( this.map.layerManager.byLayer[groupName] || [] ) ) {
                     this.pushMarker( leafletMarker );
                 }
@@ -162,7 +162,7 @@ class CollectiblesLegend {
     _initialisePanel() {
         for ( const groupName in this.map.config.groups ) {
             const group = this.map.config.groups[groupName];
-            if ( group.canDismiss ) {
+            if ( group.collectible ) {
                 this.groups[groupName] = new CollectibleMarkerGroup( this, group );
                 this.groups[groupName].$element.appendTo( this.$root );
             }
@@ -171,7 +171,7 @@ class CollectiblesLegend {
 
 
     pushMarker( leafletMarker ) {
-        if ( this.map.config.groups[leafletMarker.attachedLayers[0]].canDismiss )
+        if ( this.map.config.groups[leafletMarker.attachedLayers[0]].collectible )
             this.groups[leafletMarker.attachedLayers[0]].push( leafletMarker );
     }
 
@@ -192,7 +192,7 @@ class CollectiblesLegend {
         for ( const groupId in this.map.config.groups ) {
             const group = this.map.config.groups[groupId];
             const markers = this.map.layerManager.byLayer[groupId];
-            if ( group.canDismiss && markers && this.map.markerLegend.groupToggles[groupId] ) {
+            if ( group.collectible && markers && this.map.markerLegend.groupToggles[groupId] ) {
                 const count = markers.filter( x => x.options.dismissed ).length;
                 this.map.markerLegend.groupToggles[groupId].setBadge( `${count} / ${markers.length}` );
             }

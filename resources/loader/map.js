@@ -255,7 +255,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             this.layerManager.addMember( markerType, leafletMarker );
 
             // Update dismissal status if storage says it's been dismissed
-            if ( group.canDismiss ) {
+            if ( group.collectible ) {
                 leafletMarker.setDismissed( this.storage.isDismissed( Util.getMarkerId( leafletMarker ) ) );
             }
 
@@ -553,7 +553,7 @@ const buildLegend = function () {
     }
 
     // Set up the dismissable marker interactions
-    if ( Object.values( this.config.groups ).some( x => x.canDismiss ) ) {
+    if ( Object.values( this.config.groups ).some( x => x.collectible ) ) {
         this.legend.dismissables = new DismissableMarkersLegend( this.legend );
     }
 

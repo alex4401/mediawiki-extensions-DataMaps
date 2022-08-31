@@ -271,8 +271,9 @@ class DataMapEmbedRenderer {
             $out['article'] = $spec->getSharedRelatedArticle();
         }
 
-        if ( $spec->canDismiss() ) {
-            $out['canDismiss'] = $spec->canDismiss();
+        if ( $spec->getCollectibleMode() !== null ) {
+            $out['collectible'] = $spec->getCollectibleMode();
+        }
         }
 
         return $out;
