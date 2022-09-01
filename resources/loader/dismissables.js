@@ -5,6 +5,7 @@ const Util = require( './util.js' ),
 class CollectibleMarkerGroup {
     constructor( panel, group ) {
         this.panel = panel;
+        this.map = this.panel.map;
         this.group = group;
         this.markers = [];
 
@@ -56,7 +57,7 @@ class CollectibleMarkerGroup {
     toggleAll( newState ) {
         for ( const marker of this.markers ) {
             if ( newState != marker.leafletMarker.options.dismissed ) {
-                this.panel.map.toggleMarkerDismissal( marker.leafletMarker );
+                this.map.toggleMarkerDismissal( marker.leafletMarker );
             }
         }
     }
@@ -66,12 +67,26 @@ class CollectibleMarkerGroup {
     }
 
     sort() {
-        this.markers.sort( ( a, b ) => {
-            if ( a.apiInstance[0] == b.apiInstance[0] ) {
-                return a.apiInstance[1] > b.apiInstance[1];
-            }
-            return a.apiInstance[0] > b.apiInstance[0];
-        } );
+        let sortKey;
+        switch ( this.map.crsOrigin ) {
+            case 1:
+                sortKey = ( a, b ) => {
+                    if ( a.apiInstance[0] == b.apiInstance[0] ) {
+                        return a.apiInstance[1] > b.apiInstance[1];
+                    }
+                    return a.apiInstance[0] > b.apiInstance[0];
+                };
+            case 2:
+                sortKey = ( a, b ) => {
+                    if ( a.apiInstance[0] == b.apiInstance[0] ) {
+                        return a.apiInstance[1] < b.apiInstance[1];
+                    }
+                    return a.apiInstance[0] < b.apiInstance[0];
+                };
+        };
+
+        this.markers.sort( sortKey );
+        
         for ( let index = 0; index < this.markers.length; index++ ) {
             const marker = this.markers[index];
             marker.field.$element.appendTo( this.container.$element );
