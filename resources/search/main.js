@@ -85,6 +85,10 @@ MarkerSearch.prototype.addMarker = function ( leafletMarker ) {
     const group = this.map.config.groups[leafletMarker.attachedLayers[0]];
     const label = state.label || group.name;
 
+    if ( group.doNotSearch ) {
+        return;
+    }
+
     if ( !state.search ) {
         state.search = ( `${ Util.extractText( label ) } ${ Util.extractText( state.desc || '' ) }` )
             .replace( /&#39;/g, "'" ).replace( /&#34;/g, '"' ).replace( /&#32;/g, ' ' );
