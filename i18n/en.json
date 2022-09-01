@@ -75,5 +75,6 @@
 
     "datamap-coordinate-control-text": "lat $1, lon $2",
     "datamap-control-reset-view": "Restore default view",
-    "datamap-control-centre-view": "Center view at current zoom level"
+    "datamap-control-centre-view": "Center view at current zoom level",
+    "datamap-control-search": "Click and start typing to search..."
 }

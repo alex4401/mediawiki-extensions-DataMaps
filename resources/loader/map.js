@@ -88,7 +88,11 @@ function DataMap( id, $root, config ) {
 
     // Load search add-on
     if ( this.isFeatureBitSet( this.FF_SEARCH ) ) {
-        mw.loader.using( 'ext.ark.datamaps.search' );
+        mw.loader.using( [
+            'oojs-ui-core',
+            'ext.ark.datamaps.styles.search',
+            'ext.ark.datamaps.search'
+        ] );
     }
 }
 
@@ -352,8 +356,8 @@ DataMap.prototype.centreView = function () {
 };
 
 
-DataMap.prototype.addControl = function ( anchor, $element ) {
-    this.$root.find( `.leaflet-control-container ${anchor}` ).append( $element );
+DataMap.prototype.addControl = function ( anchor, $element, shouldPrepend ) {
+    this.$root.find( `.leaflet-control-container ${anchor}` )[ shouldPrepend ? 'prepend' : 'append' ]( $element );
     return $element;
 };
 

@@ -65,7 +65,8 @@
 				"exitFullscreen",
 				"fullScreen",
 				"expand",
-				"link"
+				"link",
+				"search"
 			]
 		},
 
@@ -149,6 +150,32 @@
 			],
 			"packageFiles": [
 				"inlineLoader/main.js"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
+
+		"ext.ark.datamaps.styles.search": {
+			"styles": [
+				"search/styles.less"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
+
+		"ext.ark.datamaps.search": {
+			"es6": true,
+			"dependencies": [
+				"oojs-ui-core",
+				"ext.ark.datamaps.core",
+				"ext.ark.datamaps.bootstrap",
+				"ext.ark.datamaps.styles.search"
+			],
+			"packageFiles": [
+				"search/main.js",
+				"search/util.js",
+				"search/menu.js"
+			],
+			"messages": [
+				"datamap-control-search"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
