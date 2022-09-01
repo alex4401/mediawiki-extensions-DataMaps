@@ -85,6 +85,11 @@ function DataMap( id, $root, config ) {
         'ext.ark.datamaps.leaflet.core',
         'ext.ark.datamaps.leaflet.extra'
     ], buildLeafletMap.bind( this, this.$root.find( '.datamap-holder' ) ) );
+
+    // Load search add-on
+    if ( this.isFeatureBitSet( this.FF_SEARCH ) ) {
+        mw.loader.using( 'ext.ark.datamaps.search' );
+    }
 }
 
 
@@ -99,6 +104,7 @@ DataMap.prototype.anchors = {
 DataMap.prototype.FF_SHOW_COORDINATES = 1<<0;
 DataMap.prototype.FF_HIDE_LEGEND = 1<<1;
 DataMap.prototype.FF_DISABLE_ZOOM = 1<<2;
+DataMap.prototype.FF_SEARCH = 1<<3;
 
 
 DataMap.prototype.isFeatureBitSet = function ( mask ) {

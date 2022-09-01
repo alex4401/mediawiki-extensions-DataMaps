@@ -69,6 +69,11 @@ class DataMapSpec extends DataModel {
             : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_REQUIRE_CUSTOM_MARKER_IDS );
     }
 
+    public function wantsSearch(): bool {
+        return isset( $this->raw->enableSearch ) ? $this->raw->enableSearch
+            : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SEARCH );
+    }
+
     public function getInjectedLeafletSettings(): ?object {
         return isset( $this->raw->leafletSettings ) ? $this->raw->leafletSettings : null;
     }
@@ -177,6 +182,7 @@ class DataMapSpec extends DataModel {
         $this->expectField( $status, 'showLegendAbove', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'disableZoom', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'requireCustomMarkerIDs', DataModel::TYPE_BOOL );
+        $this->expectField( $status, 'enableSearch', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
         if ( $isFull ) {
             $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );

@@ -213,7 +213,8 @@
 			"value": {
 				"ShowCoordinates": true,
 				"ShowLegendAlwaysAbove": false,
-				"RequireCustomMarkerIDs": false
+				"RequireCustomMarkerIDs": false,
+				"Search": false
 			}
 		},
 		"DataMapsAllowExperimentalFeatures": {
