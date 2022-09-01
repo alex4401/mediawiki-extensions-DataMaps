@@ -1,5 +1,6 @@
-const Util = require( './util.js' );
-const MenuWidget = require( './menu.js' );
+const Util = require( './util.js' ),
+    MenuWidget = require( './menu.js' ),
+    MenuOptionWidget = require( './option.js' );
 
 
 function MarkerSearch( map ) {
@@ -95,7 +96,8 @@ MarkerSearch.prototype.addMarker = function ( leafletMarker ) {
     }
 
     this.menu.addItems( [
-        new OO.ui.MenuOptionWidget( {
+        new MenuOptionWidget( {
+            icon: this.map.getIconFromLayers( leafletMarker.attachedLayers.join( ' ' ), leafletMarker.attachedLayers ),
             data: leafletMarker,
             label: new OO.ui.HtmlSnippet( label )
         } )

@@ -171,8 +171,9 @@
 			],
 			"packageFiles": [
 				"search/main.js",
-				"search/util.js",
-				"search/menu.js"
+				"search/menu.js",
+				"search/option.js",
+				"search/util.js"
 			],
 			"messages": [
 				"datamap-control-search"
