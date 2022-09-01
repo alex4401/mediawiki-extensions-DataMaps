@@ -51,7 +51,6 @@ MarkerSearch.prototype._initialiseUI = function () {
 
 MarkerSearch.prototype.onFocus = function () {
     this.onTextChange( this.inputBox.getValue() );
-    console.log('a');
 };
 
 
@@ -94,6 +93,12 @@ MarkerSearch.prototype.addMarker = function ( leafletMarker ) {
         state.search = ( `${ Util.extractText( label ) } ${ Util.extractText( state.desc || '' ) }` )
             .replace( /&#39;/g, "'" ).replace( /&#34;/g, '"' ).replace( /&#32;/g, ' ' );
     }
+
+    if ( !Array.isArray( state.search ) ) {
+        state.search = state.search.split( ' ' );
+    }
+
+    state.search = state.search.map( MenuWidget.static.normalizeForMatching );
 
     this.menu.addItems( [
         new MenuOptionWidget( {
