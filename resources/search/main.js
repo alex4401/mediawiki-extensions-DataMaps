@@ -94,7 +94,8 @@ MarkerSearch.prototype.addMarker = function ( leafletMarker ) {
     }
 
     this.menu.addItem( {
-        icon: this.map.getIconFromLayers( leafletMarker.attachedLayers.join( ' ' ), leafletMarker.attachedLayers ),
+        icon: leafletMarker instanceof L.Ark.IconMarker ? this.map.getIconFromLayers( leafletMarker.attachedLayers.join( ' ' ),
+            leafletMarker.attachedLayers ) : null,
         data: leafletMarker,
         keywords: state.search,
         label: new OO.ui.HtmlSnippet( label )
