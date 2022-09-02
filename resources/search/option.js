@@ -1,6 +1,8 @@
 function MenuOptionWidget( config ) {
 	MenuOptionWidget.super.call( this, config );
 
+    this.keywords = config.keywords;
+
     if ( config.icon ) {
         this.$arkIcon = $( '<img width=16 height=16 />' )
             .attr( {

@@ -161,13 +161,21 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
+		"ext.ark.datamaps.search.fuzzysort": {
+			"scripts": [
+				"vendor/fuzzysort/fuzzysort.min.js"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
+
 		"ext.ark.datamaps.search": {
 			"es6": true,
 			"dependencies": [
 				"oojs-ui-core",
 				"ext.ark.datamaps.core",
 				"ext.ark.datamaps.bootstrap",
-				"ext.ark.datamaps.styles.search"
+				"ext.ark.datamaps.styles.search",
+				"ext.ark.datamaps.search.fuzzysort"
 			],
 			"packageFiles": [
 				"search/main.js",

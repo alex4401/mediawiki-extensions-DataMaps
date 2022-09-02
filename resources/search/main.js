@@ -1,6 +1,5 @@
 const Util = require( './util.js' ),
-    MenuWidget = require( './menu.js' ),
-    MenuOptionWidget = require( './option.js' );
+    MenuWidget = require( './menu.js' );
 
 
 function MarkerSearch( map ) {
@@ -94,19 +93,16 @@ MarkerSearch.prototype.addMarker = function ( leafletMarker ) {
             .replace( /&#39;/g, "'" ).replace( /&#34;/g, '"' ).replace( /&#32;/g, ' ' );
     }
 
-    if ( !Array.isArray( state.search ) ) {
-        state.search = state.search.split( ' ' );
-    }
+    //if ( !Array.isArray( state.search ) ) {
+    //    state.search = state.search.split( ' ' );
+    //}
 
-    state.search = state.search.map( MenuWidget.static.normalizeForMatching );
-
-    this.menu.addItems( [
-        new MenuOptionWidget( {
-            icon: this.map.getIconFromLayers( leafletMarker.attachedLayers.join( ' ' ), leafletMarker.attachedLayers ),
-            data: leafletMarker,
-            label: new OO.ui.HtmlSnippet( label )
-        } )
-    ] );
+    this.menu.addItem( {
+        icon: this.map.getIconFromLayers( leafletMarker.attachedLayers.join( ' ' ), leafletMarker.attachedLayers ),
+        data: leafletMarker,
+        keywords: state.search,
+        label: new OO.ui.HtmlSnippet( label )
+    } );
 };
 
 

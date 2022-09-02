@@ -1,3 +1,7 @@
+const Fuzzysort = require( 'ext.ark.datamaps.search.fuzzysort' ),
+	MenuOptionWidget = require( './option.js' );
+
+
 function MenuWidget( config ) {
 	MenuWidget.super.call( this, config );
 }
@@ -10,74 +14,48 @@ MenuWidget.static.flippedPositions = {
 };
 
 
-MenuWidget.prototype.getItemMatcher = function ( query, mode ) {
-	const normalizedQuery = this.constructor.static.normalizeForMatching( query ).split( ' ' );
-
-	return function ( item ) {
-        if ( !item.data._map ) {
-            return false;
-        }
-
-		const keywords = item.data.apiInstance[2].search;
-        let result;
-        for ( let index = 0; index < keywords.length; index++ ) {
-            result = keywords[index].indexOf( normalizedQuery );
-            if ( result > -1 ) {
-                return result;
-            }
-        }
-        return -1;
-    };
+MenuWidget.static.normalizeForMatching = function ( text ) {
+	// Replace trailing whitespace, normalize multiple spaces and make case insensitive
+	return text.trim().replace( /\s+/, ' ' ).toLowerCase().normalize( 'NFD' ).replace( /[\u0300-\u036f]/g, '' );
 };
 
 
-OO.ui.MenuSelectWidget.prototype.updateItemVisibility = function () {
+MenuWidget.prototype.updateItemVisibility = function () {
 	if ( !this.filterFromInput || !this.$input ) {
 		this.clip();
 		return;
 	}
 
-	var anyVisible = false;
+	const results = Fuzzysort.go( MenuWidget.static.normalizeForMatching( this.$input.val() ), this.items, {
+		threshold: -150000,
+		key: 'keywords'
+	} );
 
-	var showAll = !this.isVisible() || this.previouslySelectedValue === this.$input.val(),
-		filter = showAll ? null : this.getItemMatcher( this.$input.val(), this.filterMode );
-	// Hide non-matching options, and also hide section headers if all options
-	// in their section are hidden.
-	var item;
-	var section, sectionEmpty;
-	for ( var i = 0; i < this.items.length; i++ ) {
-		item = this.items[ i ];
+	for ( const item of this.items ) {
 		if ( item instanceof OO.ui.OptionWidget ) {
-			item.affinity = filter ? filter( item ) : -1;
-            var visible = item.affinity > -1;
-			anyVisible = anyVisible || visible;
-			sectionEmpty = sectionEmpty && !visible;
-			item.toggle( visible );
+			item.toggle( false );
 		}
 	}
-	// Process the final section
-	if ( section ) {
-		section.toggle( showAll || !sectionEmpty );
+
+	for ( const result of results ) {
+		const item = result.obj;
+		if ( item instanceof OO.ui.OptionWidget ) {
+			item.toggle( true );
+			item.$element.appendTo( this.$group );
+		}
 	}
 
-	if ( !anyVisible ) {
-		this.highlightItem( null );
-	}
-
-	this.$element.toggleClass( 'oo-ui-menuSelectWidget-invisible', !anyVisible );
-
-	if ( this.highlightOnFilter &&
-		!( this.lastHighlightedItem && this.lastHighlightedItem.isSelectable() ) &&
-		this.isVisible()
-	) {
-		// Highlight the first selectable item in the list
-		item = this.findFirstSelectableItem();
-		this.highlightItem( item );
-		this.lastHighlightedItem = item;
-	}
+	this.$element.toggleClass( 'oo-ui-menuSelectWidget-invisible', results.length == 0 );
 
 	// Reevaluate clipping
 	this.clip();
+};
+
+
+MenuWidget.prototype.addItem = function ( config ) {
+    config.keywords = MenuWidget.static.normalizeForMatching( config.keywords );
+	config.keywords = Fuzzysort.prepare( config.keywords );
+	this.addItems( [ new MenuOptionWidget( config ) ] );
 };
 
 
