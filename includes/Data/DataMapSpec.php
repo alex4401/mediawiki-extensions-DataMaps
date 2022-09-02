@@ -74,6 +74,11 @@ class DataMapSpec extends DataModel {
             : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SEARCH );
     }
 
+    public function wantsChecklistSortedByAmount(): bool {
+        return isset( $this->raw->sortChecklistsByAmount ) ? $this->raw->sortChecklistsByAmount
+            : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SORT_CHECKLIST_BY_AMOUNT );
+    }
+
     public function getInjectedLeafletSettings(): ?object {
         return isset( $this->raw->leafletSettings ) ? $this->raw->leafletSettings : null;
     }
@@ -181,6 +186,7 @@ class DataMapSpec extends DataModel {
         $this->expectField( $status, 'hideLegend', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'showLegendAbove', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'disableZoom', DataModel::TYPE_BOOL );
+        $this->expectField( $status, 'sortChecklistsByAmount', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'requireCustomMarkerIDs', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'enableSearch', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );

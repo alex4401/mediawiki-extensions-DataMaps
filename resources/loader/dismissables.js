@@ -213,6 +213,13 @@ class CollectiblesLegend {
         for ( const group of Object.values( this.groups ) ) {
             group.sort();
         }
+
+        if ( this.map.isFeatureBitSet( this.map.FF_SORT_CHECKLISTS_BY_AMOUNT ) ) {
+            const groups = Object.values( this.groups ).sort( ( a, b ) => a.markers.length > b.markers.length );
+            for ( const group of groups ) {
+                group.$element.appendTo( this.$root );
+            }
+        }
     }
 
 

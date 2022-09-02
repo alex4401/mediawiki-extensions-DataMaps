@@ -196,6 +196,7 @@ class DataMapEmbedRenderer {
         $out |= $this->data->wantsLegendHidden() ? 1<<1 : 0;
         $out |= $this->data->wantsZoomDisabled() ? 1<<2 : 0;
         $out |= $this->data->wantsSearch() ? 1<<3 : 0;
+        $out |= $this->data->wantsChecklistSortedByAmount() ? 1<<4 : 0;
         return $out;
     }
 

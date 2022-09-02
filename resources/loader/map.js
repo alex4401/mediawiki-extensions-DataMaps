@@ -109,6 +109,7 @@ DataMap.prototype.FF_SHOW_COORDINATES = 1<<0;
 DataMap.prototype.FF_HIDE_LEGEND = 1<<1;
 DataMap.prototype.FF_DISABLE_ZOOM = 1<<2;
 DataMap.prototype.FF_SEARCH = 1<<3;
+DataMap.prototype.FF_SORT_CHECKLISTS_BY_AMOUNT = 1<<4;
 
 
 DataMap.prototype.isFeatureBitSet = function ( mask ) {
