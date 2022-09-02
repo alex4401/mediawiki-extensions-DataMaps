@@ -258,6 +258,11 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
                 } );
             }
 
+            // Initialise state if it's missing
+            if ( !instance[2] ) {
+                instance[2] = {};
+            }
+
             // Persist original coordinates and state
             leafletMarker.apiInstance = instance;
 
