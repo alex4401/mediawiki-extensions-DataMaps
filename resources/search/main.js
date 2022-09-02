@@ -93,10 +93,6 @@ MarkerSearch.prototype.addMarker = function ( leafletMarker ) {
             .replace( /&#39;/g, "'" ).replace( /&#34;/g, '"' ).replace( /&#32;/g, ' ' );
     }
 
-    //if ( !Array.isArray( state.search ) ) {
-    //    state.search = state.search.split( ' ' );
-    //}
-
     this.menu.addItem( {
         icon: this.map.getIconFromLayers( leafletMarker.attachedLayers.join( ' ' ), leafletMarker.attachedLayers ),
         data: leafletMarker,

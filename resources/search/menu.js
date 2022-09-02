@@ -28,7 +28,7 @@ MenuWidget.prototype.updateItemVisibility = function () {
 	}
 
 	const results = Fuzzysort.go( MenuWidget.static.normalizeForMatching( this.$input.val() ), this.items, {
-		threshold: -150000,
+		threshold: -120000,
 		key: 'keywords'
 	} );
 
