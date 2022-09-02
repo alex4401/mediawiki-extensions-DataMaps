@@ -103,4 +103,8 @@ MarkerSearch.prototype.addMarker = function ( leafletMarker ) {
 };
 
 
-mw.dataMaps.subscribeHook( 'afterInitialisation', ( map ) => map.search = new MarkerSearch( map ) );
+mw.dataMaps.subscribeHook( 'afterInitialisation', ( map ) => {
+    if ( map.isFeatureBitSet( map.FF_SEARCH ) ) {
+        map.search = new MarkerSearch( map );
+    }
+} );
