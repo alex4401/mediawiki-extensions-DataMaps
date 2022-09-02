@@ -28,8 +28,8 @@ MenuWidget.prototype.updateItemVisibility = function () {
 	}
 
 	const results = Fuzzysort.go( MenuWidget.static.normalizeForMatching( this.$input.val() ), this.items, {
-		threshold: -120000,
-		key: 'keywords'
+		threshold: -75000,
+		weighedKey: 'keywords'
 	} );
 
 	for ( const item of this.items ) {
@@ -62,8 +62,8 @@ MenuWidget.prototype.updateItemVisibility = function () {
 
 
 MenuWidget.prototype.addItem = function ( config ) {
-    config.keywords = MenuWidget.static.normalizeForMatching( config.keywords );
-	config.keywords = Fuzzysort.prepare( config.keywords );
+	console.log(config.keywords);
+    config.keywords = config.keywords.map( x => [ Fuzzysort.prepare( MenuWidget.static.normalizeForMatching( x[0] ) ), x[1] ] );
 	this.addItems( [ new MenuOptionWidget( config ) ] );
 };
 

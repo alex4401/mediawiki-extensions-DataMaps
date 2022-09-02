@@ -89,8 +89,14 @@ MarkerSearch.prototype.addMarker = function ( leafletMarker ) {
     }
 
     if ( !state.search ) {
-        state.search = ( `${ Util.extractText( label ) } ${ Util.extractText( state.desc || '' ) }` )
-            .replace( /&#39;/g, "'" ).replace( /&#34;/g, '"' ).replace( /&#32;/g, ' ' );
+        state.search = [ [ Util.decodePartial( Util.extractText( label ) ), 1.5 ] ];
+        if ( state.desc ) {
+            state.search.push( [ state.desc, 0.75 ] );
+        }
+    }
+
+    if ( typeof( state.search ) === 'string' ) {
+        state.search = [ [ state.search, 1 ] ];
     }
 
     this.menu.addItem( {
