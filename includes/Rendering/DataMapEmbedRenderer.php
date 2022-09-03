@@ -69,7 +69,9 @@ class DataMapEmbedRenderer {
             // to not delay the site module
             'ext.ark.datamaps.core',
             // Initialiser module to boot the maps
-            'ext.ark.datamaps.bootstrap'
+            'ext.ark.datamaps.bootstrap',
+            // Wiki-provided CSS and JS
+            'ext.ark.datamaps.site'
         ] );
 
         if ( $this->useInlineData ) {

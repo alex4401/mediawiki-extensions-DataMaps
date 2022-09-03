@@ -142,6 +142,10 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
+		"ext.ark.datamaps.site": {
+			"class": "MediaWiki\\Extension\\Ark\\DataMaps\\Rendering\\ResourceLoaderDataMapsSiteModule"
+		},
+
 		"ext.ark.datamaps.inlineloader": {
 			"es6": true,
 			"dependencies": [
