@@ -364,14 +364,6 @@ class DataMapEmbedRenderer {
             $containerMain->setAttributes( [ 'data-filter-groups' => implode( '|', $options->displayGroups ) ] );
         }
 
-        // Bar at the top with map title
-        if ( $options->displayTitle ) {
-            $titleText = $options->titleOverride ?? $this->data->getTitle();
-            $containerTop->appendContent( new \OOUI\LabelWidget( [
-                'label' => new \OOUI\HtmlSnippet( $this->expandWikitext( $titleText ) )
-            ] ) );
-        }
-
         // Legend
         if ( !$this->data->wantsLegendHidden() ) {
             $containerContent->appendContent( $this->getLegendContainerWidget() );

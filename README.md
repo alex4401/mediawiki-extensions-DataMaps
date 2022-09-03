@@ -39,7 +39,6 @@ Create a page within the data namespace and assign it the `datamap` content mode
 Content of the page should be a valid JSON with following structure:
 * `$mixin` (boolean, optional): if `true` forces the map to be recognised as a preset/mix-in and relaxes validation.
 * `mixins` (array of page names, optional): *experimental*, list of other pages with the `datamap` content model that'll be loaded first and stacked to share configuration.
-* `title` (string, optional): label displayed above the map's legend.
 * `crs` (box, optional): reference coordinate space, which also determines whether the system origin will be top-left or bottom-left. Defaults to `[ [0, 0], [100, 100] ]`, which is top-left - swap the points for bottom-left.
 * `image` (file name, required, allowed only if `backgrounds` is not specified): name of the file (with no namespace) to display as background. This translates to a single, nameless background.
 * `backgrounds` (array of objects): list of *backgrounds* this map has available and the user can choose between:
@@ -121,7 +120,6 @@ Box is a array of two locations, where first describes the start point of the bo
 ### Parser functions
 * `DataMap`: used to embed a map in an article.
 * * Takes an optional `filter` parameter, which is a comma-delimited list of layers to show.
-* * Takes an optional `title` parameter, which overrides the respective property. Set to `none` to hide the title bar altogether.
 * * Example: `{{DataMap:Maps/Resources/Aberration|filter=metal,crystal|title=Metal and crystal locations on [[Aberration]]}}`.
 
 ## Configuration

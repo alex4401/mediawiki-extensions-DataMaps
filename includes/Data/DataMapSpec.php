@@ -175,7 +175,6 @@ class DataMapSpec extends DataModel {
         if ( $isFull ) {
             $this->expectField( $status, 'mixins', DataModel::TYPE_ARRAY );
         }
-        $this->expectField( $status, 'title', DataModel::TYPE_STRING );
         $hasCrs = $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
         if ( $isFull ) {
             $this->requireEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
