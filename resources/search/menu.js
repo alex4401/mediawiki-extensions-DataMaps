@@ -62,7 +62,6 @@ MenuWidget.prototype.updateItemVisibility = function () {
 
 
 MenuWidget.prototype.addItem = function ( config ) {
-	console.log(config.keywords);
     config.keywords = config.keywords.map( x => [ Fuzzysort.prepare( MenuWidget.static.normalizeForMatching( x[0] ) ), x[1] ] );
 	this.addItems( [ new MenuOptionWidget( config ) ] );
 };
