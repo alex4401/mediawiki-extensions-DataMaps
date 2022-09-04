@@ -88,16 +88,19 @@ MarkerSearch.prototype.addMarker = function ( leafletMarker ) {
         return;
     }
 
+    // If no keywords were provided by the API, generate them from label and description
     if ( !state.search ) {
         state.search = [ [ Util.decodePartial( Util.extractText( label ) ), 1.5 ] ];
         if ( state.desc ) {
             state.search.push( [ state.desc, 0.75 ] );
         }
     }
-
+    // If string was provided by the API, turn into a pair
     if ( typeof( state.search ) === 'string' ) {
         state.search = [ [ state.search, 1 ] ];
     }
+    // Ensure search keywords are always an array of (text, weight) pairs
+    state.search = state.search.map( x => ( typeof( x ) === 'string' ) ? [ x, 1 ] : x );
 
     this.menu.addItem( {
         icon: leafletMarker instanceof L.Ark.IconMarker ? this.map.getIconFromLayers( leafletMarker.attachedLayers.join( ' ' ),
