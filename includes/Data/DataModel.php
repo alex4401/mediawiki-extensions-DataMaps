@@ -23,6 +23,7 @@ class DataModel {
     const TYPE_STRING_OR_NUMBER = 15;
     const TYPE_COLOUR4 = 16;
     const TYPE_ARRAY_OR_STRING = 17;
+    const TYPE_BOOL_OR_STRING = 18;
 
     protected stdClass $raw;
     private array $validationCheckedFields = [];
@@ -73,6 +74,9 @@ class DataModel {
             case self::TYPE_ARRAY_OR_STRING:
                 // S"" || A[ ... ]
                 return is_array( $var ) || is_string( $var );
+            case self::TYPE_BOOL_OR_STRING:
+                // B || A[ ... ]
+                return is_bool( $var ) || is_string( $var );
         }
         throw new InvalidArgumentException( wfMessage( 'datamap-error-internal-unknown-field-type', $typeId ) );
     }

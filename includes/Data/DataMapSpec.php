@@ -60,13 +60,23 @@ class DataMapSpec extends DataModel {
             : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SHOW_LEGEND_ABOVE );
     }
 
+    public function wantsZoomDisabled(): bool {
+        return isset( $this->raw->disableZoom ) ? $this->raw->disableZoom : false;
+    }
+
     public function wantsCustomMarkerIDs(): bool {
         return isset( $this->raw->requireCustomMarkerIDs ) ? $this->raw->requireCustomMarkerIDs
             : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_REQUIRE_CUSTOM_MARKER_IDS );
     }
 
-    public function wantsZoomDisabled(): bool {
-        return isset( $this->raw->disableZoom ) ? $this->raw->disableZoom : false;
+    public function wantsSearch(): bool {
+        return isset( $this->raw->enableSearch ) ? $this->raw->enableSearch
+            : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SEARCH );
+    }
+
+    public function wantsChecklistSortedByAmount(): bool {
+        return isset( $this->raw->sortChecklistsByAmount ) ? $this->raw->sortChecklistsByAmount
+            : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SORT_CHECKLIST_BY_AMOUNT );
     }
 
     public function getInjectedLeafletSettings(): ?object {
@@ -165,7 +175,6 @@ class DataMapSpec extends DataModel {
         if ( $isFull ) {
             $this->expectField( $status, 'mixins', DataModel::TYPE_ARRAY );
         }
-        $this->expectField( $status, 'title', DataModel::TYPE_STRING );
         $hasCrs = $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
         if ( $isFull ) {
             $this->requireEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
@@ -176,7 +185,9 @@ class DataMapSpec extends DataModel {
         $this->expectField( $status, 'hideLegend', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'showLegendAbove', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'disableZoom', DataModel::TYPE_BOOL );
+        $this->expectField( $status, 'sortChecklistsByAmount', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'requireCustomMarkerIDs', DataModel::TYPE_BOOL );
+        $this->expectField( $status, 'enableSearch', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
         if ( $isFull ) {
             $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );

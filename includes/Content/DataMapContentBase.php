@@ -44,7 +44,6 @@ abstract class DataMapContentBase extends JsonContent {
 		'name|icon|size',
 		'name|fillColor|size',
 		'name|fillColor|size|icon',
-		'article|canDismiss',
 		// Layers
 		'name|subtleText',
 		// Markers

@@ -69,7 +69,9 @@ class DataMapEmbedRenderer {
             // to not delay the site module
             'ext.ark.datamaps.core',
             // Initialiser module to boot the maps
-            'ext.ark.datamaps.bootstrap'
+            'ext.ark.datamaps.bootstrap',
+            // Wiki-provided CSS and JS
+            'ext.ark.datamaps.site'
         ] );
 
         if ( $this->useInlineData ) {
@@ -195,6 +197,8 @@ class DataMapEmbedRenderer {
         $out |= $this->data->wantsCoordinatesShown() ? 1<<0 : 0;
         $out |= $this->data->wantsLegendHidden() ? 1<<1 : 0;
         $out |= $this->data->wantsZoomDisabled() ? 1<<2 : 0;
+        $out |= $this->data->wantsSearch() ? 1<<3 : 0;
+        $out |= $this->data->wantsChecklistSortedByAmount() ? 1<<4 : 0;
         return $out;
     }
 
@@ -271,8 +275,16 @@ class DataMapEmbedRenderer {
             $out['article'] = $spec->getSharedRelatedArticle();
         }
 
-        if ( $spec->canDismiss() ) {
-            $out['canDismiss'] = $spec->canDismiss();
+        if ( $spec->getCollectibleMode() !== null ) {
+            $out['collectible'] = $spec->getCollectibleMode();
+        }
+
+        if ( $spec->wantsChecklistNumbering() ) {
+            $out['checklistNumbering'] = $spec->wantsChecklistNumbering();
+        }
+
+        if ( $spec->wantsSearchExclusion() ) {
+            $out['doNotSearch'] = $spec->wantsSearchExclusion();
         }
 
         return $out;
@@ -352,14 +364,6 @@ class DataMapEmbedRenderer {
         // Set data attribute with filters if they are specified
         if ( $options->displayGroups != null ) {
             $containerMain->setAttributes( [ 'data-filter-groups' => implode( '|', $options->displayGroups ) ] );
-        }
-
-        // Bar at the top with map title
-        if ( $options->displayTitle ) {
-            $titleText = $options->titleOverride ?? $this->data->getTitle();
-            $containerTop->appendContent( new \OOUI\LabelWidget( [
-                'label' => new \OOUI\HtmlSnippet( $this->expandWikitext( $titleText ) )
-            ] ) );
         }
 
         // Legend
