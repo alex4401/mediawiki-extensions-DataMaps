@@ -123,6 +123,7 @@ class DataModel {
         } else {
             return $this->requireField( $status, $existsA ? $nameA : $nameB, $existsA ? $typeIdA : $typeIdB );
         }
+        return false;
     }
 
     protected function expectField( Status $status, string $name, int $typeId ): bool {
@@ -145,6 +146,7 @@ class DataModel {
         } else {
             return $this->expectField( $status, $existsA ? $nameA : $nameB, $existsA ? $typeIdA : $typeIdB );
         }
+        return false;
     }
 
     protected function allowReplacedField( Status $status, string $nameOld, int $typeId, string $nameNew, string $since,
