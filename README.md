@@ -95,7 +95,7 @@ Content of the page should be a valid JSON with following structure:
 * * `isWikitext` (boolean, optional): if true, `label` and `description` will be treated as wikitext. This is expensive, do not use for every marker. If unset, the backend will guess based on the presence of some patterns.
 * * `popupImage` (file name, optional): if provided, marker's popup will display this image under the description.
 * * `article` (page name, optional): article the marker's popup should link to. Follows either a format of `article title` or `article title|displayed label`.
-* * `searchKeywords` (string or string array, optional): specifies what keywords this marker will be suggested for.
+* * `searchKeywords` (string, or array of strings or string and number (score multiplier) pairs, optional): specifies what keywords this marker will be suggested for.
 * `custom` (map, optional): any arbitrary to be added to the client-side map config, for use with e.g. on-site gadgets.
 
 #### File name
