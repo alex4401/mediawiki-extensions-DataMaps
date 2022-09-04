@@ -36,7 +36,7 @@ class DataModel {
         $this->raw = $raw;
     }
 
-    private function verifyType( $var, int $typeId ): bool {
+    protected function verifyType( $var, int $typeId ): bool {
         switch ( $typeId ) {
             case self::TYPE_ANY:
                 return true;
