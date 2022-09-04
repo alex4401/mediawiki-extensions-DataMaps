@@ -20,6 +20,7 @@ class MarkerProcessor {
     private Title $title;
     private DataMapSpec $dataMap;
     private ?array $filter;
+    private bool $isSearchEnabled;
 
     private bool $isParserDirty = true;
     private bool $useLocalParserCache = true;
@@ -34,6 +35,7 @@ class MarkerProcessor {
         $this->title = $title;
         $this->dataMap = $dataMap;
         $this->filter = $filter;
+        $this->isSearchEnabled = $this->dataMap->wantsSearch();
         // Pull configuration options
         $this->useLocalParserCache = DataMapsConfig::shouldCacheWikitextInProcess();
         $this->collectTimings = DataMapsConfig::shouldApiReturnProcessingTime();
@@ -110,7 +112,7 @@ class MarkerProcessor {
         }
 
         // Search keywords
-        if ( $marker->getSearchKeywords() != null ) {
+        if ( $this->isSearchEnabled && $marker->getSearchKeywords() != null ) {
             $keywords = $marker->getSearchKeywords();
             if ( $this->canImplodeSearchKeywords( $keywords ) ) {
                 $keywords = implode( ' ', $keywords );
