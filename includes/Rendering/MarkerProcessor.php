@@ -112,7 +112,7 @@ class MarkerProcessor {
         // Search keywords
         if ( $marker->getSearchKeywords() != null ) {
             $keywords = $marker->getSearchKeywords();
-            if ( is_array( $keywords ) ) {
+            if ( $this->canImplodeSearchKeywords( $keywords ) ) {
                 $keywords = implode( ' ', $keywords );
             }
             $slots['search'] = $keywords;
@@ -175,5 +175,17 @@ class MarkerProcessor {
             $text = implode( "\n", $text );
         }
         return $this->parseText( $marker, $text );
+    }
+
+    private function canImplodeSearchKeywords( $keywords ): bool {
+        if ( is_array( $keywords ) ) {
+            foreach ( $keywords as &$item ) {
+                if ( !is_string( $item ) ) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

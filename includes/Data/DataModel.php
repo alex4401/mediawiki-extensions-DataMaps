@@ -38,6 +38,8 @@ class DataModel {
 
     private function verifyType( $var, int $typeId ): bool {
         switch ( $typeId ) {
+            case self::TYPE_ANY:
+                return true;
             case self::TYPE_ARRAY:
                 // A[ ... ]
                 return is_array( $var );
