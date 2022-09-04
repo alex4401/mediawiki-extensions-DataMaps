@@ -1,6 +1,6 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.10.6",
+	"version": "0.11.0",
 
 	"author": [
 		"alex4401"
@@ -65,7 +65,8 @@
 				"exitFullscreen",
 				"fullScreen",
 				"expand",
-				"link"
+				"link",
+				"search"
 			]
 		},
 
@@ -141,6 +142,10 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
+		"ext.ark.datamaps.site": {
+			"class": "MediaWiki\\Extension\\Ark\\DataMaps\\Rendering\\ResourceLoaderDataMapsSiteModule"
+		},
+
 		"ext.ark.datamaps.inlineloader": {
 			"es6": true,
 			"dependencies": [
@@ -149,6 +154,41 @@
 			],
 			"packageFiles": [
 				"inlineLoader/main.js"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
+
+		"ext.ark.datamaps.styles.search": {
+			"styles": [
+				"search/styles.less"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
+
+		"ext.ark.datamaps.search.fuzzysort": {
+			"scripts": [
+				"vendor/fuzzysort/fuzzysort.min.js"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
+
+		"ext.ark.datamaps.search": {
+			"es6": true,
+			"dependencies": [
+				"oojs-ui-core",
+				"ext.ark.datamaps.core",
+				"ext.ark.datamaps.bootstrap",
+				"ext.ark.datamaps.styles.search",
+				"ext.ark.datamaps.search.fuzzysort"
+			],
+			"packageFiles": [
+				"search/main.js",
+				"search/menu.js",
+				"search/option.js",
+				"search/util.js"
+			],
+			"messages": [
+				"datamap-control-search"
 			],
 			"targets": [ "desktop", "mobile" ]
 		}
@@ -213,7 +253,9 @@
 			"value": {
 				"ShowCoordinates": true,
 				"ShowLegendAlwaysAbove": false,
-				"RequireCustomMarkerIDs": false
+				"RequireCustomMarkerIDs": false,
+				"Search": false,
+				"SortChecklistsByAmount": false
 			}
 		},
 		"DataMapsAllowExperimentalFeatures": {

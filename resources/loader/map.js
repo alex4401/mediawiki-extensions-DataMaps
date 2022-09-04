@@ -85,6 +85,15 @@ function DataMap( id, $root, config ) {
         'ext.ark.datamaps.leaflet.core',
         'ext.ark.datamaps.leaflet.extra'
     ], buildLeafletMap.bind( this, this.$root.find( '.datamap-holder' ) ) );
+
+    // Load search add-on
+    if ( this.isFeatureBitSet( this.FF_SEARCH ) ) {
+        mw.loader.using( [
+            'oojs-ui-core',
+            'ext.ark.datamaps.styles.search',
+            'ext.ark.datamaps.search'
+        ] );
+    }
 }
 
 
@@ -99,6 +108,8 @@ DataMap.prototype.anchors = {
 DataMap.prototype.FF_SHOW_COORDINATES = 1<<0;
 DataMap.prototype.FF_HIDE_LEGEND = 1<<1;
 DataMap.prototype.FF_DISABLE_ZOOM = 1<<2;
+DataMap.prototype.FF_SEARCH = 1<<3;
+DataMap.prototype.FF_SORT_CHECKLISTS_BY_AMOUNT = 1<<4;
 
 
 DataMap.prototype.isFeatureBitSet = function ( mask ) {
@@ -114,16 +125,16 @@ DataMap.prototype.waitForLeaflet = function ( callback, context ) {
     if ( this.leaflet == null ) {
         this.on( 'leafletLoaded', callback, context );
     } else {
-        callback();
+        callback.call( context );
     }
 };
 
 
-DataMap.prototype.waitForLegend = function ( callback ) {
+DataMap.prototype.waitForLegend = function ( callback, context ) {
     if ( this.legend == null ) {
         this.on( 'legendLoaded', callback, context );
     } else {
-        callback();
+        callback.call( context );
     }
 };
 
@@ -248,6 +259,11 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
                 } );
             }
 
+            // Initialise state if it's missing
+            if ( !instance[2] ) {
+                instance[2] = {};
+            }
+
             // Persist original coordinates and state
             leafletMarker.apiInstance = instance;
 
@@ -255,7 +271,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
             this.layerManager.addMember( markerType, leafletMarker );
 
             // Update dismissal status if storage says it's been dismissed
-            if ( group.canDismiss ) {
+            if ( group.collectible ) {
                 leafletMarker.setDismissed( this.storage.isDismissed( Util.getMarkerId( leafletMarker ) ) );
             }
 
@@ -346,8 +362,8 @@ DataMap.prototype.centreView = function () {
 };
 
 
-DataMap.prototype.addControl = function ( anchor, $element ) {
-    this.$root.find( `.leaflet-control-container ${anchor}` ).append( $element );
+DataMap.prototype.addControl = function ( anchor, $element, shouldPrepend ) {
+    this.$root.find( `.leaflet-control-container ${anchor}` )[ shouldPrepend ? 'prepend' : 'append' ]( $element );
     return $element;
 };
 
@@ -553,7 +569,7 @@ const buildLegend = function () {
     }
 
     // Set up the dismissable marker interactions
-    if ( Object.values( this.config.groups ).some( x => x.canDismiss ) ) {
+    if ( Object.values( this.config.groups ).some( x => x.collectible ) ) {
         this.legend.dismissables = new DismissableMarkersLegend( this.legend );
     }
 

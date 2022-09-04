@@ -52,15 +52,8 @@ final class ParserFunction_EmbedDataMap {
 			}
 			$key = trim( $parts[0] );
 			$value = trim( $parts[1] );
-
-            if ( $key == 'title' ) {
-                if ($value == 'none') {
-                    $result->displayTitle = false;
-                } else {
-                    $result->displayTitle = true;
-                    $result->titleOverride = $value;
-                }
-            } else if ( $key == 'filter' ) {
+            
+            if ( $key == 'filter' ) {
                 $result->displayGroups = explode( ',', $value );
                 // TODO: verify the markers are present on map
             }

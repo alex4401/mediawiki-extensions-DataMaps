@@ -5,6 +5,7 @@ const Util = require( './util.js' ),
 class CollectibleMarkerGroup {
     constructor( panel, group ) {
         this.panel = panel;
+        this.map = this.panel.map;
         this.group = group;
         this.markers = [];
 
@@ -56,7 +57,7 @@ class CollectibleMarkerGroup {
     toggleAll( newState ) {
         for ( const marker of this.markers ) {
             if ( newState != marker.leafletMarker.options.dismissed ) {
-                this.panel.map.toggleMarkerDismissal( marker.leafletMarker );
+                this.map.toggleMarkerDismissal( marker.leafletMarker );
             }
         }
     }
@@ -66,14 +67,32 @@ class CollectibleMarkerGroup {
     }
 
     sort() {
-        this.markers.sort( ( a, b ) => {
-            if ( a.apiInstance[0] == b.apiInstance[0] ) {
-                return a.apiInstance[1] > b.apiInstance[1];
-            }
-            return a.apiInstance[0] > b.apiInstance[0];
-        } );
-        for ( const marker of this.markers ) {
+        let sortKey;
+        switch ( this.map.crsOrigin ) {
+            case 1:
+                sortKey = ( a, b ) => {
+                    if ( a.apiInstance[0] == b.apiInstance[0] ) {
+                        return a.apiInstance[1] > b.apiInstance[1];
+                    }
+                    return a.apiInstance[0] > b.apiInstance[0];
+                };
+            case 2:
+                sortKey = ( a, b ) => {
+                    if ( a.apiInstance[0] == b.apiInstance[0] ) {
+                        return a.apiInstance[1] < b.apiInstance[1];
+                    }
+                    return a.apiInstance[0] < b.apiInstance[0];
+                };
+        };
+
+        this.markers.sort( sortKey );
+        
+        for ( let index = 0; index < this.markers.length; index++ ) {
+            const marker = this.markers[index];
             marker.field.$element.appendTo( this.container.$element );
+            if ( marker.$index ) {
+                marker.setIndex( index+1 );
+            }
         }
     }
 
@@ -103,15 +122,32 @@ class CollectibleMarkerEntry {
 
         this.$label = this.field.$label;
         this.$label.empty();
-        $( '<b>' ).text( this.panel.map.getCoordLabel( this.apiInstance ) ).appendTo( this.$label );
+
+        // Build the label
+        const areCoordsEnabled = this.panel.map.isFeatureBitSet( this.panel.map.FF_SHOW_COORDINATES );
+        // Coordinates
+        if ( areCoordsEnabled ) {
+            this.$coordLabel = $( '<b>' ).text( this.panel.map.getCoordLabel( this.apiInstance ) ).appendTo( this.$label );
+        }
+        // Marker label
+        this.$labelText = $( '<span>' ).appendTo( this.$label );
         if ( this.slots.label ) {
-            $( '<span>' ).html( this.slots.label ).appendTo( this.$label );
+            this.$labelText.html( this.slots.label );
+        }
+
+        if ( this.markerGroup.group.checklistNumbering ) {
+            this.$index = $( '<span class="datamap-collapsible-index">' ).appendTo( this.$labelText );
+            this.setIndex( this.markerGroup.markers.length + 1 );
         }
 
         this.field.$header.on( 'click', event => {
             this.leafletMarker.openPopup();
             event.preventDefault( true );
         } );
+    }
+
+    setIndex( index ) {
+        this.$index.text( ' #' + index );
     }
 }
 
@@ -146,7 +182,7 @@ class CollectiblesLegend {
         // Import existing markers if any have been loaded
         for ( const groupName in this.map.config.groups ) {
             const group = this.map.config.groups[groupName];
-            if ( group.canDismiss ) {
+            if ( group.collectible ) {
                 for ( const leafletMarker of ( this.map.layerManager.byLayer[groupName] || [] ) ) {
                     this.pushMarker( leafletMarker );
                 }
@@ -159,7 +195,7 @@ class CollectiblesLegend {
     _initialisePanel() {
         for ( const groupName in this.map.config.groups ) {
             const group = this.map.config.groups[groupName];
-            if ( group.canDismiss ) {
+            if ( group.collectible ) {
                 this.groups[groupName] = new CollectibleMarkerGroup( this, group );
                 this.groups[groupName].$element.appendTo( this.$root );
             }
@@ -168,7 +204,7 @@ class CollectiblesLegend {
 
 
     pushMarker( leafletMarker ) {
-        if ( this.map.config.groups[leafletMarker.attachedLayers[0]].canDismiss )
+        if ( this.map.config.groups[leafletMarker.attachedLayers[0]].collectible )
             this.groups[leafletMarker.attachedLayers[0]].push( leafletMarker );
     }
 
@@ -176,6 +212,13 @@ class CollectiblesLegend {
     sort() {
         for ( const group of Object.values( this.groups ) ) {
             group.sort();
+        }
+
+        if ( this.map.isFeatureBitSet( this.map.FF_SORT_CHECKLISTS_BY_AMOUNT ) ) {
+            const groups = Object.values( this.groups ).sort( ( a, b ) => a.markers.length > b.markers.length );
+            for ( const group of groups ) {
+                group.$element.appendTo( this.$root );
+            }
         }
     }
 
@@ -189,7 +232,7 @@ class CollectiblesLegend {
         for ( const groupId in this.map.config.groups ) {
             const group = this.map.config.groups[groupId];
             const markers = this.map.layerManager.byLayer[groupId];
-            if ( group.canDismiss && markers && this.map.markerLegend.groupToggles[groupId] ) {
+            if ( group.collectible && markers && this.map.markerLegend.groupToggles[groupId] ) {
                 const count = markers.filter( x => x.options.dismissed ).length;
                 this.map.markerLegend.groupToggles[groupId].setBadge( `${count} / ${markers.length}` );
             }

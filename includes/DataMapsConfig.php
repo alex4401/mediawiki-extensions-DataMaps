@@ -5,6 +5,8 @@ class DataMapsConfig {
     const FF_SHOW_COORDINATES = 'ShowCoordinates';
     const FF_SHOW_LEGEND_ABOVE = 'ShowLegendAlwaysAbove';
     const FF_REQUIRE_CUSTOM_MARKER_IDS = 'RequireCustomMarkerIDs';
+    const FF_SEARCH = 'Search';
+    const FF_SORT_CHECKLIST_BY_AMOUNT = 'SortChecklistsByAmount';
 
     public static function getParserExpansionLimit(): int {
         global $wgDataMapsMarkerParserExpansionLimit;

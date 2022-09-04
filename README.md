@@ -39,7 +39,6 @@ Create a page within the data namespace and assign it the `datamap` content mode
 Content of the page should be a valid JSON with following structure:
 * `$mixin` (boolean, optional): if `true` forces the map to be recognised as a preset/mix-in and relaxes validation.
 * `mixins` (array of page names, optional): *experimental*, list of other pages with the `datamap` content model that'll be loaded first and stacked to share configuration.
-* `title` (string, optional): label displayed above the map's legend.
 * `crs` (box, optional): reference coordinate space, which also determines whether the system origin will be top-left or bottom-left. Defaults to `[ [0, 0], [100, 100] ]`, which is top-left - swap the points for bottom-left.
 * `image` (file name, required, allowed only if `backgrounds` is not specified): name of the file (with no namespace) to display as background. This translates to a single, nameless background.
 * `backgrounds` (array of objects): list of *backgrounds* this map has available and the user can choose between:
@@ -60,8 +59,10 @@ Content of the page should be a valid JSON with following structure:
 * * * * `color` (colour, supports transparency, optional): colour to display the line with.
 * * * * `thickness` (number, optional): thickness of the line.
 * `hideLegend` (boolean, optional): if `true` does not show or load the legend at all. Defaults to `false`.
+* `enableSearch` (boolean, optional): if `true` enables marker search for this map. Controlled by `$wgDataMapsDefaultFeatures` identified by `Search`.
 * `showCoordinates` (boolean, optional): if `true` displays coordinates on mouse move and inside popups. Controlled by `$wgDataMapsDefaultFeatures` identified by `ShowCoordinates`.
 * `showLegendAbove` (boolean, optional): if `true` always displays the legend above the map. Controlled by `$wgDataMapsDefaultFeatures` identified by `ShowLegendAlwaysAbove`.
+* `sortChecklistsByAmount` (boolean, optional): if `true` sorts checklists by the number of markers inside. Controlled by `$wgDataMapsDefaultFeatures` identified by `SortChecklistsByAmount`.
 * `disableZoom` (boolean, optional): if `true` locks the map into zoom level of `2.75` (adjustable with `leafletSettings`), disables the zoom control and zoom interactions.
 * `requireCustomMarkerIDs` (boolean, optional): if `true` requires the `id` property to be always present on markers. Controlled by `$wgDataMapsDefaultFeatures` identified by `RequireCustomMarkerIDs`.
 * `leafletSettings` (object, optional): settings to pass to Leaflet's map instance.
@@ -77,7 +78,9 @@ Content of the page should be a valid JSON with following structure:
 * * * `icon` (file name, required): name of the file (with no namespace) to show markers with. This makes all markers in group SVG-based. Current support is limited.
 * * * `size` (dimensions, optional): size of each icon marker. Defaults to `[ 32, 32 ]`.
 * * `article` (page name, optional): name of an article every marker's popup should link to. Can be overridden on a marker.
-* * `canDismiss` (boolean, optional): if true, markers in this group can be marked as collected by the user.
+* * `isCollectible` (optional):
+* * * `true` or `individual`: whether markers of this group can be marked as collected by users.
+* * `autoNumberInChecklist` (boolean, optional): if collectible and true, markers in the checklist will have their index number added to the name.
 * `layers` (string to object map, optional): map from name to a *marker layer* specification:
 * * Marker layers can be used without an explicit declaration.
 * * `name` (string, required): currently unused.
@@ -92,7 +95,7 @@ Content of the page should be a valid JSON with following structure:
 * * `isWikitext` (boolean, optional): if true, `label` and `description` will be treated as wikitext. This is expensive, do not use for every marker. If unset, the backend will guess based on the presence of some patterns.
 * * `popupImage` (file name, optional): if provided, marker's popup will display this image under the description.
 * * `article` (page name, optional): article the marker's popup should link to. Follows either a format of `article title` or `article title|displayed label`.
-* * `searchKeywords` (string or string array, optional): specifies what keywords this marker will be suggested for. Search is however currently not implemented yet.
+* * `searchKeywords` (string or string array, optional): specifies what keywords this marker will be suggested for.
 * `custom` (map, optional): any arbitrary to be added to the client-side map config, for use with e.g. on-site gadgets.
 
 #### File name
@@ -117,7 +120,6 @@ Box is a array of two locations, where first describes the start point of the bo
 ### Parser functions
 * `DataMap`: used to embed a map in an article.
 * * Takes an optional `filter` parameter, which is a comma-delimited list of layers to show.
-* * Takes an optional `title` parameter, which overrides the respective property. Set to `none` to hide the title bar altogether.
 * * Example: `{{DataMap:Maps/Resources/Aberration|filter=metal,crystal|title=Metal and crystal locations on [[Aberration]]}}`.
 
 ## Configuration
@@ -131,6 +133,8 @@ Box is a array of two locations, where first describes the start point of the bo
 * * `$wgDataMapsDefaultFeatures['ShowCoordinates']`: whether coordinates will be displayed in the user interface. Defaults to `true`.
 * * `$wgDataMapsDefaultFeatures['ShowLegendAlwaysAbove']`: whether the legend will be displayed above the map. Defaults to `false`.
 * * `$wgDataMapsDefaultFeatures['RequireCustomMarkerIDs']`: whether the `id` property will be required on markers. Defaults to `false`.
+* * `$wgDataMapsDefaultFeatures['Search']`: whether marker search will be enabled by default. Defaults to `false`.
+* * `$wgDataMapsDefaultFeatures['SortChecklistsByAmount']`: whether collectible checklists will be sorted by number of markers inside. Defaults to `false`.
 * `$wgDataMapsReportTimingInfo`: if set to `true`, marker processing time will be reported in API responses. Defaults to `false`.
 * `$wgDataMapsAllowExperimentalFeatures`: if set to `true`, enables features listed below - all of which are in development and not ready for production. Defaults to `false`.
 * * Collectible checklists

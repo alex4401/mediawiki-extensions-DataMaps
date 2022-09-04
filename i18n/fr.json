@@ -8,7 +8,6 @@
     "datamap-desc": "Permet l'intégration de cartes interactives dans les pages du wiki.",
 
     "content-model-datamap": "Carte de données interactive",
-    "datamap-standard-title-prefix": "Cartes/",
 
     "datamap-doc-page-does-not-exist": "''La documentation pour la présente page de données peut être créée à [[$1]]''",
     "datamap-doc-page-header": "'''Ceci est la page de documentation pour [[$1]]'''",
