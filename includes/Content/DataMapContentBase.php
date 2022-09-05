@@ -48,10 +48,20 @@ abstract class DataMapContentBase extends JsonContent {
 		'name|subtleText',
 		// Markers
 		'id|lat|lon',
+		'id|x|y',
+		'id|y|x',
 		'lat|lon',
+		'x|y',
+		'y|x',
 		'lat|lon|article',
+		'x|y|article',
+		'y|x|article',
+		'lat|lon|image',
+		'x|y|image',
+		'y|x|image',
 		'lat|lon|popupImage',
-		'article|popupImage'
+		'article|popupImage',
+		'article|image'
 	];
 
 	public static function toJSON( stdclass $raw ) {

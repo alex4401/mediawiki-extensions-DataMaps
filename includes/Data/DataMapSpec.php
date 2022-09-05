@@ -37,7 +37,7 @@ class DataMapSpec extends DataModel {
 
     public function getBackgrounds(): array {
         if ( $this->cachedBackgrounds == null ) {
-            if ( $this->raw->backgrounds == null ) {
+            if ( !isset( $this->raw->backgrounds ) ) {
                 $this->cachedBackgrounds = [ MapBackgroundSpec::fromImageName( $this->raw->image ) ];
             } else {
                 $this->cachedBackgrounds = array_map( fn ( $raw ) => new MapBackgroundSpec( $raw ), $this->raw->backgrounds );
