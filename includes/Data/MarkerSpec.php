@@ -11,15 +11,18 @@ class MarkerSpec extends DataModel {
     }
 
     public function getLatitude(): float {
-        return $this->raw->lat;
+        return isset( $this->raw->lat ) ? $this->raw->lat : $this->raw->y;
     }
 
     public function getLongitude(): float {
-        return $this->raw->lon;
+        return isset( $this->raw->lon ) ? $this->raw->lon : $this->raw->x;
     }
 
     public function getLabel(): ?string {
-        return isset( $this->raw->label ) ? $this->raw->label : null;
+        return isset( $this->raw->name ) ? $this->raw->name : (
+            /* DEPRECATED(v0.11.3:v0.12.0) */
+            isset( $this->raw->label ) ? $this->raw->label : null
+        );
     }
 
     public function getDescription()/*: ?array|string */ {
@@ -31,7 +34,10 @@ class MarkerSpec extends DataModel {
     }
 
     public function getPopupImage(): ?string {
-        return isset( $this->raw->popupImage ) ? $this->raw->popupImage : null;
+        return isset( $this->raw->image ) ? $this->raw->image : (
+            /* DEPRECATED(v0.11.3:v0.12.0) */
+            isset( $this->raw->popupImage ) ? $this->raw->popupImage : null
+        );
     }
 
     public function getRelatedArticle(): ?string {
@@ -52,17 +58,19 @@ class MarkerSpec extends DataModel {
         } else {
             $this->expectField( $status, 'id', DataModel::TYPE_STRING_OR_NUMBER );
         }
-        $this->requireField( $status, 'lat', DataModel::TYPE_NUMBER );
-        $this->requireField( $status, 'lon', DataModel::TYPE_NUMBER );
-        $this->expectField( $status, 'label', DataModel::TYPE_STRING );
+        $this->requireEitherField( $status, 'lat', DataModel::TYPE_NUMBER, 'y', DataModel::TYPE_NUMBER );
+        $this->requireEitherField( $status, 'lon', DataModel::TYPE_NUMBER, 'x', DataModel::TYPE_NUMBER );
+        $this->allowReplacedField( $status, 'label', DataModel::TYPE_STRING, 'name', '0.11.3', '0.12.0' );
+        $this->expectField( $status, 'name', DataModel::TYPE_STRING );
         $this->expectField( $status, 'description', DataModel::TYPE_ARRAY_OR_STRING );
         $this->expectField( $status, 'isWikitext', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
-        $this->expectField( $status, 'popupImage', DataModel::TYPE_STRING );
-        $hasKeywords = $this->expectField( $status, 'searchKeywords', DataModel::TYPE_ARRAY_OR_STRING );
+        $this->allowReplacedField( $status, 'popupImage', DataModel::TYPE_STRING, 'image', '0.11.3', '0.12.0' );
+        $this->expectField( $status, 'image', DataModel::TYPE_STRING );
+        $areKeywordsOk = $this->expectField( $status, 'searchKeywords', DataModel::TYPE_ARRAY_OR_STRING );
         $this->disallowOtherFields( $status );
 
-        if ( $hasKeywords && is_array( $this->raw->searchKeywords ) ) {
+        if ( $areKeywordsOk && isset( $this->raw->searchKeywords ) && is_array( $this->raw->searchKeywords ) ) {
             foreach ( $this->getSearchKeywords() as &$item ) {
                 $isValidWeighedPair = ( is_array( $item ) && count( $item ) === 2
                     && $this->verifyType( $item[0], DataModel::TYPE_STRING )
