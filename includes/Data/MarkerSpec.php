@@ -59,10 +59,10 @@ class MarkerSpec extends DataModel {
         $this->expectField( $status, 'isWikitext', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
         $this->expectField( $status, 'popupImage', DataModel::TYPE_STRING );
-        $hasKeywords = $this->expectField( $status, 'searchKeywords', DataModel::TYPE_ARRAY_OR_STRING );
+        $areKeywordsOk = $this->expectField( $status, 'searchKeywords', DataModel::TYPE_ARRAY_OR_STRING );
         $this->disallowOtherFields( $status );
 
-        if ( $hasKeywords && is_array( $this->raw->searchKeywords ) ) {
+        if ( $areKeywordsOk && isset( $this->raw->searchKeywords ) && is_array( $this->raw->searchKeywords ) ) {
             foreach ( $this->getSearchKeywords() as &$item ) {
                 $isValidWeighedPair = ( is_array( $item ) && count( $item ) === 2
                     && $this->verifyType( $item[0], DataModel::TYPE_STRING )
