@@ -19,7 +19,10 @@ class MarkerSpec extends DataModel {
     }
 
     public function getLabel(): ?string {
-        return isset( $this->raw->label ) ? $this->raw->label : null;
+        return isset( $this->raw->name ) ? $this->raw->name : (
+            /* DEPRECATED(v0.11.3:v0.12.0) */
+            isset( $this->raw->label ) ? $this->raw->label : null
+        );
     }
 
     public function getDescription()/*: ?array|string */ {
@@ -31,7 +34,10 @@ class MarkerSpec extends DataModel {
     }
 
     public function getPopupImage(): ?string {
-        return isset( $this->raw->popupImage ) ? $this->raw->popupImage : null;
+        return isset( $this->raw->image ) ? $this->raw->image : (
+            /* DEPRECATED(v0.11.3:v0.12.0) */
+            isset( $this->raw->popupImage ) ? $this->raw->popupImage : null
+        );
     }
 
     public function getRelatedArticle(): ?string {
@@ -54,11 +60,13 @@ class MarkerSpec extends DataModel {
         }
         $this->requireEitherField( $status, 'lat', DataModel::TYPE_NUMBER, 'y', DataModel::TYPE_NUMBER );
         $this->requireEitherField( $status, 'lon', DataModel::TYPE_NUMBER, 'x', DataModel::TYPE_NUMBER );
-        $this->expectField( $status, 'label', DataModel::TYPE_STRING );
+        $this->allowReplacedField( $status, 'label', DataModel::TYPE_STRING, 'name', '0.11.3', '0.12.0' );
+        $this->expectField( $status, 'name', DataModel::TYPE_STRING );
         $this->expectField( $status, 'description', DataModel::TYPE_ARRAY_OR_STRING );
         $this->expectField( $status, 'isWikitext', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
-        $this->expectField( $status, 'popupImage', DataModel::TYPE_STRING );
+        $this->allowReplacedField( $status, 'popupImage', DataModel::TYPE_STRING, 'image', '0.11.3', '0.12.0' );
+        $this->expectField( $status, 'image', DataModel::TYPE_STRING );
         $areKeywordsOk = $this->expectField( $status, 'searchKeywords', DataModel::TYPE_ARRAY_OR_STRING );
         $this->disallowOtherFields( $status );
 
