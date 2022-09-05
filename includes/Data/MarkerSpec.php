@@ -11,11 +11,11 @@ class MarkerSpec extends DataModel {
     }
 
     public function getLatitude(): float {
-        return $this->raw->lat;
+        return isset( $this->raw->lat ) ? $this->raw->lat : $this->raw->y;
     }
 
     public function getLongitude(): float {
-        return $this->raw->lon;
+        return isset( $this->raw->lon ) ? $this->raw->lon : $this->raw->x;
     }
 
     public function getLabel(): ?string {
@@ -52,8 +52,8 @@ class MarkerSpec extends DataModel {
         } else {
             $this->expectField( $status, 'id', DataModel::TYPE_STRING_OR_NUMBER );
         }
-        $this->requireField( $status, 'lat', DataModel::TYPE_NUMBER );
-        $this->requireField( $status, 'lon', DataModel::TYPE_NUMBER );
+        $this->requireEitherField( $status, 'lat', DataModel::TYPE_NUMBER, 'y', DataModel::TYPE_NUMBER );
+        $this->requireEitherField( $status, 'lon', DataModel::TYPE_NUMBER, 'x', DataModel::TYPE_NUMBER );
         $this->expectField( $status, 'label', DataModel::TYPE_STRING );
         $this->expectField( $status, 'description', DataModel::TYPE_ARRAY_OR_STRING );
         $this->expectField( $status, 'isWikitext', DataModel::TYPE_BOOL );
