@@ -28,13 +28,21 @@
     "datamap-error-validatespec-group-no-display": "El grupo de marcadores \"$1\" no tiene ajustes de interfaz. Añade las propiedades <code>icon</code> y/o <code>fillColor</code> .",
     "datamap-error-validatespec-map-no-group-name": "Se ha definido un grupo de marcadores sin nombre (o con un nombre en blanco). Asígnale un nombre único.",
     "datamap-error-validatespec-map-missing-group": "Se han añadido los marcadores al grupo \"$1\", el cual no se ha definido.",
+    "datamap-error-validatespec-map-bad-mixin": "El mixin \"<code>$1</code>\" debe existir, debe usar el modelo de contenido del <code>mapa de datos interactivos</code>, y debe ser válido en cuanto a sintaxis y estructura.",
+    "datamap-error-validatespec-bgoverlay-invalid-polyline": "La propiedad <code>path</code> de la sobreimpresión del fondo de polilínea debe ser una lista de puntos.",
 
     "datamap-error-internal-unknown-field-type": "No se ha implementado la compatibilidad para el tipo de campo con ID de $1. Esto se debe a un error en el código de extensión.",
     "datamap-error-render-unsupported-displaymode": "El modo de pantalla $1 se ha identificado como un marcador, pero no existe compatibilidad para el mismo. Esto se debe a un error en el código de extensión.",
     "datamap-error-pf-page-does-not-exist": "La página del mapa de datos \"[[$1]]\" no existe.",
     "datamap-error-pf-page-invalid-content-model": "El modelo de contenido de la página \"[[$1]]\" no es <code>datamap</code>.",
+    "datamap-error-cannot-preview-validation-errors": "<b>No se puede mostrar la vista previa de la edición debido a uno o varios errores en el código fuente del mapa:</b>",
 
     "datamap-unnamed-map": "Mapa sin nombre",
+    "datamap-defaultloadout-map-background": "Map background.jpg",
+    "datamap-defaultloadout-group-name": "Un grupo de marcador",
+    "datamap-defaultloadout-marker-label": "Un marcador",
+    "datamap-defaultloadout-group-icon": "Marker group icon in legend.png",
+    
     "datamap-legend-label": "Leyenda",
     "datamap-javascript-required": "Los mapas de datos interactivos requieren de la activación de JavaScript.",
     "datamap-loading-data": "Espera. Cargando datos",
@@ -46,13 +54,21 @@
     "datamap-toggle-hide-all": "Ocultar todo",
     "datamap-layer-control": "Capas",
 
+    "datamap-legend-tab-checklist": "Listas de verificación",
+    "datamap-checklist-prelude": "Estos son los objetos que puedes marcar como conseguidos:",
+    "datamap-checklist-collect-all": "Conseguir todos",
+    "datamap-checklist-uncollect-all": "Reiniciar todos",
+
     "datamap-layer-surface": "Superficie",
     "datamap-layer-cave": "Cuevas",
 
     "datamap-popup-related-article": "Ver más",
     "datamap-popup-dismissed": "Recogidos",
     "datamap-popup-mark-as-dismissed": "Marcar como recogidos",
+    "datamap-popup-marker-link-get": "Obtener un enlace compartible",
+    "datamap-popup-marker-link-copied": "Enlace copiado a tu portapapeles.",
 
     "datamap-control-reset-view": "Modo por defecto",
-    "datamap-control-centre-view": "Centrar vista en el nivel de zoom actual"
+    "datamap-control-centre-view": "Centrar vista en el nivel de zoom actual",
+    "datamap-control-search": "Haz clic y escribe tu búsqueda..."
 }

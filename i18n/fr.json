@@ -28,13 +28,21 @@
     "datamap-error-validatespec-group-no-display": "Le groupe de marqueurs \"$1\" n'a pas de réglages d'affichage. Ajoutez les propriétés <code>icon</code> et/ou <code>fillColor</code>.",
     "datamap-error-validatespec-map-no-group-name": "Un groupe de marqueurs sans nom (ou avec un nom vide) a été défini. Assignez-lui un nom unique.",
     "datamap-error-validatespec-map-missing-group": "Des marqueurs ont été ajoutés au groupe \"$1\", qui n'a pas été défini.",
+    "datamap-error-validatespec-map-bad-mixin": "Mix-in \"<code>$1</code>\" doit exister, utiliser le modèle de contenu d'une <code>Carte de données interactive</code> et avoir une syntaxe et une structure valides.",
+    "datamap-error-validatespec-bgoverlay-invalid-polyline": "La propriété du <code>path</code> du calque de fond en lignes polygonales doit être une liste de points.",
 
     "datamap-error-render-unsupported-displaymode": "Le mode d'affichage $1 a été annoncé comme un marqueur, mais il n'est pas soutenu. Ceci est un défaut du code de l'extension.",
     "datamap-error-internal-unknown-field-type": "Pas de soutien de validation implémenté pour le type de champ avec l'ID de $1. Ceci est un défaut du code de l'extension.",
     "datamap-error-pf-page-does-not-exist": "La page de données de carte \"[[$1]]\" n'existe pas.",
     "datamap-error-pf-page-invalid-content-model": "Le modèle de contenu de la page \"[[$1]]\" n'est pas <code>datamap</code>.",
+    "datamap-error-cannot-preview-validation-errors": "<b>Édition non prévisualisée en raison d'erreur(s) dans le code source de la page:</b>",
 
     "datamap-unnamed-map": "Carte non nommée",
+    "datamap-defaultloadout-map-background": "Map background.jpg",
+    "datamap-defaultloadout-group-name": "Un groupe de marqueurs",
+    "datamap-defaultloadout-marker-label": "Un marqueur",
+    "datamap-defaultloadout-group-icon": "Marker group icon in legend.png",
+
     "datamap-legend-label": "Légende",
     "datamap-javascript-required": "Les cartes de données interactives nécessitent que JavaScript soit activé.",
     "datamap-loading-data": "Veuillez attendre, chargement des données",
@@ -45,6 +53,11 @@
     "datamap-toggle-show-all": "Tout montrer",
     "datamap-toggle-hide-all": "Tout cacher",
     "datamap-layer-control": "Calques",
+    
+    "datamap-legend-tab-checklist": "Checklists",
+    "datamap-checklist-prelude": "Voici les objets qui peuvent être marqués récoltés:",
+    "datamap-checklist-collect-all": "Tout récolter",
+    "datamap-checklist-uncollect-all": "Tout réinitialiser",
 
     "datamap-layer-surface": "Surface",
     "datamap-layer-cave": "Grottes",
@@ -52,7 +65,10 @@
     "datamap-popup-related-article": "Voir plus",
     "datamap-popup-dismissed": "Récoltée",
     "datamap-popup-mark-as-dismissed": "Marquer comme récoltée",
+    "datamap-popup-marker-link-get": "Partager le lien",
+    "datamap-popup-marker-link-copied": "Lien copié dans votre presse-paier.",
 
     "datamap-control-reset-view": "Restaurer la vue par défaut",
-    "datamap-control-centre-view": "Centre la vue au grossissement actuel"
+    "datamap-control-centre-view": "Centre la vue au grossissement actuel",
+    "datamap-control-search": "Cliquez et commencez à taper votre recherche..."
 }
