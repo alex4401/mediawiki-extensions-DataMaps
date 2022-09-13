@@ -4,29 +4,19 @@
             "num9852453"
         ]
     },
-
     "datamap-doc-page-does-not-exist": "''このデータページのドキュメントは、[[$1]]で作成できます''",
     "datamap-doc-page-header": "'''これは[[$1]]のドキュメントページです'''",
-
     "datamap-category-pages-including-maps": "データマップを含むページ",
-
-    "datamap-unnamed-map": "名前のないマップ",
     "datamap-legend-label": "凡例",
     "datamap-javascript-required": "インタラクティブデータマップを表示するには、JavaScriptを有効にする必要があります。",
-    "datamap-placeholder-loading": "データ読み込み中",
     "datamap-legend-tab-locations": "マーク",
     "datamap-toggle-show-all": "すべて表示",
     "datamap-toggle-hide-all": "すべて非表示",
-    "datamap-toggle-caves": "洞窟を切り替える",
-
     "datamap-layer-control": "レイヤー",
     "datamap-layer-surface": "地上",
-    "datamap-layer-caves": "洞窟",
-
     "datamap-popup-related-article": "詳細を見る",
     "datamap-popup-dismissed": "回収済み",
     "datamap-popup-mark-as-dismissed": "回収済みとしてマーク",
-
     "datamap-coordinate-control-text": "緯度 $1、経度 $2",
     "datamap-control-reset-view": "デフォルト表示に戻す"
 }

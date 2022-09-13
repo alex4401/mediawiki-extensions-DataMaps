@@ -4,35 +4,24 @@
             "HvitCrow"
         ]
     },
-
     "datamap-doc-page-does-not-exist": "''Документация для этой страницы данных может быть создана на [[$1]]''",
     "datamap-doc-page-header": "'''Это страница документации для [[$1]]'''",
-
     "datamap-category-pages-including-maps": "Страницы, включая карты данных",
-
-    "datamap-error-validation-no-display": "Группа \"$1\" не имеет указанного значка или цвета.",
     "datamap-error-validation-ambiguous-display": "Группа \"$1\" маркеры не могут иметь одновременно и значок, и цвет.",
     "datamap-error-render-unsupported-displaymode": "Для маркера был указан режим отображения $1, но для него отсутствует поддержка. Это ошибка в коде расширения.",
     "datamap-error-pf-page-does-not-exist": "Страница карты данных \"[[$1]]\" не существует.",
     "datamap-error-pf-page-invalid-content-model": "Модель содержимого страницы \"[[$1]]\" не является <code>datamap</code>.",
-
-    "datamap-unnamed-map": "Безымянная карта",
     "datamap-legend-label": "Легенда",
     "datamap-javascript-required": "Интерактивные карты данных требуют включения JavaScript.",
-    "datamap-placeholder-loading": "Загрузка данных",
     "datamap-legend-tab-locations": "Маркеры",
     "datamap-toggle-show-all": "Показать все",
     "datamap-toggle-hide-all": "Скрыть все",
-    "datamap-toggle-caves": "Выключатель пещер",
-
     "datamap-layer-control": "Слои",
     "datamap-layer-surface": "Поверхность",
     "datamap-layer-cave": "Пещеры",
-
     "datamap-popup-related-article": "Узнать больше",
     "datamap-popup-dismissed": "Собрано",
     "datamap-popup-mark-as-dismissed": "Отметить как собранный",
-
     "datamap-coordinate-control-text": "широта $1, долгота $2",
     "datamap-control-reset-view": "Восстановить вид по умолчанию"
- }
+}
