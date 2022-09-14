@@ -51,7 +51,7 @@ function DataMap( id, $root, config ) {
     this.markerIdToAutoOpen = null;
     const tabberId = this.getParentTabberNeueId();
     if ( !tabberId || ( tabberId && tabberId == window.location.hash.substr( 1 ) ) ) {
-        this.markerIdToAutoOpen = new URLSearchParams( window.location.search ).get( MarkerPopup.URL_PARAMETER );
+        this.markerIdToAutoOpen = Util.getQueryParameter( 'marker' );
     }
 
     // Coordinate reference system
