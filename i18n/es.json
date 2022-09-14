@@ -4,16 +4,11 @@
             "Mirageionova"
         ]
     },
-
     "datamap-desc": "Permite insertar mapas interactivos en las páginas de la wiki.",
-
     "content-model-datamap": "Mapa de datos interactivo",
-
     "datamap-doc-page-does-not-exist": "''La documentación para esta página de datos puede crearse en [[$1]]''",
     "datamap-doc-page-header": "'''Esta es la página de documentación para [[$1]]'''",
-
     "datamap-category-pages-including-maps": "Páginas incluyendo los mapas de datos",
-
     "datamap-error-validate-check-docs": "Consulta la [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps documentación de la extensión] para más información sobre la estructura adecuada.",
     "datamap-error-validate-invalid-json": "Este documento no es un archivo JSON válido.",
     "datamap-error-validate-unexpected-fields": "Se ha(n) encontrado campo(s) desconocido(s) en la estructura $1: $2.",
@@ -24,35 +19,42 @@
     "datamap-error-validate-exclusive-fields": "$1 solo necesita uno de estos dos campos: <code>$2</code> o <code>$3</code>. No pueden emplearse ambos simultáneamente.",
     "datamap-error-validate-replaced-field": "El campo <code>$2</code> de la estructura $1 se ha sustituido por <code>$3</code> en la versión $4, y se eliminará en la versión $5.",
     "datamap-error-validate-no-file": "El archivo [[File:$1]] se ha enlazado, pero aún no se ha subido a la wiki.",
-
     "datamap-error-validatespec-group-no-display": "El grupo de marcadores \"$1\" no tiene ajustes de interfaz. Añade las propiedades <code>icon</code> y/o <code>fillColor</code> .",
     "datamap-error-validatespec-map-no-group-name": "Se ha definido un grupo de marcadores sin nombre (o con un nombre en blanco). Asígnale un nombre único.",
     "datamap-error-validatespec-map-missing-group": "Se han añadido los marcadores al grupo \"$1\", el cual no se ha definido.",
-
+    "datamap-error-validatespec-map-bad-mixin": "El mixin \"<code>$1</code>\" debe existir, debe usar el modelo de contenido del <code>mapa de datos interactivos</code>, y debe ser válido en cuanto a sintaxis y estructura.",
+    "datamap-error-validatespec-bgoverlay-invalid-polyline": "La propiedad <code>path</code> de la sobreimpresión del fondo de polilínea debe ser una lista de puntos.",
     "datamap-error-internal-unknown-field-type": "No se ha implementado la compatibilidad para el tipo de campo con ID de $1. Esto se debe a un error en el código de extensión.",
     "datamap-error-render-unsupported-displaymode": "El modo de pantalla $1 se ha identificado como un marcador, pero no existe compatibilidad para el mismo. Esto se debe a un error en el código de extensión.",
     "datamap-error-pf-page-does-not-exist": "La página del mapa de datos \"[[$1]]\" no existe.",
     "datamap-error-pf-page-invalid-content-model": "El modelo de contenido de la página \"[[$1]]\" no es <code>datamap</code>.",
-
-    "datamap-unnamed-map": "Mapa sin nombre",
+    "datamap-error-cannot-preview-validation-errors": "<b>No se puede mostrar la vista previa de la edición debido a uno o varios errores en el código fuente del mapa:</b>",
+    "datamap-defaultloadout-map-background": "Map background.jpg",
+    "datamap-defaultloadout-group-name": "Un grupo de marcador",
+    "datamap-defaultloadout-marker-label": "Un marcador",
+    "datamap-defaultloadout-group-icon": "Marker group icon in legend.png",
     "datamap-legend-label": "Leyenda",
     "datamap-javascript-required": "Los mapas de datos interactivos requieren de la activación de JavaScript.",
     "datamap-loading-data": "Espera. Cargando datos",
     "datamap-error-dataload": "<b>No se ha podido cargar los datos</b><br/>Actualiza la página o prueba de nuevo más tarde",
-    "datamap-lazy-click-to-load": "Haz clic para cargar el mapa de datos", 
-    
+    "datamap-lazy-click-to-load": "Haz clic para cargar el mapa de datos",
     "datamap-legend-tab-locations": "Marcadores",
     "datamap-toggle-show-all": "Mostrar todo",
     "datamap-toggle-hide-all": "Ocultar todo",
     "datamap-layer-control": "Capas",
-
+    "datamap-legend-tab-checklist": "Listas de verificación",
+    "datamap-checklist-prelude": "Estos son los objetos que puedes marcar como conseguidos:",
+    "datamap-checklist-collect-all": "Conseguir todos",
+    "datamap-checklist-uncollect-all": "Reiniciar todos",
     "datamap-layer-surface": "Superficie",
     "datamap-layer-cave": "Cuevas",
-
     "datamap-popup-related-article": "Ver más",
     "datamap-popup-dismissed": "Recogidos",
     "datamap-popup-mark-as-dismissed": "Marcar como recogidos",
-
+    "datamap-popup-marker-link-get": "Obtener un enlace compartible",
+    "datamap-popup-marker-link-copied": "Enlace copiado a tu portapapeles.",
     "datamap-control-reset-view": "Modo por defecto",
-    "datamap-control-centre-view": "Centrar vista en el nivel de zoom actual"
+    "datamap-control-centre-view": "Centrar vista en el nivel de zoom actual",
+    "datamap-control-search": "Haz clic y escribe tu búsqueda...",
+    "datamap-coordinate-control-text": "lat $1, lon $2"
 }

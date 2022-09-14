@@ -22,7 +22,6 @@ class DataMapContentHandler extends JsonContentHandler {
 
 	public function makeEmptyContent() {
 		$datamap = new stdclass();
-		$datamap->title = wfMessage( 'datamap-unnamed-map' )->plain();
 		$datamap->crs = DataMapSpec::DEFAULT_COORDINATE_SPACE;
 		$datamap->image = wfMessage( 'datamap-defaultloadout-map-background' )->plain();
 		$datamap->groups = new stdclass();

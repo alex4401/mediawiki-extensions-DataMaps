@@ -4,39 +4,29 @@
             "Bellbox"
         ]
     },
-
     "datamap-desc": "อนุญาตให้ฝังแผนที่ข้อมูลแบบโต้ตอบตอบลงในหน้าวิกิ",
-
-	"content-model-datamap": "แผนที่ข้อมูลแบบโต้ตอบ",
-
+    "content-model-datamap": "แผนที่ข้อมูลแบบโต้ตอบ",
     "datamap-doc-page-suffix": "/เอกสาร",
     "datamap-doc-page-does-not-exist": "''เอกสารประกอบสำหรับหน้านี้ถูกสร้างขึ้นที่ [[$1]]''",
     "datamap-doc-page-show": "{{$1}}\n<hr />",
     "datamap-doc-page-header": "'''เอกสารประกอบนี้สำหรับ [[$1]]'''",
-
     "datamap-category-pages-including-maps": "หน้าที่มีแผนที่ข้อมูลแบบโต้ตอบ",
-
-    "datamap-unnamed-map": "แผนที่ไม่มีชื่อ",
     "datamap-legend-label": "คำอธิบาย",
     "datamap-javascript-required": "ต้องเปิดใช้งาน JavaScript สำหรับแผนที่ข้อมูลแบบโต้ตอบ",
     "datamap-loading-data": "รอสักครู่ กำลังโหลดข้อมูล",
     "datamap-error-dataload": "<b>ไม่สามารถโหลดข้อมูลได้</b><br/>โปรดรีเฟรชหน้านี้แล้วลองใหม่ภายหลัง",
     "datamap-lazy-click-to-load": "คลิกเพื่อโหลดแผนที่",
-
     "datamap-legend-tab-locations": "เครื่องหมาย",
     "datamap-toggle-show-all": "แสดงทั้งหมด",
     "datamap-toggle-hide-all": "ซ่อนทั้งหมด",
     "datamap-layer-control": "สลับ",
-
     "datamap-layer-surface": "พื้นผิว",
     "datamap-layer-cave": "ถ้ำ",
-
     "datamap-popup-related-article": "ดูเพิ่มเติมได้ที่ ",
     "datamap-popup-dismissed": "สะสมแล้ว",
     "datamap-popup-mark-as-dismissed": "ทำเครื่องหมายว่าสะสมแล้ว",
     "datamap-popup-marker-link-get": "รับลิงก์สำหรับแชร์",
     "datamap-popup-marker-link-copied": "คัดลอกลิงก์ไปยังคลิปบอร์ดแล้ว",
-
     "datamap-coordinate-control-text": "ละติจูด $1, ลองจิจูด $2",
     "datamap-control-reset-view": "คืนค่ามุมมองเดิม",
     "datamap-control-centre-view": "ปรับมุมมองให้อยู่ตรงกลางที่ระดับการซูมปัจจุบัน"

@@ -51,7 +51,7 @@ function DataMap( id, $root, config ) {
     this.markerIdToAutoOpen = null;
     const tabberId = this.getParentTabberNeueId();
     if ( !tabberId || ( tabberId && tabberId == window.location.hash.substr( 1 ) ) ) {
-        this.markerIdToAutoOpen = new URLSearchParams( window.location.search ).get( MarkerPopup.URL_PARAMETER );
+        this.markerIdToAutoOpen = Util.getQueryParameter( 'marker' );
     }
 
     // Coordinate reference system
@@ -494,24 +494,21 @@ const buildLeafletMap = function ( $holder ) {
 const buildControls = function () {
     // Create a coordinate-under-cursor display
     if ( this.isFeatureBitSet( this.FF_SHOW_COORDINATES ) ) {
-        this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
+        this.$coordTracker = this.addControl( this.anchors.bottomLeft,
+            $( '<div class="leaflet-control datamap-control datamap-control-coords">' ) );
         this.leaflet.on( 'mousemove', event => {
-            let lat = event.latlng.lat;
-            let lon = event.latlng.lng;
-            if ( lat >= -5 && lat <= 105 && lon >= -5 && lon <= 105 ) {
-                lat /= this.crsScaleY;
-                lon /= this.crsScaleX;
-                if ( this.crsOrigin == CRSOrigin.TopLeft )
-                    lat = this.config.crs[1][0] - lat;
-                this.$coordTracker.text( this.getCoordLabel( lat, lon ) );
-            }
+            let lat = event.latlng.lat / this.crsScaleY;
+            let lon = event.latlng.lng / this.crsScaleX;
+            if ( this.crsOrigin == CRSOrigin.TopLeft )
+                lat = this.config.crs[1][0] - lat;
+            this.$coordTracker.text( this.getCoordLabel( lat, lon ) );
         } );
     }
 
     // Create a background toggle
     if ( this.config.backgrounds.length > 1 ) {
         this.$backgroundSwitch = this.addControl( this.anchors.topRight,
-            $( '<select class="leaflet-control datamap-control-backgrounds leaflet-bar">' )
+            $( '<select class="leaflet-control datamap-control datamap-control-backgrounds leaflet-bar">' )
             .on( 'change', () => {
                 this.setCurrentBackground( this.$backgroundSwitch.val() );
                 // Remember the choice
@@ -526,9 +523,10 @@ const buildControls = function () {
 
     // Extend zoom control to add buttons to reset or centre the view
     const $viewControls = this.addControl( this.anchors.topLeft,
-        $( '<div class="leaflet-control leaflet-bar datamap-control-viewcontrols">' ) );
+        $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-viewcontrols">' ) );
     $viewControls.append(
-        $( '<a role="button" class="datamap-control-viewreset oo-ui-icon-fullScreen" aria-disabled="false"></a>' )
+        $( '<a role="button" class="datamap-control-viewreset" aria-disabled="false"><span class="oo-ui-icon-fullScreen">'
+            + '</span></a>' )
         .attr( {
             title: mw.msg( 'datamap-control-reset-view' ),
             'aria-label': mw.msg( 'datamap-control-reset-view' )
@@ -536,7 +534,8 @@ const buildControls = function () {
         .on( 'click', () => this.restoreDefaultView() )
     );
     $viewControls.append(
-        $( '<a role="button" class="datamap-control-viewcentre oo-ui-icon-exitFullscreen" aria-disabled="false"></a>' )
+        $( '<a role="button" class="datamap-control-viewcentre" aria-disabled="false"><span class="oo-ui-icon-exitFullscreen">'
+            + '</span></a>' )
         .attr( {
             title: mw.msg( 'datamap-control-centre-view' ),
             'aria-label': mw.msg( 'datamap-control-centre-view' )

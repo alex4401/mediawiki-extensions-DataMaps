@@ -27,10 +27,6 @@ class DataMapSpec extends DataModel {
         return isset( $this->raw->mixins ) ? $this->raw->mixins : null;
     }
 
-    public function getTitle(): string {
-        return $this->raw->title ?? wfMessage( 'datamap-unnamed-map' );
-    }
-
     public function getCoordinateReferenceSpace(): array {
         return isset( $this->raw->crs ) ? $this->raw->crs : self::DEFAULT_COORDINATE_SPACE;
     }
