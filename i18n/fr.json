@@ -15,9 +15,9 @@
     "datamap-error-validate-field-no-value": "Le champ <code>$1</code> dans la structure $2 nécessite une valeur.",
     "datamap-error-validate-field-required": "Le champ <code>$2</code> est requis dans la structure $1. $3",
     "datamap-error-validate-wrong-field-type": "Le champ <code>$2</code> a une valeur incorrecte dans la structure $1. $3",
-    "datamap-error-validate-field-required-either": "$1 nécessite seulement un des deux champs: <code>$2</code> ou <code>$3</code>. Les deux ne peuvent pas être spécifiés en même temps.",
-    "datamap-error-validate-exclusive-fields": "$1 requiert seulement un des deux champs: <code>$2</code> ou <code>$3</code>. Les deux ne peuvent pas être spécifiés en même temps.",
-    "datamap-error-validate-replaced-field": "Le champ <code>$2</code> dans la structure $1 a été remplacé par <code>$3</code> dans la version $4, et sera supprimé dans la  version $5.",
+    "datamap-error-validate-field-required-either": "$1 nécessite seulement un des deux champs : <code>$2</code> ou <code>$3</code>. Les deux ne peuvent pas être spécifiés en même temps.",
+    "datamap-error-validate-exclusive-fields": "$1 requiert seulement un des deux champs : <code>$2</code> ou <code>$3</code>. Les deux ne peuvent pas être spécifiés en même temps.",
+    "datamap-error-validate-replaced-field": "Le champ <code>$2</code> dans la structure $1 a été remplacé par <code>$3</code> dans la version $4, et sera supprimé dans la version $5.",
     "datamap-error-validate-no-file": "Le fichier [[File:$1]] est lié, mais il n'a pas pu être téléchargé vers le wiki.",
     "datamap-error-validatespec-group-no-display": "Le groupe de marqueurs \"$1\" n'a pas de réglages d'affichage. Ajoutez les propriétés <code>icon</code> et/ou <code>fillColor</code>.",
     "datamap-error-validatespec-map-no-group-name": "Un groupe de marqueurs sans nom (ou avec un nom vide) a été défini. Assignez-lui un nom unique.",
@@ -42,8 +42,8 @@
     "datamap-toggle-show-all": "Tout montrer",
     "datamap-toggle-hide-all": "Tout cacher",
     "datamap-layer-control": "Calques",
-    "datamap-legend-tab-checklist": "Checklists",
-    "datamap-checklist-prelude": "Voici les objets qui peuvent être marqués récoltés:",
+    "datamap-legend-tab-checklist": "Listes de contrôle",
+    "datamap-checklist-prelude": "Voici les objets qui peuvent être marqués récoltés :",
     "datamap-checklist-collect-all": "Tout récolter",
     "datamap-checklist-uncollect-all": "Tout réinitialiser",
     "datamap-layer-surface": "Surface",
@@ -55,5 +55,6 @@
     "datamap-popup-marker-link-copied": "Lien copié dans votre presse-paier.",
     "datamap-control-reset-view": "Restaurer la vue par défaut",
     "datamap-control-centre-view": "Centre la vue au grossissement actuel",
-    "datamap-control-search": "Cliquez et commencez à taper votre recherche..."
+    "datamap-control-search": "Cliquez et commencez à taper votre recherche...",
+    "datamap-coordinate-control-text": "lat $1, lon $2"
 }

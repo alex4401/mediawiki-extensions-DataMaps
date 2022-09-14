@@ -55,5 +55,6 @@
     "datamap-popup-marker-link-copied": "Enlace copiado a tu portapapeles.",
     "datamap-control-reset-view": "Modo por defecto",
     "datamap-control-centre-view": "Centrar vista en el nivel de zoom actual",
-    "datamap-control-search": "Haz clic y escribe tu búsqueda..."
+    "datamap-control-search": "Haz clic y escribe tu búsqueda...",
+    "datamap-coordinate-control-text": "lat $1, lon $2"
 }
