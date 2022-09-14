@@ -4,55 +4,57 @@
             "Chatmaigre888"
         ]
     },
-
     "datamap-desc": "Permet l'intégration de cartes interactives dans les pages du wiki.",
-
     "content-model-datamap": "Carte de données interactive",
-
     "datamap-doc-page-does-not-exist": "''La documentation pour la présente page de données peut être créée à [[$1]]''",
     "datamap-doc-page-header": "'''Ceci est la page de documentation pour [[$1]]'''",
-
     "datamap-category-pages-including-maps": "Pages incluant des cartes de données",
-
     "datamap-error-validate-check-docs": "Vérifiez la [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps documentation de l'extention] pour plus d'informations sur la bonne structure.",
     "datamap-error-validate-invalid-json": "Ceci n'est pas un document JSON valide.",
     "datamap-error-validate-unexpected-fields": "Champ(s) inconnu(s) dans la structure $1: $2.",
     "datamap-error-validate-field-no-value": "Le champ <code>$1</code> dans la structure $2 nécessite une valeur.",
     "datamap-error-validate-field-required": "Le champ <code>$2</code> est requis dans la structure $1. $3",
     "datamap-error-validate-wrong-field-type": "Le champ <code>$2</code> a une valeur incorrecte dans la structure $1. $3",
-    "datamap-error-validate-field-required-either": "$1 nécessite seulement un des deux champs: <code>$2</code> ou <code>$3</code>. Les deux ne peuvent pas être spécifiés en même temps.",
-    "datamap-error-validate-exclusive-fields": "$1 requiert seulement un des deux champs: <code>$2</code> ou <code>$3</code>. Les deux ne peuvent pas être spécifiés en même temps.",
-    "datamap-error-validate-replaced-field": "Le champ <code>$2</code> dans la structure $1 a été remplacé par <code>$3</code> dans la version $4, et sera supprimé dans la  version $5.",
+    "datamap-error-validate-field-required-either": "$1 nécessite seulement un des deux champs : <code>$2</code> ou <code>$3</code>. Les deux ne peuvent pas être spécifiés en même temps.",
+    "datamap-error-validate-exclusive-fields": "$1 requiert seulement un des deux champs : <code>$2</code> ou <code>$3</code>. Les deux ne peuvent pas être spécifiés en même temps.",
+    "datamap-error-validate-replaced-field": "Le champ <code>$2</code> dans la structure $1 a été remplacé par <code>$3</code> dans la version $4, et sera supprimé dans la version $5.",
     "datamap-error-validate-no-file": "Le fichier [[File:$1]] est lié, mais il n'a pas pu être téléchargé vers le wiki.",
-
     "datamap-error-validatespec-group-no-display": "Le groupe de marqueurs \"$1\" n'a pas de réglages d'affichage. Ajoutez les propriétés <code>icon</code> et/ou <code>fillColor</code>.",
     "datamap-error-validatespec-map-no-group-name": "Un groupe de marqueurs sans nom (ou avec un nom vide) a été défini. Assignez-lui un nom unique.",
     "datamap-error-validatespec-map-missing-group": "Des marqueurs ont été ajoutés au groupe \"$1\", qui n'a pas été défini.",
-
+    "datamap-error-validatespec-map-bad-mixin": "Mix-in \"<code>$1</code>\" doit exister, utiliser le modèle de contenu d'une <code>Carte de données interactive</code> et avoir une syntaxe et une structure valides.",
+    "datamap-error-validatespec-bgoverlay-invalid-polyline": "La propriété du <code>path</code> du calque de fond en lignes polygonales doit être une liste de points.",
     "datamap-error-render-unsupported-displaymode": "Le mode d'affichage $1 a été annoncé comme un marqueur, mais il n'est pas soutenu. Ceci est un défaut du code de l'extension.",
     "datamap-error-internal-unknown-field-type": "Pas de soutien de validation implémenté pour le type de champ avec l'ID de $1. Ceci est un défaut du code de l'extension.",
     "datamap-error-pf-page-does-not-exist": "La page de données de carte \"[[$1]]\" n'existe pas.",
     "datamap-error-pf-page-invalid-content-model": "Le modèle de contenu de la page \"[[$1]]\" n'est pas <code>datamap</code>.",
-
-    "datamap-unnamed-map": "Carte non nommée",
+    "datamap-error-cannot-preview-validation-errors": "<b>Édition non prévisualisée en raison d'erreur(s) dans le code source de la page:</b>",
+    "datamap-defaultloadout-map-background": "Map background.jpg",
+    "datamap-defaultloadout-group-name": "Un groupe de marqueurs",
+    "datamap-defaultloadout-marker-label": "Un marqueur",
+    "datamap-defaultloadout-group-icon": "Marker group icon in legend.png",
     "datamap-legend-label": "Légende",
     "datamap-javascript-required": "Les cartes de données interactives nécessitent que JavaScript soit activé.",
     "datamap-loading-data": "Veuillez attendre, chargement des données",
     "datamap-error-dataload": "<b>Impossible de charger les données</b><br/>veuillez rafraîchir ou réessayer plus tard",
     "datamap-lazy-click-to-load": "Cliquez pour charger la carte de données",
-    
     "datamap-legend-tab-locations": "Marqueurs",
     "datamap-toggle-show-all": "Tout montrer",
     "datamap-toggle-hide-all": "Tout cacher",
     "datamap-layer-control": "Calques",
-
+    "datamap-legend-tab-checklist": "Listes de contrôle",
+    "datamap-checklist-prelude": "Voici les objets qui peuvent être marqués récoltés :",
+    "datamap-checklist-collect-all": "Tout récolter",
+    "datamap-checklist-uncollect-all": "Tout réinitialiser",
     "datamap-layer-surface": "Surface",
     "datamap-layer-cave": "Grottes",
-
     "datamap-popup-related-article": "Voir plus",
     "datamap-popup-dismissed": "Récoltée",
     "datamap-popup-mark-as-dismissed": "Marquer comme récoltée",
-
+    "datamap-popup-marker-link-get": "Partager le lien",
+    "datamap-popup-marker-link-copied": "Lien copié dans votre presse-paier.",
     "datamap-control-reset-view": "Restaurer la vue par défaut",
-    "datamap-control-centre-view": "Centre la vue au grossissement actuel"
+    "datamap-control-centre-view": "Centre la vue au grossissement actuel",
+    "datamap-control-search": "Cliquez et commencez à taper votre recherche...",
+    "datamap-coordinate-control-text": "lat $1, lon $2"
 }

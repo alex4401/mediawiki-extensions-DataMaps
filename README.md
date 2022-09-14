@@ -91,11 +91,11 @@ Content of the page should be a valid JSON with following structure:
 * * `lat`/`y` (decimal, required): latitude/`Y` coordinate.
 * * `lon`/`x` (decimal, required): longitude/`X` coordinate.
 * * `name` (string, optional): text to append to marker's popup title.
-* * * This field was called `label` before version 0.11.3, but support will be removed in 0.12.0.
+* * * This field was called `label` before version 0.11.3, but support will be removed in 0.13.0.
 * * `description` (string or string array, optional): text to add to the marker's popup.
 * * `isWikitext` (boolean, optional): if true, `label` and `description` will be treated as wikitext. This is expensive, do not use for every marker. If unset, the backend will guess based on the presence of some patterns.
 * * `image` (file name, optional): if provided, marker's popup will display this image under the description.
-* * * This field was called `popupImage` before version 0.11.3, but support will be removed in 0.12.0.
+* * * This field was called `popupImage` before version 0.11.3, but support will be removed in 0.13.0.
 * * `article` (page name, optional): article the marker's popup should link to. Follows either a format of `article title` or `article title|displayed label`.
 * * `searchKeywords` (string, or array of strings or string and number (score multiplier) pairs, optional): specifies what keywords this marker will be suggested for.
 * `custom` (map, optional): any arbitrary to be added to the client-side map config, for use with e.g. on-site gadgets.

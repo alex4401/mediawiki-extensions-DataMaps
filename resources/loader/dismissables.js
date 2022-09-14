@@ -76,6 +76,7 @@ class CollectibleMarkerGroup {
                     }
                     return a.apiInstance[0] > b.apiInstance[0];
                 };
+                break;
             case 2:
                 sortKey = ( a, b ) => {
                     if ( a.apiInstance[0] == b.apiInstance[0] ) {
@@ -83,6 +84,7 @@ class CollectibleMarkerGroup {
                     }
                     return a.apiInstance[0] < b.apiInstance[0];
                 };
+                break;
         };
 
         this.markers.sort( sortKey );

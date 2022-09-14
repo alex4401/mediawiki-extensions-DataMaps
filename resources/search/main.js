@@ -18,7 +18,7 @@ function MarkerSearch( map ) {
 
 MarkerSearch.prototype._initialiseUI = function () {
     this.$root = this.map.addControl( this.map.anchors.topLeft,
-        $( '<div class="leaflet-control leaflet-bar datamap-control-search">' ), true );
+        $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-search">' ), true );
     
     this.inputBox = new OO.ui.TextInputWidget( {
         placeholder: mw.msg( 'datamap-control-search' ),

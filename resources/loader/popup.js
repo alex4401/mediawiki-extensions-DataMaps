@@ -1,27 +1,5 @@
 const Util = require( './util.js' );
 
-const URL_PARAMETER = 'marker';
-
-
-var getMarkerURL = function ( map, persistentMarkerId, withHost ) {
-    const params = new URLSearchParams( window.location.search );
-    if ( persistentMarkerId ) {
-        params.set( URL_PARAMETER, persistentMarkerId );
-    } else {
-        params.delete( URL_PARAMETER );
-    }
-
-    const tabber = map.getParentTabberNeueId();
-    return ( withHost ? `https://${window.location.hostname}` : '' )
-        + decodeURIComponent( `${window.location.pathname}?${params}`.replace( /\?$/, '' )
-        + ( tabber ? ( '#' + tabber ) : window.location.hash ) );
-};
-
-
-var updateLocation = function ( map, persistentMarkerId ) {
-    history.replaceState( {}, '', getMarkerURL( map, persistentMarkerId ) );
-};
-
 
 function MarkerPopup( map, markerType, leafletMarker ) {
     this.map = map;
@@ -37,7 +15,8 @@ function MarkerPopup( map, markerType, leafletMarker ) {
 }
 
 
-MarkerPopup.URL_PARAMETER = URL_PARAMETER;
+// DEPRECATED(0.11.4:0.12.0)
+MarkerPopup.URL_PARAMETER = 'marker';
 
 
 MarkerPopup.bindTo = function ( map, markerType, leafletMarker ) {
@@ -55,7 +34,7 @@ MarkerPopup.prototype.buildButtons = function () {
         .attr( {
             'title': mw.msg( 'datamap-popup-marker-link-get' ),
             'aria-label': mw.msg( 'datamap-popup-marker-link-get' ),
-            'href': getMarkerURL( this.map, this.uid, true )
+            'href': Util.makeUrlWithParams( this.map, { marker: this.uid }, true )
         } )
         .appendTo( this.$buttons )
         .on( 'click', event => {
@@ -149,12 +128,12 @@ MarkerPopup.prototype.buildTools = function () {
 
 
 MarkerPopup.prototype.onAdd = function () {
-    updateLocation( this.map, this.uid );
+    Util.updateLocation( this.map, { marker: this.uid } );
 };
 
 
 MarkerPopup.prototype.onRemove = function () {
-    updateLocation( this.map, null );
+    Util.updateLocation( this.map, { marker: null } );
 };
 
 
