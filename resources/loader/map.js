@@ -496,15 +496,11 @@ const buildControls = function () {
     if ( this.isFeatureBitSet( this.FF_SHOW_COORDINATES ) ) {
         this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
         this.leaflet.on( 'mousemove', event => {
-            let lat = event.latlng.lat;
-            let lon = event.latlng.lng;
-            if ( lat >= -5 && lat <= 105 && lon >= -5 && lon <= 105 ) {
-                lat /= this.crsScaleY;
-                lon /= this.crsScaleX;
-                if ( this.crsOrigin == CRSOrigin.TopLeft )
-                    lat = this.config.crs[1][0] - lat;
-                this.$coordTracker.text( this.getCoordLabel( lat, lon ) );
-            }
+            let lat = event.latlng.lat / this.crsScaleY;
+            let lon = event.latlng.lng / this.crsScaleX;
+            if ( this.crsOrigin == CRSOrigin.TopLeft )
+                lat = this.config.crs[1][0] - lat;
+            this.$coordTracker.text( this.getCoordLabel( lat, lon ) );
         } );
     }
 
