@@ -494,7 +494,8 @@ const buildLeafletMap = function ( $holder ) {
 const buildControls = function () {
     // Create a coordinate-under-cursor display
     if ( this.isFeatureBitSet( this.FF_SHOW_COORDINATES ) ) {
-        this.$coordTracker = this.addControl( this.anchors.bottomLeft, $( '<div class="leaflet-control datamap-control-coords">' ) );
+        this.$coordTracker = this.addControl( this.anchors.bottomLeft,
+            $( '<div class="leaflet-control datamap-control datamap-control-coords">' ) );
         this.leaflet.on( 'mousemove', event => {
             let lat = event.latlng.lat / this.crsScaleY;
             let lon = event.latlng.lng / this.crsScaleX;
@@ -507,7 +508,7 @@ const buildControls = function () {
     // Create a background toggle
     if ( this.config.backgrounds.length > 1 ) {
         this.$backgroundSwitch = this.addControl( this.anchors.topRight,
-            $( '<select class="leaflet-control datamap-control-backgrounds leaflet-bar">' )
+            $( '<select class="leaflet-control datamap-control datamap-control-backgrounds leaflet-bar">' )
             .on( 'change', () => {
                 this.setCurrentBackground( this.$backgroundSwitch.val() );
                 // Remember the choice
@@ -522,9 +523,10 @@ const buildControls = function () {
 
     // Extend zoom control to add buttons to reset or centre the view
     const $viewControls = this.addControl( this.anchors.topLeft,
-        $( '<div class="leaflet-control leaflet-bar datamap-control-viewcontrols">' ) );
+        $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-viewcontrols">' ) );
     $viewControls.append(
-        $( '<a role="button" class="datamap-control-viewreset oo-ui-icon-fullScreen" aria-disabled="false"></a>' )
+        $( '<a role="button" class="datamap-control-viewreset" aria-disabled="false"><span class="oo-ui-icon-fullScreen">'
+            + '</span></a>' )
         .attr( {
             title: mw.msg( 'datamap-control-reset-view' ),
             'aria-label': mw.msg( 'datamap-control-reset-view' )
@@ -532,7 +534,8 @@ const buildControls = function () {
         .on( 'click', () => this.restoreDefaultView() )
     );
     $viewControls.append(
-        $( '<a role="button" class="datamap-control-viewcentre oo-ui-icon-exitFullscreen" aria-disabled="false"></a>' )
+        $( '<a role="button" class="datamap-control-viewcentre" aria-disabled="false"><span class="oo-ui-icon-exitFullscreen">'
+            + '</span></a>' )
         .attr( {
             title: mw.msg( 'datamap-control-centre-view' ),
             'aria-label': mw.msg( 'datamap-control-centre-view' )
