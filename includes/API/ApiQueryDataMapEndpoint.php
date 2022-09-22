@@ -128,6 +128,11 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         return $revision;
     }
 
+    public static function makeKey( Title $title, int $revid = -1 ) {
+        return ObjectCache::getInstance( DataMapsConfig::getApiCacheType() )
+            ->makeKey( self::CACHE_NAMESPACE, self::GENERATION, $title->getId(), $revid );
+    }
+
     private function doProcessingCached( $params ): array {
         $cacheExpiryTime = DataMapsConfig::getApiCacheTTL();
 
@@ -139,7 +144,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
         // Build the cache key from an identifier, page ID and revision ID parameter
         $revid = isset( $params['revid'] ) ? $params['revid'] : -1;
-        $cacheKey = $cache->makeKey( self::CACHE_NAMESPACE, self::GENERATION, $title->getId(), $revid );
+        $cacheKey = self::makeKey( $title, $revid );
 
         // Try to retrieve the response
         $response = $cache->get( $cacheKey );
