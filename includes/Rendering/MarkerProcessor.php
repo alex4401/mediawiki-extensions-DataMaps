@@ -46,7 +46,7 @@ class MarkerProcessor {
         // Configure the wikitext parser
         $this->parserOptions->enableLimitReport( false );
         $this->parserOptions->setAllowSpecialInclusion( false );
-        $this->parserOptions->setExpensiveParserFunctionLimit( 0 );
+        $this->parserOptions->setExpensiveParserFunctionLimit( 5 );
         $this->parserOptions->setInterwikiMagic( false );
         $this->parserOptions->setMaxIncludeSize( DataMapsConfig::getParserExpansionLimit() );
     }
