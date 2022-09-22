@@ -43,8 +43,15 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                 ParamValidator::PARAM_REQUIRED => false,
             ],
             'filter' => [
+                /* DEPRECATED(v0.12.0:v0.13.0): use layers */
                 ParamValidator::PARAM_TYPE => 'string',
                 ParamValidator::PARAM_REQUIRED => false,
+                ParamValidator::PARAM_DEPRECATED => true,
+            ],
+            'layers' => [
+                ParamValidator::PARAM_TYPE => 'string',
+                ParamValidator::PARAM_REQUIRED => false,
+                ParamValidator::PARAM_ISMULTI => true,
             ],
         ];
     }
@@ -60,6 +67,11 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         }
 
         $params = $this->extractRequestParams();
+
+        // Migrate filter parameter onto layers
+        if ( isset( $params['filter'] ) && !empty( $params['filter'] ) ) {
+            $params['layers'] = explode( '|', $params['filter'] );
+        }
 
         // Configure browser-side caching recommendations
 		$this->getMain()->setCacheMode( 'public' );
@@ -104,17 +116,6 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         }
 
         return [ $title, $revision ];
-    }
-
-    private function getFiltersFromParams( $params ): ?array {
-        $filter = null;
-        if ( isset( $params['filter'] ) && !empty( $params['filter'] ) ) {
-            $filter = explode( '|', $params['filter'] );
-        }
-        if ( empty( $filter ) ) {
-            return null;
-        }
-        return $filter;
     }
 
     private function doProcessingCached( $params ): array {
@@ -200,10 +201,9 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
     private function doPostProcessing( $params, array &$data ) {
         // Filter markers by layers
-        $filter = $this->getFiltersFromParams( $params );
-        if ( $filter != null ) {
+        if ( isset( $params['layers'] ) ) {
             foreach ( array_keys( $data['markers'] ) as &$layers ) {
-                if ( empty( array_intersect( $filter, explode( ' ', $layers ) ) ) ) {
+                if ( empty( array_intersect( $params['layers'], explode( ' ', $layers ) ) ) ) {
                     unset( $data['markers'][$layers] );
                 }
             }
