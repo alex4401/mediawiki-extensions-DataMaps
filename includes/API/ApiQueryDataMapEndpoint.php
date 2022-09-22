@@ -206,8 +206,10 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $response = ApiResult::addMetadataToResultVars( $response, false );
 
         if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
-            $response['processingTime'] = hrtime( true ) - $timeStart;
-            $response['parserTime'] = $processor->timeInParser;
+            $response['timing'] = [
+                'processing' => hrtime( true ) - $timeStart,
+                'parserTime' => $processor->timeInParser
+            ];
         }
 
         return $response;
