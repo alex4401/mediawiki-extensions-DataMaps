@@ -32,6 +32,8 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     // - next two digits should be the patch version, or two zeroes instead.
     const GENERATION = 1000;
 
+    private ?Title $cachedTitle = null;
+
     public function getAllowedParams() {
         return [
             'title' => [
@@ -94,13 +96,19 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         }
     }
 
+    private function getTitleFromParams( $params ) {
+        if ( $this->cachedTitle === null ) {
+            $this->cachedTitle = Title::newFromText( $params['title'], DataMapsConfig::getNamespace() );
+            if ( !$this->cachedTitle->exists() ) {
+                $this->dieWithError( [ 'apierror-invalidtitle', $params['title'] ] );
+            }
+        }
+        return $this->cachedTitle;
+    }
+
     private function getRevisionFromParams( $params ) {
         // Retrieve latest revision by title
-        $title = Title::newFromText( $params['title'], DataMapsConfig::getNamespace() );
-        if ( !$title->exists() ) {
-            $this->dieWithError( [ 'apierror-invalidtitle', $params['title'] ] );
-        }
-
+        $title = $this->getTitleFromParams( $params );
         $revision = null;
         if ( isset( $params['revid'] ) ) {
             // Retrieve revision by ID
@@ -115,7 +123,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             $revision = WikiPage::factory( $title )->getRevisionRecord();
         }
 
-        return [ $title, $revision ];
+        return $revision;
     }
 
     private function doProcessingCached( $params ): array {
@@ -124,9 +132,12 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         // Retrieve the specified cache instance
         $cache = ObjectCache::getInstance( DataMapsConfig::getApiCacheType() );
 
-        // Build the cache key from an identifier, title parameter and revision ID parameter
+        // Retrieve the title
+        $title = $this->getTitleFromParams( $params );
+
+        // Build the cache key from an identifier, page ID and revision ID parameter
         $revid = isset( $params['revid'] ) ? $params['revid'] : -1;
-        $cacheKey = $cache->makeKey( 'ARKDataMapQuery', self::GENERATION, $params['title'], $revid );
+        $cacheKey = $cache->makeKey( 'ARKDataMapQuery', self::GENERATION, $title->getId(), $revid );
 
         // Try to retrieve the response
         $response = $cache->get( $cacheKey );
@@ -167,7 +178,8 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         }
 
         // Retrieve the content
-        list( $title, $revision ) = $this->getRevisionFromParams( $params );
+        $title = $this->getTitleFromParams( $params );
+        $revision = $this->getRevisionFromParams( $params );
         $content = $revision->getContent( SlotRecord::MAIN, RevisionRecord::FOR_PUBLIC, null );
 
         // Make sure the page is a data map
