@@ -15,10 +15,6 @@ function MarkerPopup( map, markerType, leafletMarker ) {
 }
 
 
-// DEPRECATED(0.11.4:0.12.0)
-MarkerPopup.URL_PARAMETER = 'marker';
-
-
 MarkerPopup.bindTo = function ( map, markerType, leafletMarker ) {
     leafletMarker.bindPopup( () => new MarkerPopup( map, markerType, leafletMarker ), {}, L.Ark.Popup );
 };
