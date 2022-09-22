@@ -50,7 +50,7 @@ class MarkerProcessor {
         $this->parserOptions->setInterwikiMagic( false );
         $this->parserOptions->setMaxIncludeSize( DataMapsConfig::getParserExpansionLimit() );
     }
-
+    
     public function processAll(): array {
         $results = [];
 

@@ -57,6 +57,10 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                 ParamValidator::PARAM_REQUIRED => false,
                 ParamValidator::PARAM_ISMULTI => true,
             ],
+			'continue' => [
+				ParamValidator::PARAM_TYPE => 'integer',
+				ApiBase::PARAM_HELP_MSG => 'api-help-param-continue',
+			],
         ];
     }
 
@@ -203,7 +207,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             'revisionId' => $revision->getId()
         ];
 
-        // Have a MarkerProcessor convert the data
+        // Have a MarkerProcessor convert the data and insert it into the response
         $processor = new MarkerProcessor( $title, $dataMap, null );
         $response['markers'] = $processor->processAll();
 
@@ -229,5 +233,27 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                 }
             }
         }
-    } 
+
+        // Truncate markers before the index of continue
+        if ( isset( $params['continue'] ) && $params['continue'] > 0 ) {
+            $toSkip = $params['continue'];
+            foreach ( $data['markers'] as $layers => $markers ) {
+                if ( count( $markers ) <= $toSkip ) {
+                    // Drop the whole set, its size is lower or same as the number we need to skip
+                    $toSkip -= count( $markers );
+                    unset( $data['markers'][$layers] );
+                } else {
+                    // Set is bigger than number we need, slice it
+                    $data['markers'][$layers] = array_slice( $markers, $toSkip );
+                    $toSkip = 0;
+                }
+
+                if ( $toSkip < 0 ) {
+                    throw new LogicException( 'API response truncating resulted in more markers removed than needed' );
+                } else if ( $toSkip == 0 ) {
+                    break;
+                }
+            }
+        }
+    }
 }
