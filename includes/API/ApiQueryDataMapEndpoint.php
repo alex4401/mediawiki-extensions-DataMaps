@@ -30,7 +30,9 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     // - if major version becomes higher than zero, the first digit should be the major version;
     // - next two digits should be the minor version;
     // - next two digits should be the patch version, or two zeroes instead.
-    const GENERATION = 1000;
+    const GENERATION = 1200;
+    // Key prefix for every cache key produced by this endpoint. Prior to v0.12.0 this was 'ARKDataMapQuery'.
+    const CACHE_NAMESPACE = 'ExtDataMap::Query';
 
     private ?Title $cachedTitle = null;
 
@@ -137,7 +139,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
         // Build the cache key from an identifier, page ID and revision ID parameter
         $revid = isset( $params['revid'] ) ? $params['revid'] : -1;
-        $cacheKey = $cache->makeKey( 'ARKDataMapQuery', self::GENERATION, $title->getId(), $revid );
+        $cacheKey = $cache->makeKey( self::CACHE_NAMESPACE, self::GENERATION, $title->getId(), $revid );
 
         // Try to retrieve the response
         $response = $cache->get( $cacheKey );
