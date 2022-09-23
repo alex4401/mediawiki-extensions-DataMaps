@@ -42,7 +42,8 @@ function MarkerLegendPanel( legend, name, addTotalToggles, withLayerDropdown ) {
     this.legend = legend;
     this.map = this.legend.map;
     // Root DOM element
-    this.$root = this.legend.addTab( name ).$element;
+    this.tab = this.legend.addTab( name, null, false );
+    this.$root = this.tab.$element;
     //
     this.buttonGroup = new OO.ui.ButtonGroupWidget( {} );
     //
@@ -117,6 +118,7 @@ MarkerLegendPanel.prototype.addMarkerLayerToggleRequired = function ( $parent, l
 
 MarkerLegendPanel.prototype.addMarkerGroupToggle = function ( groupId, group ) {
     this.groupToggles[groupId] = new MarkerGroupToggleField( this, groupId, group );
+    this.legend.setTabVisibility( this.tab, true );
 };
 
 

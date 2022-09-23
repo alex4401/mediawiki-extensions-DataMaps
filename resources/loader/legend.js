@@ -12,10 +12,7 @@ function MapLegend( map ) {
 }
 
 
-/*
- * 
- */
-MapLegend.prototype.addTab = function ( name, cssClass ) {
+MapLegend.prototype.addTab = function ( name, cssClass, visible ) {
     const result = new OO.ui.TabPanelLayout( {
         name: name,
         label: name,
@@ -23,7 +20,26 @@ MapLegend.prototype.addTab = function ( name, cssClass ) {
         classes: cssClass ? [ cssClass ] : []
     } );
     this.tabLayout.addTabPanels( [ result ] );
+    if ( visible === false ) {
+        this.setTabVisibility( result, false );
+    }
     return result;
+};
+
+
+MapLegend.prototype.setTabVisibility = function ( tab, value ) {
+    tab.toggle( value );
+    tab.getTabItem().toggle( value );
+    this.reevaluateVisibility();
+};
+
+
+MapLegend.prototype.reevaluateVisibility = function () {
+    if ( this.tabLayout.getTabs().getItems().some( item => item.isVisible() ) ) {
+        this.$legendRoot.show();
+    } else {
+        this.$legendRoot.hide();
+    }
 };
 
 
