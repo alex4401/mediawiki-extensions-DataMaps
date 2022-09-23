@@ -101,7 +101,7 @@ class DataMapEmbedRenderer {
         // Register page's dependency on the mix-ins
         if ( $this->data->getMixins() !== null ) {
             foreach ( $this->data->getMixins() as &$mixinName ) {
-                $mixin = Title::makeTitleSafe( ExtensionConfig::getNamespace(), $mixinName );
+                $mixin = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $mixinName );
                 $parserOutput->addTemplate( $mixin, $mixin->getArticleId(),
                     $this->parser->fetchCurrentRevisionRecordOfTitle( $mixin )->getId() );
             }

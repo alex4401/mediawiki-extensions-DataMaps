@@ -199,7 +199,7 @@ class DataMapSpec extends DataModel {
             // Make sure all mixins exist and are data maps
             if ( $this->getMixins() !== null ) {
                 foreach ( $this->getMixins() as &$mixinName ) {
-                    $title = Title::makeTitleSafe( ExtensionConfig::getNamespace(), $mixinName );
+                    $title = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $mixinName );
                     $mixinPage = DataMapContent::loadPage( $title );
                     
                     if ( is_numeric( $mixinPage ) || $mixinPage->getData()->getValue() == null ) {

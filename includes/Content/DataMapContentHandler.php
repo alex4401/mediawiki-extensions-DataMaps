@@ -50,7 +50,7 @@ class DataMapContentHandler extends JsonContentHandler {
 	 * @return bool
 	 */
 	public function canBeUsedOn( Title $title ) {
-		if ( $title->getNamespace() !== ExtensionConfig::getNamespace() ) {
+		if ( $title->getNamespace() !== ExtensionConfig::getNamespaceId() ) {
 			return false;
 		}
 

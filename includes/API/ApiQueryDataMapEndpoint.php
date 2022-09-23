@@ -104,7 +104,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
     private function getTitleFromParams( $params ) {
         if ( $this->cachedTitle === null ) {
-            $this->cachedTitle = Title::newFromText( $params['title'], ExtensionConfig::getNamespace() );
+            $this->cachedTitle = Title::newFromText( $params['title'], ExtensionConfig::getNamespaceId() );
             if ( !$this->cachedTitle->exists() ) {
                 $this->dieWithError( [ 'apierror-invalidtitle', $params['title'] ] );
             }

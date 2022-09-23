@@ -15,7 +15,7 @@ final class ParserFunction_EmbedDataMap {
         $params = func_get_args();
 		array_shift( $params ); // we know the parser already
 
-        $title = Title::makeTitleSafe( ExtensionConfig::getNamespace(), $params[0] );
+        $title = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $params[0] );
         $content = DataMapContent::loadPage( $title );
         if ( $content === DataMapContent::LERR_NOT_FOUND ) {
             $msg = wfMessage( 'datamap-error-pf-page-does-not-exist', wfEscapeWikiText( $title->getFullText() ) )

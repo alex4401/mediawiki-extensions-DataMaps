@@ -12,8 +12,16 @@ class ExtensionConfig {
         global $wgDataMapsMarkerParserExpansionLimit;
         return $wgDataMapsMarkerParserExpansionLimit;
     }
-    
-    public static function getNamespace(): int {
+
+    public static function isNamespaceSelfManaged(): bool {
+        global $wgDataMapsNamespaceId;
+        return $wgDataMapsNamespaceId == 'managed';
+    }
+
+    public static function getNamespaceId(): int {
+        if ( self::isNamespaceSelfManaged() ) {
+            return NS_MAP;
+        }
         global $wgDataMapsNamespaceId;
         return $wgDataMapsNamespaceId;
     }

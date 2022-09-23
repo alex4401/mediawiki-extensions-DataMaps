@@ -30,6 +30,24 @@
 		"datamap-category-pages-including-maps"
 	],
 
+	"namespaces": [
+		{
+			"id": 2900,
+			"constant": "NS_MAP",
+			"name": "Map",
+			"defaultcontentmodel": "wikitext",
+			"subpages": true,
+			"conditional": true
+		},
+		{
+			"id": 2901,
+			"constant": "NS_MAP_TALK",
+			"name": "Map_talk",
+			"subpages": true,
+			"conditional": true
+		}
+	],
+
 	"ResourceFileModulePaths": {
 		"localBasePath": "resources",
 		"remoteExtPath": "DataMaps/resources"
@@ -208,20 +226,21 @@
 	
 	"callback": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onRegistration",
 	"Hooks": {
-		"ParserFirstCallInit": "DataMapsHookHandler",
-		"ContentHandlerDefaultModelFor": "DataMapsHookHandler",
+		"ParserFirstCallInit": "MainHandler",
+		"ContentHandlerDefaultModelFor": "MainHandler",
+		"CanonicalNamespaces": "MainHandler",
 		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
 	},
     "HookHandlers": {
-        "DataMapsHookHandler": {
+        "MainHandler": {
             "class": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler"
         }
     },
 
 	"config": {
 		"DataMapsNamespaceId": {
-			"description": "Namespace where data maps will be stored.",
-			"value": -1
+			"description": "Namespace where data maps will be stored. Use 'managed' to use the built-in namespace.",
+			"value": "managed"
 		},
 		"DataMapsCacheType": {
 			"description": "Cache type to use for queryDataMap API output. Defaults to CACHE_ANYTHING.",

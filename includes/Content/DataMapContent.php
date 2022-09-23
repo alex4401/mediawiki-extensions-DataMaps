@@ -57,7 +57,7 @@ class DataMapContent extends DataMapContentBase {
 
 		$finalMixin = null;
 		foreach ( $mixins as &$mixinName ) {
-			$title = Title::makeTitleSafe( ExtensionConfig::getNamespace(), $mixinName );
+			$title = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $mixinName );
         	$mixinPage = DataMapContent::loadPage( $title );
 
 			// Mixin failed to load, skip it. There's no way for us to throw an error at this stage without crashing the whole

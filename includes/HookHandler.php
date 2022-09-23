@@ -6,12 +6,20 @@ use Linker;
 
 class HookHandler implements
 	\MediaWiki\Hook\ParserFirstCallInitHook,
-	\MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook
+	\MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook,
+	\MediaWiki\Hook\CanonicalNamespacesHook
 {
     public static function onRegistration(): bool {
         define( 'ARK_CONTENT_MODEL_DATAMAP', 'datamap' );
         return true;
     }
+	
+	public function onCanonicalNamespaces( &$namespaces ) {
+		if ( ExtensionConfig::isNamespaceSelfManaged() ) {
+			$namespaces[ NS_MAP ] = 'Map';
+			$namespaces[ NS_MAP_TALK ] = 'Map_talk';
+		}
+	}
     
     public function onParserFirstCallInit( $parser ) {
         $parser->setFunctionHook(
@@ -26,7 +34,7 @@ class HookHandler implements
 	}
 
 	public function onContentHandlerDefaultModelFor( $title, &$model ) {
-		if ( $title->getNamespace() === ExtensionConfig::getNamespace() && !self::isDocPage( $title ) ) {
+		if ( $title->getNamespace() === ExtensionConfig::getNamespaceId() && !self::isDocPage( $title ) ) {
             $prefix = wfMessage( 'datamap-standard-title-prefix' )->inContentLanguage();
             if ( $prefix !== '-' && str_starts_with( $title->getText(), $prefix->plain() ) ) {
 			    $model = ARK_CONTENT_MODEL_DATAMAP;
