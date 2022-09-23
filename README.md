@@ -67,6 +67,9 @@ Content of the page should be a valid JSON with following structure:
 * `requireCustomMarkerIDs` (boolean, optional): if `true` requires the `id` property to be always present on markers. Controlled by `$wgDataMapsDefaultFeatures` identified by `RequireCustomMarkerIDs`.
 * `leafletSettings` (object, optional): settings to pass to Leaflet's map instance.
 * * [Check Leaflet's documentation for valid options.](https://leafletjs.com/reference.html#map-option) Only simple (strings, booleans and numbers) options are supported. There is always a possibility of conflicts.
+* * Common:
+* * * `maxZoom`: controls max allowed zoom level. Defaults to `5`.
+* * * `minZoom`: controls minimum allowed zoom level. Defaults to `1.75` on mobile devices and `2` on others.
 * * `rendererSettings` (object, optional): options to pass to the canvas renderer. [Check Leaflet's documentation for valid options.](https://leafletjs.com/reference.html#canvas-option)
 * `groups` (string to object map, required): map from name to a *marker group* specification:
 * * `name` (string, required): name of the group and each individual marker.
