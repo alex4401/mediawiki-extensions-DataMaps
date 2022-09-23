@@ -52,6 +52,10 @@ class MarkerSpec extends DataModel {
         return isset( $this->raw->searchKeywords ) ? $this->raw->searchKeywords : null;
     }
 
+    public function isExcludedFromSearch(): bool {
+        return isset( $this->raw->excludeFromSearch ) ? $this->raw->excludeFromSearch : false;
+    }
+
     public function validate( Status $status, bool $requireOwnID = false ) {
         if ( $requireOwnID ) {
             $this->requireField( $status, 'id', DataModel::TYPE_STRING_OR_NUMBER );
@@ -67,10 +71,11 @@ class MarkerSpec extends DataModel {
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
         $this->allowReplacedField( $status, 'popupImage', DataModel::TYPE_STRING, 'image', '0.11.3', '0.13.0' );
         $this->expectField( $status, 'image', DataModel::TYPE_STRING );
-        $areKeywordsOk = $this->expectField( $status, 'searchKeywords', DataModel::TYPE_ARRAY_OR_STRING );
+        $this->expectEitherField( $status, 'searchKeywords', DataModel::TYPE_ARRAY_OR_STRING,
+            'excludeFromSearch', DataModel::TYPE_BOOL );
         $this->disallowOtherFields( $status );
 
-        if ( $areKeywordsOk && isset( $this->raw->searchKeywords ) && is_array( $this->raw->searchKeywords ) ) {
+        if ( isset( $this->raw->searchKeywords ) && is_array( $this->raw->searchKeywords ) ) {
             foreach ( $this->getSearchKeywords() as &$item ) {
                 $isValidWeighedPair = ( is_array( $item ) && count( $item ) === 2
                     && $this->verifyType( $item[0], DataModel::TYPE_STRING )

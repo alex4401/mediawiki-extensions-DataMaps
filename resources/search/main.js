@@ -88,6 +88,11 @@ MarkerSearch.prototype.addMarker = function ( leafletMarker ) {
         return;
     }
 
+    // Do not add the marker if search field in state is zero (excluded)
+    if ( state.search == 0 ) {
+        return;
+    }
+
     // If no keywords were provided by the API, generate them from label and description
     if ( !state.search ) {
         state.search = [ [ Util.decodePartial( Util.extractText( label ) ), 1.5 ] ];

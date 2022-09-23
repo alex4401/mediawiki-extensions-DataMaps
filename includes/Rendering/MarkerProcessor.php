@@ -119,12 +119,16 @@ class MarkerProcessor {
         }
 
         // Search keywords
-        if ( $this->isSearchEnabled && $marker->getSearchKeywords() != null ) {
-            $keywords = $marker->getSearchKeywords();
-            if ( $this->canImplodeSearchKeywords( $keywords ) ) {
-                $keywords = implode( ' ', $keywords );
+        if ( $this->isSearchEnabled ) {
+            if ( $marker->isExcludedFromSearch() ) {
+                $slots['search'] = 0;
+            } else if ( $marker->getSearchKeywords() != null ) {
+                $keywords = $marker->getSearchKeywords();
+                if ( $this->canImplodeSearchKeywords( $keywords ) ) {
+                    $keywords = implode( ' ', $keywords );
+                }
+                $slots['search'] = $keywords;
             }
-            $slots['search'] = $keywords;
         }
 
         // Insert slots if any data has been added
