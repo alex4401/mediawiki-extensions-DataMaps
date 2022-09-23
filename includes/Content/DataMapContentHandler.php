@@ -35,8 +35,8 @@ class DataMapContentHandler extends JsonContentHandler {
 		$datamap->groups->group = $group;
 
 		$marker = new stdclass();
-		$marker->lat = 50;
-		$marker->lon = 50;
+		$marker->y = 50;
+		$marker->x = 50;
 		$marker->label = wfMessage( 'datamap-defaultloadout-marker-label' )->plain();
 		$datamap->markers['group'] = [ $marker ];
 
