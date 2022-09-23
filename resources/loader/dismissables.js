@@ -11,15 +11,9 @@ class CollectibleMarkerGroup {
         this.markers = [];
 
         if ( group.legendIcon ) {
-            this.$icon = $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src', group.legendIcon );
+            this.$icon = Util.createGroupIconElement( group );
         } else {
-            this.$icon = $( '<div class="datamap-legend-circle">' ).css( {
-                width: group.size+4,
-                height: group.size+4,
-                backgroundColor: group.fillColor,
-                borderColor: group.strokeColor || group.fillColor,
-                borderWidth: group.strokeWidth || 1,
-            } );
+            this.$icon = Util.createGroupCircleElement( group );
         }
 
         this.container = new OO.ui.Widget( {

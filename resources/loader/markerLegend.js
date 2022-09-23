@@ -1,3 +1,6 @@
+const Util = require( './util.js' );
+
+
 function MarkerGroupToggleField( legendPanel, groupId, group ) {
     this.legendPanel = legendPanel;
     this.legend = this.legendPanel.legend;
@@ -17,18 +20,12 @@ function MarkerGroupToggleField( legendPanel, groupId, group ) {
 
     // Add a coloured circle if circle marker group
     if ( group.fillColor ) {
-        this.$circle = $( '<div class="datamap-legend-circle">' ).css( {
-            width: group.size+4,
-            height: group.size+4,
-            backgroundColor: group.fillColor,
-            borderColor: group.strokeColor || group.fillColor,
-            borderWidth: group.strokeWidth || 1,
-        } ).prependTo( this.field.$header );
+        this.$circle = Util.createGroupCircleElement( group ).prependTo( this.field.$header );
     }
 
     // Add an icon if one is specified in the group
     if ( group.legendIcon ) {
-        this.$icon = $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src', group.legendIcon ).prependTo( this.field.$header );
+        this.$icon = Util.createGroupIconElement( group ).attr( 'src', group.legendIcon ).prependTo( this.field.$header );
     }
 }
 

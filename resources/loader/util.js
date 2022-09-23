@@ -1,6 +1,22 @@
 module.exports.isBleedingEdge = require( './settings.json' ).DataMapsAllowExperimentalFeatures;
 
 
+module.exports.createGroupIconElement = function ( group ) {
+    return $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src', group.legendIcon );
+};
+
+
+module.exports.createGroupCircleElement = function ( group ) {
+    return $( '<div class="datamap-legend-circle">' ).css( {
+        width: group.size+4,
+        height: group.size+4,
+        backgroundColor: group.fillColor,
+        borderColor: group.strokeColor || group.fillColor,
+        borderWidth: group.strokeWidth || 1,
+    } );
+};
+
+
 /*
  * Generates an identifier of a marker using type and coordinates.
  */
