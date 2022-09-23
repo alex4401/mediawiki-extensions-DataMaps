@@ -1,7 +1,7 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps;
 
-class DataMapsConfig {
+class ExtensionConfig {
     const FF_SHOW_COORDINATES = 'ShowCoordinates';
     const FF_SHOW_LEGEND_ABOVE = 'ShowLegendAlwaysAbove';
     const FF_REQUIRE_CUSTOM_MARKER_IDS = 'RequireCustomMarkerIDs';
@@ -12,7 +12,7 @@ class DataMapsConfig {
         global $wgDataMapsMarkerParserExpansionLimit;
         return $wgDataMapsMarkerParserExpansionLimit;
     }
-
+    
     public static function getNamespace(): int {
         global $wgDataMapsNamespaceId;
         return $wgDataMapsNamespaceId;

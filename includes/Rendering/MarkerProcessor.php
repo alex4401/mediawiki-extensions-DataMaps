@@ -6,7 +6,7 @@ use Parser;
 use ParserOptions;
 use MapCacheLRU;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
+use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
@@ -37,8 +37,8 @@ class MarkerProcessor {
         $this->filter = $filter;
         $this->isSearchEnabled = $this->dataMap->wantsSearch();
         // Pull configuration options
-        $this->useLocalParserCache = DataMapsConfig::shouldCacheWikitextInProcess();
-        $this->collectTimings = DataMapsConfig::shouldApiReturnProcessingTime();
+        $this->useLocalParserCache = ExtensionConfig::shouldCacheWikitextInProcess();
+        $this->collectTimings = ExtensionConfig::shouldApiReturnProcessingTime();
         // Initialise the LRU
         if ( $this->useLocalParserCache ) {
             $this->localParserCache = new MapCacheLRU( self::MAX_LRU_SIZE );
@@ -48,7 +48,7 @@ class MarkerProcessor {
         $this->parserOptions->setAllowSpecialInclusion( false );
         $this->parserOptions->setExpensiveParserFunctionLimit( 5 );
         $this->parserOptions->setInterwikiMagic( false );
-        $this->parserOptions->setMaxIncludeSize( DataMapsConfig::getParserExpansionLimit() );
+        $this->parserOptions->setMaxIncludeSize( ExtensionConfig::getParserExpansionLimit() );
     }
     
     public function processAll(): array {

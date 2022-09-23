@@ -6,7 +6,7 @@ use PPFrame;
 use Title;
 use WikiPage;
 use MediaWiki\Revision\RevisionRecord;
-use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
+use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
 
@@ -15,7 +15,7 @@ final class ParserFunction_EmbedDataMap {
         $params = func_get_args();
 		array_shift( $params ); // we know the parser already
 
-        $title = Title::makeTitleSafe( DataMapsConfig::getNamespace(), $params[0] );
+        $title = Title::makeTitleSafe( ExtensionConfig::getNamespace(), $params[0] );
         $content = DataMapContent::loadPage( $title );
         if ( $content === DataMapContent::LERR_NOT_FOUND ) {
             $msg = wfMessage( 'datamap-error-pf-page-does-not-exist', wfEscapeWikiText( $title->getFullText() ) )

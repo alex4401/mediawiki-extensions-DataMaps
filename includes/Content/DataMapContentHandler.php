@@ -4,7 +4,7 @@ namespace MediaWiki\Extension\Ark\DataMaps\Content;
 use JsonContentHandler;
 use Title;
 use stdclass;
-use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
+use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 
@@ -50,7 +50,7 @@ class DataMapContentHandler extends JsonContentHandler {
 	 * @return bool
 	 */
 	public function canBeUsedOn( Title $title ) {
-		if ( $title->getNamespace() !== DataMapsConfig::getNamespace() ) {
+		if ( $title->getNamespace() !== ExtensionConfig::getNamespace() ) {
 			return false;
 		}
 

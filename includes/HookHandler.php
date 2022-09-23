@@ -26,7 +26,7 @@ class HookHandler implements
 	}
 
 	public function onContentHandlerDefaultModelFor( $title, &$model ) {
-		if ( $title->getNamespace() === DataMapsConfig::getNamespace() && !self::isDocPage( $title ) ) {
+		if ( $title->getNamespace() === ExtensionConfig::getNamespace() && !self::isDocPage( $title ) ) {
             $prefix = wfMessage( 'datamap-standard-title-prefix' )->inContentLanguage();
             if ( $prefix !== '-' && str_starts_with( $title->getText(), $prefix->plain() ) ) {
 			    $model = ARK_CONTENT_MODEL_DATAMAP;

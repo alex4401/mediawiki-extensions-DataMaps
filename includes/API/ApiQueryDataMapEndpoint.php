@@ -10,7 +10,7 @@ use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use Wikimedia\ParamValidator\ParamValidator;
 use ObjectCache;
-use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
+use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
@@ -70,7 +70,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
     public function execute() {
         $timeStart = 0;
-        if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
+        if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
             $timeStart = hrtime( true );
         }
 
@@ -86,7 +86,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $this->getMain()->setCacheMaxAge( 24 * 60 * 60 );
 
         $response = null;
-        if ( DataMapsConfig::getApiCacheTTL() <= 0 ) {
+        if ( ExtensionConfig::getApiCacheTTL() <= 0 ) {
             // Cache expiry time is zero or lower, bypass caching
             $response = $this->doProcessing( $params );
         } else {
@@ -97,14 +97,14 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
         $this->getResult()->addValue( null, 'query', $response );
 
-        if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
+        if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
             $this->getResult()->addValue( null, 'responseTime', hrtime( true ) - $timeStart );
         }
     }
 
     private function getTitleFromParams( $params ) {
         if ( $this->cachedTitle === null ) {
-            $this->cachedTitle = Title::newFromText( $params['title'], DataMapsConfig::getNamespace() );
+            $this->cachedTitle = Title::newFromText( $params['title'], ExtensionConfig::getNamespace() );
             if ( !$this->cachedTitle->exists() ) {
                 $this->dieWithError( [ 'apierror-invalidtitle', $params['title'] ] );
             }
@@ -133,15 +133,15 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     public static function makeKey( Title $title, int $revid = -1 ) {
-        return ObjectCache::getInstance( DataMapsConfig::getApiCacheType() )
+        return ObjectCache::getInstance( ExtensionConfig::getApiCacheType() )
             ->makeKey( self::CACHE_NAMESPACE, self::GENERATION, $title->getId(), $revid );
     }
 
     private function doProcessingCached( $params ): array {
-        $cacheExpiryTime = DataMapsConfig::getApiCacheTTL();
+        $cacheExpiryTime = ExtensionConfig::getApiCacheTTL();
 
         // Retrieve the specified cache instance
-        $cache = ObjectCache::getInstance( DataMapsConfig::getApiCacheType() );
+        $cache = ObjectCache::getInstance( ExtensionConfig::getApiCacheType() );
 
         // Retrieve the title
         $title = $this->getTitleFromParams( $params );
@@ -157,7 +157,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             $response = $this->doProcessing( $params );
 
             // If TTL extension is allowed, store an internal timestamp
-            if ( DataMapsConfig::shouldExtendApiCacheTTL() ) {
+            if ( ExtensionConfig::shouldExtendApiCacheTTL() ) {
                 $response['refreshedAt'] = time();
             }
 
@@ -165,17 +165,17 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             $cache->set( $cacheKey, $response, $cacheExpiryTime );
         } else {
             // Response cached, check if TTL should be extended and do it
-            if ( DataMapsConfig::shouldExtendApiCacheTTL() && isset( $response['refreshedAt'] ) ) {
-                $ttlThreshold = $cacheExpiryTime - DataMapsConfig::getApiCacheTTLExtensionThreshold();
+            if ( ExtensionConfig::shouldExtendApiCacheTTL() && isset( $response['refreshedAt'] ) ) {
+                $ttlThreshold = $cacheExpiryTime - ExtensionConfig::getApiCacheTTLExtensionThreshold();
                 if ( time() - $response['refreshedAt'] >= $ttlThreshold ) {
                     $response['refreshedAt'] = time();
-                    $cache->set( $cacheKey, $response, DataMapsConfig::getApiCacheTTLExtensionValue() );
+                    $cache->set( $cacheKey, $response, ExtensionConfig::getApiCacheTTLExtensionValue() );
                 }
             }
         }
 
         // Remove the internal TTL extension timestamp
-        if ( isset( $response['refreshedAt'] ) && !DataMapsConfig::shouldApiReturnProcessingTime() ) {
+        if ( isset( $response['refreshedAt'] ) && !ExtensionConfig::shouldApiReturnProcessingTime() ) {
             unset( $response['refreshedAt'] );
         }
 
@@ -184,7 +184,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
     private function doProcessing( $params ): array {
         $timeStart = 0;
-        if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
+        if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
             $timeStart = hrtime( true );
         }
 
@@ -214,7 +214,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         // Armour any API metadata in $response
         $response = ApiResult::addMetadataToResultVars( $response, false );
 
-        if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {
+        if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
             $response['timing'] = [
                 'processing' => hrtime( true ) - $timeStart,
                 'parserTime' => $processor->timeInParser

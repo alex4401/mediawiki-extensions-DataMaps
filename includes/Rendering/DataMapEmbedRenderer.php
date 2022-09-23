@@ -13,7 +13,7 @@ use InvalidArgumentException;
 use PPFrame;
 use FormatJson;
 
-use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
+use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerLayerSpec;
@@ -101,7 +101,7 @@ class DataMapEmbedRenderer {
         // Register page's dependency on the mix-ins
         if ( $this->data->getMixins() !== null ) {
             foreach ( $this->data->getMixins() as &$mixinName ) {
-                $mixin = Title::makeTitleSafe( DataMapsConfig::getNamespace(), $mixinName );
+                $mixin = Title::makeTitleSafe( ExtensionConfig::getNamespace(), $mixinName );
                 $parserOutput->addTemplate( $mixin, $mixin->getArticleId(),
                     $this->parser->fetchCurrentRevisionRecordOfTitle( $mixin )->getId() );
             }
