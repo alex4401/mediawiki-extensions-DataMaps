@@ -100,6 +100,9 @@ function DataMap( id, $root, config ) {
 }
 
 
+DataMap.CRSOrigin = CRSOrigin;
+
+
 DataMap.prototype = Object.create( EventEmitter.prototype );
 
 
