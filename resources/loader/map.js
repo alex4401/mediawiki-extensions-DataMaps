@@ -1,4 +1,5 @@
 const MapStorage = require( './storage.js' ),
+    Enums = require( './enums.js' ),
     MarkerLayerManager = require( './layerManager.js' ),
     MarkerPopup = require( './popup.js' ),
     MapLegend = require( './legend.js' ),
@@ -7,12 +8,6 @@ const MapStorage = require( './storage.js' ),
     DismissableMarkersLegend = require( './dismissables.js' ),
     Util = require( './util.js' ),
     mwApi = new mw.Api();
-
-
-const CRSOrigin = {
-    TopLeft: 1,
-    BottomLeft: 2
-};
 
 
 function DataMap( id, $root, config ) {
@@ -63,7 +58,7 @@ function DataMap( id, $root, config ) {
         this.config.crs = [ [ 0, 0 ], [ 100, 100 ] ];
     }
     this.crsOrigin = ( this.config.crs[0][0] < this.config.crs[1][0] && this.config.crs[0][1] < this.config.crs[1][1] )
-        ? CRSOrigin.TopLeft : CRSOrigin.BottomLeft;
+        ? Enums.CRSOrigin.TopLeft : Enums.CRSOrigin.BottomLeft;
     // Y axis is authoritative, this is really just a cosmetic choice influenced by ARK (latitude first). X doesn't need to be
     // mapped on a separate scale from Y, unless we want them to always be squares.
     let crsYHigh = Math.max( this.config.crs[0][0], this.config.crs[1][0] );
@@ -98,9 +93,6 @@ function DataMap( id, $root, config ) {
         ] );
     }
 }
-
-
-DataMap.CRSOrigin = CRSOrigin;
 
 
 DataMap.prototype = Object.create( EventEmitter.prototype );
@@ -163,14 +155,14 @@ DataMap.prototype.isLayerUsed = function ( name ) {
  * 
  */
 DataMap.prototype.translatePoint = function ( point ) {
-    return this.crsOrigin == CRSOrigin.TopLeft
+    return this.crsOrigin == Enums.CRSOrigin.TopLeft
         ? [ ( this.config.crs[1][0] - point[0] ) * this.crsScaleY, point[1] * this.crsScaleX ]
         : [ point[0] * this.crsScaleY, point[1] * this.crsScaleX ];
 };
 
 
 DataMap.prototype.translateBox = function ( box ) {
-    return this.crsOrigin == CRSOrigin.TopLeft
+    return this.crsOrigin == Enums.CRSOrigin.TopLeft
         ? [ [ ( this.config.crs[1][0] - box[0][0] ) * this.crsScaleY, box[0][1] * this.crsScaleX ],
             [ ( this.config.crs[1][0] - box[1][0] ) * this.crsScaleY, box[1][1] * this.crsScaleX ] ]
         : [ [ box[0][0] * this.crsScaleY, box[0][1] * this.crsScaleX ],
@@ -505,7 +497,7 @@ const buildControls = function () {
         this.leaflet.on( 'mousemove', event => {
             let lat = event.latlng.lat / this.crsScaleY;
             let lon = event.latlng.lng / this.crsScaleX;
-            if ( this.crsOrigin == CRSOrigin.TopLeft )
+            if ( this.crsOrigin == Enums.CRSOrigin.TopLeft )
                 lat = this.config.crs[1][0] - lat;
             this.$coordTracker.text( this.getCoordLabel( lat, lon ) );
         } );

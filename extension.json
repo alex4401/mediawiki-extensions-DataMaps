@@ -90,6 +90,7 @@
 			],
 			"packageFiles": [
 				"loader/index.js",
+				"loader/enums.js",
 				"loader/events.js",
 				"loader/storage.js",
 				"loader/layerManager.js",

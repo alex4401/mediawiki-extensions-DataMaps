@@ -1,4 +1,5 @@
-const Util = require( './util.js' ),
+const Enums = require( './enums.js' ),
+    Util = require( './util.js' ),
     MarkerLegendPanel = require( './markerLegend.js' );
 
 
@@ -69,7 +70,7 @@ class CollectibleMarkerGroup {
     sort() {
         let sortKey;
         switch ( this.map.crsOrigin ) {
-            case 1:
+            case Enums.CRSOrigin.TopLeft:
                 sortKey = ( a, b ) => {
                     if ( a.apiInstance[0] == b.apiInstance[0] ) {
                         return a.apiInstance[1] > b.apiInstance[1];
@@ -77,7 +78,7 @@ class CollectibleMarkerGroup {
                     return a.apiInstance[0] > b.apiInstance[0];
                 };
                 break;
-            case 2:
+            case Enums.CRSOrigin.BottomLeft:
                 sortKey = ( a, b ) => {
                     if ( a.apiInstance[0] == b.apiInstance[0] ) {
                         return a.apiInstance[1] < b.apiInstance[1];
