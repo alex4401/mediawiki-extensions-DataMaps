@@ -49,6 +49,10 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         ];
     }
 
+	public function isInternal() {
+		return true;
+	}
+
     public function execute() {
         $timeStart = 0;
         if ( DataMapsConfig::shouldApiReturnProcessingTime() ) {

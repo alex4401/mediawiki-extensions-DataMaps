@@ -63,8 +63,10 @@ function DataMap( id, $root, config ) {
     }
     this.crsOrigin = ( this.config.crs[0][0] < this.config.crs[1][0] && this.config.crs[0][1] < this.config.crs[1][1] )
         ? CRSOrigin.TopLeft : CRSOrigin.BottomLeft;
-    this.crsScaleY = 100 / Math.max( this.config.crs[0][0], this.config.crs[1][0] );
-    this.crsScaleX = 100 / Math.max( this.config.crs[0][1], this.config.crs[1][1] );
+    // Y axis is authoritative, this is really just a cosmetic choice influenced by ARK (latitude first). X doesn't need to be
+    // mapped on a separate scale from Y, unless we want them to always be squares.
+    let crsYHigh = Math.max( this.config.crs[0][0], this.config.crs[1][0] );
+    this.crsScaleX = this.crsScaleY = 100 / crsYHigh;
 
     // Set up internal event handlers
     this.on( 'markerReady', this.tryOpenUriPopup, this );

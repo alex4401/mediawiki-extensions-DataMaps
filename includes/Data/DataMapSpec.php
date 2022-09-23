@@ -101,10 +101,10 @@ class DataMapSpec extends DataModel {
         foreach ( array_keys( get_object_vars( $this->raw->markers ) ) as &$name ) {
             $parts = explode( ' ', $name );
             $groups[] = array_shift( $parts );
-            $specifiers += $parts;
+            $specifiers = array_merge( $parts, $specifiers );
         }
         $this->cachedMarkerGroups = array_unique( $groups );
-        $this->cachedMarkerLayers = array_unique( $specifiers );
+        $this->cachedMarkerLayers = array_values( array_unique( $specifiers ) );
     }
 
     public function getGroupNames(): array {
