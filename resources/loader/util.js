@@ -1,3 +1,6 @@
+const MAX_GROUP_CIRCLE_SIZE = 20;
+
+
 module.exports.isBleedingEdge = require( './settings.json' ).DataMapsAllowExperimentalFeatures;
 
 
@@ -8,8 +11,8 @@ module.exports.createGroupIconElement = function ( group ) {
 
 module.exports.createGroupCircleElement = function ( group ) {
     return $( '<div class="datamap-legend-circle">' ).css( {
-        width: group.size+4,
-        height: group.size+4,
+        width: Math.min( MAX_GROUP_CIRCLE_SIZE, group.size+4 ),
+        height: Math.min( MAX_GROUP_CIRCLE_SIZE, group.size+4 ),
         backgroundColor: group.fillColor,
         borderColor: group.strokeColor || group.fillColor,
         borderWidth: group.strokeWidth || 1,
