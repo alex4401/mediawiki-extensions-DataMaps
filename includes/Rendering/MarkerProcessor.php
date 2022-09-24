@@ -94,6 +94,13 @@ class MarkerProcessor {
         // Popup title
         if ( $marker->getLabel() != null ) {
             $slots['label'] = $this->parseText( $marker, $marker->getLabel() );
+            // Strip the paragraph element
+            if ( strpos( $slots['label'], '<p>' ) === 0 ) {
+                $slots['label'] = substr( $slots['label'], 3 );
+            }
+            if ( strpos( $slots['label'], '</p>' ) === 0 ) {
+                $slots['label'] = substr( $slots['label'], 4 );
+            }
         }
 
         // Popup description
