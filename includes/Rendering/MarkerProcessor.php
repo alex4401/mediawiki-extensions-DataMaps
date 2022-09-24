@@ -149,7 +149,7 @@ class MarkerProcessor {
 
         // Call the parser
         $out = $this->parser->parse( $text, $this->title, $this->parserOptions, false, $this->isParserDirty )
-            ->getText( [ 'unwrap' => true ] );
+            ->getText( [ 'unwrap' => true, 'allowTOC' => false ] );
         // Mark as clean to avoid clearing state again
         $this->isParserDirty = false;
 
