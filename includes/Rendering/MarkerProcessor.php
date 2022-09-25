@@ -120,7 +120,7 @@ class MarkerProcessor {
 
         // Search keywords
         if ( $this->isSearchEnabled ) {
-            if ( $marker->isExcludedFromSearch() ) {
+            if ( !$marker->isIncludedInSearch() ) {
                 $slots['search'] = 0;
             } else if ( $marker->getSearchKeywords() != null ) {
                 $keywords = $marker->getSearchKeywords();

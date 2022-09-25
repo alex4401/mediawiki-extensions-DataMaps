@@ -52,8 +52,8 @@ class MarkerSpec extends DataModel {
         return isset( $this->raw->searchKeywords ) ? $this->raw->searchKeywords : null;
     }
 
-    public function isExcludedFromSearch(): bool {
-        return isset( $this->raw->excludeFromSearch ) ? $this->raw->excludeFromSearch : false;
+    public function isIncludedInSearch(): bool {
+        return isset( $this->raw->canSearchFor ) ? $this->raw->canSearchFor : true;
     }
 
     public function validate( Status $status, bool $requireOwnID = false ) {

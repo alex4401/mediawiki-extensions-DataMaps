@@ -84,6 +84,8 @@ Content of the page should be a valid JSON with following structure:
 * * `isCollectible` (optional):
 * * * `true` or `individual`: whether markers of this group can be marked as collected by users.
 * * `autoNumberInChecklist` (boolean, optional): if collectible and true, markers in the checklist will have their index number added to the name.
+* * `canSearchFor` (boolean, optional): if true and search is enabled, allows markers from this group to be searched for. Defaults to `true`.
+* * * This field was called `excludeFromSearch` (and took reversed values) before version 0.12.0, but support will be removed in 0.13.0.
 * `layers` (string to object map, optional): map from name to a *marker layer* specification:
 * * Marker layers can be used without an explicit declaration.
 * * `name` (string, required): currently unused.
@@ -101,6 +103,7 @@ Content of the page should be a valid JSON with following structure:
 * * * This field was called `popupImage` before version 0.11.3, but support will be removed in 0.13.0.
 * * `article` (page name, optional): article the marker's popup should link to. Follows either a format of `article title` or `article title|displayed label`.
 * * `searchKeywords` (string, or array of strings or string and number (score multiplier) pairs, optional): specifies what keywords this marker will be suggested for.
+* * `canSearchFor` (boolean, optional): if true and search is enabled, allows this marker to be searched for. Defaults to `true`.
 * `custom` (map, optional): any arbitrary to be added to the client-side map config, for use with e.g. on-site gadgets.
 
 #### File name

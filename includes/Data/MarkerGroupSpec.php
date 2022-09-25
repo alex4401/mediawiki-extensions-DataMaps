@@ -122,8 +122,11 @@ class MarkerGroupSpec extends DataModel {
         return isset( $this->raw->autoNumberInChecklist ) ? $this->raw->autoNumberInChecklist : false;
     }
 
-    public function wantsSearchExclusion(): bool {
-        return isset( $this->raw->excludeFromSearch ) ? $this->raw->excludeFromSearch : false;
+    public function isIncludedInSearch(): bool {
+        return isset( $this->raw->canSearchFor ) ? $this->raw->canSearchFor : (
+            /* DEPRECATED(v0.12.0:v0.13.0) */
+            !( isset( $this->raw->excludeFromSearch ) ? $this->raw->excludeFromSearch : false )
+        );
     }
 
     public function validate( Status $status ) {
@@ -151,7 +154,8 @@ class MarkerGroupSpec extends DataModel {
         $this->allowReplacedField( $status, 'canDismiss', DataModel::TYPE_BOOL, 'isCollectible', '0.11.0', '0.12.0' );
         $this->expectField( $status, 'isCollectible', DataModel::TYPE_BOOL_OR_STRING );
         $this->expectField( $status, 'autoNumberInChecklist', DataModel::TYPE_BOOL );
-        $this->expectField( $status, 'excludeFromSearch', DataModel::TYPE_BOOL );
+        $this->allowReplacedField( $status, 'excludeFromSearch', DataModel::TYPE_BOOL, 'canSearchFor', '0.12.0', '0.13.0' );
+        $this->expectField( $status, 'canSearchFor', DataModel::TYPE_BOOL );
 
         if ( $this->getCollectibleMode() === self::CM_UNKNOWN ) {
             $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, 'isCollectible',

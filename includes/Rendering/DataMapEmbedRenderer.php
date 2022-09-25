@@ -321,8 +321,8 @@ class DataMapEmbedRenderer {
             $out['checklistNumbering'] = $spec->wantsChecklistNumbering();
         }
 
-        if ( $spec->wantsSearchExclusion() ) {
-            $out['doNotSearch'] = $spec->wantsSearchExclusion();
+        if ( !$spec->isIncludedInSearch() ) {
+            $out['doNotSearch'] = true;
         }
 
         return $out;
