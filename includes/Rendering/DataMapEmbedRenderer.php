@@ -89,14 +89,16 @@ class DataMapEmbedRenderer {
             ) );
         }
 
-        // Inject mw.config variables via a `dataMaps` map from ID
-        $configsVar = [
-            $this->getId() => $this->getJsConfigVariables()
-        ];
-        if ( array_key_exists( 'dataMaps', $parserOutput->mJsConfigVars ) ) {
-            $configsVar += $parserOutput->mJsConfigVars['dataMaps'];
+        if ( !ExtensionConfig::isBleedingEdge() ) {
+            // Inject mw.config variables via a `dataMaps` map from ID
+            $configsVar = [
+                $this->getId() => $this->getJsConfigVariables()
+            ];
+            if ( array_key_exists( 'dataMaps', $parserOutput->mJsConfigVars ) ) {
+                $configsVar += $parserOutput->mJsConfigVars['dataMaps'];
+            }
+            $parserOutput->addJsConfigVars( 'dataMaps', $configsVar );
         }
-        $parserOutput->addJsConfigVars( 'dataMaps', $configsVar );
 
         // Update image and page links tables
         $this->registerDependencies( $parserOutput );
@@ -153,6 +155,16 @@ class DataMapEmbedRenderer {
                 }
             }
         } );
+    }
+
+    public function getConfigElement(): string {
+        return Html::element(
+            'script',
+            [
+                'type' => 'application/json+datamap'
+            ],
+            FormatJson::encode( $this->getJsConfigVariables(), false, FormatJson::UTF8_OK )
+        );
     }
 
     public function getJsConfigVariables(): array {
@@ -404,6 +416,17 @@ class DataMapEmbedRenderer {
 		] );
         $containerMap->appendContent( new \OOUI\HtmlSnippet( $this->getLeafletContainerHtml() ) );
         $containerContent->appendContent( $containerMap );
+
+        // Deliver map configuration via a <script> tag. Prior to v0.12.0 this was delivered via mw.config, but that has the
+        // downside of slowing down the page load (config is delivered via head, but not actually used until the script is
+        // loaded), and can no longer be done in MW 1.39 without heavily polluting the store.
+        // This configuration is used to set up the map before any data sets are downloaded. It allows for environment to be
+        // prepared.
+        // TODO: possibly deliver some of this stuff via API? tho dunno if there's any real benefits to that
+        // TODO: unlock for v0.12.x release or AT LAST v0.13.x when confirmed stable
+        if ( ExtensionConfig::isBleedingEdge() ) {
+            $containerMain->appendContent( new \OOUI\HtmlSnippet( $this->getConfigElement() ) );
+        }
 
         return $containerMain;
     }

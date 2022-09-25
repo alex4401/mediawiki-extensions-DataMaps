@@ -142,7 +142,7 @@ Box is a array of two locations, where first describes the start point of the bo
 * * `$wgDataMapsDefaultFeatures['SortChecklistsByAmount']`: whether collectible checklists will be sorted by number of markers inside. Defaults to `false`.
 * `$wgDataMapsReportTimingInfo`: if set to `true`, marker processing time will be reported in API responses. Defaults to `false`.
 * `$wgDataMapsAllowExperimentalFeatures`: if set to `true`, enables features listed below - all of which are in development and not ready for production. Defaults to `false`.
-* * Collectible checklists
+* * Map configuration delivery without `mw.config` (MW 1.39 preparation)
 
 ## General architecture
 The `DataMapContent` class handles data validation (on write only), and customised source beautification.
