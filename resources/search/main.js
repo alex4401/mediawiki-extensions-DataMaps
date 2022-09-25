@@ -84,12 +84,7 @@ MarkerSearch.prototype.addMarker = function ( leafletMarker ) {
     const group = this.map.config.groups[leafletMarker.attachedLayers[0]];
     const label = state.label || group.name;
 
-    if ( group.doNotSearch ) {
-        return;
-    }
-
-    // Do not add the marker if search field in state is zero (excluded)
-    if ( state.search == 0 ) {
+    if ( state.search == 0 || mw.dataMaps.Util.isBitSet( group.flags, mw.dataMaps.Enums.MarkerGroupFlags.CannotBeSearched ) ) {
         return;
     }
 

@@ -270,11 +270,23 @@ class DataMapEmbedRenderer {
         return $result;
     }
 
+    public function getPublicGroupFeatureBitMask( MarkerGroupSpec $spec ): int {
+        $out = 0;
+        $out |= $spec->wantsChecklistNumbering() ? 1<<0 : 0;
+        $out |= !$spec->isIncludedInSearch() ? 1<<1 : 0;
+        return $out;
+    }
+
     public function getMarkerGroupConfig( MarkerGroupSpec $spec ): array {
         $out = array(
             'name' => $spec->getName(),
             'size' => $spec->getSize(),
         );
+
+        $flags = $this->getPublicGroupFeatureBitMask( $spec );
+        if ( $flags !== 0 ) {
+            $out['flags'] = $flags;
+        }
 
         switch ( $spec->getDisplayMode() ) {
             case MarkerGroupSpec::DM_CIRCLE:
@@ -317,14 +329,6 @@ class DataMapEmbedRenderer {
             $out['collectible'] = $spec->getCollectibleMode();
         }
 
-        if ( $spec->wantsChecklistNumbering() ) {
-            $out['checklistNumbering'] = $spec->wantsChecklistNumbering();
-        }
-
-        if ( !$spec->isIncludedInSearch() ) {
-            $out['doNotSearch'] = true;
-        }
-
         return $out;
     }
 
@@ -350,10 +354,6 @@ class DataMapEmbedRenderer {
         }
 
         return $out;
-    }
-
-    private function expandWikitext( string $source ): string {
-        return $this->parser->parse( $source, $this->title, $this->parserOptions )->getText( [ 'unwrap' => true ] );
     }
 
     public function getHtml( DataMapRenderOptions $options ): string {

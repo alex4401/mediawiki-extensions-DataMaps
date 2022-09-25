@@ -9,5 +9,10 @@ module.exports = {
         Individual: 1,
         Global: 2,
         GlobalGroup: 3
+    },
+
+    MarkerGroupFlags: {
+        IsNumberedInChecklists: 1<<0,
+        CannotBeSearched: 1<<1
     }
 };

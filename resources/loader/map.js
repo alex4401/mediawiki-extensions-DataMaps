@@ -111,7 +111,7 @@ DataMap.prototype.FF_SORT_CHECKLISTS_BY_AMOUNT = 1<<4;
 
 
 DataMap.prototype.isFeatureBitSet = function ( mask ) {
-    return this.config.flags && ( this.config.flags & mask ) == mask;
+    return Util.isBitSet( this.config.flags, mask );
 };
 
 

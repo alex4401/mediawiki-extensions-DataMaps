@@ -132,7 +132,7 @@ class CollectibleMarkerEntry {
             this.$labelText.html( this.slots.label );
         }
 
-        if ( this.markerGroup.group.checklistNumbering ) {
+        if ( Util.isBitSet( this.markerGroup.group.flags, Enums.MarkerGroupFlags.IsNumberedInChecklists ) ) {
             this.$index = $( '<span class="datamap-collapsible-index">' ).appendTo( this.$labelText );
             this.setIndex( this.markerGroup.markers.length + 1 );
         }

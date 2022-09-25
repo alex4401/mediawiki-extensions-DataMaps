@@ -4,6 +4,11 @@ const MAX_GROUP_CIRCLE_SIZE = 20;
 module.exports.isBleedingEdge = require( './settings.json' ).DataMapsAllowExperimentalFeatures;
 
 
+module.exports.isBitSet = function ( a, b ) {
+    return a && ( a & b ) == b;
+};
+
+
 module.exports.createGroupIconElement = function ( group ) {
     return $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src', group.legendIcon );
 };
