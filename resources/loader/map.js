@@ -476,6 +476,10 @@ const buildLeafletMap = function ( $holder ) {
 
         // Register with the layer manager
         this.layerManager.register( groupName );
+
+        if ( Util.isBitSet( group.flags, Enums.MarkerGroupFlags.IsUnselected ) ) {
+            this.layerManager.setExclusion( groupName, true );
+        }
     }
 
     // Recalculate marker sizes when zoom ends

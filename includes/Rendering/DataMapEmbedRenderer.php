@@ -274,6 +274,7 @@ class DataMapEmbedRenderer {
         $out = 0;
         $out |= $spec->wantsChecklistNumbering() ? 1<<0 : 0;
         $out |= !$spec->isIncludedInSearch() ? 1<<1 : 0;
+        $out |= !$spec->isDefault() ? 1<<2 : 0;
         return $out;
     }
 

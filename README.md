@@ -81,6 +81,7 @@ Content of the page should be a valid JSON with following structure:
 * * * `icon` (file name, required): name of the file (with no namespace) to show markers with. This makes all markers in group SVG-based. Current support is limited.
 * * * `size` (dimensions, optional): size of each icon marker. Defaults to `[ 32, 32 ]`.
 * * `article` (page name, optional): name of an article every marker's popup should link to. Can be overridden on a marker.
+* * `isDefault` (boolean, optional): whether this group is switched on on map load. Defaults to `true`.
 * * `isCollectible` (optional):
 * * * `true` or `individual`: whether markers of this group can be marked as collected by users.
 * * `autoNumberInChecklist` (boolean, optional): if collectible and true, markers in the checklist will have their index number added to the name.

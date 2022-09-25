@@ -1,4 +1,5 @@
-const Util = require( './util.js' );
+const Enums = require( './enums.js' ),
+    Util = require( './util.js' );
 
 
 function MarkerGroupToggleField( legendPanel, groupId, group ) {
@@ -8,7 +9,8 @@ function MarkerGroupToggleField( legendPanel, groupId, group ) {
     this.groupId = groupId;
 
     // Create a backing checkbox field
-    const pair = this.legend.createCheckboxField( this.legendPanel.$groupContainer, group.name, true,
+    const pair = this.legend.createCheckboxField( this.legendPanel.$groupContainer, group.name,
+        !Util.isBitSet( group.flags, Enums.MarkerGroupFlags.IsUnselected ),
         state => this.map.layerManager.setExclusion( this.groupId, !state ) );
     this.field = pair[1];
     this.checkbox = pair[0];

@@ -13,6 +13,7 @@ module.exports = {
 
     MarkerGroupFlags: {
         IsNumberedInChecklists: 1<<0,
-        CannotBeSearched: 1<<1
+        CannotBeSearched: 1<<1,
+        IsUnselected: 1<<2
     }
 };
