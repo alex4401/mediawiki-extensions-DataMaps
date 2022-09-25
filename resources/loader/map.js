@@ -485,7 +485,7 @@ const buildLeafletMap = function ( $holder ) {
     // Build extra controls
     buildControls.call( this );
 
-    this.fire( 'leafletLoaded' );
+    this.fire( 'leafletLoaded', true );
 };
 
 
@@ -564,13 +564,12 @@ const buildLegend = function () {
             this.markerLegend.addMarkerGroupToggle( groupId, this.config.groups[groupId] );
         }
     }
-
     // Set up the dismissable marker interactions
     if ( Object.values( this.config.groups ).some( x => x.collectible ) ) {
         this.legend.dismissables = new DismissableMarkersLegend( this.legend );
     }
 
-    this.fire( 'legendLoaded' );
+    this.fire( 'legendLoaded', true );
 
     mw.hook( `ext.ark.datamaps.afterLegendInitialisation.${this.id}` ).fire( this );
 };
