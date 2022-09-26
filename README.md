@@ -5,12 +5,12 @@ see http://www.gnu.org/copyleft/gpl.html for further details, including the
 full text and terms of the license.
 
 ## Overview
-A more modern, prototype replacement for ARK Wiki's [interactive maps on DOM nodes](https://ark.wiki.gg/wiki/Module:ResourceMap).
-Built on top of [Leaflet](https://leafletjs.com/). If frontend is unproven due to performance issues, stack can be rewritten onto
-the old display while keeping the benefits - which are speed, reduced server load (same work in hacky Lua is done in PHP), better
-automation possibilities with bots (extracted data imports), and less data transfered to the browser.
+A modern replacement for ARK Wiki's [interactive maps on DOM nodes](https://ark.wiki.gg/wiki/Module:ResourceMap). Built on top of
+[Leaflet](https://leafletjs.com/). Compared over their legacy DOM-based maps this approach gains speed, better interactivity
+and extensibility, reduced server load (same work in hacky Lua is done in PHP), better automation possibilities with bots
+(extracted data imports), and less data transfered to the browser.
 
-Currently no feature parity with the existing solution. [Roadmap (T75 on wiki's Trello board)](https://trello.com/c/CiLfCspG/75-datamaps-extension-for-fjordurs-release).
+Currently no feature parity with the existing solution. [Roadmap (T75 on ARK Wiki's Trello board)](https://trello.com/c/CiLfCspG/75-datamaps-extension-for-fjordurs-release).
 
 [Test installation link (may be broken)](https://1.37.wiki-dev.mglolenstine.xyz/wiki/Map_transclusion_01).
 
@@ -20,7 +20,6 @@ If your wiki is hosted on [wiki.gg](https://wiki.gg), simply request the extensi
 Manual installation:
 1. Clone the repository to `extensions/DataMaps`.
 2. `wfLoadExtension` in site configuration.
-3. Set `$wgDataMapsNamespaceId` to the ID of the Data namespace (`10006` on ARK Wiki).
 
 ### MediaWiki support schedule
 This extension's development tracks [wiki.gg](https://wiki.gg)'s platform - currently MediaWiki **1.37**. All versioned releases
@@ -132,7 +131,7 @@ Box is a array of two locations, where first describes the start point of the bo
 * * Example: `{{DataMap:Maps/Resources/Aberration|filter=metal,crystal|title=Metal and crystal locations on [[Aberration]]}}`.
 
 ## Configuration
-* `$wgDataMapsNamespaceId`: namespace where data maps will be allowed. **Must be set.**
+* `$wgDataMapsNamespaceId`: namespace where data maps will be allowed. Defaults to `managed`, which means the extension will provide a `Map` (ID: 2900) namespace by itself.
 * `$wgDataMapsCacheType`: cache type to use for `queryDataMap` API endpoint output. Defaults to `CACHE_ANYTHING`.
 * `$wgDataMapsCacheTTL`: time after which cached `queryDataMap` API endpoint responses expire. Set to `0` to disable caching. Defaults to `86400` (a day).
 * `$wgDataMapsExtendCacheTTL`: if not `false`, extends TTL to `override` of cached maps on requests `threshold` seconds away from expiry. Defaults to `[ 'threshold' => 43200, 'override' => 57600 ]`.
