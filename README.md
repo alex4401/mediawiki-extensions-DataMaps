@@ -148,18 +148,6 @@ Box is a array of two locations, where first describes the start point of the bo
 * `$wgDataMapsAllowExperimentalFeatures`: if set to `true`, enables features listed below - all of which are in development and not ready for production. Defaults to `false`.
 * * Map configuration delivery without `mw.config` (MW 1.39 preparation)
 
-## General architecture
-The `DataMapContent` class handles data validation (on write only), and customised source beautification.
-
-`DataMapEmbedRenderer` is either invoked when displaying the source page or via the `DataMap` parser function (class
-`ParserFunction_EmbedDataMap`). It generates a basic HTML structure to host the map and delivers immediate configuration needed
-to initialise the map client-side. This configuration is sent via the `dataMaps` mw.config variable, and each map uses its page
-ID for identification (`mw.config.get('dataMaps')[page ID]`) when multiple maps are present on one page.
-
-Markers are not sent to the browser immediately, and have to be requested with the `ApiQueryDataMapEndpoint`. This allows
-initialisation to start while markers are being downloaded from the server, and decouples a large payload from the HTML document,
-which has been a problem previously.
-
 ## Gadgets
 External scripts can hook into Data Maps to provide additional functionality without modifying core code.
 
