@@ -43,7 +43,3 @@ mw.dataMaps.subscribeHook = function ( hookName, callback ) {
     const ids = Object.keys( mw.config.get( 'dataMaps' ) );
     ids.forEach( id => mw.hook( 'ext.ark.datamaps.' + hookName + '.' + id ).add( callback ) );
 };
-
-
-// DEPRECATED(0.10.0:0.11.0)
-mw.subscribeDataMapsHook = mw.dataMaps.subscribeHook;
