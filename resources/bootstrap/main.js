@@ -1,9 +1,7 @@
 const initialisedMaps = [];
 
 
-function initialiseMapFromStore( id, $root ) {
-    const config = mw.config.get( 'dataMaps' )[id];
-
+function initialiseMapWithConfig( id, $root, config ) {
     // Broadcast `beforeInitialisation` event that gadgets can register to
     mw.hook( `ext.ark.datamaps.beforeInitialisation.${id}` ).fire( config );
 
@@ -27,6 +25,19 @@ function initialiseMapFromStore( id, $root ) {
 }
 
 
+function getConfig( id, $root ) {
+    let config;
+    const $data = $root.find( '> script[type="application/json+datamap"]' );
+    if ( $data.length > 0 ) {
+        config = JSON.parse( $data.text() );
+    } else {
+        // DEPRECATED(0.12.0:0.13.0)
+        config = mw.config.get( 'dataMaps' )[id];
+    }
+    return config;
+}
+
+
 // Begin initialisation once the document is loaded
 mw.hook( 'wikipage.content' ).add( $content => {
     const ids = Object.keys( mw.config.get( 'dataMaps' ) );
@@ -35,7 +46,13 @@ mw.hook( 'wikipage.content' ).add( $content => {
     mw.hook( 'ext.ark.datamaps.broadcastMaps' ).fire( ids );
 
     // Run initialisation for every map, followed by events for gadgets to listen to
-    ids.forEach( id => initialiseMapFromStore( id, $content.find( `.datamap-container#datamap-${id}` ) ) );
+    ids.forEach( id => {
+        const $root = $content.find( `.datamap-container#datamap-${id}` );
+        const config = getConfig( id, $root );
+        if ( config ) {
+            initialiseMapWithConfig( id, $root, config );
+        }
+    } );
 } );
 
 

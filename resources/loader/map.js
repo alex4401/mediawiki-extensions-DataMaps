@@ -28,7 +28,7 @@ function DataMap( id, $root, config ) {
     this.backgroundIndex = 0;
     // Data set filters
     this.dataSetFilters = this.$root.data( 'filter-groups' ) || null;
-    if (this.dataSetFilters) {
+    if ( this.dataSetFilters ) {
         this.dataSetFilters = this.dataSetFilters.split( '|' );
     }
     //
