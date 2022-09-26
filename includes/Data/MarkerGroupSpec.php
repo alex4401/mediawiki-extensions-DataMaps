@@ -156,7 +156,6 @@ class MarkerGroupSpec extends DataModel {
 
         $this->expectField( $status, 'article', DataModel::TYPE_STRING );
         $this->expectField( $status, 'isDefault', DataModel::TYPE_BOOL );
-        $this->allowReplacedField( $status, 'canDismiss', DataModel::TYPE_BOOL, 'isCollectible', '0.11.0', '0.12.0' );
         $this->expectField( $status, 'isCollectible', DataModel::TYPE_BOOL_OR_STRING );
         $this->expectField( $status, 'autoNumberInChecklist', DataModel::TYPE_BOOL );
         $this->allowReplacedField( $status, 'excludeFromSearch', DataModel::TYPE_BOOL, 'canSearchFor', '0.12.0', '0.13.0' );
