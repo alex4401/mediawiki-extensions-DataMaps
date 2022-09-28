@@ -226,10 +226,9 @@ class CollectiblesLegend {
 
 
     updateGroupBadges() {
-        for ( const groupId in this.map.config.groups ) {
-            const group = this.map.config.groups[groupId];
+        for ( const groupId in this.groups ) {
             const markers = this.map.layerManager.byLayer[groupId];
-            if ( group.collectible && markers && this.map.markerLegend.groupToggles[groupId] ) {
+            if ( markers && this.map.markerLegend.groupToggles[groupId] ) {
                 const count = markers.filter( x => x.options.dismissed ).length;
                 this.map.markerLegend.groupToggles[groupId].setBadge( `${count} / ${markers.length}` );
             }
