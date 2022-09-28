@@ -69,7 +69,10 @@ class MarkerProcessor {
                 $marker->reassignTo( $rawMarker );
                 $subResults[] = $this->processOne( $marker );
             }
-            $results[$layers] = $subResults;
+
+            if ( !empty( $subResults ) ) {
+                $results[$layers] = $subResults;
+            }
         } );
 
         return $results;
