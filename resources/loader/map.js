@@ -183,9 +183,21 @@ DataMap.prototype.getCoordLabel = function ( latOrInstance, lon ) {
 
 
 DataMap.prototype.toggleMarkerDismissal = function ( leafletMarker ) {
-    const state = this.storage.toggleDismissal( Util.getMarkerId( leafletMarker ) );
-    leafletMarker.setDismissed( state );
-    this.fire( 'markerDismissChange', leafletMarker );
+    const groupId = leafletMarker.attachedLayers[0];
+    const isIndividual = Util.getGroupCollectibleType( this.config.groups[groupId] )
+        === Enums.MarkerGroupFlags.Collectible_Individual;
+    const state = this.storage.toggleDismissal( isIndividual ? Util.getMarkerId( leafletMarker ) : groupId, !isIndividual );
+    if ( isIndividual ) {
+        // Update this marker only
+        leafletMarker.setDismissed( state );
+        this.fire( 'markerDismissChange', leafletMarker );
+    } else {
+        // Update every marker in the group
+        for ( const otherLeafletMarker of this.layerManager.byLayer[groupId] ) {
+            otherLeafletMarker.setDismissed( state );
+            this.fire( 'markerDismissChange', otherLeafletMarker );
+        }
+    }
     return state;
 };
 
@@ -254,8 +266,11 @@ DataMap.prototype.createMarkerFromApiInstance = function ( layers, instance ) {
     this.layerManager.addMember( layers, leafletMarker );
 
     // Update dismissal status if storage says it's been dismissed
-    if ( Util.getGroupCollectibleType( group ) ) {
-        leafletMarker.setDismissed( this.storage.isDismissed( Util.getMarkerId( leafletMarker ) ) );
+    const collectibleMode = Util.getGroupCollectibleType( group );
+    if ( collectibleMode ) {
+        const isIndividual = collectibleMode == Enums.MarkerGroupFlags.Collectible_Individual;
+        leafletMarker.setDismissed( this.storage.isDismissed( isIndividual ? Util.getMarkerId( leafletMarker ) : layers[0],
+            !isIndividual ) );
     }
 
     // Bind a popup building closure (this is more efficient than binds)

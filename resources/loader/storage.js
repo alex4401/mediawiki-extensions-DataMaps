@@ -87,12 +87,12 @@ MapStorage.prototype.isDismissed = function ( uid, isGroup ) {
 
 MapStorage.prototype.toggleDismissal = function ( uid, isGroup ) {
     let out;
-    uid = ( isGroup ? 'G:' : 'M:' ) + uid;
-    if ( this.isDismissed( uid ) ) {
-        this.dismissed = this.dismissed.filter( x => x != uid );
+    const uidPrefixed = ( isGroup ? 'G:' : 'M:' ) + uid;
+    if ( this.isDismissed( uid, isGroup ) ) {
+        this.dismissed = this.dismissed.filter( x => x != uidPrefixed );
         out = false;
     } else {
-        this.dismissed.push( uid );
+        this.dismissed.push( uidPrefixed );
         out = true;
     }
     this.setObject( 'dismissed', this.dismissed );
