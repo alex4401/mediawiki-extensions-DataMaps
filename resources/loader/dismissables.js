@@ -246,7 +246,7 @@ class CollectiblesLegend {
                 const count = markers.filter( x => x.options.dismissed ).length,
                     mode = Util.getGroupCollectibleType( this.map.config.groups[groupId] );
                 let text = mode == Enums.MarkerGroupFlags.Collectible_Individual ? `${count} / ${markers.length}` : '';
-                if ( count === markers.length ) {
+                if ( count > 0 && count === markers.length ) {
                     text += '✓';
                 }
 
