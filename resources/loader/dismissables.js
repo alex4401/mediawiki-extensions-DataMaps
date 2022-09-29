@@ -169,6 +169,9 @@ class CollectiblesLegend {
         // Insert an introduction paragraph
         this.$root.append( mw.msg( 'datamap-checklist-prelude' ) );
 
+        // Prepare the checklist panel
+        this._initialisePanel();
+
         // Register event handlers
         this.map.on( 'markerDismissChange', this.updateGroupBadges, this );
         this.map.on( 'markerDismissChange', this.onDismissalChange, this );
@@ -181,9 +184,6 @@ class CollectiblesLegend {
 
         // Call updaters now to bring the main panel in sync
         this.updateGroupBadges( true );
-
-        // Prepare the checklist panel
-        this._initialisePanel();
 
         // Import existing markers if any have been loaded
         for ( const groupName in this.map.config.groups ) {
