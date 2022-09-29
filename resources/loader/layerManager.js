@@ -22,9 +22,9 @@ MarkerLayerManager.prototype.register = function ( layerName ) {
 };
 
 
-MarkerLayerManager.prototype.addMember = function ( type, leafletMarker ) {
-    leafletMarker.attachedLayers = type.split(' ');
-    for ( const layer of leafletMarker.attachedLayers )
+MarkerLayerManager.prototype.addMember = function ( layers, leafletMarker ) {
+    leafletMarker.attachedLayers = layers;
+    for ( const layer of layers )
         this.byLayer[layer].push( leafletMarker );
     this.markers.push( leafletMarker );
     this.updateMember( leafletMarker );

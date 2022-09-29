@@ -1,9 +1,8 @@
 const Util = require( './util.js' );
 
 
-function MarkerPopup( map, markerType, leafletMarker ) {
+function MarkerPopup( map, leafletMarker ) {
     this.map = map;
-    this.markerType = markerType;
     this.leafletMarker = leafletMarker;
     this.markerGroup = map.config.groups[this.leafletMarker.attachedLayers[0]];
     this.slots = this.leafletMarker.apiInstance[2] || {};
@@ -15,8 +14,8 @@ function MarkerPopup( map, markerType, leafletMarker ) {
 }
 
 
-MarkerPopup.bindTo = function ( map, markerType, leafletMarker ) {
-    leafletMarker.bindPopup( () => new MarkerPopup( map, markerType, leafletMarker ), {}, L.Ark.Popup );
+MarkerPopup.bindTo = function ( map, leafletMarker ) {
+    leafletMarker.bindPopup( () => new MarkerPopup( map, leafletMarker ), {}, L.Ark.Popup );
 };
 
 

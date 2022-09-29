@@ -103,8 +103,7 @@ MarkerSearch.prototype.addMarker = function ( leafletMarker ) {
     state.search = state.search.map( x => ( typeof( x ) === 'string' ) ? [ x, 1 ] : x );
 
     this.menu.addItem( {
-        icon: leafletMarker instanceof L.Ark.IconMarker ? this.map.getIconFromLayers( leafletMarker.attachedLayers.join( ' ' ),
-            leafletMarker.attachedLayers ) : null,
+        icon: leafletMarker instanceof L.Ark.IconMarker ? this.map.getIconFromLayers( leafletMarker.attachedLayers ) : null,
         data: leafletMarker,
         keywords: state.search,
         label: new OO.ui.HtmlSnippet( label )

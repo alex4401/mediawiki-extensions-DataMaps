@@ -201,7 +201,8 @@ DataMap.prototype.tryOpenUriPopup = function ( leafletMarker ) {
 };
 
 
-DataMap.prototype.getIconFromLayers = function ( markerType, layers ) {
+DataMap.prototype.getIconFromLayers = function ( layers ) {
+    const markerType = layers.join( ' ' );
     if ( !this.iconCache[markerType] ) {
         const group = this.config.groups[layers[0]];
 
@@ -218,6 +219,57 @@ DataMap.prototype.getIconFromLayers = function ( markerType, layers ) {
 };
 
 
+DataMap.prototype.createMarkerFromApiInstance = function ( layers, instance ) {
+    const group = this.config.groups[layers[0]],
+        position = this.translatePoint( instance );
+    let leafletMarker;
+
+    // Construct the marker
+    if ( group.markerIcon ) {
+        // Fancy icon marker
+        leafletMarker = new L.Ark.IconMarker( position, {
+            icon: this.getIconFromLayers( layers )
+        } );
+    } else {
+        // Circular marker
+        leafletMarker = new L.Ark.CircleMarker( position, {
+            baseRadius: group.size/2,
+            expandZoomInvEx: group.extraMinZoomSize,
+            fillColor: group.fillColor,
+            fillOpacity: 0.7,
+            color: group.strokeColor || group.fillColor,
+            weight: group.strokeWidth || 1
+        } );
+    }
+
+    // Initialise state if it's missing
+    if ( !instance[2] ) {
+        instance[2] = {};
+    }
+
+    // Persist original coordinates and state
+    leafletMarker.apiInstance = instance;
+
+    // Add marker to the layer
+    this.layerManager.addMember( layers, leafletMarker );
+
+    // Update dismissal status if storage says it's been dismissed
+    if ( Util.getGroupCollectibleType( group ) ) {
+        leafletMarker.setDismissed( this.storage.isDismissed( Util.getMarkerId( leafletMarker ) ) );
+    }
+
+    // Bind a popup building closure (this is more efficient than binds)
+    MarkerPopup.bindTo( this, leafletMarker );
+
+    return leafletMarker;
+};
+
+
+DataMap.prototype.createMarker = function ( layers, position, state ) {
+    return this.createMarkerFromApiInstance( layers, [ position[0], position[1], state ] );
+};
+
+
 /*
  * Builds markers from a data object
  */
@@ -230,54 +282,10 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
     // Unpack markers
     for ( const markerType in data ) {
         const layers = markerType.split( ' ' );
-        const groupName = layers[0];
-        const group = this.config.groups[groupName];
         const placements = data[markerType];
-
         // Create markers for instances
         for ( const instance of placements ) {
-            const position = this.translatePoint( instance );
-            let leafletMarker;
-
-            // Construct the marker
-            if ( group.markerIcon ) {
-                // Fancy icon marker
-                leafletMarker = new L.Ark.IconMarker( position, {
-                    icon: this.getIconFromLayers( markerType, layers )
-                } );
-            } else {
-                // Circular marker
-                leafletMarker = new L.Ark.CircleMarker( position, {
-                    baseRadius: group.size/2,
-                    expandZoomInvEx: group.extraMinZoomSize,
-                    fillColor: group.fillColor,
-                    fillOpacity: 0.7,
-                    color: group.strokeColor || group.fillColor,
-                    weight: group.strokeWidth || 1
-                } );
-            }
-
-            // Initialise state if it's missing
-            if ( !instance[2] ) {
-                instance[2] = {};
-            }
-
-            // Persist original coordinates and state
-            leafletMarker.apiInstance = instance;
-
-            // Add marker to the layer
-            this.layerManager.addMember( markerType, leafletMarker );
-
-            // Update dismissal status if storage says it's been dismissed
-            if ( Util.getGroupCollectibleType( group ) ) {
-                leafletMarker.setDismissed( this.storage.isDismissed( Util.getMarkerId( leafletMarker ) ) );
-            }
-
-            // Bind a popup building closure (this is more efficient than binds)
-            const mType = markerType;
-            MarkerPopup.bindTo( this, mType, leafletMarker );
-
-            this.fire( 'markerReady', leafletMarker );
+            this.fire( 'markerReady', this.createMarkerFromApiInstance( layers, instance ) );
         }
     }
 
