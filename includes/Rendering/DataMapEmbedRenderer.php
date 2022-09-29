@@ -98,7 +98,12 @@ class DataMapEmbedRenderer {
         }
         $parserOutput->addJsConfigVars( 'dataMaps', $configsVar );
 
-        // Register page's dependency on the mix-ins
+        // Update image and page links tables
+        $this->registerDependencies( $parserOutput );
+    }
+
+    public function registerDependencies( ParserOutput $parserOutput ): void {
+        // Mix-ins
         if ( $this->data->getMixins() !== null ) {
             foreach ( $this->data->getMixins() as &$mixinName ) {
                 $mixin = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $mixinName );
@@ -107,26 +112,47 @@ class DataMapEmbedRenderer {
             }
         }
 
-        // Register image dependencies
+        // Backgrounds
         foreach ( $this->data->getBackgrounds() as &$background ) {
-            $parserOutput->addImage( $background->getImageName() );
-            // TODO: register image overlays
+            // Main image
+            DataMapFileUtils::registerImageDependency( $parserOutput, $background->getImageName() );
+            // Image overlays
+            if ( $background->hasOverlays() ) {
+                $background->iterateOverlays( function ( MapBackgroundOverlaySpec $spec ) use ( &$parserOutput ) {
+                    if ( $spec->getImageName() != null ) {
+                        DataMapFileUtils::registerImageDependency( $parserOutput, $spec->getImageName() );
+                    }
+                } );
+            }
         }
+
+        // Groups
         $this->data->iterateGroups( function( MarkerGroupSpec $spec ) use ( &$parserOutput ) {
-            $parserOutput->addImage( $spec->getIcon() );
+            // Icon
+            if ( $spec->getIcon() !== null ) {
+                DataMapFileUtils::registerImageDependency( $parserOutput, $spec->getIcon() );
+            }
+            // Article link
+            if ( $spec->getSharedRelatedArticle() !== null ) {
+                $parserOutput->addLink( Title::newFromText( $spec->getSharedRelatedArticle() ) );
+            }
         } );
 
-        // Register image dependencies on marker popups
+        // Markers
         $marker = new MarkerSpec( new \stdclass() );
         $this->data->iterateRawMarkerMap( function ( string $layers, array $rawCollection ) use ( &$marker, &$parserOutput ) {
             foreach ( $rawCollection as &$rawMarker ) {
                 $marker->reassignTo( $rawMarker );
+                // Popup image
                 if ( $marker->getPopupImage() !== null ) {
-                    $parserOutput->addImage( $marker->getPopupImage() );
+                    DataMapFileUtils::registerImageDependency( $parserOutput, $marker->getPopupImage() );
+                }
+                // Article link
+                if ( $marker->getRelatedArticle() !== null ) {
+                    $parserOutput->addLink( Title::newFromText( $marker->getRelatedArticle() ) );
                 }
             }
         } );
-
     }
 
     public function getJsConfigVariables(): array {
