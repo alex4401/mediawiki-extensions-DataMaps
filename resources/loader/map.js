@@ -509,7 +509,8 @@ const buildLeafletMap = function ( $holder ) {
     // Build extra controls
     buildControls.call( this );
 
-    this.fire( 'leafletLoaded', true );
+    this.fire( 'leafletLoaded' );
+    this.off( 'leafletLoaded' );
 };
 
 
@@ -593,7 +594,8 @@ const buildLegend = function () {
         this.legend.dismissables = new DismissableMarkersLegend( this.legend );
     }
 
-    this.fire( 'legendLoaded', true );
+    this.fire( 'legendLoaded' );
+    this.off( 'legendLoaded' );
 };
 
 

@@ -31,7 +31,7 @@ EventEmitter.prototype.off = function ( event, callback ) {
 };
 
 
-EventEmitter.prototype.fire = function ( event, unbind ) {
+EventEmitter.prototype.fire = function ( event ) {
     if ( !this._handlers[event] ) {
         return;
     }
@@ -46,10 +46,6 @@ EventEmitter.prototype.fire = function ( event, unbind ) {
                 throw error;
             } ).bind( null, error ) );
         }
-    }
-
-    if ( unbind ) {
-        this.off( event );
     }
 };
 
