@@ -5,12 +5,12 @@ see http://www.gnu.org/copyleft/gpl.html for further details, including the
 full text and terms of the license.
 
 ## Overview
-A more modern, prototype replacement for ARK Wiki's [interactive maps on DOM nodes](https://ark.wiki.gg/wiki/Module:ResourceMap).
-Built on top of [Leaflet](https://leafletjs.com/). If frontend is unproven due to performance issues, stack can be rewritten onto
-the old display while keeping the benefits - which are speed, reduced server load (same work in hacky Lua is done in PHP), better
-automation possibilities with bots (extracted data imports), and less data transfered to the browser.
+A modern replacement for ARK Wiki's [interactive maps on DOM nodes](https://ark.wiki.gg/wiki/Module:ResourceMap). Built on top of
+[Leaflet](https://leafletjs.com/). Compared over their legacy DOM-based maps this approach gains speed, better interactivity
+and extensibility, reduced server load (same work in hacky Lua is done in PHP), better automation possibilities with bots
+(extracted data imports), and less data transfered to the browser.
 
-Currently no feature parity with the existing solution. [Roadmap (T75 on wiki's Trello board)](https://trello.com/c/CiLfCspG/75-datamaps-extension-for-fjordurs-release).
+Currently no feature parity with the existing solution. [Roadmap (T75 on ARK Wiki's Trello board)](https://trello.com/c/CiLfCspG/75-datamaps-extension-for-fjordurs-release).
 
 [Test installation link (may be broken)](https://1.37.wiki-dev.mglolenstine.xyz/wiki/Map_transclusion_01).
 
@@ -20,7 +20,6 @@ If your wiki is hosted on [wiki.gg](https://wiki.gg), simply request the extensi
 Manual installation:
 1. Clone the repository to `extensions/DataMaps`.
 2. `wfLoadExtension` in site configuration.
-3. Set `$wgDataMapsNamespaceId` to the ID of the Data namespace (`10006` on ARK Wiki).
 
 ### MediaWiki support schedule
 This extension's development tracks [wiki.gg](https://wiki.gg)'s platform - currently MediaWiki **1.37**. All versioned releases
@@ -81,9 +80,14 @@ Content of the page should be a valid JSON with following structure:
 * * * `icon` (file name, required): name of the file (with no namespace) to show markers with. This makes all markers in group SVG-based. Current support is limited.
 * * * `size` (dimensions, optional): size of each icon marker. Defaults to `[ 32, 32 ]`.
 * * `article` (page name, optional): name of an article every marker's popup should link to. Can be overridden on a marker.
+* * `isDefault` (boolean, optional): whether this group is switched on on map load. Defaults to `true`.
 * * `isCollectible` (optional):
 * * * `true` or `individual`: whether markers of this group can be marked as collected by users.
+* * * `group`: whether this group (and so all of its markers) can be marked as collected by users.
+* * * `globalGroup`: like `group`, but for all maps on the site.
 * * `autoNumberInChecklist` (boolean, optional): if collectible and true, markers in the checklist will have their index number added to the name.
+* * `canSearchFor` (boolean, optional): if true and search is enabled, allows markers from this group to be searched for. Defaults to `true`.
+* * * This field was called `excludeFromSearch` (and took reversed values) before version 0.12.0, but support will be removed in 0.13.0.
 * `layers` (string to object map, optional): map from name to a *marker layer* specification:
 * * Marker layers can be used without an explicit declaration.
 * * `name` (string, required): currently unused.
@@ -101,6 +105,7 @@ Content of the page should be a valid JSON with following structure:
 * * * This field was called `popupImage` before version 0.11.3, but support will be removed in 0.13.0.
 * * `article` (page name, optional): article the marker's popup should link to. Follows either a format of `article title` or `article title|displayed label`.
 * * `searchKeywords` (string, or array of strings or string and number (score multiplier) pairs, optional): specifies what keywords this marker will be suggested for.
+* * `canSearchFor` (boolean, optional): if true and search is enabled, allows this marker to be searched for. Defaults to `true`.
 * `custom` (map, optional): any arbitrary to be added to the client-side map config, for use with e.g. on-site gadgets.
 
 #### File name
@@ -128,7 +133,7 @@ Box is a array of two locations, where first describes the start point of the bo
 * * Example: `{{DataMap:Maps/Resources/Aberration|filter=metal,crystal|title=Metal and crystal locations on [[Aberration]]}}`.
 
 ## Configuration
-* `$wgDataMapsNamespaceId`: namespace where data maps will be allowed. **Must be set.**
+* `$wgDataMapsNamespaceId`: namespace where data maps will be allowed. Defaults to `managed`, which means the extension will provide a `Map` (ID: 2900) namespace by itself.
 * `$wgDataMapsCacheType`: cache type to use for `queryDataMap` API endpoint output. Defaults to `CACHE_ANYTHING`.
 * `$wgDataMapsCacheTTL`: time after which cached `queryDataMap` API endpoint responses expire. Set to `0` to disable caching. Defaults to `86400` (a day).
 * `$wgDataMapsExtendCacheTTL`: if not `false`, extends TTL to `override` of cached maps on requests `threshold` seconds away from expiry. Defaults to `[ 'threshold' => 43200, 'override' => 57600 ]`.
@@ -142,19 +147,8 @@ Box is a array of two locations, where first describes the start point of the bo
 * * `$wgDataMapsDefaultFeatures['SortChecklistsByAmount']`: whether collectible checklists will be sorted by number of markers inside. Defaults to `false`.
 * `$wgDataMapsReportTimingInfo`: if set to `true`, marker processing time will be reported in API responses. Defaults to `false`.
 * `$wgDataMapsAllowExperimentalFeatures`: if set to `true`, enables features listed below - all of which are in development and not ready for production. Defaults to `false`.
-* * Collectible checklists
-
-## General architecture
-The `DataMapContent` class handles data validation (on write only), and customised source beautification.
-
-`DataMapEmbedRenderer` is either invoked when displaying the source page or via the `DataMap` parser function (class
-`ParserFunction_EmbedDataMap`). It generates a basic HTML structure to host the map and delivers immediate configuration needed
-to initialise the map client-side. This configuration is sent via the `dataMaps` mw.config variable, and each map uses its page
-ID for identification (`mw.config.get('dataMaps')[page ID]`) when multiple maps are present on one page.
-
-Markers are not sent to the browser immediately, and have to be requested with the `ApiQueryDataMapEndpoint`. This allows
-initialisation to start while markers are being downloaded from the server, and decouples a large payload from the HTML document,
-which has been a problem previously.
+* * Map configuration delivery without `mw.config` (MW 1.39 preparation)
+* * Support for `limit` and `continue` in API
 
 ## Gadgets
 External scripts can hook into Data Maps to provide additional functionality without modifying core code.
@@ -166,8 +160,7 @@ External scripts can hook into Data Maps to provide additional functionality wit
 * All public APIs of this extension are exposed under `window.mw.dataMaps`. Check `resources/loader/index.js` for all exposed classes.
 * `mw.dataMaps.subscribeHook( string hookName, function callback )` may be used to register a hook callback for every map on current page. `hookName` must not include the `ext.ark.datamaps` namespace. The callback receives one parameter, a `DataMap` instance.
 * * Depend (via `mw.loader.using`) on `ext.ark.datamaps.bootstrap` to use this.
-* * Prior to version 0.10.0, this was `mw.subscribeDataMapsHook`. The entrypoint still exists but will be removed in v0.11.0.
-* Alternatively, a `ext.ark.datamaps.broadcastMaps( id[] )` hook is provided to retrieve only IDs of Data Maps initialised on current page.
+* `ext.ark.datamaps.broadcastMaps( id[] )` hook provides only IDs of Data Maps initialised on current page, but has been deprecated and will be removed in v0.13.0.
 * Instance hooks:
 * * `ext.ark.datamaps.afterInitialisation.[id]( DataMap )`: called after the `DataMap` instance is created, and secondary modules and marker data set have been requested.
 * * `ext.ark.datamaps.afterLegendInitialisation.[id]( DataMap )`: called after OOUI loads and the legend panel is set up.

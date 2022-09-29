@@ -132,7 +132,7 @@ abstract class DataMapContentBase extends JsonContent {
 			)->inContentLanguage();
 
 			if ( !$msg->isDisabled() ) {
-				// We need the ParserOutput for categories and such, so we can't use $msg->parse().
+				// We need the ParserOutput for categories and such, so we can't use $msg->parse()
 				$docViewLang = $doc->getPageViewLanguage();
 				$dir = $docViewLang->getDir();
 

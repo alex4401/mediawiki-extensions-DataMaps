@@ -29,8 +29,6 @@
     "datamap-error-internal-unknown-field-type": "Non è stato implementato il supporto della validazione per il tipo di campo con ID $1. Si tratta di un bug nel codice dell'estensione.",
     "datamap-error-render-unsupported-displaymode": "La modalità di visualizzazione $ 1 è stata segnalata per un indicatore, ma manca il supporto per esso. Questo è un bug nel codice dell'estensione.",
     "datamap-checklist-prelude": "Questi sono gli elementi che si possono contrassegnare come raccolti:",
-    "datamap-checklist-collect-all": "Raccogli tutto",
-    "datamap-checklist-uncollect-all": "Resetta tutto",
     "datamap-defaultloadout-group-icon": "Marker group icon in legend.png",
     "datamap-error-cannot-preview-validation-errors": "<b>Anteprima di modifica non mostrata a causa di errori nel codice sorgente della mappa:</b>",
     "datamap-defaultloadout-map-background": "Map background.jpg",

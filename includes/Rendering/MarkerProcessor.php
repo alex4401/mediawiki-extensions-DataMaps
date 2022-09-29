@@ -6,7 +6,7 @@ use Parser;
 use ParserOptions;
 use MapCacheLRU;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
+use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
@@ -37,8 +37,8 @@ class MarkerProcessor {
         $this->filter = $filter;
         $this->isSearchEnabled = $this->dataMap->wantsSearch();
         // Pull configuration options
-        $this->useLocalParserCache = DataMapsConfig::shouldCacheWikitextInProcess();
-        $this->collectTimings = DataMapsConfig::shouldApiReturnProcessingTime();
+        $this->useLocalParserCache = ExtensionConfig::shouldCacheWikitextInProcess();
+        $this->collectTimings = ExtensionConfig::shouldApiReturnProcessingTime();
         // Initialise the LRU
         if ( $this->useLocalParserCache ) {
             $this->localParserCache = new MapCacheLRU( self::MAX_LRU_SIZE );
@@ -46,11 +46,11 @@ class MarkerProcessor {
         // Configure the wikitext parser
         $this->parserOptions->enableLimitReport( false );
         $this->parserOptions->setAllowSpecialInclusion( false );
-        $this->parserOptions->setExpensiveParserFunctionLimit( 0 );
+        $this->parserOptions->setExpensiveParserFunctionLimit( 5 );
         $this->parserOptions->setInterwikiMagic( false );
-        $this->parserOptions->setMaxIncludeSize( DataMapsConfig::getParserExpansionLimit() );
+        $this->parserOptions->setMaxIncludeSize( ExtensionConfig::getParserExpansionLimit() );
     }
-
+    
     public function processAll(): array {
         $results = [];
 
@@ -69,7 +69,10 @@ class MarkerProcessor {
                 $marker->reassignTo( $rawMarker );
                 $subResults[] = $this->processOne( $marker );
             }
-            $results[$layers] = $subResults;
+
+            if ( !empty( $subResults ) ) {
+                $results[$layers] = $subResults;
+            }
         } );
 
         return $results;
@@ -94,6 +97,13 @@ class MarkerProcessor {
         // Popup title
         if ( $marker->getLabel() != null ) {
             $slots['label'] = $this->parseText( $marker, $marker->getLabel() );
+            // Strip the paragraph element
+            if ( strpos( $slots['label'], '<p>' ) === 0 ) {
+                $slots['label'] = substr( $slots['label'], 3 );
+            }
+            if ( strpos( $slots['label'], '</p>' ) === 0 ) {
+                $slots['label'] = substr( $slots['label'], 4 );
+            }
         }
 
         // Popup description
@@ -112,12 +122,16 @@ class MarkerProcessor {
         }
 
         // Search keywords
-        if ( $this->isSearchEnabled && $marker->getSearchKeywords() != null ) {
-            $keywords = $marker->getSearchKeywords();
-            if ( $this->canImplodeSearchKeywords( $keywords ) ) {
-                $keywords = implode( ' ', $keywords );
+        if ( $this->isSearchEnabled ) {
+            if ( !$marker->isIncludedInSearch() ) {
+                $slots['search'] = 0;
+            } else if ( $marker->getSearchKeywords() != null ) {
+                $keywords = $marker->getSearchKeywords();
+                if ( $this->canImplodeSearchKeywords( $keywords ) ) {
+                    $keywords = implode( ' ', $keywords );
+                }
+                $slots['search'] = $keywords;
             }
-            $slots['search'] = $keywords;
         }
 
         // Insert slots if any data has been added
@@ -149,7 +163,7 @@ class MarkerProcessor {
 
         // Call the parser
         $out = $this->parser->parse( $text, $this->title, $this->parserOptions, false, $this->isParserDirty )
-            ->getText( [ 'unwrap' => true ] );
+            ->getText( [ 'unwrap' => true, 'allowTOC' => false ] );
         // Mark as clean to avoid clearing state again
         $this->isParserDirty = false;
 

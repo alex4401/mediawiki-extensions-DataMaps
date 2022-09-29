@@ -1,3 +1,7 @@
+const Enums = require( './enums.js' ),
+    Util = require( './util.js' );
+
+
 function MarkerGroupToggleField( legendPanel, groupId, group ) {
     this.legendPanel = legendPanel;
     this.legend = this.legendPanel.legend;
@@ -5,7 +9,8 @@ function MarkerGroupToggleField( legendPanel, groupId, group ) {
     this.groupId = groupId;
 
     // Create a backing checkbox field
-    const pair = this.legend.createCheckboxField( this.legendPanel.$groupContainer, group.name, true,
+    const pair = this.legend.createCheckboxField( this.legendPanel.$groupContainer, group.name,
+        !Util.isBitSet( group.flags, Enums.MarkerGroupFlags.IsUnselected ),
         state => this.map.layerManager.setExclusion( this.groupId, !state ) );
     this.field = pair[1];
     this.checkbox = pair[0];
@@ -17,27 +22,26 @@ function MarkerGroupToggleField( legendPanel, groupId, group ) {
 
     // Add a coloured circle if circle marker group
     if ( group.fillColor ) {
-        this.$circle = $( '<div class="datamap-legend-circle">' ).css( {
-            width: group.size+4,
-            height: group.size+4,
-            backgroundColor: group.fillColor,
-            borderColor: group.strokeColor || group.fillColor,
-            borderWidth: group.strokeWidth || 1,
-        } ).prependTo( this.field.$header );
+        this.$circle = Util.createGroupCircleElement( group ).prependTo( this.field.$header );
     }
 
     // Add an icon if one is specified in the group
     if ( group.legendIcon ) {
-        this.$icon = $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src', group.legendIcon ).prependTo( this.field.$header );
+        this.$icon = Util.createGroupIconElement( group ).attr( 'src', group.legendIcon ).prependTo( this.field.$header );
     }
 }
 
 
 MarkerGroupToggleField.prototype.setBadge = function ( text ) {
-    if ( this.$badge == null ) {
-        this.$badge = $( '<span class="datamap-legend-badge">' ).appendTo( this.field.$header );
+    if ( text && text.length > 0 ) {
+        if ( this.$badge == null ) {
+            this.$badge = $( '<span class="datamap-legend-badge">' ).appendTo( this.field.$header );
+        }
+        this.$badge.text( text );
+    } else if ( this.$badge ) {
+        this.$badge.remove();
+        this.$badge = null;
     }
-    this.$badge.text( text );
 };
 
 
@@ -45,7 +49,8 @@ function MarkerLegendPanel( legend, name, addTotalToggles, withLayerDropdown ) {
     this.legend = legend;
     this.map = this.legend.map;
     // Root DOM element
-    this.$root = this.legend.addTab( name ).$element;
+    this.tab = this.legend.addTab( name, null, false );
+    this.$root = this.tab.$element;
     //
     this.buttonGroup = new OO.ui.ButtonGroupWidget( {} );
     //
@@ -120,6 +125,7 @@ MarkerLegendPanel.prototype.addMarkerLayerToggleRequired = function ( $parent, l
 
 MarkerLegendPanel.prototype.addMarkerGroupToggle = function ( groupId, group ) {
     this.groupToggles[groupId] = new MarkerGroupToggleField( this, groupId, group );
+    this.legend.setTabVisibility( this.tab, true );
 };
 
 

@@ -1,6 +1,6 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.11.5",
+	"version": "0.12.0",
 
 	"author": [
 		"alex4401"
@@ -28,6 +28,24 @@
 
 	"TrackingCategories": [
 		"datamap-category-pages-including-maps"
+	],
+
+	"namespaces": [
+		{
+			"id": 2900,
+			"constant": "NS_MAP",
+			"name": "Map",
+			"defaultcontentmodel": "wikitext",
+			"subpages": true,
+			"conditional": true
+		},
+		{
+			"id": 2901,
+			"constant": "NS_MAP_TALK",
+			"name": "Map_talk",
+			"subpages": true,
+			"conditional": true
+		}
 	],
 
 	"ResourceFileModulePaths": {
@@ -90,6 +108,7 @@
 			],
 			"packageFiles": [
 				"loader/index.js",
+				"loader/enums.js",
 				"loader/events.js",
 				"loader/storage.js",
 				"loader/layerManager.js",
@@ -124,9 +143,7 @@
 				"datamap-coordinate-control-text",
 				"datamap-control-reset-view",
 				"datamap-control-centre-view",
-				"datamap-checklist-prelude",
-				"datamap-checklist-collect-all",
-				"datamap-checklist-uncollect-all"
+				"datamap-checklist-prelude"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},
@@ -207,20 +224,21 @@
 	
 	"callback": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onRegistration",
 	"Hooks": {
-		"ParserFirstCallInit": "DataMapsHookHandler",
-		"ContentHandlerDefaultModelFor": "DataMapsHookHandler",
+		"ParserFirstCallInit": "MainHandler",
+		"ContentHandlerDefaultModelFor": "MainHandler",
+		"CanonicalNamespaces": "MainHandler",
 		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
 	},
     "HookHandlers": {
-        "DataMapsHookHandler": {
+        "MainHandler": {
             "class": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler"
         }
     },
 
 	"config": {
 		"DataMapsNamespaceId": {
-			"description": "Namespace where data maps will be stored.",
-			"value": -1
+			"description": "Namespace where data maps will be stored. Use 'managed' to use the built-in namespace.",
+			"value": "managed"
 		},
 		"DataMapsCacheType": {
 			"description": "Cache type to use for queryDataMap API output. Defaults to CACHE_ANYTHING.",

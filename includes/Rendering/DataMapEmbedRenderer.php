@@ -13,7 +13,7 @@ use InvalidArgumentException;
 use PPFrame;
 use FormatJson;
 
-use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
+use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerLayerSpec;
@@ -89,44 +89,82 @@ class DataMapEmbedRenderer {
             ) );
         }
 
-        // Inject mw.config variables via a `dataMaps` map from ID
-        $configsVar = [
-            $this->getId() => $this->getJsConfigVariables()
-        ];
-        if ( array_key_exists( 'dataMaps', $parserOutput->mJsConfigVars ) ) {
-            $configsVar += $parserOutput->mJsConfigVars['dataMaps'];
+        if ( !ExtensionConfig::isBleedingEdge() ) {
+            // Inject mw.config variables via a `dataMaps` map from ID
+            $configsVar = [
+                $this->getId() => $this->getJsConfigVariables()
+            ];
+            if ( array_key_exists( 'dataMaps', $parserOutput->mJsConfigVars ) ) {
+                $configsVar += $parserOutput->mJsConfigVars['dataMaps'];
+            }
+            $parserOutput->addJsConfigVars( 'dataMaps', $configsVar );
         }
-        $parserOutput->addJsConfigVars( 'dataMaps', $configsVar );
 
-        // Register page's dependency on the mix-ins
+        // Update image and page links tables
+        $this->registerDependencies( $parserOutput );
+    }
+
+    public function registerDependencies( ParserOutput $parserOutput ): void {
+        // Mix-ins
         if ( $this->data->getMixins() !== null ) {
             foreach ( $this->data->getMixins() as &$mixinName ) {
-                $mixin = Title::makeTitleSafe( DataMapsConfig::getNamespace(), $mixinName );
+                $mixin = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $mixinName );
                 $parserOutput->addTemplate( $mixin, $mixin->getArticleId(),
                     $this->parser->fetchCurrentRevisionRecordOfTitle( $mixin )->getId() );
             }
         }
 
-        // Register image dependencies
+        // Backgrounds
         foreach ( $this->data->getBackgrounds() as &$background ) {
-            $parserOutput->addImage( $background->getImageName() );
-            // TODO: register image overlays
+            // Main image
+            DataMapFileUtils::registerImageDependency( $parserOutput, $background->getImageName() );
+            // Image overlays
+            if ( $background->hasOverlays() ) {
+                $background->iterateOverlays( function ( MapBackgroundOverlaySpec $spec ) use ( &$parserOutput ) {
+                    if ( $spec->getImageName() != null ) {
+                        DataMapFileUtils::registerImageDependency( $parserOutput, $spec->getImageName() );
+                    }
+                } );
+            }
         }
+
+        // Groups
         $this->data->iterateGroups( function( MarkerGroupSpec $spec ) use ( &$parserOutput ) {
-            $parserOutput->addImage( $spec->getIcon() );
+            // Icon
+            if ( $spec->getIcon() !== null ) {
+                DataMapFileUtils::registerImageDependency( $parserOutput, $spec->getIcon() );
+            }
+            // Article link
+            if ( $spec->getSharedRelatedArticle() !== null ) {
+                $parserOutput->addLink( Title::newFromText( $spec->getSharedRelatedArticle() ) );
+            }
         } );
 
-        // Register image dependencies on marker popups
+        // Markers
         $marker = new MarkerSpec( new \stdclass() );
         $this->data->iterateRawMarkerMap( function ( string $layers, array $rawCollection ) use ( &$marker, &$parserOutput ) {
             foreach ( $rawCollection as &$rawMarker ) {
                 $marker->reassignTo( $rawMarker );
+                // Popup image
                 if ( $marker->getPopupImage() !== null ) {
-                    $parserOutput->addImage( $marker->getPopupImage() );
+                    DataMapFileUtils::registerImageDependency( $parserOutput, $marker->getPopupImage() );
+                }
+                // Article link
+                if ( $marker->getRelatedArticle() !== null ) {
+                    $parserOutput->addLink( Title::newFromText( $marker->getRelatedArticle() ) );
                 }
             }
         } );
+    }
 
+    public function getConfigElement(): string {
+        return Html::element(
+            'script',
+            [
+                'type' => 'application/json+datamap'
+            ],
+            FormatJson::encode( $this->getJsConfigVariables(), false, FormatJson::UTF8_OK )
+        );
     }
 
     public function getJsConfigVariables(): array {
@@ -232,11 +270,35 @@ class DataMapEmbedRenderer {
         return $result;
     }
 
+    public function getPublicGroupFeatureBitMask( MarkerGroupSpec $spec ): int {
+        $out = 0;
+        $out |= $spec->wantsChecklistNumbering() ? 1<<0 : 0;
+        $out |= !$spec->isIncludedInSearch() ? 1<<1 : 0;
+        $out |= !$spec->isDefault() ? 1<<2 : 0;
+        switch ( $spec->getCollectibleMode() ) {
+            case MarkerGroupSpec::CM_INDIVIDUAL:
+                $out |= 1<<3;
+                break;
+            case MarkerGroupSpec::CM_AS_ONE:
+                $out |= 1<<4;
+                break;
+            case MarkerGroupSpec::CM_AS_ONE_GLOBAL:
+                $out |= 1<<5;
+                break;
+        }
+        return $out;
+    }
+
     public function getMarkerGroupConfig( MarkerGroupSpec $spec ): array {
         $out = array(
             'name' => $spec->getName(),
             'size' => $spec->getSize(),
         );
+
+        $flags = $this->getPublicGroupFeatureBitMask( $spec );
+        if ( $flags !== 0 ) {
+            $out['flags'] = $flags;
+        }
 
         switch ( $spec->getDisplayMode() ) {
             case MarkerGroupSpec::DM_CIRCLE:
@@ -275,18 +337,6 @@ class DataMapEmbedRenderer {
             $out['article'] = $spec->getSharedRelatedArticle();
         }
 
-        if ( $spec->getCollectibleMode() !== null ) {
-            $out['collectible'] = $spec->getCollectibleMode();
-        }
-
-        if ( $spec->wantsChecklistNumbering() ) {
-            $out['checklistNumbering'] = $spec->wantsChecklistNumbering();
-        }
-
-        if ( $spec->wantsSearchExclusion() ) {
-            $out['doNotSearch'] = $spec->wantsSearchExclusion();
-        }
-
         return $out;
     }
 
@@ -312,10 +362,6 @@ class DataMapEmbedRenderer {
         }
 
         return $out;
-    }
-
-    private function expandWikitext( string $source ): string {
-        return $this->parser->parse( $source, $this->title, $this->parserOptions )->getText( [ 'unwrap' => true ] );
     }
 
     public function getHtml( DataMapRenderOptions $options ): string {
@@ -378,6 +424,17 @@ class DataMapEmbedRenderer {
 		] );
         $containerMap->appendContent( new \OOUI\HtmlSnippet( $this->getLeafletContainerHtml() ) );
         $containerContent->appendContent( $containerMap );
+
+        // Deliver map configuration via a <script> tag. Prior to v0.12.0 this was delivered via mw.config, but that has the
+        // downside of slowing down the page load (config is delivered via head, but not actually used until the script is
+        // loaded), and can no longer be done in MW 1.39 without heavily polluting the store.
+        // This configuration is used to set up the map before any data sets are downloaded. It allows for environment to be
+        // prepared.
+        // TODO: possibly deliver some of this stuff via API? tho dunno if there's any real benefits to that
+        // TODO: unlock for v0.13.x release
+        if ( ExtensionConfig::isBleedingEdge() ) {
+            $containerMain->appendContent( new \OOUI\HtmlSnippet( $this->getConfigElement() ) );
+        }
 
         return $containerMain;
     }

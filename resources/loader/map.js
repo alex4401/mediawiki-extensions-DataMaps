@@ -1,4 +1,5 @@
 const MapStorage = require( './storage.js' ),
+    Enums = require( './enums.js' ),
     MarkerLayerManager = require( './layerManager.js' ),
     MarkerPopup = require( './popup.js' ),
     MapLegend = require( './legend.js' ),
@@ -7,12 +8,6 @@ const MapStorage = require( './storage.js' ),
     DismissableMarkersLegend = require( './dismissables.js' ),
     Util = require( './util.js' ),
     mwApi = new mw.Api();
-
-
-const CRSOrigin = {
-    TopLeft: 1,
-    BottomLeft: 2
-};
 
 
 function DataMap( id, $root, config ) {
@@ -25,6 +20,7 @@ function DataMap( id, $root, config ) {
     this.config = config;
     // Local storage driver
     this.storage = new MapStorage( this );
+    this.globalStorage = new MapStorage( this, 'global' );
     // Layering driver
     this.layerManager = new MarkerLayerManager( this );
     // Information of currently set background
@@ -32,7 +28,7 @@ function DataMap( id, $root, config ) {
     this.backgroundIndex = 0;
     // Data set filters
     this.dataSetFilters = this.$root.data( 'filter-groups' ) || null;
-    if (this.dataSetFilters) {
+    if ( this.dataSetFilters ) {
         this.dataSetFilters = this.dataSetFilters.split( '|' );
     }
     //
@@ -62,7 +58,7 @@ function DataMap( id, $root, config ) {
         this.config.crs = [ [ 0, 0 ], [ 100, 100 ] ];
     }
     this.crsOrigin = ( this.config.crs[0][0] < this.config.crs[1][0] && this.config.crs[0][1] < this.config.crs[1][1] )
-        ? CRSOrigin.TopLeft : CRSOrigin.BottomLeft;
+        ? Enums.CRSOrigin.TopLeft : Enums.CRSOrigin.BottomLeft;
     // Y axis is authoritative, this is really just a cosmetic choice influenced by ARK (latitude first). X doesn't need to be
     // mapped on a separate scale from Y, unless we want them to always be squares.
     let crsYHigh = Math.max( this.config.crs[0][0], this.config.crs[1][0] );
@@ -70,9 +66,6 @@ function DataMap( id, $root, config ) {
 
     // Set up internal event handlers
     this.on( 'markerReady', this.tryOpenUriPopup, this );
-
-    // Broadcast `afterInitialisation` hook
-    mw.hook( `ext.ark.datamaps.afterInitialisation.${id}` ).fire( this );
 
     // Request OOUI to be loaded and build the legend
     if ( !this.isFeatureBitSet( this.FF_HIDE_LEGEND ) ) {
@@ -115,7 +108,7 @@ DataMap.prototype.FF_SORT_CHECKLISTS_BY_AMOUNT = 1<<4;
 
 
 DataMap.prototype.isFeatureBitSet = function ( mask ) {
-    return this.config.flags && ( this.config.flags & mask ) == mask;
+    return Util.isBitSet( this.config.flags, mask );
 };
 
 
@@ -159,14 +152,14 @@ DataMap.prototype.isLayerUsed = function ( name ) {
  * 
  */
 DataMap.prototype.translatePoint = function ( point ) {
-    return this.crsOrigin == CRSOrigin.TopLeft
+    return this.crsOrigin == Enums.CRSOrigin.TopLeft
         ? [ ( this.config.crs[1][0] - point[0] ) * this.crsScaleY, point[1] * this.crsScaleX ]
         : [ point[0] * this.crsScaleY, point[1] * this.crsScaleX ];
 };
 
 
 DataMap.prototype.translateBox = function ( box ) {
-    return this.crsOrigin == CRSOrigin.TopLeft
+    return this.crsOrigin == Enums.CRSOrigin.TopLeft
         ? [ [ ( this.config.crs[1][0] - box[0][0] ) * this.crsScaleY, box[0][1] * this.crsScaleX ],
             [ ( this.config.crs[1][0] - box[1][0] ) * this.crsScaleY, box[1][1] * this.crsScaleX ] ]
         : [ [ box[0][0] * this.crsScaleY, box[0][1] * this.crsScaleX ],
@@ -186,10 +179,28 @@ DataMap.prototype.getCoordLabel = function ( latOrInstance, lon ) {
 };
 
 
+DataMap.prototype.getStorageForMarkerGroup = function ( group ) {
+    return Util.isBitSet( group.flags, Enums.MarkerGroupFlags.Collectible_GlobalGroup ) ? this.globalStorage : this.storage;
+};
+
+
 DataMap.prototype.toggleMarkerDismissal = function ( leafletMarker ) {
-    const state = this.storage.toggleDismissal( Util.getMarkerId( leafletMarker ) );
-    leafletMarker.setDismissed( state );
-    this.fire( 'markerDismissChange', leafletMarker );
+    const groupId = leafletMarker.attachedLayers[0];
+    const isIndividual = Util.getGroupCollectibleType( this.config.groups[groupId] )
+        === Enums.MarkerGroupFlags.Collectible_Individual,
+        storage = this.getStorageForMarkerGroup( this.config.groups[groupId] );
+    const state = storage.toggleDismissal( isIndividual ? Util.getMarkerId( leafletMarker ) : groupId, !isIndividual );
+    if ( isIndividual ) {
+        // Update this marker only
+        leafletMarker.setDismissed( state );
+        this.fire( 'markerDismissChange', leafletMarker );
+    } else {
+        // Update every marker in the group
+        for ( const otherLeafletMarker of this.layerManager.byLayer[groupId] ) {
+            otherLeafletMarker.setDismissed( state );
+            this.fire( 'markerDismissChange', otherLeafletMarker );
+        }
+    }
     return state;
 };
 
@@ -205,7 +216,8 @@ DataMap.prototype.tryOpenUriPopup = function ( leafletMarker ) {
 };
 
 
-DataMap.prototype.getIconFromLayers = function ( markerType, layers ) {
+DataMap.prototype.getIconFromLayers = function ( layers ) {
+    const markerType = layers.join( ' ' );
     if ( !this.iconCache[markerType] ) {
         const group = this.config.groups[layers[0]];
 
@@ -222,6 +234,61 @@ DataMap.prototype.getIconFromLayers = function ( markerType, layers ) {
 };
 
 
+DataMap.prototype.createMarkerFromApiInstance = function ( layers, instance ) {
+    const group = this.config.groups[layers[0]],
+        position = this.translatePoint( instance );
+    let leafletMarker;
+
+    // Construct the marker
+    if ( group.markerIcon ) {
+        // Fancy icon marker
+        leafletMarker = new L.Ark.IconMarker( position, {
+            icon: this.getIconFromLayers( layers )
+        } );
+    } else {
+        // Circular marker
+        leafletMarker = new L.Ark.CircleMarker( position, {
+            baseRadius: group.size/2,
+            expandZoomInvEx: group.extraMinZoomSize,
+            fillColor: group.fillColor,
+            fillOpacity: 0.7,
+            color: group.strokeColor || group.fillColor,
+            weight: group.strokeWidth || 1
+        } );
+    }
+
+    // Initialise state if it's missing
+    if ( !instance[2] ) {
+        instance[2] = {};
+    }
+
+    // Persist original coordinates and state
+    leafletMarker.apiInstance = instance;
+
+    // Add marker to the layer
+    this.layerManager.addMember( layers, leafletMarker );
+
+    // Update dismissal status if storage says it's been dismissed
+    const collectibleMode = Util.getGroupCollectibleType( group );
+    if ( collectibleMode ) {
+        const isIndividual = collectibleMode == Enums.MarkerGroupFlags.Collectible_Individual,
+            storage = this.getStorageForMarkerGroup( group );
+        leafletMarker.setDismissed( storage.isDismissed( isIndividual ? Util.getMarkerId( leafletMarker ) : layers[0],
+            !isIndividual ) );
+    }
+
+    // Bind a popup building closure (this is more efficient than binds)
+    MarkerPopup.bindTo( this, leafletMarker );
+
+    return leafletMarker;
+};
+
+
+DataMap.prototype.createMarker = function ( layers, position, state ) {
+    return this.createMarkerFromApiInstance( layers, [ position[0], position[1], state ] );
+};
+
+
 /*
  * Builds markers from a data object
  */
@@ -234,54 +301,10 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
     // Unpack markers
     for ( const markerType in data ) {
         const layers = markerType.split( ' ' );
-        const groupName = layers[0];
-        const group = this.config.groups[groupName];
         const placements = data[markerType];
-
         // Create markers for instances
         for ( const instance of placements ) {
-            const position = this.translatePoint( instance );
-            let leafletMarker;
-
-            // Construct the marker
-            if ( group.markerIcon ) {
-                // Fancy icon marker
-                leafletMarker = new L.Ark.IconMarker( position, {
-                    icon: this.getIconFromLayers( markerType, layers )
-                } );
-            } else {
-                // Circular marker
-                leafletMarker = new L.Ark.CircleMarker( position, {
-                    baseRadius: group.size/2,
-                    expandZoomInvEx: group.extraMinZoomSize,
-                    fillColor: group.fillColor,
-                    fillOpacity: 0.7,
-                    color: group.strokeColor || group.fillColor,
-                    weight: group.strokeWidth || 1
-                } );
-            }
-
-            // Initialise state if it's missing
-            if ( !instance[2] ) {
-                instance[2] = {};
-            }
-
-            // Persist original coordinates and state
-            leafletMarker.apiInstance = instance;
-
-            // Add marker to the layer
-            this.layerManager.addMember( markerType, leafletMarker );
-
-            // Update dismissal status if storage says it's been dismissed
-            if ( group.collectible ) {
-                leafletMarker.setDismissed( this.storage.isDismissed( Util.getMarkerId( leafletMarker ) ) );
-            }
-
-            // Bind a popup building closure (this is more efficient than binds)
-            const mType = markerType;
-            MarkerPopup.bindTo( this, mType, leafletMarker );
-
-            this.fire( 'markerReady', leafletMarker );
+            this.fire( 'markerReady', this.createMarkerFromApiInstance( layers, instance ) );
         }
     }
 
@@ -289,7 +312,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
 };
 
 
-DataMap.prototype.streamMarkersIn = function ( pageName, version, filter, successCallback, errorCallback ) {
+DataMap.prototype.streamMarkersIn = function ( pageName, version, filter, successCallback, errorCallback, retryCount ) {
     const query = {
         action: 'queryDataMap',
         title: pageName
@@ -300,17 +323,29 @@ DataMap.prototype.streamMarkersIn = function ( pageName, version, filter, succes
     if ( filter ) {
         query.filter = filter.join( '|' );
     }
+    if ( retryCount == null ) {
+        retryCount = 2;
+    }
+
     return mwApi.get( query ).then(
         data => {
-            if ( data.error )
+            if ( data.error ) {
                 errorCallback();
-            else
+            } else {
                 this.waitForLeaflet( () => {
                     this.instantiateMarkers( data.query.markers );
                     successCallback();
                 } );
+            }
         },
-        errorCallback
+        () => {
+            if ( retryCount <= 0 ) {
+                errorCallback();
+            } else {
+                console.warn( 'Retrying marker chunk loading' );
+                this.streamMarkersIn( pageName, version, filter, successCallback, errorCallback, retryCount - 1 );
+            }
+        }
     );
 };
 
@@ -480,6 +515,10 @@ const buildLeafletMap = function ( $holder ) {
 
         // Register with the layer manager
         this.layerManager.register( groupName );
+
+        if ( Util.isBitSet( group.flags, Enums.MarkerGroupFlags.IsUnselected ) ) {
+            this.layerManager.setExclusion( groupName, true );
+        }
     }
 
     // Recalculate marker sizes when zoom ends
@@ -490,6 +529,7 @@ const buildLeafletMap = function ( $holder ) {
     buildControls.call( this );
 
     this.fire( 'leafletLoaded' );
+    this.off( 'leafletLoaded' );
 };
 
 
@@ -501,7 +541,7 @@ const buildControls = function () {
         this.leaflet.on( 'mousemove', event => {
             let lat = event.latlng.lat / this.crsScaleY;
             let lon = event.latlng.lng / this.crsScaleX;
-            if ( this.crsOrigin == CRSOrigin.TopLeft )
+            if ( this.crsOrigin == Enums.CRSOrigin.TopLeft )
                 lat = this.config.crs[1][0] - lat;
             this.$coordTracker.text( this.getCoordLabel( lat, lon ) );
         } );
@@ -568,15 +608,13 @@ const buildLegend = function () {
             this.markerLegend.addMarkerGroupToggle( groupId, this.config.groups[groupId] );
         }
     }
-
     // Set up the dismissable marker interactions
-    if ( Object.values( this.config.groups ).some( x => x.collectible ) ) {
+    if ( Object.values( this.config.groups ).some( x => Util.getGroupCollectibleType( x ) ) ) {
         this.legend.dismissables = new DismissableMarkersLegend( this.legend );
     }
 
     this.fire( 'legendLoaded' );
-
-    mw.hook( `ext.ark.datamaps.afterLegendInitialisation.${this.id}` ).fire( this );
+    this.off( 'legendLoaded' );
 };
 
 

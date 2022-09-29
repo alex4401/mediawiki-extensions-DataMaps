@@ -1,4 +1,40 @@
+const MAX_GROUP_CIRCLE_SIZE = 20,
+    Enums = require( './enums.js' );
+
+
 module.exports.isBleedingEdge = require( './settings.json' ).DataMapsAllowExperimentalFeatures;
+
+
+module.exports.isBitSet = function ( a, b ) {
+    return a && ( a & b ) == b;
+};
+
+
+module.exports.isAnyBitSet = function ( a, b ) {
+    return a && ( a & b ) !== 0;
+};
+
+
+module.exports.getGroupCollectibleType = function ( group ) {
+    return ( group.flags || 0 ) & ( Enums.MarkerGroupFlags.Collectible_Individual | Enums.MarkerGroupFlags.Collectible_Group
+        | Enums.MarkerGroupFlags.Collectible_GlobalGroup );
+};
+
+
+module.exports.createGroupIconElement = function ( group ) {
+    return $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src', group.legendIcon );
+};
+
+
+module.exports.createGroupCircleElement = function ( group ) {
+    return $( '<div class="datamap-legend-circle">' ).css( {
+        width: Math.min( MAX_GROUP_CIRCLE_SIZE, group.size+4 ),
+        height: Math.min( MAX_GROUP_CIRCLE_SIZE, group.size+4 ),
+        backgroundColor: group.fillColor,
+        borderColor: group.strokeColor || group.fillColor,
+        borderWidth: group.strokeWidth || 1,
+    } );
+};
 
 
 /*

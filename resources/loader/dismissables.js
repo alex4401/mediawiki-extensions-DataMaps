@@ -1,4 +1,5 @@
-const Util = require( './util.js' ),
+const Enums = require( './enums.js' ),
+    Util = require( './util.js' ),
     MarkerLegendPanel = require( './markerLegend.js' );
 
 
@@ -8,22 +9,22 @@ class CollectibleMarkerGroup {
         this.map = this.panel.map;
         this.group = group;
         this.markers = [];
+        this.isIndividual = Util.getGroupCollectibleType( group ) == Enums.MarkerGroupFlags.Collectible_Individual;
 
         if ( group.legendIcon ) {
-            this.$icon = $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src', group.legendIcon );
+            this.$icon = Util.createGroupIconElement( group );
         } else {
-            this.$icon = $( '<div class="datamap-legend-circle">' ).css( {
-                width: group.size+4,
-                height: group.size+4,
-                backgroundColor: group.fillColor,
-                borderColor: group.strokeColor || group.fillColor,
-                borderWidth: group.strokeWidth || 1,
-            } );
+            this.$icon = Util.createGroupCircleElement( group );
         }
 
         this.container = new OO.ui.Widget( {
             classes: [ 'datamap-collectible-group-markers' ]
         } );
+
+        this.checkbox = new OO.ui.CheckboxInputWidget( {
+            selected: false
+        } );
+        this.checkbox.on( 'change', () => this.toggleAll( this.checkbox.isSelected() ) );
 
         this.$element = new OO.ui.PanelLayout( {
             framed: true,
@@ -34,6 +35,7 @@ class CollectibleMarkerGroup {
                     expanded: false,
                     classes: [ 'datamap-collectible-group-header' ],
                     content: [
+                        this.checkbox,
                         this.$icon,
                         new OO.ui.LabelWidget( {
                             label: group.name
@@ -43,16 +45,8 @@ class CollectibleMarkerGroup {
                 this.container
             ]
         } ).$element;
-
-        this.buttonGroup = new OO.ui.ButtonGroupWidget( {} );
-        // Prepend the button group to the root element
-        this.buttonGroup.$element.prependTo( this.container.$element );
-
-        MarkerLegendPanel.prototype.createActionButton.call( this, mw.msg( 'datamap-checklist-collect-all' ),
-            this.toggleAll.bind( this, true ) );
-        MarkerLegendPanel.prototype.createActionButton.call( this, mw.msg( 'datamap-checklist-uncollect-all' ),
-            this.toggleAll.bind( this, false ) );
     }
+
 
     toggleAll( newState ) {
         for ( const marker of this.markers ) {
@@ -62,14 +56,17 @@ class CollectibleMarkerGroup {
         }
     }
 
+
     push( leafletMarker ) {
         this.markers.push( new CollectibleMarkerEntry( this, leafletMarker ) );
+        this.updateCheckboxState();
     }
+
 
     sort() {
         let sortKey;
         switch ( this.map.crsOrigin ) {
-            case 1:
+            case Enums.CRSOrigin.TopLeft:
                 sortKey = ( a, b ) => {
                     if ( a.apiInstance[0] == b.apiInstance[0] ) {
                         return a.apiInstance[1] > b.apiInstance[1];
@@ -77,7 +74,7 @@ class CollectibleMarkerGroup {
                     return a.apiInstance[0] > b.apiInstance[0];
                 };
                 break;
-            case 2:
+            case Enums.CRSOrigin.BottomLeft:
                 sortKey = ( a, b ) => {
                     if ( a.apiInstance[0] == b.apiInstance[0] ) {
                         return a.apiInstance[1] < b.apiInstance[1];
@@ -98,6 +95,7 @@ class CollectibleMarkerGroup {
         }
     }
 
+
     replicateMarkerState( leafletMarker ) {
         for ( const marker of this.markers ) {
             if ( marker.leafletMarker == leafletMarker ) {
@@ -105,6 +103,12 @@ class CollectibleMarkerGroup {
                 break;
             }
         }
+        this.updateCheckboxState();
+    }
+
+
+    updateCheckboxState() {
+        this.checkbox.setSelected( this.markers.every( x => x.leafletMarker.options.dismissed ), true );
     }
 }
 
@@ -116,6 +120,7 @@ class CollectibleMarkerEntry {
         this.apiInstance = leafletMarker.apiInstance;
         this.slots = this.apiInstance[2] || {};
         this.leafletMarker = leafletMarker;
+        this.isIndividual = this.markerGroup.isIndividual;
 
         const pair = this.panel.legend.createCheckboxField( this.markerGroup.container.$element, '...',
             leafletMarker.options.dismissed, _ => this.panel.map.toggleMarkerDismissal( this.leafletMarker ) );
@@ -124,6 +129,11 @@ class CollectibleMarkerEntry {
 
         this.$label = this.field.$label;
         this.$label.empty();
+
+        // Hide field input area if for group
+        if ( !this.isIndividual ) {
+            this.field.getField().toggle( false );
+        }
 
         // Build the label
         const areCoordsEnabled = this.panel.map.isFeatureBitSet( this.panel.map.FF_SHOW_COORDINATES );
@@ -134,10 +144,18 @@ class CollectibleMarkerEntry {
         // Marker label
         this.$labelText = $( '<span>' ).appendTo( this.$label );
         if ( this.slots.label ) {
-            this.$labelText.html( this.slots.label );
+            const groupName = this.markerGroup.group.name;
+            let labelText = this.slots.label;
+            if ( labelText.indexOf( groupName ) == 0 ) {
+                labelText = labelText.substr( groupName.length ).trim().replace( /(^\(|\)$)/g, '' );
+                if ( labelText.length <= 2 ) {
+                    labelText = this.slots.label;
+                }
+            }
+            this.$labelText.html( labelText );
         }
 
-        if ( this.markerGroup.group.checklistNumbering ) {
+        if ( Util.isBitSet( this.markerGroup.group.flags, Enums.MarkerGroupFlags.IsNumberedInChecklists ) ) {
             this.$index = $( '<span class="datamap-collapsible-index">' ).appendTo( this.$labelText );
             this.setIndex( this.markerGroup.markers.length + 1 );
         }
@@ -147,6 +165,7 @@ class CollectibleMarkerEntry {
             event.preventDefault( true );
         } );
     }
+
 
     setIndex( index ) {
         this.$index.text( ' #' + index );
@@ -159,32 +178,36 @@ class CollectiblesLegend {
         this.legend = legend;
         this.map = this.legend.map;
 
-        this.map.on( 'markerDismissChange', this.updateGroupBadges, this );
-        this.map.on( 'streamingDone', this.updateGroupBadges, this );
-
         // Root DOM element
         this.$root = this.legend.addTab( mw.msg( 'datamap-legend-tab-checklist' ), 'datamap-container-collectibles' ).$element;
         //
         this.groups = {};
 
+        this.suppressBadgeUpdates = true;
+
         // Insert an introduction paragraph
         this.$root.append( mw.msg( 'datamap-checklist-prelude' ) );
-
-        // Register event handlers
-        this.map.on( 'markerDismissChange', this.onDismissalChange, this );
-        this.map.on( 'markerReady', this.pushMarker, this );
-        this.map.on( 'streamingDone', this.sort, this );
-
-        // Call updaters now to bring the main panel in sync
-        this.updateGroupBadges();
 
         // Prepare the checklist panel
         this._initialisePanel();
 
+        // Register event handlers
+        this.map.on( 'markerDismissChange', this.updateGroupBadges, this );
+        this.map.on( 'markerDismissChange', this.onDismissalChange, this );
+        this.map.on( 'markerReady', this.pushMarker, this );
+        this.map.on( 'streamingDone', this.sort, this );
+        this.map.on( 'streamingDone', () => {
+            this.suppressBadgeUpdates = false;
+        }, this );
+        this.map.on( 'streamingDone', this.updateGroupBadges, this );
+
+        // Call updaters now to bring the main panel in sync
+        this.updateGroupBadges( true );
+
         // Import existing markers if any have been loaded
         for ( const groupName in this.map.config.groups ) {
             const group = this.map.config.groups[groupName];
-            if ( group.collectible ) {
+            if ( Util.getGroupCollectibleType( group ) ) {
                 for ( const leafletMarker of ( this.map.layerManager.byLayer[groupName] || [] ) ) {
                     this.pushMarker( leafletMarker );
                 }
@@ -197,7 +220,7 @@ class CollectiblesLegend {
     _initialisePanel() {
         for ( const groupName in this.map.config.groups ) {
             const group = this.map.config.groups[groupName];
-            if ( group.collectible ) {
+            if ( Util.getGroupCollectibleType( group ) ) {
                 this.groups[groupName] = new CollectibleMarkerGroup( this, group );
                 this.groups[groupName].$element.appendTo( this.$root );
             }
@@ -206,8 +229,9 @@ class CollectiblesLegend {
 
 
     pushMarker( leafletMarker ) {
-        if ( this.map.config.groups[leafletMarker.attachedLayers[0]].collectible )
+        if ( Util.getGroupCollectibleType( this.map.config.groups[leafletMarker.attachedLayers[0]] ) ) {
             this.groups[leafletMarker.attachedLayers[0]].push( leafletMarker );
+        }
     }
 
 
@@ -230,13 +254,22 @@ class CollectiblesLegend {
     }
 
 
-    updateGroupBadges() {
-        for ( const groupId in this.map.config.groups ) {
-            const group = this.map.config.groups[groupId];
+    updateGroupBadges( force ) {
+        if ( !force && this.suppressBadgeUpdates ) {
+            return;
+        }
+
+        for ( const groupId in this.groups ) {
             const markers = this.map.layerManager.byLayer[groupId];
-            if ( group.collectible && markers && this.map.markerLegend.groupToggles[groupId] ) {
-                const count = markers.filter( x => x.options.dismissed ).length;
-                this.map.markerLegend.groupToggles[groupId].setBadge( `${count} / ${markers.length}` );
+            if ( markers && this.map.markerLegend.groupToggles[groupId] ) {
+                const count = markers.filter( x => x.options.dismissed ).length,
+                    mode = Util.getGroupCollectibleType( this.map.config.groups[groupId] );
+                let text = mode == Enums.MarkerGroupFlags.Collectible_Individual ? `${count} / ${markers.length}` : '';
+                if ( count > 0 && count === markers.length ) {
+                    text += '✓';
+                }
+
+                this.map.markerLegend.groupToggles[groupId].setBadge( text );
             }
         }
     }

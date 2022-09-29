@@ -16,6 +16,11 @@ EventEmitter.prototype.on = function ( event, callback, context ) {
 
 
 EventEmitter.prototype.off = function ( event, callback ) {
+    if ( !callback ) {
+        delete this._handlers[event];
+        return;
+    }
+
     if ( this._handlers[event] ) {
         this._handlers[event] = this._handlers[event].filter( x => x.method != callback );
 
@@ -42,7 +47,7 @@ EventEmitter.prototype.fire = function ( event ) {
             } ).bind( null, error ) );
         }
     }
-}
+};
 
 
 module.exports = EventEmitter;

@@ -1,9 +1,8 @@
 const Util = require( './util.js' );
 
 
-function MarkerPopup( map, markerType, leafletMarker ) {
+function MarkerPopup( map, leafletMarker ) {
     this.map = map;
-    this.markerType = markerType;
     this.leafletMarker = leafletMarker;
     this.markerGroup = map.config.groups[this.leafletMarker.attachedLayers[0]];
     this.slots = this.leafletMarker.apiInstance[2] || {};
@@ -15,17 +14,13 @@ function MarkerPopup( map, markerType, leafletMarker ) {
 }
 
 
-// DEPRECATED(0.11.4:0.12.0)
-MarkerPopup.URL_PARAMETER = 'marker';
-
-
-MarkerPopup.bindTo = function ( map, markerType, leafletMarker ) {
-    leafletMarker.bindPopup( () => new MarkerPopup( map, markerType, leafletMarker ), {}, L.Ark.Popup );
+MarkerPopup.bindTo = function ( map, leafletMarker ) {
+    leafletMarker.bindPopup( () => new MarkerPopup( map, leafletMarker ), {}, L.Ark.Popup );
 };
 
 
 MarkerPopup.prototype.getDismissToolText = function () {
-    return mw.msg( 'datamap-popup-' + ( this.map.storage.isDismissed( this.uid ) ? 'dismissed' : 'mark-as-dismissed' ) );
+    return mw.msg( 'datamap-popup-' + ( this.leafletMarker.options.dismissed ? 'dismissed' : 'mark-as-dismissed' ) );
 };
 
 
@@ -112,7 +107,7 @@ MarkerPopup.prototype.buildTools = function () {
     }
 
     // Dismissables
-    if ( this.markerGroup.collectible ) {
+    if ( Util.getGroupCollectibleType( this.markerGroup ) ) {
         this.addTool( 'datamap-popup-dismiss',
             $( '<a>' )
                 .text( this.getDismissToolText() )

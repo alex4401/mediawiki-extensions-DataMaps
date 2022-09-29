@@ -1,22 +1,23 @@
-function MapStorage( map ) {
+function MapStorage( map, storageId ) {
     this.map = map;
+    this.id = storageId || this.map.id;
     this.hasSchemaVersion = false;
     this.migrate();
     this.dismissed = this.getArray( 'dismissed' );
 }
 
 
-MapStorage.prototype.LATEST_VERSION = 20220803;
+MapStorage.prototype.LATEST_VERSION = 20220929;
 
 
 MapStorage.prototype.get = function ( name ) {
-    return localStorage.getItem( `ext.ark.datamaps.${this.map.id}:${name}` );
+    return localStorage.getItem( `ext.ark.datamaps.${this.id}:${name}` );
 };
 
 
 MapStorage.prototype.set = function ( name, data ) {
     this.initialiseFirstWrite();
-    localStorage.setItem( `ext.ark.datamaps.${this.map.id}:${name}`, data );
+    localStorage.setItem( `ext.ark.datamaps.${this.id}:${name}`, data );
 };
 
 
@@ -34,7 +35,7 @@ MapStorage.prototype.getArray = function ( name ) {
 
     
 MapStorage.prototype.setObject = function ( name, data ) {
-    this.set( name, JSON.stringify(data) );
+    this.set( name, JSON.stringify( data ) );
 };
 
 
@@ -64,6 +65,10 @@ MapStorage.prototype.migrate = function () {
                 return ( lat == NaN || lon == NaN ) ? x : ( a[0] + '@' + lat.toFixed( 3 ) + ':' + lon.toFixed( 3 ) );
             } ) );
             break;
+        case '20220803':
+            shouldUpdateVersion = true;
+            // Add marker namespace to every dismissed ID
+            this.setObject( 'dismissed', this.getArray( 'dismissed' ).map( x => 'M:' + x ) );
     }
 
     if ( shouldUpdateVersion ) {
@@ -72,21 +77,22 @@ MapStorage.prototype.migrate = function () {
 };
 
 
-MapStorage.prototype.isDismissed = function ( uid ) {
+MapStorage.prototype.isDismissed = function ( uid, isGroup ) {
     if ( this.dismissed.length === 0 ) {
         return false;
     }
-    return this.dismissed.indexOf( uid ) >= 0;
+    return this.dismissed.indexOf( ( isGroup ? 'G:' : 'M:' ) + uid ) >= 0;
 };
 
 
-MapStorage.prototype.toggleDismissal = function ( uid ) {
+MapStorage.prototype.toggleDismissal = function ( uid, isGroup ) {
     let out;
-    if ( this.isDismissed( uid ) ) {
-        this.dismissed = this.dismissed.filter( x => x != uid );
+    const uidPrefixed = ( isGroup ? 'G:' : 'M:' ) + uid;
+    if ( this.isDismissed( uid, isGroup ) ) {
+        this.dismissed = this.dismissed.filter( x => x != uidPrefixed );
         out = false;
     } else {
-        this.dismissed.push( uid );
+        this.dismissed.push( uidPrefixed );
         out = true;
     }
     this.setObject( 'dismissed', this.dismissed );

@@ -3,7 +3,7 @@ namespace MediaWiki\Extension\Ark\DataMaps\Data;
 
 use Status;
 use Title;
-use MediaWiki\Extension\Ark\DataMaps\DataMapsConfig;
+use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
 
 class DataMapSpec extends DataModel {
@@ -44,7 +44,7 @@ class DataMapSpec extends DataModel {
 
     public function wantsCoordinatesShown(): bool {
         return isset( $this->raw->showCoordinates ) ? $this->raw->showCoordinates
-            : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SHOW_COORDINATES );
+            : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_SHOW_COORDINATES );
     }
 
     public function wantsLegendHidden(): bool {
@@ -53,7 +53,7 @@ class DataMapSpec extends DataModel {
 
     public function wantsLegendShownAbove(): bool {
         return isset( $this->raw->showLegendAbove ) ? $this->raw->showLegendAbove
-            : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SHOW_LEGEND_ABOVE );
+            : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_SHOW_LEGEND_ABOVE );
     }
 
     public function wantsZoomDisabled(): bool {
@@ -62,17 +62,17 @@ class DataMapSpec extends DataModel {
 
     public function wantsCustomMarkerIDs(): bool {
         return isset( $this->raw->requireCustomMarkerIDs ) ? $this->raw->requireCustomMarkerIDs
-            : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_REQUIRE_CUSTOM_MARKER_IDS );
+            : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_REQUIRE_CUSTOM_MARKER_IDS );
     }
 
     public function wantsSearch(): bool {
         return isset( $this->raw->enableSearch ) ? $this->raw->enableSearch
-            : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SEARCH );
+            : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_SEARCH );
     }
 
     public function wantsChecklistSortedByAmount(): bool {
         return isset( $this->raw->sortChecklistsByAmount ) ? $this->raw->sortChecklistsByAmount
-            : DataMapsConfig::getDefaultFeatureState( DataMapsConfig::FF_SORT_CHECKLIST_BY_AMOUNT );
+            : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_SORT_CHECKLIST_BY_AMOUNT );
     }
 
     public function getInjectedLeafletSettings(): ?object {
@@ -199,7 +199,7 @@ class DataMapSpec extends DataModel {
             // Make sure all mixins exist and are data maps
             if ( $this->getMixins() !== null ) {
                 foreach ( $this->getMixins() as &$mixinName ) {
-                    $title = Title::makeTitleSafe( DataMapsConfig::getNamespace(), $mixinName );
+                    $title = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $mixinName );
                     $mixinPage = DataMapContent::loadPage( $title );
                     
                     if ( is_numeric( $mixinPage ) || $mixinPage->getData()->getValue() == null ) {
