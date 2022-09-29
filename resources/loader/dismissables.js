@@ -243,8 +243,14 @@ class CollectiblesLegend {
         for ( const groupId in this.groups ) {
             const markers = this.map.layerManager.byLayer[groupId];
             if ( markers && this.map.markerLegend.groupToggles[groupId] ) {
-                const count = markers.filter( x => x.options.dismissed ).length;
-                this.map.markerLegend.groupToggles[groupId].setBadge( `${count} / ${markers.length}` );
+                const count = markers.filter( x => x.options.dismissed ).length,
+                    mode = Util.getGroupCollectibleType( this.map.config.groups[groupId] );
+                let text = mode == Enums.MarkerGroupFlags.Collectible_Individual ? `${count} / ${markers.length}` : '';
+                if ( count === markers.length ) {
+                    text += '✓';
+                }
+
+                this.map.markerLegend.groupToggles[groupId].setBadge( text );
             }
         }
     }
