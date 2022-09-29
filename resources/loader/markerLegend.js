@@ -33,10 +33,15 @@ function MarkerGroupToggleField( legendPanel, groupId, group ) {
 
 
 MarkerGroupToggleField.prototype.setBadge = function ( text ) {
-    if ( this.$badge == null ) {
-        this.$badge = $( '<span class="datamap-legend-badge">' ).appendTo( this.field.$header );
+    if ( text && text.length > 0 ) {
+        if ( this.$badge == null ) {
+            this.$badge = $( '<span class="datamap-legend-badge">' ).appendTo( this.field.$header );
+        }
+        this.$badge.text( text );
+    } else if ( this.$badge ) {
+        this.$badge.remove();
+        this.$badge = null;
     }
-    this.$badge.text( text );
 };
 
 
