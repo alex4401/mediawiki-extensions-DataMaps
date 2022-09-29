@@ -40,7 +40,7 @@ function getConfig( id, $root ) {
     if ( $data.length > 0 ) {
         config = JSON.parse( $data.text() );
     } else {
-        // DEPRECATED(0.12.0:0.13.0)
+        // DEPRECATED(0.12.0:0.14.0)
         config = mw.config.get( 'dataMaps' )[id];
     }
     return config;

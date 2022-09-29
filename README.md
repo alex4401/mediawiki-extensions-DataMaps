@@ -83,6 +83,8 @@ Content of the page should be a valid JSON with following structure:
 * * `isDefault` (boolean, optional): whether this group is switched on on map load. Defaults to `true`.
 * * `isCollectible` (optional):
 * * * `true` or `individual`: whether markers of this group can be marked as collected by users.
+* * * `group`: whether this group (and so all of its markers) can be marked as collected by users.
+* * * `globalGroup`: like `group`, but for all maps on the site.
 * * `autoNumberInChecklist` (boolean, optional): if collectible and true, markers in the checklist will have their index number added to the name.
 * * `canSearchFor` (boolean, optional): if true and search is enabled, allows markers from this group to be searched for. Defaults to `true`.
 * * * This field was called `excludeFromSearch` (and took reversed values) before version 0.12.0, but support will be removed in 0.13.0.
@@ -158,8 +160,7 @@ External scripts can hook into Data Maps to provide additional functionality wit
 * All public APIs of this extension are exposed under `window.mw.dataMaps`. Check `resources/loader/index.js` for all exposed classes.
 * `mw.dataMaps.subscribeHook( string hookName, function callback )` may be used to register a hook callback for every map on current page. `hookName` must not include the `ext.ark.datamaps` namespace. The callback receives one parameter, a `DataMap` instance.
 * * Depend (via `mw.loader.using`) on `ext.ark.datamaps.bootstrap` to use this.
-* * Prior to version 0.10.0, this was `mw.subscribeDataMapsHook`. The entrypoint still exists but will be removed in v0.11.0.
-* Alternatively, a `ext.ark.datamaps.broadcastMaps( id[] )` hook is provided to retrieve only IDs of Data Maps initialised on current page.
+* `ext.ark.datamaps.broadcastMaps( id[] )` hook provides only IDs of Data Maps initialised on current page, but has been deprecated and will be removed in v0.13.0.
 * Instance hooks:
 * * `ext.ark.datamaps.afterInitialisation.[id]( DataMap )`: called after the `DataMap` instance is created, and secondary modules and marker data set have been requested.
 * * `ext.ark.datamaps.afterLegendInitialisation.[id]( DataMap )`: called after OOUI loads and the legend panel is set up.

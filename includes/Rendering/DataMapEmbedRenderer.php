@@ -431,7 +431,7 @@ class DataMapEmbedRenderer {
         // This configuration is used to set up the map before any data sets are downloaded. It allows for environment to be
         // prepared.
         // TODO: possibly deliver some of this stuff via API? tho dunno if there's any real benefits to that
-        // TODO: unlock for v0.12.x release or AT LAST v0.13.x when confirmed stable
+        // TODO: unlock for v0.13.x release
         if ( ExtensionConfig::isBleedingEdge() ) {
             $containerMain->appendContent( new \OOUI\HtmlSnippet( $this->getConfigElement() ) );
         }
