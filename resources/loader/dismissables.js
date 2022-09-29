@@ -159,24 +159,28 @@ class CollectiblesLegend {
         this.legend = legend;
         this.map = this.legend.map;
 
-        this.map.on( 'markerDismissChange', this.updateGroupBadges, this );
-        this.map.on( 'streamingDone', this.updateGroupBadges, this );
-
         // Root DOM element
         this.$root = this.legend.addTab( mw.msg( 'datamap-legend-tab-checklist' ), 'datamap-container-collectibles' ).$element;
         //
         this.groups = {};
 
+        this.suppressBadgeUpdates = true;
+
         // Insert an introduction paragraph
         this.$root.append( mw.msg( 'datamap-checklist-prelude' ) );
 
         // Register event handlers
+        this.map.on( 'markerDismissChange', this.updateGroupBadges, this );
         this.map.on( 'markerDismissChange', this.onDismissalChange, this );
         this.map.on( 'markerReady', this.pushMarker, this );
         this.map.on( 'streamingDone', this.sort, this );
+        this.map.on( 'streamingDone', () => {
+            this.suppressBadgeUpdates = false;
+        }, this );
+        this.map.on( 'streamingDone', this.updateGroupBadges, this );
 
         // Call updaters now to bring the main panel in sync
-        this.updateGroupBadges();
+        this.updateGroupBadges( true );
 
         // Prepare the checklist panel
         this._initialisePanel();
@@ -231,7 +235,11 @@ class CollectiblesLegend {
     }
 
 
-    updateGroupBadges() {
+    updateGroupBadges( force ) {
+        if ( !force && this.suppressBadgeUpdates ) {
+            return;
+        }
+
         for ( const groupId in this.groups ) {
             const markers = this.map.layerManager.byLayer[groupId];
             if ( markers && this.map.markerLegend.groupToggles[groupId] ) {
