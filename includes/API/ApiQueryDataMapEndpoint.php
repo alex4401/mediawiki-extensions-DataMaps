@@ -9,6 +9,7 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use Wikimedia\ParamValidator\ParamValidator;
+use Wikimedia\ParamValidator\TypeDef\IntegerDef;
 use ObjectCache;
 use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
@@ -57,8 +58,17 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                 ParamValidator::PARAM_REQUIRED => false,
                 ParamValidator::PARAM_ISMULTI => true,
             ],
+			'limit' => [
+				ParamValidator::PARAM_TYPE => 'limit',
+                // TODO: 
+				ParamValidator::PARAM_DEFAULT => 10000,
+				IntegerDef::PARAM_MIN => 1,
+				//IntegerDef::PARAM_MAX => ApiBase::LIMIT_BIG1,
+				//IntegerDef::PARAM_MAX2 => ApiBase::LIMIT_BIG2,
+			],
 			'continue' => [
 				ParamValidator::PARAM_TYPE => 'integer',
+                ParamValidator::PARAM_REQUIRED => false,
 				ApiBase::PARAM_HELP_MSG => 'api-help-param-continue',
 			],
         ];
@@ -235,7 +245,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         }
 
         // Truncate markers before the index of continue
-        if ( isset( $params['continue'] ) && $params['continue'] > 0 ) {
+        if ( isset( $params['continue'] ) ) {
             $toSkip = $params['continue'];
             foreach ( $data['markers'] as $layers => $markers ) {
                 if ( count( $markers ) <= $toSkip ) {
@@ -252,6 +262,30 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                     throw new LogicException( 'API response truncating resulted in more markers removed than needed' );
                 } else if ( $toSkip == 0 ) {
                     break;
+                }
+            }
+        }
+
+        // Truncate markers after the limit
+        if ( isset( $params['limit'] ) ) {
+            $toAllow = $params['limit'];
+            foreach ( $data['markers'] as $layers => $markers ) {
+                if ( $toAllow <= 0 ) {
+                    // Drop this set entirely, we've reached the margin already
+                    unset( $data['markers'][$layers] );
+                    continue;
+                } else if ( count( $markers ) <= $toAllow ) {
+                    // Don't alter this set, it fits within the margin
+                    $toAllow -= count( $markers );
+                    continue;
+                } else {
+                    // Set is bigger than number we need, slice it
+                    $data['markers'][$layers] = array_slice( $markers, 0, $toAllow );
+                    $toAllow = 0;
+                }
+
+                if ( $toAllow < 0 ) {
+                    throw new LogicException( 'API response limiting resulted in more markers removed than needed' );
                 }
             }
         }
