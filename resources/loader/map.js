@@ -312,7 +312,7 @@ DataMap.prototype.instantiateMarkers = function ( data ) {
 };
 
 
-DataMap.prototype.streamMarkersIn = function ( pageName, version, filter, successCallback, errorCallback ) {
+DataMap.prototype.streamMarkersIn = function ( pageName, version, filter, successCallback, errorCallback, retryCount ) {
     const query = {
         action: 'queryDataMap',
         title: pageName
@@ -323,17 +323,29 @@ DataMap.prototype.streamMarkersIn = function ( pageName, version, filter, succes
     if ( filter ) {
         query.filter = filter.join( '|' );
     }
+    if ( retryCount == null ) {
+        retryCount = 2;
+    }
+
     return mwApi.get( query ).then(
         data => {
-            if ( data.error )
+            if ( data.error ) {
                 errorCallback();
-            else
+            } else {
                 this.waitForLeaflet( () => {
                     this.instantiateMarkers( data.query.markers );
                     successCallback();
                 } );
+            }
         },
-        errorCallback
+        () => {
+            if ( retryCount <= 0 ) {
+                errorCallback();
+            } else {
+                console.warn( 'Retrying marker chunk loading' );
+                this.streamMarkersIn( pageName, version, filter, successCallback, errorCallback, retryCount - 1 );
+            }
+        }
     );
 };
 
