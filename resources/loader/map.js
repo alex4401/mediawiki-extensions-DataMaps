@@ -179,11 +179,17 @@ DataMap.prototype.getCoordLabel = function ( latOrInstance, lon ) {
 };
 
 
+DataMap.prototype.getStorageForMarkerGroup = function ( group ) {
+    return Util.isBitSet( group.flags, Enums.MarkerGroupFlags.Collectible_GlobalGroup ) ? this.globalStorage : this.storage;
+};
+
+
 DataMap.prototype.toggleMarkerDismissal = function ( leafletMarker ) {
     const groupId = leafletMarker.attachedLayers[0];
     const isIndividual = Util.getGroupCollectibleType( this.config.groups[groupId] )
-        === Enums.MarkerGroupFlags.Collectible_Individual;
-    const state = this.storage.toggleDismissal( isIndividual ? Util.getMarkerId( leafletMarker ) : groupId, !isIndividual );
+        === Enums.MarkerGroupFlags.Collectible_Individual,
+        storage = this.getStorageForMarkerGroup( this.config.groups[groupId] );
+    const state = storage.toggleDismissal( isIndividual ? Util.getMarkerId( leafletMarker ) : groupId, !isIndividual );
     if ( isIndividual ) {
         // Update this marker only
         leafletMarker.setDismissed( state );
@@ -265,8 +271,9 @@ DataMap.prototype.createMarkerFromApiInstance = function ( layers, instance ) {
     // Update dismissal status if storage says it's been dismissed
     const collectibleMode = Util.getGroupCollectibleType( group );
     if ( collectibleMode ) {
-        const isIndividual = collectibleMode == Enums.MarkerGroupFlags.Collectible_Individual;
-        leafletMarker.setDismissed( this.storage.isDismissed( isIndividual ? Util.getMarkerId( leafletMarker ) : layers[0],
+        const isIndividual = collectibleMode == Enums.MarkerGroupFlags.Collectible_Individual,
+            storage = this.getStorageForMarkerGroup( group );
+        leafletMarker.setDismissed( storage.isDismissed( isIndividual ? Util.getMarkerId( leafletMarker ) : layers[0],
             !isIndividual ) );
     }
 
