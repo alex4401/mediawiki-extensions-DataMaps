@@ -7,7 +7,7 @@ function MapStorage( map, storageId ) {
 }
 
 
-MapStorage.prototype.LATEST_VERSION = 20220803;
+MapStorage.prototype.LATEST_VERSION = 20220929;
 
 
 MapStorage.prototype.get = function ( name ) {
@@ -65,6 +65,10 @@ MapStorage.prototype.migrate = function () {
                 return ( lat == NaN || lon == NaN ) ? x : ( a[0] + '@' + lat.toFixed( 3 ) + ':' + lon.toFixed( 3 ) );
             } ) );
             break;
+        case '20220803':
+            shouldUpdateVersion = true;
+            // Add marker namespace to every dismissed ID
+            this.setObject( 'dismissed', this.getArray( 'dismissed' ).map( x => 'M:' + x ) );
     }
 
     if ( shouldUpdateVersion ) {
@@ -73,16 +77,17 @@ MapStorage.prototype.migrate = function () {
 };
 
 
-MapStorage.prototype.isDismissed = function ( uid ) {
+MapStorage.prototype.isDismissed = function ( uid, isGroup ) {
     if ( this.dismissed.length === 0 ) {
         return false;
     }
-    return this.dismissed.indexOf( uid ) >= 0;
+    return this.dismissed.indexOf( ( isGroup ? 'G:' : 'M:' ) + uid ) >= 0;
 };
 
 
-MapStorage.prototype.toggleDismissal = function ( uid ) {
+MapStorage.prototype.toggleDismissal = function ( uid, isGroup ) {
     let out;
+    uid = ( isGroup ? 'G:' : 'M:' ) + uid;
     if ( this.isDismissed( uid ) ) {
         this.dismissed = this.dismissed.filter( x => x != uid );
         out = false;
