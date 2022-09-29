@@ -143,9 +143,7 @@
 				"datamap-coordinate-control-text",
 				"datamap-control-reset-view",
 				"datamap-control-centre-view",
-				"datamap-checklist-prelude",
-				"datamap-checklist-collect-all",
-				"datamap-checklist-uncollect-all"
+				"datamap-checklist-prelude"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},

@@ -58,8 +58,6 @@
 
     "datamap-legend-tab-checklist": "Checklists",
     "datamap-checklist-prelude": "These are the items you can mark as collected:",
-    "datamap-checklist-collect-all": "Collect all",
-    "datamap-checklist-uncollect-all": "Reset all",
 
     "datamap-layer-surface": "Surface",
     "datamap-layer-cave": "Caves",

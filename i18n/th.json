@@ -56,7 +56,5 @@
     "datamap-error-validate-check-docs": "สามารถดูรายละเอียดเพิ่มเติมและโครงสร้างของส่วนขยายได้ที่ [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps เอกสารประกอบส่วนขยาย]",
     "datamap-error-cannot-preview-validation-errors": "<b>ไม่แสดงตัวอย่างเนื่องจากข้อผิดพลาดในซอร์สโค้ด</b>",
     "datamap-defaultloadout-group-name": "กลุ่มเครื่องหมาย",
-    "datamap-legend-tab-checklist": "รายการตรวจสอบ",
-    "datamap-checklist-collect-all": "สะสมทั้งหมด",
-    "datamap-checklist-uncollect-all": "รีเซ็ตทั้งหมด"
+    "datamap-legend-tab-checklist": "รายการตรวจสอบ"
 }
