@@ -146,6 +146,7 @@ Box is a array of two locations, where first describes the start point of the bo
 * `$wgDataMapsReportTimingInfo`: if set to `true`, marker processing time will be reported in API responses. Defaults to `false`.
 * `$wgDataMapsAllowExperimentalFeatures`: if set to `true`, enables features listed below - all of which are in development and not ready for production. Defaults to `false`.
 * * Map configuration delivery without `mw.config` (MW 1.39 preparation)
+* * Support for `limit` and `continue` in API
 
 ## Gadgets
 External scripts can hook into Data Maps to provide additional functionality without modifying core code.
