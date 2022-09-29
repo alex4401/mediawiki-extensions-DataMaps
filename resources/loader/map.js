@@ -25,6 +25,7 @@ function DataMap( id, $root, config ) {
     this.config = config;
     // Local storage driver
     this.storage = new MapStorage( this );
+    this.globalStorage = new MapStorage( this, 'global' );
     // Layering driver
     this.layerManager = new MarkerLayerManager( this );
     // Information of currently set background
