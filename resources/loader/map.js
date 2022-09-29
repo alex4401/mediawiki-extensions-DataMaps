@@ -67,9 +67,6 @@ function DataMap( id, $root, config ) {
     // Set up internal event handlers
     this.on( 'markerReady', this.tryOpenUriPopup, this );
 
-    // Broadcast `afterInitialisation` hook
-    mw.hook( `ext.ark.datamaps.afterInitialisation.${id}` ).fire( this );
-
     // Request OOUI to be loaded and build the legend
     if ( !this.isFeatureBitSet( this.FF_HIDE_LEGEND ) ) {
         mw.loader.using( [
@@ -597,8 +594,6 @@ const buildLegend = function () {
     }
 
     this.fire( 'legendLoaded', true );
-
-    mw.hook( `ext.ark.datamaps.afterLegendInitialisation.${this.id}` ).fire( this );
 };
 
 
