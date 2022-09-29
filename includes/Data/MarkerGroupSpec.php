@@ -105,8 +105,11 @@ class MarkerGroupSpec extends DataModel {
 
     public function getCollectibleMode(): ?int {
         if ( isset( $this->raw->isCollectible ) ) {
+            if ( $this->raw->isCollectible === true ) {
+                $this->raw->isCollectible = 'individual';
+            }
+
             switch ( $this->raw->isCollectible ) {
-                case true:
                 case "individual":
                     return self::CM_INDIVIDUAL;
                 case "group":
