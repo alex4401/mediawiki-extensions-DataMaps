@@ -144,7 +144,15 @@ class CollectibleMarkerEntry {
         // Marker label
         this.$labelText = $( '<span>' ).appendTo( this.$label );
         if ( this.slots.label ) {
-            this.$labelText.html( this.slots.label );
+            const groupName = this.markerGroup.group.name;
+            let labelText = this.slots.label;
+            if ( labelText.indexOf( groupName ) == 0 ) {
+                labelText = labelText.substr( groupName.length ).trim().replace( /(^\(|\)$)/g, '' );
+                if ( labelText.length <= 2 ) {
+                    labelText = this.slots.label;
+                }
+            }
+            this.$labelText.html( labelText );
         }
 
         if ( Util.isBitSet( this.markerGroup.group.flags, Enums.MarkerGroupFlags.IsNumberedInChecklists ) ) {
