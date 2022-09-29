@@ -15,7 +15,7 @@ class HookHandler implements
     }
 	
 	public function onCanonicalNamespaces( &$namespaces ) {
-		if ( ExtensionConfig::isNamespaceSelfManaged() ) {
+		if ( ExtensionConfig::isNamespaceManaged() ) {
 			$namespaces[ NS_MAP ] = 'Map';
 			$namespaces[ NS_MAP_TALK ] = 'Map_talk';
 		}
