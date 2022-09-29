@@ -275,6 +275,17 @@ class DataMapEmbedRenderer {
         $out |= $spec->wantsChecklistNumbering() ? 1<<0 : 0;
         $out |= !$spec->isIncludedInSearch() ? 1<<1 : 0;
         $out |= !$spec->isDefault() ? 1<<2 : 0;
+        switch ( $spec->getCollectibleMode() ) {
+            case MarkerGroupSpec::CM_INDIVIDUAL:
+                $out |= 1<<3;
+                break;
+            case MarkerGroupSpec::CM_AS_ONE:
+                $out |= 1<<4;
+                break;
+            case MarkerGroupSpec::CM_AS_ONE_GLOBAL:
+                $out |= 1<<5;
+                break;
+        }
         return $out;
     }
 

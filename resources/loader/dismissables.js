@@ -49,6 +49,7 @@ class CollectibleMarkerGroup {
             this.toggleAll.bind( this, false ) );
     }
 
+
     toggleAll( newState ) {
         for ( const marker of this.markers ) {
             if ( newState != marker.leafletMarker.options.dismissed ) {
@@ -57,9 +58,11 @@ class CollectibleMarkerGroup {
         }
     }
 
+
     push( leafletMarker ) {
         this.markers.push( new CollectibleMarkerEntry( this, leafletMarker ) );
     }
+
 
     sort() {
         let sortKey;
@@ -92,6 +95,7 @@ class CollectibleMarkerGroup {
             }
         }
     }
+
 
     replicateMarkerState( leafletMarker ) {
         for ( const marker of this.markers ) {
@@ -143,6 +147,7 @@ class CollectibleMarkerEntry {
         } );
     }
 
+
     setIndex( index ) {
         this.$index.text( ' #' + index );
     }
@@ -179,7 +184,7 @@ class CollectiblesLegend {
         // Import existing markers if any have been loaded
         for ( const groupName in this.map.config.groups ) {
             const group = this.map.config.groups[groupName];
-            if ( group.collectible ) {
+            if ( Util.getGroupCollectibleType( group ) ) {
                 for ( const leafletMarker of ( this.map.layerManager.byLayer[groupName] || [] ) ) {
                     this.pushMarker( leafletMarker );
                 }
@@ -192,7 +197,7 @@ class CollectiblesLegend {
     _initialisePanel() {
         for ( const groupName in this.map.config.groups ) {
             const group = this.map.config.groups[groupName];
-            if ( group.collectible ) {
+            if ( Util.getGroupCollectibleType( group ) ) {
                 this.groups[groupName] = new CollectibleMarkerGroup( this, group );
                 this.groups[groupName].$element.appendTo( this.$root );
             }
@@ -201,8 +206,9 @@ class CollectiblesLegend {
 
 
     pushMarker( leafletMarker ) {
-        if ( this.map.config.groups[leafletMarker.attachedLayers[0]].collectible )
+        if ( Util.getGroupCollectibleType( this.map.config.groups[leafletMarker.attachedLayers[0]] ) ) {
             this.groups[leafletMarker.attachedLayers[0]].push( leafletMarker );
+        }
     }
 
 

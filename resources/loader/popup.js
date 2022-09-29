@@ -108,7 +108,7 @@ MarkerPopup.prototype.buildTools = function () {
     }
 
     // Dismissables
-    if ( this.markerGroup.collectible ) {
+    if ( Util.getGroupCollectibleType( this.markerGroup ) ) {
         this.addTool( 'datamap-popup-dismiss',
             $( '<a>' )
                 .text( this.getDismissToolText() )

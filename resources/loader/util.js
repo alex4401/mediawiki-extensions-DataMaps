@@ -1,4 +1,5 @@
-const MAX_GROUP_CIRCLE_SIZE = 20;
+const MAX_GROUP_CIRCLE_SIZE = 20,
+    Enums = require( './enums.js' );
 
 
 module.exports.isBleedingEdge = require( './settings.json' ).DataMapsAllowExperimentalFeatures;
@@ -6,6 +7,17 @@ module.exports.isBleedingEdge = require( './settings.json' ).DataMapsAllowExperi
 
 module.exports.isBitSet = function ( a, b ) {
     return a && ( a & b ) == b;
+};
+
+
+module.exports.isAnyBitSet = function ( a, b ) {
+    return a && ( a & b ) !== 0;
+};
+
+
+module.exports.getGroupCollectibleType = function ( group ) {
+    return ( group.flags || 0 ) & ( Enums.MarkerGroupFlags.Collectible_Individual | Enums.MarkerGroupFlags.Collectible_Group
+        | Enums.MarkerGroupFlags.Collectible_GlobalGroup );
 };
 
 

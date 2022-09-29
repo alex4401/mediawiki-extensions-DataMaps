@@ -20,6 +20,7 @@ class MarkerGroupSpec extends DataModel {
     // Collectible modes
     const CM_INDIVIDUAL = 1;
     const CM_AS_ONE = 2;
+    const CM_AS_ONE_GLOBAL = 3;
     const CM_UNKNOWN = -1;
 
     private string $id;
@@ -103,16 +104,15 @@ class MarkerGroupSpec extends DataModel {
     }
 
     public function getCollectibleMode(): ?int {
-        if ( isset( $this->raw->canDismiss ) ) {
-            return $this->raw->canDismiss ? self::CM_INDIVIDUAL : null;
-        }
         if ( isset( $this->raw->isCollectible ) ) {
             switch ( $this->raw->isCollectible ) {
                 case true:
                 case "individual":
                     return self::CM_INDIVIDUAL;
-                case "asOne":
+                case "group":
                     return self::CM_AS_ONE;
+                case "globalGroup":
+                    return self::CM_AS_ONE_GLOBAL;
             }
         }
         return null;
