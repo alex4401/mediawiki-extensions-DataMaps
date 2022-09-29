@@ -9,6 +9,7 @@ class CollectibleMarkerGroup {
         this.map = this.panel.map;
         this.group = group;
         this.markers = [];
+        this.isIndividual = Util.getGroupCollectibleType( group ) == Enums.MarkerGroupFlags.Collectible_Individual;
 
         if ( group.legendIcon ) {
             this.$icon = Util.createGroupIconElement( group );
@@ -20,6 +21,11 @@ class CollectibleMarkerGroup {
             classes: [ 'datamap-collectible-group-markers' ]
         } );
 
+        this.checkbox = new OO.ui.CheckboxInputWidget( {
+            selected: false
+        } );
+        this.checkbox.on( 'change', () => this.toggleAll( this.checkbox.isSelected() ) );
+
         this.$element = new OO.ui.PanelLayout( {
             framed: true,
             expanded: false,
@@ -29,6 +35,7 @@ class CollectibleMarkerGroup {
                     expanded: false,
                     classes: [ 'datamap-collectible-group-header' ],
                     content: [
+                        this.checkbox,
                         this.$icon,
                         new OO.ui.LabelWidget( {
                             label: group.name
@@ -38,15 +45,6 @@ class CollectibleMarkerGroup {
                 this.container
             ]
         } ).$element;
-
-        this.buttonGroup = new OO.ui.ButtonGroupWidget( {} );
-        // Prepend the button group to the root element
-        this.buttonGroup.$element.prependTo( this.container.$element );
-
-        MarkerLegendPanel.prototype.createActionButton.call( this, mw.msg( 'datamap-checklist-collect-all' ),
-            this.toggleAll.bind( this, true ) );
-        MarkerLegendPanel.prototype.createActionButton.call( this, mw.msg( 'datamap-checklist-uncollect-all' ),
-            this.toggleAll.bind( this, false ) );
     }
 
 
@@ -61,6 +59,7 @@ class CollectibleMarkerGroup {
 
     push( leafletMarker ) {
         this.markers.push( new CollectibleMarkerEntry( this, leafletMarker ) );
+        this.updateCheckboxState();
     }
 
 
@@ -104,6 +103,12 @@ class CollectibleMarkerGroup {
                 break;
             }
         }
+        this.updateCheckboxState();
+    }
+
+
+    updateCheckboxState() {
+        this.checkbox.setSelected( this.markers.every( x => x.leafletMarker.options.dismissed ), true );
     }
 }
 
@@ -115,6 +120,7 @@ class CollectibleMarkerEntry {
         this.apiInstance = leafletMarker.apiInstance;
         this.slots = this.apiInstance[2] || {};
         this.leafletMarker = leafletMarker;
+        this.isIndividual = this.markerGroup.isIndividual;
 
         const pair = this.panel.legend.createCheckboxField( this.markerGroup.container.$element, '...',
             leafletMarker.options.dismissed, _ => this.panel.map.toggleMarkerDismissal( this.leafletMarker ) );
@@ -123,6 +129,11 @@ class CollectibleMarkerEntry {
 
         this.$label = this.field.$label;
         this.$label.empty();
+
+        // Hide field input area if for group
+        if ( !this.isIndividual ) {
+            this.field.getField().toggle( false );
+        }
 
         // Build the label
         const areCoordsEnabled = this.panel.map.isFeatureBitSet( this.panel.map.FF_SHOW_COORDINATES );
