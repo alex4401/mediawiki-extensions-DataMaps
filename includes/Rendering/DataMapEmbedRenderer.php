@@ -337,10 +337,6 @@ class DataMapEmbedRenderer {
             $out['article'] = $spec->getSharedRelatedArticle();
         }
 
-        if ( $spec->getCollectibleMode() !== null ) {
-            $out['collectible'] = $spec->getCollectibleMode();
-        }
-
         return $out;
     }
 
