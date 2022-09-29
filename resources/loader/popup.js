@@ -20,7 +20,7 @@ MarkerPopup.bindTo = function ( map, leafletMarker ) {
 
 
 MarkerPopup.prototype.getDismissToolText = function () {
-    return mw.msg( 'datamap-popup-' + ( this.map.storage.isDismissed( this.uid ) ? 'dismissed' : 'mark-as-dismissed' ) );
+    return mw.msg( 'datamap-popup-' + ( this.leafletMarker.options.dismissed ? 'dismissed' : 'mark-as-dismissed' ) );
 };
 
 
