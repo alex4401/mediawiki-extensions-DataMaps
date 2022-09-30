@@ -260,8 +260,9 @@ class DataMapSpec extends DataModel {
             // Validate markers by the MarkerSpec class
             if ( $isFull ) {
                 $requireOwnIDs = $this->wantsCustomMarkerIDs();
+                $uidMap = [];
                 $this->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection )
-                    use ( &$status, &$requireOwnIDs ) {
+                    use ( &$status, &$requireOwnIDs, &$uidMap ) {
                     // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
                     // creating thousands of small, very short-lived (only one at a time) objects
                     $marker = new MarkerSpec( new \stdclass() );
@@ -279,6 +280,15 @@ class DataMapSpec extends DataModel {
                     foreach ( $rawMarkerCollection as &$rawMarker ) {
                         $marker->reassignTo( $rawMarker );
                         $marker->validate( $status, $requireOwnIDs );
+
+                        $uid = $marker->getCustomPersistentId();
+                        if ( $uid !== null ) {
+                            if ( isset( $uidMap[$uid] ) ) {
+                                $status->fatal( 'datamap-error-validatespec-map-uid-conflict', wfEscapeWikiText( $uid ) );
+                            }
+
+                            $uidMap[$uid] = true;
+                        }
                     }
                 } );
             }
