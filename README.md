@@ -127,7 +127,7 @@ Box is a array of two locations, where first describes the start point of the bo
 ### Parser functions
 * `DataMap`: used to embed a map in an article.
 * * Takes an optional `filter` parameter, which is a comma-delimited list of layers to show.
-* * Example: `{{DataMap:Maps/Resources/Aberration|filter=metal,crystal|title=Metal and crystal locations on [[Aberration]]}}`.
+* * Example: `{{DataMap:Maps/Resources/Aberration|filter=metal,crystal}}`.
 
 ## Configuration
 * `$wgDataMapsNamespaceId`: namespace where data maps will be allowed. Defaults to `managed`, which means the extension will provide a `Map` (ID: 2900) namespace by itself.
