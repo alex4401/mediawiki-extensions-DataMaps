@@ -31,12 +31,21 @@ MapLegend.prototype.addTab = function ( name, cssClass, visible ) {
 MapLegend.prototype.setTabVisibility = function ( tab, value ) {
     tab.toggle( value );
     tab.getTabItem().toggle( value );
+
+    if ( this.tabLayout.tabSelectWidget.findSelectedItem() == tab.getTabItem() ) {
+        this.tabLayout.tabSelectWidget.selectItem( null );
+        this.tabLayout.selectFirstSelectableTabPanel();
+    }
+
     this.reevaluateVisibility();
 };
 
 
 MapLegend.prototype.reevaluateVisibility = function () {
     if ( this.tabLayout.getTabs().getItems().some( item => item.isVisible() ) ) {
+        if ( !this.$legendRoot.is( ':visible' ) ) {
+            this.tabLayout.selectFirstSelectableTabPanel();
+        }
         this.$legendRoot.show();
     } else {
         this.$legendRoot.hide();
