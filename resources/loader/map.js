@@ -202,6 +202,7 @@ DataMap.prototype.toggleMarkerDismissal = function ( leafletMarker ) {
             otherLeafletMarker.setDismissed( state );
             this.fire( 'markerDismissChange', otherLeafletMarker );
         }
+        this.fire( 'groupDismissChange', groupId );
     }
     return state;
 };
