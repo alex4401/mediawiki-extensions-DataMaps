@@ -66,6 +66,7 @@ function DataMap( id, $root, config ) {
 
     // Set up internal event handlers
     this.on( 'markerReady', this.tryOpenUriPopup, this );
+    this.on( 'streamingDone', this.refreshMaxBounds, this );
 
     // Request OOUI to be loaded and build the legend
     if ( !this.isFeatureBitSet( this.FF_HIDE_LEGEND ) ) {
@@ -100,6 +101,7 @@ DataMap.prototype.anchors = {
     topRight: '.leaflet-top.leaflet-right',
     topLeft: '.leaflet-top.leaflet-left'
 };
+DataMap.prototype.BOUNDS_PADDING = [ 150, 200 ];
 DataMap.prototype.FF_SHOW_COORDINATES = 1<<0;
 DataMap.prototype.FF_HIDE_LEGEND = 1<<1;
 DataMap.prototype.FF_DISABLE_ZOOM = 1<<2;
@@ -435,6 +437,25 @@ DataMap.prototype.buildBackgroundOverlayObject = function ( overlay ) {
 };
 
 
+DataMap.prototype.refreshMaxBounds = function () {
+	const bounds = new L.LatLngBounds();
+    // Collect content bounds
+	for ( const id in this.leaflet._layers ) {
+		const layer = this.leaflet._layers[id];
+        if ( layer.getBounds || layer.getLatLng ) {
+		    bounds.extend( layer.getBounds ? layer.getBounds() : layer.getLatLng() );
+        }
+	}
+    // Add padding
+    const nw = bounds.getNorthWest(),
+        se = bounds.getSouthEast();
+    bounds.extend( [ [ se.lat - this.BOUNDS_PADDING[0], se.lng + this.BOUNDS_PADDING[1] ],
+        [ nw.lat + this.BOUNDS_PADDING[0], nw.lng - this.BOUNDS_PADDING[1] ] ] );
+    // Update Leaflet instance
+    this.leaflet.setMaxBounds( bounds );
+};
+
+
 const buildLeafletMap = function ( $holder ) {
     // If FF_DISABLE_ZOOM is set, prevent all kind of zooming
     if ( this.isFeatureBitSet( this.FF_DISABLE_ZOOM ) ) {
@@ -507,6 +528,8 @@ const buildLeafletMap = function ( $holder ) {
     } );
     // Switch to the last chosen one or first defined
     this.setCurrentBackground( this.storage.get( 'background' ) || 0 );
+    // Update max bounds
+    this.refreshMaxBounds();
     // Restore default view
     this.restoreDefaultView();
 
