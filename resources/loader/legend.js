@@ -23,6 +23,7 @@ MapLegend.prototype.addTab = function ( name, cssClass, visible ) {
     if ( visible === false ) {
         this.setTabVisibility( result, false );
     }
+    this.reevaluateVisibility();
     return result;
 };
 
