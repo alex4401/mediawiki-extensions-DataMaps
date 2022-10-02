@@ -54,25 +54,17 @@
 	},
 
 	"ResourceModules": {
-		"ext.ark.datamaps.leaflet.core": {
-			"scripts": [
-				"vendor/leaflet/leaflet.js"
+		"ext.ark.datamaps.leaflet": {
+			"es6": true,
+			"packageFiles": [
+				"leafletPkg/index.js",
+				"vendor/leaflet/leaflet.js",
+				"leafletPkg/iconMarker.js",
+				"leafletPkg/circleMarker.js",
+				"leafletPkg/popup.js"
 			],
 			"styles": [
 				"vendor/leaflet/leaflet.css"
-			],
-			"targets": [ "desktop", "mobile" ]
-		},
-		"ext.ark.datamaps.leaflet.extra": {
-			"es6": true,
-			"dependencies": [
-				"ext.ark.datamaps.leaflet.core"
-			],
-			"packageFiles": [
-				"leafletExtension/index.js",
-				"leafletExtension/iconMarker.js",
-				"leafletExtension/circleMarker.js",
-				"leafletExtension/popup.js"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},
@@ -182,7 +174,7 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.ark.datamaps.search.fuzzysort": {
+		"ext.ark.datamaps.fuzzysort": {
 			"scripts": [
 				"vendor/fuzzysort/fuzzysort.min.js"
 			],
@@ -196,7 +188,7 @@
 				"ext.ark.datamaps.core",
 				"ext.ark.datamaps.bootstrap",
 				"ext.ark.datamaps.styles.search",
-				"ext.ark.datamaps.search.fuzzysort"
+				"ext.ark.datamaps.fuzzysort"
 			],
 			"packageFiles": [
 				"search/main.js",

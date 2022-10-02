@@ -79,8 +79,7 @@ function DataMap( id, $root, config ) {
 
     // Prepare the Leaflet map view
     mw.loader.using( [
-        'ext.ark.datamaps.leaflet.core',
-        'ext.ark.datamaps.leaflet.extra'
+        'ext.ark.datamaps.leaflet'
     ], buildLeafletMap.bind( this, this.$root.find( '.datamap-holder' ) ) );
 
     // Load search add-on
