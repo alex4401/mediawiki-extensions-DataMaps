@@ -96,14 +96,7 @@ class MarkerProcessor {
 
         // Popup title
         if ( $marker->getLabel() != null ) {
-            $slots['label'] = $this->parseText( $marker, $marker->getLabel() );
-            // Strip the paragraph element
-            if ( strpos( $slots['label'], '<p>' ) === 0 ) {
-                $slots['label'] = substr( $slots['label'], 3 );
-            }
-            if ( strpos( $slots['label'], '</p>' ) === 0 ) {
-                $slots['label'] = substr( $slots['label'], 4 );
-            }
+            $slots['label'] = $this->stripParagraphTag( $this->parseText( $marker, $marker->getLabel() ) );
         }
 
         // Popup description
@@ -191,6 +184,16 @@ class MarkerProcessor {
             $text = implode( "\n", $text );
         }
         return $this->parseText( $marker, $text );
+    }
+
+    private function stripParagraphTag( string $text ): string {
+        if ( str_starts_with( $text, '<p>' ) ) {
+            $text = substr( $text, 3 );
+        }
+        if ( str_ends_with( $text, '</p>' ) ) {
+            $text = substr( $text, 0, strlen( $text ) - 4 );
+        }
+        return $text;
     }
 
     private function canImplodeSearchKeywords( $keywords ): bool {
