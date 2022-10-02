@@ -187,13 +187,32 @@ DataMap.prototype.getStorageForMarkerGroup = function ( group ) {
 };
 
 
-DataMap.prototype.onLinkedEventReceived = function ( event ) {};
+DataMap.prototype.onLinkedEventReceived = function ( event ) {
+    switch ( event.type ) {
+        case 'groupDismissChange':
+            const group = this.config.groups[event.groupId];
+            if ( group && Util.isBitSet( group.flags, Enums.MarkerGroupFlags.Collectible_GlobalGroup ) ) {
+                this._updateGlobalDismissal( event.groupId, event.state );
+            }
+            break;
+    }
+};
+
+
+DataMap.prototype._updateGlobalDismissal = function ( groupId, state ) {
+    // Update every marker in the group
+    for ( const leafletMarker of this.layerManager.byLayer[groupId] ) {
+        leafletMarker.setDismissed( state );
+        this.fire( 'markerDismissChange', leafletMarker );
+    }
+    this.fire( 'groupDismissChange', groupId );
+};
 
 
 DataMap.prototype.toggleMarkerDismissal = function ( leafletMarker ) {
     const groupId = leafletMarker.attachedLayers[0];
-    const isIndividual = Util.getGroupCollectibleType( this.config.groups[groupId] )
-        === Enums.MarkerGroupFlags.Collectible_Individual,
+    const mode = Util.getGroupCollectibleType( this.config.groups[groupId] );
+    const isIndividual = mode === Enums.MarkerGroupFlags.Collectible_Individual,
         storage = this.getStorageForMarkerGroup( this.config.groups[groupId] );
     const state = storage.toggleDismissal( isIndividual ? Util.getMarkerId( leafletMarker ) : groupId, !isIndividual );
     if ( isIndividual ) {
@@ -201,12 +220,15 @@ DataMap.prototype.toggleMarkerDismissal = function ( leafletMarker ) {
         leafletMarker.setDismissed( state );
         this.fire( 'markerDismissChange', leafletMarker );
     } else {
-        // Update every marker in the group
-        for ( const otherLeafletMarker of this.layerManager.byLayer[groupId] ) {
-            otherLeafletMarker.setDismissed( state );
-            this.fire( 'markerDismissChange', otherLeafletMarker );
+        this._updateGlobalDismissal( groupId, state );
+        // If global, broadcast an event to other maps on this page
+        if ( mode === Enums.MarkerGroupFlags.Collectible_GlobalGroup ) {
+            this.fire( 'sendLinkedEvent', {
+                type: 'groupDismissChange',
+                groupId: groupId,
+                state: state
+            } );
         }
-        this.fire( 'groupDismissChange', groupId );
     }
     return state;
 };

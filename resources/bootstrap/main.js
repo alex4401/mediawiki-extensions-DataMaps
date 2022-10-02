@@ -18,10 +18,12 @@ function initialiseMapWithConfig( id, $root, config ) {
     } );
 
     // Set up a handler for linked events (broadcast to other maps)
-    map.on( 'linkedEvent', event => {
+    map.on( 'sendLinkedEvent', event => {
         event.map = map;
         for ( const otherMap of initialisedMaps ) {
-            otherMap.fire( 'linkedEvent', event );
+            if ( map !== otherMap ) {
+                otherMap.fire( 'linkedEvent', event );
+            }
         }
     } );
 
