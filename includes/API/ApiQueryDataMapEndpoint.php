@@ -47,12 +47,6 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                 ParamValidator::PARAM_TYPE => 'integer',
                 ParamValidator::PARAM_REQUIRED => false,
             ],
-            'filter' => [
-                /* DEPRECATED(v0.12.0:v0.13.0): use layers */
-                ParamValidator::PARAM_TYPE => 'string',
-                ParamValidator::PARAM_REQUIRED => false,
-                ParamValidator::PARAM_DEPRECATED => true,
-            ],
             'layers' => [
                 ParamValidator::PARAM_TYPE => 'string',
                 ParamValidator::PARAM_REQUIRED => false,
@@ -85,11 +79,6 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         }
 
         $params = $this->extractRequestParams();
-
-        // Migrate filter parameter onto layers
-        if ( isset( $params['filter'] ) && !empty( $params['filter'] ) ) {
-            $params['layers'] = explode( '|', $params['filter'] );
-        }
 
         // Configure browser-side caching recommendations
 		$this->getMain()->setCacheMode( 'public' );

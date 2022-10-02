@@ -126,10 +126,7 @@ class MarkerGroupSpec extends DataModel {
     }
 
     public function isIncludedInSearch(): bool {
-        return isset( $this->raw->canSearchFor ) ? $this->raw->canSearchFor : (
-            /* DEPRECATED(v0.12.0:v0.13.0) */
-            !( isset( $this->raw->excludeFromSearch ) ? $this->raw->excludeFromSearch : false )
-        );
+        return isset( $this->raw->canSearchFor ) ? $this->raw->canSearchFor : true;
     }
 
     public function isDefault(): bool {
@@ -161,7 +158,6 @@ class MarkerGroupSpec extends DataModel {
         $this->expectField( $status, 'isDefault', DataModel::TYPE_BOOL );
         $this->expectField( $status, 'isCollectible', DataModel::TYPE_BOOL_OR_STRING );
         $this->expectField( $status, 'autoNumberInChecklist', DataModel::TYPE_BOOL );
-        $this->allowReplacedField( $status, 'excludeFromSearch', DataModel::TYPE_BOOL, 'canSearchFor', '0.12.0', '0.13.0' );
         $this->expectField( $status, 'canSearchFor', DataModel::TYPE_BOOL );
 
         if ( $this->getCollectibleMode() === self::CM_UNKNOWN ) {

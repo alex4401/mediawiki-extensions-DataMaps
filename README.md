@@ -87,7 +87,6 @@ Content of the page should be a valid JSON with following structure:
 * * * `globalGroup`: like `group`, but for all maps on the site.
 * * `autoNumberInChecklist` (boolean, optional): if collectible and true, markers in the checklist will have their index number added to the name.
 * * `canSearchFor` (boolean, optional): if true and search is enabled, allows markers from this group to be searched for. Defaults to `true`.
-* * * This field was called `excludeFromSearch` (and took reversed values) before version 0.12.0, but support will be removed in 0.13.0.
 * `layers` (string to object map, optional): map from name to a *marker layer* specification:
 * * Marker layers can be used without an explicit declaration.
 * * `name` (string, required): currently unused.
@@ -98,11 +97,9 @@ Content of the page should be a valid JSON with following structure:
 * * `lat`/`y` (decimal, required): latitude/`Y` coordinate.
 * * `lon`/`x` (decimal, required): longitude/`X` coordinate.
 * * `name` (string, optional): text to append to marker's popup title.
-* * * This field was called `label` before version 0.11.3, but support will be removed in 0.13.0.
 * * `description` (string or string array, optional): text to add to the marker's popup.
 * * `isWikitext` (boolean, optional): if true, `label` and `description` will be treated as wikitext. This is expensive, do not use for every marker. If unset, the backend will guess based on the presence of some patterns.
 * * `image` (file name, optional): if provided, marker's popup will display this image under the description.
-* * * This field was called `popupImage` before version 0.11.3, but support will be removed in 0.13.0.
 * * `article` (page name, optional): article the marker's popup should link to. Follows either a format of `article title` or `article title|displayed label`.
 * * `searchKeywords` (string, or array of strings or string and number (score multiplier) pairs, optional): specifies what keywords this marker will be suggested for.
 * * `canSearchFor` (boolean, optional): if true and search is enabled, allows this marker to be searched for. Defaults to `true`.
