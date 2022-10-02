@@ -73,12 +73,6 @@ mw.hook( 'wikipage.content' ).add( $content => {
             initialiseMapWithConfig( id, $root, config );
         }
     } );
-
-    // Broadcast all map IDs so gadgets can register to
-    // DEPRECATED(v0.12.0:v0.13.0)
-    if ( !mw.config.get( 'dataMaps' ) ) {
-        mw.hook( 'ext.ark.datamaps.broadcastMaps' ).fire( ids );
-    }
 } );
 
 

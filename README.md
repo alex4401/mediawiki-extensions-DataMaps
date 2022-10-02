@@ -157,7 +157,6 @@ External scripts can hook into Data Maps to provide additional functionality wit
 * All public APIs of this extension are exposed under `window.mw.dataMaps`. Check `resources/loader/index.js` for all exposed classes.
 * `mw.dataMaps.subscribeHook( string hookName, function callback )` may be used to register a hook callback for every map on current page. `hookName` must not include the `ext.ark.datamaps` namespace. The callback receives one parameter, a `DataMap` instance.
 * * Depend (via `mw.loader.using`) on `ext.ark.datamaps.bootstrap` to use this.
-* `ext.ark.datamaps.broadcastMaps( id[] )` hook provides only IDs of Data Maps initialised on current page, but has been deprecated and will be removed in v0.13.0.
 * Instance hooks:
 * * `ext.ark.datamaps.afterInitialisation.[id]( DataMap )`: called after the `DataMap` instance is created, and secondary modules and marker data set have been requested.
 * * `ext.ark.datamaps.afterLegendInitialisation.[id]( DataMap )`: called after OOUI loads and the legend panel is set up.
