@@ -10,9 +10,7 @@ function MenuOptionWidget( config ) {
             } )
             .prependTo( this.$label );
     }
-};
-
-
+}
 OO.inheritClass( MenuOptionWidget, OO.ui.MenuOptionWidget );
 
 

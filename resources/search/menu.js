@@ -1,4 +1,4 @@
-const Fuzzysort = require( 'ext.ark.datamaps.search.fuzzysort' ),
+const Fuzzysort = require( 'ext.ark.datamaps.fuzzysort' ),
 	MenuOptionWidget = require( './option.js' ),
 	IsDebug = mw.config.get( 'debug' ) == 1;
 
@@ -6,7 +6,6 @@ const Fuzzysort = require( 'ext.ark.datamaps.search.fuzzysort' ),
 function MenuWidget( config ) {
 	MenuWidget.super.call( this, config );
 }
-
 OO.inheritClass( MenuWidget, OO.ui.MenuSelectWidget );
 
 
