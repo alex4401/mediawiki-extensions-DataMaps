@@ -67,6 +67,7 @@ function DataMap( id, $root, config ) {
     // Set up internal event handlers
     this.on( 'markerReady', this.tryOpenUriPopup, this );
     this.on( 'streamingDone', this.refreshMaxBounds, this );
+    this.on( 'linkedEvent', this.onLinkedEventReceived, this );
 
     // Request OOUI to be loaded and build the legend
     if ( !this.isFeatureBitSet( this.FF_HIDE_LEGEND ) ) {
@@ -184,6 +185,9 @@ DataMap.prototype.getCoordLabel = function ( latOrInstance, lon ) {
 DataMap.prototype.getStorageForMarkerGroup = function ( group ) {
     return Util.isBitSet( group.flags, Enums.MarkerGroupFlags.Collectible_GlobalGroup ) ? this.globalStorage : this.storage;
 };
+
+
+DataMap.prototype.onLinkedEventReceived = function ( event ) {};
 
 
 DataMap.prototype.toggleMarkerDismissal = function ( leafletMarker ) {
