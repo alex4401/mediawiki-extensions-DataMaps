@@ -1,6 +1,5 @@
 const Enums = require( './enums.js' ),
-    Util = require( './util.js' ),
-    MarkerLegendPanel = require( './markerLegend.js' );
+    Util = require( './util.js' );
 
 
 class CollectibleMarkerGroup {
