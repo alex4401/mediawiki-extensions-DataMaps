@@ -1,68 +1,67 @@
-function MapLegend( map ) {
-    this.map = map;
-    // DOM element of the legend container
-    this.$legendRoot = this.map.$root.find( '.datamap-container-legend' );
-    // IndexLayout of the legend panel
-    this.tabLayout = new OO.ui.IndexLayout( {
-        expanded: false
-    } );
+module.exports = class MapLegend {
+    constructor( map ) {
+        this.map = map;
+        // DOM element of the legend container
+        this.$legendRoot = this.map.$root.find( '.datamap-container-legend' );
+        // IndexLayout of the legend panel
+        this.tabLayout = new OO.ui.IndexLayout( {
+            expanded: false
+        } );
 
-    // Append the IndexLayout to the root
-    this.tabLayout.$element.appendTo( this.$legendRoot );
-}
-
-
-MapLegend.prototype.addTab = function ( name, cssClass, visible ) {
-    const result = new OO.ui.TabPanelLayout( {
-        name: name,
-        label: name,
-        expanded: false,
-        classes: cssClass ? [ cssClass ] : []
-    } );
-    this.tabLayout.addTabPanels( [ result ] );
-    if ( visible === false ) {
-        this.setTabVisibility( result, false );
-    }
-    this.reevaluateVisibility();
-    return result;
-};
-
-
-MapLegend.prototype.setTabVisibility = function ( tab, value ) {
-    tab.toggle( value );
-    tab.getTabItem().toggle( value );
-
-    if ( this.tabLayout.tabSelectWidget.findSelectedItem() == tab.getTabItem() ) {
-        this.tabLayout.tabSelectWidget.selectItem( null );
-        this.tabLayout.selectFirstSelectableTabPanel();
+        // Append the IndexLayout to the root
+        this.tabLayout.$element.appendTo( this.$legendRoot );
     }
 
-    this.reevaluateVisibility();
-};
+
+    addTab( name, cssClass, visible ) {
+        const result = new OO.ui.TabPanelLayout( {
+            name: name,
+            label: name,
+            expanded: false,
+            classes: cssClass ? [ cssClass ] : []
+        } );
+        this.tabLayout.addTabPanels( [ result ] );
+        if ( visible === false ) {
+            this.setTabVisibility( result, false );
+        }
+        this.reevaluateVisibility();
+        return result;
+    }
 
 
-MapLegend.prototype.reevaluateVisibility = function () {
-    if ( this.tabLayout.getTabs().getItems().some( item => item.isVisible() ) ) {
-        if ( !this.$legendRoot.is( ':visible' ) ) {
+    setTabVisibility( tab, value ) {
+        tab.toggle( value );
+        tab.getTabItem().toggle( value );
+
+        if ( this.tabLayout.tabSelectWidget.findSelectedItem() == tab.getTabItem() ) {
+            this.tabLayout.tabSelectWidget.selectItem( null );
             this.tabLayout.selectFirstSelectableTabPanel();
         }
-        this.$legendRoot.show();
-    } else {
-        this.$legendRoot.hide();
+
+        this.reevaluateVisibility();
     }
-};
 
 
-MapLegend.prototype.createCheckboxField = function ( $parent, label, defaultState, changeCallback ) {
-    const checkbox = new OO.ui.CheckboxInputWidget( { selected: defaultState } );
-    const field = new OO.ui.FieldLayout( checkbox, {
-        label: label,
-        align: 'inline'
-    } );
-    checkbox.on( 'change', () => changeCallback( checkbox.isSelected() ) );
-    field.$element.appendTo( $parent );
-    return [ checkbox, field ];
-};
+    reevaluateVisibility() {
+        if ( this.tabLayout.getTabs().getItems().some( item => item.isVisible() ) ) {
+            if ( !this.$legendRoot.is( ':visible' ) ) {
+                this.tabLayout.selectFirstSelectableTabPanel();
+            }
+            this.$legendRoot.show();
+        } else {
+            this.$legendRoot.hide();
+        }
+    }
 
 
-module.exports = MapLegend;
+    createCheckboxField( $parent, label, defaultState, changeCallback ) {
+        const checkbox = new OO.ui.CheckboxInputWidget( { selected: defaultState } );
+        const field = new OO.ui.FieldLayout( checkbox, {
+            label: label,
+            align: 'inline'
+        } );
+        checkbox.on( 'change', () => changeCallback( checkbox.isSelected() ) );
+        field.$element.appendTo( $parent );
+        return [ checkbox, field ];
+    }
+}
