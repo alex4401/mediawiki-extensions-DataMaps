@@ -350,7 +350,7 @@ DataMap.prototype.streamMarkersIn = function ( pageName, version, filter, succes
         query.revid = version;
     }
     if ( filter ) {
-        query.filter = filter.join( '|' );
+        query.layers = filter.join( '|' );
     }
     if ( retryCount == null ) {
         retryCount = 2;
