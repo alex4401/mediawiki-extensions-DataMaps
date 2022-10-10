@@ -159,6 +159,30 @@ class DataModel {
         }
     }
 
+    protected function permitValues( Status $status, string $name, array $values ): bool {
+        // TODO: safety checks, this will wreck spectacular chaos if field does not exist or did not pass type check
+        $result = true;
+        $toTest = $this->raw->{$name};
+        if ( is_array( $toTest ) ) {
+            foreach ( $toTest as &$value ) {
+                if ( !in_array( $value, $values ) ) {
+                    $status->fatal( 'datamap-error-validate-wrong-field-value', static::$publicName, $name,
+                        wfMessage( 'datamap-error-validate-check-docs' ) );
+                    $result = false;
+                }
+            }
+        } elseif ( is_object( $name ) ) {
+            throw new LogicException( 'Calling permitValues on an object is unsupported' );
+        } else {
+            $result = in_array( $toTest, $values );
+            if ( !$result ) {
+                $status->fatal( 'datamap-error-validate-wrong-field-value', static::$publicName, $name,
+                    wfMessage( 'datamap-error-validate-check-docs' ) );
+            }
+        }
+        return $result;
+    }
+
     protected function requireFile( Status $status, ?string $name ): bool {
         if ( $name !== null ) {
             if ( empty( $name ) ) {
