@@ -2,11 +2,6 @@ const Enums = require( './enums.js' );
 let Leaflet = null;
 
 
-mw.loader.using( 'ext.ark.datamaps.leaflet', () => {
-    Leaflet = require( 'ext.ark.datamaps.leaflet' );
-} );
-
-
 module.exports = {
     MAX_GROUP_CIRCLE_SIZE: 20,
 
@@ -24,6 +19,9 @@ module.exports = {
 
     
     getLeaflet: function () {
+        if ( Leaflet === null ) {
+            Leaflet = require( 'ext.ark.datamaps.leaflet' );
+        }
         return Leaflet;
     },
 
