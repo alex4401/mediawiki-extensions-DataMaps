@@ -255,7 +255,7 @@ DataMap.prototype.getIconFromLayers = function ( layers ) {
             markerIcon = this.config.layers[override].markerIcon;
         }
     
-        this.iconCache[markerType] = L.icon( { iconUrl: markerIcon, iconSize: group.size } );
+        this.iconCache[markerType] = new L.Icon( { iconUrl: markerIcon, iconSize: group.size } );
     }
 
     return this.iconCache[markerType];
@@ -439,16 +439,16 @@ DataMap.prototype.buildBackgroundOverlayObject = function ( overlay ) {
     // Construct a layer
     if ( overlay.image ) {
         // Construct an image
-        result = L.imageOverlay( overlay.image, this.translateBox( overlay.at ) );
+        result = new L.ImageOverlay( overlay.image, this.translateBox( overlay.at ) );
     } else if ( overlay.path ) {
         // Construct a polyline
-        result = L.polyline( overlay.path.map( p => this.translatePoint( p ) ), {
+        result = new L.Polyline( overlay.path.map( p => this.translatePoint( p ) ), {
             color: overlay.colour || L.Path.prototype.options.color,
             weight: overlay.thickness || L.Path.prototype.options.weight
         } );
     } else {
         // Construct a rectangle
-        result = L.rectangle( this.translateBox( overlay.at ), {
+        result = new L.Rectangle( this.translateBox( overlay.at ), {
             color: overlay.strokeColour || L.Path.prototype.options.color,
             fillColor: overlay.colour || L.Path.prototype.options.fillColor
         } );
@@ -530,10 +530,10 @@ const buildLeafletMap = function ( $holder ) {
     }, this.config.leafletSettings );
     // Specify the coordinate reference system and initialise the renderer
     leafletConfig.crs = L.CRS.Simple;
-    leafletConfig.renderer = L.canvas( leafletConfig.rendererSettings );
+    leafletConfig.renderer = new L.Canvas( leafletConfig.rendererSettings );
 
     // Initialise the Leaflet map
-    this.leaflet = L.map( $holder.get( 0 ), leafletConfig );
+    this.leaflet = new L.Map( $holder.get( 0 ), leafletConfig );
 
     // Prepare all backgrounds
     this.config.backgrounds.forEach( ( background, index ) => {
@@ -545,7 +545,7 @@ const buildLeafletMap = function ( $holder ) {
         // Image overlay:
         // Latitude needs to be flipped as directions differ between Leaflet and ARK
         background.at = background.at || this.config.crs;
-        background.layers.push( L.imageOverlay( background.image, this.translateBox( background.at ) ) );
+        background.layers.push( new L.ImageOverlay( background.image, this.translateBox( background.at ) ) );
 
         // Prepare overlay layers
         if ( background.overlays ) {

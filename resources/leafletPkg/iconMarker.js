@@ -15,7 +15,7 @@ module.exports = L.Marker.extend( {
 
 	update: function () {
 		if ( this._icon && this._map ) {
-			const size = L.point( this.options.icon.options.iconSize )._multiplyBy( this._map.options.markerScaleA );
+			const size = new L.Point( this.options.icon.options.iconSize )._multiplyBy( this._map.options.markerScaleA );
 			const anchor = size.divideBy( 2 );
 
 			this._icon.style.marginLeft = (-anchor.x) + 'px';
