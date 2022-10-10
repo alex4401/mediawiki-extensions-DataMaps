@@ -1,5 +1,6 @@
 const Util = require( './util.js' ),
-    MenuWidget = require( './menu.js' );
+    MenuWidget = require( './menu.js' ),
+    Leaflet = require( 'ext.ark.datamaps.leaflet' );
 
 
 class MarkerSearch {
@@ -104,7 +105,8 @@ class MarkerSearch {
         state.search = state.search.map( x => ( typeof( x ) === 'string' ) ? [ x, 1 ] : x );
 
         this.menu.addItem( {
-            icon: leafletMarker instanceof L.Ark.IconMarker ? this.map.getIconFromLayers( leafletMarker.attachedLayers ) : null,
+            icon: leafletMarker instanceof Leaflet.Ark.IconMarker
+                ? this.map.getIconFromLayers( leafletMarker.attachedLayers ) : null,
             data: leafletMarker,
             keywords: state.search,
             label: new OO.ui.HtmlSnippet( label )

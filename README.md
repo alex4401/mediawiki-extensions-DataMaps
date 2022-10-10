@@ -150,9 +150,9 @@ Box is a array of two locations, where first describes the start point of the bo
 ## Gadgets
 External scripts can hook into Data Maps to provide additional functionality without modifying core code.
 
-* All Leaflet APIs are public and left exposed under `window.L`. 
-* * Custom Leaflet layers are exposed under `window.L.Ark`.
-* * Lazy-loaded. Depend (via `mw.loader.using`) on `ext.ark.datamaps.leaflet.core` and `ext.ark.datamaps.leaflet.extra` respectively.
+* All Leaflet APIs are public and left exposed under the `ext.ark.datamaps.leaflet` module. 
+* * Custom Leaflet layers are exposed under `ext.ark.datamaps.leaflet.Ark`.
+* * Lazy-loaded. Depend (via `mw.loader.using`) on `ext.ark.datamaps.leaflet`.
 * * `DataMap` objects provide `waitForLeaflet( function callback )`.
 * All public APIs of this extension are exposed under `window.mw.dataMaps`. Check `resources/loader/index.js` for all exposed classes.
 * `mw.dataMaps.subscribeHook( string hookName, function callback )` may be used to register a hook callback for every map on current page. `hookName` must not include the `ext.ark.datamaps` namespace. The callback receives one parameter, a `DataMap` instance.

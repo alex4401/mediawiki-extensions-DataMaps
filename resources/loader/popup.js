@@ -8,7 +8,7 @@ module.exports = class MarkerPopup {
         this.markerGroup = map.config.groups[this.leafletMarker.attachedLayers[0]];
         this.slots = this.leafletMarker.apiInstance[2] || {};
         this.uid = Util.getMarkerId( this.leafletMarker );
-        // These two containers are provided by L.Ark.Popup
+        // These two containers are provided by Leaflet.Ark.Popup
         this.$buttons = null;
         this.$content = null;
         this.$tools = null;
@@ -16,7 +16,7 @@ module.exports = class MarkerPopup {
 
 
     static bindTo( map, leafletMarker ) {
-        leafletMarker.bindPopup( () => new MarkerPopup( map, leafletMarker ), {}, L.Ark.Popup );
+        leafletMarker.bindPopup( () => new MarkerPopup( map, leafletMarker ), {}, Util.getLeaflet().Ark.Popup );
     }
 
 
@@ -82,7 +82,8 @@ module.exports = class MarkerPopup {
 
         // Image
         if ( this.slots.image ) {
-            $( '<img class="datamap-popup-image" width=240 />' ).attr( 'src', this.slots.image ).appendTo( this.$content );
+            $( '<img class="datamap-popup-image" width=240 />' ).attr( 'src', this.slots.image )
+                .appendTo( this.$content );
         }
     }
 

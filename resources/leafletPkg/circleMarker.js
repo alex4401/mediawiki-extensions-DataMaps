@@ -1,8 +1,9 @@
-const MAX_RADIUS_TO_GROW_MORE = 4;
-const DISMISSED_MARKER_OPACITY = 0.4;
+const Leaflet = require( '../vendor/leaflet/leaflet.js' ),
+	MAX_RADIUS_TO_GROW_MORE = 4,
+	DISMISSED_MARKER_OPACITY = 0.4;
 
 
-module.exports = L.CircleMarker.extend( {
+module.exports = Leaflet.CircleMarker.extend( {
 	options: {
 		baseRadius: 10,
 		dismissed: false

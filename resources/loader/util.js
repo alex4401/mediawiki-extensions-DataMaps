@@ -1,4 +1,10 @@
 const Enums = require( './enums.js' );
+let Leaflet = null;
+
+
+mw.loader.using( 'ext.ark.datamaps.leaflet', () => {
+    Leaflet = require( 'ext.ark.datamaps.leaflet' );
+} );
 
 
 module.exports = {
@@ -14,6 +20,11 @@ module.exports = {
 
     isAnyBitSet: function ( a, b ) {
         return a && ( a & b ) !== 0;
+    },
+
+    
+    getLeaflet: function () {
+        return Leaflet;
     },
 
 

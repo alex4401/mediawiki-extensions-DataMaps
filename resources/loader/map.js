@@ -8,6 +8,7 @@ const MapStorage = require( './storage.js' ),
     DismissableMarkersLegend = require( './dismissables.js' ),
     Util = require( './util.js' ),
     mwApi = new mw.Api();
+let Leaflet;
 
 
 function DataMap( id, $root, config ) {
@@ -78,9 +79,10 @@ function DataMap( id, $root, config ) {
     }
 
     // Prepare the Leaflet map view
-    mw.loader.using( [
-        'ext.ark.datamaps.leaflet'
-    ], buildLeafletMap.bind( this, this.$root.find( '.datamap-holder' ) ) );
+    mw.loader.using( 'ext.ark.datamaps.leaflet', () => {
+        Leaflet = Util.getLeaflet();
+        buildLeafletMap.bind( this, this.$root.find( '.datamap-holder' ) );
+    } );
 
     // Load search add-on
     if ( this.isFeatureBitSet( this.FF_SEARCH ) ) {
@@ -255,7 +257,7 @@ DataMap.prototype.getIconFromLayers = function ( layers ) {
             markerIcon = this.config.layers[override].markerIcon;
         }
     
-        this.iconCache[markerType] = new L.Icon( { iconUrl: markerIcon, iconSize: group.size } );
+        this.iconCache[markerType] = new Leaflet.Icon( { iconUrl: markerIcon, iconSize: group.size } );
     }
 
     return this.iconCache[markerType];
@@ -270,12 +272,12 @@ DataMap.prototype.createMarkerFromApiInstance = function ( layers, instance ) {
     // Construct the marker
     if ( group.markerIcon ) {
         // Fancy icon marker
-        leafletMarker = new L.Ark.IconMarker( position, {
+        leafletMarker = new Leaflet.Ark.IconMarker( position, {
             icon: this.getIconFromLayers( layers )
         } );
     } else {
         // Circular marker
-        leafletMarker = new L.Ark.CircleMarker( position, {
+        leafletMarker = new Leaflet.Ark.CircleMarker( position, {
             baseRadius: group.size/2,
             expandZoomInvEx: group.extraMinZoomSize,
             fillColor: group.fillColor,
@@ -439,18 +441,18 @@ DataMap.prototype.buildBackgroundOverlayObject = function ( overlay ) {
     // Construct a layer
     if ( overlay.image ) {
         // Construct an image
-        result = new L.ImageOverlay( overlay.image, this.translateBox( overlay.at ) );
+        result = new Leaflet.ImageOverlay( overlay.image, this.translateBox( overlay.at ) );
     } else if ( overlay.path ) {
         // Construct a polyline
-        result = new L.Polyline( overlay.path.map( p => this.translatePoint( p ) ), {
-            color: overlay.colour || L.Path.prototype.options.color,
-            weight: overlay.thickness || L.Path.prototype.options.weight
+        result = new Leaflet.Polyline( overlay.path.map( p => this.translatePoint( p ) ), {
+            color: overlay.colour || Leaflet.Path.prototype.options.color,
+            weight: overlay.thickness || Leaflet.Path.prototype.options.weight
         } );
     } else {
         // Construct a rectangle
-        result = new L.Rectangle( this.translateBox( overlay.at ), {
-            color: overlay.strokeColour || L.Path.prototype.options.color,
-            fillColor: overlay.colour || L.Path.prototype.options.fillColor
+        result = new Leaflet.Rectangle( this.translateBox( overlay.at ), {
+            color: overlay.strokeColour || Leaflet.Path.prototype.options.color,
+            fillColor: overlay.colour || Leaflet.Path.prototype.options.fillColor
         } );
     }
 
@@ -464,7 +466,7 @@ DataMap.prototype.buildBackgroundOverlayObject = function ( overlay ) {
 
 
 DataMap.prototype.refreshMaxBounds = function () {
-	const bounds = new L.LatLngBounds();
+	const bounds = new Leaflet.LatLngBounds();
     // Collect content bounds
 	for ( const id in this.leaflet._layers ) {
 		const layer = this.leaflet._layers[id];
@@ -508,10 +510,10 @@ const buildLeafletMap = function ( $holder ) {
         zoomDelta: 0.25,
         maxZoom: 5,
         wheelPxPerZoomLevel: 240,
-        minZoom: L.Browser.mobile ? ( L.Browser.retina ? 1 : 1.75 ) : 2,
-        // Zoom animation causes some awkward locking as Leaflet waits for the animation to finish before processing more zoom
-        // requests, but disabling it causes some updates to be distorted (for example, the canvas renderer will drift).
-        // We include a patch in our Leaflet builds to disable animations on desktop-style zooms.
+        minZoom: Leaflet.Browser.mobile ? ( Leaflet.Browser.retina ? 1 : 1.75 ) : 2,
+        // Zoom animation causes some awkward locking as Leaflet waits for the animation to finish before processing
+        // more zoom requests, but disabling it causes some updates to be distorted (for example, the canvas renderer
+        // will drift). We include a patch in our Leaflet builds to disable animations on desktop-style zooms.
         zoomAnimation: true,
         markerZoomAnimation: true,
         // Do not allow pinch-zooming to surpass max zoom even temporarily. This seems to cause a mispositioning.
@@ -521,19 +523,19 @@ const buildLeafletMap = function ( $holder ) {
         // Zoom-based marker scaling
         shouldExpandZoomInvEx: true,
         expandZoomInvEx: 1.8,
-        // Canvas renderer settings - using canvas for performance with padding of 1/3rd (to draw some more markers outside of
-        // view for panning UX)
+        // Canvas renderer settings - using canvas for performance with padding of 1/3rd (to draw some more markers
+        // outside of view for panning UX)
         preferCanvas: true,
         rendererSettings: {
             padding: 1/3
         },
     }, this.config.leafletSettings );
     // Specify the coordinate reference system and initialise the renderer
-    leafletConfig.crs = L.CRS.Simple;
-    leafletConfig.renderer = new L.Canvas( leafletConfig.rendererSettings );
+    leafletConfig.crs = Leaflet.CRS.Simple;
+    leafletConfig.renderer = new Leaflet.Canvas( leafletConfig.rendererSettings );
 
     // Initialise the Leaflet map
-    this.leaflet = new L.Map( $holder.get( 0 ), leafletConfig );
+    this.leaflet = new Leaflet.Map( $holder.get( 0 ), leafletConfig );
 
     // Prepare all backgrounds
     this.config.backgrounds.forEach( ( background, index ) => {
@@ -545,11 +547,12 @@ const buildLeafletMap = function ( $holder ) {
         // Image overlay:
         // Latitude needs to be flipped as directions differ between Leaflet and ARK
         background.at = background.at || this.config.crs;
-        background.layers.push( new L.ImageOverlay( background.image, this.translateBox( background.at ) ) );
+        background.layers.push( new Leaflet.ImageOverlay( background.image, this.translateBox( background.at ) ) );
 
         // Prepare overlay layers
         if ( background.overlays ) {
-            background.overlays.forEach( overlay => background.layers.push( this.buildBackgroundOverlayObject( overlay ) ) );
+            background.overlays.forEach( overlay => background.layers.push(
+                this.buildBackgroundOverlayObject( overlay ) ) );
         }
     } );
     // Switch to the last chosen one or first defined

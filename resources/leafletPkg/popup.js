@@ -1,4 +1,7 @@
-module.exports = L.Popup.extend( {
+const Leaflet = require( '../vendor/leaflet/leaflet.js' );
+
+
+module.exports = Leaflet.Popup.extend( {
     options: {
         className: 'datamap-popup'
     },
@@ -35,19 +38,19 @@ module.exports = L.Popup.extend( {
 	},
 
 	_initLayout: function () {
-		L.Popup.prototype._initLayout.call( this );
+		Leaflet.Popup.prototype._initLayout.call( this );
 
         this.$customButtonArea = $( '<div class="datamap-popup-buttons">' ).appendTo( this._container );
 	},
 
 	onAdd: function ( map ) {
         this._updateContent();
-        L.Popup.prototype.onAdd.call( this, map );
+        Leaflet.Popup.prototype.onAdd.call( this, map );
         this._content.onAdd();
     },
 
 	onRemove: function ( map ) {
-        L.Popup.prototype.onRemove.call( this, map );
+        Leaflet.Popup.prototype.onRemove.call( this, map );
         this._content.onRemove();
     }
 } );
