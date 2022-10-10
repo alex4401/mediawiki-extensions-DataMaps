@@ -154,6 +154,7 @@ External scripts can hook into Data Maps to provide additional functionality wit
 * * Custom Leaflet layers are exposed under `ext.ark.datamaps.leaflet.Ark`.
 * * Lazy-loaded. Depend (via `mw.loader.using`) on `ext.ark.datamaps.leaflet`.
 * * `DataMap` objects provide `waitForLeaflet( function callback )`.
+* * `window.L` is deprecated and will be removed in v0.13.
 * All public APIs of this extension are exposed under `window.mw.dataMaps`. Check `resources/loader/index.js` for all exposed classes.
 * `mw.dataMaps.subscribeHook( string hookName, function callback )` may be used to register a hook callback for every map on current page. `hookName` must not include the `ext.ark.datamaps` namespace. The callback receives one parameter, a `DataMap` instance.
 * * Depend (via `mw.loader.using`) on `ext.ark.datamaps.bootstrap` to use this.
