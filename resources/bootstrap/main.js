@@ -12,13 +12,23 @@ function initialiseMapWithConfig( id, $root, config ) {
     // Push onto internal tracking list
     initialisedMaps.push( map );
 
-    // Broadcast `afterInitialisation` hook that gadgets can register to
-    mw.hook( `ext.ark.datamaps.afterInitialisation.${id}` ).fire( map );
-
     // Broadcast `afterLegendInitialisation` hook that gadgets can register to
     map.on( 'legendLoaded', () => {
         mw.hook( `ext.ark.datamaps.afterLegendInitialisation.${id}` ).fire( map );
     } );
+
+    // Set up a handler for linked events (broadcast to other maps)
+    map.on( 'sendLinkedEvent', event => {
+        event.map = map;
+        for ( const otherMap of initialisedMaps ) {
+            if ( map !== otherMap ) {
+                otherMap.fire( 'linkedEvent', event );
+            }
+        }
+    } );
+
+    // Broadcast `afterInitialisation` hook that gadgets can register to
+    mw.hook( `ext.ark.datamaps.afterInitialisation.${id}` ).fire( map );
 
     // Request markers from the API
     if ( map.config.pageName && map.config.version ) {
