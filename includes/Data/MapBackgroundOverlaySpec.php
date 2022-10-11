@@ -63,38 +63,39 @@ class MapBackgroundOverlaySpec extends DataModel {
     }
 
     public function validate( Status $status ) {
-        $this->expectField( $status, 'name', DataModel::TYPE_STRING );
-        $hasImage = $this->expectField( $status, 'image', DataModel::TYPE_STRING );
-        $hasPath = $this->expectField( $status, 'path', DataModel::TYPE_ARRAY );
+        $this->checkField( $status, 'name', DataModel::TYPE_STRING );
+        $hasImage = $this->checkField( $status, [
+            'name' => 'image',
+            'type' => DataModel::TYPE_FILE,
+            'fileMustExist' => true
+        ] );
+        $hasPath = $this->checkField( $status, [
+            'name' => 'path',
+            'type' => DataModel::TYPE_ARRAY,
+            'itemCheck' => function ( Status $status, $item ) {
+                if ( !$this->verifyType( $item, DataModel::TYPE_VECTOR2 ) ) {
+                    $status->fatal( 'datamap-error-validatespec-bgoverlay-invalid-polyline' );
+                    return false;
+                }
+                return true;
+            }
+        ] );
         // Placement location, only allowed if not a polyline
         if ( !isset( $this->raw->path ) ) {
-            $this->requireField( $status, 'at', DataModel::TYPE_BOUNDS );
+            $this->checkField( $status, 'at', DataModel::TYPE_BOUNDS );
         }
 
         if ( $this->supportsDrawProperties() ) {
-            $this->expectField( $status, 'color', DataModel::TYPE_COLOUR4 );
+            $this->checkField( $status, 'color', DataModel::TYPE_COLOUR4 );
             switch ( $this->getType() ) {
                 case self::TYPE_POLYLINE:
-                    $this->expectField( $status, 'thickness', DataModel::TYPE_NUMBER );
-                    break;
+                    $this->checkField( $status, 'thickness', DataModel::TYPE_NUMBER );
                 case self::TYPE_RECT:
-                    $this->expectField( $status, 'borderColor', DataModel::TYPE_COLOUR3 );
+                    $this->checkField( $status, 'borderColor', DataModel::TYPE_COLOUR3 );
                     break;
             }
         }
 
         $this->disallowOtherFields( $status );
-
-        if ( $hasPath ) {
-            foreach ( $this->getPath() as &$v2d ) {
-                if ( !$this->verifyType( $v2d, DataModel::TYPE_VECTOR2 ) ) {
-                    $status->fatal( 'datamap-error-validatespec-bgoverlay-invalid-polyline' );
-                }
-            }
-        }
-
-        if ( $hasImage ) {
-            $this->requireFile( $status, $this->getImageName() );
-        }
     }
 }

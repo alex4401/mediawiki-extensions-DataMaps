@@ -3,6 +3,7 @@ namespace MediaWiki\Extension\Ark\DataMaps\Data;
 
 use Status;
 use stdClass;
+use InvalidArgumentException;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 
@@ -20,10 +21,11 @@ class DataModel {
     const TYPE_VECTOR2x2 = 13;
     const TYPE_BOUNDS = self::TYPE_VECTOR2x2;
     const TYPE_COLOUR3 = 14;
-    const TYPE_STRING_OR_NUMBER = 15;
+    const TYPE_STRING_OR_NUMBER = 15; // TODO: drop deprecated union type
     const TYPE_COLOUR4 = 16;
-    const TYPE_ARRAY_OR_STRING = 17;
-    const TYPE_BOOL_OR_STRING = 18;
+    const TYPE_ARRAY_OR_STRING = 17; // TODO: drop deprecated union type
+    const TYPE_BOOL_OR_STRING = 18; // TODO: drop deprecated union type
+    const TYPE_FILE = 19;
 
     protected stdClass $raw;
     private array $validationCheckedFields = [];
@@ -44,6 +46,7 @@ class DataModel {
                 // A[ ... ]
                 return is_array( $var );
             case self::TYPE_STRING:
+            case self::TYPE_FILE:
                 // S""
                 return is_string( $var );
             case self::TYPE_BOOL:
@@ -68,14 +71,17 @@ class DataModel {
             case self::TYPE_COLOUR3:
                 // S"#rrggbb" || S"#rgb" || [ Nr, Ng, Nb ]
                 return DataMapColourUtils::decode( $var ) !== null;
+            // TODO: deprecated union type
             case self::TYPE_STRING_OR_NUMBER:
                 return is_string( $var ) || is_numeric( $var );
             case self::TYPE_COLOUR4:
                 // S"#rrggbbaa" || S"#rgba" || [ Nr, Ng, Nb, Na ]
                 return DataMapColourUtils::decode4( $var ) !== null;
+            // TODO: deprecated union type
             case self::TYPE_ARRAY_OR_STRING:
                 // S"" || A[ ... ]
                 return is_array( $var ) || is_string( $var );
+            // TODO: deprecated union type
             case self::TYPE_BOOL_OR_STRING:
                 // B || A[ ... ]
                 return is_bool( $var ) || is_string( $var );
@@ -86,7 +92,8 @@ class DataModel {
     protected function allowOnly( Status $status, array $fields ) {
         $unexpected = array_diff( array_keys( get_object_vars( $this->raw ) ), $fields );
         if ( !empty( $unexpected ) ) {
-            $status->fatal( 'datamap-error-validate-unexpected-fields', static::$publicName, wfEscapeWikiText( implode( ', ', $unexpected ) ) );
+            $status->fatal( 'datamap-error-validate-unexpected-fields', static::$publicName, wfEscapeWikiText(
+                implode( ', ', $unexpected ) ) );
         }
     }
 
@@ -98,104 +105,144 @@ class DataModel {
         $this->allowOnly( $status, $this->validationCheckedFields );
     }
 
-    protected function requireField( Status $status, string $name, int $typeId ): bool {
-        $this->trackField( $name );
-        if ( !isset( $this->raw->$name ) ) {
-            $this->validationAreRequiredFieldsPresent = false;
+    protected function conflict( Status $status, array $fields ): bool {
+        $count = 0;
+        foreach ( $fields as &$name ) {
+            if ( isset( $this->raw->$name ) ) {
+                $count++;
+            }
+        }
+        if ( $count > 1 ) {
+            $status->fatal( 'datamap-error-validate-exclusive-fields', static::$publicName, implode( ', ', $fields ) );
+            return true;
+        }
+        return false;
+    }
+
+    protected function checkField( Status $status, /*array|string*/ $spec, ?int $type = null ): bool {
+        if ( is_string( $spec ) ) {
+            return $this->checkField( $status, [
+                'name' => $spec,
+                'type' => $type
+            ] );
+        }
+
+        $result = true;
+
+        $isRequired = $spec['required'] ?? false;
+        $name = $spec['name'] ?? null;
+        $types = $spec['type'];
+        if ( !is_array( $types ) ) {
+            $types = [$types];
+        }
+
+        if ( isset( $spec['names'] ) ) {
+            if ( !$this->conflict( $status, $spec['names'] ) ) {
+                foreach ( $spec['names'] as &$candidate ) {
+                    if ( isset( $this->raw->$candidate ) ) {
+                        $name = $candidate;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if ( $isRequired && ( $name === null || !isset( $this->raw->$name ) ) ) {
+            // TODO: display right name if there's multiples
             $status->fatal( 'datamap-error-validate-field-required', static::$publicName, $name,
                 wfMessage( 'datamap-error-validate-check-docs' ) );
+            $this->validationAreRequiredFieldsPresent = false;
             return false;
-        } elseif ( $typeId !== self::TYPE_ANY && !$this->verifyType( $this->raw->$name, $typeId ) ) {
+        }
+
+        if ( !$isRequired && !isset( $this->raw->$name ) ) {
+            return true;
+        }
+
+        if ( $name === null ) {
+            return true;
+        }
+
+        if ( isset( $spec['@replaced'] ) ) {
+            $info = $spec['@replaced'];
+            $status->warning( 'datamap-error-validate-replaced-field', static::$publicName, $name, $info[2], $info[0],
+                $info[1] );
+        } else if ( isset( $spec['@pendingRemoval'] ) ) {
+            $info = $spec['@replaced'];
+            $status->warning( 'datamap-error-validate-deprecated-field', static::$publicName, $name, $info[0],
+                $info[1] );
+        }
+
+        $this->trackField( $name );
+
+        $value = $this->raw->$name ?? null;
+
+        $type = null;
+        foreach ( $types as &$candidate ) {
+            if ( $this->verifyType( $value, $candidate ) ) {
+                $type = $candidate;
+                break;
+            }
+        }
+
+        if ( $type === null ) {
             $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, $name,
                 wfMessage( 'datamap-error-validate-check-docs' ) );
             return false;
         }
-        return true;
-    }
 
-    protected function requireEitherField( Status $status, string $nameA, int $typeIdA, string $nameB, int $typeIdB ): bool {
-        $this->trackField( $nameA );
-        $this->trackField( $nameB );
-        $existsA = isset( $this->raw->$nameA );
-        $existsB = isset( $this->raw->$nameB );
-        if ( !$existsA && !$existsB ) {
-            $status->fatal( 'datamap-error-validate-field-required-either', static::$publicName, $nameA, $nameB );
-        } elseif ( $existsA && $existsB ) {
-            $status->fatal( 'datamap-error-validate-exclusive-fields', static::$publicName, $nameA, $nameB );
-        } else {
-            return $this->requireField( $status, $existsA ? $nameA : $nameB, $existsA ? $typeIdA : $typeIdB );
-        }
-        return false;
-    }
-
-    protected function expectField( Status $status, string $name, int $typeId ): bool {
-        $this->trackField( $name );
-        if ( isset( $this->raw->$name ) && !$this->verifyType( $this->raw->$name, $typeId ) ) {
-            $status->fatal( 'datamap-error-validate-wrong-field-type', $name, static::$publicName,
-                wfMessage( 'datamap-error-validate-check-docs' ) );
-            return false;
-        }
-        return true;
-    }
-
-    protected function expectEitherField( Status $status, string $nameA, int $typeIdA, string $nameB, int $typeIdB ): bool {
-        $this->trackField( $nameA );
-        $this->trackField( $nameB );
-        $existsA = isset( $this->raw->$nameA );
-        $existsB = isset( $this->raw->$nameB );
-        if ( $existsA && $existsB ) {
-            $status->fatal( 'datamap-error-validate-exclusive-fields', static::$publicName, $nameA, $nameB );
-        } else {
-            return $this->expectField( $status, $existsA ? $nameA : $nameB, $existsA ? $typeIdA : $typeIdB );
-        }
-        return false;
-    }
-
-    protected function allowReplacedField( Status $status, string $nameOld, int $typeId, string $nameNew, string $since,
-        string $until ) {
-        if ( isset( $this->raw->$nameOld ) ) {
-            $status->warning( 'datamap-error-validate-replaced-field', static::$publicName, $nameOld, $nameNew, $since, $until );
-            $this->expectField( $status, $nameOld, $typeId );
-        }
-    }
-
-    protected function permitValues( Status $status, string $name, array $values ): bool {
-        // TODO: safety checks, this will wreck spectacular chaos if field does not exist or did not pass type check
-        $result = true;
-        $toTest = $this->raw->{$name};
-        if ( is_array( $toTest ) ) {
-            foreach ( $toTest as &$value ) {
-                if ( !in_array( $value, $values ) ) {
-                    $status->fatal( 'datamap-error-validate-wrong-field-value', static::$publicName, $name,
-                        wfMessage( 'datamap-error-validate-check-docs' ) );
-                    $result = false;
-                }
-            }
-        } elseif ( is_object( $name ) ) {
-            throw new LogicException( 'Calling permitValues on an object is unsupported' );
-        } else {
-            $result = in_array( $toTest, $values );
-            if ( !$result ) {
-                $status->fatal( 'datamap-error-validate-wrong-field-value', static::$publicName, $name,
-                    wfMessage( 'datamap-error-validate-check-docs' ) );
-            }
-        }
-        return $result;
-    }
-
-    protected function requireFile( Status $status, ?string $name ): bool {
-        if ( $name !== null ) {
-            if ( empty( $name ) ) {
+        if ( $type === self::TYPE_FILE && ( $spec['fileMustExist'] ?? false ) ) {
+            if ( empty( $value ) ) {
                 $status->fatal( 'datamap-error-validate-field-no-value', static::$publicName, $name );
                 return false;
             }
 
-            $file = DataMapFileUtils::getFile( $name );
+            $file = DataMapFileUtils::getFile( $value );
             if ( !$file || !$file->exists() ) {
-                $status->fatal( 'datamap-error-validate-no-file', wfEscapeWikiText( trim( $name ) ) );
+                $status->fatal( 'datamap-error-validate-no-file', wfEscapeWikiText( trim( $value ) ) );
                 return false;
             }
         }
+
+        if ( isset( $spec['check'] ) ) {
+            if ( !$spec['check']( $status, $value ) ) {
+                return false;
+            }
+        }
+
+        if ( $type === self::TYPE_ARRAY ) {
+            if ( isset( $spec['values'] ) ) {
+                foreach ( $value as &$item ) {
+                    if ( !in_array( $item, $spec['values'] ) ) {
+                        // TODO: display message for bad value
+                        return false;
+                    }
+                }
+            }
+
+            if ( isset( $spec['itemType'] ) ) {
+                foreach ( $value as &$item ) {
+                    if ( !$this->verifyType( $item, $spec['itemType'] ) ) {
+                        // TODO: display message for bad item type
+                        return false;
+                    }
+                }
+            }
+
+            if ( isset( $spec['itemCheck'] ) ) {
+                foreach ( $value as &$item ) {
+                    if ( !$spec['itemCheck']( $status, $item ) ) {
+                        return false;
+                    }
+                }
+            }
+        } else {
+            if ( isset( $spec['values'] ) && !in_array( $value, $spec['values'] ) ) {
+                // TODO: display message for bad value
+                return false;
+            }
+        }
+
         return true;
     }
 

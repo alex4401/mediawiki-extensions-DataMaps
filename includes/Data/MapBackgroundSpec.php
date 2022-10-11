@@ -39,19 +39,30 @@ class MapBackgroundSpec extends DataModel {
     }
 
     public function validate( Status $status, bool $isSingle = true ) {
-        if ( $isSingle ) {
-            $this->expectField( $status, 'name', DataModel::TYPE_STRING );
-        } else {
-            $this->requireField( $status, 'name', DataModel::TYPE_STRING );
-        }
-        $this->requireField( $status, 'image', DataModel::TYPE_STRING );
-        $this->expectField( $status, 'at', DataModel::TYPE_BOUNDS );
-        $this->expectField( $status, 'overlays', DataModel::TYPE_ARRAY );
-        $this->expectField( $status, 'associatedLayer', DataModel::TYPE_STRING );
+        $this->checkField( $status, [
+            'name' => 'name',
+            'type' => DataModel::TYPE_STRING,
+            'required' => !$isSingle
+        ] );
+        $this->checkField( $status, [
+            'name' => 'image',
+            'type' => DataModel::TYPE_FILE,
+            'required' => true,
+            'fileMustExist' => true
+        ] );
+        $this->checkField( $status, 'at', DataModel::TYPE_BOUNDS );
+        $this->checkField( $status, [
+            'name' => 'overlays',
+            'type' => DataModel::TYPE_ARRAY,
+            'itemCheck' => function ( Status $status, $item ) {
+                $spec = new MapBackgroundOverlaySpec( $item );
+                if ( !$spec->validate( $status ) ) {
+                    return false;
+                }
+                return true;
+            }
+        ] );
+        $this->checkField( $status, 'associatedLayer', DataModel::TYPE_STRING );
         $this->disallowOtherFields( $status );
-
-        if ( $this->validationAreRequiredFieldsPresent ) {
-            $this->requireFile( $status, $this->getImageName() );
-        }
     }
 }

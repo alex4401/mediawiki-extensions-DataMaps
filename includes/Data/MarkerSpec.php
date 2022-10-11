@@ -84,37 +84,52 @@ class MarkerSpec extends DataModel {
     }
 
     public function validate( Status $status, bool $requireOwnID = false ) {
-        if ( $requireOwnID ) {
-            $this->requireField( $status, 'id', DataModel::TYPE_STRING_OR_NUMBER );
-        } else {
-            $this->expectField( $status, 'id', DataModel::TYPE_STRING_OR_NUMBER );
-        }
-        $this->requireEitherField( $status, 'lat', DataModel::TYPE_NUMBER, 'y', DataModel::TYPE_NUMBER );
-        $this->requireEitherField( $status, 'lon', DataModel::TYPE_NUMBER, 'x', DataModel::TYPE_NUMBER );
-        $this->expectField( $status, 'name', DataModel::TYPE_STRING );
-        $this->expectField( $status, 'description', DataModel::TYPE_ARRAY_OR_STRING );
-        $this->expectField( $status, 'isWikitext', DataModel::TYPE_BOOL );
-        $this->expectField( $status, 'article', DataModel::TYPE_STRING );
-        $this->expectField( $status, 'image', DataModel::TYPE_STRING );
-        $this->expectEitherField( $status, 'searchKeywords', DataModel::TYPE_ARRAY_OR_STRING,
-            'excludeFromSearch', DataModel::TYPE_BOOL );
-        $this->disallowOtherFields( $status );
-
-        if ( isset( $this->raw->searchKeywords ) && is_array( $this->raw->searchKeywords ) ) {
-            foreach ( $this->getSearchKeywords() as &$item ) {
-                $isValidWeighedPair = ( is_array( $item ) && count( $item ) === 2
+        $this->checkField( $status, [
+            'name' => 'id',
+            'type' => [ DataModel::TYPE_STRING, DataModel::TYPE_NUMBER ],
+            'required' => $requireOwnID
+        ] );
+        $this->checkField( $status, [
+            'names' => [ 'lat', 'y' ],
+            'type' => DataModel::TYPE_NUMBER,
+            'required' => true
+        ] );
+        $this->checkField( $status, [
+            'names' => [ 'lon', 'x' ],
+            'type' => DataModel::TYPE_NUMBER,
+            'required' => true
+        ] );
+        $this->checkField( $status, 'name', DataModel::TYPE_STRING );
+        $this->checkField( $status, [
+            'name' => 'description',
+            'type' => [ DataModel::TYPE_ARRAY, DataModel::TYPE_STRING ],
+            'itemType' => DataModel::TYPE_STRING
+        ] );
+        $this->checkField( $status, 'isWikitext', DataModel::TYPE_BOOL );
+        $this->checkField( $status, 'article', DataModel::TYPE_STRING );
+        $this->checkField( $status, [
+            'name' => 'image',
+            'type' => DataModel::TYPE_FILE,
+            'fileMustExist' => true
+        ] );
+        $this->conflict( $status, [ 'searchKeywords', 'canSearchFor' ] );
+        $this->checkField( $status, [
+            'name' => 'searchKeywords',
+            'type' => [ DataModel::TYPE_ARRAY, DataModel::TYPE_STRING ],
+            'itemType' => DataModel::TYPE_ARRAY,
+            'itemCheck' => function ( Status $status, $item ) {
+                $isValidWeighedPair = ( count( $item ) === 2
                     && $this->verifyType( $item[0], DataModel::TYPE_STRING )
                     && $this->verifyType( $item[1], DataModel::TYPE_NUMBER ) );
-                
                 if ( !$isValidWeighedPair && !$this->verifyType( $item, DataModel::TYPE_STRING ) ) {
                     $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, 'searchKeywords',
                         wfMessage( 'datamap-error-validate-check-docs' ) );
+                    return false;
                 }
+                return true;
             }
-        }
-
-        if ( $this->validationAreRequiredFieldsPresent ) {
-            $this->requireFile( $status, $this->getPopupImage() );
-        }
+        ] );
+        $this->checkField( $status, 'canSearchFor', DataModel::TYPE_BOOL );
+        $this->disallowOtherFields( $status );
     }
 }
