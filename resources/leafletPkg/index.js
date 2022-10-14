@@ -4,7 +4,3 @@ module.exports.Ark = {
     IconMarker: require( './iconMarker.js' ),
     Popup: require( './popup.js' )
 };
-
-
-/* DEPRECATED(v0.13.0:v0.14.0): use mw.loader.require( 'ext.ark.datamaps.leaflet' ) */
-window.L = module.exports;

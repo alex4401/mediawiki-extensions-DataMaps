@@ -42,10 +42,7 @@ class DataMapContentHandler extends JsonContentHandler {
 		return parent::canBeUsedOn( $title );
 	}
 
-	public function validateSave(
-		Content $content,
-		ValidationParams $validationParams
-	) {
+	public function validateSave( Content $content, ValidationParams $validationParams ) {
 		'@phan-var DataMapContent $content';
 		return $content->getValidationStatus();
 	}
