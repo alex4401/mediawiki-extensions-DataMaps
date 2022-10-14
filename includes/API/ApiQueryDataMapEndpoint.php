@@ -229,7 +229,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         }
 
         // Truncate markers before the index of continue
-        if ( ExtensionConfig::isBleedingEdge() && isset( $params['continue'] ) ) {
+        if ( isset( $params['continue'] ) ) {
             $toSkip = $params['continue'];
             foreach ( $data['markers'] as $layers => $markers ) {
                 if ( count( $markers ) <= $toSkip ) {
@@ -251,7 +251,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         }
 
         // Truncate markers after the limit
-        if ( ExtensionConfig::isBleedingEdge() && isset( $params['limit'] ) ) {
+        if ( isset( $params['limit'] ) ) {
             $toAllow = $params['limit'];
             foreach ( $data['markers'] as $layers => $markers ) {
                 if ( $toAllow <= 0 ) {
