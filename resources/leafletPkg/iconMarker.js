@@ -16,8 +16,7 @@ module.exports = Leaflet.Marker.extend( {
 
 	update: function () {
 		if ( this._icon && this._map ) {
-			const size = new Leaflet.Point( this.options.icon.options.iconSize )
-				._multiplyBy( this._map.options.markerScaleA );
+			const size = Leaflet.point( this.options.icon.options.iconSize )._multiplyBy( this._map.options.markerScaleA );
 			const anchor = size.divideBy( 2 );
 
 			this._icon.style.marginLeft = (-anchor.x) + 'px';
@@ -25,7 +24,7 @@ module.exports = Leaflet.Marker.extend( {
 			this._icon.style.width  = this.options.icon.options.iconSize[0] * this._map.options.markerScaleA + 'px';
 			this._icon.style.height = this.options.icon.options.iconSize[1] * this._map.options.markerScaleA + 'px';
 		}
-		
+
 		return Leaflet.Marker.prototype.update.call( this );
 	},
 
