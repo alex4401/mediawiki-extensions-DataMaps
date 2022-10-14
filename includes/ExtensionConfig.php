@@ -56,6 +56,14 @@ class ExtensionConfig {
         return $wgDataMapsReportTimingInfo;
     }
 
+    public static function getApiDefaultMarkerLimit(): int {
+        return $GLOBALS['wgDataMapsDefaultApiMarkerBatch'];
+    }
+
+    public static function getApiMaxMarkerLimit(): int {
+        return $GLOBALS['wgDataMapsMaxApiMarkerBatch'];
+    }
+
     public static function shouldCacheWikitextInProcess(): bool {
         global $wgDataMapsUseInProcessParserCache;
         return $wgDataMapsUseInProcessParserCache;

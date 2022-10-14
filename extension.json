@@ -249,6 +249,12 @@
 				"override": 57600
 			}
 		},
+		"DataMapsDefaultApiMarkerBatch": {
+			"value": 2500
+		},
+		"DataMapsMaxApiMarkerBatch": {
+			"value": 5000
+		},
 		"DataMapsMarkerParserExpansionLimit": {
 			"description": "Controls how big the parser output for a marker's description can get.",
 			"value": 800

@@ -54,11 +54,9 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             ],
 			'limit' => [
 				ParamValidator::PARAM_TYPE => 'limit',
-                // TODO: 
-				ParamValidator::PARAM_DEFAULT => 10000,
+				ParamValidator::PARAM_DEFAULT => ExtensionConfig::getApiDefaultMarkerLimit(),
 				IntegerDef::PARAM_MIN => 1,
-				//IntegerDef::PARAM_MAX => ApiBase::LIMIT_BIG1,
-				//IntegerDef::PARAM_MAX2 => ApiBase::LIMIT_BIG2,
+				IntegerDef::PARAM_MAX => ExtensionConfig::getApiMaxMarkerLimit()
 			],
 			'continue' => [
 				ParamValidator::PARAM_TYPE => 'integer',
