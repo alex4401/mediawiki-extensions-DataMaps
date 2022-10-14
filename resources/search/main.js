@@ -116,7 +116,7 @@ class MarkerSearch {
 
 
 mw.dataMaps.subscribeHook( 'afterInitialisation', ( map ) => {
-    if ( map.isFeatureBitSet( map.FF_SEARCH ) ) {
+    if ( map.isFeatureBitSet( mw.dataMaps.Enums.MapFlags.Search ) ) {
         map.search = new MarkerSearch( map );
     }
 } );

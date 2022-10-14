@@ -135,7 +135,7 @@ class CollectibleMarkerEntry {
         }
 
         // Build the label
-        const areCoordsEnabled = this.panel.map.isFeatureBitSet( this.panel.map.FF_SHOW_COORDINATES );
+        const areCoordsEnabled = this.panel.map.isFeatureBitSet( Enums.MapFlags.ShowCoordinates );
         // Coordinates
         if ( areCoordsEnabled ) {
             this.$coordLabel = $( '<b>' ).text( this.panel.map.getCoordLabel( this.apiInstance ) ).appendTo( this.$label );

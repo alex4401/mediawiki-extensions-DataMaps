@@ -1,4 +1,5 @@
-const Util = require( './util.js' );
+const Util = require( './util.js' ),
+    Enums = require( './enums.js' );
 
 
 module.exports = class MarkerPopup {
@@ -68,7 +69,7 @@ module.exports = class MarkerPopup {
         if ( discrims.length > 0 ) {
             coordText += ` (${ discrims.join( ', ' ) })`;
         }
-        if ( this.map.isFeatureBitSet( this.map.FF_SHOW_COORDINATES ) ) {
+        if ( this.map.isFeatureBitSet( Enums.MapFlags.ShowCoordinates ) ) {
             $( '<div class="datamap-popup-coordinates">' ).text( coordText ).appendTo( this.$content );
         }
 
