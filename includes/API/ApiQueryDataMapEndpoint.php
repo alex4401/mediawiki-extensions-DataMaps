@@ -210,9 +210,6 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $processor = new MarkerProcessor( $title, $dataMap, null );
         $response['markers'] = $processor->processAll();
 
-        // Armour any API metadata in $response
-        $response = ApiResult::addMetadataToResultVars( $response, false );
-
         if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
             $response['timing'] = [
                 'processing' => hrtime( true ) - $timeStart,
