@@ -2,12 +2,12 @@ const MapStorage = require( './storage.js' ),
     Enums = require( './enums.js' ),
     MarkerLayerManager = require( './layerManager.js' ),
     MarkerPopup = require( './popup.js' ),
+    MarkerStreamingManager = require( './stream.js' ),
     MapLegend = require( './legend.js' ),
     MarkerLegendPanel = require( './markerLegend.js' ),
     EventEmitter = require( './events.js' ),
     DismissableMarkersLegend = require( './dismissables.js' ),
-    Util = require( './util.js' ),
-    mwApi = new mw.Api();
+    Util = require( './util.js' );
 let Leaflet = null;
 
 
@@ -25,6 +25,8 @@ class DataMap extends EventEmitter {
         this.globalStorage = new MapStorage( this, 'global' );
         // Layering driver
         this.layerManager = new MarkerLayerManager( this );
+        // Marker data streaming controller
+        this.streaming = new MarkerStreamingManager( this );
         // Information of currently set background
         this.background = null;
         this.backgroundIndex = 0;
@@ -371,41 +373,11 @@ class DataMap extends EventEmitter {
     }
 
 
+    // DEPRECATED(v0.13.0:v0.14.0): call methods provided by DataMap.streaming instead for a higher level interface
     streamMarkersIn( pageName, version, filter, successCallback, errorCallback, retryCount ) {
-        const query = {
-            action: 'queryDataMap',
-            title: pageName
-        };
-        if ( version ) {
-            query.revid = version;
-        }
-        if ( filter ) {
-            query.layers = filter.join( '|' );
-        }
-        if ( retryCount == null ) {
-            retryCount = 2;
-        }
-
-        return mwApi.get( query ).then(
-            data => {
-                if ( data.error ) {
-                    errorCallback();
-                } else {
-                    this.waitForLeaflet( () => {
-                        this.instantiateMarkers( data.query.markers );
-                        successCallback();
-                    } );
-                }
-            },
-            () => {
-                if ( retryCount <= 0 ) {
-                    errorCallback();
-                } else {
-                    console.warn( 'Retrying marker chunk loading' );
-                    this.streamMarkersIn( pageName, version, filter, successCallback, errorCallback, retryCount - 1 );
-                }
-            }
-        );
+        this.streaming.loadChunk( pageName, version, filter )
+            .then( successCallback )
+            .catch( errorCallback );
     }
 
 

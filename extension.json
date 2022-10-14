@@ -103,6 +103,7 @@
 				"loader/enums.js",
 				"loader/events.js",
 				"loader/storage.js",
+				"loader/stream.js",
 				"loader/layerManager.js",
 				"loader/map.js",
 				"loader/legend.js",
