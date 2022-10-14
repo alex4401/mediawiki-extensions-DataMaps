@@ -253,10 +253,12 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         // Truncate markers after the limit
         if ( isset( $params['limit'] ) ) {
             $toAllow = $params['limit'];
+            $anyRemoved = false;
             foreach ( $data['markers'] as $layers => $markers ) {
                 if ( $toAllow <= 0 ) {
                     // Drop this set entirely, we've reached the margin already
                     unset( $data['markers'][$layers] );
+                    $anyRemoved = true;
                     continue;
                 } else if ( count( $markers ) <= $toAllow ) {
                     // Don't alter this set, it fits within the margin
@@ -266,11 +268,16 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                     // Set is bigger than number we need, slice it
                     $data['markers'][$layers] = array_slice( $markers, 0, $toAllow );
                     $toAllow = 0;
+                    $anyRemoved = true;
                 }
 
                 if ( $toAllow < 0 ) {
                     throw new LogicException( 'API response limiting resulted in more markers removed than needed' );
                 }
+            }
+
+            if ( $anyRemoved ) {
+                $data['continue'] = ( $params['continue'] ?? 0 ) + $params['limit'];
             }
         }
     }
