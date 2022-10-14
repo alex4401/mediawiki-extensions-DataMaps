@@ -38,7 +38,7 @@ module.exports = class MarkerStreamingManager {
         };
         if ( version ) query.revid = version;
         if ( filter ) query.layers = filter.join( '|' );
-        if ( start ) query.start = start;
+        if ( start !== null ) query.continue = start;
         if ( limit ) query.limit = limit;
         if ( sector ) query.sector = sector;
         return this.callApiReliable( query );
@@ -56,6 +56,14 @@ module.exports = class MarkerStreamingManager {
 
     
     loadSequential( pageName, version, filter, start, sector ) {
-        // TODO: API does not return continuation links yet
+        return this.requestChunk( pageName, version, filter, start || 0, null, sector )
+            .then( data => {
+                this.map.waitForLeaflet( () => {
+                    this.map.instantiateMarkers( data.query.markers );
+                } );
+                if ( data.query.continue ) {
+                    return this.loadSequential( pageName, version, filter, data.query.continue );
+                }
+            } );
     }
 }

@@ -375,7 +375,7 @@ class DataMap extends EventEmitter {
 
     // DEPRECATED(v0.13.0:v0.14.0): call methods provided by DataMap.streaming instead for a higher level interface
     streamMarkersIn( pageName, version, filter, successCallback, errorCallback, retryCount ) {
-        this.streaming.loadChunk( pageName, version, filter )
+        this.streaming.loadSequential( pageName, version, filter )
             .then( successCallback )
             .catch( errorCallback );
     }
