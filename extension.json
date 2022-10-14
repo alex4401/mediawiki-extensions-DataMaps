@@ -188,6 +188,7 @@
 				"oojs-ui-core",
 				"ext.ark.datamaps.core",
 				"ext.ark.datamaps.bootstrap",
+				"ext.ark.datamaps.leaflet",
 				"ext.ark.datamaps.styles.search",
 				"ext.ark.datamaps.fuzzysort"
 			],
