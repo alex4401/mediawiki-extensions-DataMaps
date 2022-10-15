@@ -558,9 +558,11 @@ class DataMap extends EventEmitter {
             // Image overlay:
             // Latitude needs to be flipped as directions differ between Leaflet and ARK
             background.at = background.at || this.config.crs;
-            background.layers.push( new Leaflet.ImageOverlay( background.image, this.translateBox( background.at ), {
-                antiAliasing: 0.5
-            } ) );
+            if ( background.image ) {
+                background.layers.push( new Leaflet.ImageOverlay( background.image, this.translateBox( background.at ), {
+                    antiAliasing: 0.5
+                } ) );
+            }
 
             // Prepare overlay layers
             if ( background.overlays ) {
