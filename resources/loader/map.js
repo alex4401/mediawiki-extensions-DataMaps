@@ -137,8 +137,11 @@ class DataMap extends EventEmitter {
      * Finds ID of the TabberNeue tab this map is in. If not inside tabber, this will be null.
     */
     getParentTabberNeueId() {
-        const $panel = this.$root.closest( 'article.tabber__panel' );
-        return $panel.length > 0 ? ( $panel.attr( 'id' ) || $panel.attr( 'title' ).replace( ' ', '_' ) ) : null;
+        if ( !this._tabberId ) {
+            const $panel = this.$root.closest( 'article.tabber__panel' );
+            this._tabberId = $panel.length > 0 ? ( $panel.attr( 'id' ) || $panel.attr( 'title' ).replace( ' ', '_' ) ) : null;
+        }
+        return this._tabberId;
     }
 
 
