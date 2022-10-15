@@ -2,23 +2,17 @@
 namespace MediaWiki\Extension\Ark\DataMaps\API;
 
 use ApiBase;
-use ApiResult;
 use Title;
 use WikiPage;
+use ObjectCache;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\ParamValidator\TypeDef\IntegerDef;
-use ObjectCache;
 use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
-use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\MarkerProcessor;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
-use ParserOptions;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
     // This value is a part of every cache key produced by this endpoint. It should be raised only on API output changes and

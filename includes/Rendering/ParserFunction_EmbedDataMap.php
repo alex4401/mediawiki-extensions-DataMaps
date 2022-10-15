@@ -2,9 +2,7 @@
 namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
 
 use Parser;
-use PPFrame;
 use Title;
-use WikiPage;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
@@ -41,8 +39,8 @@ final class ParserFunction_EmbedDataMap {
 		return [ $embed->getHtml( $options ), 'noparse' => true, 'isHTML' => true ];
     }
 
-    public static function getRenderOptions( DataMapSpec $data, array $params ): DataMapRenderOptions {
-        $result = new DataMapRenderOptions();
+    public static function getRenderOptions( DataMapSpec $data, array $params ): EmbedRenderOptions {
+        $result = new EmbedRenderOptions();
 
 		foreach ( $params as $param ) {
 			$parts = explode( '=', $param, 2 );

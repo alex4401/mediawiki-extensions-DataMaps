@@ -16,8 +16,8 @@ use stdClass;
 use WikiPage;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapRenderOptions;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\EmbedRenderer;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\EmbedRenderOptions;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataModelMixinTransformer;
@@ -110,8 +110,8 @@ class DataMapContent extends DataMapContentBase {
 		}
 	}
 
-	public function getEmbedRenderer( Title $title, Parser $parser, bool $useInlineData = false ): DataMapEmbedRenderer {
-		return new DataMapEmbedRenderer( $title, $this->asModel(), $parser, $useInlineData );
+	public function getEmbedRenderer( Title $title, Parser $parser, bool $useInlineData = false ): EmbedRenderer {
+		return new EmbedRenderer( $title, $this->asModel(), $parser, $useInlineData );
 	}
 
 	protected function fillParserOutput( Title $title, $revId, ParserOptions $options, $generateHtml, ParserOutput &$output ) {
@@ -136,7 +136,7 @@ class DataMapContent extends DataMapContentBase {
 			$embed->prepareOutput( $output );
 
 			if ( $generateHtml ) {
-				$output->setText( $output->getRawText() . $embed->getHtml( new DataMapRenderOptions() ) );
+				$output->setText( $output->getRawText() . $embed->getHtml( new EmbedRenderOptions() ) );
 			}
 		}
 
