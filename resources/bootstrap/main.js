@@ -59,14 +59,10 @@ function getConfig( id, $root ) {
 
 // Begin initialisation once the document is loaded
 mw.hook( 'wikipage.content' ).add( $content => {
-    if ( mw.config.get( 'dataMaps' ) ) {
-        mw.hook( 'ext.ark.datamaps.broadcastMaps' ).fire( Object.keys( mw.config.get( 'dataMaps' ) ) );
-    }
-    
     // Run initialisation for every map, followed by events for gadgets to listen to
     $content.find( '.datamap-container' ).each( function () {
         const $root = $( this );
-        const id = $root.attr( 'id' ).substr( 'datamap-'.length );
+        const id = $root.data( 'datamap-id' ) || $root.attr( 'id' ).substr( 'datamap-'.length );
         const config = getConfig( id, $root );
         if ( config ) {
             ids.push( id );

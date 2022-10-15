@@ -367,11 +367,15 @@ class DataMapEmbedRenderer {
     public function getHtml( DataMapRenderOptions $options ): string {
         // Primary slots
 		$containerMain = new \OOUI\PanelLayout( [
+            // DEPRECATED(v0.13.0:v0.14.0): replaced with data-datamap-id
             'id' => 'datamap-' . $this->getId(),
             'classes' => [ 'datamap-container' ],
 			'framed' => true,
 			'expanded' => false,
-			'padded' => false
+			'padded' => false,
+            'attributes' => [
+                'data-datamap-id' => $this->getId()
+            ]
 		] );
 		$containerTop = new \OOUI\PanelLayout( [
             'classes' => [ 'datamap-container-top' ],
