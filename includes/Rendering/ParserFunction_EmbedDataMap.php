@@ -27,8 +27,8 @@ final class ParserFunction_EmbedDataMap {
 
         $options = self::getRenderOptions( $content->asModel(), $params );
 
-        $embed = $content->getEmbedRenderer( $title, $parser );
-		$embed->prepareOutput( $parser->getOutput() );
+        $embed = $content->getEmbedRenderer( $title, $parser, $parser->getOutput() );
+		$embed->prepareOutput();
 
         // Add the page to a tracking category
         $parser->addTrackingCategory( 'datamap-category-pages-including-maps' );

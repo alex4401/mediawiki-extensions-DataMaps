@@ -110,8 +110,9 @@ class DataMapContent extends DataMapContentBase {
 		}
 	}
 
-	public function getEmbedRenderer( Title $title, Parser $parser, bool $useInlineData = false ): EmbedRenderer {
-		return new EmbedRenderer( $title, $this->asModel(), $parser, $useInlineData );
+	public function getEmbedRenderer( Title $title, Parser $parser, ParserOutput $parserOutput,
+		bool $useInlineData = false ): EmbedRenderer {
+		return new EmbedRenderer( $title, $this->asModel(), $parser, $parserOutput, $useInlineData );
 	}
 
 	protected function fillParserOutput( Title $title, $revId, ParserOptions $options, $generateHtml, ParserOutput &$output ) {
@@ -132,7 +133,7 @@ class DataMapContent extends DataMapContentBase {
 			}
 
 			$parser = MediaWikiServices::getInstance()->getParser();
-			$embed = $this->getEmbedRenderer( $title, $parser, $options->getIsPreview() );
+			$embed = $this->getEmbedRenderer( $title, $parser, $output, $options->getIsPreview() );
 			$embed->prepareOutput( $output );
 
 			if ( $generateHtml ) {
