@@ -41,7 +41,11 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         return [
             'title' => [
                 ParamValidator::PARAM_TYPE => 'string',
-                ParamValidator::PARAM_REQUIRED => true,
+                ParamValidator::PARAM_DEPRECATED => true
+            ],
+            'pageid' => [
+                ParamValidator::PARAM_TYPE => 'integer',
+                //ParamValidator::PARAM_REQUIRED => true
             ],
             'revid' => [
                 ParamValidator::PARAM_TYPE => 'integer',
@@ -100,12 +104,23 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     private function getTitleFromParams( $params ) {
+		$this->requireOnlyOneParameter( $params, 'title', 'pageid' );
+
         if ( $this->cachedTitle === null ) {
-            $this->cachedTitle = Title::newFromText( $params['title'], ExtensionConfig::getNamespaceId() );
-            if ( !$this->cachedTitle->exists() ) {
-                $this->dieWithError( [ 'apierror-invalidtitle', $params['title'] ] );
+            if ( isset( $params['title'] ) ) {
+                $this->cachedTitle = Title::newFromText( $params['title'], ExtensionConfig::getNamespaceId() );
+            } elseif ( isset( $params['pageid'] ) ) {
+                $this->cachedTitle = Title::newFromID( $params['pageid'] );
+                if ( !$this->cachedTitle ) {
+                    $this->dieWithError( [ 'apierror-nosuchpageid', $params['pageid'] ] );
+                }
             }
         }
+
+        if ( !$this->cachedTitle || !$this->cachedTitle->exists() || $this->cachedTitle->isExternal() ) {
+            $this->dieWithError( [ 'apierror-invalidtitle', wfEscapeWikiText( $params['title'] ) ] );
+        }
+
         return $this->cachedTitle;
     }
 

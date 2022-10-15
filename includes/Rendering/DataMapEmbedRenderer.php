@@ -172,7 +172,6 @@ class DataMapEmbedRenderer {
 
         // Required to query the API for marker clusters
         if ( !$this->useInlineData ) {
-            $out['pageName'] = $this->title->getPrefixedText();
             $out['version'] = $this->title->getLatestRevID();
         }
         // Coordinate transformation

@@ -31,10 +31,10 @@ function initialiseMapWithConfig( id, $root, config ) {
     mw.hook( `ext.ark.datamaps.afterInitialisation.${id}` ).fire( map );
 
     // Request markers from the API
-    if ( map.config.pageName && map.config.version ) {
-        map.streamMarkersIn( map.config.pageName, map.config.version, map.dataSetFilters,
-            () => map.$status.hide(),
-            () => map.$status.show().html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' ) );
+    if ( map.config.version ) {
+        map.streaming.loadSequential( id, map.config.version, map.dataSetFilters )
+            .then( () => map.$status.hide() )
+            .catch( () => map.$status.show().html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' ) );
     } else {
         // No page to request markers from, hide the status message
         map.$status.hide();

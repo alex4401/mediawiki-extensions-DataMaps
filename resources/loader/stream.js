@@ -32,9 +32,9 @@ module.exports = class MarkerStreamingManager {
     }
 
 
-    requestChunk( pageName, version, filter, start, limit, sector ) {
+    requestChunk( pageId, version, filter, start, limit, sector ) {
         const query = {
-            title: pageName
+            pageid: pageId
         };
         if ( version ) query.revid = version;
         if ( filter ) query.layers = filter.join( '|' );
@@ -45,8 +45,8 @@ module.exports = class MarkerStreamingManager {
     }
 
 
-    loadChunk( pageName, version, filter, start, limit, sector ) {
-        return this.requestChunk( pageName, version, filter, start, limit, sector )
+    loadChunk( pageId, version, filter, start, limit, sector ) {
+        return this.requestChunk( pageId, version, filter, start, limit, sector )
             .then( data => {
                 this.map.waitForLeaflet( () => {
                     this.map.instantiateMarkers( data.query.markers );
@@ -55,14 +55,14 @@ module.exports = class MarkerStreamingManager {
     }
 
     
-    loadSequential( pageName, version, filter, start, sector ) {
-        return this.requestChunk( pageName, version, filter, start || 0, null, sector )
+    loadSequential( pageId, version, filter, start, sector ) {
+        return this.requestChunk( pageId, version, filter, start || 0, null, sector )
             .then( data => {
                 this.map.waitForLeaflet( () => {
                     this.map.instantiateMarkers( data.query.markers );
                 } );
                 if ( data.query.continue ) {
-                    return this.loadSequential( pageName, version, filter, data.query.continue );
+                    return this.loadSequential( pageId, version, filter, data.query.continue );
                 }
             } );
     }
