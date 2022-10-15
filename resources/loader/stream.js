@@ -33,6 +33,10 @@ module.exports = class MarkerStreamingManager {
 
 
     requestChunk( pageId, version, filter, start, limit, sector ) {
+        pageId = pageId || this.map.id;
+        version = version || this.map.config.version;
+        filter = filter || this.map.dataSetFilters;
+
         const query = {
             pageid: pageId
         };

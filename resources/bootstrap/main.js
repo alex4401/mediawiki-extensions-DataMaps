@@ -32,7 +32,7 @@ function initialiseMapWithConfig( id, $root, config ) {
 
     // Request markers from the API
     if ( map.config.version ) {
-        map.streaming.loadSequential( id, map.config.version, map.dataSetFilters )
+        map.streaming.loadSequential()
             .then( () => map.$status.hide() )
             .catch( () => map.$status.show().html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' ) );
     } else {
