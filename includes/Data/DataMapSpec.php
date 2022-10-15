@@ -226,7 +226,8 @@ class DataMapSpec extends DataModel {
                     'type' => DataModel::TYPE_ARRAY,
                     'check' => function ( $status, $backgrounds ) {
                         $multipleBgs = count( $backgrounds ) > 1;
-                        foreach ( $backgrounds as &$spec ) {
+                        foreach ( $backgrounds as &$raw ) {
+                            $spec = new MapBackgroundSpec( $raw );
                             if ( !$spec->validate( $status, !$multipleBgs ) ) {
                                 return false;
                             }
