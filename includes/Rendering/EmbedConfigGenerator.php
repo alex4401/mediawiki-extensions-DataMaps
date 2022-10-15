@@ -17,6 +17,7 @@ use MediaWiki\Extension\Ark\DataMaps\Data\MarkerLayerSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundOverlaySpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundTileSpec;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 
@@ -65,28 +66,8 @@ class EmbedConfigGenerator {
             $out['flags'] = $bitmask;
         }
         // Backgrounds
-        $out['backgrounds'] = array_map( function ( MapBackgroundSpec $background ) {
-            $image = DataMapFileUtils::getRequiredFile( $background->getImageName() );
-
-            $out = [];
-            $out['image'] = $image->getURL();
-            if ( $background->getName() != null ) {
-                $out['name'] = $background->getName();
-            }
-            if ( $background->getPlacementLocation() != null ) {
-                $out['at'] = $background->getPlacementLocation();
-            }
-            if ( $background->getBackgroundLayerName() !== null ) {
-                $out['layer'] = $background->getBackgroundLayerName();
-            }
-            if ( $background->hasOverlays() ) {
-                $out['overlays'] = [];
-                $background->iterateOverlays( function ( MapBackgroundOverlaySpec $overlay ) use ( &$out ) {
-                    $out['overlays'][] = $this->convertBackgroundOverlay( $overlay );
-                } );
-            }
-
-            return $out;
+        $out['backgrounds'] = array_map( function ( MapBackgroundSpec $spec ) {
+            return $this->getBackgroundConfig( $spec );
         }, $this->data->getBackgrounds() );
         // Marker groups
         $out['groups'] = [];
@@ -121,6 +102,36 @@ class EmbedConfigGenerator {
         return $out;
     }
 
+    private function getBackgroundConfig( MapBackgroundSpec $spec ): array {
+        $out = [];
+        $out['image'] = DataMapFileUtils::getRequiredFile( $spec->getImageName() )->getURL();
+        if ( $spec->getName() != null ) {
+            $out['name'] = $spec->getName();
+        }
+        if ( $spec->getPlacementLocation() != null ) {
+            $out['at'] = $spec->getPlacementLocation();
+        }
+        if ( $spec->getBackgroundLayerName() !== null ) {
+            $out['layer'] = $spec->getBackgroundLayerName();
+        }
+        if ( $spec->hasOverlays() || $spec->hasTiles() ) {
+            $out['overlays'] = [];
+        }
+        if ( $spec->hasTiles() ) {
+            $tileSize = $spec->getTileSize();
+            $spec->iterateTiles( function ( MapBackgroundTileSpec $tile ) use ( &$out, $tileSize ) {
+                $out['overlays'][] = $this->convertBackgroundTile( $tile, $tileSize );
+            } );
+        }
+        if ( $spec->hasOverlays() ) {
+            $spec->iterateOverlays( function ( MapBackgroundOverlaySpec $overlay ) use ( &$out ) {
+                $out['overlays'][] = $this->convertBackgroundOverlay( $overlay );
+            } );
+        }
+
+        return $out;
+    }
+
     private function convertBackgroundOverlay( MapBackgroundOverlaySpec $spec ) {
         $result = [];
         if ( $spec->getName() != null ) {
@@ -148,6 +159,20 @@ class EmbedConfigGenerator {
             }
         }
 
+        return $result;
+    }
+
+    private function convertBackgroundTile( MapBackgroundTileSpec $spec, array $tileSize ) {
+        $result = [];
+
+        $at = $spec->getPlacementLocation();
+        $at = [
+            [ $at[0] * $tileSize[0] - 0.5, $at[1] * $tileSize[1] - 0.5 ],
+            [ ( $at[0] + 1 ) * $tileSize[0] + 0.5, ( $at[1] + 1 ) * $tileSize[1] + 0.5 ]
+        ];
+
+        $result['image'] = DataMapFileUtils::getRequiredFile( $spec->getImageName() )->getURL();
+        $result['at'] = $at;
         return $result;
     }
 

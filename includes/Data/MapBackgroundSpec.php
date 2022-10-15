@@ -28,6 +28,20 @@ class MapBackgroundSpec extends DataModel {
         return isset( $this->raw->associatedLayer ) ? $this->raw->associatedLayer : null;
     }
 
+    public function hasTiles(): bool {
+        return isset( $this->raw->tiles );
+    }
+
+    public function getTileSize(): array {
+        return $this->raw->tileSize;
+    }
+
+    public function iterateTiles( callable $callback ) {
+        foreach ( $this->raw->tiles as &$raw ) {
+            $callback( new MapBackgroundTileSpec( $raw ) );
+        }
+    }
+
     public function hasOverlays(): bool {
         return isset( $this->raw->overlays );
     }
@@ -44,16 +58,43 @@ class MapBackgroundSpec extends DataModel {
             'type' => DataModel::TYPE_STRING,
             'required' => !$isSingle
         ] );
-        $this->checkField( $status, [
-            'name' => 'image',
-            'type' => DataModel::TYPE_FILE,
-            'required' => true,
-            'fileMustExist' => true
-        ] );
-        $this->checkField( $status, 'at', DataModel::TYPE_BOUNDS );
+
+        if ( !$this->conflict( $status, [ 'image', 'tiles' ] ) ) {
+            if ( isset( $this->raw->image ) ) {
+                $this->checkField( $status, [
+                    'name' => 'image',
+                    'type' => DataModel::TYPE_FILE,
+                    'fileMustExist' => true
+                ] );
+                $this->checkField( $status, 'at', DataModel::TYPE_BOUNDS );
+            } else if ( isset( $this->raw->tiles ) ) {
+                $this->checkField( $status, [
+                    'name' => 'tileSize',
+                    'type' => DataModel::TYPE_DIMENSIONS,
+                    'required' => true
+                ] );
+                $this->checkField( $status, [
+                    'name' => 'tiles',
+                    'type' => DataModel::TYPE_ARRAY,
+                    'itemType' => DataModel::TYPE_OBJECT,
+                    'itemCheck' => function ( $status, $item ) {
+                        $spec = new MapBackgroundTileSpec( $item );
+                        if ( !$spec->validate( $status ) ) {
+                            return false;
+                        }
+                        return true;
+                    }
+                ] );
+            } else {
+                $status->fatal( 'datamap-error-validate-field-required-either', self::$publicName, 'image', 'tiles' );
+                $this->validationAreRequiredFieldsPresent = false;
+            }
+        }
+
         $this->checkField( $status, [
             'name' => 'overlays',
             'type' => DataModel::TYPE_ARRAY,
+            'itemType' => DataModel::TYPE_OBJECT,
             'itemCheck' => function ( Status $status, $item ) {
                 $spec = new MapBackgroundOverlaySpec( $item );
                 if ( !$spec->validate( $status ) ) {
