@@ -118,6 +118,7 @@ class EmbedConfigGenerator {
             $out['overlays'] = [];
         }
         if ( $spec->hasTiles() ) {
+            $out['aa'] = 0.5;
             $tileSize = $spec->getTileSize();
             $spec->iterateTiles( function ( MapBackgroundTileSpec $tile ) use ( &$out, $tileSize ) {
                 $out['overlays'][] = $this->convertBackgroundTile( $tile, $tileSize );
@@ -167,8 +168,8 @@ class EmbedConfigGenerator {
 
         $at = $spec->getPlacementLocation();
         $at = [
-            [ $at[0] * $tileSize[0] - 0.5, $at[1] * $tileSize[1] - 0.5 ],
-            [ ( $at[0] + 1 ) * $tileSize[0] + 0.5, ( $at[1] + 1 ) * $tileSize[1] + 0.5 ]
+            [ $at[0] * $tileSize[0], $at[1] * $tileSize[1] ],
+            [ ( $at[0] + 1 ) * $tileSize[0], ( $at[1] + 1 ) * $tileSize[1] ]
         ];
 
         $result['image'] = DataMapFileUtils::getRequiredFile( $spec->getImageName() )->getURL();

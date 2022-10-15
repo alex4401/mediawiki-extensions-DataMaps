@@ -69,6 +69,9 @@ class MapBackgroundOverlaySpec extends DataModel {
             'type' => DataModel::TYPE_FILE,
             'fileMustExist' => true
         ] );
+        //if ( isset( $this->raw->image ) ) {
+        //    $this->checkField( $status, 'renderLikeTiles', DataModel::TYPE_BOOL );
+        //}
         $hasPath = $this->checkField( $status, [
             'name' => 'path',
             'type' => DataModel::TYPE_ARRAY,

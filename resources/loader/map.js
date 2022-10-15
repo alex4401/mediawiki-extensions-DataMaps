@@ -450,7 +450,9 @@ class DataMap extends EventEmitter {
         // Construct a layer
         if ( overlay.image ) {
             // Construct an image
-            result = new Leaflet.ImageOverlay( overlay.image, this.translateBox( overlay.at ) );
+            result = new Leaflet.ImageOverlay( overlay.image, this.translateBox( overlay.at ), {
+                antiAliasing: 0.5
+            } );
         } else if ( overlay.path ) {
             // Construct a polyline
             result = new Leaflet.Polyline( overlay.path.map( p => this.translatePoint( p ) ), {
@@ -556,7 +558,9 @@ class DataMap extends EventEmitter {
             // Image overlay:
             // Latitude needs to be flipped as directions differ between Leaflet and ARK
             background.at = background.at || this.config.crs;
-            background.layers.push( new Leaflet.ImageOverlay( background.image, this.translateBox( background.at ) ) );
+            background.layers.push( new Leaflet.ImageOverlay( background.image, this.translateBox( background.at ), {
+                antiAliasing: 0.5
+            } ) );
 
             // Prepare overlay layers
             if ( background.overlays ) {
