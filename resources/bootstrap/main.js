@@ -1,8 +1,10 @@
 const initialisedMaps = [],
-    ids = [];
+    ids = [],
+    toNotify = [];
 
 
 function initialiseMapWithConfig( id, $root, config ) {
+    /* DEPRECATED(v0.13.0:v0.14.0): use registerMapAddedHandler */
     // Broadcast `beforeInitialisation` hook that gadgets can register to
     mw.hook( `ext.ark.datamaps.beforeInitialisation.${id}` ).fire( config );
 
@@ -12,6 +14,7 @@ function initialiseMapWithConfig( id, $root, config ) {
     // Push onto internal tracking list
     initialisedMaps.push( map );
 
+    /* DEPRECATED(v0.13.0:v0.14.0): use registerMapAddedHandler */
     // Broadcast `afterLegendInitialisation` hook that gadgets can register to
     map.on( 'legendLoaded', () => {
         mw.hook( `ext.ark.datamaps.afterLegendInitialisation.${id}` ).fire( map );
@@ -27,8 +30,14 @@ function initialiseMapWithConfig( id, $root, config ) {
         }
     } );
 
+    /* DEPRECATED(v0.13.0:v0.14.0): use registerMapAddedHandler */
     // Broadcast `afterInitialisation` hook that gadgets can register to
     mw.hook( `ext.ark.datamaps.afterInitialisation.${id}` ).fire( map );
+
+    // Notify external scripts waiting on maps
+    for ( const handler of toNotify ) {
+        mw.dataMaps.EventEmitter.prototype._invokeEventHandler( handler, [ map ] );
+    }
 
     // Request markers from the API
     if ( map.config.version ) {
@@ -72,7 +81,22 @@ mw.hook( 'wikipage.content' ).add( $content => {
 } );
 
 
+mw.dataMaps.registerMapAddedHandler = function ( callback, context ) {
+    const handler = {
+        method: callback,
+        context: context
+    };
+    toNotify.push( handler );
+
+    for ( const map of initialisedMaps ) {
+        mw.dataMaps.EventEmitter.prototype._invokeEventHandler( handler, [ map ] );
+    }
+};
+
+
+/* DEPRECATED(v0.13.0:v0.14.0): use registerMapAddedHandler */
 mw.dataMaps.subscribeHook = function ( hookName, callback ) {
-    const ids = Object.keys( mw.config.get( 'dataMaps' ) );
-    ids.forEach( id => mw.hook( 'ext.ark.datamaps.' + hookName + '.' + id ).add( callback ) );
+    mw.dataMaps.registerMapAddedHandler( map => {
+        mw.hook( 'ext.ark.datamaps.' + hookName + '.' + map.id ).add( callback );
+    } );
 };

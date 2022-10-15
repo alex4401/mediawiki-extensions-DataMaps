@@ -32,6 +32,18 @@ module.exports = class EventEmitter {
     }
 
 
+    _invokeEventHandler( handler, args ) {
+        try {
+            handler.method.apply( handler.context, args );
+        } catch ( error ) {
+            // If a listener throws an exception, do not disrupt the emitter's routine, and rethrow the exception later
+            setTimeout( ( function ( error ) {
+                throw error;
+            } ).bind( null, error ) );
+        }
+    }
+
+
     fire( event ) {
         if ( !this._handlers[event] ) {
             return;
@@ -39,14 +51,7 @@ module.exports = class EventEmitter {
 
         const args = Object.values( arguments ).slice( 1 );
         for ( const handler of this._handlers[event] ) {
-            try {
-                handler.method.apply( handler.context, args );
-            } catch ( error ) {
-                // If a listener throws an exception, do not disrupt the emitter's routine, and rethrow the exception later
-                setTimeout( ( function ( error ) {
-                    throw error;
-                } ).bind( null, error ) );
-            }
+            this._invokeEventHandler( handler, args );
         }
     }
 }
