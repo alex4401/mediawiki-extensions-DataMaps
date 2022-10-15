@@ -37,9 +37,9 @@ module.exports = class EventEmitter {
             handler.method.apply( handler.context, args );
         } catch ( error ) {
             // If a listener throws an exception, do not disrupt the emitter's routine, and rethrow the exception later
-            setTimeout( ( function ( error ) {
+            setTimeout( () => {
                 throw error;
-            } ).bind( null, error ) );
+            } );
         }
     }
 
