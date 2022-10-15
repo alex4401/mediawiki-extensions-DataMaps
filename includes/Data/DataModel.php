@@ -169,8 +169,7 @@ class DataModel {
                 $info[1] );
         } else if ( isset( $spec['@pendingRemoval'] ) ) {
             $info = $spec['@replaced'];
-            $status->warning( 'datamap-error-validate-deprecated-field', static::$publicName, $name, $info[0],
-                $info[1] );
+            $status->warning( 'datamap-error-validate-deprecated-field', static::$publicName, $name, $info[0], $info[1] );
         }
 
         $this->trackField( $name );
@@ -214,18 +213,22 @@ class DataModel {
             if ( isset( $spec['values'] ) ) {
                 foreach ( $value as &$item ) {
                     if ( !in_array( $item, $spec['values'] ) ) {
-                        // TODO: display message for bad value
+                        $status->fatal( 'datamap-error-validate-disallowed-value', static::$publicName, $name,
+                            wfMessage( 'datamap-error-validate-check-docs' ) );
                         return false;
                     }
                 }
             }
 
             if ( isset( $spec['itemType'] ) ) {
+                $index = 0;
                 foreach ( $value as &$item ) {
                     if ( !$this->verifyType( $item, $spec['itemType'] ) ) {
-                        // TODO: display message for bad item type
+                        $status->fatal( 'datamap-error-validate-wrong-item-type', static::$publicName, $name, $index,
+                            wfMessage( 'datamap-error-validate-check-docs' ) );
                         return false;
                     }
+                    $index++;
                 }
             }
 
@@ -238,7 +241,8 @@ class DataModel {
             }
         } else {
             if ( isset( $spec['values'] ) && !in_array( $value, $spec['values'] ) ) {
-                // TODO: display message for bad value
+                $status->fatal( 'datamap-error-validate-disallowed-value', static::$publicName, $name,
+                    wfMessage( 'datamap-error-validate-check-docs' ) );
                 return false;
             }
         }
