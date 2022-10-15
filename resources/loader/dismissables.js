@@ -239,7 +239,7 @@ class CollectiblesLegend {
             group.sort();
         }
 
-        if ( this.map.isFeatureBitSet( this.map.FF_SORT_CHECKLISTS_BY_AMOUNT ) ) {
+        if ( this.map.isFeatureBitSet( Enums.MapFlags.SortChecklistsByAmount ) ) {
             const groups = Object.values( this.groups ).sort( ( a, b ) => a.markers.length > b.markers.length );
             for ( const group of groups ) {
                 group.$element.appendTo( this.$root );

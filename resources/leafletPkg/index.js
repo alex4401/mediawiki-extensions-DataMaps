@@ -6,5 +6,5 @@ module.exports.Ark = {
 };
 
 
-/* DEPRECATED(v0.13.0:v0.14.0): use mw.loader.require( '' ) */
+/* DEPRECATED(v0.13.0:v0.14.0): use mw.loader.require( 'ext.ark.datamaps.leaflet' ) */
 window.L = module.exports;
