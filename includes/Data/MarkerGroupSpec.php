@@ -142,26 +142,11 @@ class MarkerGroupSpec extends DataModel {
 
         switch ( $this->getDisplayMode() ) {
             case self::DM_CIRCLE:
-                $this->checkField( $status, [
-                    'name' => 'fillColor',
-                    'type' => DataModel::TYPE_COLOUR3
-                ] );
-                $this->checkField( $status, [
-                    'name' => 'borderColor',
-                    'type' => DataModel::TYPE_COLOUR3
-                ] );
-                $this->checkField( $status, [
-                    'name' => 'borderWidth',
-                    'type' => DataModel::TYPE_NUMBER
-                ] );
-                $this->checkField( $status, [
-                    'name' => 'size',
-                    'type' => DataModel::TYPE_NUMBER
-                ] );
-                $this->checkField( $status, [
-                    'name' => 'extraMinZoomSize',
-                    'type' => DataModel::TYPE_NUMBER
-                ] );
+                $this->checkField( $status, 'fillColor', DataModel::TYPE_COLOUR3 );
+                $this->checkField( $status, 'borderColor', DataModel::TYPE_COLOUR3 );
+                $this->checkField( $status, 'borderWidth', DataModel::TYPE_NUMBER );
+                $this->checkField( $status, 'size', DataModel::TYPE_NUMBER );
+                $this->checkField( $status, 'extraMinZoomSize', DataModel::TYPE_NUMBER );
                 $this->checkField( $status, [
                     'name' => 'icon',
                     'type' => DataModel::TYPE_FILE,
@@ -175,10 +160,7 @@ class MarkerGroupSpec extends DataModel {
                     'fileMustExist' => true,
                     'required' => true
                 ] );
-                $this->checkField( $status, [
-                    'name' => 'size',
-                    'type' => DataModel::TYPE_DIMENSIONS
-                ] );
+                $this->checkField( $status, 'size', DataModel::TYPE_DIMENSIONS );
                 break;
             case self::DM_UNKNOWN:
                 $status->fatal( 'datamap-error-validatespec-group-no-display', wfEscapeWikiText( $this->id ) );
@@ -186,27 +168,15 @@ class MarkerGroupSpec extends DataModel {
         }
 
 
-        $this->checkField( $status, [
-            'name' => 'article',
-            'type' => DataModel::TYPE_STRING
-        ] );
-        $this->checkField( $status, [
-            'name' => 'isDefault',
-            'type' => DataModel::TYPE_BOOL
-        ] );
+        $this->checkField( $status, 'article', DataModel::TYPE_STRING );
+        $this->checkField( $status, 'isDefault', DataModel::TYPE_BOOL );
         $this->checkField( $status, [
             'name' => 'isCollectible',
             'type' => [ DataModel::TYPE_BOOL, DataModel::TYPE_STRING ],
             'values' => [ true, 'individual', 'group', 'globalGroup' ]
         ] );
-        $this->checkField( $status, [
-            'name' => 'autoNumberInChecklist',
-            'type' => DataModel::TYPE_BOOL
-        ] );
-        $this->checkField( $status, [
-            'name' => 'canSearchFor',
-            'type' => DataModel::TYPE_BOOL
-        ] );
+        $this->checkField( $status, 'autoNumberInChecklist', DataModel::TYPE_BOOL );
+        $this->checkField( $status, 'canSearchFor', DataModel::TYPE_BOOL );
 
         $this->disallowOtherFields( $status );
     }
