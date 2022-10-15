@@ -15,6 +15,10 @@ class DataMapSpec extends DataModel {
     private ?array $cachedMarkerLayers = null;
     private ?array $cachedBackgrounds = null;
 
+    const SM_NONE = 0;
+    const SM_SELF = 1;
+    const SM_TABBER = 2;
+
     public static function staticIsMixin( \stdclass $raw ): bool {
         return isset( $raw->{'$mixin'} ) ? $raw->{'$mixin'} : false;
     }
@@ -65,9 +69,15 @@ class DataMapSpec extends DataModel {
             : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_REQUIRE_CUSTOM_MARKER_IDS );
     }
 
-    public function wantsSearch(): bool {
-        return isset( $this->raw->enableSearch ) ? $this->raw->enableSearch
+    public function wantsSearch(): int {
+        $value = isset( $this->raw->enableSearch ) ? $this->raw->enableSearch
             : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_SEARCH );
+        if ( $value === true ) {
+            return self::SM_SELF;
+        } else if ( $value === 'tabberWide' ) {
+            return self::SM_TABBER;
+        }
+        return self::SM_NONE;
     }
 
     public function wantsChecklistSortedByAmount(): bool {
@@ -236,7 +246,11 @@ class DataMapSpec extends DataModel {
         $this->checkField( $status, 'disableZoom', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'sortChecklistsByAmount', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'requireCustomMarkerIDs', DataModel::TYPE_BOOL );
-        $this->checkField( $status, 'enableSearch', DataModel::TYPE_BOOL );
+        $this->checkField( $status, [
+            'name' => 'enableSearch',
+            'type' => [ DataModel::TYPE_BOOL, DataModel::TYPE_STRING ],
+            'values' => [ true, false, 'tabberWide' ]
+        ] );
         $this->checkField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
         $this->checkField( $status, [
             'name' => 'groups',

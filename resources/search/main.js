@@ -1,18 +1,22 @@
-const Util = require( './util.js' ),
-    MenuWidget = require( './menu.js' ),
-    Leaflet = require( 'ext.ark.datamaps.leaflet' );
+const MarkerSearchIndex = require( './indexing.js' ),
+    MenuWidget = require( './menu.js' );
 
 
 class MarkerSearch {
-    constructor( map ) {
+    constructor( map, index, isLinked ) {
         this.map = map;
+        this.index = index;
+        this.isLinked = isLinked;
 
         this.map.waitForLegend( () => {
             this.map.waitForLeaflet( () => {
                 this._initialiseUI();
+
+                this.index.on( 'commit', this.onIndexCommitted, this );
                 this.importExisting();
 
                 this.map.on( 'markerReady', this.addMarker, this );
+                this.map.on( 'streamingDone', this.onChunkStreamed, this );
             } );
         } );
     }
@@ -70,53 +74,64 @@ class MarkerSearch {
     onMenuItemChosen( item ) {
         this.close();
         this.inputBox.setValue( '', true );
-        setTimeout( () => item.data.openPopup() );
+        setTimeout( () => {
+            item.data.openPopup();
+            if ( item.$tab ) {
+                item.$tab.get( 0 ).click();
+            }
+        } );
     }
 
 
     importExisting() {
-        for ( const marker of this.map.layerManager.markers ) {
-            this.addMarker( marker );
+        this.onIndexCommitted( this.index.items );
+
+        for ( const leafletMarker of this.map.layerManager.markers ) {
+            this.index.add( this.map, leafletMarker );
         }
+        this.index.commit();
     }
 
 
     addMarker( leafletMarker ) {
-        const state = leafletMarker.apiInstance[2];
-        const group = this.map.config.groups[leafletMarker.attachedLayers[0]];
-        const label = state.label || group.name;
+        this.index.add( this.map, leafletMarker );
+    }
 
-        if ( state.search == 0 || mw.dataMaps.Util.isBitSet( group.flags, mw.dataMaps.Enums.MarkerGroupFlags.CannotBeSearched ) ) {
-            return;
+    onIndexCommitted( items ) {
+        for ( const item of items ) {
+            this.menu.addItem( {
+                icon: item.icon,
+                data: item.marker,
+                keywords: item.keywords,
+                label: new OO.ui.HtmlSnippet( item.label ),
+                $tab: this.isLinked && item.map !== this.map ? item.map.getParentTabberNeue().find( '#' + item.map.getParentTabberNeuePanel()
+                    .attr( 'aria-labelledby' ) ) : null,
+                badge: this.isLinked ? item.map.getParentTabberNeuePanel().attr( 'title' ) : null,
+                badgeCurrent: item.map === this.map
+            } );
         }
+    }
 
-        // If no keywords were provided by the API, generate them from label and description
-        if ( !state.search ) {
-            state.search = [ [ Util.decodePartial( Util.extractText( label ) ), 1.5 ] ];
-            if ( state.desc ) {
-                state.search.push( [ state.desc, 0.75 ] );
-            }
-        }
-        // If string was provided by the API, turn into a pair
-        if ( typeof( state.search ) === 'string' ) {
-            state.search = [ [ state.search, 1 ] ];
-        }
-        // Ensure search keywords are always an array of (text, weight) pairs
-        state.search = state.search.map( x => ( typeof( x ) === 'string' ) ? [ x, 1 ] : x );
-
-        this.menu.addItem( {
-            icon: leafletMarker instanceof Leaflet.Ark.IconMarker
-                ? this.map.getIconFromLayers( leafletMarker.attachedLayers ) : null,
-            data: leafletMarker,
-            keywords: state.search,
-            label: new OO.ui.HtmlSnippet( label )
-        } );
+    onChunkStreamed() {
+        this.index.commit();
     }
 }
 
 
+const linkedIndexMap = {};
 mw.dataMaps.subscribeHook( 'afterInitialisation', ( map ) => {
     if ( map.isFeatureBitSet( mw.dataMaps.Enums.MapFlags.Search ) ) {
-        map.search = new MarkerSearch( map );
+        const isLinked = map.isFeatureBitSet( mw.dataMaps.Enums.MapFlags.LinkedSearch ),
+            $tabber = map.getParentTabberNeue();
+        let index;
+
+        if ( isLinked && $tabber ) {
+            index = linkedIndexMap[$tabber] || new MarkerSearchIndex();
+            linkedIndexMap[$tabber] = index;
+        } else {
+            index = new MarkerSearchIndex();
+        }
+
+        map.search = new MarkerSearch( map, index, isLinked && $tabber );
     }
 } );

@@ -9,7 +9,8 @@ module.exports = {
         HideLegend: 1<<1,
         DisableZoom: 1<<2,
         Search: 1<<3,
-        SortChecklistsByAmount: 1<<4
+        SortChecklistsByAmount: 1<<4,
+        LinkedSearch: 1<<5
     },
 
     CollectibleType: {
