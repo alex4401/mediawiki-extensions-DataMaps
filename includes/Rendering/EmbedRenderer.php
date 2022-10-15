@@ -20,6 +20,7 @@ use MediaWiki\Extension\Ark\DataMaps\Data\MarkerLayerSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundOverlaySpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundTileSpec;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 
@@ -115,7 +116,15 @@ class EmbedRenderer {
         // Backgrounds
         foreach ( $this->data->getBackgrounds() as &$background ) {
             // Main image
-            DataMapFileUtils::registerImageDependency( $this->parserOutput, $background->getImageName() );
+            if ( !$background->hasTiles() ) {
+                DataMapFileUtils::registerImageDependency( $this->parserOutput, $background->getImageName() );
+            }
+            // Tiles
+            if ( $background->hasTiles() ) {
+                $background->iterateTiles( function ( MapBackgroundTileSpec $spec ) {
+                    DataMapFileUtils::registerImageDependency( $this->parserOutput, $spec->getImageName() );
+                } );
+            }
             // Image overlays
             if ( $background->hasOverlays() ) {
                 $background->iterateOverlays( function ( MapBackgroundOverlaySpec $spec ) {
