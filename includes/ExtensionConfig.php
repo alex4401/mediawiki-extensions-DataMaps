@@ -78,6 +78,10 @@ class ExtensionConfig {
         return self::getDefaultFeatureStates()[$feature];
     }
 
+    public static function isVisualEditorEnabled(): bool {
+        return $GLOBALS['wgDataMapsEnableVisualEditor'];
+    }
+
     public static function isBleedingEdge(): bool {
         global $wgDataMapsAllowExperimentalFeatures;
         return $wgDataMapsAllowExperimentalFeatures;

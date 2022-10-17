@@ -143,8 +143,9 @@ Box is a array of two locations, where first describes the start point of the bo
 * * `$wgDataMapsDefaultFeatures['Search']`: whether marker search will be enabled by default. Defaults to `false`.
 * * `$wgDataMapsDefaultFeatures['SortChecklistsByAmount']`: whether collectible checklists will be sorted by number of markers inside. Defaults to `false`.
 * `$wgDataMapsReportTimingInfo`: if set to `true`, marker processing time will be reported in API responses. Defaults to `false`.
+* `$wgDataMapsEnableVisualEditor`: 
 * `$wgDataMapsAllowExperimentalFeatures`: if set to `true`, enables features listed below - all of which are in development and not ready for production. Defaults to `false`.
-* * None at the time
+* * Visual editor
 
 ## Gadgets
 External scripts can hook into Data Maps to provide additional functionality without modifying core code.

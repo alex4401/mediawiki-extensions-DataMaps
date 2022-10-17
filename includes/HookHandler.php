@@ -1,13 +1,15 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps;
 
+use MediaWiki\MediaWikiServices;
 use Title;
 use Linker;
 
 class HookHandler implements
 	\MediaWiki\Hook\ParserFirstCallInitHook,
 	\MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook,
-	\MediaWiki\Hook\CanonicalNamespacesHook
+	\MediaWiki\Hook\CanonicalNamespacesHook,
+	\MediaWiki\Hook\BeforePageDisplayHook
 {
     public static function onRegistration(): bool {
         define( 'ARK_CONTENT_MODEL_DATAMAP', 'datamap' );
@@ -48,5 +50,19 @@ class HookHandler implements
 			$languageCode = 'json';
 		}
 		return true;
+	}
+
+	public function onBeforePageDisplay( $outputPage, $skin ): void {
+		$title = $skin->getRelevantTitle();
+
+		if ( $title->getNamespace() === ExtensionConfig::getNamespaceId()
+			&& $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
+			$user = $skin->getAuthority()->getUser();
+			if ( MediaWikiServices::getInstance()->getPermissionManager()->quickUserCan( 'edit', $user, $title ) ) {
+				$outputPage->addModules( [
+					'ext.datamaps.vebootstrap'
+				] );
+			}
+		}
 	}
 }

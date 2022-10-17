@@ -203,6 +203,31 @@
 				"datamap-control-search"
 			],
 			"targets": [ "desktop", "mobile" ]
+		},
+
+		"ext.datamaps.ve": {
+			"es6": true,
+			"dependencies": [
+				"ext.ark.datamaps.core",
+				"ext.ark.datamaps.leaflet",
+				"oojs-ui-toolbars"
+			],
+			"packageFiles": [
+				"ve/index.js"
+			],
+			"targets": [ "desktop" ]
+		},
+
+		"ext.datamaps.vebootstrap": {
+			"es6": true,
+			"dependencies": [
+				"mediawiki.util",
+				"ext.ark.datamaps.bootstrap"
+			],
+			"packageFiles": [
+				"vebootstrap/main.js"
+			],
+			"targets": [ "desktop" ]
 		}
 	},
 
@@ -222,6 +247,7 @@
 		"ParserFirstCallInit": "MainHandler",
 		"ContentHandlerDefaultModelFor": "MainHandler",
 		"CanonicalNamespaces": "MainHandler",
+		"BeforePageDisplay": "MainHandler",
 		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
 	},
     "HookHandlers": {
@@ -276,6 +302,9 @@
 				"Search": false,
 				"SortChecklistsByAmount": false
 			}
+		},
+		"DataMapsEnableVisualEditor": {
+			"value": true
 		},
 		"DataMapsAllowExperimentalFeatures": {
 			"description": "Whether to enable experimental features.",
