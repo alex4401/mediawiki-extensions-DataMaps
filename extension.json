@@ -211,12 +211,14 @@
 				"ext.ark.datamaps.core",
 				"ext.ark.datamaps.leaflet",
 				"oojs-ui-toolbars",
+				"oojs-ui-windows",
 				"ext.datamaps.ve.icons"
 			],
 			"packageFiles": [
 				"ve/main.js",
 				"ve/editor.js",
-				"ve/tools/commit.js"
+				"ve/tools/commit.js",
+				"ve/dialogs/commit.js"
 			],
 			"styles": [
 				"ve/css/toolbar.less"
@@ -232,7 +234,8 @@
 				"wikiText",
 				"check",
 				"close",
-				"menu"
+				"menu",
+				"required"
 			]
 		}
 	},

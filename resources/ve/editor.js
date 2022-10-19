@@ -7,6 +7,9 @@ module.exports = class MapVisualEditor extends mw.dataMaps.EventEmitter {
         this.map.storage.isWritable = false;
         this.map.storage.dismissed = [];
 
+        this.windowManager = new OO.ui.WindowManager();
+        $( 'body' ).append( this.windowManager.$element );
+
         this.toolFactory = new OO.ui.ToolFactory();
         this.groupFactory = new OO.ui.ToolGroupFactory();
         this.toolbar = new OO.ui.Toolbar( this.toolFactory, this.groupFactory, {

@@ -1,20 +1,27 @@
-function CommitChangesTool( toolGroup, config ) {
-    OO.ui.PopupTool.call( this, toolGroup, $.extend( { popup: {
-        padded: true,
-        label: mw.msg( 'datamap-ve-tool-commit' ),
-        head: true
-    } }, config ) );
+const CommitDialog = require( '../dialogs/commit.js' );
+
+
+function CommitTool( toolGroup, config ) {
+    OO.ui.Tool.call( this, toolGroup, config );
 }
-OO.inheritClass( CommitChangesTool, OO.ui.PopupTool );
-CommitChangesTool.static.name = 'commit';
-CommitChangesTool.static.icon = 'check';
-CommitChangesTool.static.title = mw.msg( 'datamap-ve-tool-commit' );
+OO.inheritClass( CommitTool, OO.ui.Tool );
+CommitTool.static.name = 'commit';
+CommitTool.static.icon = 'check';
+CommitTool.static.title = mw.msg( 'datamap-ve-tool-commit' );
 
 
-CommitChangesTool.prototype.onUpdateState = function ( event ) {
-    this.ve = event.ve;
-    this.map = event.ve.map;
+CommitTool.prototype.onSelect = function () {
+    const dialog = new CommitDialog( {
+        size: 'medium'
+    } );
+    this.ve.windowManager.addWindows( [ dialog ] );
+    this.ve.windowManager.openWindow( dialog );
 };
 
 
-module.exports = CommitChangesTool;
+CommitTool.prototype.onUpdateState = function ( event ) {
+    this.ve = event.ve;
+};
+
+
+module.exports = CommitTool;
