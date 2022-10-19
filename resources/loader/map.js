@@ -592,27 +592,7 @@ class DataMap extends EventEmitter {
         this.leaflet = new Leaflet.Map( $holder.get( 0 ), leafletConfig );
 
         // Prepare all backgrounds
-        this.config.backgrounds.forEach( ( background, index ) => {
-            background.layers = [];
-
-            // Set the associated layer name
-            background.layer = background.layer || index;
-
-            // Image overlay:
-            // Latitude needs to be flipped as directions differ between Leaflet and ARK
-            background.at = background.at || this.config.crs;
-            if ( background.image ) {
-                background.layers.push( new Leaflet.ImageOverlay( background.image, this.translateBox( background.at ), {
-                    antiAliasing: 0.5
-                } ) );
-            }
-
-            // Prepare overlay layers
-            if ( background.overlays ) {
-                background.overlays.forEach( overlay => background.layers.push(
-                    this.buildBackgroundOverlayObject( overlay ) ) );
-            }
-        } );
+        this.config.backgrounds.forEach( ( background, index ) => this._initialiseBackground( background, index ) );
         // Switch to the last chosen one or first defined
         this.setCurrentBackground( this.storage.get( 'background' ) || 0 );
         // Update max bounds
@@ -641,6 +621,29 @@ class DataMap extends EventEmitter {
         // Notify other components that the Leaflet component has been loaded, and remove all subscribers. All future
         // subscribers will be invoked right away.
         this.fireMemorised( 'leafletLoaded' );
+    }
+
+    
+    _initialiseBackground( background, index ) {
+        background.layers = [];
+
+        // Set the associated layer name
+        background.layer = background.layer || index;
+
+        // Image overlay
+        background.at = background.at || this.config.crs;
+        if ( background.image ) {
+            background.layers.push( new Leaflet.ImageOverlay( background.image, this.translateBox( background.at ), {
+                // Expand the DOM element's width and height by 0.5 pixels. This helps with gaps between tiles.
+                antiAliasing: 0.5
+            } ) );
+        }
+
+        // Prepare overlay layers
+        if ( background.overlays ) {
+            background.overlays.forEach( overlay => background.layers.push(
+                this.buildBackgroundOverlayObject( overlay ) ) );
+        }
     }
 
 
