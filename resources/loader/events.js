@@ -4,6 +4,15 @@ module.exports = class EventEmitter {
     }
 
 
+    /**
+     * Registers an event handler.
+     * 
+     * If an event is set to fire immediately with memorised arguments, the handler will be invoked right away and won't
+     * be enqueued for the next time.
+     * @param {string} event 
+     * @param {Function} callback 
+     * @param {object?} context 
+     */
     on( event, callback, context ) {
         if ( !this._handlers[event] ) {
             this._handlers[event] = [];
@@ -16,15 +25,24 @@ module.exports = class EventEmitter {
     }
 
 
+    /**
+     * Deregisters all event handlers with the same callback. If no callback function is given, clears ALL handlers for
+     * the event.
+     * @param {string} event Event name.
+     * @param {Function?} callback 
+     */
     off( event, callback ) {
+        // If no callback function given, remove all bound handlers
         if ( !callback ) {
             delete this._handlers[event];
             return;
         }
 
+        // If event has any bound handlers, drop those with matching callback function
         if ( this._handlers[event] ) {
             this._handlers[event] = this._handlers[event].filter( x => x.method != callback );
 
+            // If no handlers left, drop the list entirely
             if ( this._handlers[event].length == 0 ) {
                 delete this._handlers[event];
             }
@@ -44,6 +62,10 @@ module.exports = class EventEmitter {
     }
 
 
+    /**
+     * Invokes all bound event handlers with given arguments.
+     * @param {string} event Event name.
+     */
     fire( event ) {
         if ( !this._handlers[event] ) {
             return;

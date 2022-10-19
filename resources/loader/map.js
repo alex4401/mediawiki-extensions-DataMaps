@@ -103,14 +103,21 @@ class DataMap extends EventEmitter {
     }
 
 
+    /**
+     * Checks if all bits of a mask are set on the configured flags constant.
+     * @param {int} mask Feature's bit mask.
+     * @returns {boolean}
+     */
     isFeatureBitSet( mask ) {
         return Util.isBitSet( this.config.flags, mask );
     }
 
 
-    /*
+    /**
      * Runs the callback function when the Leaflet map is initialised. If you only need access to Leaflet's API, require module
      * `ext.ark.datamaps.leaflet` instead with ResourceLoader.
+     * @param {Function} callback Function to run when Leaflet map is initialised.
+     * @param {object?} context Object to use as callback's context.
      */
     waitForLeaflet( callback, context ) {
         if ( this.leaflet == null ) {
@@ -123,6 +130,8 @@ class DataMap extends EventEmitter {
 
     /*
      * Runs the callback function when the map legend is initialised.
+     * @param {Function} callback Function to run when the legend is initialised.
+     * @param {object?} context Object to use as callback's context.
     */
     waitForLegend( callback, context ) {
         if ( this.legend == null ) {
@@ -149,8 +158,9 @@ class DataMap extends EventEmitter {
     }
 
 
-    /*
+    /**
      * Finds ID of the TabberNeue tab this map is in. If not inside tabber, this will be null.
+     * @returns {string?}
     */
     getParentTabberNeueId() {
         const $panel = this.getParentTabberNeuePanel();
@@ -158,17 +168,19 @@ class DataMap extends EventEmitter {
     }
 
 
-    /*
+    /**
      * Returns true if a layer is used on the map. This is a look-up on the static configuration provided by the server, and does
      * not depend on any data being loaded.
+     * @param {string} name Layer name.
      */
     isLayerUsed( name ) {
         return this.config.layerIds.indexOf( name ) >= 0;
     }
 
 
-    /*
+    /**
      * Maps a point from map's coordinate reference system specified by the server, to the universal space [ 0 0 100 100 ].
+     * @param {array} point Array with two number elements: X and Y coordinates.
      */
     translatePoint( point ) {
         return this.crsOrigin == Enums.CRSOrigin.TopLeft
@@ -290,9 +302,11 @@ class DataMap extends EventEmitter {
     */
     getIconFromLayers( layers ) {
         const markerType = layers.join( ' ' );
+        // Construct the object if not found in cache
         if ( !this.iconCache[markerType] ) {
             const group = this.config.groups[layers[0]];
 
+            // Look for the first layer of this marker that has an icon override property
             let markerIcon = group.markerIcon;
             const override = layers.find( x => this.config.layers[x] && this.config.layers[x].markerIcon );
             if ( override ) {
@@ -305,11 +319,12 @@ class DataMap extends EventEmitter {
     }
 
 
-    /*
+    /**
      * Creates a Leaflet marker instance from information provided by the API: layers, and an array with latitude, longitude,
      * and optional data (the "state").
      * 
-     * This does not fire any events.
+     * Produces a `markerReady(Marker)` event. This event should be used sparingly whenever there's a possibility for a
+     * hot-path.
     */
     createMarkerFromApiInstance( layers, instance ) {
         const group = this.config.groups[layers[0]],
@@ -361,6 +376,13 @@ class DataMap extends EventEmitter {
     }
 
 
+    /**
+     * Creates a Leaflet marker instance with given layers, position and API state object.
+     * @param {array} layers Array of string layer names.
+     * @param {array} position Point to place the marker at.
+     * @param {object?} state Optional object with fields: label, desc, image, article, search.
+     * @returns Leaflet marker instance of type Leaflet.Ark.IconMarker or Leaflet.Ark.CircleMarker.
+     */
     createMarker( layers, position, state ) {
         return this.createMarkerFromApiInstance( layers, [ position[0], position[1], state ] );
     }
@@ -419,9 +441,14 @@ class DataMap extends EventEmitter {
     }
 
 
+    /**
+     * Updates map options regarding our custom marker scaling behaviour.
+     */
     updateMarkerScaling() {
         const zoom = this.leaflet.getZoom();
+        // Inverse scale: zoom to minimum value
         this.leaflet.options.markerScaleI = zoom / this.leaflet.options.minZoom;
+        // Percentage scale: zoom to maximum value
         this.leaflet.options.markerScaleA = zoom / this.leaflet.options.maxZoom;
     }
 
@@ -438,6 +465,14 @@ class DataMap extends EventEmitter {
     }
 
 
+    /**
+     * Adds a custom control to Leaflet's container.
+     * @note Requires the Leaflet map to be initialised.
+     * @param {string} anchor Anchor selector (common ones are found in DataMap.anchors).
+     * @param {Element} $element DOM node of the custom control.
+     * @param {boolean} shouldPrepend Whether to add the control to the beginning of the anchor.
+     * @returns $element for chaining.
+     */
     addControl( anchor, $element, shouldPrepend ) {
         this.$root.find( `.leaflet-control-container ${anchor}` )[ shouldPrepend ? 'prepend' : 'append' ]( $element );
         return $element;
@@ -451,6 +486,7 @@ class DataMap extends EventEmitter {
         if ( overlay.image ) {
             // Construct an image
             result = new Leaflet.ImageOverlay( overlay.image, this.translateBox( overlay.at ), {
+                // Expand the DOM element's width and height by 0.5 pixels. This helps with gaps between tiles.
                 antiAliasing: 0.5
             } );
         } else if ( overlay.path ) {
@@ -476,6 +512,10 @@ class DataMap extends EventEmitter {
     }
 
 
+    /**
+     * Calculates max bounds for a map from its contents (all geometrical layers are included). This is usually done
+     * after a data chunk is streamed in, and is fairly expensive.
+     */
     refreshMaxBounds() {
     	const bounds = new Leaflet.LatLngBounds();
         // Collect content bounds
@@ -619,6 +659,7 @@ class DataMap extends EventEmitter {
             this.$backgroundSwitch = this.addControl( DataMap.anchors.topRight,
                 $( '<select class="leaflet-control datamap-control datamap-control-backgrounds leaflet-bar">' )
                 .on( 'change', () => {
+                    // TODO: extract to setBackgroundPreference
                     this.setCurrentBackground( this.$backgroundSwitch.val() );
                     // Remember the choice
                     this.storage.set( 'background', this.$backgroundSwitch.val() );
@@ -664,6 +705,7 @@ class DataMap extends EventEmitter {
         this.markerLegend = new MarkerLegendPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ), true, withLayerDropdown );
 
         // Build the surface and caves toggle
+        // TODO: this should be gone by v0.15, preferably in v0.14 (though that one's going to be a 1.39 compat update)
         if ( hasCaves ) {
             this.markerLegend.addMarkerLayerToggleRequired( this.markerLegend.$layersPopup, 'cave', mw.msg( 'datamap-layer-surface' ) );
             this.markerLegend.addMarkerLayerToggleExclusive( this.markerLegend.$layersPopup, 'cave', mw.msg( 'datamap-layer-cave' ) );

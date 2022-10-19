@@ -120,7 +120,10 @@ class EmbedConfigGenerator {
             $out['overlays'] = [];
         }
         if ( $spec->hasTiles() ) {
+            // Unused field corresponding to Leaflet.ImageOverlay.options.antiAliasing, this may be used by the frontend
+            // in future.
             $out['aa'] = 0.5;
+            // Translate all tiles into overlays
             $tileSize = $spec->getTileSize();
             $spec->iterateTiles( function ( MapBackgroundTileSpec $tile ) use ( &$out, $tileSize ) {
                 $out['overlays'][] = $this->convertBackgroundTile( $tile, $tileSize );
