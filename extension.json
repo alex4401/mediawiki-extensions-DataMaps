@@ -213,7 +213,11 @@
 				"oojs-ui-toolbars"
 			],
 			"packageFiles": [
-				"ve/index.js"
+				"ve/index.js",
+				"ve/tools/commit.js"
+			],
+			"styles": [
+				"ve/css/toolbar.less"
 			],
 			"targets": [ "desktop" ]
 		},
