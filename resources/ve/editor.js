@@ -38,6 +38,8 @@ module.exports = class MapVisualEditor extends mw.dataMaps.EventEmitter {
         } );
 
         this.map.on( 'legendLoaded', this._enhanceGroups, this );
+
+        this.map.waitForLegend( () => this.map.waitForLeaflet( () => this.map.$status.hide() ) );
     }
 
     onClose() {
