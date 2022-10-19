@@ -372,6 +372,9 @@ class DataMap extends EventEmitter {
         // Set up the marker popup
         MarkerPopup.bindTo( this, leafletMarker );
 
+        // Fire an event so other components may prepare the marker
+        this.fire( 'markerReady', leafletMarker );
+
         return leafletMarker;
     }
 
