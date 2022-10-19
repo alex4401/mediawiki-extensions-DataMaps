@@ -230,7 +230,7 @@ class EmbedConfigGenerator {
                 break;
             case MarkerGroupSpec::DM_ICON:
                 // Upsize by 50% to mitigate quality loss at max zoom
-                $size = floor($out['size'][0] * 1.5);
+                $size = floor( $out['size'][0] * 1.5 );
                 // Ensure it's a multiple of 2
                 if ( $size % 2 !== 0 ) {
                     $size++;
