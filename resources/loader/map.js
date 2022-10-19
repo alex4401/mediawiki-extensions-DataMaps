@@ -717,7 +717,7 @@ class DataMap extends EventEmitter {
 
         // Notify other components that the legend has been loaded, and remove all subscribers. All future subscribers
         // will be invoked right away.
-        this.fireMemorised( 'leafletLoaded' );
+        this.fireMemorised( 'legendLoaded' );
     }
 }
 
