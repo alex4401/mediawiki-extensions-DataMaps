@@ -96,7 +96,7 @@ class EmbedRenderer {
         $this->parserOutput->setText( $this->parserOutput->getRawText() . Html::element(
             'script',
             [
-                'type' => 'application/json+datamap',
+                'type' => 'application/datamap+json',
                 'id' => 'datamap-inline-data-' . $this->getId()
             ],
             FormatJson::encode( $processor->processAll(), false, FormatJson::UTF8_OK )

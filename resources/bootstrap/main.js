@@ -55,7 +55,7 @@ function initialiseMapWithConfig( id, $root, config ) {
 
 function getConfig( id, $root ) {
     let config;
-    const $data = $root.find( '> script[type="application/json+datamap"]' );
+    const $data = $root.find( '> script[type="application/datamap+json"]' );
     if ( $data.length > 0 ) {
         config = JSON.parse( $data.text() );
     } else {
