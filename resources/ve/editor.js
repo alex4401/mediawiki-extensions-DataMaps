@@ -3,6 +3,10 @@ module.exports = class MapVisualEditor extends mw.dataMaps.EventEmitter {
         super();
         
         this.map = map;
+
+        this.map.storage.isWritable = false;
+        this.map.storage.dismissed = [];
+
         this.toolFactory = new OO.ui.ToolFactory();
         this.groupFactory = new OO.ui.ToolGroupFactory();
         this.toolbar = new OO.ui.Toolbar( this.toolFactory, this.groupFactory, {
