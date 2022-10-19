@@ -3,7 +3,9 @@ class MapStorage {
         this.map = map;
         this.id = storageId || this.map.id;
         this.hasSchemaVersion = false;
+        this.isWritable = true;
         this.migrate();
+        
         this.dismissed = this.getArray( 'dismissed' );
     }
 
@@ -14,8 +16,10 @@ class MapStorage {
 
 
     set( name, data ) {
-        this._initialiseVersioning();
-        localStorage.setItem( `ext.ark.datamaps.${this.id}:${name}`, data );
+        if ( this.isWritable ) {
+            this._initialiseVersioning();
+            localStorage.setItem( `ext.ark.datamaps.${this.id}:${name}`, data );
+        }
     }
 
 
