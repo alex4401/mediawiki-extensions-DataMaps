@@ -79,7 +79,7 @@ class ExtensionConfig {
     }
 
     public static function isVisualEditorEnabled(): bool {
-        return $GLOBALS['wgDataMapsEnableVisualEditor'];
+        return self::isBleedingEdge() && $GLOBALS['wgDataMapsEnableVisualEditor'];
     }
 
     public static function isBleedingEdge(): bool {
