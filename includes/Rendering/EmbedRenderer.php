@@ -29,15 +29,17 @@ class EmbedRenderer {
 
     private Title $title;
     private bool $useInlineData;
+    private bool $includeNoData;
     private Parser $parser;
     private ParserOutput $parserOutput;
     private ParserOptions $parserOptions;
 
     public function __construct( Title $title, DataMapSpec $data, Parser $parser, ParserOutput $parserOutput,
-        bool $useInlineData = false ) {
+        bool $useInlineData = false, bool $includeNoData = false ) {
         $this->title = $title;
         $this->data = $data;
         $this->useInlineData = $useInlineData;
+        $this->includeNoData = $includeNoData;
 
         $this->parser = $parser->getFreshParser();
         $this->parserOutput = $parserOutput;
@@ -60,7 +62,7 @@ class EmbedRenderer {
     public function prepareOutput() {
         $this->enableOOUI();
         $this->addModules();
-        if ( $this->useInlineData ) {
+        if ( $this->useInlineData && !$this->includeNoData ) {
             $this->addMarkerDataInline();
         }
         $this->updateLinks();

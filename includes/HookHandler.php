@@ -4,12 +4,17 @@ namespace MediaWiki\Extension\Ark\DataMaps;
 use MediaWiki\MediaWikiServices;
 use Title;
 use Linker;
+use RequestContext;
+use MediaWiki\Extension\Ark\DataMaps\Content\VisualMapEditPage;
 
 class HookHandler implements
 	\MediaWiki\Hook\ParserFirstCallInitHook,
 	\MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook,
 	\MediaWiki\Hook\CanonicalNamespacesHook,
-	\MediaWiki\Hook\BeforePageDisplayHook
+	\MediaWiki\Preferences\Hook\GetPreferencesHook,
+	\MediaWiki\Hook\SkinTemplateNavigation__UniversalHook,
+	\MediaWiki\Hook\CustomEditorHook,
+	\MediaWiki\Hook\ParserOptionsRegisterHook
 {
     public static function onRegistration(): bool {
         define( 'ARK_CONTENT_MODEL_DATAMAP', 'datamap' );
@@ -52,17 +57,66 @@ class HookHandler implements
 		return true;
 	}
 
-	public function onBeforePageDisplay( $outputPage, $skin ): void {
-		$title = $skin->getRelevantTitle();
-
-		if ( $title->getNamespace() === ExtensionConfig::getNamespaceId()
-			&& $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
-			$user = $skin->getAuthority()->getUser();
-			if ( MediaWikiServices::getInstance()->getPermissionManager()->quickUserCan( 'edit', $user, $title ) ) {
-				$outputPage->addModules( [
-					'ext.datamaps.vebootstrap'
-				] );
-			}
+	public function onGetPreferences( $user, &$preferences ) {
+		if ( ExtensionConfig::isVisualEditorEnabled() ) {
+			$preferences['datamap-enable-visual-editor'] = [
+				'type' => 'toggle',
+				'label-message' => 'datamap-userpref-enable-ve',
+				'section' => 'editing/editor'
+			];
 		}
+	}
+
+	public function onSkinTemplateNavigation__Universal( $skinTemplate, &$links ): void {
+		if ( !ExtensionConfig::isVisualEditorEnabled() || !isset( $links['views']['edit'] ) ) {
+			return;
+		}
+
+		$title = $skinTemplate->getRelevantTitle();
+		if ( !$title->getNamespace() === ExtensionConfig::getNamespaceId()
+			|| !$title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
+			return;
+		}
+
+		$prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
+		if ( $prefsLookup->getOption( $skinTemplate->getAuthority()->getUser(), 'datamaps-enable-visual-editor' ) ) {
+			$injection = [
+				'editsource' => [
+					'text' => wfMessage( 'datamap-ve-edit-source-action' )->text(),
+					'href' => $title->getLocalURL( $skinTemplate->editUrlOptions() + [
+						'mapsource' => 1
+					] )
+				]
+			];
+			$links['views'] = array_slice( $links['views'], 0, 2, true ) + $injection +
+				array_slice( $links['views'], 2, null, true );
+		}
+	}
+
+	public function onCustomEditor( $article, $user ) {
+		if ( !ExtensionConfig::isVisualEditorEnabled()
+			|| RequestContext::getMain()->getRequest()->getBool( 'mapsource' ) ) {
+			return true;
+		}
+
+		$title = $article->getTitle();
+		if ( !$title->getNamespace() === ExtensionConfig::getNamespaceId()
+			|| !$title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
+			return;
+		}
+
+		$prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
+		if ( $prefsLookup->getOption( $user, 'datamaps-enable-visual-editor' ) ) {
+			$editor = new VisualMapEditPage( $article );
+			$editor->setContextTitle( $title );
+			$editor->edit();
+			return false;
+		}
+
+		return true;
+	}
+
+	public function onParserOptionsRegister( &$defaults, &$inCacheKey, &$lazyLoad ) {
+		$defaults['isMapVisualEditor'] = false;
 	}
 }

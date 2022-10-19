@@ -210,10 +210,12 @@
 			"dependencies": [
 				"ext.ark.datamaps.core",
 				"ext.ark.datamaps.leaflet",
-				"oojs-ui-toolbars"
+				"oojs-ui-toolbars",
+				"ext.datamaps.ve.icons"
 			],
 			"packageFiles": [
-				"ve/index.js",
+				"ve/main.js",
+				"ve/editor.js",
 				"ve/tools/commit.js"
 			],
 			"styles": [
@@ -222,16 +224,16 @@
 			"targets": [ "desktop" ]
 		},
 
-		"ext.datamaps.vebootstrap": {
-			"es6": true,
-			"dependencies": [
-				"mediawiki.util",
-				"ext.ark.datamaps.bootstrap"
-			],
-			"packageFiles": [
-				"vebootstrap/main.js"
-			],
-			"targets": [ "desktop" ]
+		"ext.datamaps.ve.icons": {
+			"class": "ResourceLoaderOOUIIconPackModule",
+			"icons": [
+				"code",
+				"noWikiText",
+				"wikiText",
+				"check",
+				"close",
+				"menu"
+			]
 		}
 	},
 
@@ -251,7 +253,10 @@
 		"ParserFirstCallInit": "MainHandler",
 		"ContentHandlerDefaultModelFor": "MainHandler",
 		"CanonicalNamespaces": "MainHandler",
-		"BeforePageDisplay": "MainHandler",
+		"GetPreferences": "MainHandler",
+		"SkinTemplateNavigation::Universal": "MainHandler",
+		"CustomEditor": "MainHandler",
+		"ParserOptionsRegister": "MainHandler",
 		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
 	},
     "HookHandlers": {
@@ -259,6 +264,10 @@
             "class": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler"
         }
     },
+
+	"DefaultUserOptions": {
+		"datamaps-enable-visual-editor": true
+	},
 
 	"config": {
 		"DataMapsNamespaceId": {
