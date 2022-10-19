@@ -632,14 +632,15 @@ class DataMap extends EventEmitter {
         }
 
         // Recalculate marker sizes when zoom ends
-        this.leaflet.on( 'zoom', () => this.updateMarkerScaling() );
+        this.leaflet.on( 'zoom', this.updateMarkerScaling, this );
         this.updateMarkerScaling();
 
         // Build extra controls
         this._buildControls();
 
-        this.fire( 'leafletLoaded' );
-        this.off( 'leafletLoaded' );
+        // Notify other components that the Leaflet component has been loaded, and remove all subscribers. All future
+        // subscribers will be invoked right away.
+        this.fireMemorised( 'leafletLoaded' );
     }
 
 
@@ -725,8 +726,9 @@ class DataMap extends EventEmitter {
             this.legend.dismissables = new DismissableMarkersLegend( this.legend );
         }
 
-        this.fire( 'legendLoaded' );
-        this.off( 'legendLoaded' );
+        // Notify other components that the legend has been loaded, and remove all subscribers. All future subscribers
+        // will be invoked right away.
+        this.fireMemorised( 'leafletLoaded' );
     }
 }
 

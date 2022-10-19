@@ -1,6 +1,7 @@
 module.exports = class EventEmitter {
     constructor() {
         this._handlers = {};
+        this._autoFiringEvents = {};
     }
 
 
@@ -18,10 +19,17 @@ module.exports = class EventEmitter {
             this._handlers[event] = [];
         }
 
-        this._handlers[event].push( {
+        const handler = {
             context: context || null,
             method: callback
-        } );
+        };
+        if ( this._autoFiringEvents[event] ) {
+            // Event marked to set off right away with persistent parameters, invoke the handler now
+            this._invokeEventHandler( handler, this._autoFiringEvents[event] );
+        } else {
+            // Event requires manual set-off, push the handler onto the list
+            this._handlers[event].push( handler );
+        }
     }
 
 
@@ -75,5 +83,18 @@ module.exports = class EventEmitter {
         for ( const handler of this._handlers[event] ) {
             this._invokeEventHandler( handler, args );
         }
+    }
+
+
+    /**
+     * Invokes all bound event handlers and saves given arguments to invoke any future handler right away.
+     * 
+     * All handlers already bound are invoked and dropped.
+     * @param {string} event Event name.
+     */
+    fireMemorised( event ) {
+        this._autoFiringEvents[event] = Object.values( arguments ).slice( 2 );
+        this.fire.apply( this, [ event ].concat( this._autoFiringEvents[event] ) );
+        this.off( event );
     }
 }
