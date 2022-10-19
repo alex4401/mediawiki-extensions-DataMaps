@@ -391,26 +391,12 @@ class DataMap extends EventEmitter {
     }
 
 
-    /*
+    /**
      * Builds markers from a data object.
+     * @deprecated
      */
     instantiateMarkers( data ) {
-        // Register all layers in this package
-        for ( const markerType in data ) {
-            markerType.split( ' ' ).forEach( name => this.layerManager.register( name ) );
-        }
-
-        // Unpack markers
-        for ( const markerType in data ) {
-            const layers = markerType.split( ' ' );
-            const placements = data[markerType];
-            // Create markers for instances
-            for ( const instance of placements ) {
-                this.fire( 'markerReady', this.createMarkerFromApiInstance( layers, instance ) );
-            }
-        }
-
-        this.fire( 'streamingDone' );
+        this.streaming.instantiateMarkers( data );
     }
 
 

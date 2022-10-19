@@ -49,11 +49,34 @@ module.exports = class MarkerStreamingManager {
     }
 
 
+    instantiateMarkers( data ) {
+        // Register all layers in this package
+        for ( const markerType in data ) {
+            markerType.split( ' ' ).forEach( name => this.map.layerManager.register( name ) );
+        }
+
+        // Unpack markers
+        const markers = [];
+        for ( const markerType in data ) {
+            const layers = markerType.split( ' ' );
+            const placements = data[markerType];
+            // Create markers for instances
+            for ( const instance of placements ) {
+                markers.push( this.map.createMarkerFromApiInstance( layers, instance ) );
+            }
+        }
+
+        // Notify other components this chunk has been loaded, and send them all produced markers
+        this.map.fire( 'chunkStreamed', markers );
+    }
+
+
     loadChunk( pageId, version, filter, start, limit, sector ) {
         return this.requestChunk( pageId, version, filter, start, limit, sector )
             .then( data => {
                 this.map.waitForLeaflet( () => {
-                    this.map.instantiateMarkers( data.query.markers );
+                    this.instantiateMarkers( data.query.markers );
+                    this.map.fire( 'streamingDone' );
                 } );
             } );
     }
@@ -67,6 +90,11 @@ module.exports = class MarkerStreamingManager {
                 } );
                 if ( data.query.continue ) {
                     return this.loadSequential( pageId, version, filter, data.query.continue );
+                } else {
+                    // Notify other components that all chunks have been streamed in this request
+                    this.map.fire( 'chunkStreamingDone' );
+                    // DEPRECATED(v0.13.0:v0.14.0): old event name
+                    this.map.fire( 'streamingDone' );
                 }
             } );
     }
