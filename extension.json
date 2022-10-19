@@ -221,7 +221,16 @@
 				"ve/dialogs/commit.js"
 			],
 			"styles": [
-				"ve/css/toolbar.less"
+				"ve/css/toolbar.less",
+				"ve/css/groups.less",
+				"ve/css/extension.less"
+			],
+			"messages": [
+				"datamap-ve-tool-commit",
+				"datamap-ve-tool-commit-save",
+				"datamap-ve-tool-commit-edit-summary",
+				"datamap-ve-tool-commit-edit-summary-subtext",
+				"datamap-ve-group-collectible-mode"
 			],
 			"targets": [ "desktop" ]
 		},
