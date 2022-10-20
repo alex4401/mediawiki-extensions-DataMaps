@@ -78,5 +78,6 @@
     "datamap-control-centre-view": "Center view at current zoom level",
     "datamap-control-search": "Click and start typing to search...",
 
-    "datamap-ve-portlet": "Edit visual"
+    "datamap-userpref-enable-ve": "Enable the visual editor for data maps when it's out of beta",
+    "datamap-userpref-enable-ve-beta": "Opt me into the map visual editor beta"
 }

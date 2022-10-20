@@ -59,9 +59,14 @@ class HookHandler implements
 
 	public function onGetPreferences( $user, &$preferences ) {
 		if ( ExtensionConfig::isVisualEditorEnabled() ) {
-			$preferences['datamap-enable-visual-editor'] = [
+			$preferences['datamaps-enable-visual-editor'] = [
 				'type' => 'toggle',
 				'label-message' => 'datamap-userpref-enable-ve',
+				'section' => 'editing/editor'
+			];
+			$preferences['datamaps-opt-in-visual-editor-beta'] = [
+				'type' => 'toggle',
+				'label-message' => 'datamap-userpref-enable-ve-beta',
 				'section' => 'editing/editor'
 			];
 		}
@@ -106,7 +111,7 @@ class HookHandler implements
 		}
 
 		$prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
-		if ( $prefsLookup->getOption( $user, 'datamaps-enable-visual-editor' ) ) {
+		if ( $prefsLookup->getOption( $user, /*'datamaps-enable-visual-editor'*/ 'datamaps-opt-in-visual-editor-beta' ) ) {
 			$editor = new VisualMapEditPage( $article );
 			$editor->setContextTitle( $title );
 			$editor->edit();

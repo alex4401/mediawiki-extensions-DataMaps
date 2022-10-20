@@ -269,7 +269,8 @@
     },
 
 	"DefaultUserOptions": {
-		"datamaps-enable-visual-editor": true
+		"datamaps-enable-visual-editor": true,
+		"datamaps-opt-in-visual-editor-beta": true
 	},
 
 	"config": {
