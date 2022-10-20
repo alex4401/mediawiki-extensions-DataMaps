@@ -12,6 +12,10 @@ module.exports = class MapVisualEditor extends EventEmitter {
         this.map.storage.isWritable = false;
         this.map.storage.dismissed = [];
 
+        $( '<div class="datamap-ve-beta-notice">' )
+            .text( mw.msg( 'datamap-ve-beta-notice' ) )
+            .prependTo( this.map.$root.find( '.datamap-container-top' ) );
+
         this.windowManager = new OO.ui.WindowManager();
         $( 'body' ).append( this.windowManager.$element );
 

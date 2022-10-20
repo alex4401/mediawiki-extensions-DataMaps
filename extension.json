@@ -226,6 +226,7 @@
 				"ve/css/extension.less"
 			],
 			"messages": [
+				"datamap-ve-beta-notice",
 				"datamap-ve-tool-commit",
 				"datamap-ve-tool-commit-save",
 				"datamap-ve-tool-commit-edit-summary",

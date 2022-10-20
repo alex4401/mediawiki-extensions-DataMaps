@@ -82,6 +82,8 @@
     "datamap-userpref-enable-ve-beta": "Opt me into the map visual editor beta",
     "datamap-ve-edit-source-action": "Edit source",
 
+    "datamap-ve-beta-notice": "The visual editor is still in an early development stage, please report issues over Discord: alex#7749",
+
     "datamap-ve-tool-commit": "Save changes",
     "datamap-ve-tool-commit-save": "Proceed",
     "datamap-ve-tool-commit-edit-summary": "Edit summary (required)",
