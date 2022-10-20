@@ -84,7 +84,8 @@ class HookHandler implements
 		}
 
 		$prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
-		if ( $prefsLookup->getOption( $skinTemplate->getAuthority()->getUser(), 'datamaps-enable-visual-editor' ) ) {
+		if ( $prefsLookup->getOption( $skinTemplate->getAuthority()->getUser(),
+			/*'datamaps-enable-visual-editor'*/ 'datamaps-opt-in-visual-editor-beta' ) ) {
 			$links['views']['edit']['href'] = $title->getLocalURL( $skinTemplate->editUrlOptions() + [
 				'visual' => 1
 			] );
