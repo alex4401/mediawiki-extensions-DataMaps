@@ -39,6 +39,7 @@ module.exports = class MapVisualEditor extends EventEmitter {
         
         // Register tools
         this.toolFactory.register( require( './tools/commit.js' ) );
+        this.toolFactory.register( require( './tools/sourceEditor.js' ) );
 
         // Set up the toolbar
         this.toolbar.setup( [
@@ -48,7 +49,7 @@ module.exports = class MapVisualEditor extends EventEmitter {
             },
             {
                 type: 'bar',
-                include: [ 'commit' ]
+                include: [ 'sourceEditor', 'commit' ]
             }
         ] );
         this.toolbar.$element.prependTo( this.map.$root.find( '.datamap-holder' ).parent() );

@@ -218,6 +218,7 @@
 				"ve/main.js",
 				"ve/editor.js",
 				"ve/tools/commit.js",
+				"ve/tools/sourceEditor.js",
 				"ve/dialogs/commit.js"
 			],
 			"styles": [
