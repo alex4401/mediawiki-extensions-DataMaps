@@ -85,12 +85,13 @@ class HookHandler implements
 
 		$prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
 		if ( $prefsLookup->getOption( $skinTemplate->getAuthority()->getUser(), 'datamaps-enable-visual-editor' ) ) {
+			$links['views']['edit']['href'] = $title->getLocalURL( $skinTemplate->editUrlOptions() + [
+				'visual' => 1
+			] );
 			$injection = [
 				'editsource' => [
 					'text' => wfMessage( 'datamap-ve-edit-source-action' )->text(),
-					'href' => $title->getLocalURL( $skinTemplate->editUrlOptions() + [
-						'mapsource' => 1
-					] )
+					'href' => $title->getLocalURL( $skinTemplate->editUrlOptions() )
 				]
 			];
 			$links['views'] = array_slice( $links['views'], 0, 2, true ) + $injection +
@@ -100,7 +101,7 @@ class HookHandler implements
 
 	public function onCustomEditor( $article, $user ) {
 		if ( !ExtensionConfig::isVisualEditorEnabled()
-			|| RequestContext::getMain()->getRequest()->getBool( 'mapsource' ) ) {
+			|| !RequestContext::getMain()->getRequest()->getBool( 'visual' ) ) {
 			return true;
 		}
 
