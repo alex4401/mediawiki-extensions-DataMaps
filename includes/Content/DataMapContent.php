@@ -110,9 +110,9 @@ class DataMapContent extends DataMapContentBase {
 		}
 	}
 
-	public function getEmbedRenderer( Title $title, Parser $parser, ParserOutput $parserOutput,
-		bool $useInlineData = false, bool $includeNoData = false ): EmbedRenderer {
-		return new EmbedRenderer( $title, $this->asModel(), $parser, $parserOutput, $useInlineData, $includeNoData );
+	public function getEmbedRenderer( Title $title, Parser $parser, ParserOutput $parserOutput, bool $useInlineData = false,
+		bool $forVisualEditor = false ): EmbedRenderer {
+		return new EmbedRenderer( $title, $this->asModel(), $parser, $parserOutput, $useInlineData, $forVisualEditor );
 	}
 
 	protected function fillParserOutput( Title $title, $revId, ParserOptions $options, $generateHtml, ParserOutput &$output ) {

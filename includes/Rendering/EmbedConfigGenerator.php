@@ -28,11 +28,13 @@ class EmbedConfigGenerator {
     public DataMapSpec $data;
     private Title $title;
     private bool $useInlineData;
+    private bool $forVisualEditor;
 
-    public function __construct( Title $title, DataMapSpec $data, bool $useInlineData = false ) {
+    public function __construct( Title $title, DataMapSpec $data, bool $useInlineData = false, bool $forVisualEditor = false ) {
         $this->title = $title;
         $this->data = $data;
         $this->useInlineData = $useInlineData;
+        $this->forVisualEditor = $forVisualEditor;
     }
 
     public function getId(): int {
@@ -53,7 +55,7 @@ class EmbedConfigGenerator {
         $out = [];
 
         // Required to query the API for marker clusters
-        if ( !$this->useInlineData ) {
+        if ( !$this->useInlineData && !$this->forVisualEditor ) {
             $out['version'] = $this->title->getLatestRevID();
         }
         // Coordinate transformation
@@ -99,6 +101,7 @@ class EmbedConfigGenerator {
         $out |= $this->data->wantsSearch() ? 1<<3 : 0;
         $out |= $this->data->wantsChecklistSortedByAmount() ? 1<<4 : 0;
         $out |= $this->data->wantsSearch() === DataMapSpec::SM_TABBER ? 1<<5 : 0;
+        $out |= $this->forVisualEditor ? 1<<6 : 0;
         return $out;
     }
 

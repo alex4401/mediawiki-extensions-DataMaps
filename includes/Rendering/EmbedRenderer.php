@@ -29,17 +29,17 @@ class EmbedRenderer {
 
     private Title $title;
     private bool $useInlineData;
-    private bool $includeNoData;
+    private bool $forVisualEditor;
     private Parser $parser;
     private ParserOutput $parserOutput;
     private ParserOptions $parserOptions;
 
     public function __construct( Title $title, DataMapSpec $data, Parser $parser, ParserOutput $parserOutput,
-        bool $useInlineData = false, bool $includeNoData = false ) {
+        bool $useInlineData = false, bool $forVisualEditor = false ) {
         $this->title = $title;
         $this->data = $data;
         $this->useInlineData = $useInlineData;
-        $this->includeNoData = $includeNoData;
+        $this->forVisualEditor = $forVisualEditor;
 
         $this->parser = $parser->getFreshParser();
         $this->parserOutput = $parserOutput;
@@ -62,7 +62,7 @@ class EmbedRenderer {
     public function prepareOutput() {
         $this->enableOOUI();
         $this->addModules();
-        if ( $this->useInlineData && !$this->includeNoData ) {
+        if ( $this->useInlineData && !$this->forVisualEditor ) {
             $this->addMarkerDataInline();
         }
         $this->updateLinks();
@@ -86,7 +86,7 @@ class EmbedRenderer {
             'ext.ark.datamaps.site'
         ] );
 
-        if ( $this->useInlineData ) {
+        if ( $this->useInlineData && !$this->forVisualEditor ) {
             $this->parserOutput->addModules( [
 				'ext.ark.datamaps.inlineloader'
 			] );
@@ -237,7 +237,7 @@ class EmbedRenderer {
         // This configuration is used to set up the map before any data sets are downloaded. It allows for environment to be
         // prepared.
         // TODO: possibly deliver some of this stuff via API? tho dunno if there's any real benefits to that
-        $config = new EmbedConfigGenerator( $this->title, $this->data, $this->useInlineData );
+        $config = new EmbedConfigGenerator( $this->title, $this->data, $this->useInlineData, $this->forVisualEditor );
         $containerMain->appendContent( new \OOUI\HtmlSnippet( $config->makeElement() ) );
 
         return $containerMain;
