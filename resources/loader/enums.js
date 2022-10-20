@@ -10,7 +10,8 @@ module.exports = {
         DisableZoom: 1<<2,
         Search: 1<<3,
         SortChecklistsByAmount: 1<<4,
-        LinkedSearch: 1<<5
+        LinkedSearch: 1<<5,
+        VisualEditor: 1<<6
     },
 
     CollectibleType: {

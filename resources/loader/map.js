@@ -77,7 +77,7 @@ class DataMap extends EventEmitter {
         this.anchors = DataMap.anchors;
 
         // Request OOUI to be loaded and build the legend
-        if ( !this.isFeatureBitSet( Enums.MapFlags.HideLegend ) ) {
+        if ( !( !this.isFeatureBitSet( Enums.MapFlags.VisualEditor ) && this.isFeatureBitSet( Enums.MapFlags.HideLegend ) ) ) {
             mw.loader.using( [
                 'oojs-ui-core',
                 'oojs-ui-widgets'
@@ -93,7 +93,7 @@ class DataMap extends EventEmitter {
         } );
 
         // Load search add-on
-        if ( this.isFeatureBitSet( Enums.MapFlags.Search ) ) {
+        if ( !this.isFeatureBitSet( Enums.MapFlags.VisualEditor ) && this.isFeatureBitSet( Enums.MapFlags.Search ) ) {
             mw.loader.using( [
                 'oojs-ui-core',
                 'ext.ark.datamaps.styles.search',
@@ -711,7 +711,8 @@ class DataMap extends EventEmitter {
             }
         }
         // Set up the dismissable marker interactions
-        if ( Object.values( this.config.groups ).some( x => Util.getGroupCollectibleType( x ) ) ) {
+        if ( !this.isFeatureBitSet( Enums.MapFlags.VisualEditor )
+            && Object.values( this.config.groups ).some( x => Util.getGroupCollectibleType( x ) ) ) {
             this.legend.dismissables = new DismissableMarkersLegend( this.legend );
         }
 
