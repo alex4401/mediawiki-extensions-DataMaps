@@ -19,6 +19,23 @@ class DataMapSpec extends DataModel {
     const SM_SELF = 1;
     const SM_TABBER = 2;
 
+    const CO_YX = 0;
+    const CO_XY = 1;
+
+    public static function normalisePointCoordinates( array $value, int $order ): array {
+        if ( $order === self::CO_XY ) {
+            $value = [ $value[1], $value[0] ];
+        }
+        return $value;
+    }
+
+    public static function normaliseBoxCoordinates( array $value, int $order ): array {
+        if ( $order === self::CO_XY ) {
+            $value = [ [ $value[0][1], $value[0][0] ], [ $value[1][1], $value[1][0] ] ];
+        }
+        return $value;
+    }
+
     public static function staticIsMixin( \stdclass $raw ): bool {
         return isset( $raw->{'$mixin'} ) ? $raw->{'$mixin'} : false;
     }
@@ -29,6 +46,18 @@ class DataMapSpec extends DataModel {
 
     public function getMixins(): ?array {
         return isset( $this->raw->mixins ) ? $this->raw->mixins : null;
+    }
+
+    public function getCoordinateOrder(): int {
+        $value = isset( $this->raw->coordinateOrder ) ? $this->raw->coordinateOrder : 'yx';
+        switch ( $value ) {
+            case 'yx':
+            case 'latlon':
+                return self::CO_YX;
+            case 'xy':
+            case 'lonlat':
+                return self::CO_XY;
+        }
     }
 
     public function getCoordinateReferenceSpace(): array {
@@ -211,6 +240,11 @@ class DataMapSpec extends DataModel {
                 }
                 return true;
             }
+        ] );
+        $this->checkField( $status, [
+            'name' => 'coordinateOrder',
+            'type' => DataModel::TYPE_STRING,
+            'values' => [ 'yx', 'xy', 'latlon', 'lonlat' ]
         ] );
 
         if ( !$this->conflict( $status, [ 'image', 'backgrounds' ] ) ) {

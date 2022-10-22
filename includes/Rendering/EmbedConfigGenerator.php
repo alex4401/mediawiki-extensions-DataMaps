@@ -58,9 +58,10 @@ class EmbedConfigGenerator {
         if ( !$this->useInlineData && !$this->forVisualEditor ) {
             $out['version'] = $this->title->getLatestRevID();
         }
+        $out['cOrder'] = $coordOrder = $this->data->getCoordinateOrder();
         // Coordinate transformation
         if ( $this->data->getCoordinateReferenceSpace() != DataMapSpec::DEFAULT_COORDINATE_SPACE ) {
-            $out['crs'] = $this->data->getCoordinateReferenceSpace();
+            $out['crs'] = DataMapSpec::normaliseBoxCoordinates( $this->data->getCoordinateReferenceSpace(), $coordOrder );
         }
         // Feature management
         $bitmask = $this->getPublicFeatureBitMask();
@@ -68,8 +69,8 @@ class EmbedConfigGenerator {
             $out['flags'] = $bitmask;
         }
         // Backgrounds
-        $out['backgrounds'] = array_map( function ( MapBackgroundSpec $spec ) {
-            return $this->getBackgroundConfig( $spec );
+        $out['backgrounds'] = array_map( function ( MapBackgroundSpec $spec ) use ( $coordOrder ) {
+            return $this->getBackgroundConfig( $spec, $coordOrder );
         }, $this->data->getBackgrounds() );
         // Marker groups
         $out['groups'] = [];
@@ -105,7 +106,7 @@ class EmbedConfigGenerator {
         return $out;
     }
 
-    private function getBackgroundConfig( MapBackgroundSpec $spec ): array {
+    private function getBackgroundConfig( MapBackgroundSpec $spec, int $coordOrder ): array {
         $out = [];
         if ( !$spec->hasTiles() ) {
             $out['image'] = DataMapFileUtils::getRequiredFile( $spec->getImageName() )->getURL();
@@ -114,7 +115,7 @@ class EmbedConfigGenerator {
             $out['name'] = $spec->getName();
         }
         if ( $spec->getPlacementLocation() != null ) {
-            $out['at'] = $spec->getPlacementLocation();
+            $out['at'] = DataMapSpec::normaliseBoxCoordinates( $spec->getPlacementLocation(), $coordOrder );
         }
         if ( $spec->getBackgroundLayerName() !== null ) {
             $out['layer'] = $spec->getBackgroundLayerName();
@@ -127,21 +128,21 @@ class EmbedConfigGenerator {
             // in future.
             $out['aa'] = 0.5;
             // Translate all tiles into overlays
-            $tileSize = $spec->getTileSize();
+            $tileSize = DataMapSpec::normalisePointCoordinates( $spec->getTileSize(), $coordOrder );
             $spec->iterateTiles( function ( MapBackgroundTileSpec $tile ) use ( &$out, $tileSize ) {
                 $out['overlays'][] = $this->convertBackgroundTile( $tile, $tileSize );
             } );
         }
         if ( $spec->hasOverlays() ) {
-            $spec->iterateOverlays( function ( MapBackgroundOverlaySpec $overlay ) use ( &$out ) {
-                $out['overlays'][] = $this->convertBackgroundOverlay( $overlay );
+            $spec->iterateOverlays( function ( MapBackgroundOverlaySpec $overlay ) use ( &$out, $coordOrder ) {
+                $out['overlays'][] = $this->convertBackgroundOverlay( $overlay, $coordOrder );
             } );
         }
 
         return $out;
     }
 
-    private function convertBackgroundOverlay( MapBackgroundOverlaySpec $spec ) {
+    private function convertBackgroundOverlay( MapBackgroundOverlaySpec $spec, int $coordOrder ) {
         $result = [];
         if ( $spec->getName() != null ) {
             $result['name'] = $spec->getName();
@@ -153,7 +154,7 @@ class EmbedConfigGenerator {
         if ( $spec->getPath() != null ) {
             $result['path'] = $spec->getPath();
         } else {
-            $result['at'] = $spec->getPlacementLocation();
+            $result['at'] = DataMapSpec::normaliseBoxCoordinates( $spec->getPlacementLocation(), $coordOrder );
         }
 
         if ( $spec->supportsDrawProperties() ) {
@@ -241,7 +242,8 @@ class EmbedConfigGenerator {
                 $out['markerIcon'] = DataMapFileUtils::getFileUrl( $spec->getIcon(), $size );
                 break;
             default:
-                throw new InvalidArgumentException( wfMessage( 'datamap-error-render-unsupported-displaymode', $spec->getDisplayMode() ) );
+                throw new InvalidArgumentException( wfMessage( 'datamap-error-render-unsupported-displaymode',
+                    $spec->getDisplayMode() ) );
         }
 
         if ( $spec->getIcon() !== null ) {
@@ -268,7 +270,7 @@ class EmbedConfigGenerator {
 
         if ( $spec->getIconOverride() !== null ) {
             // Upsize by 50% to mitigate quality loss at max zoom
-            $size = floor($out['size'][0] * 1.5);
+            $size = floor( $out['size'][0] * 1.5 );
             // Ensure it's a multiple of 2
             if ( $size % 2 !== 0 ) {
                 $size++;
