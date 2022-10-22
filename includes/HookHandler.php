@@ -14,7 +14,10 @@ class HookHandler implements
 	\MediaWiki\Preferences\Hook\GetPreferencesHook,
 	\MediaWiki\Hook\SkinTemplateNavigation__UniversalHook,
 	\MediaWiki\Hook\CustomEditorHook,
-	\MediaWiki\Hook\ParserOptionsRegisterHook
+	\MediaWiki\Hook\ParserOptionsRegisterHook,
+	\MediaWiki\ChangeTags\Hook\ChangeTagsListActiveHook,
+	\MediaWiki\ChangeTags\Hook\ListDefinedTagsHook,
+	\MediaWiki\Hook\RecentChange_saveHook
 {
     public static function onRegistration(): bool {
         define( 'ARK_CONTENT_MODEL_DATAMAP', 'datamap' );
@@ -125,5 +128,23 @@ class HookHandler implements
 
 	public function onParserOptionsRegister( &$defaults, &$inCacheKey, &$lazyLoad ) {
 		$defaults['isMapVisualEditor'] = false;
+	}
+
+	public function onListDefinedTags( &$tags ) {
+		$tags[] = 'datamaps-visualeditor';
+	}
+
+	public function onChangeTagsListActive( &$tags ) {
+		$tags[] = 'datamaps-visualeditor';
+	}
+
+	/**
+	 * @param RecentChange $rc The new RC entry.
+	 */
+	public function onRecentChange_save( $rc ) {
+		$request = RequestContext::getMain()->getRequest();
+		if ( $request->getBool( 'isdatamapsve' ) ) {
+			$rc->addTags( 'datamaps-visualeditor' );
+		}
 	}
 }

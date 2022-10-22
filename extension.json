@@ -273,6 +273,9 @@
 		"SkinTemplateNavigation::Universal": "MainHandler",
 		"CustomEditor": "MainHandler",
 		"ParserOptionsRegister": "MainHandler",
+		"ChangeTagsListActive": "MainHandler",
+		"ListDefinedTags": "MainHandler",
+		"RecentChange_save": "MainHandler",
 		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
 	},
     "HookHandlers": {
