@@ -82,23 +82,11 @@
 			]
 		},
 
-		"ext.datamaps.styles": {
-			"dependencies": [
-				"ext.datamaps.icons"
-			],
-			"styles": [
-				"styles/main.less",
-				"styles/legend.less",
-				"styles/controls.less",
-				"styles/popups.less"
-			],
-			"targets": [ "desktop", "mobile" ]
-		},
-
 		"ext.datamaps.core": {
 			"es6": true,
 			"dependencies": [
-				"mediawiki.api"
+				"mediawiki.api",
+				"ext.datamaps.icons"
 			],
 			"packageFiles": [
 				"core/index.js",
@@ -119,6 +107,12 @@
 					]
 				},
 				"core/util.js"
+			],
+			"styles": [
+				"styles/main.less",
+				"styles/legend.less",
+				"styles/controls.less",
+				"styles/popups.less"
 			],
 			"messages": [
 				"datamap-error-dataload",
@@ -170,13 +164,6 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.datamaps.styles.search": {
-			"styles": [
-				"search/styles.less"
-			],
-			"targets": [ "desktop", "mobile" ]
-		},
-
 		"ext.datamaps.fuzzysort": {
 			"scripts": [
 				"vendor/fuzzysort/fuzzysort.min.js"
@@ -191,7 +178,6 @@
 				"ext.datamaps.core",
 				"ext.datamaps.bootstrap",
 				"ext.datamaps.leaflet",
-				"ext.datamaps.styles.search",
 				"ext.datamaps.fuzzysort"
 			],
 			"packageFiles": [
@@ -200,6 +186,9 @@
 				"search/menu.js",
 				"search/option.js",
 				"search/util.js"
+			],
+			"styles": [
+				"search/styles.less"
 			],
 			"messages": [
 				"datamap-control-search",

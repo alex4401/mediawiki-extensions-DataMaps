@@ -97,7 +97,6 @@ class DataMap extends EventEmitter {
         if ( !this.isFeatureBitSet( Enums.MapFlags.VisualEditor ) && this.isFeatureBitSet( Enums.MapFlags.Search ) ) {
             mw.loader.using( [
                 'oojs-ui-core',
-                'ext.datamaps.styles.search',
                 'ext.datamaps.search'
             ] );
         }

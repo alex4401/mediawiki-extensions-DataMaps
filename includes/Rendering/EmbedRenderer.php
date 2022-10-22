@@ -78,7 +78,6 @@ class EmbedRenderer {
 
     public function addModules(): void {
         $this->parserOutput->addModules( [
-            'ext.datamaps.styles',
             // ext.datamaps.leaflet is loaded on demand (when a DataMap is initialised) in a separate request
             // to not delay the site module
             'ext.datamaps.core',
