@@ -275,8 +275,8 @@ class DataMap extends EventEmitter {
             if ( mode === Enums.MarkerGroupFlags.Collectible_GlobalGroup ) {
                 this.fire( 'sendLinkedEvent', {
                     type: 'groupDismissChange',
-                    groupId: groupId,
-                    state: state
+                    groupId,
+                    state
                 } );
             }
         }

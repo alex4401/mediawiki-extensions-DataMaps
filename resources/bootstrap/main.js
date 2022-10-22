@@ -84,7 +84,7 @@ mw.hook( 'wikipage.content' ).add( $content => {
 mw.dataMaps.registerMapAddedHandler = function ( callback, context ) {
     const handler = {
         method: callback,
-        context: context
+        context
     };
     toNotify.push( handler );
 

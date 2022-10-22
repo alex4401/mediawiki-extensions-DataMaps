@@ -37,8 +37,8 @@ module.exports = class MarkerSearchIndex extends mw.dataMaps.EventEmitter {
                 ? map.getIconFromLayers( leafletMarker.attachedLayers ) : null,
             marker: leafletMarker,
             keywords: state.search,
-            label: label,
-            map: map
+            label,
+            map
         } );
     }
 

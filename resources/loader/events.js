@@ -20,7 +20,7 @@ module.exports = class EventEmitter {
         }
 
         const handler = {
-            context: context || null,
+            context,
             method: callback
         };
         if ( this._autoFiringEvents[event] ) {

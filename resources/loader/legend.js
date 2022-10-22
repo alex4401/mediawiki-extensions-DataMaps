@@ -15,7 +15,7 @@ module.exports = class MapLegend {
 
     addTab( name, cssClass, visible ) {
         const result = new OO.ui.TabPanelLayout( {
-            name: name,
+            name,
             label: name,
             expanded: false,
             classes: cssClass ? [ cssClass ] : []
@@ -57,7 +57,7 @@ module.exports = class MapLegend {
     createCheckboxField( $parent, label, defaultState, changeCallback ) {
         const checkbox = new OO.ui.CheckboxInputWidget( { selected: defaultState } );
         const field = new OO.ui.FieldLayout( checkbox, {
-            label: label,
+            label,
             align: 'inline'
         } );
         checkbox.on( 'change', () => changeCallback( checkbox.isSelected() ) );

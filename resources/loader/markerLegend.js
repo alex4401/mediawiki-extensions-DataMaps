@@ -88,10 +88,10 @@ module.exports = class MarkerLegendPanel {
     createPopupButton( label ) {
         const $content = $( '<div>' );
         const button = new OO.ui.PopupButtonWidget( { 
-            label: label,
+            label,
             indicator: 'down',
             popup: {
-                $content: $content,
+                $content,
                 padded: true,
                 width: 220,
                 align: 'forwards'
