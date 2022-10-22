@@ -109,10 +109,10 @@
 				"core/util.js"
 			],
 			"styles": [
-				"styles/main.less",
-				"styles/legend.less",
-				"styles/controls.less",
-				"styles/popups.less"
+				"core/css/main.less",
+				"core/css/legend.less",
+				"core/css/controls.less",
+				"core/css/popups.less"
 			],
 			"messages": [
 				"datamap-error-dataload",
@@ -188,7 +188,7 @@
 				"search/util.js"
 			],
 			"styles": [
-				"search/styles.less"
+				"search/css/styles.less"
 			],
 			"messages": [
 				"datamap-control-search",
