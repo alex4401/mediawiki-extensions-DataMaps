@@ -313,7 +313,7 @@ class DataMap extends EventEmitter {
                 markerIcon = this.config.layers[override].markerIcon;
             }
         
-            this.iconCache[markerType] = new L.Icon( { iconUrl: markerIcon, iconSize: group.size } );
+            this.iconCache[markerType] = new Leaflet.Icon( { iconUrl: markerIcon, iconSize: group.size } );
         }
         return this.iconCache[markerType];
     }
@@ -334,12 +334,12 @@ class DataMap extends EventEmitter {
         // Construct the marker
         if ( group.markerIcon ) {
             // Fancy icon marker
-            leafletMarker = new L.Ark.IconMarker( position, {
+            leafletMarker = new Leaflet.Ark.IconMarker( position, {
                 icon: this.getIconFromLayers( layers )
             } );
         } else {
             // Circular marker
-            leafletMarker = new L.Ark.CircleMarker( position, {
+            leafletMarker = new Leaflet.Ark.CircleMarker( position, {
                 baseRadius: group.size/2,
                 expandZoomInvEx: group.extraMinZoomSize,
                 fillColor: group.fillColor,
