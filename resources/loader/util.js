@@ -53,7 +53,8 @@ module.exports = {
      */
     getGeneratedMarkerId( leafletMarker ) {
         const type = leafletMarker.attachedLayers.join( ' ' );
-        return `M${type}@${leafletMarker.apiInstance[0].toFixed(3)}:${leafletMarker.apiInstance[1].toFixed(3)}`;
+        const out = `M${type}@${leafletMarker.apiInstance[0].toFixed(3)}:${leafletMarker.apiInstance[1].toFixed(3)}`;
+        return out;
     },
 
 
