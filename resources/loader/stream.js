@@ -91,10 +91,12 @@ module.exports = class MarkerStreamingManager {
                 if ( data.query.continue ) {
                     return this.loadSequential( pageId, version, filter, data.query.continue );
                 } else {
-                    // Notify other components that all chunks have been streamed in this request
-                    this.map.fire( 'chunkStreamingDone' );
-                    // DEPRECATED(v0.13.0:v0.14.0): old event name
-                    this.map.fire( 'streamingDone' );
+                    this.map.waitForLeaflet( () => {
+                        // Notify other components that all chunks have been streamed in this request
+                        this.map.fire( 'chunkStreamingDone' );
+                        // DEPRECATED(v0.13.0:v0.14.0): old event name
+                        this.map.fire( 'streamingDone' );
+                    } );
                 }
             } );
     }
