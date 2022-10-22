@@ -56,7 +56,7 @@
 	},
 
 	"ResourceModules": {
-		"ext.ark.datamaps.leaflet": {
+		"ext.datamaps.leaflet": {
 			"es6": true,
 			"packageFiles": [
 				"leafletPkg/index.js",
@@ -71,7 +71,7 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.ark.datamaps.icons": {
+		"ext.datamaps.icons": {
 			"class": "ResourceLoaderOOUIIconPackModule",
 			"icons": [
 				"exitFullscreen",
@@ -82,9 +82,9 @@
 			]
 		},
 
-		"ext.ark.datamaps.styles": {
+		"ext.datamaps.styles": {
 			"dependencies": [
-				"ext.ark.datamaps.icons"
+				"ext.datamaps.icons"
 			],
 			"styles": [
 				"styles/main.less",
@@ -95,7 +95,7 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.ark.datamaps.core": {
+		"ext.datamaps.core": {
 			"es6": true,
 			"dependencies": [
 				"mediawiki.api"
@@ -143,10 +143,10 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.ark.datamaps.bootstrap": {
+		"ext.datamaps.bootstrap": {
 			"es6": true,
 			"dependencies": [
-				"ext.ark.datamaps.core"
+				"ext.datamaps.core"
 			],
 			"packageFiles": [
 				"bootstrap/main.js"
@@ -154,15 +154,15 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.ark.datamaps.site": {
+		"ext.datamaps.site": {
 			"class": "MediaWiki\\Extension\\Ark\\DataMaps\\Rendering\\ResourceLoaderDataMapsSiteModule"
 		},
 
-		"ext.ark.datamaps.inlineloader": {
+		"ext.datamaps.inlineloader": {
 			"es6": true,
 			"dependencies": [
-				"ext.ark.datamaps.core",
-				"ext.ark.datamaps.bootstrap"
+				"ext.datamaps.core",
+				"ext.datamaps.bootstrap"
 			],
 			"packageFiles": [
 				"inlineLoader/main.js"
@@ -170,29 +170,29 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.ark.datamaps.styles.search": {
+		"ext.datamaps.styles.search": {
 			"styles": [
 				"search/styles.less"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.ark.datamaps.fuzzysort": {
+		"ext.datamaps.fuzzysort": {
 			"scripts": [
 				"vendor/fuzzysort/fuzzysort.min.js"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.ark.datamaps.search": {
+		"ext.datamaps.search": {
 			"es6": true,
 			"dependencies": [
 				"oojs-ui-core",
-				"ext.ark.datamaps.core",
-				"ext.ark.datamaps.bootstrap",
-				"ext.ark.datamaps.leaflet",
-				"ext.ark.datamaps.styles.search",
-				"ext.ark.datamaps.fuzzysort"
+				"ext.datamaps.core",
+				"ext.datamaps.bootstrap",
+				"ext.datamaps.leaflet",
+				"ext.datamaps.styles.search",
+				"ext.datamaps.fuzzysort"
 			],
 			"packageFiles": [
 				"search/main.js",
@@ -225,8 +225,8 @@
 		"ext.datamaps.ve": {
 			"es6": true,
 			"dependencies": [
-				"ext.ark.datamaps.core",
-				"ext.ark.datamaps.leaflet",
+				"ext.datamaps.core",
+				"ext.datamaps.leaflet",
 				"oojs-ui-toolbars",
 				"oojs-ui-windows",
 				"ext.datamaps.ve.icons"

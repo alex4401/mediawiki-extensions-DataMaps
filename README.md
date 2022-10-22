@@ -150,16 +150,16 @@ Box is a array of two locations, where first describes the start point of the bo
 ## Gadgets
 External scripts can hook into Data Maps to provide additional functionality without modifying core code.
 
-* All Leaflet APIs are public and left exposed under the `ext.ark.datamaps.leaflet` module. 
-* * Custom Leaflet layers are exposed under `ext.ark.datamaps.leaflet.Ark`.
-* * Lazy-loaded. Depend (via `mw.loader.using`) on `ext.ark.datamaps.leaflet`.
+* All Leaflet APIs are public and left exposed under the `ext.datamaps.leaflet` module. 
+* * Custom Leaflet layers are exposed under `ext.datamaps.leaflet.Ark`.
+* * Lazy-loaded. Depend (via `mw.loader.using`) on `ext.datamaps.leaflet`.
 * * `DataMap` objects provide `waitForLeaflet( function callback )`.
 * All public APIs of this extension are exposed under `window.mw.dataMaps`. Check `resources/loader/index.js` for all exposed classes.
-* `mw.dataMaps.subscribeHook( string hookName, function callback )` may be used to register a hook callback for every map on current page. `hookName` must not include the `ext.ark.datamaps` namespace. The callback receives one parameter, a `DataMap` instance.
-* * Depend (via `mw.loader.using`) on `ext.ark.datamaps.bootstrap` to use this.
+* `mw.dataMaps.subscribeHook( string hookName, function callback )` may be used to register a hook callback for every map on current page. `hookName` must not include the `ext.datamaps` namespace. The callback receives one parameter, a `DataMap` instance.
+* * Depend (via `mw.loader.using`) on `ext.datamaps.bootstrap` to use this.
 * Instance hooks:
-* * `ext.ark.datamaps.afterInitialisation.[id]( DataMap )`: called after the `DataMap` instance is created, and secondary modules and marker data set have been requested.
-* * `ext.ark.datamaps.afterLegendInitialisation.[id]( DataMap )`: called after OOUI loads and the legend panel is set up.
+* * `ext.datamaps.afterInitialisation.[id]( DataMap )`: called after the `DataMap` instance is created, and secondary modules and marker data set have been requested.
+* * `ext.datamaps.afterLegendInitialisation.[id]( DataMap )`: called after OOUI loads and the legend panel is set up.
 * Refer to the source code for information about the classes.
 
 ## Leaflet

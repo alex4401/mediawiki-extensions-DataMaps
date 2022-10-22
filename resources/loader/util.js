@@ -20,7 +20,7 @@ module.exports = {
     
     getLeaflet() {
         if ( Leaflet === null ) {
-            Leaflet = require( 'ext.ark.datamaps.leaflet' );
+            Leaflet = require( 'ext.datamaps.leaflet' );
         }
         return Leaflet;
     },

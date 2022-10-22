@@ -86,7 +86,7 @@ class DataMap extends EventEmitter {
         }
 
         // Prepare the Leaflet map view
-        mw.loader.using( 'ext.ark.datamaps.leaflet', () => {
+        mw.loader.using( 'ext.datamaps.leaflet', () => {
             if ( Leaflet === null ) {
                 Leaflet = Util.getLeaflet();
             }
@@ -97,8 +97,8 @@ class DataMap extends EventEmitter {
         if ( !this.isFeatureBitSet( Enums.MapFlags.VisualEditor ) && this.isFeatureBitSet( Enums.MapFlags.Search ) ) {
             mw.loader.using( [
                 'oojs-ui-core',
-                'ext.ark.datamaps.styles.search',
-                'ext.ark.datamaps.search'
+                'ext.datamaps.styles.search',
+                'ext.datamaps.search'
             ] );
         }
     }
@@ -127,7 +127,7 @@ class DataMap extends EventEmitter {
 
     /**
      * Runs the callback function when the Leaflet map is initialised. If you only need access to Leaflet's API, require module
-     * `ext.ark.datamaps.leaflet` instead with ResourceLoader.
+     * `ext.datamaps.leaflet` instead with ResourceLoader.
      * @param {Function} callback Function to run when Leaflet map is initialised.
      * @param {object?} context Object to use as callback's context.
      */

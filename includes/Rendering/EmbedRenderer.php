@@ -78,19 +78,19 @@ class EmbedRenderer {
 
     public function addModules(): void {
         $this->parserOutput->addModules( [
-            'ext.ark.datamaps.styles',
-            // ext.ark.datamaps.leaflet.core is loaded on demand (when a DataMap is initialised) in a separate request
+            'ext.datamaps.styles',
+            // ext.datamaps.leaflet is loaded on demand (when a DataMap is initialised) in a separate request
             // to not delay the site module
-            'ext.ark.datamaps.core',
+            'ext.datamaps.core',
             // Initialiser module to boot the maps
-            'ext.ark.datamaps.bootstrap',
+            'ext.datamaps.bootstrap',
             // Wiki-provided CSS and JS
-            'ext.ark.datamaps.site'
+            'ext.datamaps.site'
         ] );
 
         if ( $this->useInlineData && !$this->forVisualEditor ) {
             $this->parserOutput->addModules( [
-				'ext.ark.datamaps.inlineloader'
+				'ext.datamaps.inlineloader'
 			] );
         }
     }
