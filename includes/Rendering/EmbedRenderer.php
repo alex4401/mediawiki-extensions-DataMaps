@@ -174,10 +174,7 @@ class EmbedRenderer {
             'classes' => [ 'datamap-container' ],
 			'framed' => true,
 			'expanded' => false,
-			'padded' => false,
-            'attributes' => [
-                'data-datamap-id' => $this->getId()
-            ]
+			'padded' => false
 		] );
 		$containerTop = new \OOUI\PanelLayout( [
             'classes' => [ 'datamap-container-top' ],
@@ -197,6 +194,11 @@ class EmbedRenderer {
 			'expanded' => false,
 			'padded' => false
 		] );
+
+        // Push page ID onto the container
+        $containerMain->setAttributes( [
+            'data-datamap-id' => $this->getId()
+        ] );
 
         // Stack the containers
         $containerMain->appendContent( $containerTop );
