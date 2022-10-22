@@ -51,7 +51,7 @@ module.exports = class MarkerPopup {
             $( '<b class="datamap-popup-subtitle">' ).text( this.markerGroup.name ).appendTo( this.$content );
             $( '<b class="datamap-popup-title">' ).html( this.slots.label ).appendTo( this.$content );
         } else {
-            $( '<b class="datamap-popup-title">' ).html( this.markerGroup.name ).appendTo( this.$content );
+            $( '<b class="datamap-popup-title">' ).text( this.markerGroup.name ).appendTo( this.$content );
         }
 
         // Collect layer discriminators
