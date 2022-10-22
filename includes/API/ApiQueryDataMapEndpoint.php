@@ -228,6 +228,11 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     private function doPostProcessing( $params, array &$data ) {
+        $timeStart = 0;
+        if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
+            $timeStart = hrtime( true );
+        }
+
         // Filter markers by layers
         if ( isset( $params['layers'] ) ) {
             foreach ( array_keys( $data['markers'] ) as &$layers ) {
@@ -288,6 +293,10 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             if ( $anyRemoved ) {
                 $data['continue'] = ( $params['continue'] ?? 0 ) + $params['limit'];
             }
+        }
+
+        if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
+            $data['timing']['postProcessing'] = hrtime( true ) - $timeStart;
         }
     }
 }
