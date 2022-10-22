@@ -16,7 +16,7 @@ class MarkerSearch {
                 this.importExisting();
 
                 this.map.on( 'markerReady', this.addMarker, this );
-                this.map.on( 'streamingDone', this.onChunkStreamed, this );
+                this.map.on( 'chunkStreamingDone', this.onChunkStreamed, this );
             } );
         } );
     }

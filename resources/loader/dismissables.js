@@ -194,11 +194,11 @@ class CollectiblesLegend {
         this.map.on( 'markerDismissChange', this.updateGroupBadges, this );
         this.map.on( 'markerDismissChange', this.onDismissalChange, this );
         this.map.on( 'markerReady', this.pushMarker, this );
-        this.map.on( 'streamingDone', this.sort, this );
-        this.map.on( 'streamingDone', () => {
+        this.map.on( 'chunkStreamingDone', this.sort, this );
+        this.map.on( 'chunkStreamingDone', () => {
             this.suppressBadgeUpdates = false;
         }, this );
-        this.map.on( 'streamingDone', this.updateGroupBadges, this );
+        this.map.on( 'chunkStreamingDone', this.updateGroupBadges, this );
 
         // Call updaters now to bring the main panel in sync
         this.updateGroupBadges( true );

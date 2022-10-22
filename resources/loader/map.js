@@ -70,7 +70,7 @@ class DataMap extends EventEmitter {
 
         // Set up internal event handlers
         this.on( 'markerReady', this.openPopupIfUriMarker, this );
-        this.on( 'streamingDone', this.refreshMaxBounds, this );
+        this.on( 'chunkStreamingDone', this.refreshMaxBounds, this );
         this.on( 'linkedEvent', this.onLinkedEventReceived, this );
 
         // DEPRECATED(v0.13.0:v0.14.0): use class constants
