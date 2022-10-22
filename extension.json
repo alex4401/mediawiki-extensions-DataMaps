@@ -18,8 +18,9 @@
 	},
 
 	"MessagesDirs": {
-		"DataMaps.class": [
-			"i18n"
+		"DataMaps": [
+			"i18n/core",
+			"i18n/ve"
 		]
 	},
 	"ExtensionMessagesFiles": {
