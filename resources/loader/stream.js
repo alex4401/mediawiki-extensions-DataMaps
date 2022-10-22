@@ -76,6 +76,8 @@ module.exports = class MarkerStreamingManager {
             .then( data => {
                 this.map.waitForLeaflet( () => {
                     this.instantiateMarkers( data.query.markers );
+                    this.map.fire( 'chunkStreamingDone' );
+                    // DEPRECATED(v0.13.0:v0.14.0): old event name
                     this.map.fire( 'streamingDone' );
                 } );
             } );
