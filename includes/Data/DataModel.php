@@ -148,9 +148,18 @@ class DataModel {
         }
 
         if ( $isRequired && ( $name === null || !isset( $this->raw->$name ) ) ) {
-            // TODO: display right name if there's multiples
-            $status->fatal( 'datamap-error-validate-field-required', static::$publicName, $name,
-                wfMessage( 'datamap-error-validate-check-docs' ) );
+            if ( isset( $spec['names'] ) ) {
+                if ( count( $spec['names'] ) === 2 ) {
+                    $status->fatal( 'datamap-error-validate-field-required-either', static::$publicName, $spec['names'][0],
+                        $spec['names'][1], wfMessage( 'datamap-error-validate-check-docs' ) );
+                } else {
+                    $status->fatal( 'datamap-error-validate-field-required-alt', static::$publicName, $spec['names'][0],
+                        wfMessage( 'datamap-error-validate-check-docs' ) );
+                }
+            } else {
+                $status->fatal( 'datamap-error-validate-field-required', static::$publicName, $spec['name'],
+                    wfMessage( 'datamap-error-validate-check-docs' ) );
+            }
             $this->validationAreRequiredFieldsPresent = false;
             return false;
         }
