@@ -101,24 +101,24 @@
 				"mediawiki.api"
 			],
 			"packageFiles": [
-				"loader/index.js",
-				"loader/enums.js",
-				"loader/events.js",
-				"loader/storage.js",
-				"loader/stream.js",
-				"loader/layerManager.js",
-				"loader/map.js",
-				"loader/legend.js",
-				"loader/markerLegend.js",
-				"loader/popup.js",
-				"loader/dismissables.js",
+				"core/index.js",
+				"core/enums.js",
+				"core/events.js",
+				"core/storage.js",
+				"core/stream.js",
+				"core/layerManager.js",
+				"core/map.js",
+				"core/legend.js",
+				"core/markerLegend.js",
+				"core/popup.js",
+				"core/dismissables.js",
 				{
-					"name": "loader/settings.json",
+					"name": "core/settings.json",
 					"config": [
 						"DataMapsAllowExperimentalFeatures"
 					]
 				},
-				"loader/util.js"
+				"core/util.js"
 			],
 			"messages": [
 				"datamap-error-dataload",
