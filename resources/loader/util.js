@@ -8,17 +8,17 @@ module.exports = {
     isBleedingEdge: require( './settings.json' ).DataMapsAllowExperimentalFeatures,
 
 
-    isBitSet: function ( a, b ) {
+    isBitSet( a, b ) {
         return a && ( a & b ) == b;
     },
 
 
-    isAnyBitSet: function ( a, b ) {
+    isAnyBitSet( a, b ) {
         return a && ( a & b ) !== 0;
     },
 
     
-    getLeaflet: function () {
+    getLeaflet() {
         if ( Leaflet === null ) {
             Leaflet = require( 'ext.ark.datamaps.leaflet' );
         }
@@ -26,18 +26,18 @@ module.exports = {
     },
 
 
-    getGroupCollectibleType: function ( group ) {
+    getGroupCollectibleType( group ) {
         return ( group.flags || 0 ) & ( Enums.MarkerGroupFlags.Collectible_Individual | Enums.MarkerGroupFlags.Collectible_Group
             | Enums.MarkerGroupFlags.Collectible_GlobalGroup );
     },
 
 
-    createGroupIconElement: function ( group ) {
+    createGroupIconElement( group ) {
         return $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src', group.legendIcon );
     },
 
 
-    createGroupCircleElement: function ( group ) {
+    createGroupCircleElement( group ) {
         return $( '<div class="datamap-legend-circle">' ).css( {
             width: Math.min( module.exports.MAX_GROUP_CIRCLE_SIZE, group.size+4 ),
             height: Math.min( module.exports.MAX_GROUP_CIRCLE_SIZE, group.size+4 ),
@@ -51,7 +51,7 @@ module.exports = {
     /*
      * Generates an identifier of a marker using type and coordinates.
      */
-    getGeneratedMarkerId: function ( leafletMarker ) {
+    getGeneratedMarkerId( leafletMarker ) {
         const type = leafletMarker.attachedLayers.join( ' ' );
         return `M${type}@${leafletMarker.apiInstance[0].toFixed(3)}:${leafletMarker.apiInstance[1].toFixed(3)}`;
     },
@@ -60,18 +60,18 @@ module.exports = {
     /*
      * Retrieves an identifier of a marker to use with local storage or in permanent links.
      */
-    getMarkerId: function ( leafletMarker ) {
+    getMarkerId( leafletMarker ) {
         return leafletMarker.apiInstance[2] && leafletMarker.apiInstance[2].uid
             || module.exports.getGeneratedMarkerId( leafletMarker );
     },
 
 
-    getQueryParameter: function ( name ) {
+    getQueryParameter( name ) {
         return new URLSearchParams( window.location.search ).get( name );
     },
 
 
-    makeUrlWithParams: function ( map, paramsToSet, withHost ) {
+    makeUrlWithParams( map, paramsToSet, withHost ) {
         const params = new URLSearchParams( window.location.search );
         for ( const paramName in paramsToSet ) {
             if ( paramsToSet[paramName] ) {
@@ -89,7 +89,7 @@ module.exports = {
     },
 
 
-    updateLocation: function ( map, paramsToSet ) {
+    updateLocation( map, paramsToSet ) {
         history.replaceState( {}, '', module.exports.makeUrlWithParams( map, paramsToSet, false ) );
     }
 };

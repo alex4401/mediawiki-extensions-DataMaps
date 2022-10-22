@@ -49,18 +49,14 @@ CommitDialog.prototype.initialize = function () {
 // Set up the initial mode of the window ('edit', in this example.)  
 CommitDialog.prototype.getSetupProcess = function ( data ) {
 	return OO.ui.ProcessDialog.prototype.getSetupProcess.call( this, data )
-	    .next( function () {
-		    this.actions.setMode( 'edit' );
-	    }, this );
+	    .next( () => this.actions.setMode( 'edit' ), this );
 };
 
 
 // Use the getActionProcess() method to set the modes and displayed item.
 CommitDialog.prototype.getActionProcess = function ( action ) {
 	if ( action === 'continue' ) {
-		return new OO.ui.Process( () => {
-			this.close();
-		} );
+		return new OO.ui.Process( () => this.close() );
 	}
 	return OO.ui.ProcessDialog.prototype.getActionProcess.call( this, action );
 };

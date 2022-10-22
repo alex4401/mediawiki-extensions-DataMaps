@@ -6,12 +6,12 @@ module.exports = Leaflet.Popup.extend( {
         className: 'datamap-popup'
     },
 
-    setContent: function ( content ) {
+    setContent( content ) {
         this.getContentManager = content;
         return this;
     },
 
-	_updateContent: function () {
+	_updateContent() {
         if ( !this._contentNode ) {
             return;
         }
@@ -37,19 +37,19 @@ module.exports = Leaflet.Popup.extend( {
 		this._content.buildTools();
 	},
 
-	_initLayout: function () {
+	_initLayout() {
 		Leaflet.Popup.prototype._initLayout.call( this );
 
         this.$customButtonArea = $( '<div class="datamap-popup-buttons">' ).appendTo( this._container );
 	},
 
-	onAdd: function ( map ) {
+	onAdd( map ) {
         this._updateContent();
         Leaflet.Popup.prototype.onAdd.call( this, map );
         this._content.onAdd();
     },
 
-	onRemove: function ( map ) {
+	onRemove( map ) {
         Leaflet.Popup.prototype.onRemove.call( this, map );
         this._content.onRemove();
     }

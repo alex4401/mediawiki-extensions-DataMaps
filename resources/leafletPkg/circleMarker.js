@@ -9,18 +9,18 @@ module.exports = Leaflet.CircleMarker.extend( {
 		dismissed: false
 	},
 
-	setRadius: function ( radius ) {
+	setRadius( radius ) {
 		this.options.baseRadius = this._radius = radius;
 		return this.redraw();
 	},
 
-	setDismissed: function ( state ) {
+	setDismissed( state ) {
 		this.options.dismissed = state;
 		this.opacityMult = state ? DISMISSED_MARKER_OPACITY : 1;
 		return this.redraw();
 	},
 
-    getDisplayScale: function () {
+    getDisplayScale() {
         if ( this._map.options.shouldExpandZoomInvEx && this.options.baseRadius <= MAX_RADIUS_TO_GROW_MORE ) {
             return this._map.options.markerScaleI + ( 1 - this._map.options.markerScaleA )
                 * ( this.options.expandZoomInvEx || this._map.options.expandZoomInvEx );
@@ -28,7 +28,7 @@ module.exports = Leaflet.CircleMarker.extend( {
         return this._map.options.markerScaleI;
     },
 
-	_updatePath: function () {
+	_updatePath() {
         this._radius = this.options.baseRadius * this.getDisplayScale();
         // Super behaviour
 		this._renderer._updateCircle( this );
