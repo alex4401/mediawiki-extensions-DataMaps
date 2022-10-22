@@ -4,16 +4,16 @@ namespace MediaWiki\Extension\Ark\DataMaps\Content;
 use MediaWiki\MediaWikiServices;
 use FormatJson;
 use JsonContent;
-use Parser;
-use ParserOptions;
-use ParserOutput;
 use OutputPage;
 use Title;
 use Html;
 use PPFrame;
 use Status;
 use stdClass;
+use Parser;
 use WikiPage;
+use User;
+use ParserOutput;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\EmbedRenderer;
@@ -22,14 +22,81 @@ use MediaWiki\Extension\Ark\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataModelMixinTransformer;
 
-class DataMapContent extends DataMapContentBase {
+class DataMapContent extends JsonContent {
 	const LERR_NOT_FOUND = 1;
 	const LERR_NOT_DATAMAP = 2;
+
+    # Reduce 2-12 numbers in an array onto a single line
+    const JOIN_MULTIPLE_NUMBERS_RE = '/(\n\s+)([+-]?\d+(\.\d+)?([eE][-+]?\d+)?|true|false),(?:\n\s+(?:[+-]?\d+(\.\d+)?([eE][-+]?\d+)?|true|false|null|"[^"\n\t]*"),?){1,12}/';
+    # Reduce short arrays of strings onto a single line
+    const JOIN_MULTIPLE_STRINGS_RE = '/\[((?:\n\s+".{1,30}",?\s*$){1,4})\n\s+\]/';
+    # Reduces dict fields with only a single line of content (including previously joined multiple fields) to a single line
+    const COLLAPSE_SINGLE_LINE_DICT_RE = '/\{\n\s+("\w+": [^}\n\]]{1,120})\n\s+\}/';
+    # Reduce arrays with only a single line of content (including previously joined multiple fields) to a single line
+    const COLLAPSE_SINGLE_LINE_ARRAY_RE = '/\[\s+(.+)\s+\]/';
+	# Sets of named fields that should be combined onto a single line
+	const JOIN_LINE_FIELDS = [
+		'left|right|top|bottom',
+		// Backgrounds
+		'name|image',
+		// Marker groups
+		'fillColor|size',
+		'fillColor|borderColor',
+		'fillColor|borderColor|size',
+		'fillColor|borderColor|borderWidth',
+		'fillColor|borderColor|borderWidth|size',
+		'icon|size',
+		'name|icon',
+		'name|icon|size',
+		'name|fillColor|size',
+		'name|fillColor|size|icon',
+		// Layers
+		'name|subtleText',
+		// Markers
+		'id|lat|lon',
+		'id|x|y',
+		'id|y|x',
+		'lat|lon',
+		'x|y',
+		'y|x',
+		'lat|lon|article',
+		'x|y|article',
+		'y|x|article',
+		'lat|lon|image',
+		'x|y|image',
+		'y|x|image',
+		'lat|lon|popupImage',
+		'article|popupImage',
+		'article|image'
+	];
 
 	private ?DataMapSpec $modelCached = null;
 
 	public function __construct( $text, $modelId = ARK_CONTENT_MODEL_DATAMAP ) {
 		parent::__construct( $text, $modelId );
+	}
+	
+	public static function toJSON( stdclass $raw ) {
+		$out = FormatJson::encode( $raw, "\t", FormatJson::ALL_OK );
+
+		foreach ( self::JOIN_LINE_FIELDS as $term ) {
+			$part = '(?:("(?:' . $term . ')": [^,\n]+,?))';
+			$fieldCount = substr_count( $term, '|' ) + 1;
+			$full = '/' . join( '\s+', array_fill( 0, $fieldCount, $part ) ) . '(\s+)/';
+			$subs = join( ' ', array_map( fn ( $n ) => '$' . $n, range( 1, $fieldCount ) ) ) . "$" . ( $fieldCount + 1 );
+			$out = preg_replace( $full, $subs, $out );
+		}
+
+		$out = preg_replace_callback( self::JOIN_MULTIPLE_NUMBERS_RE, function ( array $matches ) {
+			$txt = $matches[0];
+			$txt = preg_replace( '/\s*\n\s+/', '', $txt );
+			$txt = str_replace( ',', ', ', $txt );
+			return $matches[1] . $txt;
+		}, $out );
+		$out = preg_replace( self::COLLAPSE_SINGLE_LINE_DICT_RE, '{ $1 }', $out );
+		$out = preg_replace( self::COLLAPSE_SINGLE_LINE_ARRAY_RE, '[ $1 ]', $out );
+
+		return $out;
 	}
 
 	public static function loadPage( Title $title ) {
@@ -120,40 +187,26 @@ class DataMapContent extends DataMapContentBase {
 		return new EmbedRenderer( $title, $this->asModel(), $parser, $parserOutput, $useInlineData, $forVisualEditor );
 	}
 
-	protected function fillParserOutput( Title $title, $revId, ParserOptions $options, $generateHtml, ParserOutput &$output ) {
-		$output = parent::fillParserOutput( $title, $revId, $options, $generateHtml, $output );
+	public function beautifyJSON() {
+		return self::toJSON( $this->getData()->getValue() );
+	}
 
-		if ( !$this->isMixin() ) {
-			$isVisualEditor = $options->getOption( 'isMapVisualEditor' );
+	public function prepareSave( WikiPage $page, $flags, $parentRevId, User $user ) {
+		$status = new Status();
+		$this->validateBeforeSave( $status );
+		return $status;
+	}
 
-			if ( $options->getIsPreview() && $generateHtml ) {
-				// If previewing an edit, run validation and end early on failure
-				$status = new Status();
-				$this->validateBeforeSave( $status );
-				if ( !$status->isOK() ) {
-					$output->setText( $output->getRawText() . Html::errorBox(
-						wfMessage(
-							'datamap-error-cannot-' . ( $isVisualEditor ? 'open-ve' : 'preview' ) . '-validation-errors',
-							$status->getMessage( false, false )
-						)
-					) );
-					return $output;
-				}
-			}
-
-			$parser = MediaWikiServices::getInstance()->getParser();
-			$embed = $this->getEmbedRenderer( $title, $parser, $output, $options->getIsPreview(),
-				$isVisualEditor );
-			$embed->prepareOutput( $output );
-
-			if ( $generateHtml ) {
-				$output->setText( $output->getRawText() . $embed->getHtml( new EmbedRenderOptions() ) );
-			}
+	public function validateBeforeSave( Status $status ) {
+		if ( !$this->isValid() ) {
+			$status->fatal( 'datamap-error-validate-invalid-json' );
 		} else {
-			$output->setProperty( 'ext.datamaps.isMapMixin', true );
-			$output->setProperty( 'ext.datamaps.isIneligibleForVE', true );
+            if ( $this->isMixin() && isset( $this->getData()->getValue()->mixins ) ) {
+                $status->fatal( 'datamap-error-validatespec-map-mixin-with-mixins' );
+                return;
+            }
+			
+			$this->asModel()->validate( $status );
 		}
-
-		return $output;
 	}
 }
