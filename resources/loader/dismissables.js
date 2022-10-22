@@ -1,6 +1,5 @@
 const Enums = require( './enums.js' ),
-    Util = require( './util.js' ),
-    MarkerLegendPanel = require( './markerLegend.js' );
+    Util = require( './util.js' );
 
 
 class CollectibleMarkerGroup {
@@ -136,7 +135,7 @@ class CollectibleMarkerEntry {
         }
 
         // Build the label
-        const areCoordsEnabled = this.panel.map.isFeatureBitSet( this.panel.map.FF_SHOW_COORDINATES );
+        const areCoordsEnabled = this.panel.map.isFeatureBitSet( Enums.MapFlags.ShowCoordinates );
         // Coordinates
         if ( areCoordsEnabled ) {
             this.$coordLabel = $( '<b>' ).text( this.panel.map.getCoordLabel( this.apiInstance ) ).appendTo( this.$label );
@@ -195,11 +194,11 @@ class CollectiblesLegend {
         this.map.on( 'markerDismissChange', this.updateGroupBadges, this );
         this.map.on( 'markerDismissChange', this.onDismissalChange, this );
         this.map.on( 'markerReady', this.pushMarker, this );
-        this.map.on( 'streamingDone', this.sort, this );
-        this.map.on( 'streamingDone', () => {
+        this.map.on( 'chunkStreamingDone', this.sort, this );
+        this.map.on( 'chunkStreamingDone', () => {
             this.suppressBadgeUpdates = false;
         }, this );
-        this.map.on( 'streamingDone', this.updateGroupBadges, this );
+        this.map.on( 'chunkStreamingDone', this.updateGroupBadges, this );
 
         // Call updaters now to bring the main panel in sync
         this.updateGroupBadges( true );
@@ -240,7 +239,7 @@ class CollectiblesLegend {
             group.sort();
         }
 
-        if ( this.map.isFeatureBitSet( this.map.FF_SORT_CHECKLISTS_BY_AMOUNT ) ) {
+        if ( this.map.isFeatureBitSet( Enums.MapFlags.SortChecklistsByAmount ) ) {
             const groups = Object.values( this.groups ).sort( ( a, b ) => a.markers.length > b.markers.length );
             for ( const group of groups ) {
                 group.$element.appendTo( this.$root );

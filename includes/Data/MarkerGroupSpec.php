@@ -126,10 +126,7 @@ class MarkerGroupSpec extends DataModel {
     }
 
     public function isIncludedInSearch(): bool {
-        return isset( $this->raw->canSearchFor ) ? $this->raw->canSearchFor : (
-            /* DEPRECATED(v0.12.0:v0.13.0) */
-            !( isset( $this->raw->excludeFromSearch ) ? $this->raw->excludeFromSearch : false )
-        );
+        return isset( $this->raw->canSearchFor ) ? $this->raw->canSearchFor : true;
     }
 
     public function isDefault(): bool {
@@ -137,44 +134,50 @@ class MarkerGroupSpec extends DataModel {
     }
 
     public function validate( Status $status ) {
-        $this->requireField( $status, 'name', DataModel::TYPE_STRING );
+        $this->checkField( $status, [
+            'name' => 'name',
+            'type' => DataModel::TYPE_STRING,
+            'required' => true
+        ] );
 
         switch ( $this->getDisplayMode() ) {
             case self::DM_CIRCLE:
-                $this->requireField( $status, 'fillColor', DataModel::TYPE_COLOUR3 );
-                $this->expectField( $status, 'borderColor', DataModel::TYPE_COLOUR3 );
-                $this->expectField( $status, 'borderWidth', DataModel::TYPE_NUMBER );
-                $this->expectField( $status, 'size', DataModel::TYPE_NUMBER );
-                $this->expectField( $status, 'extraMinZoomSize', DataModel::TYPE_NUMBER );
-                $this->expectField( $status, 'icon', DataModel::TYPE_STRING );
+                $this->checkField( $status, 'fillColor', DataModel::TYPE_COLOUR3 );
+                $this->checkField( $status, 'borderColor', DataModel::TYPE_COLOUR3 );
+                $this->checkField( $status, 'borderWidth', DataModel::TYPE_NUMBER );
+                $this->checkField( $status, 'size', DataModel::TYPE_NUMBER );
+                $this->checkField( $status, 'extraMinZoomSize', DataModel::TYPE_NUMBER );
+                $this->checkField( $status, [
+                    'name' => 'icon',
+                    'type' => DataModel::TYPE_FILE,
+                    'fileMustExist' => true
+                ] );
                 break;
             case self::DM_ICON:
-                $this->requireField( $status, 'icon', DataModel::TYPE_STRING );
-                $this->expectField( $status, 'size', DataModel::TYPE_DIMENSIONS );
+                $this->checkField( $status, [
+                    'name' => 'icon',
+                    'type' => DataModel::TYPE_FILE,
+                    'fileMustExist' => true,
+                    'required' => true
+                ] );
+                $this->checkField( $status, 'size', DataModel::TYPE_DIMENSIONS );
                 break;
             case self::DM_UNKNOWN:
                 $status->fatal( 'datamap-error-validatespec-group-no-display', wfEscapeWikiText( $this->id ) );
                 return;
         }
 
-        $this->expectField( $status, 'article', DataModel::TYPE_STRING );
-        $this->expectField( $status, 'isDefault', DataModel::TYPE_BOOL );
-        $this->expectField( $status, 'isCollectible', DataModel::TYPE_BOOL_OR_STRING );
-        $this->expectField( $status, 'autoNumberInChecklist', DataModel::TYPE_BOOL );
-        $this->allowReplacedField( $status, 'excludeFromSearch', DataModel::TYPE_BOOL, 'canSearchFor', '0.12.0', '0.13.0' );
-        $this->expectField( $status, 'canSearchFor', DataModel::TYPE_BOOL );
 
-        if ( $this->getCollectibleMode() === self::CM_UNKNOWN ) {
-            $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, 'isCollectible',
-                wfMessage( 'datamap-error-validate-check-docs' ) );
-        }
+        $this->checkField( $status, 'article', DataModel::TYPE_STRING );
+        $this->checkField( $status, 'isDefault', DataModel::TYPE_BOOL );
+        $this->checkField( $status, [
+            'name' => 'isCollectible',
+            'type' => [ DataModel::TYPE_BOOL, DataModel::TYPE_STRING ],
+            'values' => [ true, 'individual', 'group', 'globalGroup' ]
+        ] );
+        $this->checkField( $status, 'autoNumberInChecklist', DataModel::TYPE_BOOL );
+        $this->checkField( $status, 'canSearchFor', DataModel::TYPE_BOOL );
 
         $this->disallowOtherFields( $status );
-
-        if ( $this->validationAreRequiredFieldsPresent ) {
-            if ( $this->getIcon() !== null ) {
-                $this->requireFile( $status, $this->getIcon() );
-            }
-        }
     }
 }

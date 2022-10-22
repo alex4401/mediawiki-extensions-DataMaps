@@ -56,6 +56,14 @@ class ExtensionConfig {
         return $wgDataMapsReportTimingInfo;
     }
 
+    public static function getApiDefaultMarkerLimit(): int {
+        return $GLOBALS['wgDataMapsDefaultApiMarkerBatch'];
+    }
+
+    public static function getApiMaxMarkerLimit(): int {
+        return $GLOBALS['wgDataMapsMaxApiMarkerBatch'];
+    }
+
     public static function shouldCacheWikitextInProcess(): bool {
         global $wgDataMapsUseInProcessParserCache;
         return $wgDataMapsUseInProcessParserCache;
@@ -68,6 +76,10 @@ class ExtensionConfig {
 
     public static function getDefaultFeatureState( string $feature ) {
         return self::getDefaultFeatureStates()[$feature];
+    }
+
+    public static function isVisualEditorEnabled(): bool {
+        return self::isBleedingEdge() && $GLOBALS['wgDataMapsEnableVisualEditor'];
     }
 
     public static function isBleedingEdge(): bool {

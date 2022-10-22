@@ -26,6 +26,19 @@
         .dmLegendAboveMap();
     }
 
+    &,
+    > .oo-ui-layout,
+    > .oo-ui-layout > .oo-ui-menuLayout-content,
+    > .oo-ui-layout > .oo-ui-menuLayout-content > .oo-ui-stackLayout {
+        display: flex;
+        flex-direction: column;
+    }
+
+    > .oo-ui-layout,
+    > .oo-ui-layout > .oo-ui-menuLayout-content {
+        flex-grow: 1;
+    }
+
     .oo-ui-tabSelectWidget {
         padding: 4px 0;
     }

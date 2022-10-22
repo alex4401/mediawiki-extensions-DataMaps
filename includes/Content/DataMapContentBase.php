@@ -7,17 +7,12 @@ use JsonContent;
 use Parser;
 use ParserOptions;
 use ParserOutput;
-use OutputPage;
 use Title;
 use Html;
-use PPFrame;
 use WikiPage;
 use User;
 use Status;
 use stdclass;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapRenderOptions;
-use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 
 abstract class DataMapContentBase extends JsonContent {
     # Reduce 2-12 numbers in an array onto a single line

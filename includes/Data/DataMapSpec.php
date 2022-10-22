@@ -15,6 +15,27 @@ class DataMapSpec extends DataModel {
     private ?array $cachedMarkerLayers = null;
     private ?array $cachedBackgrounds = null;
 
+    const SM_NONE = 0;
+    const SM_SELF = 1;
+    const SM_TABBER = 2;
+
+    const CO_YX = 0;
+    const CO_XY = 1;
+
+    public static function normalisePointCoordinates( array $value, int $order ): array {
+        if ( $order === self::CO_XY ) {
+            $value = [ $value[1], $value[0] ];
+        }
+        return $value;
+    }
+
+    public static function normaliseBoxCoordinates( array $value, int $order ): array {
+        if ( $order === self::CO_XY ) {
+            $value = [ [ $value[0][1], $value[0][0] ], [ $value[1][1], $value[1][0] ] ];
+        }
+        return $value;
+    }
+
     public static function staticIsMixin( \stdclass $raw ): bool {
         return isset( $raw->{'$mixin'} ) ? $raw->{'$mixin'} : false;
     }
@@ -25,6 +46,18 @@ class DataMapSpec extends DataModel {
 
     public function getMixins(): ?array {
         return isset( $this->raw->mixins ) ? $this->raw->mixins : null;
+    }
+
+    public function getCoordinateOrder(): int {
+        $value = isset( $this->raw->coordinateOrder ) ? $this->raw->coordinateOrder : 'yx';
+        switch ( $value ) {
+            case 'yx':
+            case 'latlon':
+                return self::CO_YX;
+            case 'xy':
+            case 'lonlat':
+                return self::CO_XY;
+        }
     }
 
     public function getCoordinateReferenceSpace(): array {
@@ -65,9 +98,15 @@ class DataMapSpec extends DataModel {
             : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_REQUIRE_CUSTOM_MARKER_IDS );
     }
 
-    public function wantsSearch(): bool {
-        return isset( $this->raw->enableSearch ) ? $this->raw->enableSearch
+    public function wantsSearch(): int {
+        $value = isset( $this->raw->enableSearch ) ? $this->raw->enableSearch
             : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_SEARCH );
+        if ( $value === true ) {
+            return self::SM_SELF;
+        } else if ( $value === 'tabberWide' ) {
+            return self::SM_TABBER;
+        }
+        return self::SM_NONE;
     }
 
     public function wantsChecklistSortedByAmount(): bool {
@@ -167,105 +206,127 @@ class DataMapSpec extends DataModel {
         // Perform full strict validation if this is a full map, otherwise limit it to certain fields and lenience
         $isFull = !$this->isMixin();
 
-        $this->expectField( $status, '$mixin', DataModel::TYPE_BOOL );
-        if ( $isFull ) {
-            $this->expectField( $status, 'mixins', DataModel::TYPE_ARRAY );
-        }
-        $hasCrs = $this->expectField( $status, 'crs', DataModel::TYPE_VECTOR2x2 );
-        if ( $isFull ) {
-            $this->requireEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
-        } else {
-            $this->expectEitherField( $status, 'image', DataModel::TYPE_STRING, 'backgrounds', DataModel::TYPE_ARRAY );
-        }
-        $this->expectField( $status, 'showCoordinates', DataModel::TYPE_BOOL );
-        $this->expectField( $status, 'hideLegend', DataModel::TYPE_BOOL );
-        $this->expectField( $status, 'showLegendAbove', DataModel::TYPE_BOOL );
-        $this->expectField( $status, 'disableZoom', DataModel::TYPE_BOOL );
-        $this->expectField( $status, 'sortChecklistsByAmount', DataModel::TYPE_BOOL );
-        $this->expectField( $status, 'requireCustomMarkerIDs', DataModel::TYPE_BOOL );
-        $this->expectField( $status, 'enableSearch', DataModel::TYPE_BOOL );
-        $this->expectField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
-        if ( $isFull ) {
-            $this->requireField( $status, 'groups', DataModel::TYPE_OBJECT );
-        } else {
-            $this->expectField( $status, 'groups', DataModel::TYPE_OBJECT );
-        }
-        $this->expectField( $status, 'layers', DataModel::TYPE_OBJECT );
-        $this->expectField( $status, 'custom', DataModel::TYPE_OBJECT );
-        $this->expectField( $status, 'markers', DataModel::TYPE_OBJECT );
-        $this->disallowOtherFields( $status );
-
-        if ( $this->validationAreRequiredFieldsPresent ) {
-            // Make sure all mixins exist and are data maps
-            if ( $this->getMixins() !== null ) {
-                foreach ( $this->getMixins() as &$mixinName ) {
-                    $title = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $mixinName );
-                    $mixinPage = DataMapContent::loadPage( $title );
+        $this->checkField( $status, '$mixin', DataModel::TYPE_BOOL );
+        $this->checkField( $status, [
+            'name' => 'mixins',
+            'type' => DataModel::TYPE_ARRAY,
+            'itemType' => DataModel::TYPE_STRING,
+            'itemCheck' => function ( $status, $mixinName ) {
+                // Make sure all mixins exist and are data maps
+                $title = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $mixinName );
+                $mixinPage = DataMapContent::loadPage( $title );
                     
-                    if ( is_numeric( $mixinPage ) || $mixinPage->getData()->getValue() == null ) {
-                        $status->fatal( 'datamap-error-validatespec-map-bad-mixin', wfEscapeWikiText( $mixinName ) );
-                    }
+                if ( is_numeric( $mixinPage ) || $mixinPage->getData()->getValue() == null ) {
+                    $status->fatal( 'datamap-error-validatespec-map-bad-mixin', wfEscapeWikiText( $mixinName ) );
+                    return false;
                 }
-            }
 
-            // Validate the coordinate system - only two supported schemes are [ lower lower higher higher ] (top-left), and
-            // [ higher higher lower lower ] (bottom-left).
-            if ( $hasCrs ) {
-                $crs = $this->getCoordinateReferenceSpace();
+                return true;
+            }
+        ] );
+        $this->checkField( $status, [
+            'name' => 'crs',
+            'type' => DataModel::TYPE_VECTOR2x2,
+            'check' => function ( $status, $crs ) {
+                // Validate the coordinate system - only two supported schemes are [ lower lower higher higher ] (top-left), and
+                // [ higher higher lower lower ] (bottom-left).
                 $first = $crs[0];
                 $second = $crs[1];
                 if ( !( ( $first[0] < $second[0] && $first[1] < $second[1] ) || ( $first[0] > $second[0]
                     && $first[1] > $second[1] ) ) ) {
                     $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, 'crs',
                         wfMessage( 'datamap-error-validate-check-docs' ) );
+                    return false;
                 }
+                return true;
             }
+        ] );
+        $this->checkField( $status, [
+            'name' => 'coordinateOrder',
+            'type' => DataModel::TYPE_STRING,
+            'values' => [ 'yx', 'xy', 'latlon', 'lonlat' ]
+        ] );
 
-            // Validate backgrounds by the MapBackgroundSpec class
-            if ( isset( $this->raw->image ) || isset( $this->raw->backgrounds ) ) {
-                $multipleBgs = count( $this->getBackgrounds() ) > 1;
-                foreach ( $this->getBackgrounds() as &$spec ) {
-                    $spec->validate( $status, !$multipleBgs );
-                }
+        if ( !$this->conflict( $status, [ 'image', 'backgrounds' ] ) ) {
+            if ( isset( $this->raw->image ) ) {
+                $this->checkField( $status, [
+                    'name' => 'image',
+                    'type' => DataModel::TYPE_FILE,
+                    'fileMustExist' => true
+                ] );
+            } else if ( isset( $this->raw->backgrounds ) ) {
+                $this->checkField( $status, [
+                    'name' => 'backgrounds',
+                    'type' => DataModel::TYPE_ARRAY,
+                    'check' => function ( $status, $backgrounds ) {
+                        $multipleBgs = count( $backgrounds ) > 1;
+                        foreach ( $backgrounds as &$raw ) {
+                            $spec = new MapBackgroundSpec( $raw );
+                            if ( !$spec->validate( $status, !$multipleBgs ) ) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                ] );
+            } else if ( $isFull ) {
+                $status->fatal( 'datamap-error-validate-field-required-either', self::$publicName, 'image', 'backgrounds' );
+                $this->validationAreRequiredFieldsPresent = false;
             }
-    
-            // Validate marker groups by the MarkerGroupSpec class
-            if ( isset( $this->raw->groups ) ) {
-                foreach ( $this->getRawMarkerGroupMap() as $name => $group ) {
+        }
+
+        $this->checkField( $status, 'showCoordinates', DataModel::TYPE_BOOL );
+        $this->checkField( $status, 'hideLegend', DataModel::TYPE_BOOL );
+        $this->checkField( $status, 'showLegendAbove', DataModel::TYPE_BOOL );
+        $this->checkField( $status, 'disableZoom', DataModel::TYPE_BOOL );
+        $this->checkField( $status, 'sortChecklistsByAmount', DataModel::TYPE_BOOL );
+        $this->checkField( $status, 'requireCustomMarkerIDs', DataModel::TYPE_BOOL );
+        $this->checkField( $status, [
+            'name' => 'enableSearch',
+            'type' => [ DataModel::TYPE_BOOL, DataModel::TYPE_STRING ],
+            'values' => [ true, false, 'tabberWide' ]
+        ] );
+        $this->checkField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
+        $this->checkField( $status, [
+            'name' => 'groups',
+            'type' => DataModel::TYPE_OBJECT,
+            'required' => $isFull,
+            'check' => function ( $status, &$rawMap ) {
+                foreach ( $rawMap as $name => $group ) {
                     if ( empty( $name ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-no-group-name' );
                     }
                 
                     $spec = new MarkerGroupSpec( $name, $group );
-                    $spec->validate( $status );
-                }
-            }
-
-            // Validate there's no overlap between marker layer names and group names
-            if ( isset( $this->raw->groups ) && isset( $this->raw->layers ) ) {
-                foreach ( array_keys( $this->getRawMarkerLayerMap() ) as &$name ) {
-                    if ( isset( $this->raw->groups->{$name} ) ) {
-                        $status->fatal( 'datamap-error-validatespec-map-name-conflict-group-layer', wfEscapeWikiText( $name ) );
+                    if ( !$spec->validate( $status ) ) {
+                        return false;
                     }
                 }
+                return true;
             }
-    
-            // Validate marker layers by the MarkerLayerSpec class
-            if ( isset( $this->raw->layers ) ) {
-                foreach ( $this->getRawMarkerLayerMap() as $name => $layer ) {
+        ] );
+        $this->checkField( $status, [
+            'name' => 'layers',
+            'type' => DataModel::TYPE_OBJECT,
+            'check' => function ( $status, &$rawMap ) {
+                foreach ( $rawMap as $name => $layer ) {
                     if ( empty( $name ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-no-layer-name' );
                     }
                 
                     $spec = new MarkerLayerSpec( $name, $layer );
-                    $spec->validate( $status );
+                    if ( !$spec->validate( $status ) ) {
+                        return false;
+                    }
                 }
+                return true;
             }
-
-            // TODO: validate sublayers can reference parent layers properly (causes a frontend error)
-
-            // Validate markers by the MarkerSpec class
-            if ( $isFull ) {
+        ] );
+        $this->checkField( $status, 'custom', DataModel::TYPE_OBJECT );
+        $this->checkField( $status, [
+            'name' => 'markers',
+            'type' => DataModel::TYPE_OBJECT,
+            'check' => function ( $status, &$rawMap ) {
                 $requireOwnIDs = $this->wantsCustomMarkerIDs();
                 $uidMap = [];
                 $this->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection )
@@ -299,6 +360,20 @@ class DataMapSpec extends DataModel {
                     }
                 } );
             }
+        ] );
+        $this->disallowOtherFields( $status );
+
+        if ( $this->validationAreRequiredFieldsPresent ) {
+            // Validate there's no overlap between marker layer names and group names
+            if ( isset( $this->raw->groups ) && isset( $this->raw->layers ) ) {
+                foreach ( array_keys( $this->getRawMarkerLayerMap() ) as &$name ) {
+                    if ( isset( $this->raw->groups->{$name} ) ) {
+                        $status->fatal( 'datamap-error-validatespec-map-name-conflict-group-layer', wfEscapeWikiText( $name ) );
+                    }
+                }
+            }
+
+            // TODO: validate sublayers can reference parent layers properly (causes a frontend error)
         }
     }
 }

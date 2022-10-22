@@ -1,11 +1,11 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.12.3",
+	"version": "0.13.0",
 
 	"author": [
 		"alex4401"
 	],
-	"url": "https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps",
+	"url": "https://mediawiki.org/wiki/Extension:DataMaps",
 	"descriptionmsg": "datamap-desc",
 	"license-name": "GPL-2.0-or-later",
 	"type": "parserhook",
@@ -18,8 +18,9 @@
 	},
 
 	"MessagesDirs": {
-		"DataMaps.class": [
-			"i18n"
+		"DataMaps": [
+			"i18n/core",
+			"i18n/ve"
 		]
 	},
 	"ExtensionMessagesFiles": {
@@ -54,25 +55,17 @@
 	},
 
 	"ResourceModules": {
-		"ext.ark.datamaps.leaflet.core": {
-			"scripts": [
-				"vendor/leaflet/leaflet.js"
+		"ext.ark.datamaps.leaflet": {
+			"es6": true,
+			"packageFiles": [
+				"leafletPkg/index.js",
+				"vendor/leaflet/leaflet.js",
+				"leafletPkg/iconMarker.js",
+				"leafletPkg/circleMarker.js",
+				"leafletPkg/popup.js"
 			],
 			"styles": [
 				"vendor/leaflet/leaflet.css"
-			],
-			"targets": [ "desktop", "mobile" ]
-		},
-		"ext.ark.datamaps.leaflet.extra": {
-			"es6": true,
-			"dependencies": [
-				"ext.ark.datamaps.leaflet.core"
-			],
-			"packageFiles": [
-				"leafletExtension/index.js",
-				"leafletExtension/iconMarker.js",
-				"leafletExtension/circleMarker.js",
-				"leafletExtension/popup.js"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},
@@ -111,6 +104,7 @@
 				"loader/enums.js",
 				"loader/events.js",
 				"loader/storage.js",
+				"loader/stream.js",
 				"loader/layerManager.js",
 				"loader/map.js",
 				"loader/legend.js",
@@ -182,7 +176,7 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.ark.datamaps.search.fuzzysort": {
+		"ext.ark.datamaps.fuzzysort": {
 			"scripts": [
 				"vendor/fuzzysort/fuzzysort.min.js"
 			],
@@ -195,11 +189,13 @@
 				"oojs-ui-core",
 				"ext.ark.datamaps.core",
 				"ext.ark.datamaps.bootstrap",
+				"ext.ark.datamaps.leaflet",
 				"ext.ark.datamaps.styles.search",
-				"ext.ark.datamaps.search.fuzzysort"
+				"ext.ark.datamaps.fuzzysort"
 			],
 			"packageFiles": [
 				"search/main.js",
+				"search/indexing.js",
 				"search/menu.js",
 				"search/option.js",
 				"search/util.js"
@@ -208,6 +204,53 @@
 				"datamap-control-search"
 			],
 			"targets": [ "desktop", "mobile" ]
+		},
+
+		"ext.datamaps.ve": {
+			"es6": true,
+			"dependencies": [
+				"ext.ark.datamaps.core",
+				"ext.ark.datamaps.leaflet",
+				"oojs-ui-toolbars",
+				"oojs-ui-windows",
+				"ext.datamaps.ve.icons"
+			],
+			"packageFiles": [
+				"ve/main.js",
+				"ve/editor.js",
+				"ve/tools/commit.js",
+				"ve/tools/sourceEditor.js",
+				"ve/dialogs/commit.js"
+			],
+			"styles": [
+				"ve/css/bars.less",
+				"ve/css/toolbar.less",
+				"ve/css/groups.less",
+				"ve/css/extension.less"
+			],
+			"messages": [
+				"datamap-ve-beta-notice",
+				"datamap-ve-limited-preview-notice",
+				"datamap-ve-tool-commit",
+				"datamap-ve-tool-commit-save",
+				"datamap-ve-tool-commit-edit-summary",
+				"datamap-ve-tool-commit-edit-summary-subtext",
+				"datamap-ve-group-collectible-mode"
+			],
+			"targets": [ "desktop" ]
+		},
+
+		"ext.datamaps.ve.icons": {
+			"class": "ResourceLoaderOOUIIconPackModule",
+			"icons": [
+				"code",
+				"noWikiText",
+				"wikiText",
+				"check",
+				"close",
+				"menu",
+				"required"
+			]
 		}
 	},
 
@@ -227,6 +270,13 @@
 		"ParserFirstCallInit": "MainHandler",
 		"ContentHandlerDefaultModelFor": "MainHandler",
 		"CanonicalNamespaces": "MainHandler",
+		"GetPreferences": "MainHandler",
+		"SkinTemplateNavigation::Universal": "MainHandler",
+		"CustomEditor": "MainHandler",
+		"ParserOptionsRegister": "MainHandler",
+		"ChangeTagsListActive": "MainHandler",
+		"ListDefinedTags": "MainHandler",
+		"RecentChange_save": "MainHandler",
 		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
 	},
     "HookHandlers": {
@@ -234,6 +284,11 @@
             "class": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler"
         }
     },
+
+	"DefaultUserOptions": {
+		"datamaps-enable-visual-editor": true,
+		"datamaps-opt-in-visual-editor-beta": true
+	},
 
 	"config": {
 		"DataMapsNamespaceId": {
@@ -255,6 +310,12 @@
 				"override": 57600
 			}
 		},
+		"DataMapsDefaultApiMarkerBatch": {
+			"value": 2500
+		},
+		"DataMapsMaxApiMarkerBatch": {
+			"value": 5000
+		},
 		"DataMapsMarkerParserExpansionLimit": {
 			"description": "Controls how big the parser output for a marker's description can get.",
 			"value": 800
@@ -275,6 +336,9 @@
 				"Search": false,
 				"SortChecklistsByAmount": false
 			}
+		},
+		"DataMapsEnableVisualEditor": {
+			"value": true
 		},
 		"DataMapsAllowExperimentalFeatures": {
 			"description": "Whether to enable experimental features.",

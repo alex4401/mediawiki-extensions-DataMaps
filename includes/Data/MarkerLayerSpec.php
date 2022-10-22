@@ -32,15 +32,14 @@ class MarkerLayerSpec extends DataModel {
     }
     
     public function validate( Status $status ) {
-        $this->expectField( $status, 'name', DataModel::TYPE_STRING );
-        $this->expectField( $status, 'subtleText', DataModel::TYPE_STRING );
-        $this->expectField( $status, 'overrideIcon', DataModel::TYPE_STRING );
-        $this->disallowOtherFields( $status );
+        $this->checkField( $status, 'name', DataModel::TYPE_STRING );
+        $this->checkField( $status, 'subtleText', DataModel::TYPE_STRING );
+        $this->checkField( $status, [
+            'name' => 'overrideIcon',
+            'type' => DataModel::TYPE_FILE,
+            'fileMustExist' => true
+        ] );
 
-        if ( $this->validationAreRequiredFieldsPresent ) {
-            if ( $this->getIconOverride() !== null ) {
-                $this->requireFile( $status, $this->getIconOverride() );
-            }
-        }
+        $this->disallowOtherFields( $status );
     }
 }

@@ -4,6 +4,16 @@ module.exports = {
         BottomLeft: 2
     },
 
+    MapFlags: {
+        ShowCoordinates: 1<<0,
+        HideLegend: 1<<1,
+        DisableZoom: 1<<2,
+        Search: 1<<3,
+        SortChecklistsByAmount: 1<<4,
+        LinkedSearch: 1<<5,
+        VisualEditor: 1<<6
+    },
+
     CollectibleType: {
         // Corresponds to CM_ constants in Data\MarkerGroupSpec
         Individual: 1,

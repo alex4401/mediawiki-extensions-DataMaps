@@ -1,21 +1,22 @@
-const DISMISSED_MARKER_OPACITY = 0.4;
+const Leaflet = require( '../vendor/leaflet/leaflet.js' ),
+	DISMISSED_MARKER_OPACITY = 0.4;
 
 
-module.exports = L.Marker.extend( {
+module.exports = Leaflet.Marker.extend( {
 	options: {
         dismissed: false
 	},
 
-	_initIcon: function () {
-		L.Marker.prototype._initIcon.call( this );
+	_initIcon() {
+		Leaflet.Marker.prototype._initIcon.call( this );
 		if ( this.options.dismissed ) {
 			this._updateOpacity();
 		}
 	},
 
-	update: function () {
+	update() {
 		if ( this._icon && this._map ) {
-			const size = L.point( this.options.icon.options.iconSize )._multiplyBy( this._map.options.markerScaleA );
+			const size = Leaflet.point( this.options.icon.options.iconSize )._multiplyBy( this._map.options.markerScaleA );
 			const anchor = size.divideBy( 2 );
 
 			this._icon.style.marginLeft = (-anchor.x) + 'px';
@@ -23,11 +24,11 @@ module.exports = L.Marker.extend( {
 			this._icon.style.width  = this.options.icon.options.iconSize[0] * this._map.options.markerScaleA + 'px';
 			this._icon.style.height = this.options.icon.options.iconSize[1] * this._map.options.markerScaleA + 'px';
 		}
-		
-		return L.Marker.prototype.update.call( this );
+
+		return Leaflet.Marker.prototype.update.call( this );
 	},
 
-	setDismissed: function ( state ) {
+	setDismissed( state ) {
 		this.options.dismissed = state;
 		this.opacityMult = state ? DISMISSED_MARKER_OPACITY : 1;
 		if ( this._map ) {

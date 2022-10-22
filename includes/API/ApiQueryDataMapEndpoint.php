@@ -2,23 +2,17 @@
 namespace MediaWiki\Extension\Ark\DataMaps\API;
 
 use ApiBase;
-use ApiResult;
 use Title;
 use WikiPage;
+use ObjectCache;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\ParamValidator\TypeDef\IntegerDef;
-use ObjectCache;
 use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
-use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\MarkerProcessor;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
-use ParserOptions;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
     // This value is a part of every cache key produced by this endpoint. It should be raised only on API output changes and
@@ -41,17 +35,15 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         return [
             'title' => [
                 ParamValidator::PARAM_TYPE => 'string',
-                ParamValidator::PARAM_REQUIRED => true,
+                ParamValidator::PARAM_DEPRECATED => true
+            ],
+            'pageid' => [
+                ParamValidator::PARAM_TYPE => 'integer',
+                //ParamValidator::PARAM_REQUIRED => true
             ],
             'revid' => [
                 ParamValidator::PARAM_TYPE => 'integer',
                 ParamValidator::PARAM_REQUIRED => false,
-            ],
-            'filter' => [
-                /* DEPRECATED(v0.12.0:v0.13.0): use layers */
-                ParamValidator::PARAM_TYPE => 'string',
-                ParamValidator::PARAM_REQUIRED => false,
-                ParamValidator::PARAM_DEPRECATED => true,
             ],
             'layers' => [
                 ParamValidator::PARAM_TYPE => 'string',
@@ -60,11 +52,9 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             ],
 			'limit' => [
 				ParamValidator::PARAM_TYPE => 'limit',
-                // TODO: 
-				ParamValidator::PARAM_DEFAULT => 10000,
+				ParamValidator::PARAM_DEFAULT => ExtensionConfig::getApiDefaultMarkerLimit(),
 				IntegerDef::PARAM_MIN => 1,
-				//IntegerDef::PARAM_MAX => ApiBase::LIMIT_BIG1,
-				//IntegerDef::PARAM_MAX2 => ApiBase::LIMIT_BIG2,
+				IntegerDef::PARAM_MAX => ExtensionConfig::getApiMaxMarkerLimit()
 			],
 			'continue' => [
 				ParamValidator::PARAM_TYPE => 'integer',
@@ -85,11 +75,6 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         }
 
         $params = $this->extractRequestParams();
-
-        // Migrate filter parameter onto layers
-        if ( isset( $params['filter'] ) && !empty( $params['filter'] ) ) {
-            $params['layers'] = explode( '|', $params['filter'] );
-        }
 
         // Configure browser-side caching recommendations
 		$this->getMain()->setCacheMode( 'public' );
@@ -113,12 +98,23 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     private function getTitleFromParams( $params ) {
+		$this->requireOnlyOneParameter( $params, 'title', 'pageid' );
+
         if ( $this->cachedTitle === null ) {
-            $this->cachedTitle = Title::newFromText( $params['title'], ExtensionConfig::getNamespaceId() );
-            if ( !$this->cachedTitle->exists() ) {
-                $this->dieWithError( [ 'apierror-invalidtitle', $params['title'] ] );
+            if ( isset( $params['title'] ) ) {
+                $this->cachedTitle = Title::newFromText( $params['title'], ExtensionConfig::getNamespaceId() );
+            } elseif ( isset( $params['pageid'] ) ) {
+                $this->cachedTitle = Title::newFromID( $params['pageid'] );
+                if ( !$this->cachedTitle ) {
+                    $this->dieWithError( [ 'apierror-nosuchpageid', $params['pageid'] ] );
+                }
             }
         }
+
+        if ( !$this->cachedTitle || !$this->cachedTitle->exists() || $this->cachedTitle->isExternal() ) {
+            $this->dieWithError( [ 'apierror-invalidtitle', wfEscapeWikiText( $params['title'] ) ] );
+        }
+
         return $this->cachedTitle;
     }
 
@@ -221,9 +217,6 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $processor = new MarkerProcessor( $title, $dataMap, null );
         $response['markers'] = $processor->processAll();
 
-        // Armour any API metadata in $response
-        $response = ApiResult::addMetadataToResultVars( $response, false );
-
         if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
             $response['timing'] = [
                 'processing' => hrtime( true ) - $timeStart,
@@ -235,6 +228,11 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     private function doPostProcessing( $params, array &$data ) {
+        $timeStart = 0;
+        if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
+            $timeStart = hrtime( true );
+        }
+
         // Filter markers by layers
         if ( isset( $params['layers'] ) ) {
             foreach ( array_keys( $data['markers'] ) as &$layers ) {
@@ -245,7 +243,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         }
 
         // Truncate markers before the index of continue
-        if ( ExtensionConfig::isBleedingEdge() && isset( $params['continue'] ) ) {
+        if ( isset( $params['continue'] ) ) {
             $toSkip = $params['continue'];
             foreach ( $data['markers'] as $layers => $markers ) {
                 if ( count( $markers ) <= $toSkip ) {
@@ -267,12 +265,14 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         }
 
         // Truncate markers after the limit
-        if ( ExtensionConfig::isBleedingEdge() && isset( $params['limit'] ) ) {
+        if ( isset( $params['limit'] ) ) {
             $toAllow = $params['limit'];
+            $anyRemoved = false;
             foreach ( $data['markers'] as $layers => $markers ) {
                 if ( $toAllow <= 0 ) {
                     // Drop this set entirely, we've reached the margin already
                     unset( $data['markers'][$layers] );
+                    $anyRemoved = true;
                     continue;
                 } else if ( count( $markers ) <= $toAllow ) {
                     // Don't alter this set, it fits within the margin
@@ -282,12 +282,21 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                     // Set is bigger than number we need, slice it
                     $data['markers'][$layers] = array_slice( $markers, 0, $toAllow );
                     $toAllow = 0;
+                    $anyRemoved = true;
                 }
 
                 if ( $toAllow < 0 ) {
                     throw new LogicException( 'API response limiting resulted in more markers removed than needed' );
                 }
             }
+
+            if ( $anyRemoved ) {
+                $data['continue'] = ( $params['continue'] ?? 0 ) + $params['limit'];
+            }
+        }
+
+        if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
+            $data['timing']['postProcessing'] = hrtime( true ) - $timeStart;
         }
     }
 }

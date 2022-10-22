@@ -1,0 +1,22 @@
+{
+    "@metadata": {
+        "authors": [
+            "alex4401"
+        ]
+    },
+
+    "datamap-userpref-enable-ve": "Enable the visual editor for data maps when it's out of beta",
+    "datamap-userpref-enable-ve-beta": "Opt me into the map visual editor beta",
+    "datamap-ve-edit-source-action": "Edit source",
+    "datamap-ve-beta-notice": "The visual editor is still in an early development stage, please report issues over Discord: alex#7749",
+    "datamap-ve-limited-preview-notice": "[PH] Certain features are disabled when previewing the map in the visual editor",
+    "tag-datamaps-visualeditor": "Visual map edit",
+    "tag-datamaps-visualeditor-description": "Edit made using the DataMaps visual editor",
+
+
+    "datamap-ve-tool-commit": "Save changes",
+    "datamap-ve-tool-commit-save": "Proceed",
+    "datamap-ve-tool-commit-edit-summary": "Edit summary (required)",
+    "datamap-ve-tool-commit-edit-summary-subtext": "[PH] Describe your changes in a concise way",
+    "datamap-ve-group-collectible-mode": "[PH] Collectible type"
+}

@@ -1,118 +1,137 @@
-const Util = require( './util.js' ),
+const MarkerSearchIndex = require( './indexing.js' ),
     MenuWidget = require( './menu.js' );
 
 
-function MarkerSearch( map ) {
-    this.map = map;
+class MarkerSearch {
+    constructor( map, index, isLinked ) {
+        this.map = map;
+        this.index = index;
+        this.isLinked = isLinked;
 
-    this.map.waitForLegend( () => {
-        this.map.waitForLeaflet( () => {
-            this._initialiseUI();
-            this.importExisting();
+        this.map.waitForLegend( () => {
+            this.map.waitForLeaflet( () => {
+                this._initialiseUI();
 
-            this.map.on( 'markerReady', this.addMarker, this );
+                this.index.on( 'commit', this.onIndexCommitted, this );
+                this.importExisting();
+
+                this.map.on( 'markerReady', this.addMarker, this );
+                this.map.on( 'chunkStreamingDone', this.onChunkStreamed, this );
+            } );
         } );
-    } );
+    }
+
+
+    _initialiseUI() {
+        this.$root = this.map.addControl( this.map.anchors.topLeft,
+            $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-search">' ), true );
+        
+        this.inputBox = new OO.ui.TextInputWidget( {
+            placeholder: mw.msg( 'datamap-control-search' ),
+            icon: 'search'
+        } );
+        this.menu = new MenuWidget( {
+            widget: this.inputBox,
+            input: this.inputBox,
+            $floatableContainer: this.inputBox.$element,
+            filterFromInput: true,
+            filterMode: 'substring',
+            verticalPosition: 'below',
+            width: '100%'
+        } );
+
+        this.inputBox.$element.appendTo( this.$root );
+    	this.menu.$element.appendTo( this.inputBox.$element );
+
+        this.$root.on( 'click dblclick scroll mousewheel wheel', event => event.stopPropagation() );
+        this.menu.$element.on( 'scroll mousewheel wheel', event => event.stopPropagation() );
+
+        this.inputBox.on( 'change', this.onTextChange, null, this );
+        this.inputBox.$element.on( 'mousedown', this.onFocus.bind( this ) );
+        this.menu.on( 'choose', this.onMenuItemChosen, null, this );
+
+        this.map.leaflet.on( 'click', this.close, this );
+    }
+
+
+    onFocus() {
+        this.onTextChange( this.inputBox.getValue() );
+    }
+
+
+    close() {
+        if ( this.menu.isVisible() ) {
+            this.menu.toggle( false );
+        }
+    }
+
+
+    onTextChange( value ) {
+        this.menu.toggle( value.length > 0 );
+    }
+
+
+    onMenuItemChosen( item ) {
+        this.close();
+        this.inputBox.setValue( '', true );
+        setTimeout( () => {
+            item.data.openPopup();
+            if ( item.$tab ) {
+                item.$tab.get( 0 ).click();
+            }
+        } );
+    }
+
+
+    importExisting() {
+        this.onIndexCommitted( this.index.items );
+
+        for ( const leafletMarker of this.map.layerManager.markers ) {
+            this.index.add( this.map, leafletMarker );
+        }
+        this.index.commit();
+    }
+
+
+    addMarker( leafletMarker ) {
+        this.index.add( this.map, leafletMarker );
+    }
+
+    onIndexCommitted( items ) {
+        for ( const item of items ) {
+            this.menu.addItem( {
+                icon: item.icon,
+                data: item.marker,
+                keywords: item.keywords,
+                label: new OO.ui.HtmlSnippet( item.label ),
+                $tab: this.isLinked && item.map !== this.map ? item.map.getParentTabberNeue().find( '#' + item.map.getParentTabberNeuePanel()
+                    .attr( 'aria-labelledby' ) ) : null,
+                badge: this.isLinked ? item.map.getParentTabberNeuePanel().attr( 'title' ) : null,
+                badgeCurrent: item.map === this.map
+            } );
+        }
+    }
+
+    onChunkStreamed() {
+        this.index.commit();
+    }
 }
 
 
-MarkerSearch.prototype._initialiseUI = function () {
-    this.$root = this.map.addControl( this.map.anchors.topLeft,
-        $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-search">' ), true );
-    
-    this.inputBox = new OO.ui.TextInputWidget( {
-        placeholder: mw.msg( 'datamap-control-search' ),
-        icon: 'search'
-    } );
-    this.menu = new MenuWidget( {
-        widget: this.inputBox,
-        input: this.inputBox,
-        $floatableContainer: this.inputBox.$element,
-        filterFromInput: true,
-        filterMode: 'substring',
-        verticalPosition: 'below',
-        width: '100%'
-    } );
-
-    this.inputBox.$element.appendTo( this.$root );
-	this.menu.$element.appendTo( this.inputBox.$element );
-
-    this.$root.on( 'click dblclick scroll mousewheel wheel', event => event.stopPropagation() );
-    this.menu.$element.on( 'scroll mousewheel wheel', event => event.stopPropagation() );
-
-    this.inputBox.on( 'change', this.onTextChange, null, this );
-    this.inputBox.$element.on( 'mousedown', this.onFocus.bind( this ) );
-    this.menu.on( 'choose', this.onMenuItemChosen, null, this );
-
-    this.map.leaflet.on( 'click', this.close, this );
-};
-
-
-MarkerSearch.prototype.onFocus = function () {
-    this.onTextChange( this.inputBox.getValue() );
-};
-
-
-MarkerSearch.prototype.close = function () {
-    if ( this.menu.isVisible() ) {
-        this.menu.toggle( false );
-    }
-};
-
-
-MarkerSearch.prototype.onTextChange = function ( value ) {
-    this.menu.toggle( value.length > 0 );
-};
-
-
-MarkerSearch.prototype.onMenuItemChosen = function ( item ) {
-    this.close();
-    this.inputBox.setValue( '', true );
-    setTimeout( () => item.data.openPopup() );
-};
-
-
-MarkerSearch.prototype.importExisting = function () {
-    for ( const marker of this.map.layerManager.markers ) {
-        this.addMarker( marker );
-    }
-};
-
-
-MarkerSearch.prototype.addMarker = function ( leafletMarker ) {
-    const state = leafletMarker.apiInstance[2];
-    const group = this.map.config.groups[leafletMarker.attachedLayers[0]];
-    const label = state.label || group.name;
-
-    if ( state.search == 0 || mw.dataMaps.Util.isBitSet( group.flags, mw.dataMaps.Enums.MarkerGroupFlags.CannotBeSearched ) ) {
-        return;
-    }
-
-    // If no keywords were provided by the API, generate them from label and description
-    if ( !state.search ) {
-        state.search = [ [ Util.decodePartial( Util.extractText( label ) ), 1.5 ] ];
-        if ( state.desc ) {
-            state.search.push( [ state.desc, 0.75 ] );
-        }
-    }
-    // If string was provided by the API, turn into a pair
-    if ( typeof( state.search ) === 'string' ) {
-        state.search = [ [ state.search, 1 ] ];
-    }
-    // Ensure search keywords are always an array of (text, weight) pairs
-    state.search = state.search.map( x => ( typeof( x ) === 'string' ) ? [ x, 1 ] : x );
-
-    this.menu.addItem( {
-        icon: leafletMarker instanceof L.Ark.IconMarker ? this.map.getIconFromLayers( leafletMarker.attachedLayers ) : null,
-        data: leafletMarker,
-        keywords: state.search,
-        label: new OO.ui.HtmlSnippet( label )
-    } );
-};
-
-
+const linkedIndexMap = {};
 mw.dataMaps.subscribeHook( 'afterInitialisation', ( map ) => {
-    if ( map.isFeatureBitSet( map.FF_SEARCH ) ) {
-        map.search = new MarkerSearch( map );
+    if ( map.isFeatureBitSet( mw.dataMaps.Enums.MapFlags.Search ) ) {
+        const isLinked = map.isFeatureBitSet( mw.dataMaps.Enums.MapFlags.LinkedSearch ),
+            $tabber = map.getParentTabberNeue();
+        let index;
+
+        if ( isLinked && $tabber ) {
+            index = linkedIndexMap[$tabber] || new MarkerSearchIndex();
+            linkedIndexMap[$tabber] = index;
+        } else {
+            index = new MarkerSearchIndex();
+        }
+
+        map.search = new MarkerSearch( map, index, isLinked && $tabber );
     }
 } );

@@ -16,8 +16,8 @@ use stdClass;
 use WikiPage;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapEmbedRenderer;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapRenderOptions;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\EmbedRenderer;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\EmbedRenderOptions;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataModelMixinTransformer;
@@ -110,25 +110,22 @@ class DataMapContent extends DataMapContentBase {
 		}
 	}
 
-	public function getEmbedRenderer( Title $title, Parser $parser, bool $useInlineData = false ): DataMapEmbedRenderer {
-		return new DataMapEmbedRenderer( $title, $this->asModel(), $parser, $useInlineData );
+	public function getEmbedRenderer( Title $title, Parser $parser, ParserOutput $parserOutput, bool $useInlineData = false,
+		bool $forVisualEditor = false ): EmbedRenderer {
+		return new EmbedRenderer( $title, $this->asModel(), $parser, $parserOutput, $useInlineData, $forVisualEditor );
 	}
 
 	protected function fillParserOutput( Title $title, $revId, ParserOptions $options, $generateHtml, ParserOutput &$output ) {
 		$output = parent::fillParserOutput( $title, $revId, $options, $generateHtml, $output );
 
-		if ( !$generateHtml ) {
-			return $output;
-		}
-
 		if ( !$this->isMixin() ) {
-			if ( $options->getIsPreview() ) {
+			if ( $options->getIsPreview() && $generateHtml ) {
 				// If previewing an edit, run validation and end early on failure
 				$status = new Status();
 				$this->validateBeforeSave( $status );
 				if ( !$status->isOK() ) {
 					$output->setText( $output->getRawText() . Html::errorBox(
-						wfMessage( 'datamap-error-cannot-preview-validation-errors' ) . "<br/>\n" . $status->getWikiText(
+						wfMessage( 'datamap-error-cannot-preview-validation-errors' ) . "<br/>\n" . $status->getMessage(
 							false, false )
 					) );
 					return $output;
@@ -136,10 +133,13 @@ class DataMapContent extends DataMapContentBase {
 			}
 
 			$parser = MediaWikiServices::getInstance()->getParser();
-			$embed = $this->getEmbedRenderer( $title, $parser, $options->getIsPreview() );
+			$embed = $this->getEmbedRenderer( $title, $parser, $output, $options->getIsPreview(),
+				$options->getOption( 'isMapVisualEditor' ) );
 			$embed->prepareOutput( $output );
 
-			$output->setText( $output->getRawText() . $embed->getHtml( new DataMapRenderOptions() ) );
+			if ( $generateHtml ) {
+				$output->setText( $output->getRawText() . $embed->getHtml( new EmbedRenderOptions() ) );
+			}
 		}
 
 		return $output;
