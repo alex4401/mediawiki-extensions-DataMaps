@@ -206,6 +206,20 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
+		"ext.datamaps.ve.icons": {
+			"class": "ResourceLoaderOOUIIconPackModule",
+			"icons": [
+				"code",
+				"noWikiText",
+				"wikiText",
+				"check",
+				"close",
+				"menu",
+				"required",
+				"trash"
+			]
+		},
+
 		"ext.datamaps.ve": {
 			"es6": true,
 			"dependencies": [
@@ -221,7 +235,8 @@
 				"ve/widgets/markerGroupEditor.js",
 				"ve/tools/commit.js",
 				"ve/tools/sourceEditor.js",
-				"ve/dialogs/commit.js"
+				"ve/dialogs/commit.js",
+				"ve/dialogs/confirmDelete.js"
 			],
 			"styles": [
 				"ve/css/bars.less",
@@ -244,19 +259,6 @@
 				"datamap-ve-tool-commit-edit-summary-subtext"
 			],
 			"targets": [ "desktop" ]
-		},
-
-		"ext.datamaps.ve.icons": {
-			"class": "ResourceLoaderOOUIIconPackModule",
-			"icons": [
-				"code",
-				"noWikiText",
-				"wikiText",
-				"check",
-				"close",
-				"menu",
-				"required"
-			]
 		}
 	},
 

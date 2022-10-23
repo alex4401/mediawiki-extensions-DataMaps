@@ -1,5 +1,6 @@
 const Enums = mw.dataMaps.Enums,
-    Util = mw.dataMaps.Util;
+    Util = mw.dataMaps.Util,
+    ConfirmDeleteDialog = require( '../dialogs/confirmDelete.js' );
 
 
 module.exports = class MarkerGroupEditor {
@@ -16,12 +17,14 @@ module.exports = class MarkerGroupEditor {
             icon: 'menu',
             popup: {
                 $content: this._buildPopup(),
+                head: true,
+                invisibleLabel: true,
                 padded: true,
                 align: 'forwards'
             }
         } );
 
-        this.nameEd.on( 'input', this.updateName );
+        this.nameEd.on( 'input', this.updateName, this );
 
         this.coreWidget.field.$label.replaceWith( this.nameEd.$element );
         this.button.$element.appendTo( this.coreWidget.field.$header );
@@ -46,6 +49,11 @@ module.exports = class MarkerGroupEditor {
         this.articleLinkEd = new OO.ui.TextInputWidget( {
             value: this.group.article
         } );
+        this.deleteButton = new OO.ui.ButtonWidget( {
+            label: mw.msg( 'datamap-ve-tool-delete' ),
+            icon: 'trash',
+            flags: [ 'destructive' ]
+        } );
 
         this.popupPanel = new OO.ui.PanelLayout( {
             framed: false,
@@ -65,12 +73,14 @@ module.exports = class MarkerGroupEditor {
                 new OO.ui.FieldLayout( this.collectibleModeEd, { 
                     label: mw.msg( 'datamap-ve-group-collectible-mode' ),
                     align: 'top'
-                } )
+                } ),
+                this.deleteButton
             ]
         } );
 
         this.collectibleModeEd.on( 'change', this.updateCollectibleMode, this );
         this.articleLinkEd.on( 'input', this.updateArticleLink, this );
+        this.deleteButton.on( 'click', this.promptDeleteConfirmation, this );
 
         return this.popupPanel.$element;
     }
@@ -91,5 +101,16 @@ module.exports = class MarkerGroupEditor {
     updateArticleLink() {
         this.group.article = this.articleLinkEd.getValue();
         this.ve.markStale( this.group );
+    }
+
+
+    promptDeleteConfirmation() {
+        const dialog = new ConfirmDeleteDialog( {
+            size: 'small',
+            message: mw.msg( 'datamap-ve-group-confirm-delete', this.groupId ),
+            callback: () => this.ve.destroyMarkerGroup( this.groupId )
+        } );
+        this.ve.windowManager.addWindows( [ dialog ] );
+        this.ve.windowManager.openWindow( dialog );
     }
 }
