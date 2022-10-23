@@ -235,8 +235,10 @@
 				"ve/widgets/markerGroupEditor.js",
 				"ve/tools/commit.js",
 				"ve/tools/sourceEditor.js",
+				"ve/tools/addMarker.js",
 				"ve/dialogs/commit.js",
-				"ve/dialogs/confirmDelete.js"
+				"ve/dialogs/confirmDelete.js",
+				"ve/dialogs/addMarker.js"
 			],
 			"styles": [
 				"ve/css/bars.less",
@@ -258,12 +260,16 @@
 
 				"datamap-ve-legend-tab-marker-layers",
 
+				"datamap-ve-cancel",
 				"datamap-ve-tool-delete",
 				"datamap-ve-tool-source-editor",
 				"datamap-ve-tool-commit",
-				"datamap-ve-tool-commit-save",
+				"datamap-ve-tool-commit-continue",
 				"datamap-ve-tool-commit-edit-summary",
-				"datamap-ve-tool-commit-edit-summary-subtext"
+				"datamap-ve-tool-commit-edit-summary-subtext",
+
+				"datamap-ve-tool-add-marker",
+				"datamap-ve-tool-add-marker-continue"
 			],
 			"targets": [ "desktop" ]
 		}

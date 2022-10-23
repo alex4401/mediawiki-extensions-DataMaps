@@ -23,11 +23,15 @@
 
     "datamap-ve-legend-tab-marker-layers": "Marker layers",
 
+    "datamap-ve-cancel": "Cancel",
     "datamap-ve-tool-delete": "Delete",
     "datamap-ve-tool-confirm-delete": "Confirm deletion",
     "datamap-ve-tool-source-editor": "Switch to source editor",
     "datamap-ve-tool-commit": "Save changes",
-    "datamap-ve-tool-commit-save": "Proceed",
+    "datamap-ve-tool-commit-continue": "Proceed",
     "datamap-ve-tool-commit-edit-summary": "Edit summary (required)",
-    "datamap-ve-tool-commit-edit-summary-subtext": "[PH] Describe your changes in a concise way"
+    "datamap-ve-tool-commit-edit-summary-subtext": "[PH] Describe your changes in a concise way",
+
+    "datamap-ve-tool-add-marker": "Create a marker",
+    "datamap-ve-tool-add-marker-continue": "Proceed"
 }

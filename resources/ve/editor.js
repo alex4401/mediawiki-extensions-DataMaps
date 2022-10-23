@@ -42,12 +42,13 @@ module.exports = class MapVisualEditor extends EventEmitter {
         // Register tools
         this.toolFactory.register( require( './tools/commit.js' ) );
         this.toolFactory.register( require( './tools/sourceEditor.js' ) );
+        this.toolFactory.register( require( './tools/addMarker.js' ) );
 
         // Set up the toolbar
         this.toolbar.setup( [
             {
                 type: 'bar',
-                include: []
+                include: [ 'addMarker' ]
             },
             {
                 type: 'bar',

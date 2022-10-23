@@ -17,7 +17,7 @@ ConfirmDeleteDialog.static.actions = [
 	},
 	{
         modes: [ 'main' ],
-		label: 'Cancel',
+		label: mw.msg( 'datamap-ve-cancel' ),
 		flags: [ 'safe', 'close' ]
 	}
 ];

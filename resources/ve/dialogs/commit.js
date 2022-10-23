@@ -10,12 +10,12 @@ CommitDialog.static.actions = [
 	{
         modes: [ 'edit' ],
 		action: 'continue',
-		label: 'Save changes',
+		label: mw.msg( 'datamap-ve-tool-commit-continue' ),
 		flags: [ 'primary', 'progressive' ]
 	},
 	{
         modes: [ 'edit' ],
-		label: 'Cancel',
+		label: mw.msg( 'datamap-ve-cancel' ),
 		flags: [ 'safe', 'close' ]
 	}
 ];
