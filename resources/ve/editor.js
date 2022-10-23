@@ -60,12 +60,60 @@ module.exports = class MapVisualEditor extends EventEmitter {
 
         this.map.on( 'legendLoaded', this._enhanceGroups, this );
 
-        this.map.waitForLegend( () => this.map.waitForLeaflet( () => {
-            map.streaming.loadSequential( null, this.revisionId )
-                .then( () => map.$status.hide() )
-                .catch( () => map.$status.show().html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' ) );
-        } ) );
+        this._requestRevisionData();
     }
+
+
+    _requestRevisionData() {
+        this.map.streaming.callApiReliable( {
+            action: 'query',
+            prop: 'revisions',
+            titles: mw.config.get( 'wgPageName' ),
+            rvstartid: this.revisionId,
+            rvlimit: 1,
+            rvprop: 'content',
+            rvslots: 'main'
+        } )
+            .then( data => {
+                this.sourceData = JSON.parse( data.query.pages[this.map.id].revisions[0].slots.main['*'] );
+
+                if ( !this.sourceData.markers ) {
+                    this.sourceData.markers = {};
+                }
+
+                const markerStore = {};
+                for ( const layers in this.sourceData.markers ) {
+                    markerStore[layers] = [];
+                    for ( const raw of this.sourceData.markers[layers] ) {
+                        const apiInstance = [ raw.y || raw.lat, raw.x || raw.lon, {
+                            _ve_raw: raw,
+                            _ve_invalidate: [ '_ve_parsed_desc', '_ve_parsed_label' ],
+                            article: raw.article,
+                            label: raw.label,
+                            desc: raw.description
+                        } ];
+                        markerStore[layers].push( apiInstance );
+                    }
+                }
+
+                this.map.waitForLeaflet( () => {
+                    this.map.instantiateMarkers( markerStore );
+                    this.map.fire( 'chunkStreamingDone' );
+                    // DEPRECATED(v0.13.0:v0.14.0): old event name
+                    this.map.fire( 'streamingDone' );
+                } );
+            } )
+            .catch( () => this.map.$status.show().html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' ) );
+
+        
+        const streamingCallback = () => {
+            this.map.off( 'chunkStreamingDone', streamingCallback );
+
+            this.map.$status.hide();
+        };
+        this.map.on( 'chunkStreamingDone', streamingCallback );
+    }
+
 
     _enhanceGroups() {
         // Hide the mass-visibility toggle button group
@@ -79,7 +127,14 @@ module.exports = class MapVisualEditor extends EventEmitter {
         }
     }
 
+
     markStale( obj ) {
         obj._ve_stale = true;
+
+        if ( obj._ve_invalidate ) {
+            for ( const field of obj._ve_invalidate ) {
+                delete obj[field];
+            }
+        }
     }
 }
