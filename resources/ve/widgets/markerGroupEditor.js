@@ -110,8 +110,8 @@ module.exports = class MarkerGroupEditor {
     promptDeleteConfirmation() {
         const dialog = new ConfirmDeleteDialog( {
             size: 'small',
-            message: mw.msg( 'datamap-ve-group-confirm-delete', this.groupId ),
-            callback: () => this.ve.destroyMarkerGroup( this.groupId )
+            message: mw.msg( 'datamap-ve-group-confirm-delete', this.coreWidget.groupId ),
+            callback: () => this.ve.destroyMarkerGroup( this.coreWidget.groupId )
         } );
         this.ve.windowManager.addWindows( [ dialog ] );
         this.ve.windowManager.openWindow( dialog );

@@ -138,4 +138,14 @@ module.exports = class MapVisualEditor extends EventEmitter {
             }
         }
     }
+
+
+    destroyMarkerGroup( groupId ) {
+        this.map.markerLegend.groupToggles[groupId].field.$element.remove();
+        delete this.map.markerLegend.groupToggles[groupId];
+        delete this.map.config.groups[groupId];
+        delete this.sourceData.groups[groupId];
+        this.map.layerManager.nuke( groupId );
+        this.map.layerManager.deregister( groupId );
+    }
 }
