@@ -24,7 +24,7 @@ module.exports = class MarkerGroupEditor {
             }
         } );
 
-        this.nameEd.on( 'input', this.updateName, this );
+        this.nameEd.on( 'input', this.updateName, null, this );
 
         this.coreWidget.field.$label.replaceWith( this.nameEd.$element );
         this.button.$element.appendTo( this.coreWidget.field.$header );
@@ -78,9 +78,9 @@ module.exports = class MarkerGroupEditor {
             ]
         } );
 
-        this.collectibleModeEd.on( 'change', this.updateCollectibleMode, this );
-        this.articleLinkEd.on( 'input', this.updateArticleLink, this );
-        this.deleteButton.on( 'click', this.promptDeleteConfirmation, this );
+        this.collectibleModeEd.on( 'change', this.updateCollectibleMode, null, this );
+        this.articleLinkEd.on( 'input', this.updateArticleLink, null, this );
+        this.deleteButton.on( 'click', this.promptDeleteConfirmation, null, this );
 
         return this.popupPanel.$element;
     }
