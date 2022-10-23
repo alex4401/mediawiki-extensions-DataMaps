@@ -13,7 +13,10 @@
     "tag-datamaps-visualeditor": "Visual map edit",
     "tag-datamaps-visualeditor-description": "Edit made using the DataMaps visual editor",
 
+    "datamap-ve-legend-tab-marker-groups": "Marker groups",
+    "datamap-ve-legend-tab-marker-layers": "Marker layers",
 
+    "datamap-ve-tool-source-editor": "Switch to source editor",
     "datamap-ve-tool-commit": "Save changes",
     "datamap-ve-tool-commit-save": "Proceed",
     "datamap-ve-tool-commit-edit-summary": "Edit summary (required)",

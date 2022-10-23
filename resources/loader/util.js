@@ -27,8 +27,7 @@ module.exports = {
 
 
     getGroupCollectibleType( group ) {
-        return ( group.flags || 0 ) & ( Enums.MarkerGroupFlags.Collectible_Individual | Enums.MarkerGroupFlags.Collectible_Group
-            | Enums.MarkerGroupFlags.Collectible_GlobalGroup );
+        return ( group.flags || 0 ) & Enums.MarkerGroupFlags.Collectible_Any;
     },
 
 
