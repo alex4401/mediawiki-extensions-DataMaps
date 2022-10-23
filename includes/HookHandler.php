@@ -86,6 +86,11 @@ class HookHandler implements
 			return;
 		}
 
+		$pageProps = MediaWikiServices::getInstance()->getPageProps();
+		if ( count( $pageProps->getProperties( $title, 'ext.datamaps.isMapMixin' ) ) > 0 ) {
+			return;
+		}
+
 		$prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
 		if ( $prefsLookup->getOption( $skinTemplate->getAuthority()->getUser(),
 			/*'datamaps-enable-visual-editor'*/ 'datamaps-opt-in-visual-editor-beta' ) ) {

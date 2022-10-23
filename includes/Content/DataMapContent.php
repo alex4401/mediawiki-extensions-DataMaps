@@ -119,6 +119,8 @@ class DataMapContent extends DataMapContentBase {
 		$output = parent::fillParserOutput( $title, $revId, $options, $generateHtml, $output );
 
 		if ( !$this->isMixin() ) {
+			$isVisualEditor = $options->getOption( 'isMapVisualEditor' );
+
 			if ( $options->getIsPreview() && $generateHtml ) {
 				// If previewing an edit, run validation and end early on failure
 				$status = new Status();
@@ -134,12 +136,14 @@ class DataMapContent extends DataMapContentBase {
 
 			$parser = MediaWikiServices::getInstance()->getParser();
 			$embed = $this->getEmbedRenderer( $title, $parser, $output, $options->getIsPreview(),
-				$options->getOption( 'isMapVisualEditor' ) );
+				$isVisualEditor );
 			$embed->prepareOutput( $output );
 
 			if ( $generateHtml ) {
 				$output->setText( $output->getRawText() . $embed->getHtml( new EmbedRenderOptions() ) );
 			}
+		} else {
+			$output->setProperty( 'ext.datamaps.isMapMixin', true );
 		}
 
 		return $output;
