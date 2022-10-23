@@ -29,6 +29,11 @@ module.exports = class MarkerGroupEditor {
 
 
     _buildPopup() {
+        this.idEd = new OO.ui.TextInputWidget( {
+            value: this.coreWidget.groupId,
+            readOnly: true,
+            disabled: true
+        } );
         this.collectibleModeEd = new OO.ui.RadioSelectInputWidget( {
             value: Util.getGroupCollectibleType( this.group ),
             options: [
@@ -47,6 +52,12 @@ module.exports = class MarkerGroupEditor {
             expanded: false,
             padded: false,
             content: [
+                new OO.ui.FieldLayout( this.idEd, { 
+                    label: mw.msg( 'datamap-ve-group-id' ),
+                    align: 'top',
+                    help: mw.msg( 'datamap-ve-group-id-cannot-modify' ),
+                    helpInline: true
+                } ),
                 new OO.ui.FieldLayout( this.articleLinkEd, { 
                     label: mw.msg( 'datamap-ve-group-article-link' ),
                     align: 'top'

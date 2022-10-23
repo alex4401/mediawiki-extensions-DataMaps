@@ -14,6 +14,9 @@
     "tag-datamaps-visualeditor-description": "Edit made using the DataMaps visual editor",
 
     "datamap-ve-legend-tab-marker-groups": "Marker groups",
+    "datamap-ve-group-id": "Unique identifier",
+    "datamap-ve-group-id-cannot-modify": "Currently renaming groups is not supported in the visual editor",
+
     "datamap-ve-legend-tab-marker-layers": "Marker layers",
 
     "datamap-ve-tool-source-editor": "Switch to source editor",
