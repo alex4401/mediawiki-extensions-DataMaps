@@ -35,9 +35,6 @@ module.exports = class MapVisualEditor extends EventEmitter {
         this.map.$root.addClass( 'datamap-is-ve-active' );
 
         this.map.$status.show().text( mw.msg( 'datamap-ve-loading' ) );
-
-        // Set up internal event handlers
-        this.on( 'close', this.onClose, this );
         
         // Register tools
         this.toolFactory.register( require( './tools/commit.js' ) );
@@ -68,11 +65,6 @@ module.exports = class MapVisualEditor extends EventEmitter {
                 .then( () => map.$status.hide() )
                 .catch( () => map.$status.show().html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' ) );
         } ) );
-    }
-
-    onClose() {
-        this.toolbar.$element.remove();
-        this.map.$root.removeClass( 'datamap-is-ve-active' );
     }
 
     _enhanceGroups() {
