@@ -242,7 +242,8 @@
 				"ve/css/bars.less",
 				"ve/css/toolbar.less",
 				"ve/css/groups.less",
-				"ve/css/extension.less"
+				"ve/css/extension.less",
+				"ve/css/popup.less"
 			],
 			"messages": [
 				"datamap-ve-beta-notice",

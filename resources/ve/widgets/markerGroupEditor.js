@@ -17,6 +17,7 @@ module.exports = class MarkerGroupEditor {
             icon: 'menu',
             popup: {
                 $content: this._buildPopup(),
+                classes: [ 'datamap-ve-popup' ],
                 head: true,
                 invisibleLabel: true,
                 padded: true,
@@ -52,7 +53,7 @@ module.exports = class MarkerGroupEditor {
         this.deleteButton = new OO.ui.ButtonWidget( {
             label: mw.msg( 'datamap-ve-tool-delete' ),
             icon: 'trash',
-            flags: [ 'destructive' ]
+            flags: [ 'primary', 'destructive' ]
         } );
 
         this.popupPanel = new OO.ui.PanelLayout( {
