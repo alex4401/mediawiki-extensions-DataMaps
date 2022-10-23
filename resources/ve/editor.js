@@ -73,7 +73,7 @@ module.exports = class MapVisualEditor extends EventEmitter {
         // Hide the mass-visibility toggle button group
         this.map.markerLegend.buttonGroup.toggle( false );
         // Rename the tab
-        this.map.markerLegend.tab.tabItem.setLabel( mw.msg( 'datamap-' ) );
+        this.map.markerLegend.tab.tabItem.setLabel( mw.msg( 'datamap-ve-legend-tab-marker-groups' ) );
 
         // Rebuild every marker group toggle into editor widgets
         for ( const groupToggle of Object.values( this.map.markerLegend.groupToggles ) ) {
