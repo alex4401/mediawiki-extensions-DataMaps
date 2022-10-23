@@ -9,6 +9,7 @@ module.exports = class MapVisualEditor extends EventEmitter {
         super();
         
         this.map = map;
+        this.revisionId = mw.config.get( 'wgCurRevisionId' );
 
         this.map.storage.isWritable = false;
         this.map.storage.dismissed = [];
@@ -61,7 +62,11 @@ module.exports = class MapVisualEditor extends EventEmitter {
 
         this.map.on( 'legendLoaded', this._enhanceGroups, this );
 
-        this.map.waitForLegend( () => this.map.waitForLeaflet( () => this.map.$status.hide() ) );
+        this.map.waitForLegend( () => this.map.waitForLeaflet( () => {
+            map.streaming.loadSequential( null, this.revisionId )
+                .then( () => map.$status.hide() )
+                .catch( () => map.$status.show().html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' ) );
+        } ) );
     }
 
     onClose() {
