@@ -247,11 +247,16 @@
 			"messages": [
 				"datamap-ve-beta-notice",
 				"datamap-ve-limited-preview-notice",
+
 				"datamap-ve-legend-tab-marker-groups",
 				"datamap-ve-group-id",
 				"datamap-ve-group-id-cannot-modify",
+				"datamap-ve-group-article-link",
 				"datamap-ve-group-collectible-mode",
+
 				"datamap-ve-legend-tab-marker-layers",
+
+				"datamap-ve-tool-delete",
 				"datamap-ve-tool-source-editor",
 				"datamap-ve-tool-commit",
 				"datamap-ve-tool-commit-save",

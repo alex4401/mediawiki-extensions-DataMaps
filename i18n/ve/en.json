@@ -16,15 +16,17 @@
     "datamap-ve-legend-tab-marker-groups": "Marker groups",
     "datamap-ve-group-id": "Unique identifier",
     "datamap-ve-group-id-cannot-modify": "Currently renaming groups is not supported in the visual editor",
+    "datamap-ve-group-article-link": "Link to article",
+    "datamap-ve-group-collectible-mode": "Collectible type",
     "datamap-ve-group-confirm-delete": "Are you sure you want to permanently destroy marker group $1? This action is irreversible.",
 
     "datamap-ve-legend-tab-marker-layers": "Marker layers",
 
+    "datamap-ve-tool-delete": "Delete",
     "datamap-ve-tool-confirm-delete": "Confirm deletion",
     "datamap-ve-tool-source-editor": "Switch to source editor",
     "datamap-ve-tool-commit": "Save changes",
     "datamap-ve-tool-commit-save": "Proceed",
     "datamap-ve-tool-commit-edit-summary": "Edit summary (required)",
-    "datamap-ve-tool-commit-edit-summary-subtext": "[PH] Describe your changes in a concise way",
-    "datamap-ve-group-collectible-mode": "[PH] Collectible type"
+    "datamap-ve-tool-commit-edit-summary-subtext": "[PH] Describe your changes in a concise way"
 }
