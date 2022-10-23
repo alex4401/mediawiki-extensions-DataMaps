@@ -60,6 +60,8 @@ module.exports = class MapVisualEditor extends EventEmitter {
 
         this.map.on( 'legendLoaded', this._enhanceGroups, this );
 
+        require( './editablePopup.js' );
+
         this._requestRevisionData();
     }
 
@@ -86,11 +88,10 @@ module.exports = class MapVisualEditor extends EventEmitter {
                     markerStore[layers] = [];
                     for ( const raw of this.sourceData.markers[layers] ) {
                         const apiInstance = [ raw.y || raw.lat, raw.x || raw.lon, {
-                            _ve_raw: raw,
+                            raw,
+                            ve: this,
                             _ve_invalidate: [ '_ve_parsed_desc', '_ve_parsed_label' ],
-                            article: raw.article,
-                            label: raw.label,
-                            desc: raw.description
+                            article: raw.article
                         } ];
                         markerStore[layers].push( apiInstance );
                     }

@@ -232,13 +232,15 @@
 			"packageFiles": [
 				"ve/main.js",
 				"ve/editor.js",
+				"ve/editablePopup.js",
 				"ve/widgets/markerGroupEditor.js",
 				"ve/tools/commit.js",
 				"ve/tools/sourceEditor.js",
 				"ve/tools/addMarker.js",
 				"ve/dialogs/commit.js",
 				"ve/dialogs/confirmDelete.js",
-				"ve/dialogs/addMarker.js"
+				"ve/dialogs/addMarker.js",
+				"ve/dialogs/editMarker.js"
 			],
 			"styles": [
 				"ve/css/bars.less",
