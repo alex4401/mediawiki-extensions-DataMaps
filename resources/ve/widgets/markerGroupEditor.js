@@ -69,7 +69,9 @@ module.exports = class MarkerGroupEditor {
                 } ),
                 new OO.ui.FieldLayout( this.articleLinkEd, { 
                     label: mw.msg( 'datamap-ve-group-article-link' ),
-                    align: 'top'
+                    align: 'top',
+                    help: mw.msg( 'datamap-ve-group-article-link-subtext' ),
+                    helpInline: true
                 } ),
                 new OO.ui.FieldLayout( this.collectibleModeEd, { 
                     label: mw.msg( 'datamap-ve-group-collectible-mode' ),

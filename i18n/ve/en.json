@@ -16,7 +16,8 @@
     "datamap-ve-legend-tab-marker-groups": "Marker groups",
     "datamap-ve-group-id": "Unique identifier",
     "datamap-ve-group-id-cannot-modify": "Currently renaming groups is not supported in the visual editor",
-    "datamap-ve-group-article-link": "Link to article",
+    "datamap-ve-group-article-link": "Default link to article",
+    "datamap-ve-group-article-link-subtext": "This can be overridden on individual markers.",
     "datamap-ve-group-collectible-mode": "Collectible type",
     "datamap-ve-group-confirm-delete": "Are you sure you want to permanently destroy marker group $1? This action is irreversible.",
 
