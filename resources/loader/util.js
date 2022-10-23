@@ -37,9 +37,11 @@ module.exports = {
 
 
     createGroupCircleElement( group ) {
+        const size = Math.min( module.exports.MAX_GROUP_CIRCLE_SIZE, group.size+4 );
         return $( '<div class="datamap-legend-circle">' ).css( {
-            width: Math.min( module.exports.MAX_GROUP_CIRCLE_SIZE, group.size+4 ),
-            height: Math.min( module.exports.MAX_GROUP_CIRCLE_SIZE, group.size+4 ),
+            minWidth: size,
+            width: size,
+            height: size,
             backgroundColor: group.fillColor,
             borderColor: group.strokeColor || group.fillColor,
             borderWidth: group.strokeWidth || 1,
