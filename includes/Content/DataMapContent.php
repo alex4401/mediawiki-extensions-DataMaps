@@ -144,6 +144,7 @@ class DataMapContent extends DataMapContentBase {
 			}
 		} else {
 			$output->setProperty( 'ext.datamaps.isMapMixin', true );
+			$output->setProperty( 'ext.datamaps.isIneligibleForVE', true );
 		}
 
 		return $output;

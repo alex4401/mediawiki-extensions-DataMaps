@@ -87,7 +87,7 @@ class HookHandler implements
 		}
 
 		$pageProps = MediaWikiServices::getInstance()->getPageProps();
-		if ( count( $pageProps->getProperties( $title, 'ext.datamaps.isMapMixin' ) ) > 0 ) {
+		if ( count( $pageProps->getProperties( $title, 'ext.datamaps.isIneligibleForVE' ) ) > 0 ) {
 			return;
 		}
 
