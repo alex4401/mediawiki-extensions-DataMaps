@@ -274,6 +274,57 @@
 				"datamap-ve-tool-add-marker-continue"
 			],
 			"targets": [ "desktop" ]
+		},
+
+		"ext.datamaps.vec": {
+			"es6": true,
+			"dependencies": [
+				"oojs-ui-core",
+				"oojs-ui-widgets",
+				"oojs-ui-windows",
+				"mediawiki.widgets",
+				"ext.datamaps.ve.icons"
+			],
+			"packageFiles": [
+				"vec/main.js",
+				"vec/creationDialog.js",
+				"loader/enums.js"
+			],
+			"styles": [
+				"ve/css/collapsibles.less",
+				"vec/css/all.less"
+			],
+			"messages": [
+				"datamap-vec-beta-notice",
+
+				"datamap-ve-cancel",
+				"datamap-vec-title",
+				"datamap-vec-intro",
+				"datamap-vec-select-crs-origin",
+				"datamap-vec-crs-top-left",
+				"datamap-vec-crs-bottom-left",
+				"datamap-vec-select-crs",
+				"datamap-vec-crs-percent",
+				"datamap-vec-crs-image",
+				"datamap-vec-crs-custom",
+				"datamap-vec-select-background",
+				"datamap-vec-extra-options",
+				"datamap-vec-toggle-coord-display",
+				"datamap-vec-toggle-zoom",
+				"datamap-vec-toggle-search",
+				"datamap-vec-toggle-search-tabber",
+				"datamap-vec-toggle-uid-requirement",
+				"datamap-vec-submit"
+			],
+			"targets": [ "desktop" ]
+		},
+
+		"ext.datamaps.vec-lazy": {
+			"es6": true,
+			"packageFiles": [
+				"vec-lazy/main.js"
+			],
+			"targets": [ "desktop" ]
 		}
 	},
 
