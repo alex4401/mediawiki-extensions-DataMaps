@@ -313,45 +313,46 @@
 		"datamaps-opt-in-visual-editor-beta": true
 	},
 
+	"config_prefix": "wgDataMaps",
 	"config": {
-		"DataMapsNamespaceId": {
+		"NamespaceId": {
 			"description": "Namespace where data maps will be stored. Use 'managed' to use the built-in namespace.",
 			"value": "managed"
 		},
-		"DataMapsCacheType": {
+		"CacheType": {
 			"description": "Cache type to use for queryDataMap API output. Defaults to CACHE_ANYTHING.",
 			"value": -1
 		},
-		"DataMapsCacheTTL": {
+		"CacheTTL": {
 			"description": "Time To Live for cached queryDataMap API (per title and revision) responses to be valid. Set to 0 to disable caching. Defaults to a day.",
 			"value": 86400
 		},
-		"DataMapsExtendCacheTTL": {
+		"ExtendCacheTTL": {
 			"description": "Settings to extend TTL of cached maps on requests close to expiry time. Set to false to disable.",
 			"value": {
 				"threshold": 43200,
 				"override": 57600
 			}
 		},
-		"DataMapsDefaultApiMarkerBatch": {
+		"DefaultApiMarkerBatch": {
 			"value": 2500
 		},
-		"DataMapsMaxApiMarkerBatch": {
+		"MaxApiMarkerBatch": {
 			"value": 5000
 		},
-		"DataMapsMarkerParserExpansionLimit": {
+		"MarkerParserExpansionLimit": {
 			"description": "Controls how big the parser output for a marker's description can get.",
 			"value": 800
 		},
-		"DataMapsUseInProcessParserCache": {
+		"UseInProcessParserCache": {
 			"description": "If enabled, uses a simple wikitext parser cache inside the process handling the request.",
 			"value": true
 		},
-		"DataMapsReportTimingInfo": {
+		"ReportTimingInfo": {
 			"description": "Attaches data map marker processing time in API requests.",
 			"value": false
 		},
-		"DataMapsDefaultFeatures": {
+		"DefaultFeatures": {
 			"value": {
 				"ShowCoordinates": true,
 				"ShowLegendAlwaysAbove": false,
@@ -360,10 +361,13 @@
 				"SortChecklistsByAmount": false
 			}
 		},
-		"DataMapsEnableVisualEditor": {
+		"EnableVisualEditor": {
 			"value": true
 		},
-		"DataMapsAllowExperimentalFeatures": {
+		"EnableVisualCreator": {
+			"value": true
+		},
+		"AllowExperimentalFeatures": {
 			"description": "Whether to enable experimental features.",
 			"value": false
 		}
