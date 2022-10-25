@@ -161,6 +161,8 @@ CreationDialog.prototype.getSetupProcess = function ( data ) {
 
 
 CreationDialog.prototype.updatePrefillValue = function () {
+    this.pushPending();
+
     const imageSize = [ 100, 100 ];
 
     const out = {
