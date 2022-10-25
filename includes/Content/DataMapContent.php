@@ -127,8 +127,10 @@ class DataMapContent extends DataMapContentBase {
 				$this->validateBeforeSave( $status );
 				if ( !$status->isOK() ) {
 					$output->setText( $output->getRawText() . Html::errorBox(
-						wfMessage( 'datamap-error-cannot-preview-validation-errors' ) . "<br/>\n" . $status->getMessage(
-							false, false )
+						wfMessage(
+							'datamap-error-cannot-' . ( $isVisualEditor ? 'open-ve' : 'preview' ) . '-validation-errors',
+							$status->getMessage( false, false )
+						)
 					) );
 					return $output;
 				}

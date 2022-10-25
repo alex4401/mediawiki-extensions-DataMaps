@@ -11,6 +11,7 @@
     "datamap-ve-beta-notice": "The visual editor is still in an early development stage, please report issues over Discord: alex#7749",
     "datamap-vec-beta-notice": "The visual map creation process is still in an early development stage",
     "datamap-ve-limited-preview-notice": "[PH] Certain features are disabled when previewing the map in the visual editor",
+    "datamap-error-cannot-open-ve-validation-errors": "<b>Visual editor is unavailable due to errors in map's source code:</b><br/>$1<br/>Resolve the issues in the source editor first.",
     "tag-datamaps-visualeditor": "Visual map edit",
     "tag-datamaps-visualeditor-description": "Edit made using the DataMaps visual editor",
 
