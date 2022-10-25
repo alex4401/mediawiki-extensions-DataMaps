@@ -361,7 +361,7 @@
 
 	"DefaultUserOptions": {
 		"datamaps-enable-visual-editor": true,
-		"datamaps-opt-in-visual-editor-beta": true
+		"datamaps-opt-in-visual-editor-beta": false
 	},
 
 	"config_prefix": "wgDataMaps",
