@@ -58,6 +58,7 @@ CreationDialog.prototype.initialize = function () {
     } );
     this.submitButton = new OO.ui.ButtonInputWidget( {
         label: mw.msg( 'datamap-vec-submit' ),
+        name: 'wpPreview',
         flags: [ 'primary', 'progressive' ],
         useInputTag: true,
         type: 'submit'
@@ -134,7 +135,27 @@ CreationDialog.prototype.initialize = function () {
                                     } )
                                 ]
                             } ),
+                            new OO.ui.HiddenInputWidget( {
+                                name: 'wpUnicodeCheck',
+                                value: 'ℳ𝒲♥𝓊𝓃𝒾𝒸ℴ𝒹ℯ'
+                            } ),
+                            new OO.ui.HiddenInputWidget( {
+                                name: 'wpEditToken',
+                                value: mw.user.tokens.get('csrfToken')
+                            } ),
+                            new OO.ui.HiddenInputWidget( {
+                                name: 'model',
+                                value: 'datamap'
+                            } ),
+                            new OO.ui.HiddenInputWidget( {
+                                name: 'format',
+                                value: 'application/json'
+                            } ),
                             this.prefill,
+                            new OO.ui.HiddenInputWidget( {
+                                name: 'wpUltimateParam',
+                                value: '1'
+                            } ),
                             new OO.ui.FieldLayout( this.submitButton )
                         ]
                     } )
@@ -199,7 +220,7 @@ CreationDialog.prototype.updatePrefillValue = function () {
     out.markers = {};
     this.prefill.$element.attr( 'value', JSON.stringify( out ) );
 
-    this.submitButton.$button.submit();
+    this.$body.find( 'form' ).submit();
 };
 
 
