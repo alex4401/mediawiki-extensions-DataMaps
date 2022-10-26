@@ -49,12 +49,18 @@
     "datamap-error-validatespec-map-missing-group": "เครื่องหมายถูกเพิ่มเข้ามาในกลุ่ม \"$1\", ซึ่งไม่ได้กำหนดไว้",
     "datamap-error-validatespec-map-no-group-name": "กลุ่มของเครื่องหมายต้อง (หรือว่างเปล่า) ไม่ซ้ำหรือถูกใช้ไปแล้ว โปรดกำหนดชื่อที่ไม่ซ้ำ",
     "datamap-defaultloadout-marker-label": "เครื่องหมาย",
-    "datamap-control-search": "คลิกและเริ่มพิมพ์เพื่อค้นหา...",
+    "datamap-control-search": "คลิกและเริ่มพิมพ์เพื่อค้นหา…",
     "datamap-error-validatespec-group-no-display": "ไม่มีการตั้งค่าแสดงผลของกลุ่มเครื่องหมาย \"$1\" โปรดเพิ่มคุณสมบัติ <code>icon</code> และ/หรือ <code>fillColor</code>",
     "datamap-defaultloadout-group-icon": "Marker group icon in legend.png",
     "datamap-error-validate-unexpected-fields": "พบฟิลด์ที่ไม่ทราบในโครงสร้าง $1: $2",
     "datamap-error-validate-check-docs": "สามารถดูรายละเอียดเพิ่มเติมและโครงสร้างของส่วนขยายได้ที่ [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps เอกสารประกอบส่วนขยาย]",
     "datamap-error-cannot-preview-validation-errors": "<b>ไม่แสดงตัวอย่างเนื่องจากข้อผิดพลาดในซอร์สโค้ด</b>",
     "datamap-defaultloadout-group-name": "กลุ่มเครื่องหมาย",
-    "datamap-legend-tab-checklist": "รายการตรวจสอบ"
+    "datamap-legend-tab-checklist": "รายการตรวจสอบ",
+    "datamap-error-validate-wrong-item-type": "องค์ประกอบใน <code>$2</code> อาร์เรย์มีค่าที่ผิดพลาดสำหรับโครงสร้าง $1. $3",
+    "datamap-error-validate-disallowed-value": "ฟิลด์ <code>$2</code> มีค่าที่ไม่ทราบสำหรับโครงสร้าง $1. $3",
+    "datamap-error-validate-deprecated-field": "ฟิลด์ <code>$2</code> ในโครงสร้าง $1 มีการเลิกใช้แล้วในเวอร์ชัน $3, และจะถูกนำออกในเวอร์ชัน $4",
+    "datamap-error-validatespec-map-name-conflict-group-layer": "พบเลเยอร์เครื่องหมาย \"$1\", แต่กลุ่มของเครื่องหมายที่มีชื่อเดียวกัน",
+    "datamap-error-validatespec-map-uid-conflict": "พบตัวระบุเครื่องหมายที่ซ้ำ: <code>$1</code>",
+    "datamap-error-validate-field-required-alt": "ฟิลด์ <code>$2</code> หรือมีอย่างอื่นที่ต้องใช้โครงสร้าง $1. $3"
 }
