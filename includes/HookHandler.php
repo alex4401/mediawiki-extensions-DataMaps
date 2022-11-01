@@ -94,7 +94,7 @@ class HookHandler implements
 
 		if ( $isVCEnabled && !$title->exists() ) {
 			$skinTemplate->getOutput()->addModules( [
-				'ext.datamaps.vec-lazy'
+				'ext.datamaps.createMapLazy'
 			] );
 		} else if ( $isVEEnabled ) {
 			$pageProps = MediaWikiServices::getInstance()->getPageProps();

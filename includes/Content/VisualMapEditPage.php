@@ -69,7 +69,7 @@ class VisualMapEditPage extends EditPage {
 	        $out->addHTML( $parserOutput->getText( [] ) );
 		} else {
 			$out->addModules( [
-				'ext.datamaps.vec'
+				'ext.datamaps.createMap'
 			] );
 		}
 	}

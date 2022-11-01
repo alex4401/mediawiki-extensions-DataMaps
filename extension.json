@@ -276,7 +276,7 @@
 			"targets": [ "desktop" ]
 		},
 
-		"ext.datamaps.vec": {
+		"ext.datamaps.createMap": {
 			"es6": true,
 			"dependencies": [
 				"oojs-ui-core",
@@ -286,13 +286,13 @@
 				"ext.datamaps.ve.icons"
 			],
 			"packageFiles": [
-				"vec/main.js",
-				"vec/creationDialog.js",
+				"createMap/main.js",
+				"createMap/creationDialog.js",
 				"loader/enums.js"
 			],
 			"styles": [
 				"ve/css/collapsibles.less",
-				"vec/css/all.less"
+				"createMap/css/all.less"
 			],
 			"messages": [
 				"datamap-vec-beta-notice",
@@ -319,10 +319,10 @@
 			"targets": [ "desktop" ]
 		},
 
-		"ext.datamaps.vec-lazy": {
+		"ext.datamaps.createMapLazy": {
 			"es6": true,
 			"packageFiles": [
-				"vec-lazy/main.js"
+				"createMapLazy/main.js"
 			],
 			"targets": [ "desktop" ]
 		}
