@@ -1,13 +1,13 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
 
-use ResourceLoaderContext;
-use ResourceLoaderWikiModule;
+use MediaWiki\ResourceLoader\Context;
+use MediaWiki\ResourceLoader\WikiModule;
 
-class ResourceLoaderDataMapsSiteModule extends ResourceLoaderWikiModule {
+class ResourceLoaderDataMapsSiteModule extends WikiModule {
     protected $targets = [ 'desktop', 'mobile' ];
 
-    protected function getPages( ResourceLoaderContext $context ): array {
+    protected function getPages( Context $context ): array {
         $pages = [];
         if ( $this->getConfig()->get( 'UseSiteJs' ) ) {
             $pages['MediaWiki:DataMaps.js'] = [ 'type' => 'script' ];
