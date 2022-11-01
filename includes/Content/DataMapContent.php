@@ -7,13 +7,13 @@ use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataModelMixinTransformer;
 use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\EmbedRenderer;
+use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use Parser;
 use ParserOutput;
 use Status;
 use stdClass;
 use Title;
-use WikiPage;
 
 class DataMapContent extends JsonContent {
     public const LERR_NOT_FOUND = 1;
@@ -97,7 +97,7 @@ class DataMapContent extends JsonContent {
             return self::LERR_NOT_FOUND;
         }
 
-        $mapPage = WikiPage::factory( $title );
+        $mapPage = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle( $title );
         $content = $mapPage->getContent( RevisionRecord::RAW );
 
         if ( !( $content instanceof DataMapContent ) ) {

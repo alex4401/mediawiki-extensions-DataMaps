@@ -13,7 +13,6 @@ use ObjectCache;
 use Title;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\ParamValidator\TypeDef\IntegerDef;
-use WikiPage;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
     // This value is a part of every cache key produced by this endpoint. It should be raised only on API output changes and
@@ -118,7 +117,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                 $this->dieWithError( [ 'apierror-revwrongpage', $revision->getId(), $title->getPrefixedText() ] );
             }
         } else {
-            $revision = WikiPage::factory( $title )->getRevisionRecord();
+            $revision = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle( $title )->getRevisionRecord();
         }
 
         return $revision;

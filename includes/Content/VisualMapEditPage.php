@@ -15,7 +15,7 @@ class VisualMapEditPage extends EditPage {
         if ( $permErrors ) {
             if ( $this->context->getUser()->getBlock() ) {
                 // Auto-block user's IP if the account was "hard" blocked
-                if ( !wfReadOnly() ) {
+                if ( !MediaWikiServices::getInstance()->getReadOnlyMode()->isReadOnly() ) {
                     DeferredUpdates::addCallableUpdate( function () {
                         $this->context->getUser()->spreadAnyEditBlock();
                     } );
@@ -52,7 +52,7 @@ class VisualMapEditPage extends EditPage {
 			$content = $this->getContentObject( $dummy );
 
 	        $parser = MediaWikiServices::getInstance()->getParser();
-    	    $parserOptions = ParserOptions::newCanonical( 'canonical' );
+            $parserOptions = ParserOptions::newFromAnon();
         	$parserOptions->setIsPreview( true );
         	$parserOptions->setOption( 'isMapVisualEditor', true );
         	$parser->setOptions( $parserOptions );

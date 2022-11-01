@@ -33,7 +33,7 @@ class ConvertMaps extends Maintenance {
         if ( $userName === false ) {
             $this->commitUser = User::newSystemUser( User::MAINTENANCE_SCRIPT_USER, [ 'steal' => true ] );
         } else {
-            $this->commitUser = User::newFromName( $userName );
+            $this->commitUser = MediaWikiServices::getInstance()->getUserFactory()->newFromName( $userName );
         }
         if ( !$this->commitUser ) {
             $this->fatalError( 'Invalid username' );
@@ -54,7 +54,6 @@ class ConvertMaps extends Maintenance {
             ] )
             ->caller( __METHOD__ )
             ->fetchResultSet();
-
 
         // Update default content model for every page
         $this->output( "Overriding default content models to DataMap...\n" );
@@ -241,7 +240,8 @@ class ConvertMaps extends Maintenance {
             // Check for unsupported properties
             foreach ( self::UNSUPPORTED_CATEGORY_PROPS as $propName ) {
                 if ( isset( $fmCategoryData->$propName ) && !empty( $fmCategoryData->$propName ) ) {
-                    $this->output( "    ... unsupported property in category '$fmCategoryName', this must be solved manually on site: $propName\n" );
+                    $this->output( "    ... unsupported property in category '$fmCategoryName', this must be solved manually on "
+                        . "site: $propName\n" );
                 }
             }
             // Map name

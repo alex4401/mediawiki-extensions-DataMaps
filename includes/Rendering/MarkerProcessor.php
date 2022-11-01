@@ -31,7 +31,7 @@ class MarkerProcessor {
 
     public function __construct( Title $title, DataMapSpec $dataMap, ?array $filter ) {
         $this->parser = MediaWikiServices::getInstance()->getParser();
-        $this->parserOptions = ParserOptions::newCanonical( 'canonical' );
+        $this->parserOptions = ParserOptions::newFromAnon();
         $this->title = $title;
         $this->dataMap = $dataMap;
         $this->filter = $filter;
@@ -44,7 +44,6 @@ class MarkerProcessor {
             $this->localParserCache = new MapCacheLRU( self::MAX_LRU_SIZE );
         }
         // Configure the wikitext parser
-        $this->parserOptions->enableLimitReport( false );
         $this->parserOptions->setAllowSpecialInclusion( false );
         $this->parserOptions->setExpensiveParserFunctionLimit( 5 );
         $this->parserOptions->setInterwikiMagic( false );
@@ -156,7 +155,11 @@ class MarkerProcessor {
 
         // Call the parser
         $out = $this->parser->parse( $text, $this->title, $this->parserOptions, false, $this->isParserDirty )
-            ->getText( [ 'unwrap' => true, 'allowTOC' => false ] );
+            ->getText( [
+                'unwrap' => true,
+                'allowTOC' => false,
+                'includeDebugInfo' => false
+            ] );
         // Mark as clean to avoid clearing state again
         $this->isParserDirty = false;
 

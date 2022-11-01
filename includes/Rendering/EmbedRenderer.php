@@ -10,6 +10,7 @@ use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
 use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
+use MediaWiki\MediaWikiServices;
 use Parser;
 use ParserOptions;
 use ParserOutput;
@@ -32,11 +33,10 @@ class EmbedRenderer {
         $this->useInlineData = $useInlineData;
         $this->forVisualEditor = $forVisualEditor;
 
-        $this->parser = $parser->getFreshParser();
+        $this->parser = MediaWikiServices::getInstance()->getParserFactory()->getInstance();
         $this->parserOutput = $parserOutput;
 
-        $this->parserOptions = ParserOptions::newCanonical( 'canonical' );
-        $this->parserOptions->enableLimitReport( false );
+        $this->parserOptions = ParserOptions::newFromAnon();
         $this->parserOptions->setAllowSpecialInclusion( false );
         $this->parserOptions->setExpensiveParserFunctionLimit( 4 );
         $this->parserOptions->setInterwikiMagic( false );

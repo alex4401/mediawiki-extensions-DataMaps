@@ -226,7 +226,7 @@ class DataMapSpec extends DataModel {
         ] );
         $this->checkField( $status, [
             'name' => 'crs',
-            'type' => DataModel::TYPE_VECTOR2x2,
+            'type' => DataModel::TYPE_VECTOR2X2,
             'check' => static function ( $status, $crs ) {
                 // Validate the coordinate system - only two supported schemes are [ lower lower higher higher ] (top-left), and
                 // [ higher higher lower lower ] (bottom-left).

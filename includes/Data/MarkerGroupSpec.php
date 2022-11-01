@@ -167,7 +167,6 @@ class MarkerGroupSpec extends DataModel {
                 return;
         }
 
-
         $this->checkField( $status, 'article', DataModel::TYPE_STRING );
         $this->checkField( $status, 'isDefault', DataModel::TYPE_BOOL );
         $this->checkField( $status, [
