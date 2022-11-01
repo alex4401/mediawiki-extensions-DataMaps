@@ -1,36 +1,35 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps;
 
-use MediaWiki\MediaWikiServices;
-use Title;
-use Linker;
-use RequestContext;
 use MediaWiki\Extension\Ark\DataMaps\Content\VisualMapEditPage;
+use MediaWiki\MediaWikiServices;
+use RequestContext;
+use Title;
 
 class HookHandler implements
-	\MediaWiki\Hook\ParserFirstCallInitHook,
-	\MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook,
-	\MediaWiki\Hook\CanonicalNamespacesHook,
-	\MediaWiki\Preferences\Hook\GetPreferencesHook,
-	\MediaWiki\Hook\SkinTemplateNavigation__UniversalHook,
-	\MediaWiki\Hook\CustomEditorHook,
-	\MediaWiki\Hook\ParserOptionsRegisterHook,
-	\MediaWiki\ChangeTags\Hook\ChangeTagsListActiveHook,
-	\MediaWiki\ChangeTags\Hook\ListDefinedTagsHook,
-	\MediaWiki\Hook\RecentChange_saveHook
+    \MediaWiki\Hook\ParserFirstCallInitHook,
+    \MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook,
+    \MediaWiki\Hook\CanonicalNamespacesHook,
+    \MediaWiki\Preferences\Hook\GetPreferencesHook,
+    \MediaWiki\Hook\SkinTemplateNavigation__UniversalHook,
+    \MediaWiki\Hook\CustomEditorHook,
+    \MediaWiki\Hook\ParserOptionsRegisterHook,
+    \MediaWiki\ChangeTags\Hook\ChangeTagsListActiveHook,
+    \MediaWiki\ChangeTags\Hook\ListDefinedTagsHook,
+    \MediaWiki\Hook\RecentChange_saveHook
 {
     public static function onRegistration(): bool {
         define( 'ARK_CONTENT_MODEL_DATAMAP', 'datamap' );
         return true;
     }
-	
-	public function onCanonicalNamespaces( &$namespaces ) {
-		if ( ExtensionConfig::isNamespaceManaged() ) {
-			$namespaces[ NS_MAP ] = 'Map';
-			$namespaces[ NS_MAP_TALK ] = 'Map_talk';
-		}
-	}
-    
+
+    public function onCanonicalNamespaces( &$namespaces ) {
+        if ( ExtensionConfig::isNamespaceManaged() ) {
+            $namespaces[NS_MAP] = 'Map';
+            $namespaces[NS_MAP_TALK] = 'Map_talk';
+        }
+    }
+
     public function onParserFirstCallInit( $parser ) {
         $parser->setFunctionHook(
             'pf-embed-data-map', [ Rendering\ParserFunction_EmbedDataMap::class, 'run' ],
@@ -38,42 +37,42 @@ class HookHandler implements
         );
     }
 
-	private static function isDocPage( Title $title ) {
-		$docPage = wfMessage( 'datamap-doc-page-suffix' )->inContentLanguage();
-		return !$docPage->isDisabled() && str_ends_with( $title->getPrefixedText(), $docPage->plain() );
-	}
+    private static function isDocPage( Title $title ) {
+        $docPage = wfMessage( 'datamap-doc-page-suffix' )->inContentLanguage();
+        return !$docPage->isDisabled() && str_ends_with( $title->getPrefixedText(), $docPage->plain() );
+    }
 
-	public function onContentHandlerDefaultModelFor( $title, &$model ) {
-		if ( $title->getNamespace() === ExtensionConfig::getNamespaceId() && !self::isDocPage( $title ) ) {
+    public function onContentHandlerDefaultModelFor( $title, &$model ) {
+        if ( $title->getNamespace() === ExtensionConfig::getNamespaceId() && !self::isDocPage( $title ) ) {
             $prefix = wfMessage( 'datamap-standard-title-prefix' )->inContentLanguage();
             if ( $prefix !== '-' && str_starts_with( $title->getText(), $prefix->plain() ) ) {
-			    $model = ARK_CONTENT_MODEL_DATAMAP;
+                $model = ARK_CONTENT_MODEL_DATAMAP;
             }
-		}
-		return true;
-	}
+        }
+        return true;
+    }
 
-	public static function onCodeEditorGetPageLanguage( Title $title, &$languageCode ) {
-		if ( $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
-			$languageCode = 'json';
-		}
-		return true;
-	}
+    public static function onCodeEditorGetPageLanguage( Title $title, &$languageCode ) {
+        if ( $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
+            $languageCode = 'json';
+        }
+        return true;
+    }
 
-	public function onGetPreferences( $user, &$preferences ) {
-		if ( ExtensionConfig::isVisualEditorEnabled() ) {
-			$preferences['datamaps-enable-visual-editor'] = [
-				'type' => 'toggle',
-				'label-message' => 'datamap-userpref-enable-ve',
-				'section' => 'editing/editor'
-			];
-			$preferences['datamaps-opt-in-visual-editor-beta'] = [
-				'type' => 'toggle',
-				'label-message' => 'datamap-userpref-enable-ve-beta',
-				'section' => 'editing/editor'
-			];
-		}
-	}
+    public function onGetPreferences( $user, &$preferences ) {
+        if ( ExtensionConfig::isVisualEditorEnabled() ) {
+            $preferences['datamaps-enable-visual-editor'] = [
+                'type' => 'toggle',
+                'label-message' => 'datamap-userpref-enable-ve',
+                'section' => 'editing/editor'
+            ];
+            $preferences['datamaps-opt-in-visual-editor-beta'] = [
+                'type' => 'toggle',
+                'label-message' => 'datamap-userpref-enable-ve-beta',
+                'section' => 'editing/editor'
+            ];
+        }
+    }
 
 	public function onSkinTemplateNavigation__Universal( $skinTemplate, &$links ): void {
 		if ( !isset( $links['views']['edit'] ) ) {
@@ -86,11 +85,11 @@ class HookHandler implements
 			return;
 		}
 
-		$title = $skinTemplate->getRelevantTitle();
-		if ( !$title->getNamespace() === ExtensionConfig::getNamespaceId()
-			|| !$title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
-			return;
-		}
+        $title = $skinTemplate->getRelevantTitle();
+        if ( !$title->getNamespace() === ExtensionConfig::getNamespaceId()
+            || !$title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
+            return;
+        }
 
 		if ( $isVCEnabled && !$title->exists() ) {
 			$skinTemplate->getOutput()->addModules( [
@@ -144,28 +143,28 @@ class HookHandler implements
 			}
 		}
 
-		return true;
-	}
+        return true;
+    }
 
-	public function onParserOptionsRegister( &$defaults, &$inCacheKey, &$lazyLoad ) {
-		$defaults['isMapVisualEditor'] = false;
-	}
+    public function onParserOptionsRegister( &$defaults, &$inCacheKey, &$lazyLoad ) {
+        $defaults['isMapVisualEditor'] = false;
+    }
 
-	public function onListDefinedTags( &$tags ) {
-		$tags[] = 'datamaps-visualeditor';
-	}
+    public function onListDefinedTags( &$tags ) {
+        $tags[] = 'datamaps-visualeditor';
+    }
 
-	public function onChangeTagsListActive( &$tags ) {
-		$tags[] = 'datamaps-visualeditor';
-	}
+    public function onChangeTagsListActive( &$tags ) {
+        $tags[] = 'datamaps-visualeditor';
+    }
 
-	/**
-	 * @param RecentChange $rc The new RC entry.
-	 */
-	public function onRecentChange_save( $rc ) {
-		$request = RequestContext::getMain()->getRequest();
-		if ( $request->getBool( 'isdatamapsve' ) ) {
-			$rc->addTags( 'datamaps-visualeditor' );
-		}
-	}
+    /**
+     * @param RecentChange $rc The new RC entry.
+     */
+    public function onRecentChange_save( $rc ) {
+        $request = RequestContext::getMain()->getRequest();
+        if ( $request->getBool( 'isdatamapsve' ) ) {
+            $rc->addTags( 'datamaps-visualeditor' );
+        }
+    }
 }

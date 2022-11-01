@@ -1,28 +1,36 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps\Data;
 
+use InvalidArgumentException;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
 use Status;
 use stdClass;
-use InvalidArgumentException;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 
 class DataModel {
     protected static string $publicName = '???';
 
-    const TYPE_ANY = 0;
-    const TYPE_ARRAY = 1;
-    const TYPE_STRING = 2;
-    const TYPE_BOOL = 3;
-    const TYPE_NUMBER = 4;
-    const TYPE_OBJECT = 5;
-    const TYPE_VECTOR2 = 11;
-    const TYPE_DIMENSIONS = 12;
-    const TYPE_VECTOR2X2 = 13;
-    const TYPE_BOUNDS = self::TYPE_VECTOR2X2;
-    const TYPE_COLOUR3 = 14;
-    const TYPE_COLOUR4 = 16;
-    const TYPE_FILE = 19;
+    public const TYPE_ANY = 0;
+    public const TYPE_ARRAY = 1;
+    public const TYPE_STRING = 2;
+    public const TYPE_BOOL = 3;
+    public const TYPE_NUMBER = 4;
+    public const TYPE_OBJECT = 5;
+    public const TYPE_VECTOR2 = 11;
+    public const TYPE_DIMENSIONS = 12;
+    public const TYPE_VECTOR2X2 = 13;
+    public const TYPE_BOUNDS = self::TYPE_VECTOR2X2;
+    public const TYPE_COLOUR3 = 14;
+    public const TYPE_COLOUR4 = 16;
+    public const TYPE_FILE = 19;
+
+    /**
+     * phpcs:disable Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase
+     * @deprecated 0.14.0 Will be removed in v0.15.0.
+     * @see TYPE_VECTOR2X2 The replacement.
+     */
+    public const TYPE_VECTOR2x2 = self::TYPE_VECTOR2X2;
+    // phpcs:enable Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase
 
     protected stdClass $raw;
     private array $validationCheckedFields = [];
@@ -30,7 +38,7 @@ class DataModel {
 
     public function __construct( stdClass $raw ) {
         if ( is_array( $raw ) ) {
-            $raw = (object) $raw;
+            $raw = (object)$raw;
         }
         $this->raw = $raw;
     }
@@ -119,7 +127,7 @@ class DataModel {
         $name = $spec['name'] ?? null;
         $types = $spec['type'];
         if ( !is_array( $types ) ) {
-            $types = [$types];
+            $types = [ $types ];
         }
 
         if ( isset( $spec['names'] ) ) {
@@ -162,7 +170,7 @@ class DataModel {
             $info = $spec['@replaced'];
             $status->warning( 'datamap-error-validate-replaced-field', static::$publicName, $name, $info[2], $info[0],
                 $info[1] );
-        } else if ( isset( $spec['@pendingRemoval'] ) ) {
+        } elseif ( isset( $spec['@pendingRemoval'] ) ) {
             $info = $spec['@replaced'];
             $status->warning( 'datamap-error-validate-deprecated-field', static::$publicName, $name, $info[0], $info[1] );
         }
@@ -245,5 +253,6 @@ class DataModel {
         return true;
     }
 
-    public function validate( Status $status ) { }
+    public function validate( Status $status ) {
+    }
 }

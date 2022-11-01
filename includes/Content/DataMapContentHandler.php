@@ -1,72 +1,65 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps\Content;
 
-use JsonContentHandler;
-use Title;
-use stdclass;
-use Parser;
-use ParserOptions;
-use ParserOutput;
-use OutputPage;
-use Html;
-use PPFrame;
-use Status;
-use WikiPage;
 use Content;
-use MediaWiki\MediaWikiServices;
-use MediaWiki\Revision\RevisionRecord;
-use MediaWiki\Content\ValidationParams;
+use Html;
+use JsonContentHandler;
 use MediaWiki\Content\Renderer\ContentParseParams;
-use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
-use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
+use MediaWiki\Content\ValidationParams;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\EmbedRenderOptions;
+use MediaWiki\MediaWikiServices;
+use ParserOutput;
+use Status;
+use stdclass;
+use Title;
 
 class DataMapContentHandler extends JsonContentHandler {
-	public function __construct( $modelId = ARK_CONTENT_MODEL_DATAMAP ) {
-		parent::__construct( $modelId, [ ARK_CONTENT_MODEL_DATAMAP ] );
-	}
+    public function __construct( $modelId = ARK_CONTENT_MODEL_DATAMAP ) {
+        parent::__construct( $modelId, [ ARK_CONTENT_MODEL_DATAMAP ] );
+    }
 
-	protected function getContentClass() {
-		return DataMapContent::class;
-	}
+    protected function getContentClass() {
+        return DataMapContent::class;
+    }
 
-	/**
-	 * Only allow this content handler to be used in the configured data namespace
-	 */
-	public function canBeUsedOn( Title $title ) {
-		if ( $title->getNamespace() !== ExtensionConfig::getNamespaceId() ) {
-			return false;
-		}
+    /**
+     * Only allow this content handler to be used in the configured data namespace
+     */
+    public function canBeUsedOn( Title $title ) {
+        if ( $title->getNamespace() !== ExtensionConfig::getNamespaceId() ) {
+            return false;
+        }
 
-		return parent::canBeUsedOn( $title );
-	}
+        return parent::canBeUsedOn( $title );
+    }
 
-	public function validateSave( Content $content, ValidationParams $validationParams ) {
-		'@phan-var DataMapContent $content';
-		return $content->getValidationStatus();
-	}
+    public function validateSave( Content $content, ValidationParams $validationParams ) {
+        '@phan-var DataMapContent $content';
+        return $content->getValidationStatus();
+    }
 
-	public static function getDocPage( Title $title ) {
-		$docPage = wfMessage( 'datamap-doc-page-suffix' )->inContentLanguage();
-		return $docPage->isDisabled() ? null : Title::newFromText( $title->getPrefixedText() . $docPage->plain() );
-	}
+    public static function getDocPage( Title $title ) {
+        $docPage = wfMessage( 'datamap-doc-page-suffix' )->inContentLanguage();
+        return $docPage->isDisabled() ? null : Title::newFromText( $title->getPrefixedText() . $docPage->plain() );
+    }
 
-	public function isParserCacheSupported() {
-		return true;
-	}
+    public function isParserCacheSupported() {
+        return true;
+    }
 
-	protected function fillParserOutput( Content $content, ContentParseParams $cpoParams, ParserOutput &$parserOutput ) {
-		'@phan-var DataMapContent $content';
+    protected function fillParserOutput( Content $content, ContentParseParams $cpoParams, ParserOutput &$parserOutput ) {
+        '@phan-var DataMapContent $content';
 
-		if ( !$content->isValid() ) {
-			// FIXME:
-			$parserOutput->setText( 'Invalid JSON content' );
-			return;
-		}
+        if ( !$content->isValid() ) {
+            // FIXME:
+            $parserOutput->setText( 'Invalid JSON content' );
+            return;
+        }
 
-		$pageRef = $cpoParams->getPage();
-		$parserOptions = $cpoParams->getParserOptions();
+        $pageRef = $cpoParams->getPage();
+        $parserOptions = $cpoParams->getParserOptions();
 
 		$shouldGenerateHtml = $cpoParams->getGenerateHtml();
 		$isVisualEditor = $parserOptions->getOption( 'isMapVisualEditor' );
@@ -78,32 +71,32 @@ class DataMapContentHandler extends JsonContentHandler {
 			$msg = wfMessage( $doc->exists() ? 'datamap-doc-page-show' : 'datamap-doc-page-does-not-exist',
 				$doc->getPrefixedText() )->inContentLanguage();
 
-			if ( !$msg->isDisabled() ) {
-				// We need the ParserOutput for categories and such, so we can't use $msg->parse()
-				$docViewLang = $doc->getPageViewLanguage();
-				$dir = $docViewLang->getDir();
+            if ( !$msg->isDisabled() ) {
+                // We need the ParserOutput for categories and such, so we can't use $msg->parse()
+                $docViewLang = $doc->getPageViewLanguage();
+                $dir = $docViewLang->getDir();
 
-				$docWikitext = Html::rawElement(
-					'div',
-					[
-						'lang' => $docViewLang->getHtmlCode(),
-						'dir' => $dir,
-						'class' => "mw-content-$dir",
-					],
-					"\n" . $msg->plain() . "\n"
-				);
+                $docWikitext = Html::rawElement(
+                    'div',
+                    [
+                        'lang' => $docViewLang->getHtmlCode(),
+                        'dir' => $dir,
+                        'class' => "mw-content-$dir",
+                    ],
+                    "\n" . $msg->plain() . "\n"
+                );
 
-				if ( $parserOptions->getTargetLanguage() === null ) {
-					$parserOptions->setTargetLanguage( $doc->getPageLanguage() );
-				}
+                if ( $parserOptions->getTargetLanguage() === null ) {
+                    $parserOptions->setTargetLanguage( $doc->getPageLanguage() );
+                }
 
-				$parserOutput = MediaWikiServices::getInstance()->getParser()
-					->parse( $docWikitext, $pageRef, $parserOptions, true, true, $cpoParams->getRevId() );
-			}
+                $parserOutput = MediaWikiServices::getInstance()->getParser()
+                    ->parse( $docWikitext, $pageRef, $parserOptions, true, true, $cpoParams->getRevId() );
+            }
 
-			// Mark the doc page as a transclusion, so we get purged when it changes
-			$parserOutput->addTemplate( $doc, $doc->getArticleID(), $doc->getLatestRevID() );
-		}
+            // Mark the doc page as a transclusion, so we get purged when it changes
+            $parserOutput->addTemplate( $doc, $doc->getArticleID(), $doc->getLatestRevID() );
+        }
 
 		// Render the map if it isn't a mix-in
 		if ( !$content->isMixin() ) {

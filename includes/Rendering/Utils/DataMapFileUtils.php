@@ -2,11 +2,11 @@
 namespace MediaWiki\Extension\Ark\DataMaps\Rendering\Utils;
 
 use InvalidArgumentException;
-use ParserOutput;
 use MediaWiki\MediaWikiServices;
+use ParserOutput;
 
 class DataMapFileUtils {
-    const SCALING_WIDTH_THRESHOLD = 64;
+    public const SCALING_WIDTH_THRESHOLD = 64;
 
     protected static function cleanName( string $title ): string {
         if ( str_starts_with( strtolower( $title ), 'file:' ) ) {
@@ -33,7 +33,7 @@ class DataMapFileUtils {
             ] );
         }
 
-		return $file;
+        return $file;
     }
 
     public static function getFileUrl( string $title, int $width = -1 ): string {
@@ -42,6 +42,6 @@ class DataMapFileUtils {
 
     public static function registerImageDependency( ParserOutput $parserOutput, string $name ): void {
         $file = self::getRequiredFile( $name );
-		$parserOutput->addImage( $file->getTitle()->getDBkey(), $file->getTimestamp(), $file->getSha1() );
+        $parserOutput->addImage( $file->getTitle()->getDBkey(), $file->getTimestamp(), $file->getSha1() );
     }
 }

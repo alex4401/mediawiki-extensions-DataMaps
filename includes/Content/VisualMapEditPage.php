@@ -1,51 +1,45 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps\Content;
 
-use EditPage;
-use Article;
-use Title;
-use MediaWiki\Permissions\PermissionManager;
-use MediaWiki\MediaWikiServices;
 use DeferredUpdates;
+use EditPage;
+use MediaWiki\MediaWikiServices;
+use MediaWiki\Permissions\PermissionManager;
 use ParserOptions;
-use ParserOutput;
 
 class VisualMapEditPage extends EditPage {
-	public function edit() {
-		$permErrors = $this->getEditPermissionErrors(
-			$this->save ? PermissionManager::RIGOR_SECURE : PermissionManager::RIGOR_FULL
-		);
-		if ( $permErrors ) {
-			if ( $this->context->getUser()->getBlock() ) {
-				// Auto-block user's IP if the account was "hard" blocked
-				if ( !wfReadOnly() ) {
-					DeferredUpdates::addCallableUpdate( function () {
-						$this->context->getUser()->spreadAnyEditBlock();
-					} );
-				}
-			}
-			$this->displayPermissionsError( $permErrors );
-			return;
-		}
+    public function edit() {
+        $permErrors = $this->getEditPermissionErrors(
+            $this->save ? PermissionManager::RIGOR_SECURE : PermissionManager::RIGOR_FULL
+        );
+        if ( $permErrors ) {
+            if ( $this->context->getUser()->getBlock() ) {
+                // Auto-block user's IP if the account was "hard" blocked
+                if ( !wfReadOnly() ) {
+                    DeferredUpdates::addCallableUpdate( function () {
+                        $this->context->getUser()->spreadAnyEditBlock();
+                    } );
+                }
+            }
+            $this->displayPermissionsError( $permErrors );
+            return;
+        }
 
-		$revRecord = $this->mArticle->fetchRevisionRecord();
+        $revRecord = $this->mArticle->fetchRevisionRecord();
 
-		$out = $this->context->getOutput();
+        $out = $this->context->getOutput();
 
-		// Enable article-related sidebar, toplinks, etc.
-		$out->setArticleRelated( true );
+        // Enable article-related sidebar, toplinks, etc.
+        $out->setArticleRelated( true );
 
-		$contextTitle = $this->getContextTitle();
-		$out->setPageTitle( $this->context->msg( $contextTitle->exists() ? 'editing' : 'creating',
-			$contextTitle->getPrefixedText() ) );
+        $contextTitle = $this->getContextTitle();
+        $out->setPageTitle( $this->context->msg( $contextTitle->exists() ? 'editing' : 'creating',
+            $contextTitle->getPrefixedText() ) );
 
-		// Show applicable editing introductions
-		if ( $this->formtype == 'initial' ) {
-			$this->showIntro();
-		}
-		
-		$this->addEditNotices();
-		$this->showHeader();
+        // Show applicable editing introductions
+        if ( $this->formtype == 'initial' ) {
+            $this->showIntro();
+        }
 
 		if ( $this->mArticle->getTitle()->exists() ) {
 			$out->addModules( [

@@ -1,26 +1,26 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps\Data;
 
+use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
+use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use Status;
 use Title;
-use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
-use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
 
 class DataMapSpec extends DataModel {
     protected static string $publicName = 'DataMapSpec';
 
-    const DEFAULT_COORDINATE_SPACE = [ [ 0, 0 ], [ 100, 100 ] ];
+    public const DEFAULT_COORDINATE_SPACE = [ [ 0, 0 ], [ 100, 100 ] ];
 
     private ?array $cachedMarkerGroups = null;
     private ?array $cachedMarkerLayers = null;
     private ?array $cachedBackgrounds = null;
 
-    const SM_NONE = 0;
-    const SM_SELF = 1;
-    const SM_TABBER = 2;
+    public const SM_NONE = 0;
+    public const SM_SELF = 1;
+    public const SM_TABBER = 2;
 
-    const CO_YX = 0;
-    const CO_XY = 1;
+    public const CO_YX = 0;
+    public const CO_XY = 1;
 
     public static function normalisePointCoordinates( array $value, int $order ): array {
         if ( $order === self::CO_XY ) {
@@ -103,7 +103,7 @@ class DataMapSpec extends DataModel {
             : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_SEARCH );
         if ( $value === true ) {
             return self::SM_SELF;
-        } else if ( $value === 'tabberWide' ) {
+        } elseif ( $value === 'tabberWide' ) {
             return self::SM_TABBER;
         }
         return self::SM_NONE;
@@ -135,8 +135,8 @@ class DataMapSpec extends DataModel {
     }
 
     private function warmUpUsedMarkerTypes() {
-        $groups = array();
-        $specifiers = array();
+        $groups = [];
+        $specifiers = [];
         foreach ( array_keys( get_object_vars( $this->raw->markers ) ) as &$name ) {
             $parts = explode( ' ', $name );
             $groups[] = array_shift( $parts );
@@ -197,7 +197,7 @@ class DataMapSpec extends DataModel {
     }
 
     public function iterateRawLayerMap( callable $callback ) {
-        foreach ( get_object_vars( $this->getRawLayerMap() ) as $id => $data ) {
+        foreach ( get_object_vars( $this->getRawMarkerLayerMap() ) as $id => $data ) {
             $callback( $id, $data );
         }
     }
@@ -211,11 +211,11 @@ class DataMapSpec extends DataModel {
             'name' => 'mixins',
             'type' => DataModel::TYPE_ARRAY,
             'itemType' => DataModel::TYPE_STRING,
-            'itemCheck' => function ( $status, $mixinName ) {
+            'itemCheck' => static function ( $status, $mixinName ) {
                 // Make sure all mixins exist and are data maps
                 $title = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $mixinName );
                 $mixinPage = DataMapContent::loadPage( $title );
-                    
+
                 if ( is_numeric( $mixinPage ) || $mixinPage->getData()->getValue() == null ) {
                     $status->fatal( 'datamap-error-validatespec-map-bad-mixin', wfEscapeWikiText( $mixinName ) );
                     return false;
@@ -227,7 +227,7 @@ class DataMapSpec extends DataModel {
         $this->checkField( $status, [
             'name' => 'crs',
             'type' => DataModel::TYPE_VECTOR2x2,
-            'check' => function ( $status, $crs ) {
+            'check' => static function ( $status, $crs ) {
                 // Validate the coordinate system - only two supported schemes are [ lower lower higher higher ] (top-left), and
                 // [ higher higher lower lower ] (bottom-left).
                 $first = $crs[0];
@@ -254,11 +254,11 @@ class DataMapSpec extends DataModel {
                     'type' => DataModel::TYPE_FILE,
                     'fileMustExist' => true
                 ] );
-            } else if ( isset( $this->raw->backgrounds ) ) {
+            } elseif ( isset( $this->raw->backgrounds ) ) {
                 $this->checkField( $status, [
                     'name' => 'backgrounds',
                     'type' => DataModel::TYPE_ARRAY,
-                    'check' => function ( $status, $backgrounds ) {
+                    'check' => static function ( $status, $backgrounds ) {
                         $multipleBgs = count( $backgrounds ) > 1;
                         foreach ( $backgrounds as &$raw ) {
                             $spec = new MapBackgroundSpec( $raw );
@@ -269,7 +269,7 @@ class DataMapSpec extends DataModel {
                         return true;
                     }
                 ] );
-            } else if ( $isFull ) {
+            } elseif ( $isFull ) {
                 $status->fatal( 'datamap-error-validate-field-required-either', self::$publicName, 'image', 'backgrounds' );
                 $this->validationAreRequiredFieldsPresent = false;
             }
@@ -291,12 +291,12 @@ class DataMapSpec extends DataModel {
             'name' => 'groups',
             'type' => DataModel::TYPE_OBJECT,
             'required' => $isFull,
-            'check' => function ( $status, &$rawMap ) {
+            'check' => static function ( $status, &$rawMap ) {
                 foreach ( $rawMap as $name => $group ) {
                     if ( empty( $name ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-no-group-name' );
                     }
-                
+
                     $spec = new MarkerGroupSpec( $name, $group );
                     if ( !$spec->validate( $status ) ) {
                         return false;
@@ -308,12 +308,12 @@ class DataMapSpec extends DataModel {
         $this->checkField( $status, [
             'name' => 'layers',
             'type' => DataModel::TYPE_OBJECT,
-            'check' => function ( $status, &$rawMap ) {
+            'check' => static function ( $status, &$rawMap ) {
                 foreach ( $rawMap as $name => $layer ) {
                     if ( empty( $name ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-no-layer-name' );
                     }
-                
+
                     $spec = new MarkerLayerSpec( $name, $layer );
                     if ( !$spec->validate( $status ) ) {
                         return false;
@@ -334,7 +334,7 @@ class DataMapSpec extends DataModel {
                     // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
                     // creating thousands of small, very short-lived (only one at a time) objects
                     $marker = new MarkerSpec( new \stdclass() );
-                
+
                     // Check if the group is defined. Don't check layers, as it's not required for any of them to be actually
                     // defined - such layers will be treated as transparent by default.
                     $layers = explode( ' ', $layers );
@@ -343,7 +343,7 @@ class DataMapSpec extends DataModel {
                         $status->fatal( 'datamap-error-validatespec-map-missing-group', wfEscapeWikiText( $groupName ) );
                         return;
                     }
-                
+
                     // Validate each marker
                     foreach ( $rawMarkerCollection as &$rawMarker ) {
                         $marker->reassignTo( $rawMarker );

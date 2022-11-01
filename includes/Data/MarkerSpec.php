@@ -5,7 +5,7 @@ use Status;
 
 class MarkerSpec extends DataModel {
     protected static string $publicName = 'MarkerSpec';
-    
+
     public function reassignTo( object $newRaw ) {
         $this->raw = $newRaw;
     }
@@ -40,7 +40,7 @@ class MarkerSpec extends DataModel {
 
     /**
      * Returns whether the label and description should be treated as wikitext as indicated by the data.
-     * 
+     *
      * If null, leaves the decision to MarkerProcessor.
      */
     public function isWikitext(): ?bool {

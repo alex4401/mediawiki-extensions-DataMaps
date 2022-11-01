@@ -2,11 +2,11 @@
 namespace MediaWiki\Extension\Ark\DataMaps;
 
 class ExtensionConfig {
-    const FF_SHOW_COORDINATES = 'ShowCoordinates';
-    const FF_SHOW_LEGEND_ABOVE = 'ShowLegendAlwaysAbove';
-    const FF_REQUIRE_CUSTOM_MARKER_IDS = 'RequireCustomMarkerIDs';
-    const FF_SEARCH = 'Search';
-    const FF_SORT_CHECKLIST_BY_AMOUNT = 'SortChecklistsByAmount';
+    public const FF_SHOW_COORDINATES = 'ShowCoordinates';
+    public const FF_SHOW_LEGEND_ABOVE = 'ShowLegendAlwaysAbove';
+    public const FF_REQUIRE_CUSTOM_MARKER_IDS = 'RequireCustomMarkerIDs';
+    public const FF_SEARCH = 'Search';
+    public const FF_SORT_CHECKLIST_BY_AMOUNT = 'SortChecklistsByAmount';
 
     public static function getParserExpansionLimit(): int {
         return $GLOBALS['wgDataMapsMarkerParserExpansionLimit'];

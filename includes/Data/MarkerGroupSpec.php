@@ -8,20 +8,20 @@ use stdclass;
 class MarkerGroupSpec extends DataModel {
     protected static string $publicName = 'MarkerGroupSpec';
 
-    const DEFAULT_CIRCLE_SIZE = 5;
-    const DEFAULT_CIRCLE_STROKE_WIDTH = 1;
-    const DEFAULT_ICON_SIZE = [ 32, 32 ];
+    public const DEFAULT_CIRCLE_SIZE = 5;
+    public const DEFAULT_CIRCLE_STROKE_WIDTH = 1;
+    public const DEFAULT_ICON_SIZE = [ 32, 32 ];
 
     // Display modes
-    const DM_CIRCLE = 1;
-    const DM_ICON = 2;
-    const DM_UNKNOWN = -1;
+    public const DM_CIRCLE = 1;
+    public const DM_ICON = 2;
+    public const DM_UNKNOWN = -1;
 
     // Collectible modes
-    const CM_INDIVIDUAL = 1;
-    const CM_AS_ONE = 2;
-    const CM_AS_ONE_GLOBAL = 3;
-    const CM_UNKNOWN = -1;
+    public const CM_INDIVIDUAL = 1;
+    public const CM_AS_ONE = 2;
+    public const CM_AS_ONE_GLOBAL = 3;
+    public const CM_UNKNOWN = -1;
 
     private string $id;
 
@@ -93,7 +93,7 @@ class MarkerGroupSpec extends DataModel {
     public function getDisplayMode(): int {
         if ( $this->getRawFillColour() !== null ) {
             return self::DM_CIRCLE;
-        } else if ( $this->getIcon() !== null ) {
+        } elseif ( $this->getIcon() !== null ) {
             return self::DM_ICON;
         }
         return self::DM_UNKNOWN;

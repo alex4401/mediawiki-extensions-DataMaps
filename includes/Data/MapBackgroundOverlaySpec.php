@@ -1,17 +1,17 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps\Data;
 
-use Status;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
+use Status;
 
 // TODO: this is kind of a mess, needs a rewrite
 
 class MapBackgroundOverlaySpec extends DataModel {
     protected static string $publicName = 'MapBackgroundOverlaySpec';
 
-    const TYPE_RECT = 1;
-    const TYPE_POLYLINE = 2;
-    const TYPE_IMAGE = 3;
+    public const TYPE_RECT = 1;
+    public const TYPE_POLYLINE = 2;
+    public const TYPE_IMAGE = 3;
 
     public function getName(): ?string {
         return isset( $this->raw->name ) ? $this->raw->name : null;
@@ -20,7 +20,7 @@ class MapBackgroundOverlaySpec extends DataModel {
     public function getType(): int {
         if ( $this->getImageName() != null ) {
             return self::TYPE_IMAGE;
-        } else if ( $this->getPath() != null ) {
+        } elseif ( $this->getPath() != null ) {
             return self::TYPE_POLYLINE;
         }
         return self::TYPE_RECT;
@@ -69,9 +69,9 @@ class MapBackgroundOverlaySpec extends DataModel {
             'type' => DataModel::TYPE_FILE,
             'fileMustExist' => true
         ] );
-        //if ( isset( $this->raw->image ) ) {
-        //    $this->checkField( $status, 'renderLikeTiles', DataModel::TYPE_BOOL );
-        //}
+        // if ( isset( $this->raw->image ) ) {
+        //     $this->checkField( $status, 'renderLikeTiles', DataModel::TYPE_BOOL );
+        // }
         $hasPath = $this->checkField( $status, [
             'name' => 'path',
             'type' => DataModel::TYPE_ARRAY,
@@ -93,6 +93,7 @@ class MapBackgroundOverlaySpec extends DataModel {
             switch ( $this->getType() ) {
                 case self::TYPE_POLYLINE:
                     $this->checkField( $status, 'thickness', DataModel::TYPE_NUMBER );
+                    // TODO: allow border thickness on rectangles
                 case self::TYPE_RECT:
                     $this->checkField( $status, 'borderColor', DataModel::TYPE_COLOUR3 );
                     break;

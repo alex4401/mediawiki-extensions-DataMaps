@@ -1,20 +1,20 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
 
-use Title;
-use Parser;
-use ParserOptions;
 use MapCacheLRU;
-use MediaWiki\MediaWikiServices;
-use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
+use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
+use MediaWiki\MediaWikiServices;
+use Parser;
+use ParserOptions;
+use Title;
 
 class MarkerProcessor {
-    const POPUP_IMAGE_WIDTH = 240;
-    const MAX_LRU_SIZE = 128;
-    
+    private const POPUP_IMAGE_WIDTH = 240;
+    private const MAX_LRU_SIZE = 128;
+
     private Parser $parser;
     private ParserOptions $parserOptions;
     private Title $title;
@@ -50,14 +50,14 @@ class MarkerProcessor {
         $this->parserOptions->setInterwikiMagic( false );
         $this->parserOptions->setMaxIncludeSize( ExtensionConfig::getParserExpansionLimit() );
     }
-    
+
     public function processAll(): array {
         $results = [];
 
         // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
         // creating thousands of small, very short-lived (only one at a time) objects
         $marker = new MarkerSpec( new \stdclass() );
-        
+
         $this->dataMap->iterateRawMarkerMap( function ( string $layers, array $rawCollection ) use ( &$results, &$marker ) {
             // If filters were specified, check if there is any overlap between the filters list and skip the marker set
             if ( $this->filter !== null && empty( array_intersect( $this->filter, explode( ' ', $layers ) ) ) ) {
@@ -118,7 +118,7 @@ class MarkerProcessor {
         if ( $this->isSearchEnabled ) {
             if ( !$marker->isIncludedInSearch() ) {
                 $slots['search'] = 0;
-            } else if ( $marker->getSearchKeywords() != null ) {
+            } elseif ( $marker->getSearchKeywords() != null ) {
                 $keywords = $marker->getSearchKeywords();
                 if ( $this->canImplodeSearchKeywords( $keywords ) ) {
                     $keywords = implode( ' ', $keywords );
@@ -163,7 +163,7 @@ class MarkerProcessor {
         if ( $this->collectTimings ) {
             $this->timeInParser += hrtime( true ) - $timeStart;
         }
-        
+
         // Store in local cache if enabled
         if ( $this->useLocalParserCache ) {
             $this->localParserCache->set( $text, $out );

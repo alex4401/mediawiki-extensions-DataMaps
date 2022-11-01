@@ -11,12 +11,12 @@ class DataMapColourUtils {
             $len = strlen( $input );
             if ( $len === 3 ) {
                 $input = str_split( $input, 1 );
-            } else if ( $len === 6 ) {
+            } elseif ( $len === 6 ) {
                 $input = str_split( $input, 2 );
             } else {
                 return null;
             }
-        
+
             list( $r, $g, $b ) = array_map( fn ( $c ) => hexdec( str_pad( $c, 2, $c ) ), $input );
             return [ $r, $g, $b ];
         }
@@ -32,12 +32,12 @@ class DataMapColourUtils {
             $len = strlen( $input );
             if ( $len === 4 ) {
                 $input = str_split( $input, 1 );
-            } else if ( $len === 8 ) {
+            } elseif ( $len === 8 ) {
                 $input = str_split( $input, 2 );
             } else {
                 return null;
             }
-        
+
             list( $r, $g, $b, $a ) = array_map( fn ( $c ) => hexdec( str_pad( $c, 2, $c ) ), $input );
             return [ $r, $g, $b, $a ];
         }

@@ -1,17 +1,16 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
 
+use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
+use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use Parser;
 use Title;
-use MediaWiki\Revision\RevisionRecord;
-use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
-use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
-use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
 
 final class ParserFunction_EmbedDataMap {
-    public static function run( Parser $parser ): array {        
+    public static function run( Parser $parser ): array {
         $params = func_get_args();
-		array_shift( $params ); // we know the parser already
+        array_shift( $params ); // we know the parser already
 
         $title = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $params[0] );
         $content = DataMapContent::loadPage( $title );
@@ -28,7 +27,7 @@ final class ParserFunction_EmbedDataMap {
         $options = self::getRenderOptions( $content->asModel(), $params );
 
         $embed = $content->getEmbedRenderer( $title, $parser, $parser->getOutput() );
-		$embed->prepareOutput();
+        $embed->prepareOutput();
 
         // Add the page to a tracking category
         $parser->addTrackingCategory( 'datamap-category-pages-including-maps' );
@@ -36,27 +35,27 @@ final class ParserFunction_EmbedDataMap {
         $parser->getOutput()->addTemplate( $title, $title->getArticleId(),
             $parser->fetchCurrentRevisionRecordOfTitle( $title )->getId() );
 
-		return [ $embed->getHtml( $options ), 'noparse' => true, 'isHTML' => true ];
+        return [ $embed->getHtml( $options ), 'noparse' => true, 'isHTML' => true ];
     }
 
     public static function getRenderOptions( DataMapSpec $data, array $params ): EmbedRenderOptions {
         $result = new EmbedRenderOptions();
 
-		foreach ( $params as $param ) {
-			$parts = explode( '=', $param, 2 );
+        foreach ( $params as $param ) {
+            $parts = explode( '=', $param, 2 );
 
-			if ( count( $parts ) != 2 ) {
-				continue;
-			}
-			$key = trim( $parts[0] );
-			$value = trim( $parts[1] );
-            
+            if ( count( $parts ) != 2 ) {
+                continue;
+            }
+            $key = trim( $parts[0] );
+            $value = trim( $parts[1] );
+
             if ( $key == 'filter' ) {
                 $result->displayGroups = explode( ',', $value );
                 // TODO: verify the markers are present on map
             }
         }
-        
+
         return $result;
     }
 }

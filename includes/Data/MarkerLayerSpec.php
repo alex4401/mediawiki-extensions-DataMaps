@@ -1,7 +1,6 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps\Data;
 
-use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 use Status;
 use stdclass;
 
@@ -30,7 +29,7 @@ class MarkerLayerSpec extends DataModel {
     public function getIconOverride(): ?string {
         return isset( $this->raw->overrideIcon ) ? $this->raw->overrideIcon : null;
     }
-    
+
     public function validate( Status $status ) {
         $this->checkField( $status, 'name', DataModel::TYPE_STRING );
         $this->checkField( $status, 'subtleText', DataModel::TYPE_STRING );

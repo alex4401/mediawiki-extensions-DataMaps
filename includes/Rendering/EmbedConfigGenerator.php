@@ -1,29 +1,22 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
 
-use MediaWiki\MediaWikiServices;
-use Title;
-use OutputPage;
-use Html;
-use File;
-use InvalidArgumentException;
-use PPFrame;
 use FormatJson;
-
-use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
+use Html;
+use InvalidArgumentException;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundOverlaySpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundTileSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MarkerLayerSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundOverlaySpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundTileSpec;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
+use Title;
 
 class EmbedConfigGenerator {
-    const MARKER_ICON_WIDTH = MarkerGroupSpec::DEFAULT_ICON_SIZE[0];
-    const LEGEND_ICON_WIDTH = 24;
+    public const MARKER_ICON_WIDTH = MarkerGroupSpec::DEFAULT_ICON_SIZE[0];
+    public const LEGEND_ICON_WIDTH = 24;
 
     public DataMapSpec $data;
     private Title $title;
@@ -96,13 +89,13 @@ class EmbedConfigGenerator {
 
     public function getPublicFeatureBitMask(): int {
         $out = 0;
-        $out |= $this->data->wantsCoordinatesShown() ? 1<<0 : 0;
-        $out |= $this->data->wantsLegendHidden() ? 1<<1 : 0;
-        $out |= $this->data->wantsZoomDisabled() ? 1<<2 : 0;
-        $out |= $this->data->wantsSearch() ? 1<<3 : 0;
-        $out |= $this->data->wantsChecklistSortedByAmount() ? 1<<4 : 0;
-        $out |= $this->data->wantsSearch() === DataMapSpec::SM_TABBER ? 1<<5 : 0;
-        $out |= $this->forVisualEditor ? 1<<6 : 0;
+        $out |= $this->data->wantsCoordinatesShown() ? 1 << 0 : 0;
+        $out |= $this->data->wantsLegendHidden() ? 1 << 1 : 0;
+        $out |= $this->data->wantsZoomDisabled() ? 1 << 2 : 0;
+        $out |= $this->data->wantsSearch() ? 1 << 3 : 0;
+        $out |= $this->data->wantsChecklistSortedByAmount() ? 1 << 4 : 0;
+        $out |= $this->data->wantsSearch() === DataMapSpec::SM_TABBER ? 1 << 5 : 0;
+        $out |= $this->forVisualEditor ? 1 << 6 : 0;
         return $out;
     }
 
@@ -188,28 +181,28 @@ class EmbedConfigGenerator {
 
     public function getPublicGroupFeatureBitMask( MarkerGroupSpec $spec ): int {
         $out = 0;
-        $out |= $spec->wantsChecklistNumbering() ? 1<<0 : 0;
-        $out |= !$spec->isIncludedInSearch() ? 1<<1 : 0;
-        $out |= !$spec->isDefault() ? 1<<2 : 0;
+        $out |= $spec->wantsChecklistNumbering() ? 1 << 0 : 0;
+        $out |= !$spec->isIncludedInSearch() ? 1 << 1 : 0;
+        $out |= !$spec->isDefault() ? 1 << 2 : 0;
         switch ( $spec->getCollectibleMode() ) {
             case MarkerGroupSpec::CM_INDIVIDUAL:
-                $out |= 1<<3;
+                $out |= 1 << 3;
                 break;
             case MarkerGroupSpec::CM_AS_ONE:
-                $out |= 1<<4;
+                $out |= 1 << 4;
                 break;
             case MarkerGroupSpec::CM_AS_ONE_GLOBAL:
-                $out |= 1<<5;
+                $out |= 1 << 5;
                 break;
         }
         return $out;
     }
 
     public function getMarkerGroupConfig( MarkerGroupSpec $spec ): array {
-        $out = array(
+        $out = [
             'name' => $spec->getName(),
             'size' => $spec->getSize(),
-        );
+        ];
 
         $flags = $this->getPublicGroupFeatureBitMask( $spec );
         if ( $flags !== 0 ) {

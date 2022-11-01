@@ -11,7 +11,7 @@ class MapBackgroundSpec extends DataModel {
         $fake->image = $file;
         return new MapBackgroundSpec( $fake );
     }
-    
+
     public function getImageName(): string {
         return $this->raw->image;
     }
@@ -67,7 +67,7 @@ class MapBackgroundSpec extends DataModel {
                     'fileMustExist' => true
                 ] );
                 $this->checkField( $status, 'at', DataModel::TYPE_BOUNDS );
-            } else if ( isset( $this->raw->tiles ) ) {
+            } elseif ( isset( $this->raw->tiles ) ) {
                 $this->checkField( $status, [
                     'name' => 'tileSize',
                     'type' => DataModel::TYPE_DIMENSIONS,
@@ -77,7 +77,7 @@ class MapBackgroundSpec extends DataModel {
                     'name' => 'tiles',
                     'type' => DataModel::TYPE_ARRAY,
                     'itemType' => DataModel::TYPE_OBJECT,
-                    'itemCheck' => function ( $status, $item ) {
+                    'itemCheck' => static function ( $status, $item ) {
                         $spec = new MapBackgroundTileSpec( $item );
                         if ( !$spec->validate( $status ) ) {
                             return false;
@@ -95,7 +95,7 @@ class MapBackgroundSpec extends DataModel {
             'name' => 'overlays',
             'type' => DataModel::TYPE_ARRAY,
             'itemType' => DataModel::TYPE_OBJECT,
-            'itemCheck' => function ( Status $status, $item ) {
+            'itemCheck' => static function ( Status $status, $item ) {
                 $spec = new MapBackgroundOverlaySpec( $item );
                 if ( !$spec->validate( $status ) ) {
                     return false;

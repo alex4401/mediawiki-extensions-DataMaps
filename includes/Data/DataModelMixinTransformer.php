@@ -51,12 +51,12 @@ class DataModelMixinTransformer {
                     // Merge
                     $target[$key] = self::mergeUnknown( $target[$key], $value, $allowObjectMerge );
                 }
-            } else if ( $allowObjectMerge ) {
+            } elseif ( $allowObjectMerge ) {
                 // Indexed
                 if ( $key >= $lenT ) {
                     // Index out of target bounds, copy
                     $target[$key] = $value;
-                } else if ( $allowObjectMerge ) {
+                } elseif ( $allowObjectMerge ) {
                     // Merge
                     $target[$key] = self::mergeUnknown( $target[$key], $value, $allowObjectMerge );
                 }

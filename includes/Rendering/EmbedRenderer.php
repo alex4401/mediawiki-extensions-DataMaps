@@ -1,28 +1,19 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
 
-use MediaWiki\MediaWikiServices;
-use Title;
-use Parser;
-use ParserOutput;
-use OutputPage;
-use ParserOptions;
-use Html;
-use File;
-use InvalidArgumentException;
-use PPFrame;
 use FormatJson;
-
-use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
+use Html;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MarkerLayerSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundOverlaySpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundTileSpec;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
+use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
+use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
+use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
+use Parser;
+use ParserOptions;
+use ParserOutput;
+use Title;
 
 class EmbedRenderer {
     public DataMapSpec $data;
@@ -72,8 +63,8 @@ class EmbedRenderer {
 
     public function enableOOUI(): void {
         $this->parserOutput->setEnableOOUI( true );
-		\OOUI\Theme::setSingleton( new \OOUI\WikimediaUITheme() );
-		\OOUI\Element::setDefaultDir( 'ltr' );
+        \OOUI\Theme::setSingleton( new \OOUI\WikimediaUITheme() );
+        \OOUI\Element::setDefaultDir( 'ltr' );
     }
 
     public function addModules(): void {
@@ -89,8 +80,8 @@ class EmbedRenderer {
 
         if ( $this->useInlineData && !$this->forVisualEditor ) {
             $this->parserOutput->addModules( [
-				'ext.datamaps.inlineloader'
-			] );
+                'ext.datamaps.inlineloader'
+            ] );
         }
     }
 
@@ -139,7 +130,7 @@ class EmbedRenderer {
         }
 
         // Groups
-        $this->data->iterateGroups( function( MarkerGroupSpec $spec ) {
+        $this->data->iterateGroups( function ( MarkerGroupSpec $spec ) {
             // Icon
             if ( $spec->getIcon() !== null ) {
                 DataMapFileUtils::registerImageDependency( $this->parserOutput, $spec->getIcon() );
@@ -169,30 +160,30 @@ class EmbedRenderer {
 
     public function getHtml( EmbedRenderOptions $options ): string {
         // Primary slots
-		$containerMain = new \OOUI\PanelLayout( [
+        $containerMain = new \OOUI\PanelLayout( [
             'classes' => [ 'datamap-container' ],
-			'framed' => true,
-			'expanded' => false,
-			'padded' => false
-		] );
-		$containerTop = new \OOUI\PanelLayout( [
+            'framed' => true,
+            'expanded' => false,
+            'padded' => false
+        ] );
+        $containerTop = new \OOUI\PanelLayout( [
             'classes' => [ 'datamap-container-top' ],
-			'framed' => false,
-			'expanded' => false,
-			'padded' => false
-		] );
-		$containerContent = new \OOUI\PanelLayout( [
+            'framed' => false,
+            'expanded' => false,
+            'padded' => false
+        ] );
+        $containerContent = new \OOUI\PanelLayout( [
             'classes' => [ 'datamap-container-content' ],
-			'framed' => false,
-			'expanded' => false,
-			'padded' => false
-		] );
-		$containerBottom = new \OOUI\PanelLayout( [
+            'framed' => false,
+            'expanded' => false,
+            'padded' => false
+        ] );
+        $containerBottom = new \OOUI\PanelLayout( [
             'classes' => [ 'datamap-container-bottom' ],
-			'framed' => false,
-			'expanded' => false,
-			'padded' => false
-		] );
+            'framed' => false,
+            'expanded' => false,
+            'padded' => false
+        ] );
 
         // Push page ID onto the container
         $containerMain->setAttributes( [
@@ -225,10 +216,10 @@ class EmbedRenderer {
         }
 
         // Leaflet area
-		$containerMap = new \OOUI\PanelLayout( [
-			'framed' => true,
-			'expanded' => false,
-		] );
+        $containerMap = new \OOUI\PanelLayout( [
+            'framed' => true,
+            'expanded' => false,
+        ] );
         $containerMap->appendContent( new \OOUI\HtmlSnippet( $this->getLeafletContainerHtml() ) );
         $containerContent->appendContent( $containerMap );
 
@@ -258,11 +249,11 @@ class EmbedRenderer {
     }
 
     public function getLeafletContainerHtml(): string {
-		return Html::rawElement(
-			'div',
-			[
-				'class' => 'datamap-holder'
-			],
+        return Html::rawElement(
+            'div',
+            [
+                'class' => 'datamap-holder'
+            ],
             Html::element(
                 'noscript',
                 [
@@ -271,15 +262,15 @@ class EmbedRenderer {
                 wfMessage( 'datamap-javascript-required' )
             )
             . Html::rawElement(
-				'div',
-				[
-					'class' => 'datamap-status datamap-overlay-status'
-				],
-				wfMessage( 'datamap-loading-data' )
+                'div',
+                [
+                    'class' => 'datamap-status datamap-overlay-status'
+                ],
+                wfMessage( 'datamap-loading-data' )
                 . ( new \OOUI\ProgressBarWidget( [
                     'progress' => false
                 ] ) )->toString()
-			)
-		);
+            )
+        );
     }
 }

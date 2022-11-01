@@ -2,17 +2,18 @@
 namespace MediaWiki\Extension\Ark\DataMaps\API;
 
 use ApiBase;
-use Title;
-use WikiPage;
-use ObjectCache;
+use LogicException;
+use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
+use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
+use ObjectCache;
+use Title;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\ParamValidator\TypeDef\IntegerDef;
-use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
-use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\MarkerProcessor;
+use WikiPage;
 
 class ApiQueryDataMapEndpoint extends ApiBase {
     // This value is a part of every cache key produced by this endpoint. It should be raised only on API output changes and
@@ -25,9 +26,9 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     // - if major version becomes higher than zero, the first digit should be the major version;
     // - next two digits should be the minor version;
     // - next two digits should be the patch version, or two zeroes instead.
-    const GENERATION = 1200;
+    public const GENERATION = 1200;
     // Key prefix for every cache key produced by this endpoint. Prior to v0.12.0 this was 'ARKDataMapQuery'.
-    const CACHE_NAMESPACE = 'ExtDataMap::Query';
+    private const CACHE_NAMESPACE = 'ExtDataMap::Query';
 
     private ?Title $cachedTitle = null;
 
@@ -46,23 +47,23 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                 ParamValidator::PARAM_REQUIRED => false,
                 ParamValidator::PARAM_ISMULTI => true,
             ],
-			'limit' => [
-				ParamValidator::PARAM_TYPE => 'limit',
-				ParamValidator::PARAM_DEFAULT => ExtensionConfig::getApiDefaultMarkerLimit(),
-				IntegerDef::PARAM_MIN => 1,
-				IntegerDef::PARAM_MAX => ExtensionConfig::getApiMaxMarkerLimit()
-			],
-			'continue' => [
-				ParamValidator::PARAM_TYPE => 'integer',
+            'limit' => [
+                ParamValidator::PARAM_TYPE => 'limit',
+                ParamValidator::PARAM_DEFAULT => ExtensionConfig::getApiDefaultMarkerLimit(),
+                IntegerDef::PARAM_MIN => 1,
+                IntegerDef::PARAM_MAX => ExtensionConfig::getApiMaxMarkerLimit()
+            ],
+            'continue' => [
+                ParamValidator::PARAM_TYPE => 'integer',
                 ParamValidator::PARAM_REQUIRED => false,
-				ApiBase::PARAM_HELP_MSG => 'api-help-param-continue',
-			],
+                ApiBase::PARAM_HELP_MSG => 'api-help-param-continue',
+            ],
         ];
     }
 
-	public function isInternal() {
-		return true;
-	}
+    public function isInternal() {
+        return true;
+    }
 
     public function execute() {
         $timeStart = 0;
@@ -73,7 +74,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $params = $this->extractRequestParams();
 
         // Configure browser-side caching recommendations
-		$this->getMain()->setCacheMode( 'public' );
+        $this->getMain()->setCacheMode( 'public' );
         $this->getMain()->setCacheMaxAge( 24 * 60 * 60 );
 
         $response = null;
@@ -83,7 +84,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         } else {
             $response = $this->doProcessingCached( $params );
         }
-		
+
         $this->doPostProcessing( $params, $response );
 
         $this->getResult()->addValue( null, 'query', $response );
@@ -94,7 +95,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     private function getTitleFromParams( $params ) {
-		$this->requireOnlyOneParameter( $params, 'title', 'pageid' );
+        $this->requireOnlyOneParameter( $params, 'title', 'pageid' );
 
         if ( $this->cachedTitle === null ) {
             $this->cachedTitle = Title::newFromID( $params['pageid'] );
@@ -120,7 +121,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             $revision = $revisionStore->getRevisionById( $params['revid'] );
             if ( !$revision ) {
                 $this->dieWithError( [ 'apierror-nosuchrevid', $params['revid'] ] );
-            } else if ( $revision->getPageId() != $title->getId() ) {
+            } elseif ( $revision->getPageId() != $title->getId() ) {
                 $this->dieWithError( [ 'apierror-revwrongpage', $revision->getId(), $title->getPrefixedText() ] );
             }
         } else {
@@ -250,7 +251,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
                 if ( $toSkip < 0 ) {
                     throw new LogicException( 'API response truncating resulted in more markers removed than needed' );
-                } else if ( $toSkip == 0 ) {
+                } elseif ( $toSkip == 0 ) {
                     break;
                 }
             }
@@ -266,7 +267,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
                     unset( $data['markers'][$layers] );
                     $anyRemoved = true;
                     continue;
-                } else if ( count( $markers ) <= $toAllow ) {
+                } elseif ( count( $markers ) <= $toAllow ) {
                     // Don't alter this set, it fits within the margin
                     $toAllow -= count( $markers );
                     continue;
