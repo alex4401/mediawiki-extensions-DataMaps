@@ -95,19 +95,12 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     private function getTitleFromParams( $params ) {
-        $this->requireOnlyOneParameter( $params, 'title', 'pageid' );
-
         if ( $this->cachedTitle === null ) {
             $this->cachedTitle = Title::newFromID( $params['pageid'] );
-            if ( !$this->cachedTitle ) {
+            if ( !$this->cachedTitle || !$this->cachedTitle->exists() ) {
                 $this->dieWithError( [ 'apierror-nosuchpageid', $params['pageid'] ] );
             }
         }
-
-        if ( !$this->cachedTitle || !$this->cachedTitle->exists() || $this->cachedTitle->isExternal() ) {
-            $this->dieWithError( [ 'apierror-invalidtitle', wfEscapeWikiText( $params['title'] ) ] );
-        }
-
         return $this->cachedTitle;
     }
 
