@@ -164,7 +164,8 @@ class DataMap extends EventEmitter {
     */
     getParentTabberNeueId() {
         const $panel = this.getParentTabberNeuePanel();
-        return $panel ? ( $panel.attr( 'id' ) || $panel.attr( 'title' ).replace( ' ', '_' ) ) : null;
+        return $panel ? ($panel.attr('id') || ($panel.attr('data-title') || $panel.attr('title')).replace(' ', '_'))
+            : null;
     }
 
 
