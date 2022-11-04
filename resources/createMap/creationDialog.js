@@ -131,7 +131,7 @@ CreationDialog.prototype.initialize = function () {
                                 expanded: false,
                                 classes: [ 'datamap-collapsible' ],
                                 content: [
-                                    $( '<input type="checkbox" />' ),
+                                    this.$extraCheckbox = $( '<input type="checkbox" />' ),
                                     new OO.ui.LabelWidget( {
                                         label: mw.msg( 'datamap-vec-extra-options' )
                                     } ),
@@ -197,9 +197,8 @@ CreationDialog.prototype.initialize = function () {
     this.crsCustomPanel.toggle( false );
     this.crsSelector.on( 'change', _ => this.updateCrs() );
 
-    this.imageSelector.on( 'change', () => {
-        this.fetchImageInfo();
-    } );
+    this.imageSelector.on( 'change', () => this.fetchImageInfo() );
+    this.$extraCheckbox.on( 'change', () => this.updateSize() );
 
     this.searchToggle.on( 'change', () => {
         this.tabberSearchToggle.setDisabled( !this.searchToggle.getValue() );
@@ -254,6 +253,7 @@ CreationDialog.prototype.fetchImageInfo = function () {
 
         this.updateCrs();
         this.updateButtonState();
+        this.updateSize();
     } );
 };
 
@@ -265,6 +265,7 @@ CreationDialog.prototype.updateButtonState = function () {
 
 CreationDialog.prototype.updateCrs = function () {
     this.crsCustomPanel.toggle( this.crsSelector.getValue() == CrsType.Custom );
+    this.updateSize();
     switch ( this.crsSelector.getValue() ) {
         case CrsType.Percent+'':
             this.crsWidth.setValue( 100 );
