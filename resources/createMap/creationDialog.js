@@ -1,4 +1,5 @@
-const Enums = require( '../loader/enums.js' );
+const Enums = require( '../loader/enums.js' ),
+    mwApi = new mw.Api();
 
 
 function CreationDialog( config ) {
@@ -35,7 +36,8 @@ CreationDialog.prototype.initialize = function () {
         ]
     } );
     this.imageSelector = new mw.widgets.TitleInputWidget( {
-        namespace: 6
+        namespace: 6,
+        showImages: true
     } );
     this.coordsToggle = new OO.ui.ToggleSwitchWidget( {
         value: true
@@ -79,6 +81,10 @@ CreationDialog.prototype.initialize = function () {
                 items: [
                     new OO.ui.FieldsetLayout( {
                         items: [
+                            this.imageField = new OO.ui.FieldLayout( this.imageSelector, {
+                                label: mw.msg( 'datamap-vec-select-background' ),
+                                align: 'left'
+                            } ),
                             new OO.ui.FieldLayout( this.originSelector, {
                                 label: mw.msg( 'datamap-vec-select-crs-origin' ),
                                 align: 'left'
@@ -90,10 +96,6 @@ CreationDialog.prototype.initialize = function () {
                             new OO.ui.PanelLayout( {
                                 expanded: false,
                                 classes: [ 'hidden' ]
-                            } ),
-                            new OO.ui.FieldLayout( this.imageSelector, {
-                                label: mw.msg( 'datamap-vec-select-background' ),
-                                align: 'left'
                             } ),
                             new OO.ui.PanelLayout( {
                                 framed: true,
@@ -141,7 +143,7 @@ CreationDialog.prototype.initialize = function () {
                             } ),
                             new OO.ui.HiddenInputWidget( {
                                 name: 'wpEditToken',
-                                value: mw.user.tokens.get('csrfToken')
+                                value: mw.user.tokens.get( 'csrfToken' )
                             } ),
                             new OO.ui.HiddenInputWidget( {
                                 name: 'model',
@@ -164,6 +166,10 @@ CreationDialog.prototype.initialize = function () {
         ]
     } );
 
+    this.imageSelector.on( 'change', () => {
+        this.fetchImageInfo();
+    } );
+
     this.searchToggle.on( 'change', () => {
         this.tabberSearchToggle.setDisabled( !this.searchToggle.getValue() );
     } );
@@ -178,6 +184,48 @@ CreationDialog.prototype.initialize = function () {
 CreationDialog.prototype.getSetupProcess = function ( data ) {
 	return OO.ui.ProcessDialog.prototype.getSetupProcess.call( this, data )
 	    .next( () => this.actions.setMode( 'create' ), this );
+};
+
+
+CreationDialog.static.GOOD_MIME_TYPES = [ 'image/jpeg', 'image/png', 'image/svg+xml', 'image/gif' ];
+CreationDialog.static.POOR_MIME_TYPES = [ 'image/png', 'image/gif' ];
+
+
+CreationDialog.prototype.fetchImageInfo = function () {
+    this.submitButton.setDisabled( true );
+
+    mwApi.get( {
+        action: 'query',
+        titles: 'File:' + this.imageSelector.getValue(),
+        prop: 'imageinfo',
+        iiprop: 'size|url|mime'
+    } ).then( data => {
+        const pageInfo = Object.values( data.query.pages )[0];
+        const imageInfo = pageInfo.imageinfo[0];
+
+        this.imageField.setNotices( [
+            mw.msg( 'datamap-vec-note-image-size', imageInfo.width, imageInfo.height )
+        ] );
+
+        if ( CreationDialog.static.GOOD_MIME_TYPES.indexOf( imageInfo.mime ) < 0 ) {
+            this.imageField.setErrors( [
+                mw.msg( 'datamap-vec-error-bad-file-type', imageInfo.mime )
+            ] );
+        }
+
+        if ( CreationDialog.static.POOR_MIME_TYPES.indexOf( imageInfo.mime ) >= 0 ) {
+            this.imageField.setWarnings( [
+                mw.msg( 'datamap-vec-error-poor-file-type', imageInfo.mime )
+            ] );
+        }
+
+        this.updateButtonState();
+    } );
+};
+
+
+CreationDialog.prototype.updateButtonState = function () {
+    this.submitButton.setDisabled( this.imageField.errors.length > 0 );
 };
 
 
