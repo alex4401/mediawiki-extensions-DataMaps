@@ -1,4 +1,4 @@
-const MODULE = 'ext.datamaps.vec';
+const MODULE = 'ext.datamaps.createMap';
 $( '#ca-edit' ).on( 'click', event => {
     event.preventDefault();
     mw.loader.using( MODULE, () => {
