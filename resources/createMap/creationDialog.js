@@ -19,8 +19,17 @@ CreationDialog.static.actions = [
 ];
 
 
+const CrsType = {
+    Image: 0,
+    Percent: 1,
+    Custom: 2
+};
+
+
 CreationDialog.prototype.initialize = function () {
 	OO.ui.ProcessDialog.prototype.initialize.apply( this, arguments );
+
+    this.imageSize = [ 100, 100 ];
 	
     this.originSelector = new OO.ui.DropdownInputWidget( {
         options: [
@@ -30,10 +39,18 @@ CreationDialog.prototype.initialize = function () {
     } );
     this.crsSelector = new OO.ui.DropdownInputWidget( {
         options: [
-            { data: 0, label: mw.msg( 'datamap-vec-crs-image' ) },
-            { data: 1, label: mw.msg( 'datamap-vec-crs-percent' ) },
-            { data: 2, label: mw.msg( 'datamap-vec-crs-custom' ) }
+            { data: CrsType.Image, label: mw.msg( 'datamap-vec-crs-image' ) },
+            { data: CrsType.Percent, label: mw.msg( 'datamap-vec-crs-percent' ) },
+            { data: CrsType.Custom, label: mw.msg( 'datamap-vec-crs-custom' ) }
         ]
+    } );
+    this.crsWidth = new OO.ui.TextInputWidget( {
+        type: 'number',
+        value: 100
+    } );
+    this.crsHeight = new OO.ui.TextInputWidget( {
+        type: 'number',
+        value: 100
     } );
     this.imageSelector = new mw.widgets.TitleInputWidget( {
         namespace: 6,
@@ -93,9 +110,20 @@ CreationDialog.prototype.initialize = function () {
                                 label: mw.msg( 'datamap-vec-select-crs' ),
                                 align: 'left'
                             } ),
-                            new OO.ui.PanelLayout( {
+                            this.crsCustomPanel = new OO.ui.PanelLayout( {
+                                padded: true,
+                                framed: true,
                                 expanded: false,
-                                classes: [ 'hidden' ]
+                                content: [
+                                    new OO.ui.FieldLayout( this.crsWidth, {
+                                        label: mw.msg( 'datamap-vec-crs-width' ),
+                                        align: 'left'
+                                    } ),
+                                    new OO.ui.FieldLayout( this.crsHeight, {
+                                        label: mw.msg( 'datamap-vec-crs-height' ),
+                                        align: 'left'
+                                    } )
+                                ]
                             } ),
                             new OO.ui.PanelLayout( {
                                 framed: true,
@@ -166,6 +194,9 @@ CreationDialog.prototype.initialize = function () {
         ]
     } );
 
+    this.crsCustomPanel.toggle( false );
+    this.crsSelector.on( 'change', _ => this.updateCrs() );
+
     this.imageSelector.on( 'change', () => {
         this.fetchImageInfo();
     } );
@@ -218,7 +249,10 @@ CreationDialog.prototype.fetchImageInfo = function () {
                 mw.msg( 'datamap-vec-error-poor-file-type', imageInfo.mime )
             ] );
         }
+        
+        this.imageSize = [ imageInfo.width, imageInfo.height ];
 
+        this.updateCrs();
         this.updateButtonState();
     } );
 };
@@ -229,10 +263,28 @@ CreationDialog.prototype.updateButtonState = function () {
 };
 
 
+CreationDialog.prototype.updateCrs = function () {
+    this.crsCustomPanel.toggle( this.crsSelector.getValue() == CrsType.Custom );
+    switch ( this.crsSelector.getValue() ) {
+        case CrsType.Percent+'':
+            this.crsWidth.setValue( 100 );
+            this.crsHeight.setValue( 100 );
+            break;
+        case CrsType.Image+'':
+            this.crsWidth.setValue( this.imageSize[0] );
+            this.crsHeight.setValue( this.imageSize[1] );
+            break;
+    }
+};
+
+
 CreationDialog.prototype.updatePrefillValue = function () {
     this.pushPending();
 
-    const imageSize = [ 100, 100 ];
+    const imageSize = [
+        parseFloat( this.crsWidth.getValue() ),
+        parseFloat( this.crsHeight.getValue() )
+    ];
 
     const out = {
         crs: [ [ 0, 0 ], imageSize ],
