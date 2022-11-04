@@ -46,11 +46,6 @@
     "datamap-error-pf-page-invalid-content-model": "Content model of page \"[[$1]]\" is not <code>Interactive Data Map</code>.",
     "datamap-error-cannot-preview-validation-errors": "<b>Edit preview not shown due to error(s) in map's source code:</b><br/>$1",
 
-    "datamap-defaultloadout-map-background": "Map background.jpg",
-    "datamap-defaultloadout-group-name": "A marker group",
-    "datamap-defaultloadout-marker-label": "A marker",
-    "datamap-defaultloadout-group-icon": "Marker group icon in legend.png",
-
     "datamap-legend-label": "Legend",
     "datamap-javascript-required": "Interactive data maps require JavaScript to be enabled.",
     "datamap-loading-data": "Please wait, loading data",
