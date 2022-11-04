@@ -11,7 +11,7 @@ module.exports = function () {
         $( 'body' ).append( windowManager.$element );
 
         const dialog = new CreationDialog( {
-            size: 'medium'
+            size: 'large'
         } );
         windowManager.addWindows( [ dialog ] );
         windowManager.openWindow( dialog );
