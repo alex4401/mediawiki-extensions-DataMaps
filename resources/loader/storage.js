@@ -66,7 +66,6 @@ class MapStorage {
                     const lon = parseFloat( b[1] );
                     return ( lat == NaN || lon == NaN ) ? x : ( a[0] + '@' + lat.toFixed( 3 ) + ':' + lon.toFixed( 3 ) );
                 } ) );
-                break;
             case '20220803':
                 shouldUpdateVersion = true;
                 // Add marker namespace to every dismissed ID
