@@ -1,0 +1,28 @@
+{
+    "@metadata": {
+        "authors": [
+            "alex4401"
+        ]
+    },
+
+    "datamap-vec-title": "Create a map",
+    "datamap-vec-intro": "Adjust the following information to your needs so we may prepare a basic map, before you move onto editing it",
+    "datamap-vec-select-crs-origin": "(0, 0) coordinate corner",
+    "datamap-vec-crs-top-left": "Top-left",
+    "datamap-vec-crs-bottom-left": "Bottom-left",
+    "datamap-vec-select-crs": "Coordinate system",
+    "datamap-vec-crs-percent": "Percentage (0-100%)",
+    "datamap-vec-crs-image": "Match image coordinates",
+    "datamap-vec-crs-custom": "Custom",
+    "datamap-vec-select-background": "Background image",
+    "datamap-vec-note-image-size": "Size: $1 x $2",
+    "datamap-vec-error-bad-file-type": "File type ($1) is unsupported; please select a JPEG, PNG, GIF or an SVG file.",
+    "datamap-vec-error-poor-file-type": "This file type may perform poorly on limited networks. Use JPEGs whenever possible.",
+    "datamap-vec-extra-options": "Extra options",
+    "datamap-vec-toggle-coord-display": "Display coordinates under cursor",
+    "datamap-vec-toggle-zoom": "Enable zooming",
+    "datamap-vec-toggle-search": "Enable marker search",
+    "datamap-vec-toggle-search-tabber": "Share search data within tabber",
+    "datamap-vec-toggle-uid-requirement": "Require unique marker IDs",
+    "datamap-vec-submit": "Proceed"
+}

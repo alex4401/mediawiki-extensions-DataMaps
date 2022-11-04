@@ -20,6 +20,7 @@
 	"MessagesDirs": {
 		"DataMaps": [
 			"i18n/core",
+			"i18n/createmap",
 			"i18n/ve"
 		]
 	},
