@@ -81,7 +81,7 @@ class HookHandler implements
 		}
 
 		$isVEEnabled = ExtensionConfig::isVisualEditorEnabled();
-		$isVCEnabled = ExtensionConfig::isVisualCreationFlowEnabled();
+		$isVCEnabled = ExtensionConfig::isCreateMapEnabled();
 		if ( !( $isVEEnabled || $isVCEnabled ) ) {
 			return;
 		}
@@ -122,7 +122,7 @@ class HookHandler implements
 
 	public function onCustomEditor( $article, $user ) {
 		$isVEEnabled = ExtensionConfig::isVisualEditorEnabled();
-		$isVCEnabled = ExtensionConfig::isVisualCreationFlowEnabled();
+		$isVCEnabled = ExtensionConfig::isCreateMapEnabled();
 		if ( !( $isVEEnabled || $isVCEnabled ) || !RequestContext::getMain()->getRequest()->getBool( 'visual' ) ) {
 			return true;
 		}

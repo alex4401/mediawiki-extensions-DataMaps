@@ -71,8 +71,8 @@ class ExtensionConfig {
         return self::isBleedingEdge() && $GLOBALS['wgDataMapsEnableVisualEditor'];
     }
 
-    public static function isVisualCreationFlowEnabled(): bool {
-        return self::isBleedingEdge() && $GLOBALS['wgDataMapsEnableVisualCreator'];
+    public static function isCreateMapEnabled(): bool {
+        return self::isBleedingEdge() && $GLOBALS['wgDataMapsEnableCreateMap'];
     }
 
     public static function isBleedingEdge(): bool {
