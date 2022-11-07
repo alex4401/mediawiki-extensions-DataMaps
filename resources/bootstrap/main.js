@@ -39,7 +39,12 @@ function initialiseMapWithConfig( id, $root, config ) {
 }
 
 
-function getConfig( id, $root ) {
+/**
+ * Looks for a configuration element and parses its contents as JSON.
+ * @param {Element} $root Root element of the map.
+ * @returns {object} Configuration object.
+ */
+function getConfig( $root ) {
     let config;
     const $data = $root.find( '> script[type="application/datamap+json"]' );
     if ( $data.length > 0 ) {
@@ -55,7 +60,7 @@ mw.hook( 'wikipage.content' ).add( $content => {
     $content.find( '.datamap-container[data-datamap-id]' ).each( function () {
         const $root = $( this );
         const id = $root.data( 'datamap-id' );
-        const config = getConfig( id, $root );
+        const config = getConfig( $root );
         if ( config ) {
             ids.push( id );
             initialiseMapWithConfig( id, $root, config );
