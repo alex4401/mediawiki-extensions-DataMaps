@@ -1,6 +1,8 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps;
 
+use MediaWiki\MediaWikiServices;
+
 class ExtensionConfig {
     public const FF_SHOW_COORDINATES = 'ShowCoordinates';
     public const FF_SHOW_LEGEND_ABOVE = 'ShowLegendAlwaysAbove';
@@ -9,58 +11,59 @@ class ExtensionConfig {
     public const FF_SORT_CHECKLIST_BY_AMOUNT = 'SortChecklistsByAmount';
 
     public static function getParserExpansionLimit(): int {
-        return $GLOBALS['wgDataMapsMarkerParserExpansionLimit'];
+        return MediaWikiServices::getInstance()->getMainConfig()
+            ->get( 'DataMapsMarkerParserExpansionLimit' );
     }
 
     public static function isNamespaceManaged(): bool {
-        return $GLOBALS['wgDataMapsNamespaceId'] == 'managed';
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsNamespaceId' ) == 'managed';
     }
 
     public static function getNamespaceId(): int {
         if ( self::isNamespaceManaged() ) {
             return NS_MAP;
         }
-        return $GLOBALS['wgDataMapsNamespaceId'];
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsNamespaceId' );
     }
 
     public static function getApiCacheType() {
-        return $GLOBALS['wgDataMapsCacheType'];
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsCacheType' );
     }
 
     public static function getApiCacheTTL(): int {
-        return $GLOBALS['wgDataMapsCacheTTL'];
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsCacheTTL' );
     }
 
     public static function shouldExtendApiCacheTTL(): bool {
-        return $GLOBALS['wgDataMapsExtendCacheTTL'] != false;
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsExtendCacheTTL' ) != false;
     }
 
     public static function getApiCacheTTLExtensionThreshold(): int {
-        return $GLOBALS['wgDataMapsExtendCacheTTL']['threshold'];
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsExtendCacheTTL' )['threshold'];
     }
 
     public static function getApiCacheTTLExtensionValue(): int {
-        return $GLOBALS['wgDataMapsExtendCacheTTL']['override'];
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsExtendCacheTTL' )['override'];
     }
 
     public static function shouldApiReturnProcessingTime(): bool {
-        return $GLOBALS['wgDataMapsReportTimingInfo'];
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsReportTimingInfo' );
     }
 
     public static function getApiDefaultMarkerLimit(): int {
-        return $GLOBALS['wgDataMapsDefaultApiMarkerBatch'];
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsDefaultApiMarkerBatch' );
     }
 
     public static function getApiMaxMarkerLimit(): int {
-        return $GLOBALS['wgDataMapsMaxApiMarkerBatch'];
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsMaxApiMarkerBatch' );
     }
 
     public static function shouldCacheWikitextInProcess(): bool {
-        return $GLOBALS['wgDataMapsUseInProcessParserCache'];
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsUseInProcessParserCache' );
     }
 
     public static function getDefaultFeatureStates(): array {
-        return $GLOBALS['wgDataMapsDefaultFeatures'];
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsDefaultFeatures' );
     }
 
     public static function getDefaultFeatureState( string $feature ) {
@@ -68,14 +71,15 @@ class ExtensionConfig {
     }
 
     public static function isVisualEditorEnabled(): bool {
-        return self::isBleedingEdge() && $GLOBALS['wgDataMapsEnableVisualEditor'];
+        return self::isBleedingEdge()
+            && MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsEnableVisualEditor' );
     }
 
     public static function isCreateMapEnabled(): bool {
-        return $GLOBALS['wgDataMapsEnableCreateMap'];
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsEnableCreateMap' );
     }
 
     public static function isBleedingEdge(): bool {
-        return $GLOBALS['wgDataMapsAllowExperimentalFeatures'];
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsAllowExperimentalFeatures' );
     }
 }
