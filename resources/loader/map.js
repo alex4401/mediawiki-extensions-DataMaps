@@ -49,9 +49,14 @@ class DataMap extends EventEmitter {
         this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
         // Retrieve a `marker` parameter from the query string if one is present
         this.markerIdToAutoOpen = null;
-        const tabberId = this.getParentTabberNeueId();
-        if ( !tabberId || ( tabberId && tabberId == window.location.hash.substr( 1 ) ) ) {
-            this.markerIdToAutoOpen = Util.getQueryParameter( 'marker' );
+
+        const $tabberPanel = Util.TabberNeue.getOwningPanel( this.$root );
+        if ( $tabberPanel === null || mw.loader.getState( 'ext.tabberNeue' ) === 'ready' ) {
+            this._setUpUriMarkerHandler();
+        } else if ( $tabberPanel !== null ) {
+            mw.loader.using( 'ext.tabberNeue', () => {
+                this._setUpUriMarkerHandler();
+            } );
         }
 
         // Coordinate reference system
@@ -69,7 +74,6 @@ class DataMap extends EventEmitter {
         this.crsScaleX = this.crsScaleY = 100 / crsYHigh;
 
         // Set up internal event handlers
-        this.on( 'markerReady', this.openPopupIfUriMarker, this );
         this.on( 'chunkStreamingDone', this.refreshMaxBounds, this );
         this.on( 'linkedEvent', this.onLinkedEventReceived, this );
 
@@ -110,6 +114,17 @@ class DataMap extends EventEmitter {
      */
     isFeatureBitSet( mask ) {
         return Util.isBitSet( this.config.flags, mask );
+    }
+
+
+    _setUpUriMarkerHandler() {
+        const tabberId = Util.TabberNeue.getOwningId( this.$root );
+        if ( tabberId && tabberId != window.location.hash.substr( 1 ) ) {
+            return;
+        }
+        
+        this.markerIdToAutoOpen = Util.getQueryParameter( 'marker' );
+        this.on( 'markerReady', this.openPopupIfUriMarker, this );
     }
 
 
