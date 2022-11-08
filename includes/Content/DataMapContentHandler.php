@@ -125,8 +125,8 @@ class DataMapContentHandler extends JsonContentHandler {
 				$parserOutput->setText( $parserOutput->getRawText() . $embed->getHtml( new EmbedRenderOptions() ) );
 			}
 		} else {
-			$output->setProperty( 'ext.datamaps.isMapMixin', true );
-			$output->setProperty( 'ext.datamaps.isIneligibleForVE', true );
-		}
-	}
+            $parserOutput->setPageProperty( 'ext.datamaps.isMapMixin', true );
+            $parserOutput->setPageProperty( 'ext.datamaps.isIneligibleForVE', true );
+        }
+    }
 }
