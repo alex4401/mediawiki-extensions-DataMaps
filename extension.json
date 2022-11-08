@@ -1,6 +1,6 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.13.2",
+	"version": "0.13.3",
 
 	"author": [
 		"alex4401"
@@ -290,7 +290,7 @@
 			"packageFiles": [
 				"createMap/main.js",
 				"createMap/creationDialog.js",
-				"core/enums.js"
+				"loader/enums.js"
 			],
 			"styles": [
 				"ve/css/collapsibles.less",
