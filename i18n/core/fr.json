@@ -28,7 +28,7 @@
     "datamap-error-internal-unknown-field-type": "Pas de soutien de validation implémenté pour le type de champ avec l'ID de $1. Ceci est un défaut du code de l'extension.",
     "datamap-error-pf-page-does-not-exist": "La page de données de carte \"[[$1]]\" n'existe pas.",
     "datamap-error-pf-page-invalid-content-model": "Le modèle de contenu de la page \"[[$1]]\" n'est pas <code>datamap</code>.",
-    "datamap-error-cannot-preview-validation-errors": "<b>Édition non prévisualisée en raison d'erreur(s) dans le code source de la page:</b>",
+    "datamap-error-cannot-preview-validation-errors": "<b>Édition non prévisualisée en raison d'erreur(s) dans le code source de la page:</b><br/>$1",
     "datamap-legend-label": "Légende",
     "datamap-javascript-required": "Les cartes de données interactives nécessitent que JavaScript soit activé.",
     "datamap-loading-data": "Veuillez attendre, chargement des données",
