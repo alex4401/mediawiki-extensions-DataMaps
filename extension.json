@@ -202,7 +202,8 @@
 				"search/util.js"
 			],
 			"messages": [
-				"datamap-control-search"
+				"datamap-control-search",
+				"datamap-control-search-toggle-sharing"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},
