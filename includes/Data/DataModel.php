@@ -21,16 +21,8 @@ class DataModel {
     const TYPE_VECTOR2X2 = 13;
     const TYPE_BOUNDS = self::TYPE_VECTOR2X2;
     const TYPE_COLOUR3 = 14;
-    const TYPE_STRING_OR_NUMBER = 15; // TODO: drop deprecated union type
     const TYPE_COLOUR4 = 16;
-    const TYPE_ARRAY_OR_STRING = 17; // TODO: drop deprecated union type
-    const TYPE_BOOL_OR_STRING = 18; // TODO: drop deprecated union type
     const TYPE_FILE = 19;
-
-    /**
-     * @deprecated
-     */
-    const TYPE_VECTOR2x2 = 13;
 
     protected stdClass $raw;
     private array $validationCheckedFields = [];
@@ -76,20 +68,9 @@ class DataModel {
             case self::TYPE_COLOUR3:
                 // S"#rrggbb" || S"#rgb" || [ Nr, Ng, Nb ]
                 return DataMapColourUtils::decode( $var ) !== null;
-            // TODO: deprecated union type
-            case self::TYPE_STRING_OR_NUMBER:
-                return is_string( $var ) || is_numeric( $var );
             case self::TYPE_COLOUR4:
                 // S"#rrggbbaa" || S"#rgba" || [ Nr, Ng, Nb, Na ]
                 return DataMapColourUtils::decode4( $var ) !== null;
-            // TODO: deprecated union type
-            case self::TYPE_ARRAY_OR_STRING:
-                // S"" || A[ ... ]
-                return is_array( $var ) || is_string( $var );
-            // TODO: deprecated union type
-            case self::TYPE_BOOL_OR_STRING:
-                // B || A[ ... ]
-                return is_bool( $var ) || is_string( $var );
         }
         throw new InvalidArgumentException( wfMessage( 'datamap-error-internal-unknown-field-type', $typeId ) );
     }

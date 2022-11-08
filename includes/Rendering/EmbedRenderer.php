@@ -171,8 +171,6 @@ class EmbedRenderer {
     public function getHtml( EmbedRenderOptions $options ): string {
         // Primary slots
 		$containerMain = new \OOUI\PanelLayout( [
-            // DEPRECATED(v0.13.0:v0.14.0): replaced with data-datamap-id
-            'id' => 'datamap-' . $this->getId(),
             'classes' => [ 'datamap-container' ],
 			'framed' => true,
 			'expanded' => false,

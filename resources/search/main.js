@@ -1,6 +1,7 @@
 const MarkerSearchIndex = require( './indexing.js' ),
     MenuWidget = require( './menu.js' ),
     MenuOptionWidget = require( './option.js' ),
+    DataMap = mw.dataMaps.DataMap,
     Enums = mw.dataMaps.Enums;
 
 
@@ -26,7 +27,7 @@ class MarkerSearch {
 
 
     _initialiseUI() {
-        this.$root = this.map.addControl( this.map.anchors.topLeft,
+        this.$root = this.map.addControl( DataMap.anchors.topLeft,
             $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-search">' ), true );
         
         this.inputBox = new OO.ui.TextInputWidget( {

@@ -77,8 +77,6 @@ module.exports = class MarkerStreamingManager {
                 this.map.waitForLeaflet( () => {
                     this.instantiateMarkers( data.query.markers );
                     this.map.fire( 'chunkStreamingDone' );
-                    // DEPRECATED(v0.13.0:v0.14.0): old event name
-                    this.map.fire( 'streamingDone' );
                 } );
             } );
     }
@@ -88,7 +86,7 @@ module.exports = class MarkerStreamingManager {
         return this.requestChunk( pageId, version, filter, start || 0, null, sector )
             .then( data => {
                 this.map.waitForLeaflet( () => {
-                    this.map.instantiateMarkers( data.query.markers );
+                    this.instantiateMarkers( data.query.markers );
                 } );
                 if ( data.query.continue ) {
                     return this.loadSequential( pageId, version, filter, data.query.continue );
@@ -96,8 +94,6 @@ module.exports = class MarkerStreamingManager {
                     this.map.waitForLeaflet( () => {
                         // Notify other components that all chunks have been streamed in this request
                         this.map.fire( 'chunkStreamingDone' );
-                        // DEPRECATED(v0.13.0:v0.14.0): old event name
-                        this.map.fire( 'streamingDone' );
                     } );
                 }
             } );

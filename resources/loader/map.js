@@ -77,9 +77,6 @@ class DataMap extends EventEmitter {
         this.on( 'chunkStreamingDone', this.refreshMaxBounds, this );
         this.on( 'linkedEvent', this.onLinkedEventReceived, this );
 
-        // DEPRECATED(v0.13.0:v0.14.0): use class constants
-        this.anchors = DataMap.anchors;
-
         // Request OOUI to be loaded and build the legend
         if ( !( !this.isFeatureBitSet( Enums.MapFlags.VisualEditor ) && this.isFeatureBitSet( Enums.MapFlags.HideLegend ) ) ) {
             mw.loader.using( [
@@ -404,15 +401,6 @@ class DataMap extends EventEmitter {
      */
     createMarker( layers, position, state ) {
         return this.createMarkerFromApiInstance( layers, [ position[0], position[1], state ] );
-    }
-
-
-    /**
-     * Builds markers from a data object.
-     * @deprecated
-     */
-    instantiateMarkers( data ) {
-        this.streaming.instantiateMarkers( data );
     }
 
 

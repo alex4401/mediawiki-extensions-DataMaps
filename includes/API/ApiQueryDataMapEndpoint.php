@@ -33,13 +33,9 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
     public function getAllowedParams() {
         return [
-            'title' => [
-                ParamValidator::PARAM_TYPE => 'string',
-                ParamValidator::PARAM_DEPRECATED => true
-            ],
             'pageid' => [
                 ParamValidator::PARAM_TYPE => 'integer',
-                //ParamValidator::PARAM_REQUIRED => true
+                ParamValidator::PARAM_REQUIRED => true
             ],
             'revid' => [
                 ParamValidator::PARAM_TYPE => 'integer',
@@ -101,13 +97,9 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 		$this->requireOnlyOneParameter( $params, 'title', 'pageid' );
 
         if ( $this->cachedTitle === null ) {
-            if ( isset( $params['title'] ) ) {
-                $this->cachedTitle = Title::newFromText( $params['title'], ExtensionConfig::getNamespaceId() );
-            } elseif ( isset( $params['pageid'] ) ) {
-                $this->cachedTitle = Title::newFromID( $params['pageid'] );
-                if ( !$this->cachedTitle ) {
-                    $this->dieWithError( [ 'apierror-nosuchpageid', $params['pageid'] ] );
-                }
+            $this->cachedTitle = Title::newFromID( $params['pageid'] );
+            if ( !$this->cachedTitle ) {
+                $this->dieWithError( [ 'apierror-nosuchpageid', $params['pageid'] ] );
             }
         }
 
