@@ -290,6 +290,7 @@ class DataMap extends EventEmitter {
     openPopupIfUriMarker( leafletMarker ) {
         if ( this.markerIdToAutoOpen != null && Util.getMarkerId( leafletMarker ) === this.markerIdToAutoOpen ) {
             leafletMarker.openPopup();
+            this.off( 'markerReady', this.openPopupIfUriMarker );
         }
     }
 
