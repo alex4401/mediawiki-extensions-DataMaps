@@ -67,6 +67,20 @@ module.exports = class MarkerSearchIndex extends mw.dataMaps.EventEmitter {
         this.items = this.items.concat( this._queue );
         this._queue = [];
     }
+
+
+    normalisePhrase() {
+    	// Replace trailing whitespace, normalize multiple spaces and make case insensitive
+	    return text.trim().replace( /\s+/, ' ' ).toLowerCase().normalize( 'NFD' ).replace( /[\u0300-\u036f]/g, '' );
+    }
+
+
+    query( phrase ) {
+    	return Fuzzysort.go( this.normalisePhrase( phrase ), this.items, {
+	    	threshold: -75000,
+		    weighedKey: 'keywords'
+	    } );
+    }
 }
 
 
