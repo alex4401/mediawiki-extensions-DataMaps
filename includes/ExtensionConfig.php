@@ -11,8 +11,7 @@ class ExtensionConfig {
     public const FF_SORT_CHECKLIST_BY_AMOUNT = 'SortChecklistsByAmount';
 
     public static function getParserExpansionLimit(): int {
-        return MediaWikiServices::getInstance()->getMainConfig()
-            ->get( 'DataMapsMarkerParserExpansionLimit' );
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsMarkerParserExpansionLimit' );
     }
 
     public static function isNamespaceManaged(): bool {

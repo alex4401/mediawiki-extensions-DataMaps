@@ -6,13 +6,10 @@ use Html;
 use JsonContentHandler;
 use MediaWiki\Content\Renderer\ContentParseParams;
 use MediaWiki\Content\ValidationParams;
-use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\EmbedRenderOptions;
 use MediaWiki\MediaWikiServices;
 use ParserOutput;
-use Status;
-use stdclass;
 use Title;
 
 class DataMapContentHandler extends JsonContentHandler {
@@ -61,15 +58,15 @@ class DataMapContentHandler extends JsonContentHandler {
         $pageRef = $cpoParams->getPage();
         $parserOptions = $cpoParams->getParserOptions();
 
-		$shouldGenerateHtml = $cpoParams->getGenerateHtml();
-		$isVisualEditor = $parserOptions->getOption( 'isMapVisualEditor' );
-		$isEditPreview = $parserOptions->getIsPreview();
+        $shouldGenerateHtml = $cpoParams->getGenerateHtml();
+        $isVisualEditor = $parserOptions->getOption( 'isMapVisualEditor' );
+        $isEditPreview = $parserOptions->getIsPreview();
 
-		// Get documentation, if any
-		$doc = self::getDocPage( $cpoParams->getPage() );
-		if ( $shouldGenerateHtml && $doc ) {
-			$msg = wfMessage( $doc->exists() ? 'datamap-doc-page-show' : 'datamap-doc-page-does-not-exist',
-				$doc->getPrefixedText() )->inContentLanguage();
+        // Get documentation, if any
+        $doc = self::getDocPage( $cpoParams->getPage() );
+        if ( $shouldGenerateHtml && $doc ) {
+            $msg = wfMessage( $doc->exists() ? 'datamap-doc-page-show' : 'datamap-doc-page-does-not-exist',
+                $doc->getPrefixedText() )->inContentLanguage();
 
             if ( !$msg->isDisabled() ) {
                 // We need the ParserOutput for categories and such, so we can't use $msg->parse()
@@ -98,33 +95,33 @@ class DataMapContentHandler extends JsonContentHandler {
             $parserOutput->addTemplate( $doc, $doc->getArticleID(), $doc->getLatestRevID() );
         }
 
-		// Render the map if it isn't a mix-in
-		if ( !$content->isMixin() ) {
-			// If previewing an edit, run validation and end early on failure
-			if ( $shouldGenerateHtml && $isEditPreview ) {
-				$status = $content->getValidationStatus();
-				if ( !$status->isOK() ) {
-					$parserOutput->setText( $parserOutput->getRawText() . Html::errorBox(
-						wfMessage(
-							'datamap-error-cannot-' . ( $isVisualEditor ? 'open-ve' : 'preview' ) . '-validation-errors',
-							$status->getMessage( false, false )
-						)
-					) );
-					return;
-				}
-			}
+        // Render the map if it isn't a mix-in
+        if ( !$content->isMixin() ) {
+            // If previewing an edit, run validation and end early on failure
+            if ( $shouldGenerateHtml && $isEditPreview ) {
+                $status = $content->getValidationStatus();
+                if ( !$status->isOK() ) {
+                    $parserOutput->setText( $parserOutput->getRawText() . Html::errorBox(
+                        wfMessage(
+                            'datamap-error-cannot-' . ( $isVisualEditor ? 'open-ve' : 'preview' ) . '-validation-errors',
+                            $status->getMessage( false, false )
+                        )
+                    ) );
+                    return;
+                }
+            }
 
-			// Initialise the embed renderer
-			$parser = MediaWikiServices::getInstance()->getParser();
-			$embed = $content->getEmbedRenderer( $pageRef, $parser, $parserOutput, $isEditPreview, $isVisualEditor );
-			// Add metadata
-			$embed->prepareOutput( $parserOutput );
+            // Initialise the embed renderer
+            $parser = MediaWikiServices::getInstance()->getParser();
+            $embed = $content->getEmbedRenderer( $pageRef, $parser, $parserOutput, $isEditPreview, $isVisualEditor );
+            // Add metadata
+            $embed->prepareOutput( $parserOutput );
 
-			// Generate HTML if requested
-			if ( $shouldGenerateHtml ) {
-				$parserOutput->setText( $parserOutput->getRawText() . $embed->getHtml( new EmbedRenderOptions() ) );
-			}
-		} else {
+            // Generate HTML if requested
+            if ( $shouldGenerateHtml ) {
+                $parserOutput->setText( $parserOutput->getRawText() . $embed->getHtml( new EmbedRenderOptions() ) );
+            }
+        } else {
             $parserOutput->setPageProperty( 'ext.datamaps.isMapMixin', true );
             $parserOutput->setPageProperty( 'ext.datamaps.isIneligibleForVE', true );
         }

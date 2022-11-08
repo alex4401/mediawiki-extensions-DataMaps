@@ -74,16 +74,16 @@ class HookHandler implements
         }
     }
 
-	public function onSkinTemplateNavigation__Universal( $skinTemplate, &$links ): void {
-		if ( !isset( $links['views']['edit'] ) ) {
-			return;
-		}
+    public function onSkinTemplateNavigation__Universal( $skinTemplate, &$links ): void {
+        if ( !isset( $links['views']['edit'] ) ) {
+            return;
+        }
 
-		$isVEEnabled = ExtensionConfig::isVisualEditorEnabled();
-		$isVCEnabled = ExtensionConfig::isCreateMapEnabled();
-		if ( !( $isVEEnabled || $isVCEnabled ) ) {
-			return;
-		}
+        $isVEEnabled = ExtensionConfig::isVisualEditorEnabled();
+        $isVCEnabled = ExtensionConfig::isCreateMapEnabled();
+        if ( !( $isVEEnabled || $isVCEnabled ) ) {
+            return;
+        }
 
         $title = $skinTemplate->getRelevantTitle();
         if ( !$title->getNamespace() === ExtensionConfig::getNamespaceId()
@@ -91,57 +91,57 @@ class HookHandler implements
             return;
         }
 
-		if ( $isVCEnabled && !$title->exists() ) {
-			$skinTemplate->getOutput()->addModules( [
-				'ext.datamaps.createMapLazy'
-			] );
-		} else if ( $isVEEnabled ) {
-			$pageProps = MediaWikiServices::getInstance()->getPageProps();
-			if ( count( $pageProps->getProperties( $title, 'ext.datamaps.isIneligibleForVE' ) ) > 0 ) {
-				return;
-			}
+        if ( $isVCEnabled && !$title->exists() ) {
+            $skinTemplate->getOutput()->addModules( [
+                'ext.datamaps.createMapLazy'
+            ] );
+        } else if ( $isVEEnabled ) {
+            $pageProps = MediaWikiServices::getInstance()->getPageProps();
+            if ( count( $pageProps->getProperties( $title, 'ext.datamaps.isIneligibleForVE' ) ) > 0 ) {
+                return;
+            }
 
-			$prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
-			if ( $prefsLookup->getOption( $skinTemplate->getAuthority()->getUser(),
-				/*'datamaps-enable-visual-editor'*/ 'datamaps-opt-in-visual-editor-beta' ) ) {
-				$links['views']['edit']['href'] = $title->getLocalURL( $skinTemplate->editUrlOptions() + [
-					'visual' => 1
-				] );
-				$injection = [
-					'editsource' => [
-						'text' => wfMessage( 'datamap-ve-edit-source-action' )->text(),
-						'href' => $title->getLocalURL( $skinTemplate->editUrlOptions() )
-					]
-				];
-				$links['views'] = array_slice( $links['views'], 0, 2, true ) + $injection +
-					array_slice( $links['views'], 2, null, true );
-			}
-		}
-	}
+            $prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
+            if ( $prefsLookup->getOption( $skinTemplate->getAuthority()->getUser(),
+                /*'datamaps-enable-visual-editor'*/ 'datamaps-opt-in-visual-editor-beta' ) ) {
+                $links['views']['edit']['href'] = $title->getLocalURL( $skinTemplate->editUrlOptions() + [
+                    'visual' => 1
+                ] );
+                $injection = [
+                    'editsource' => [
+                        'text' => wfMessage( 'datamap-ve-edit-source-action' )->text(),
+                        'href' => $title->getLocalURL( $skinTemplate->editUrlOptions() )
+                    ]
+                ];
+                $links['views'] = array_slice( $links['views'], 0, 2, true ) + $injection +
+                    array_slice( $links['views'], 2, null, true );
+            }
+        }
+    }
 
-	public function onCustomEditor( $article, $user ) {
-		$isVEEnabled = ExtensionConfig::isVisualEditorEnabled();
-		$isVCEnabled = ExtensionConfig::isCreateMapEnabled();
-		if ( !( $isVEEnabled || $isVCEnabled ) || !RequestContext::getMain()->getRequest()->getBool( 'visual' ) ) {
-			return true;
-		}
+    public function onCustomEditor( $article, $user ) {
+        $isVEEnabled = ExtensionConfig::isVisualEditorEnabled();
+        $isVCEnabled = ExtensionConfig::isCreateMapEnabled();
+        if ( !( $isVEEnabled || $isVCEnabled ) || !RequestContext::getMain()->getRequest()->getBool( 'visual' ) ) {
+            return true;
+        }
 
-		$title = $article->getTitle();
-		if ( !$title->getNamespace() === ExtensionConfig::getNamespaceId()
-			|| !$title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
-			return true;
-		}
+        $title = $article->getTitle();
+        if ( !$title->getNamespace() === ExtensionConfig::getNamespaceId()
+            || !$title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
+            return true;
+        }
 
-		$prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
-		if ( $prefsLookup->getOption( $user, /*'datamaps-enable-visual-editor'*/ 'datamaps-opt-in-visual-editor-beta' ) ) {
-			$doesExist = $title->exists();
-			if ( ( $isVCEnabled && !$doesExist ) || ( $isVEEnabled && $doesExist ) ) {
-				$editor = new VisualMapEditPage( $article );
-				$editor->setContextTitle( $title );
-				$editor->edit();
-				return false;
-			}
-		}
+        $prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
+        if ( $prefsLookup->getOption( $user, /*'datamaps-enable-visual-editor'*/ 'datamaps-opt-in-visual-editor-beta' ) ) {
+            $doesExist = $title->exists();
+            if ( ( $isVCEnabled && !$doesExist ) || ( $isVEEnabled && $doesExist ) ) {
+                $editor = new VisualMapEditPage( $article );
+                $editor->setContextTitle( $title );
+                $editor->edit();
+                return false;
+            }
+        }
 
         return true;
     }
