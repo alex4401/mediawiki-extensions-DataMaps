@@ -289,7 +289,7 @@
 			"packageFiles": [
 				"createMap/main.js",
 				"createMap/creationDialog.js",
-				"loader/enums.js"
+				"core/enums.js"
 			],
 			"styles": [
 				"ve/css/collapsibles.less",
