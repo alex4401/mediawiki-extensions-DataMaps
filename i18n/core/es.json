@@ -28,11 +28,7 @@
     "datamap-error-render-unsupported-displaymode": "El modo de pantalla $1 se ha identificado como un marcador, pero no existe compatibilidad para el mismo. Esto se debe a un error en el código de extensión.",
     "datamap-error-pf-page-does-not-exist": "La página del mapa de datos \"[[$1]]\" no existe.",
     "datamap-error-pf-page-invalid-content-model": "El modelo de contenido de la página \"[[$1]]\" no es <code>datamap</code>.",
-    "datamap-error-cannot-preview-validation-errors": "<b>No se puede mostrar la vista previa de la edición debido a uno o varios errores en el código fuente del mapa:</b>",
-    "datamap-defaultloadout-map-background": "Map background.jpg",
-    "datamap-defaultloadout-group-name": "Un grupo de marcador",
-    "datamap-defaultloadout-marker-label": "Un marcador",
-    "datamap-defaultloadout-group-icon": "Marker group icon in legend.png",
+    "datamap-error-cannot-preview-validation-errors": "<b>No se puede mostrar la vista previa de la edición debido a uno o varios errores en el código fuente del mapa:</b><br/>$1",
     "datamap-legend-label": "Leyenda",
     "datamap-javascript-required": "Los mapas de datos interactivos requieren de la activación de JavaScript.",
     "datamap-loading-data": "Espera. Cargando datos",
@@ -53,6 +49,12 @@
     "datamap-popup-marker-link-copied": "Enlace copiado a tu portapapeles.",
     "datamap-control-reset-view": "Modo por defecto",
     "datamap-control-centre-view": "Centrar vista en el nivel de zoom actual",
-    "datamap-control-search": "Haz clic y escribe tu búsqueda...",
-    "datamap-coordinate-control-text": "lat $1, lon $2"
+    "datamap-control-search": "Haz clic y escribe tu búsqueda…",
+    "datamap-coordinate-control-text": "lat $1, lon $2",
+    "datamap-error-validate-field-required-alt": "Se necesita rellenar el campo <code>$2</code> o un campo alternativo para la estructura $1. $3",
+    "datamap-error-validate-disallowed-value": "El campo <code>$2</code> tiene un valor desconocido para la estructura $1. $3",
+    "datamap-error-validatespec-map-uid-conflict": "Se ha encontrado un identificador de marcador no exclusivo: <code>$1</code>.",
+    "datamap-error-validate-wrong-item-type": "El elemento en la matriz <code>$2</code> tiene un valor incorrecto para la estructura $1. $3",
+    "datamap-error-validate-deprecated-field": "El campo <code>$2</code> en la estructura $1 ha quedado obsoleto en la versión $3, y se eliminará en la versión $4.",
+    "datamap-error-validatespec-map-name-conflict-group-layer": "Se ha encontrado la capa de marcador \"$1\", pero ya existe un grupo de marcadores con el mismo nombre."
 }

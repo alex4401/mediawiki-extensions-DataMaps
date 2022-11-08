@@ -1,6 +1,7 @@
 const EventEmitter = mw.dataMaps.EventEmitter,
     Util = mw.dataMaps.Util,
-    Enums = mw.dataMaps.Enums;
+    Enums = mw.dataMaps.Enums,
+    MarkerGroupEditor = require( './widgets/markerGroupEditor.js' );
 
 
 module.exports = class MapVisualEditor extends EventEmitter {
@@ -8,6 +9,7 @@ module.exports = class MapVisualEditor extends EventEmitter {
         super();
         
         this.map = map;
+        this.revisionId = mw.config.get( 'wgCurRevisionId' );
 
         this.map.storage.isWritable = false;
         this.map.storage.dismissed = [];
@@ -33,19 +35,17 @@ module.exports = class MapVisualEditor extends EventEmitter {
         this.map.$root.addClass( 'datamap-is-ve-active' );
 
         this.map.$status.show().text( mw.msg( 'datamap-ve-loading' ) );
-
-        // Set up internal event handlers
-        this.on( 'close', this.onClose, this );
         
         // Register tools
         this.toolFactory.register( require( './tools/commit.js' ) );
         this.toolFactory.register( require( './tools/sourceEditor.js' ) );
+        this.toolFactory.register( require( './tools/addMarker.js' ) );
 
         // Set up the toolbar
         this.toolbar.setup( [
             {
                 type: 'bar',
-                include: []
+                include: [ 'addMarker' ]
             },
             {
                 type: 'bar',
@@ -60,78 +60,92 @@ module.exports = class MapVisualEditor extends EventEmitter {
 
         this.map.on( 'legendLoaded', this._enhanceGroups, this );
 
-        this.map.waitForLegend( () => this.map.waitForLeaflet( () => this.map.$status.hide() ) );
+        require( './editablePopup.js' );
+
+        this._requestRevisionData();
     }
 
-    onClose() {
-        this.toolbar.$element.remove();
-        this.map.$root.removeClass( 'datamap-is-ve-active' );
+
+    _requestRevisionData() {
+        this.map.streaming.callApiReliable( {
+            action: 'query',
+            prop: 'revisions',
+            titles: mw.config.get( 'wgPageName' ),
+            rvstartid: this.revisionId,
+            rvlimit: 1,
+            rvprop: 'content',
+            rvslots: 'main'
+        } )
+            .then( data => {
+                this.sourceData = JSON.parse( data.query.pages[this.map.id].revisions[0].slots.main['*'] );
+
+                if ( !this.sourceData.markers ) {
+                    this.sourceData.markers = {};
+                }
+
+                const markerStore = {};
+                for ( const layers in this.sourceData.markers ) {
+                    markerStore[layers] = [];
+                    for ( const raw of this.sourceData.markers[layers] ) {
+                        const apiInstance = [ raw.y || raw.lat, raw.x || raw.lon, {
+                            raw,
+                            ve: this,
+                            _ve_invalidate: [ '_ve_parsed_desc', '_ve_parsed_label' ],
+                            article: raw.article
+                        } ];
+                        markerStore[layers].push( apiInstance );
+                    }
+                }
+
+                this.map.waitForLeaflet( () => {
+                    this.map.instantiateMarkers( markerStore );
+                    this.map.fire( 'chunkStreamingDone' );
+                    // DEPRECATED(v0.13.0:v0.14.0): old event name
+                    this.map.fire( 'streamingDone' );
+                } );
+            } )
+            .catch( () => this.map.$status.show().html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' ) );
+
+        
+        const streamingCallback = () => {
+            this.map.off( 'chunkStreamingDone', streamingCallback );
+
+            this.map.$status.hide();
+        };
+        this.map.on( 'chunkStreamingDone', streamingCallback );
     }
+
 
     _enhanceGroups() {
+        // Hide the mass-visibility toggle button group
+        this.map.markerLegend.buttonGroup.toggle( false );
+        // Rename the tab
+        this.map.markerLegend.tab.tabItem.setLabel( mw.msg( 'datamap-ve-legend-tab-marker-groups' ) );
+
+        // Rebuild every marker group toggle into editor widgets
         for ( const groupToggle of Object.values( this.map.markerLegend.groupToggles ) ) {
-            const group = this.map.config.groups[groupToggle.groupId];
-
-            const textInput = new OO.ui.TextInputWidget( {
-                value: group.name,
-                flags: [ 'progressive' ],
-                spellcheck: true
-            } );
-            groupToggle.field.$label.replaceWith( textInput.$element );
-
-            const button = new OO.ui.PopupButtonWidget( { 
-                icon: 'menu',
-                popup: {
-                    $content: this._buildGroupModifierPopup( groupToggle, group ),
-                    padded: true,
-                    align: 'forwards'
-                }
-            } );
-            button.$element.appendTo( groupToggle.field.$header );
+            groupToggle.veWidget = new MarkerGroupEditor( this, groupToggle );
         }
     }
 
-    _buildGroupModifierPopup( groupToggle, group ) {
-        const collectibleMode = new OO.ui.RadioSelectInputWidget( {
-            value: ( () => {
-                switch ( Util.getGroupCollectibleType( group ) ) {
-                    case Enums.MarkerGroupFlags.Collectible_Individual:
-                        return 'individual';
-                    case Enums.MarkerGroupFlags.Collectible_Group:
-                        return 'group';
-                    case Enums.MarkerGroupFlags.Collectible_GlobalGroup:
-                        return 'globalGroup';
-                }
-                return null;
-            } )(),
-            options: [
-                { data: null, label: 'None' },
-                { data: 'individual', label: 'Individual' },
-                { data: 'group', label: 'As group' },
-                { data: 'globalGroup', label: 'As group (global)' }
-            ]
-        } );
-        const articleLink = new OO.ui.TextInputWidget( {
-            value: group.article
-        } );
 
-        const panel = new OO.ui.PanelLayout( {
-            framed: false,
-            expanded: false,
-            padded: false,
-            content: [
-                new OO.ui.FieldLayout( articleLink, { 
-                    label: mw.msg( 'datamap-ve-group-article-link' ),
-                    align: 'top'
-                } ),
-                new OO.ui.FieldLayout( collectibleMode, { 
-                    label: mw.msg( 'datamap-ve-group-collectible-mode' ),
-                    align: 'top'
-                } )
-            ]
-        } );
-        
+    markStale( obj ) {
+        obj._ve_stale = true;
 
-        return panel.$element;
+        if ( obj._ve_invalidate ) {
+            for ( const field of obj._ve_invalidate ) {
+                delete obj[field];
+            }
+        }
+    }
+
+
+    destroyMarkerGroup( groupId ) {
+        this.map.markerLegend.groupToggles[groupId].field.$element.remove();
+        delete this.map.markerLegend.groupToggles[groupId];
+        delete this.map.config.groups[groupId];
+        delete this.sourceData.groups[groupId];
+        this.map.layerManager.nuke( groupId );
+        this.map.layerManager.deregister( groupId );
     }
 }

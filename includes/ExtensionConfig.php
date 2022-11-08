@@ -9,51 +9,42 @@ class ExtensionConfig {
     const FF_SORT_CHECKLIST_BY_AMOUNT = 'SortChecklistsByAmount';
 
     public static function getParserExpansionLimit(): int {
-        global $wgDataMapsMarkerParserExpansionLimit;
-        return $wgDataMapsMarkerParserExpansionLimit;
+        return $GLOBALS['wgDataMapsMarkerParserExpansionLimit'];
     }
 
     public static function isNamespaceManaged(): bool {
-        global $wgDataMapsNamespaceId;
-        return $wgDataMapsNamespaceId == 'managed';
+        return $GLOBALS['wgDataMapsNamespaceId'] == 'managed';
     }
 
     public static function getNamespaceId(): int {
         if ( self::isNamespaceManaged() ) {
             return NS_MAP;
         }
-        global $wgDataMapsNamespaceId;
-        return $wgDataMapsNamespaceId;
+        return $GLOBALS['wgDataMapsNamespaceId'];
     }
 
     public static function getApiCacheType() {
-        global $wgDataMapsCacheType;
-        return $wgDataMapsCacheType;
+        return $GLOBALS['wgDataMapsCacheType'];
     }
 
     public static function getApiCacheTTL(): int {
-        global $wgDataMapsCacheTTL;
-        return $wgDataMapsCacheTTL;
+        return $GLOBALS['wgDataMapsCacheTTL'];
     }
 
     public static function shouldExtendApiCacheTTL(): bool {
-        global $wgDataMapsExtendCacheTTL;
-        return $wgDataMapsExtendCacheTTL != false;
+        return $GLOBALS['wgDataMapsExtendCacheTTL'] != false;
     }
 
     public static function getApiCacheTTLExtensionThreshold(): int {
-        global $wgDataMapsExtendCacheTTL;
-        return $wgDataMapsExtendCacheTTL['threshold'];
+        return $GLOBALS['wgDataMapsExtendCacheTTL']['threshold'];
     }
 
     public static function getApiCacheTTLExtensionValue(): int {
-        global $wgDataMapsExtendCacheTTL;
-        return $wgDataMapsExtendCacheTTL['override'];
+        return $GLOBALS['wgDataMapsExtendCacheTTL']['override'];
     }
 
     public static function shouldApiReturnProcessingTime(): bool {
-        global $wgDataMapsReportTimingInfo;
-        return $wgDataMapsReportTimingInfo;
+        return $GLOBALS['wgDataMapsReportTimingInfo'];
     }
 
     public static function getApiDefaultMarkerLimit(): int {
@@ -65,13 +56,11 @@ class ExtensionConfig {
     }
 
     public static function shouldCacheWikitextInProcess(): bool {
-        global $wgDataMapsUseInProcessParserCache;
-        return $wgDataMapsUseInProcessParserCache;
+        return $GLOBALS['wgDataMapsUseInProcessParserCache'];
     }
 
     public static function getDefaultFeatureStates(): array {
-        global $wgDataMapsDefaultFeatures;
-        return $wgDataMapsDefaultFeatures;
+        return $GLOBALS['wgDataMapsDefaultFeatures'];
     }
 
     public static function getDefaultFeatureState( string $feature ) {
@@ -82,8 +71,11 @@ class ExtensionConfig {
         return self::isBleedingEdge() && $GLOBALS['wgDataMapsEnableVisualEditor'];
     }
 
+    public static function isCreateMapEnabled(): bool {
+        return $GLOBALS['wgDataMapsEnableCreateMap'];
+    }
+
     public static function isBleedingEdge(): bool {
-        global $wgDataMapsAllowExperimentalFeatures;
-        return $wgDataMapsAllowExperimentalFeatures;
+        return $GLOBALS['wgDataMapsAllowExperimentalFeatures'];
     }
 }

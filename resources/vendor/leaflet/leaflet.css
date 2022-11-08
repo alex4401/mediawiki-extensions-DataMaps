@@ -233,7 +233,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 	border-radius: 4px;
 	}
-.leaflet-bar a {
+.leaflet-bar > a {
 	background-color: #fff;
 	border-bottom: 1px solid #ccc;
 	width: 26px;
@@ -244,41 +244,41 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	text-decoration: none;
 	color: black;
 	}
-.leaflet-bar a/*,
+.leaflet-bar > a/*,
 .leaflet-control-layers-toggle {
 	background-position: 50% 50%;
 	background-repeat: no-repeat;
 	display: block;
 	}*/
-.leaflet-bar a:hover,
-.leaflet-bar a:focus {
+.leaflet-bar > a:hover,
+.leaflet-bar > a:focus {
 	background-color: #f4f4f4;
 	}
-.leaflet-bar a:first-child {
+.leaflet-bar > a:first-child {
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
 	}
-.leaflet-bar a:last-child {
+.leaflet-bar > a:last-child {
 	border-bottom-left-radius: 4px;
 	border-bottom-right-radius: 4px;
 	border-bottom: none;
 	}
-.leaflet-bar a.leaflet-disabled {
+.leaflet-bar > a.leaflet-disabled {
 	cursor: default;
 	background-color: #f4f4f4;
 	color: #bbb;
 	}
 
-.leaflet-touch .leaflet-bar a {
+.leaflet-touch .leaflet-bar > a {
 	width: 30px;
 	height: 30px;
 	line-height: 30px;
 	}
-.leaflet-touch .leaflet-bar a:first-child {
+.leaflet-touch .leaflet-bar > a:first-child {
 	border-top-left-radius: 2px;
 	border-top-right-radius: 2px;
 	}
-.leaflet-touch .leaflet-bar a:last-child {
+.leaflet-touch .leaflet-bar > a:last-child {
 	border-bottom-left-radius: 2px;
 	border-bottom-right-radius: 2px;
 	}

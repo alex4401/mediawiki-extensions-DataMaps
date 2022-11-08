@@ -27,6 +27,7 @@ module.exports = {
         IsUnselected: 1<<2,
         Collectible_Individual: 1<<3,
         Collectible_Group: 1<<4,
-        Collectible_GlobalGroup: 1<<5
+        Collectible_GlobalGroup: 1<<5,
+        Collectible_Any: (1<<3) | (1<<4) | (1<<5)
     }
 };

@@ -49,8 +49,10 @@ class EmbedRenderer {
         $this->parserOptions->setAllowSpecialInclusion( false );
         $this->parserOptions->setExpensiveParserFunctionLimit( 4 );
         $this->parserOptions->setInterwikiMagic( false );
-        $this->parserOptions->setMaxIncludeSize( 800 );        
-        $this->parserOptions->setCurrentRevisionRecordCallback( $parser->getOptions()->getCurrentRevisionRecordCallback() );
+        $this->parserOptions->setMaxIncludeSize( 800 );
+        if ( $parser->getOptions() !== null ) {
+            $this->parserOptions->setCurrentRevisionRecordCallback( $parser->getOptions()->getCurrentRevisionRecordCallback() );
+        }
 
         $this->parser->setOptions( $this->parserOptions );
     }
@@ -174,10 +176,7 @@ class EmbedRenderer {
             'classes' => [ 'datamap-container' ],
 			'framed' => true,
 			'expanded' => false,
-			'padded' => false,
-            'attributes' => [
-                'data-datamap-id' => $this->getId()
-            ]
+			'padded' => false
 		] );
 		$containerTop = new \OOUI\PanelLayout( [
             'classes' => [ 'datamap-container-top' ],
@@ -197,6 +196,11 @@ class EmbedRenderer {
 			'expanded' => false,
 			'padded' => false
 		] );
+
+        // Push page ID onto the container
+        $containerMain->setAttributes( [
+            'data-datamap-id' => $this->getId()
+        ] );
 
         // Stack the containers
         $containerMain->appendContent( $containerTop );

@@ -49,7 +49,7 @@ class DataModelMixinTransformer {
                     $target[$key] = $value;
                 } else {
                     // Merge
-                    $target[$key] = self::mergeUnknown( $target[$key], $value, $allowObjectArrayMerge );
+                    $target[$key] = self::mergeUnknown( $target[$key], $value, $allowObjectMerge );
                 }
             } else if ( $allowObjectMerge ) {
                 // Indexed
@@ -58,7 +58,7 @@ class DataModelMixinTransformer {
                     $target[$key] = $value;
                 } else if ( $allowObjectMerge ) {
                     // Merge
-                    $target[$key] = self::mergeUnknown( $target[$key], $value, $allowObjectArrayMerge );
+                    $target[$key] = self::mergeUnknown( $target[$key], $value, $allowObjectMerge );
                 }
             } else {
                 // Object merge disallowed, append

@@ -20,7 +20,7 @@
     "datamap-error-validate-check-docs": "Check the [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps extension's documentation] for information about the proper structure.",
     "datamap-error-validate-invalid-json": "This is not a valid JSON document.",
     "datamap-error-validate-unexpected-fields": "Found unknown field(s) in structure $1: $2.",
-    "datamap-error-validate-field-no-value": "Field <code>$1</code> in structure $2 requires a value.",
+    "datamap-error-validate-field-no-value": "Field <code>$2</code> in structure $1 requires a value.",
     "datamap-error-validate-field-required": "Field <code>$2</code> is required in structure $1. $3",
     "datamap-error-validate-field-required-alt": "Field <code>$2</code> or an alternative is required in structure $1. $3",
     "datamap-error-validate-wrong-field-type": "Field <code>$2</code> has an incorrect value for structure $1. $3",
@@ -38,18 +38,14 @@
     "datamap-error-validatespec-map-bad-mixin": "Mix-in \"<code>$1</code>\" must exist, use the <code>Interactive Data Map</code> content model, and be valid syntax- and structure-wise.",
     "datamap-error-validatespec-map-name-conflict-group-layer": "Found marker layer \"$1\", but a marker group exists with the same name.",
     "datamap-error-validatespec-map-uid-conflict": "Found a non-unique marker identifier: <code>$1</code>.",
+    "datamap-error-validatespec-map-mixin-with-mixins": "A mix-in must not use other mix-ins.",
     "datamap-error-validatespec-bgoverlay-invalid-polyline": "Polyline background overlay's <code>path</code> property must be a list of points.",
 
     "datamap-error-internal-unknown-field-type": "No validation support implemented for field type with ID of $1. This is a bug in the extension's code.",
     "datamap-error-render-unsupported-displaymode": "Display mode $1 has been reported for a marker, but support is missing for it. This is a bug in the extension's code.",
     "datamap-error-pf-page-does-not-exist": "Data map page \"[[$1]]\" does not exist.",
     "datamap-error-pf-page-invalid-content-model": "Content model of page \"[[$1]]\" is not <code>Interactive Data Map</code>.",
-    "datamap-error-cannot-preview-validation-errors": "<b>Edit preview not shown due to error(s) in map's source code:</b>",
-
-    "datamap-defaultloadout-map-background": "Map background.jpg",
-    "datamap-defaultloadout-group-name": "A marker group",
-    "datamap-defaultloadout-marker-label": "A marker",
-    "datamap-defaultloadout-group-icon": "Marker group icon in legend.png",
+    "datamap-error-cannot-preview-validation-errors": "<b>Edit preview not shown due to error(s) in map's source code:</b><br/>$1",
 
     "datamap-legend-label": "Legend",
     "datamap-javascript-required": "Interactive data maps require JavaScript to be enabled.",
@@ -77,5 +73,6 @@
     "datamap-coordinate-control-text": "lat $1, lon $2",
     "datamap-control-reset-view": "Restore default view",
     "datamap-control-centre-view": "Center view at current zoom level",
-    "datamap-control-search": "Click and start typing to search..."
+    "datamap-control-search": "Click and start typing to search...",
+    "datamap-control-search-toggle-sharing": "All maps"
 }

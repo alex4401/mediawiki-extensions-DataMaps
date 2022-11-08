@@ -1,12 +1,14 @@
 .datamap-is-ve-active .datamap-container-groups {
-    .oo-ui-textInputWidget {
-        display: inline-block;
-        width: unset;
-        margin-right: 0;
+    .oo-ui-fieldLayout > .oo-ui-fieldLayout-body > .oo-ui-fieldLayout-header {
+        display: flex;
+        align-items: center;
 
-        .oo-ui-inputWidget-input {
-            padding: 0 6px;
-            height: 2em;
+        > .oo-ui-textInputWidget {
+            flex-grow: 1;
+            .oo-ui-inputWidget-input {
+                padding: 0 6px;
+                height: 2em;
+            }
         }
     }
 

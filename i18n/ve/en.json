@@ -9,14 +9,31 @@
     "datamap-userpref-enable-ve-beta": "Opt me into the map visual editor beta",
     "datamap-ve-edit-source-action": "Edit source",
     "datamap-ve-beta-notice": "The visual editor is still in an early development stage, please report issues over Discord: alex#7749",
+    "datamap-vec-beta-notice": "The visual map creation process is still in an early development stage",
     "datamap-ve-limited-preview-notice": "[PH] Certain features are disabled when previewing the map in the visual editor",
+    "datamap-error-cannot-open-ve-validation-errors": "<b>Visual editor is unavailable due to errors in map's source code:</b><br/>$1<br/>Resolve the issues in the source editor first.",
     "tag-datamaps-visualeditor": "Visual map edit",
     "tag-datamaps-visualeditor-description": "Edit made using the DataMaps visual editor",
 
+    "datamap-ve-legend-tab-marker-groups": "Marker groups",
+    "datamap-ve-group-id": "Unique identifier",
+    "datamap-ve-group-id-cannot-modify": "Currently renaming groups is not supported in the visual editor",
+    "datamap-ve-group-article-link": "Default link to article",
+    "datamap-ve-group-article-link-subtext": "This can be overridden on individual markers.",
+    "datamap-ve-group-collectible-mode": "Collectible type",
+    "datamap-ve-group-confirm-delete": "Are you sure you want to permanently destroy marker group $1? This action is irreversible.",
 
+    "datamap-ve-legend-tab-marker-layers": "Marker layers",
+
+    "datamap-ve-cancel": "Cancel",
+    "datamap-ve-tool-delete": "Delete",
+    "datamap-ve-tool-confirm-delete": "Confirm deletion",
+    "datamap-ve-tool-source-editor": "Switch to source editor",
     "datamap-ve-tool-commit": "Save changes",
-    "datamap-ve-tool-commit-save": "Proceed",
+    "datamap-ve-tool-commit-continue": "Proceed",
     "datamap-ve-tool-commit-edit-summary": "Edit summary (required)",
     "datamap-ve-tool-commit-edit-summary-subtext": "[PH] Describe your changes in a concise way",
-    "datamap-ve-group-collectible-mode": "[PH] Collectible type"
+
+    "datamap-ve-tool-add-marker": "Create a marker",
+    "datamap-ve-tool-add-marker-continue": "Proceed"
 }

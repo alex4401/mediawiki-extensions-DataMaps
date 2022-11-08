@@ -326,11 +326,11 @@ class DataMapSpec extends DataModel {
         $this->checkField( $status, [
             'name' => 'markers',
             'type' => DataModel::TYPE_OBJECT,
-            'check' => function ( $status, &$rawMap ) {
+            'check' => function ( $status, &$rawMap ) use ( $isFull ) {
                 $requireOwnIDs = $this->wantsCustomMarkerIDs();
                 $uidMap = [];
                 $this->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection )
-                    use ( &$status, &$requireOwnIDs, &$uidMap ) {
+                    use ( &$status, &$requireOwnIDs, &$uidMap, $isFull ) {
                     // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
                     // creating thousands of small, very short-lived (only one at a time) objects
                     $marker = new MarkerSpec( new \stdclass() );
@@ -339,7 +339,7 @@ class DataMapSpec extends DataModel {
                     // defined - such layers will be treated as transparent by default.
                     $layers = explode( ' ', $layers );
                     $groupName = $layers[0];
-                    if ( !isset( $this->raw->groups->$groupName ) ) {
+                    if ( $isFull && !isset( $this->raw->groups->$groupName ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-missing-group', wfEscapeWikiText( $groupName ) );
                         return;
                     }

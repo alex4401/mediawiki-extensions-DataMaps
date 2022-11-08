@@ -27,8 +27,7 @@ module.exports = {
 
 
     getGroupCollectibleType( group ) {
-        return ( group.flags || 0 ) & ( Enums.MarkerGroupFlags.Collectible_Individual | Enums.MarkerGroupFlags.Collectible_Group
-            | Enums.MarkerGroupFlags.Collectible_GlobalGroup );
+        return ( group.flags || 0 ) & Enums.MarkerGroupFlags.Collectible_Any;
     },
 
 
@@ -38,9 +37,11 @@ module.exports = {
 
 
     createGroupCircleElement( group ) {
+        const size = Math.min( module.exports.MAX_GROUP_CIRCLE_SIZE, group.size+4 );
         return $( '<div class="datamap-legend-circle">' ).css( {
-            width: Math.min( module.exports.MAX_GROUP_CIRCLE_SIZE, group.size+4 ),
-            height: Math.min( module.exports.MAX_GROUP_CIRCLE_SIZE, group.size+4 ),
+            minWidth: size,
+            width: size,
+            height: size,
             backgroundColor: group.fillColor,
             borderColor: group.strokeColor || group.fillColor,
             borderWidth: group.strokeWidth || 1,
@@ -92,5 +93,31 @@ module.exports = {
 
     updateLocation( map, paramsToSet ) {
         history.replaceState( {}, '', module.exports.makeUrlWithParams( map, paramsToSet, false ) );
+    },
+
+
+    TabberNeue: {
+        getOwningPanel( $element ) {
+            // TODO: use native functions
+            const $panel = $element.closest( 'article.tabber__panel' );
+            return $panel && $panel.length > 0 ? $panel : null;
+        },
+
+
+        getOwningTabber( $element ) {
+            const $tabber = $element.closest( 'div.tabber' );
+            return $tabber && $tabber.length > 0 ? $tabber : null;
+        },
+
+
+        /**
+         * Finds ID of the TabberNeue tab this map is in. If not inside tabber, this will be null.
+         * @returns {string?}
+        */
+        getOwningId( $element ) {
+            const $panel = module.exports.TabberNeue.getOwningPanel( $element );
+            return $panel ? ( $panel.attr( 'id' ) || ( $panel.attr( 'data-title' ) || $panel.attr( 'title' ) ).replace( ' ', '_' ) )
+                : null;
+        }
     }
 };

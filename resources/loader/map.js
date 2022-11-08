@@ -49,9 +49,14 @@ class DataMap extends EventEmitter {
         this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
         // Retrieve a `marker` parameter from the query string if one is present
         this.markerIdToAutoOpen = null;
-        const tabberId = this.getParentTabberNeueId();
-        if ( !tabberId || ( tabberId && tabberId == window.location.hash.substr( 1 ) ) ) {
-            this.markerIdToAutoOpen = Util.getQueryParameter( 'marker' );
+
+        const $tabberPanel = Util.TabberNeue.getOwningPanel( this.$root );
+        if ( $tabberPanel === null || mw.loader.getState( 'ext.tabberNeue' ) === 'ready' ) {
+            this._setUpUriMarkerHandler();
+        } else if ( $tabberPanel !== null ) {
+            mw.loader.using( 'ext.tabberNeue', () => {
+                this._setUpUriMarkerHandler();
+            } );
         }
 
         // Coordinate reference system
@@ -69,7 +74,6 @@ class DataMap extends EventEmitter {
         this.crsScaleX = this.crsScaleY = 100 / crsYHigh;
 
         // Set up internal event handlers
-        this.on( 'markerReady', this.openPopupIfUriMarker, this );
         this.on( 'chunkStreamingDone', this.refreshMaxBounds, this );
         this.on( 'linkedEvent', this.onLinkedEventReceived, this );
 
@@ -113,6 +117,17 @@ class DataMap extends EventEmitter {
     }
 
 
+    _setUpUriMarkerHandler() {
+        const tabberId = Util.TabberNeue.getOwningId( this.$root );
+        if ( tabberId && tabberId != window.location.hash.substr( 1 ) ) {
+            return;
+        }
+        
+        this.markerIdToAutoOpen = Util.getQueryParameter( 'marker' );
+        this.on( 'markerReady', this.openPopupIfUriMarker, this );
+    }
+
+
     /**
      * Runs the callback function when the Leaflet map is initialised. If you only need access to Leaflet's API, require module
      * `ext.ark.datamaps.leaflet` instead with ResourceLoader.
@@ -142,29 +157,29 @@ class DataMap extends EventEmitter {
     }
 
 
+    /**
+     * @deprecated
+     */
     getParentTabberNeuePanel() {
-        if ( !this.$_tabberPanel ) {
-            this.$_tabberPanel = this.$root.closest( 'article.tabber__panel' );
-        }
-        return this.$_tabberPanel && this.$_tabberPanel.length > 0 ? this.$_tabberPanel : null;
+        return Util.TabberNeue.getOwningPanel( this.$root );
     }
 
 
+    /**
+     * @deprecated
+     */
     getParentTabberNeue() {
-        if ( !this.$_tabber ) {
-            this.$_tabber = this.$root.closest( 'div.tabber' );
-        }
-        return this.$_tabber && this.$_tabber.length > 0 ? this.$_tabber : null;
+        return Util.TabberNeue.getOwningTabber( this.$root );
     }
 
 
     /**
      * Finds ID of the TabberNeue tab this map is in. If not inside tabber, this will be null.
      * @returns {string?}
+     * @deprecated
     */
     getParentTabberNeueId() {
-        const $panel = this.getParentTabberNeuePanel();
-        return $panel ? ( $panel.attr( 'id' ) || $panel.attr( 'title' ).replace( ' ', '_' ) ) : null;
+        return Util.TabberNeue.getOwningId( this.$root );
     }
 
 
@@ -290,6 +305,7 @@ class DataMap extends EventEmitter {
     openPopupIfUriMarker( leafletMarker ) {
         if ( this.markerIdToAutoOpen != null && Util.getMarkerId( leafletMarker ) === this.markerIdToAutoOpen ) {
             leafletMarker.openPopup();
+            this.off( 'markerReady', this.openPopupIfUriMarker );
         }
     }
 
@@ -313,7 +329,7 @@ class DataMap extends EventEmitter {
                 markerIcon = this.config.layers[override].markerIcon;
             }
         
-            this.iconCache[markerType] = new L.Icon( { iconUrl: markerIcon, iconSize: group.size } );
+            this.iconCache[markerType] = new Leaflet.Icon( { iconUrl: markerIcon, iconSize: group.size } );
         }
         return this.iconCache[markerType];
     }
@@ -334,12 +350,12 @@ class DataMap extends EventEmitter {
         // Construct the marker
         if ( group.markerIcon ) {
             // Fancy icon marker
-            leafletMarker = new L.Ark.IconMarker( position, {
+            leafletMarker = new Leaflet.Ark.IconMarker( position, {
                 icon: this.getIconFromLayers( layers )
             } );
         } else {
             // Circular marker
-            leafletMarker = new L.Ark.CircleMarker( position, {
+            leafletMarker = new Leaflet.Ark.CircleMarker( position, {
                 baseRadius: group.size/2,
                 expandZoomInvEx: group.extraMinZoomSize,
                 fillColor: group.fillColor,

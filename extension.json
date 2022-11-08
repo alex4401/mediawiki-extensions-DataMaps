@@ -1,6 +1,6 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.13.1",
+	"version": "0.13.2",
 
 	"author": [
 		"alex4401"
@@ -20,6 +20,7 @@
 	"MessagesDirs": {
 		"DataMaps": [
 			"i18n/core",
+			"i18n/createmap",
 			"i18n/ve"
 		]
 	},
@@ -201,9 +202,24 @@
 				"search/util.js"
 			],
 			"messages": [
-				"datamap-control-search"
+				"datamap-control-search",
+				"datamap-control-search-toggle-sharing"
 			],
 			"targets": [ "desktop", "mobile" ]
+		},
+
+		"ext.datamaps.ve.icons": {
+			"class": "ResourceLoaderOOUIIconPackModule",
+			"icons": [
+				"code",
+				"noWikiText",
+				"wikiText",
+				"check",
+				"close",
+				"menu",
+				"required",
+				"trash"
+			]
 		},
 
 		"ext.datamaps.ve": {
@@ -218,39 +234,102 @@
 			"packageFiles": [
 				"ve/main.js",
 				"ve/editor.js",
+				"ve/editablePopup.js",
+				"ve/widgets/markerGroupEditor.js",
 				"ve/tools/commit.js",
 				"ve/tools/sourceEditor.js",
-				"ve/dialogs/commit.js"
+				"ve/tools/addMarker.js",
+				"ve/dialogs/commit.js",
+				"ve/dialogs/confirmDelete.js",
+				"ve/dialogs/addMarker.js",
+				"ve/dialogs/editMarker.js"
 			],
 			"styles": [
 				"ve/css/bars.less",
 				"ve/css/toolbar.less",
 				"ve/css/groups.less",
-				"ve/css/extension.less"
+				"ve/css/extension.less",
+				"ve/css/popup.less"
 			],
 			"messages": [
 				"datamap-ve-beta-notice",
 				"datamap-ve-limited-preview-notice",
+
+				"datamap-ve-legend-tab-marker-groups",
+				"datamap-ve-group-id",
+				"datamap-ve-group-id-cannot-modify",
+				"datamap-ve-group-article-link",
+				"datamap-ve-group-article-link-subtext",
+				"datamap-ve-group-collectible-mode",
+
+				"datamap-ve-legend-tab-marker-layers",
+
+				"datamap-ve-cancel",
+				"datamap-ve-tool-delete",
+				"datamap-ve-tool-source-editor",
 				"datamap-ve-tool-commit",
-				"datamap-ve-tool-commit-save",
+				"datamap-ve-tool-commit-continue",
 				"datamap-ve-tool-commit-edit-summary",
 				"datamap-ve-tool-commit-edit-summary-subtext",
-				"datamap-ve-group-collectible-mode"
+
+				"datamap-ve-tool-add-marker",
+				"datamap-ve-tool-add-marker-continue"
 			],
 			"targets": [ "desktop" ]
 		},
 
-		"ext.datamaps.ve.icons": {
-			"class": "ResourceLoaderOOUIIconPackModule",
-			"icons": [
-				"code",
-				"noWikiText",
-				"wikiText",
-				"check",
-				"close",
-				"menu",
-				"required"
-			]
+		"ext.datamaps.createMap": {
+			"es6": true,
+			"dependencies": [
+				"oojs-ui-core",
+				"oojs-ui-widgets",
+				"oojs-ui-windows",
+				"mediawiki.widgets",
+				"ext.datamaps.ve.icons"
+			],
+			"packageFiles": [
+				"createMap/main.js",
+				"createMap/creationDialog.js",
+				"core/enums.js"
+			],
+			"styles": [
+				"ve/css/collapsibles.less",
+				"createMap/css/all.less"
+			],
+			"messages": [
+				"datamap-vec-beta-notice",
+
+				"datamap-ve-cancel",
+				"datamap-vec-title",
+				"datamap-vec-intro",
+				"datamap-vec-select-crs-origin",
+				"datamap-vec-crs-top-left",
+				"datamap-vec-crs-bottom-left",
+				"datamap-vec-select-crs",
+				"datamap-vec-crs-percent",
+				"datamap-vec-crs-image",
+				"datamap-vec-crs-custom",
+				"datamap-vec-select-background",
+				"datamap-vec-note-image-size",
+				"datamap-vec-error-bad-file-type",
+				"datamap-vec-error-poor-file-type",
+				"datamap-vec-extra-options",
+				"datamap-vec-toggle-coord-display",
+				"datamap-vec-toggle-zoom",
+				"datamap-vec-toggle-search",
+				"datamap-vec-toggle-search-tabber",
+				"datamap-vec-toggle-uid-requirement",
+				"datamap-vec-submit"
+			],
+			"targets": [ "desktop" ]
+		},
+
+		"ext.datamaps.createMapLazy": {
+			"es6": true,
+			"packageFiles": [
+				"createMapLazy/main.js"
+			],
+			"targets": [ "desktop" ]
 		}
 	},
 
@@ -287,48 +366,49 @@
 
 	"DefaultUserOptions": {
 		"datamaps-enable-visual-editor": true,
-		"datamaps-opt-in-visual-editor-beta": true
+		"datamaps-opt-in-visual-editor-beta": false
 	},
 
+	"config_prefix": "wgDataMaps",
 	"config": {
-		"DataMapsNamespaceId": {
+		"NamespaceId": {
 			"description": "Namespace where data maps will be stored. Use 'managed' to use the built-in namespace.",
 			"value": "managed"
 		},
-		"DataMapsCacheType": {
+		"CacheType": {
 			"description": "Cache type to use for queryDataMap API output. Defaults to CACHE_ANYTHING.",
 			"value": -1
 		},
-		"DataMapsCacheTTL": {
+		"CacheTTL": {
 			"description": "Time To Live for cached queryDataMap API (per title and revision) responses to be valid. Set to 0 to disable caching. Defaults to a day.",
 			"value": 86400
 		},
-		"DataMapsExtendCacheTTL": {
+		"ExtendCacheTTL": {
 			"description": "Settings to extend TTL of cached maps on requests close to expiry time. Set to false to disable.",
 			"value": {
 				"threshold": 43200,
 				"override": 57600
 			}
 		},
-		"DataMapsDefaultApiMarkerBatch": {
+		"DefaultApiMarkerBatch": {
 			"value": 2500
 		},
-		"DataMapsMaxApiMarkerBatch": {
+		"MaxApiMarkerBatch": {
 			"value": 5000
 		},
-		"DataMapsMarkerParserExpansionLimit": {
+		"MarkerParserExpansionLimit": {
 			"description": "Controls how big the parser output for a marker's description can get.",
 			"value": 800
 		},
-		"DataMapsUseInProcessParserCache": {
+		"UseInProcessParserCache": {
 			"description": "If enabled, uses a simple wikitext parser cache inside the process handling the request.",
 			"value": true
 		},
-		"DataMapsReportTimingInfo": {
+		"ReportTimingInfo": {
 			"description": "Attaches data map marker processing time in API requests.",
 			"value": false
 		},
-		"DataMapsDefaultFeatures": {
+		"DefaultFeatures": {
 			"value": {
 				"ShowCoordinates": true,
 				"ShowLegendAlwaysAbove": false,
@@ -337,10 +417,13 @@
 				"SortChecklistsByAmount": false
 			}
 		},
-		"DataMapsEnableVisualEditor": {
+		"EnableVisualEditor": {
 			"value": true
 		},
-		"DataMapsAllowExperimentalFeatures": {
+		"EnableCreateMap": {
+			"value": true
+		},
+		"AllowExperimentalFeatures": {
 			"description": "Whether to enable experimental features.",
 			"value": false
 		}

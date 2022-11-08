@@ -37,9 +37,10 @@ module.exports = class EventEmitter {
      * Deregisters all event handlers with the same callback. If no callback function is given, clears ALL handlers for
      * the event.
      * @param {string} event Event name.
-     * @param {Function?} callback 
+     * @param {Function?} callback
+     * @param {object?} context 
      */
-    off( event, callback ) {
+    off( event, callback, context ) {
         // If no callback function given, remove all bound handlers
         if ( !callback ) {
             delete this._handlers[event];
@@ -48,7 +49,8 @@ module.exports = class EventEmitter {
 
         // If event has any bound handlers, drop those with matching callback function
         if ( this._handlers[event] ) {
-            this._handlers[event] = this._handlers[event].filter( x => x.method != callback );
+            this._handlers[event] = this._handlers[event].filter( x => x.method != callback && ( !context
+                || x.context === context ) );
 
             // If no handlers left, drop the list entirely
             if ( this._handlers[event].length == 0 ) {

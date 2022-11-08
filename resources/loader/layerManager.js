@@ -182,4 +182,44 @@ module.exports = class MarkerLayerManager {
         }
         this.doNotUpdate = state;
     }
+
+
+    /**
+     * Destroys ALL markers in a layer from the whole map (all layers). The layer itself is not deregistered.
+     * 
+     * Expensive if there are markers in a lot of layers: each of those layers' members will be scanned.
+     * 
+     * @param {string} layerName Layer to purge.
+     */
+    nuke( layerName ) {
+        const toPurge = new Set();
+        for ( const leafletMarker of this.byLayer[layerName] ) {
+            // Remove the marker from map
+            if ( leafletMarker._map ) {
+                this.map.leaflet.removeLayer( leafletMarker );
+            }
+            // Remember other layers this marker is in, so we can clean them up as well
+            for ( const other of leafletMarker.attachedLayers ) {
+                if ( other !== layerName ) {
+                    toPurge.add( other );
+                }
+            }
+        }
+
+        // Clean up other layer lists
+        for ( const other of toPurge ) {
+            this.byLayer[other] = this.byLayer[other].filter( x => x.attachedLayers.indexOf( other ) >= 0 );
+        }
+    }
+
+
+    /**
+     * Removes a layer list. This does not destroy the markers or tamper with any references. You must resolve that before
+     * calling this method.
+     * 
+     * @param {string} layerName Layer to remove.
+     */
+    deregister( layerName ) {
+        delete this.byLayer[layerName];
+    }
 }
