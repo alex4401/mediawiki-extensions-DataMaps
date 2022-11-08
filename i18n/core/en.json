@@ -38,6 +38,7 @@
     "datamap-error-validatespec-map-bad-mixin": "Mix-in \"<code>$1</code>\" must exist, use the <code>Interactive Data Map</code> content model, and be valid syntax- and structure-wise.",
     "datamap-error-validatespec-map-name-conflict-group-layer": "Found marker layer \"$1\", but a marker group exists with the same name.",
     "datamap-error-validatespec-map-uid-conflict": "Found a non-unique marker identifier: <code>$1</code>.",
+    "datamap-error-validatespec-map-mixin-with-mixins": "A mix-in must not use other mix-ins.",
     "datamap-error-validatespec-bgoverlay-invalid-polyline": "Polyline background overlay's <code>path</code> property must be a list of points.",
 
     "datamap-error-internal-unknown-field-type": "No validation support implemented for field type with ID of $1. This is a bug in the extension's code.",

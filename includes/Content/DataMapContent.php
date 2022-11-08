@@ -106,6 +106,11 @@ class DataMapContent extends DataMapContentBase {
 	public function validateBeforeSave( Status $status ) {
 		parent::validateBeforeSave( $status );
 		if ( $this->isValid() ) {
+            if ( $this->isMixin() && isset( $this->getData()->getValue()->mixins ) ) {
+                $status->fatal( 'datamap-error-validatespec-map-mixin-with-mixins' );
+                return;
+            }
+
 			$this->asModel()->validate( $status );
 		}
 	}
