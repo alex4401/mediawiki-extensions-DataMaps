@@ -102,8 +102,7 @@ class DataMapContentHandler extends JsonContentHandler {
 		if ( !$content->isMixin() ) {
 			// If previewing an edit, run validation and end early on failure
 			if ( $shouldGenerateHtml && $isEditPreview ) {
-				$status = new Status();
-				$content->validateBeforeSave( $status );
+				$status = $content->getValidationStatus();
 				if ( !$status->isOK() ) {
 					$parserOutput->setText( $parserOutput->getRawText() . Html::errorBox(
 						wfMessage(
