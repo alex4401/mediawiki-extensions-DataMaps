@@ -96,8 +96,11 @@ module.exports.ChildIndex = class ChildIndex extends module.exports {
 
     _enqueue( info ) {
         this._queue.push( info );
-        // Propagate the entry to the master index
-        this.parent._enqueue( info );
+        // Propagate the entry to the master index: copy it, push tabber title to its keywords, enqueue.
+        const copy = Object.assign( {}, info );
+        copy.keywords = Array.from( info.keywords );
+        copy.keywords.push( [ item.map.getParentTabberNeuePanel().attr( 'title' ), 0.2 ] );
+        this.parent._enqueue( copy );
     }
 
 
