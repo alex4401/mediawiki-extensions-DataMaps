@@ -80,7 +80,8 @@ CreationDialog.prototype.initialize = function () {
         name: 'wpPreview',
         flags: [ 'primary', 'progressive' ],
         useInputTag: true,
-        type: 'submit'
+        type: 'submit',
+        disabled: true
     } );
 
     this.panel = new OO.ui.PanelLayout( {
