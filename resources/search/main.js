@@ -43,6 +43,14 @@ class MarkerSearch {
         this.inputBox.$element.appendTo( this.$root );
     	this.menu.$element.appendTo( this.inputBox.$element );
 
+        if ( this.isLinked ) {
+            this.linkedToggle = new OO.ui.ToggleButtonWidget( {
+                label: mw.msg( 'datamap-control-search-toggle-sharing' ),
+                value: true
+            } );
+            this.linkedToggle.$element.insertBefore( this.inputBox.$indicator );
+        }
+
         this.$root.on( 'click dblclick scroll mousewheel wheel', event => event.stopPropagation() );
         this.menu.$element.on( 'scroll mousewheel wheel', event => event.stopPropagation() );
 
