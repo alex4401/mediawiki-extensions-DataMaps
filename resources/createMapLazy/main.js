@@ -1,7 +1,7 @@
 const MODULE = 'ext.datamaps.createMap';
-$( '#ca-edit' ).on( 'click', event => {
-    event.preventDefault();
-    mw.loader.using( MODULE, () => {
-        require( MODULE )();
+mw.hook( 'wikipage.content' ).add( () => {
+    document.getElementById( 'ca-edit' ).addEventListener( 'click', event => {
+        event.preventDefault();
+        mw.loader.using( MODULE, () => require( MODULE )() );
     } );
 } );
