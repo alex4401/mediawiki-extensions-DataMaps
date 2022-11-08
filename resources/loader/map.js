@@ -142,30 +142,29 @@ class DataMap extends EventEmitter {
     }
 
 
+    /**
+     * @deprecated
+     */
     getParentTabberNeuePanel() {
-        if ( !this.$_tabberPanel ) {
-            this.$_tabberPanel = this.$root.closest( 'article.tabber__panel' );
-        }
-        return this.$_tabberPanel && this.$_tabberPanel.length > 0 ? this.$_tabberPanel : null;
+        return Util.TabberNeue.getOwningPanel( this.$root );
     }
 
 
+    /**
+     * @deprecated
+     */
     getParentTabberNeue() {
-        if ( !this.$_tabber ) {
-            this.$_tabber = this.$root.closest( 'div.tabber' );
-        }
-        return this.$_tabber && this.$_tabber.length > 0 ? this.$_tabber : null;
+        return Util.TabberNeue.getOwningTabber( this.$root );
     }
 
 
     /**
      * Finds ID of the TabberNeue tab this map is in. If not inside tabber, this will be null.
      * @returns {string?}
+     * @deprecated
     */
     getParentTabberNeueId() {
-        const $panel = this.getParentTabberNeuePanel();
-        return $panel ? ($panel.attr('id') || ($panel.attr('data-title') || $panel.attr('title')).replace(' ', '_'))
-            : null;
+        return Util.TabberNeue.getOwningId( this.$root );
     }
 
 
