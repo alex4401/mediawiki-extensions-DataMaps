@@ -1,11 +1,11 @@
-const Leaflet = require( 'ext.ark.datamaps.leaflet' ),
-    Util = require( './util.js' );
+const Util = require( './util.js' ),
+    Fuzzysort = require( 'ext.ark.datamaps.fuzzysort' );
 
 
 /**
  * A search index entry collection.
  */
-module.exports = class MarkerSearchIndex extends mw.dataMaps.EventEmitter {
+class MarkerSearchIndex extends mw.dataMaps.EventEmitter {
     constructor() {
         super();
         
@@ -35,12 +35,10 @@ module.exports = class MarkerSearchIndex extends mw.dataMaps.EventEmitter {
         // Ensure search keywords are always an array of (text, weight) pairs
         keywords = keywords.map( x => ( typeof( x ) === 'string' ) ? [ x, 1 ] : x );
         // Run normaliser and Fuzzysort preparator on each keyword
-        keywords = keywords.map( x => [ Fuzzysort.prepare( this.normalisePhrase( x[0] ) ), x[1] ] );
+        keywords = keywords.map( x => [ Fuzzysort.prepare( MarkerSearchIndex.normalisePhrase( x[0] ) ), x[1] ] );
 
         return {
-            icon: leafletMarker instanceof Leaflet.Ark.IconMarker
-                ? map.getIconFromLayers( leafletMarker.attachedLayers ) : null,
-            marker: leafletMarker,
+            leafletMarker,
             keywords,
             label,
             map
@@ -71,14 +69,8 @@ module.exports = class MarkerSearchIndex extends mw.dataMaps.EventEmitter {
     }
 
 
-    normalisePhrase() {
-    	// Replace trailing whitespace, normalize multiple spaces and make case insensitive
-	    return text.trim().replace( /\s+/, ' ' ).toLowerCase().normalize( 'NFD' ).replace( /[\u0300-\u036f]/g, '' );
-    }
-
-
     query( phrase ) {
-    	return Fuzzysort.go( this.normalisePhrase( phrase ), this.items, {
+    	return Fuzzysort.go( MarkerSearchIndex.normalisePhrase( phrase ), this.items, {
 	    	threshold: -75000,
 		    weighedKey: 'keywords'
 	    } );
@@ -86,10 +78,16 @@ module.exports = class MarkerSearchIndex extends mw.dataMaps.EventEmitter {
 }
 
 
+MarkerSearchIndex.normalisePhrase = function ( text ) {
+    // Replace trailing whitespace, normalize multiple spaces and make case insensitive
+    return text.trim().replace( /\s+/, ' ' ).toLowerCase().normalize( 'NFD' ).replace( /[\u0300-\u036f]/g, '' );
+};
+
+
 /**
  * A search index entry collection that replicates information into a shared index.
  */
-module.exports.ChildIndex = class ChildIndex extends module.exports {
+ MarkerSearchIndex.ChildIndex = class ChildIndex extends MarkerSearchIndex {
     constructor( parent ) {
         super();
         this.parent = parent;
@@ -112,3 +110,6 @@ module.exports.ChildIndex = class ChildIndex extends module.exports {
         this.parent.commit();
     }
 }
+
+
+module.exports = MarkerSearchIndex;

@@ -1,5 +1,4 @@
-const Fuzzysort = require( 'ext.ark.datamaps.fuzzysort' ),
-	MenuOptionWidget = require( './option.js' ),
+const MarkerSearchIndex = require( './indexing.js' ),
 	IsDebug = mw.config.get( 'debug' ) == 1;
 
 
@@ -14,22 +13,13 @@ MenuWidget.static.flippedPositions = {
 };
 
 
-MenuWidget.static.normalizeForMatching = function ( text ) {
-	// Replace trailing whitespace, normalize multiple spaces and make case insensitive
-	return text.trim().replace( /\s+/, ' ' ).toLowerCase().normalize( 'NFD' ).replace( /[\u0300-\u036f]/g, '' );
-};
-
-
 MenuWidget.prototype.updateItemVisibility = function () {
 	if ( !this.filterFromInput || !this.$input ) {
 		this.clip();
 		return;
 	}
 
-	const results = Fuzzysort.go( MenuWidget.static.normalizeForMatching( this.$input.val() ), this.items, {
-		threshold: -75000,
-		weighedKey: 'keywords'
-	} );
+	const results = MarkerSearchIndex.prototype.query.call( this, this.$input.val() );
 
 	for ( const item of this.items ) {
 		if ( item instanceof OO.ui.OptionWidget ) {
@@ -58,12 +48,6 @@ MenuWidget.prototype.updateItemVisibility = function () {
 
 	// Reevaluate clipping
 	this.clip();
-};
-
-
-MenuWidget.prototype.addItem = function ( config ) {
-    config.keywords = config.keywords.map( x => [ Fuzzysort.prepare( MenuWidget.static.normalizeForMatching( x[0] ) ), x[1] ] );
-	this.addItems( [ new MenuOptionWidget( config ) ] );
 };
 
 

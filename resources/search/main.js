@@ -1,5 +1,7 @@
 const MarkerSearchIndex = require( './indexing.js' ),
-    MenuWidget = require( './menu.js' );
+    MenuWidget = require( './menu.js' ),
+    MenuOptionWidget = require( './option.js' ),
+    Enums = mw.dataMaps.Enums;
 
 
 class MarkerSearch {
@@ -79,18 +81,22 @@ class MarkerSearch {
 
 
     _acceptOptions( items ) {
+        const widgets = [];
         for ( const item of items ) {
-            this.menu.addItem( {
-                icon: item.icon,
-                data: item.marker,
+            widgets.push( new MenuOptionWidget( {
+                // Reference to index entry
+                data: item,
+                // Query backing info
                 keywords: item.keywords,
+                // Display
                 label: new OO.ui.HtmlSnippet( item.label ),
+                badge: this.isLinked ? item.map.getParentTabberNeuePanel().attr( 'title' ) : null,
+                badgeCurrent: item.map === this.map,
                 $tab: this.isLinked && item.map !== this.map ? item.map.getParentTabberNeue().find( '#' + item.map.getParentTabberNeuePanel()
                     .attr( 'aria-labelledby' ) ) : null,
-                badge: this.isLinked ? item.map.getParentTabberNeuePanel().attr( 'title' ) : null,
-                badgeCurrent: item.map === this.map
-            } );
+            } ) );
         }
+        this.menu.addItems( widgets );
     }
 
 
