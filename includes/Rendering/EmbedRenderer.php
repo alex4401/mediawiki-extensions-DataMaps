@@ -49,8 +49,10 @@ class EmbedRenderer {
         $this->parserOptions->setAllowSpecialInclusion( false );
         $this->parserOptions->setExpensiveParserFunctionLimit( 4 );
         $this->parserOptions->setInterwikiMagic( false );
-        $this->parserOptions->setMaxIncludeSize( 800 );        
-        $this->parserOptions->setCurrentRevisionRecordCallback( $parser->getOptions()->getCurrentRevisionRecordCallback() );
+        $this->parserOptions->setMaxIncludeSize( 800 );
+        if ( $parser->getOptions() !== null ) {
+            $this->parserOptions->setCurrentRevisionRecordCallback( $parser->getOptions()->getCurrentRevisionRecordCallback() );
+        }
 
         $this->parser->setOptions( $this->parserOptions );
     }
