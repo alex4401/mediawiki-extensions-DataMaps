@@ -4,21 +4,15 @@ namespace MediaWiki\Extension\Ark\DataMaps\Content;
 use MediaWiki\MediaWikiServices;
 use FormatJson;
 use JsonContent;
-use OutputPage;
 use Title;
-use Html;
-use PPFrame;
 use Status;
 use stdClass;
 use Parser;
 use WikiPage;
-use User;
 use ParserOutput;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Rendering\EmbedRenderer;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\EmbedRenderOptions;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataModelMixinTransformer;
 
@@ -191,13 +185,8 @@ class DataMapContent extends JsonContent {
 		return self::toJSON( $this->getData()->getValue() );
 	}
 
-	public function prepareSave( WikiPage $page, $flags, $parentRevId, User $user ) {
+	public function getValidationStatus() {
 		$status = new Status();
-		$this->validateBeforeSave( $status );
-		return $status;
-	}
-
-	public function validateBeforeSave( Status $status ) {
 		if ( !$this->isValid() ) {
 			$status->fatal( 'datamap-error-validate-invalid-json' );
 		} else {
@@ -208,5 +197,6 @@ class DataMapContent extends JsonContent {
 			
 			$this->asModel()->validate( $status );
 		}
+		return $status;
 	}
 }

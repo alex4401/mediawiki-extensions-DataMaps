@@ -15,11 +15,12 @@ use WikiPage;
 use Content;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
+use MediaWiki\Content\ValidationParams;
 use MediaWiki\Content\Renderer\ContentParseParams;
 use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\DataMapRenderOptions;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\EmbedRenderOptions;
 
 class DataMapContentHandler extends JsonContentHandler {
 	public function __construct( $modelId = ARK_CONTENT_MODEL_DATAMAP ) {
@@ -41,9 +42,21 @@ class DataMapContentHandler extends JsonContentHandler {
 		return parent::canBeUsedOn( $title );
 	}
 
+	public function validateSave(
+		Content $content,
+		ValidationParams $validationParams
+	) {
+		'@phan-var DataMapContent $content';
+		return $content->getValidationStatus();
+	}
+
 	public static function getDocPage( Title $title ) {
 		$docPage = wfMessage( 'datamap-doc-page-suffix' )->inContentLanguage();
 		return $docPage->isDisabled() ? null : Title::newFromText( $title->getPrefixedText() . $docPage->plain() );
+	}
+
+	public function isParserCacheSupported() {
+		return true;
 	}
 
 	protected function fillParserOutput( Content $content, ContentParseParams $cpoParams, ParserOutput &$parserOutput ) {
@@ -107,7 +120,7 @@ class DataMapContentHandler extends JsonContentHandler {
 							'datamap-error-cannot-' . ( $isVisualEditor ? 'open-ve' : 'preview' ) . '-validation-errors',
 							$status->getMessage( false, false )
 						)
-					);
+					) );
 					return;
 				}
 			}
