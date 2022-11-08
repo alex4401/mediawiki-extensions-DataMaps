@@ -54,7 +54,9 @@ CreationDialog.prototype.initialize = function () {
     } );
     this.imageSelector = new mw.widgets.TitleInputWidget( {
         namespace: 6,
-        showImages: true
+        showImages: true,
+        required: true,
+        showRedirectTargets: true
     } );
     this.coordsToggle = new OO.ui.ToggleSwitchWidget( {
         value: true
@@ -77,7 +79,6 @@ CreationDialog.prototype.initialize = function () {
     } );
     this.submitButton = new OO.ui.ButtonInputWidget( {
         label: mw.msg( 'datamap-vec-submit' ),
-        name: 'wpPreview',
         flags: [ 'primary', 'progressive' ],
         useInputTag: true,
         type: 'submit',
@@ -93,7 +94,7 @@ CreationDialog.prototype.initialize = function () {
             $( '<p>' ).text( mw.msg( 'datamap-vec-intro' ) ),
             new OO.ui.FormLayout( {
                 action: mw.util.getUrl( mw.config.get( 'wgPageName' ), {
-                    action: 'edit'
+                    action: 'submit'
                 } ),
                 method: 'POST',
                 items: [
@@ -183,6 +184,10 @@ CreationDialog.prototype.initialize = function () {
                                 value: 'application/json'
                             } ),
                             this.prefill,
+                            new OO.ui.HiddenInputWidget( {
+                                name: 'wpPreview',
+                                value: '1'
+                            } ),
                             new OO.ui.HiddenInputWidget( {
                                 name: 'wpUltimateParam',
                                 value: '1'
