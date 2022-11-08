@@ -224,6 +224,10 @@ CreationDialog.static.POOR_MIME_TYPES = [ 'image/png', 'image/gif' ];
 CreationDialog.prototype.fetchImageInfo = function () {
     this.submitButton.setDisabled( true );
 
+    this.imageField.setNotices( [] );
+    this.imageField.setErrors( [] );
+    this.imageField.setWarnings( [] );
+
     mwApi.get( {
         action: 'query',
         titles: 'File:' + this.imageSelector.getValue(),
@@ -231,6 +235,10 @@ CreationDialog.prototype.fetchImageInfo = function () {
         iiprop: 'size|url|mime'
     } ).then( data => {
         const pageInfo = Object.values( data.query.pages )[0];
+        if ( !pageInfo.imageinfo ) {
+            return;
+        }
+
         const imageInfo = pageInfo.imageinfo[0];
 
         this.imageField.setNotices( [
