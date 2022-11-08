@@ -93,5 +93,31 @@ module.exports = {
 
     updateLocation( map, paramsToSet ) {
         history.replaceState( {}, '', module.exports.makeUrlWithParams( map, paramsToSet, false ) );
+    },
+
+
+    TabberNeue: {
+        getOwningPanel( $element ) {
+            // TODO: use native functions
+            const $panel = $element.closest( 'article.tabber__panel' );
+            return $panel && $panel.length > 0 ? $panel : null;
+        },
+
+
+        getOwningTabber( $element ) {
+            const $tabber = $element.closest( 'div.tabber' );
+            return $tabber && $tabber.length > 0 ? $tabber : null;
+        },
+
+
+        /**
+         * Finds ID of the TabberNeue tab this map is in. If not inside tabber, this will be null.
+         * @returns {string?}
+        */
+        getOwningId( $element ) {
+            const $panel = module.exports.TabberNeue.getOwningPanel( $element );
+            return $panel ? ( $panel.attr( 'id' ) || ( $panel.attr( 'data-title' ) || $panel.attr( 'title' ) ).replace( ' ', '_' ) )
+                : null;
+        }
     }
 };
