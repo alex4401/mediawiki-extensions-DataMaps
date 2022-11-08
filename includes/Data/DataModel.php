@@ -24,14 +24,6 @@ class DataModel {
     public const TYPE_COLOUR4 = 16;
     public const TYPE_FILE = 19;
 
-    /**
-     * phpcs:disable Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase
-     * @deprecated 0.14.0 Will be removed in v0.15.0.
-     * @see TYPE_VECTOR2X2 The replacement.
-     */
-    public const TYPE_VECTOR2x2 = self::TYPE_VECTOR2X2;
-    // phpcs:enable Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase
-
     protected stdClass $raw;
     private array $validationCheckedFields = [];
     protected bool $validationAreRequiredFieldsPresent = true;
