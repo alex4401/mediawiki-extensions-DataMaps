@@ -72,7 +72,7 @@ class ExtensionConfig {
     }
 
     public static function isCreateMapEnabled(): bool {
-        return self::isBleedingEdge() && $GLOBALS['wgDataMapsEnableCreateMap'];
+        return $GLOBALS['wgDataMapsEnableCreateMap'];
     }
 
     public static function isBleedingEdge(): bool {
