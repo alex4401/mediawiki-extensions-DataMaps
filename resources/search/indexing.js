@@ -34,6 +34,8 @@ module.exports = class MarkerSearchIndex extends mw.dataMaps.EventEmitter {
         }
         // Ensure search keywords are always an array of (text, weight) pairs
         keywords = keywords.map( x => ( typeof( x ) === 'string' ) ? [ x, 1 ] : x );
+        // Run normaliser and Fuzzysort preparator on each keyword
+        keywords = keywords.map( x => [ Fuzzysort.prepare( this.normalisePhrase( x[0] ) ), x[1] ] );
 
         return {
             icon: leafletMarker instanceof Leaflet.Ark.IconMarker
