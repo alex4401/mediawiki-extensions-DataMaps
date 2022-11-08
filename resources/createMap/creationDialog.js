@@ -333,7 +333,7 @@ CreationDialog.prototype.updatePrefillValue = function () {
 
     out.groups = {};
     out.markers = {};
-    this.prefill.$element.attr( 'value', JSON.stringify( out ) );
+    this.prefill.$element.attr( 'value', JSON.stringify( out, null, "\t" ) );
 
     this.$body.find( 'form' ).submit();
 };
