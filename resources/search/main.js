@@ -5,15 +5,16 @@ const MarkerSearchIndex = require( './indexing.js' ),
 class MarkerSearch {
     constructor( map, index, isLinked ) {
         this.map = map;
-        this.index = index;
+        this.ownedIndex = index;
+        this.displayIndex = null;
         this.isLinked = isLinked;
 
         this.map.waitForLegend( () => {
             this.map.waitForLeaflet( () => {
                 this._initialiseUI();
 
-                this.index.on( 'commit', this.onIndexCommitted, this );
-                this.importExisting();
+                this._setDisplayIndex( this.isLinked ? this.ownedIndex.parent : this.ownedIndex );
+                this.addExistingMarkersToOwnIndex();
 
                 this.map.on( 'markerReady', this.addMarker, this );
                 this.map.on( 'chunkStreamingDone', this.onChunkStreamed, this );
@@ -48,6 +49,8 @@ class MarkerSearch {
                 label: mw.msg( 'datamap-control-search-toggle-sharing' ),
                 value: true
             } );
+            this.linkedToggle.on( 'change', value =>
+                this._setDisplayIndex( value ? this.ownedIndex.parent : this.ownedIndex ) );
             this.linkedToggle.$element.insertBefore( this.inputBox.$indicator );
         }
 
@@ -62,11 +65,32 @@ class MarkerSearch {
     }
 
 
-    getActiveIndex() {
-        if ( this.isLinked ) {
-            return this.index.parent;
+    _setDisplayIndex( index ) {
+        if ( this.displayIndex ) {
+            this.displayIndex.off( 'commit', this._acceptOptions, this );
         }
-        return this.index;
+
+        this.displayIndex = index;
+        this.menu.clearItems();
+        this._acceptOptions( this.displayIndex.items );
+
+        this.displayIndex.on( 'commit', this._acceptOptions, this );
+    }
+
+
+    _acceptOptions( items ) {
+        for ( const item of items ) {
+            this.menu.addItem( {
+                icon: item.icon,
+                data: item.marker,
+                keywords: item.keywords,
+                label: new OO.ui.HtmlSnippet( item.label ),
+                $tab: this.isLinked && item.map !== this.map ? item.map.getParentTabberNeue().find( '#' + item.map.getParentTabberNeuePanel()
+                    .attr( 'aria-labelledby' ) ) : null,
+                badge: this.isLinked ? item.map.getParentTabberNeuePanel().attr( 'title' ) : null,
+                badgeCurrent: item.map === this.map
+            } );
+        }
     }
 
 
@@ -99,39 +123,28 @@ class MarkerSearch {
     }
 
 
-    importExisting() {
-        this.onIndexCommitted( this.index.items );
-
+    /**
+     * Inserts markers from the map to the index owned by this control.
+     */
+    addExistingMarkersToOwnIndex() {
         for ( const leafletMarker of this.map.layerManager.markers ) {
-            this.index.add( this.map, leafletMarker );
+            this.ownedIndex.add( this.map, leafletMarker );
         }
-        this.index.commit();
+        this.ownedIndex.commit();
     }
 
 
+    /**
+     * Adds a single marker to the index owned by this control.
+     * @param {*} leafletMarker 
+     */
     addMarker( leafletMarker ) {
-        this.index.add( this.map, leafletMarker );
-    }
-
-
-    onIndexCommitted( items ) {
-        for ( const item of items ) {
-            this.menu.addItem( {
-                icon: item.icon,
-                data: item.marker,
-                keywords: item.keywords,
-                label: new OO.ui.HtmlSnippet( item.label ),
-                $tab: this.isLinked && item.map !== this.map ? item.map.getParentTabberNeue().find( '#' + item.map.getParentTabberNeuePanel()
-                    .attr( 'aria-labelledby' ) ) : null,
-                badge: this.isLinked ? item.map.getParentTabberNeuePanel().attr( 'title' ) : null,
-                badgeCurrent: item.map === this.map
-            } );
-        }
+        this.ownedIndex.add( this.map, leafletMarker );
     }
 
     
     onChunkStreamed() {
-        this.index.commit();
+        this.ownedIndex.commit();
     }
 }
 
