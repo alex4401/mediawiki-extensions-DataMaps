@@ -18,14 +18,19 @@ class DataModel {
     const TYPE_OBJECT = 5;
     const TYPE_VECTOR2 = 11;
     const TYPE_DIMENSIONS = 12;
-    const TYPE_VECTOR2x2 = 13;
-    const TYPE_BOUNDS = self::TYPE_VECTOR2x2;
+    const TYPE_VECTOR2X2 = 13;
+    const TYPE_BOUNDS = self::TYPE_VECTOR2X2;
     const TYPE_COLOUR3 = 14;
     const TYPE_STRING_OR_NUMBER = 15; // TODO: drop deprecated union type
     const TYPE_COLOUR4 = 16;
     const TYPE_ARRAY_OR_STRING = 17; // TODO: drop deprecated union type
     const TYPE_BOOL_OR_STRING = 18; // TODO: drop deprecated union type
     const TYPE_FILE = 19;
+
+    /**
+     * @deprecated
+     */
+    const TYPE_VECTOR2x2 = 13;
 
     protected stdClass $raw;
     private array $validationCheckedFields = [];
@@ -64,7 +69,7 @@ class DataModel {
             case self::TYPE_DIMENSIONS:
                 // Nab || [ Na, Nb ]
                 return is_numeric( $var ) || $this->verifyType( $var, self::TYPE_VECTOR2 );
-            case self::TYPE_VECTOR2x2:
+            case self::TYPE_VECTOR2X2:
                 // [ [ Na, Nb ], [ Nc, Nd ] ]
                 return is_array( $var ) && count( $var ) == 2
                     && $this->verifyType( $var[0], self::TYPE_VECTOR2 ) && $this->verifyType( $var[1], self::TYPE_VECTOR2 );
