@@ -121,7 +121,7 @@ class MarkerSearch {
         this.close();
         this.inputBox.setValue( '', true );
         setTimeout( () => {
-            item.data.openPopup();
+            item.data.leafletMarker.openPopup();
             if ( item.$tab ) {
                 item.$tab.get( 0 ).click();
             }
