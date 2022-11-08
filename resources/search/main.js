@@ -54,6 +54,14 @@ class MarkerSearch {
     }
 
 
+    getActiveIndex() {
+        if ( this.isLinked ) {
+            return this.index.parent;
+        }
+        return this.index;
+    }
+
+
     onFocus() {
         this.onTextChange( this.inputBox.getValue() );
     }
@@ -97,6 +105,7 @@ class MarkerSearch {
         this.index.add( this.map, leafletMarker );
     }
 
+
     onIndexCommitted( items ) {
         for ( const item of items ) {
             this.menu.addItem( {
@@ -112,22 +121,24 @@ class MarkerSearch {
         }
     }
 
+    
     onChunkStreamed() {
         this.index.commit();
     }
 }
 
 
-const linkedIndexMap = {};
-mw.dataMaps.subscribeHook( 'afterInitialisation', ( map ) => {
-    if ( map.isFeatureBitSet( mw.dataMaps.Enums.MapFlags.Search ) ) {
-        const isLinked = map.isFeatureBitSet( mw.dataMaps.Enums.MapFlags.LinkedSearch ),
+const sharedTabberIndexMap = {};
+mw.dataMaps.registerMapAddedHandler( map => {
+    if ( map.isFeatureBitSet( Enums.MapFlags.Search ) ) {
+        const isLinked = map.isFeatureBitSet( Enums.MapFlags.LinkedSearch ),
             $tabber = map.getParentTabberNeue();
         let index;
 
         if ( isLinked && $tabber ) {
-            index = linkedIndexMap[$tabber] || new MarkerSearchIndex();
-            linkedIndexMap[$tabber] = index;
+            const masterIndex = sharedTabberIndexMap[$tabber] || new MarkerSearchIndex();
+            sharedTabberIndexMap[$tabber] = masterIndex;
+            index = new MarkerSearchIndex.ChildIndex( masterIndex );
         } else {
             index = new MarkerSearchIndex();
         }
