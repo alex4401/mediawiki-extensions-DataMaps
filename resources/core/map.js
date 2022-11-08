@@ -11,6 +11,9 @@ const MapStorage = require( './storage.js' ),
 let Leaflet = null;
 
 
+/**
+ * A class that initialises, manages and represents a data map.
+ */
 class DataMap extends EventEmitter {
     constructor( id, $root, config ) {
         super();
@@ -75,7 +78,7 @@ class DataMap extends EventEmitter {
 
         // Set up internal event handlers
         this.on( 'chunkStreamingDone', this.refreshMaxBounds, this );
-        this.on( 'linkedEvent', this.onLinkedEventReceived, this );
+        this.on( 'linkedEvent', this._onLinkedEventReceived, this );
 
         // Request OOUI to be loaded and build the legend
         if ( !( !this.isFeatureBitSet( Enums.MapFlags.VisualEditor ) && this.isFeatureBitSet( Enums.MapFlags.HideLegend ) ) ) {
@@ -139,7 +142,7 @@ class DataMap extends EventEmitter {
     }
 
 
-    /*
+    /**
      * Runs the callback function when the map legend is initialised.
      * @param {Function} callback Function to run when the legend is initialised.
      * @param {object?} context Object to use as callback's context.
@@ -182,7 +185,8 @@ class DataMap extends EventEmitter {
     /**
      * Returns true if a layer is used on the map. This is a look-up on the static configuration provided by the server, and does
      * not depend on any data being loaded.
-     * @param {string} name Layer name.
+     * @param {string} name Layer name
+     * @returns {boolean} Whether a layer is used.
      */
     isLayerUsed( name ) {
         return this.config.layerIds.indexOf( name ) >= 0;
@@ -191,7 +195,9 @@ class DataMap extends EventEmitter {
 
     /**
      * Maps a point from map's coordinate reference system specified by the server, to the universal space [ 0 0 100 100 ].
+     * @note This is non-destructive, and clones the input.
      * @param {array} point Array with two number elements: X and Y coordinates.
+     * @returns {array} New point in the universal space.
      */
     translatePoint( point ) {
         return this.crsOrigin == Enums.CRSOrigin.TopLeft
@@ -200,8 +206,10 @@ class DataMap extends EventEmitter {
     }
 
 
-    /*
+    /**
      * Maps a box from map's coordinate reference system specified by the server, to the universal space [ 0 0 100 100 ].
+     * @note This is non-destructive, and clones the input.
+     * @returns {array} New box in the universal space.
      */
     translateBox( box ) {
         return this.crsOrigin == Enums.CRSOrigin.TopLeft
@@ -212,33 +220,38 @@ class DataMap extends EventEmitter {
     }
 
 
-    /*
+    /**
      * Returns a formatted datamap-coordinate-control-text message.
+     * @param {array|number} latOrInstance Latitude or API marker instance
+     * @returns {string}
      */
     getCoordLabel( latOrInstance, lon ) {
         if ( Array.isArray( latOrInstance ) ) {
             lon = latOrInstance[1];
             latOrInstance = latOrInstance[0];
         }
-        return this.coordTrackingMsg.replace( '$1', latOrInstance.toFixed( 2 ) ).replace( '$2', lon.toFixed( 2 ) );
+        return mw.msg( 'datamap-coordinate-control-text', latOrInstance.toFixed( 2 ), lon.toFixed( 2 ) );
     }
 
 
-    /*
+    /**
      * Returns global storage interface for global collectibles, local otherwise.
+     * @returns {MapStorage}
     */
     getStorageForMarkerGroup( group ) {
         return Util.isBitSet( group.flags, Enums.MarkerGroupFlags.Collectible_GlobalGroup ) ? this.globalStorage : this.storage;
     }
 
 
-    /*
+    /**
      * Handles a event sent by another data map on this page. This is used for cross-communication. Sender map is exposed under
      * `event.map`.
      *
      * Message delivery is handled by the bootstrap itself, and not maps.
+     * @param {object} event External event information.
+     * @protected
     */
-    onLinkedEventReceived( event ) {
+    _onLinkedEventReceived( event ) {
         switch ( event.type ) {
             /*
              * Sent when a global group's collected status changes. Data contains affected `groupId` and `state` after changed.
@@ -253,9 +266,13 @@ class DataMap extends EventEmitter {
     }
 
 
-    /*
+    /**
      * For a group, updates each marker's dismissal state and notifies other components (such as checklists). This may be called
      * either by natural/direct user interaction or a linked event.
+     * 
+     * @param {string} groupId Identifier of a group to update.
+     * @param {boolean} state Whether dismissed.
+     * @protected
     */
     _updateGlobalDismissal( groupId, state ) {
         for ( const leafletMarker of this.layerManager.byLayer[groupId] ) {
@@ -266,7 +283,7 @@ class DataMap extends EventEmitter {
     }
 
 
-    /*
+    /**
      * Switches marker's (or its group's) collected status in storage, updates visuals, and notifies other components. In case of
      * global collectibles also fires a linked event to notify other maps on the page.
     */

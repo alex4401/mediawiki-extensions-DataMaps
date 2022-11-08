@@ -1,16 +1,26 @@
 module.exports = class MarkerLayerManager {
     constructor( map ) {
         this.map = map;
+        // Collection of all bound markers
         this.markers = [];
+        // Map of markers by layer
         this.byLayer = {};
+        // Permitted layer names
         this.includeMaskHi = new Set();
+        // Required layer names (that must be present on a marker for it to be displayed)
         this.includeMaskLo = new Set();
+        // Excluded layer names
         this.excludeMask = new Set();
+        // Parametrized requirements
         this.includeMaskPr = {};
+        // Initialise the cache
         this.clearCache();
     }
 
 
+    /**
+     * Resets internal visibility computation cache. This must be called whenever any parameters are modified.
+     */
     clearCache() {
         this.computeCache = {};
     }
@@ -161,8 +171,9 @@ module.exports = class MarkerLayerManager {
     }
 
 
-    /*
+    /**
      * Sets a layer as preventing marker display. This updates only markers within the layer.
+     * @param {string} layerName 
      */
     setExclusion( layerName, state ) {
         if ( state )
