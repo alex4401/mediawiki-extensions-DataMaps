@@ -46,7 +46,8 @@ class DataMap extends EventEmitter {
         // DOM element of the coordinates display control
         this.$coordTracker = null;
         // Cached value of the 'datamap-coordinate-control-text' message
-        this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
+        this.coordTrackingMsg = mw.msg( this.config.cOrder === 1 ? 'datamap-coordinate-control-text-xy'
+            : 'datamap-coordinate-control-text' );
         // Retrieve a `marker` parameter from the query string if one is present
         this.markerIdToAutoOpen = null;
 
