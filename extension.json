@@ -130,6 +130,7 @@
 				"datamap-popup-marker-link-get",
 				"datamap-popup-marker-link-copied",
 				"datamap-coordinate-control-text",
+				"datamap-coordinate-control-text-xy",
 				"datamap-control-reset-view",
 				"datamap-control-centre-view",
 				"datamap-checklist-prelude"

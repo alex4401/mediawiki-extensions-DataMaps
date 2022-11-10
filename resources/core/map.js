@@ -230,7 +230,9 @@ class DataMap extends EventEmitter {
             lon = latOrInstance[1];
             latOrInstance = latOrInstance[0];
         }
-        return mw.msg( 'datamap-coordinate-control-text', latOrInstance.toFixed( 2 ), lon.toFixed( 2 ) );
+
+        const message = this.config.cOrder === 1 ? 'datamap-coordinate-control-text-xy' : 'datamap-coordinate-control-text';
+        return mw.msg( message, latOrInstance.toFixed( 2 ), lon.toFixed( 2 ) );
     }
 
 
