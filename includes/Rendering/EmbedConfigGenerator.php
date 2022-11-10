@@ -169,7 +169,7 @@ class EmbedConfigGenerator {
     private function convertBackgroundTile( MapBackgroundTileSpec $spec, array $tileOffset, array $tileSize, int $coordOrder ) {
         $result = [];
 
-        $at = $spec->getPlacementLocation();
+        $at = DataMapSpec::normalisePointCoordinates( $spec->getPlacementLocation(), $coordOrder );
         $at = [
             [ $at[0] * $tileSize[0] + $tileOffset[0], $at[1] * $tileSize[1] + $tileOffset[1] ],
             [ ( $at[0] + 1 ) * $tileSize[0] + $tileOffset[0], ( $at[1] + 1 ) * $tileSize[1] + $tileOffset[1] ]
