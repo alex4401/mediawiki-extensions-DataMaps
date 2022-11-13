@@ -20,6 +20,10 @@ class MapBackgroundSpec extends DataModel {
         return isset( $this->raw->at ) ? $this->raw->at : null;
     }
 
+    public function getTilePlacementOffset(): ?array {
+        return isset( $this->raw->at ) ? $this->raw->at : null;
+    }
+
     public function getName(): ?string {
         return isset( $this->raw->name ) ? $this->raw->name : null;
     }
@@ -68,6 +72,7 @@ class MapBackgroundSpec extends DataModel {
                 ] );
                 $this->checkField( $status, 'at', DataModel::TYPE_BOUNDS );
             } else if ( isset( $this->raw->tiles ) ) {
+                $this->checkField( $status, 'at', DataModel::TYPE_VECTOR2 );
                 $this->checkField( $status, [
                     'name' => 'tileSize',
                     'type' => DataModel::TYPE_DIMENSIONS,

@@ -128,9 +128,10 @@ class EmbedConfigGenerator {
             // in future.
             $out['aa'] = 0.5;
             // Translate all tiles into overlays
+            $tileOffset = DataMapSpec::normalisePointCoordinates( $spec->getTilePlacementOffset() ?? [ 0, 0 ], $coordOrder );
             $tileSize = DataMapSpec::normalisePointCoordinates( $spec->getTileSize(), $coordOrder );
-            $spec->iterateTiles( function ( MapBackgroundTileSpec $tile ) use ( &$out, $tileSize ) {
-                $out['overlays'][] = $this->convertBackgroundTile( $tile, $tileSize );
+            $spec->iterateTiles( function ( MapBackgroundTileSpec $tile ) use ( &$out, &$tileOffset, &$tileSize, $coordOrder ) {
+                $out['overlays'][] = $this->convertBackgroundTile( $tile, $tileOffset, $tileSize, $coordOrder );
             } );
         }
         if ( $spec->hasOverlays() ) {
@@ -172,13 +173,13 @@ class EmbedConfigGenerator {
         return $result;
     }
 
-    private function convertBackgroundTile( MapBackgroundTileSpec $spec, array $tileSize ) {
+    private function convertBackgroundTile( MapBackgroundTileSpec $spec, array $tileOffset, array $tileSize, int $coordOrder ) {
         $result = [];
 
-        $at = $spec->getPlacementLocation();
+        $at = DataMapSpec::normalisePointCoordinates( $spec->getPlacementLocation(), $coordOrder );
         $at = [
-            [ $at[0] * $tileSize[0], $at[1] * $tileSize[1] ],
-            [ ( $at[0] + 1 ) * $tileSize[0], ( $at[1] + 1 ) * $tileSize[1] ]
+            [ $at[0] * $tileSize[0] + $tileOffset[0], $at[1] * $tileSize[1] + $tileOffset[1] ],
+            [ ( $at[0] + 1 ) * $tileSize[0] + $tileOffset[0], ( $at[1] + 1 ) * $tileSize[1] + $tileOffset[1] ]
         ];
 
         $result['image'] = DataMapFileUtils::getRequiredFile( $spec->getImageName() )->getURL();

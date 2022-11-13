@@ -1,6 +1,6 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.13.3",
+	"version": "0.13.4",
 
 	"author": [
 		"alex4401"
@@ -136,6 +136,7 @@
 				"datamap-popup-marker-link-get",
 				"datamap-popup-marker-link-copied",
 				"datamap-coordinate-control-text",
+				"datamap-coordinate-control-text-xy",
 				"datamap-control-reset-view",
 				"datamap-control-centre-view",
 				"datamap-checklist-prelude"
