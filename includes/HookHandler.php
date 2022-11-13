@@ -95,7 +95,7 @@ class HookHandler implements
             $skinTemplate->getOutput()->addModules( [
                 'ext.datamaps.createMapLazy'
             ] );
-        } else if ( $isVEEnabled ) {
+        } elseif ( $isVEEnabled ) {
             $pageProps = MediaWikiServices::getInstance()->getPageProps();
             if ( count( $pageProps->getProperties( $title, 'ext.datamaps.isIneligibleForVE' ) ) > 0 ) {
                 return;
@@ -121,26 +121,23 @@ class HookHandler implements
 
     public function onCustomEditor( $article, $user ) {
         $isVEEnabled = ExtensionConfig::isVisualEditorEnabled();
-        $isVCEnabled = ExtensionConfig::isCreateMapEnabled();
-        if ( !( $isVEEnabled || $isVCEnabled ) || !RequestContext::getMain()->getRequest()->getBool( 'visual' ) ) {
+        if ( !$isVEEnabled || !RequestContext::getMain()->getRequest()->getBool( 'visual' ) ) {
             return true;
         }
 
         $title = $article->getTitle();
         if ( !$title->getNamespace() === ExtensionConfig::getNamespaceId()
-            || !$title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
+            || !$title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP )
+            || !$title->exists() ) {
             return true;
         }
 
         $prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
         if ( $prefsLookup->getOption( $user, /*'datamaps-enable-visual-editor'*/ 'datamaps-opt-in-visual-editor-beta' ) ) {
-            $doesExist = $title->exists();
-            if ( ( $isVCEnabled && !$doesExist ) || ( $isVEEnabled && $doesExist ) ) {
-                $editor = new VisualMapEditPage( $article );
-                $editor->setContextTitle( $title );
-                $editor->edit();
-                return false;
-            }
+            $editor = new VisualMapEditPage( $article );
+            $editor->setContextTitle( $title );
+            $editor->edit();
+            return false;
         }
 
         return true;

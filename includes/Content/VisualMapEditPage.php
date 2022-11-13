@@ -41,30 +41,25 @@ class VisualMapEditPage extends EditPage {
             $this->showIntro();
         }
 
-		if ( $this->mArticle->getTitle()->exists() ) {
-			$out->addModules( [
-				'ext.datamaps.ve'
-			] );
+        $out->addModules( [
+            'ext.datamaps.ve'
+        ] );
 
-			$dummy = MediaWikiServices::getInstance()->getContentHandlerFactory()
-				->getContentHandler( ARK_CONTENT_MODEL_DATAMAP )
-				->makeEmptyContent();
-			$content = $this->getContentObject( $dummy );
+        $dummy = MediaWikiServices::getInstance()->getContentHandlerFactory()
+            ->getContentHandler( ARK_CONTENT_MODEL_DATAMAP )
+            ->makeEmptyContent();
+        $content = $this->getContentObject( $dummy );
 
-	        $parser = MediaWikiServices::getInstance()->getParser();
-            $parserOptions = ParserOptions::newFromAnon();
-        	$parserOptions->setIsPreview( true );
-        	$parserOptions->setOption( 'isMapVisualEditor', true );
-        	$parser->setOptions( $parserOptions );
+        $parser = MediaWikiServices::getInstance()->getParser();
+        $parserOptions = ParserOptions::newFromAnon();
+        $parserOptions->setIsPreview( true );
+        $parserOptions->setOption( 'isMapVisualEditor', true );
+        $parser->setOptions( $parserOptions );
 
-			$parserOutput = $content->getParserOutput( $this->mTitle, null, $parserOptions );
+        $parserOutput = MediaWikiServices::getInstance()->getContentRenderer()->getParserOutput( $content, $this->mTitle,
+            null, $parserOptions );
 
-			$out->addParserOutputMetadata( $parserOutput );
-	        $out->addHTML( $parserOutput->getText( [] ) );
-		} else {
-			$out->addModules( [
-				'ext.datamaps.createMap'
-			] );
-		}
-	}
+        $out->addParserOutputMetadata( $parserOutput );
+        $out->addHTML( $parserOutput->getText( [] ) );
+    }
 }
