@@ -100,8 +100,6 @@ module.exports = class MapVisualEditor extends EventEmitter {
                 this.map.waitForLeaflet( () => {
                     this.map.instantiateMarkers( markerStore );
                     this.map.fire( 'chunkStreamingDone' );
-                    // DEPRECATED(v0.13.0:v0.14.0): old event name
-                    this.map.fire( 'streamingDone' );
                 } );
             } )
             .catch( () => this.map.$status.show().html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' ) );

@@ -2,7 +2,8 @@ const MarkerSearchIndex = require( './indexing.js' ),
     MenuWidget = require( './menu.js' ),
     MenuOptionWidget = require( './option.js' ),
     DataMap = mw.dataMaps.DataMap,
-    Enums = mw.dataMaps.Enums;
+    Enums = mw.dataMaps.Enums,
+    Util = mw.dataMaps.Util;
 
 
 class MarkerSearch {
@@ -91,10 +92,10 @@ class MarkerSearch {
                 keywords: item.keywords,
                 // Display
                 label: new OO.ui.HtmlSnippet( item.label ),
-                badge: this.isLinked ? item.map.getParentTabberNeuePanel().attr( 'title' ) : null,
+                badge: this.isLinked ? Util.TabberNeue.getOwningPanel( item.map.$root ).attr( 'title' ) : null,
                 badgeCurrent: item.map === this.map,
-                $tab: this.isLinked && item.map !== this.map ? item.map.getParentTabberNeue().find( '#' + item.map.getParentTabberNeuePanel()
-                    .attr( 'aria-labelledby' ) ) : null,
+                $tab: this.isLinked && item.map !== this.map ? Util.TabberNeue.getOwningTabber( item.map.$root )
+                    .find( '#' + Util.TabberNeue.getOwningPanel( item.map.$root ).attr( 'aria-labelledby' ) ) : null,
             } ) );
         }
         this.menu.addItems( widgets );
@@ -160,7 +161,7 @@ const sharedTabberIndexMap = {};
 mw.dataMaps.registerMapAddedHandler( map => {
     if ( map.isFeatureBitSet( Enums.MapFlags.Search ) ) {
         const isLinked = map.isFeatureBitSet( Enums.MapFlags.LinkedSearch ),
-            $tabber = map.getParentTabberNeue();
+            $tabber = Util.TabberNeue.getOwningTabber( map.$root );
         let index;
 
         if ( isLinked && $tabber ) {

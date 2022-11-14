@@ -83,7 +83,7 @@ module.exports = {
             }
         }
 
-        const tabber = map.getParentTabberNeueId();
+        const tabber = Util.TabberNeue.getOwningId( map.$root );
         const hash = ( tabber ? ( '#' + tabber ) : window.location.hash );
         return ( withHost ? `https://${window.location.hostname}` : '' )
             + decodeURIComponent( `${window.location.pathname}?${params}`.replace( /\?$/, '' )

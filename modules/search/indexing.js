@@ -99,7 +99,7 @@ MarkerSearchIndex.normalisePhrase = function ( text ) {
         // Propagate the entry to the master index: copy it, push tabber title to its keywords, enqueue.
         const copy = Object.assign( {}, info );
         copy.keywords = Array.from( info.keywords );
-        copy.keywords.push( [ info.map.getParentTabberNeuePanel().attr( 'title' ), 0.2 ] );
+        copy.keywords.push( [ Util.TabberNeue.getOwningPanel( info.map.$root ).attr( 'title' ), 0.2 ] );
         this.parent._enqueue( copy );
     }
 

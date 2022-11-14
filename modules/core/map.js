@@ -157,32 +157,6 @@ class DataMap extends EventEmitter {
 
 
     /**
-     * @deprecated
-     */
-    getParentTabberNeuePanel() {
-        return Util.TabberNeue.getOwningPanel( this.$root );
-    }
-
-
-    /**
-     * @deprecated
-     */
-    getParentTabberNeue() {
-        return Util.TabberNeue.getOwningTabber( this.$root );
-    }
-
-
-    /**
-     * Finds ID of the TabberNeue tab this map is in. If not inside tabber, this will be null.
-     * @returns {string?}
-     * @deprecated
-    */
-    getParentTabberNeueId() {
-        return Util.TabberNeue.getOwningId( this.$root );
-    }
-
-
-    /**
      * Returns true if a layer is used on the map. This is a look-up on the static configuration provided by the server, and does
      * not depend on any data being loaded.
      * @param {string} name Layer name
