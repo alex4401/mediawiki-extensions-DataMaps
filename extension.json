@@ -235,6 +235,7 @@
 				"ve/dialogs/editMarker.js"
 			],
 			"styles": [
+				"ve/css/placeholder.less",
 				"ve/css/bars.less",
 				"ve/css/toolbar.less",
 				"ve/css/groups.less",
