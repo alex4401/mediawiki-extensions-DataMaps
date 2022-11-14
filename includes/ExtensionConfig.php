@@ -25,24 +25,29 @@ class ExtensionConfig {
         return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsNamespaceId' );
     }
 
+    public static function getApiCacheSettings() {
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsApiCaching' );
+    }
+
     public static function getApiCacheType() {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsCacheType' );
+        return self::getApiCacheSettings()['type'];
     }
 
     public static function getApiCacheTTL(): int {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsCacheTTL' );
+        return self::getApiCacheSettings()['ttl'];
     }
 
     public static function shouldExtendApiCacheTTL(): bool {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsExtendCacheTTL' ) != false;
+        $settings = self::getApiCacheSettings();
+        return $settings['ttlExtensionThreshold'] === false || $settings['ttlExtensionValue'] === false;
     }
 
     public static function getApiCacheTTLExtensionThreshold(): int {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsExtendCacheTTL' )['threshold'];
+        return self::getApiCacheSettings()['ttlExtensionThreshold'];
     }
 
     public static function getApiCacheTTLExtensionValue(): int {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsExtendCacheTTL' )['override'];
+        return self::getApiCacheSettings()['ttlExtensionValue'];
     }
 
     public static function shouldApiReturnProcessingTime(): bool {

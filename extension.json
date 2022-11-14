@@ -365,19 +365,12 @@
 			"description": "Namespace where data maps will be stored. Use 'managed' to use the built-in namespace.",
 			"value": "managed"
 		},
-		"CacheType": {
-			"description": "Cache type to use for queryDataMap API output. Defaults to CACHE_ANYTHING.",
-			"value": -1
-		},
-		"CacheTTL": {
-			"description": "Time To Live for cached queryDataMap API (per title and revision) responses to be valid. Set to 0 to disable caching. Defaults to a day.",
-			"value": 86400
-		},
-		"ExtendCacheTTL": {
-			"description": "Settings to extend TTL of cached maps on requests close to expiry time. Set to false to disable.",
+		"ApiCaching": {
 			"value": {
-				"threshold": 43200,
-				"override": 57600
+				"type": -1,
+				"ttl": 86400,
+				"ttlExtensionThreshold": 43200,
+				"ttlExtensionValue": 57600
 			}
 		},
 		"DefaultApiMarkerBatch": {
