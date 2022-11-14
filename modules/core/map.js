@@ -325,6 +325,15 @@ class DataMap extends EventEmitter {
 
 
     /**
+     * Returns the class to be used for marker popup contents.
+     * @returns {Function}
+     */
+    getPopupClass() {
+        return MarkerPopup;
+    }
+
+
+    /**
      * Creates a Leaflet marker instance from information provided by the API: layers, and an array with latitude, longitude,
      * and optional data (the "state").
      * 

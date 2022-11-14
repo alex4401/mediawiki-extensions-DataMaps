@@ -17,7 +17,7 @@ module.exports = class MarkerPopup {
 
 
     static bindTo( map, leafletMarker ) {
-        leafletMarker.bindPopup( () => new MarkerPopup( map, leafletMarker ), {}, Util.getLeaflet().Ark.Popup );
+        leafletMarker.bindPopup( () => new (map.getPopupClass())( map, leafletMarker ), {}, Util.getLeaflet().Ark.Popup );
     }
 
 
