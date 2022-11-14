@@ -36,18 +36,24 @@ class MapStorage {
     }
 
 
+    getObject( name ) {
+        return JSON.parse( this.get( name ) || '{}' );
+    }
+
+
     setObject( name, data ) {
         this.set( name, JSON.stringify( data ) );
     }
 
 
     migrate() {
+        const schemaVersion = parseInt( this.get( 'schemaVersion' ) || '-1' );
+
         // Check if any saved properties exist, and if not, abort
         if ( !this.get( 'dismissed' ) ) {
             return;
         }
 
-        const schemaVersion = this.get( 'schemaVersion' ) || -1;
         this.hasSchemaVersion = true;
         let shouldUpdateVersion = false;
 
@@ -56,7 +62,7 @@ class MapStorage {
                 shouldUpdateVersion = true;
                 // Drop the #surface layer from memorised dismissed markers
                 this.setObject( 'dismissed', this.getArray( 'dismissed' ).map( x => x.replace( ' #surface', '' ) ) );
-            case '20220713':
+            case 20220713:
                 shouldUpdateVersion = true;
                 // Parse dismissed marker IDs and use fixed precision on coordinates
                 this.setObject( 'dismissed', this.getArray( 'dismissed' ).map( x => {
@@ -66,7 +72,7 @@ class MapStorage {
                     const lon = parseFloat( b[1] );
                     return ( lat == NaN || lon == NaN ) ? x : ( a[0] + '@' + lat.toFixed( 3 ) + ':' + lon.toFixed( 3 ) );
                 } ) );
-            case '20220803':
+            case 20220803:
                 shouldUpdateVersion = true;
                 // Add marker namespace to every dismissed ID
                 this.setObject( 'dismissed', this.getArray( 'dismissed' ).map( x => 'M:' + x ) );
