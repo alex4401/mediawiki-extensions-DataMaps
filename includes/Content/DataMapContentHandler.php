@@ -113,7 +113,11 @@ class DataMapContentHandler extends JsonContentHandler {
 
             // Initialise the embed renderer
             $parser = MediaWikiServices::getInstance()->getParser();
-            $embed = $content->getEmbedRenderer( $pageRef, $parser, $parserOutput, $isEditPreview, $isVisualEditor );
+            $embed = $content->getEmbedRenderer( $pageRef, $parser, $parserOutput, [
+                'inlineData' => $isEditPreview,
+                // TODO: this can /probably/ be dropped as embed rendering has been moved into the CustomEditor hook
+                've' => $isVisualEditor
+            ] );
             // Add metadata
             $embed->prepareOutput( $parserOutput );
 

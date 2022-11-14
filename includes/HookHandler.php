@@ -172,7 +172,9 @@ class HookHandler implements
             $parser->setOptions( $parserOptions );
             $parserOutput = new ParserOutput();
 
-            $embedRenderer = $content->getEmbedRenderer( $article->getTitle(), $parser, $parserOutput, false, true );
+            $embedRenderer = $content->getEmbedRenderer( $article->getTitle(), $parser, $parserOutput, [
+                've' => true
+            ] );
             $embedRenderer->prepareOutput();
             $out->addParserOutputMetadata( $parserOutput );
             $out->addHTML( $embedRenderer->getHtml() );
