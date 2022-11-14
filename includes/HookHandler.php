@@ -5,6 +5,7 @@ use MediaWiki\Extension\Ark\DataMaps\Content\VisualMapEditPage;
 use MediaWiki\MediaWikiServices;
 use RequestContext;
 use Title;
+use PageProps;
 
 class HookHandler implements
     \MediaWiki\Hook\ParserFirstCallInitHook,
@@ -59,6 +60,18 @@ class HookHandler implements
         return true;
     }
 
+    public function onParserOptionsRegister( &$defaults, &$inCacheKey, &$lazyLoad ) {
+        $defaults['isMapVisualEditor'] = false;
+    }
+
+    public function onListDefinedTags( &$tags ) {
+        $tags[] = 'datamaps-visualeditor';
+    }
+
+    public function onChangeTagsListActive( &$tags ) {
+        $tags[] = 'datamaps-visualeditor';
+    }
+
     public function onGetPreferences( $user, &$preferences ) {
         if ( ExtensionConfig::isVisualEditorEnabled() ) {
             $preferences['datamaps-enable-visual-editor'] = [
@@ -74,85 +87,63 @@ class HookHandler implements
         }
     }
 
+    private function canUseVE( User $user, Title $title ): bool {
+        $prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
+        $pageProps = MediaWikiServices::getInstance()->getPageProps();
+        
+        return ExtensionConfig::isVisualEditorEnabled()
+            && $title->getNamespace() === ExtensionConfig::getNamespaceId()
+            && $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP )
+            && $prefsLookup->getOption( $user, /*datamaps-enable-visual-editor*/ 'datamaps-opt-in-visual-editor-beta' )
+            && $title->exists()
+            && count( $pageProps->getProperties( $title, 'ext.datamaps.isIneligibleForVE' ) ) <= 0;
+    }
+
+    private function canCreateMapWithGui( Title $title ): bool {        
+        return ExtensionConfig::isCreateMapEnabled()
+            && $title->getNamespace() === ExtensionConfig::getNamespaceId()
+            && $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP )
+            && !$title->exists();
+    }
+
     public function onSkinTemplateNavigation__Universal( $skinTemplate, &$links ): void {
         if ( !isset( $links['views']['edit'] ) ) {
             return;
         }
 
-        $isVEEnabled = ExtensionConfig::isVisualEditorEnabled();
-        $isVCEnabled = ExtensionConfig::isCreateMapEnabled();
-        if ( !( $isVEEnabled || $isVCEnabled ) ) {
-            return;
-        }
-
         $title = $skinTemplate->getRelevantTitle();
-        if ( !$title->getNamespace() === ExtensionConfig::getNamespaceId()
-            || !$title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
-            return;
-        }
 
-        if ( $isVCEnabled && !$title->exists() ) {
+        // If this page does not exist yet and we can use the visual map creation workflow, offer it.
+        //
+        // Otherwise if the page exists, the instance has visual editor enabled, and the user is opted into it, inject
+        // the visual=1 query parameter into the "Edit" link, and add an "Edit source" link right after it.
+        if ( self::canCreateMapWithGui( $title ) ) {
             $skinTemplate->getOutput()->addModules( [
                 'ext.datamaps.createMapLazy'
             ] );
-        } elseif ( $isVEEnabled ) {
-            $pageProps = MediaWikiServices::getInstance()->getPageProps();
-            if ( count( $pageProps->getProperties( $title, 'ext.datamaps.isIneligibleForVE' ) ) > 0 ) {
-                return;
-            }
-
-            $prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
-            if ( $prefsLookup->getOption( $skinTemplate->getAuthority()->getUser(),
-                /*'datamaps-enable-visual-editor'*/ 'datamaps-opt-in-visual-editor-beta' ) ) {
-                $links['views']['edit']['href'] = $title->getLocalURL( $skinTemplate->editUrlOptions() + [
-                    'visual' => 1
-                ] );
-                $injection = [
-                    'editsource' => [
-                        'text' => wfMessage( 'datamap-ve-edit-source-action' )->text(),
-                        'href' => $title->getLocalURL( $skinTemplate->editUrlOptions() )
-                    ]
-                ];
-                $links['views'] = array_slice( $links['views'], 0, 2, true ) + $injection +
-                    array_slice( $links['views'], 2, null, true );
-            }
+        } else if ( self::canUseVE( $skinTemplate->getAuthority()->getUser(), $title ) ) {
+            $links['views']['edit']['href'] = $title->getLocalURL( $skinTemplate->editUrlOptions() + [
+                'visual' => 1
+            ] );
+            $injection = [
+                'editsource' => [
+                    'text' => wfMessage( 'datamap-ve-edit-source-action' )->text(),
+                    'href' => $title->getLocalURL( $skinTemplate->editUrlOptions() )
+                ]
+            ];
+            $links['views'] = array_slice( $links['views'], 0, 2, true ) + $injection +
+                array_slice( $links['views'], 2, null, true );
         }
     }
 
     public function onCustomEditor( $article, $user ) {
-        $isVEEnabled = ExtensionConfig::isVisualEditorEnabled();
-        if ( !$isVEEnabled || !RequestContext::getMain()->getRequest()->getBool( 'visual' ) ) {
-            return true;
-        }
-
-        $title = $article->getTitle();
-        if ( !$title->getNamespace() === ExtensionConfig::getNamespaceId()
-            || !$title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP )
-            || !$title->exists() ) {
-            return true;
-        }
-
-        $prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
-        if ( $prefsLookup->getOption( $user, /*'datamaps-enable-visual-editor'*/ 'datamaps-opt-in-visual-editor-beta' ) ) {
+        if ( RequestContext::getMain()->getRequest()->getBool( 'visual' ) && self::canUseVE( $user, $article->getTitle() ) ) {
             $editor = new VisualMapEditPage( $article );
             $editor->setContextTitle( $title );
             $editor->edit();
             return false;
         }
-
         return true;
-    }
-
-    public function onParserOptionsRegister( &$defaults, &$inCacheKey, &$lazyLoad ) {
-        $defaults['isMapVisualEditor'] = false;
-    }
-
-    public function onListDefinedTags( &$tags ) {
-        $tags[] = 'datamaps-visualeditor';
-    }
-
-    public function onChangeTagsListActive( &$tags ) {
-        $tags[] = 'datamaps-visualeditor';
     }
 
     /**
