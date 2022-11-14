@@ -138,9 +138,50 @@ class HookHandler implements
 
     public function onCustomEditor( $article, $user ) {
         if ( RequestContext::getMain()->getRequest()->getBool( 'visual' ) && self::canUseVE( $user, $article->getTitle() ) ) {
-            $editor = new VisualMapEditPage( $article );
-            $editor->setContextTitle( $title );
-            $editor->edit();
+            $req = $article->getContext()->getRequest();
+			$out = $article->getContext()->getOutput();
+            $contentHandlerFactory = MediaWikiServices::getInstance()->getContentHandlerFactory();
+
+			$out->setPageTitle( wfMessage( 'editing', $title->getPrefixedText() ) );
+			$out->setRevisionId( $req->getInt( 'oldid', $article->getRevIdFetched() ) );
+
+            // Fetch the content object
+            $content = $article->fetchRevisionRecord()->getContent( SlotRecord::MAIN, RevisionRecord::FOR_THIS_USER, $user );
+
+            // Ensure this is not a mix-in
+            if ( $content->isMixin() ) {
+                $out->addWikiMsg( 'datamap-ve-cannot-edit-mixins' );
+                $out->addWikiMsg( 'datamap-ve-needs-fallback-to-source'/*, $sourceUrl*/ );
+                return false;
+            }
+
+            // Run validation as the visual editor cannot handle source-level errors
+            $status = $content->getValidationStatus();
+            if ( !$status->isOk() ) {
+                $out->addWikiMsg( 'datamap-ve-cannot-edit-validation-errors', $status->getMessage( false, false ) );
+                return false;
+            }
+
+            // Render an empty embed with no markers
+			$out->addWikiMsg( 'datamap-ve-to-load' );
+
+            $parserOptions = ParserOptions::newFromAnon();
+            $parserOptions->setIsPreview( true );
+            $parserOptions->setOption( 'isMapVisualEditor', true );
+            $parser = MediaWikiServices::getInstance()->getParser();
+            $parser->setOptions( $parserOptions );
+            $parserOutput = new ParserOutput();
+
+            $embedRenderer = $content->getEmbedRenderer( $article->getTitle(), $parser, $parserOutput, false, true );
+            $embedRenderer->prepareOutput();
+            $out->addParserOutputMetadata( $parserOutput );
+            $out->addHTML( $embedRenderer->getHtml() );
+
+            // Inject the JavaScript module
+            $out->addModules( [
+                'ext.datamaps.ve'
+            ] );
+
             return false;
         }
         return true;
