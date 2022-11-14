@@ -3,9 +3,11 @@ namespace MediaWiki\Extension\Ark\DataMaps;
 
 use MediaWiki\Extension\Ark\DataMaps\Content\VisualMapEditPage;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Permissions\PermissionManager;
 use RequestContext;
 use Title;
 use PageProps;
+use User;
 
 class HookHandler implements
     \MediaWiki\Hook\ParserFirstCallInitHook,
@@ -70,6 +72,16 @@ class HookHandler implements
 
     public function onChangeTagsListActive( &$tags ) {
         $tags[] = 'datamaps-visualeditor';
+    }
+
+    /**
+     * @param RecentChange $rc The new RC entry.
+     */
+    public function onRecentChange_save( $rc ) {
+        $request = RequestContext::getMain()->getRequest();
+        if ( $request->getBool( 'isdatamapsve' ) ) {
+            $rc->addTags( 'datamaps-visualeditor' );
+        }
     }
 
     public function onGetPreferences( $user, &$preferences ) {
@@ -139,11 +151,20 @@ class HookHandler implements
     public function onCustomEditor( $article, $user ) {
         if ( RequestContext::getMain()->getRequest()->getBool( 'visual' ) && self::canUseVE( $user, $article->getTitle() ) ) {
             $req = $article->getContext()->getRequest();
-			$out = $article->getContext()->getOutput();
+            $out = $article->getContext()->getOutput();
             $contentHandlerFactory = MediaWikiServices::getInstance()->getContentHandlerFactory();
 
-			$out->setPageTitle( wfMessage( 'editing', $title->getPrefixedText() ) );
-			$out->setRevisionId( $req->getInt( 'oldid', $article->getRevIdFetched() ) );
+            // Check if the user can edit this page, and resort back to source editor (which should display the errors and
+            // a source view) if they can't. 
+            $permErrors = MediaWikiServices::getInstance()->getPermissionManager()
+                ->getPermissionErrors( 'edit', $user, $article->getTitle(), PermissionManager::RIGOR_FULL );
+            if ( $permErrors ) {
+                return true;
+            }
+
+            // Set up page title and revision ID
+            $out->setPageTitle( wfMessage( 'editing', $article->getTitle()->getPrefixedText() ) );
+            $out->setRevisionId( $req->getInt( 'oldid', $article->getRevIdFetched() ) );
 
             // Fetch the content object
             $content = $article->fetchRevisionRecord()->getContent( SlotRecord::MAIN, RevisionRecord::FOR_THIS_USER, $user );
@@ -162,9 +183,10 @@ class HookHandler implements
                 return false;
             }
 
-            // Render an empty embed with no markers
-			$out->addWikiMsg( 'datamap-ve-to-load' );
+            // Render a placeholder message for the editor
+            $out->addWikiMsg( 'datamap-ve-to-load' );
 
+            // Render an empty embed with no markers
             $parserOptions = ParserOptions::newFromAnon();
             $parserOptions->setIsPreview( true );
             $parserOptions->setOption( 'isMapVisualEditor', true );
@@ -172,9 +194,12 @@ class HookHandler implements
             $parser->setOptions( $parserOptions );
             $parserOutput = new ParserOutput();
 
+            // Get an embed renderer
             $embedRenderer = $content->getEmbedRenderer( $article->getTitle(), $parser, $parserOutput, [
                 've' => true
             ] );
+
+            // Render a marker-less embed
             $embedRenderer->prepareOutput();
             $out->addParserOutputMetadata( $parserOutput );
             $out->addHTML( $embedRenderer->getHtml() );
@@ -187,15 +212,5 @@ class HookHandler implements
             return false;
         }
         return true;
-    }
-
-    /**
-     * @param RecentChange $rc The new RC entry.
-     */
-    public function onRecentChange_save( $rc ) {
-        $request = RequestContext::getMain()->getRequest();
-        if ( $request->getBool( 'isdatamapsve' ) ) {
-            $rc->addTags( 'datamaps-visualeditor' );
-        }
     }
 }
