@@ -51,8 +51,8 @@
 	],
 
 	"ResourceFileModulePaths": {
-		"localBasePath": "resources",
-		"remoteExtPath": "DataMaps/resources"
+		"localBasePath": "modules",
+		"remoteExtPath": "DataMaps/modules"
 	},
 
 	"ResourceModules": {
