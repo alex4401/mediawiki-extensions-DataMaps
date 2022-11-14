@@ -7,11 +7,14 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\PermissionManager;
 use ParserOptions;
 
-class VisualMapEditPage extends EditPage {
+class VisualMapEditPage {
     public function edit() {
-        $permErrors = $this->getEditPermissionErrors(
-            $this->save ? PermissionManager::RIGOR_SECURE : PermissionManager::RIGOR_FULL
-        );
+		$permErrors = $this->permManager->getPermissionErrors(
+			'edit',
+			$this->getUserForPermissions(),
+			$this->mTitle,
+			PermissionManager::RIGOR_FULL
+		);
         if ( $permErrors ) {
             if ( $this->context->getUser()->getBlock() ) {
                 // Auto-block user's IP if the account was "hard" blocked
@@ -21,6 +24,7 @@ class VisualMapEditPage extends EditPage {
                     } );
                 }
             }
+            // TODO: this is a private MW 1.39 method
             $this->displayPermissionsError( $permErrors );
             return;
         }
@@ -56,6 +60,7 @@ class VisualMapEditPage extends EditPage {
         $parserOptions->setOption( 'isMapVisualEditor', true );
         $parser->setOptions( $parserOptions );
 
+        $parserOutput = $content->getParserOutput( $this->mTitle, null, $parserOptions );
         $parserOutput = MediaWikiServices::getInstance()->getContentRenderer()->getParserOutput( $content, $this->mTitle,
             null, $parserOptions );
 

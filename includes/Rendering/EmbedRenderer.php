@@ -26,12 +26,11 @@ class EmbedRenderer {
     private ParserOutput $parserOutput;
     private ParserOptions $parserOptions;
 
-    public function __construct( Title $title, DataMapSpec $data, Parser $parser, ParserOutput $parserOutput,
-        bool $useInlineData = false, bool $forVisualEditor = false ) {
+    public function __construct( Title $title, DataMapSpec $data, Parser $parser, ParserOutput $parserOutput, array $options = [] ) {
         $this->title = $title;
         $this->data = $data;
-        $this->useInlineData = $useInlineData;
-        $this->forVisualEditor = $forVisualEditor;
+        $this->useInlineData = $options['inlineData'] ?? false;
+        $this->forVisualEditor = $options['ve'] ?? false;
 
         $this->parser = MediaWikiServices::getInstance()->getParserFactory()->getInstance();
         $this->parserOutput = $parserOutput;

@@ -165,7 +165,10 @@ class DataMapContent extends JsonContent {
 
     public function getEmbedRenderer( Title $title, Parser $parser, ParserOutput $parserOutput, bool $useInlineData = false,
         bool $forVisualEditor = false ): EmbedRenderer {
-        return new EmbedRenderer( $title, $this->asModel(), $parser, $parserOutput, $useInlineData, $forVisualEditor );
+        return new EmbedRenderer( $title, $this->asModel(), $parser, $parserOutput, [
+            'inlineData' => $useInlineData,
+            've' => $forVisualEditor
+        ] );
     }
 
     public function beautifyJSON() {
