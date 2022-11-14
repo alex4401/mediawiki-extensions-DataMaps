@@ -1,6 +1,7 @@
 const EventEmitter = mw.dataMaps.EventEmitter,
     Util = mw.dataMaps.Util,
     Enums = mw.dataMaps.Enums,
+    EditableMarkerPopup = require( './editablePopup.js' ),
     MarkerGroupEditor = require( './widgets/markerGroupEditor.js' );
 
 
@@ -11,6 +12,10 @@ module.exports = class MapVisualEditor extends EventEmitter {
         this.map = map;
         this.revisionId = mw.config.get( 'wgCurRevisionId' );
 
+        // Override marker popup class
+        this.map.getPopupClass = this.getPopupClass;
+
+        // Make local map storage read-only and remove all dismissals
         this.map.storage.isWritable = false;
         this.map.storage.dismissed = [];
 
@@ -63,6 +68,10 @@ module.exports = class MapVisualEditor extends EventEmitter {
         require( './editablePopup.js' );
 
         this._requestRevisionData();
+    }
+
+    getPopupClass() {
+        return EditableMarkerPopup;
     }
 
 
