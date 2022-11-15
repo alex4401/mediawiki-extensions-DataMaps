@@ -35,6 +35,15 @@ class MapStorage {
     }
 
 
+    rename( oldName, newName, oldNamespace ) {
+        const value = this.get( oldName, oldNamespace || MapStorage.NAMESPACE );
+        if ( value !== null ) {
+            this.set( newName || oldName, value );
+            this.remove( oldName, oldNamespace );
+        }
+    }
+
+
     _initialiseVersioning() {
         if ( !this.hasSchemaVersion ) {
             this.hasSchemaVersion = true;
@@ -59,13 +68,22 @@ class MapStorage {
 
 
     migrate() {
+        // Move data from legacy namespace to the new one if saved prior to 20221115 - all keys that we use or used.
+        // Schema version is not bumped right away, so migrations can still be done with no interruption (running on old
+        // structures).
+        if ( this.has( 'schemaVersion', MapStorage.LEGACY_NAMESPACE ) ) {
+            this.rename( 'schemaVersion', null, MapStorage.LEGACY_NAMESPACE );
+            this.rename( 'dismissed', null, MapStorage.LEGACY_NAMESPACE );
+            this.rename( 'background', null, MapStorage.LEGACY_NAMESPACE );
+        }
+
         const schemaVersion = parseInt( this.get( 'schemaVersion' ) || MapStorage.LATEST_VERSION );
 
         // Drop storage data prior to this version, we no longer support it
         if ( schemaVersion < MapStorage.MIN_SUPPORTED_VERSION ) {
-            this.remove( 'background' );
             this.remove( 'schemaVersion' );
             this.remove( 'dismissed' );
+            this.remove( 'background' );
             return;
         }
 
@@ -80,12 +98,14 @@ class MapStorage {
             return;
         }
 
-        this.hasSchemaVersion = true;
-        let shouldUpdateVersion = false;
+        this._upgradeFrom( schemaVersion );
+        this._initialiseVersioning();
+    }
 
+    
+    _upgradeFrom( schemaVersion ) {
         switch ( schemaVersion ) {
             case 20220713:
-                shouldUpdateVersion = true;
                 // Parse dismissed marker IDs and use fixed precision on coordinates
                 this.setObject( 'dismissed', this.getArray( 'dismissed' ).map( x => {
                     const a = x.split( '@' );
@@ -95,21 +115,15 @@ class MapStorage {
                     return ( lat == NaN || lon == NaN ) ? x : ( a[0] + '@' + lat.toFixed( 3 ) + ':' + lon.toFixed( 3 ) );
                 } ) );
             case 20220803:
-                shouldUpdateVersion = true;
                 // Add marker namespace to every dismissed ID
                 this.setObject( 'dismissed', this.getArray( 'dismissed' ).map( x => 'M:' + x ) );
             case 20220929:
-                shouldUpdateVersion = true;
                 this.setObject( '*', {
                     dismissed: this.getArray( 'dismissed' ),
                     background: this.get( 'background' ) || 0
                 } );
                 this.remove( 'dismissed' );
                 this.remove( 'background' );
-        }
-
-        if ( shouldUpdateVersion ) {
-            this.set( 'schemaVersion', MapStorage.LATEST_VERSION );
         }
     }
 
