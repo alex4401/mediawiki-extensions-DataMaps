@@ -506,6 +506,14 @@ class DataMap extends EventEmitter {
     }
 
 
+    setBackgroundPreference( index ) {
+        this.setCurrentBackground( index );
+        // Remember the choice
+        this.storage.data.background = index;
+        this.storage.commit();
+    }
+
+
     /**
      * Calculates max bounds for a map from its contents (all geometrical layers are included). This is usually done
      * after a data chunk is streamed in, and is fairly expensive.
@@ -656,13 +664,7 @@ class DataMap extends EventEmitter {
         if ( this.config.backgrounds.length > 1 ) {
             this.$backgroundSwitch = this.addControl( DataMap.anchors.topRight,
                 $( '<select class="leaflet-control datamap-control datamap-control-backgrounds leaflet-bar">' )
-                .on( 'change', () => {
-                    // TODO: extract to setBackgroundPreference
-                    this.setCurrentBackground( this.$backgroundSwitch.val() );
-                    // Remember the choice
-                    this.storage.data.background = this.$backgroundSwitch.val();
-                    this.storage.commit();
-                } )
+                .on( 'change', () => this.setBackgroundPreference( this.$backgroundSwitch.val() ) )
             );
             this.config.backgrounds.forEach( ( background, index ) => {
                 $( '<option>' ).attr( 'value', index ).text( background.name ).appendTo( this.$backgroundSwitch );
