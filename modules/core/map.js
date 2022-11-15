@@ -585,7 +585,7 @@ class DataMap extends EventEmitter {
         // Prepare all backgrounds
         this.config.backgrounds.forEach( ( background, index ) => this._initialiseBackground( background, index ) );
         // Switch to the last chosen one or first defined
-        this.setCurrentBackground( this.storage.get( 'background' ) || 0 );
+        this.setCurrentBackground( this.storage.data.background || 0 );
         // Update max bounds
         this.refreshMaxBounds();
         // Restore default view
@@ -660,7 +660,8 @@ class DataMap extends EventEmitter {
                     // TODO: extract to setBackgroundPreference
                     this.setCurrentBackground( this.$backgroundSwitch.val() );
                     // Remember the choice
-                    this.storage.set( 'background', this.$backgroundSwitch.val() );
+                    this.storage.data.background = this.$backgroundSwitch.val();
+                    this.storage.commit();
                 } )
             );
             this.config.backgrounds.forEach( ( background, index ) => {

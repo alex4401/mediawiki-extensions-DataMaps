@@ -67,6 +67,11 @@ class MapStorage {
     }
 
 
+    commit() {
+        this.set( '*', this.data );
+    }
+
+
     migrate() {
         // Move data from legacy namespace to the new one if saved prior to 20221115 - all keys that we use or used.
         // Schema version is not bumped right away, so migrations can still be done with no interruption (running on old
@@ -146,7 +151,7 @@ class MapStorage {
             this.data.dismissed.push( uidPrefixed );
             out = true;
         }
-        this.setObject( 'dismissed', this.data.dismissed );
+        this.commit();
         return out;
     }
 }
