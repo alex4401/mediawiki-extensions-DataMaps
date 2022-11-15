@@ -11,19 +11,19 @@ class MapStorage {
 
 
     get( name ) {
-        return localStorage.getItem( `ext.ark.datamaps.${this.id}:${name}` );
+        return localStorage.getItem( `${MapStorage.NAMESPACE}.${this.id}:${name}` );
     }
 
 
     remove( name ) {
-        return localStorage.removeItem( `ext.ark.datamaps.${this.id}:${name}` );
+        return localStorage.removeItem( `${MapStorage.NAMESPACE}.${this.id}:${name}` );
     }
 
 
     set( name, data ) {
         if ( this.isWritable ) {
             this._initialiseVersioning();
-            localStorage.setItem( `ext.ark.datamaps.${this.id}:${name}`, data );
+            localStorage.setItem( `${MapStorage.NAMESPACE}.${this.id}:${name}`, data );
         }
     }
 
@@ -120,6 +120,7 @@ class MapStorage {
 
     
 MapStorage.LATEST_VERSION = 20221114;
+MapStorage.NAMESPACE = 'ext.ark.datamaps';
 
 
 module.exports = MapStorage;
