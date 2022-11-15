@@ -59,7 +59,15 @@ class MapStorage {
 
 
     migrate() {
-        const schemaVersion = parseInt( this.get( 'schemaVersion' ) || '-1' );
+        const schemaVersion = parseInt( this.get( 'schemaVersion' ) || MapStorage.LATEST_VERSION );
+
+        // Drop storage data prior to this version, we no longer support it
+        if ( schemaVersion < MapStorage.MIN_SUPPORTED_VERSION ) {
+            this.remove( 'background' );
+            this.remove( 'schemaVersion' );
+            this.remove( 'dismissed' );
+            return;
+        }
 
         // Check if version's older than current and if any saved properties exist; otherwise abort
         if ( schemaVersion < MapStorage.LATEST_VERSION && !( schemaVersion >= 20221114 ?
@@ -69,14 +77,6 @@ class MapStorage {
             // Pre-20221114: Separate keys model
             ( this.has( 'dismissed' ) || this.has( 'background' ) )
         ) ) {
-            return;
-        }
-
-        // Drop storage data prior to this version, we no longer support it
-        if ( schemaVersion < MapStorage.MIN_SUPPORTED_VERSION ) {
-            this.remove( 'background' );
-            this.remove( 'schemaVersion' );
-            this.remove( 'dismissed' );
             return;
         }
 
