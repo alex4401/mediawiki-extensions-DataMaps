@@ -6,12 +6,17 @@ class MapStorage {
         this.isWritable = true;
         this.migrate();
         
-        this.dismissed = this.getArray( 'dismissed' );
+        this.data = this.getObject( '*' );
     }
 
 
     get( name ) {
         return localStorage.getItem( `ext.ark.datamaps.${this.id}:${name}` );
+    }
+
+
+    remove( name ) {
+        return localStorage.removeItem( `ext.ark.datamaps.${this.id}:${name}` );
     }
 
 
@@ -50,7 +55,7 @@ class MapStorage {
         const schemaVersion = parseInt( this.get( 'schemaVersion' ) || '-1' );
 
         // Check if any saved properties exist, and if not, abort
-        if ( !this.get( 'dismissed' ) ) {
+        if ( !( schemaVersion >= 20221114 ? this.get( '*' ) : this.get( 'dismissed' ) ) ) {
             return;
         }
 
@@ -76,6 +81,12 @@ class MapStorage {
                 shouldUpdateVersion = true;
                 // Add marker namespace to every dismissed ID
                 this.setObject( 'dismissed', this.getArray( 'dismissed' ).map( x => 'M:' + x ) );
+            case 20220929:
+                shouldUpdateVersion = true;
+                this.setObject( '*', {
+                    dismissed: this.getArray( 'dismissed' )
+                } );
+                this.remove( 'dismissed' );
         }
 
         if ( shouldUpdateVersion ) {
@@ -85,10 +96,10 @@ class MapStorage {
 
 
     isDismissed( uid, isGroup ) {
-        if ( this.dismissed.length === 0 ) {
+        if ( this.data.dismissed.length === 0 ) {
             return false;
         }
-        return this.dismissed.indexOf( ( isGroup ? 'G:' : 'M:' ) + uid ) >= 0;
+        return this.data.dismissed.indexOf( ( isGroup ? 'G:' : 'M:' ) + uid ) >= 0;
     }
 
 
@@ -96,19 +107,19 @@ class MapStorage {
         let out;
         const uidPrefixed = ( isGroup ? 'G:' : 'M:' ) + uid;
         if ( this.isDismissed( uid, isGroup ) ) {
-            this.dismissed = this.dismissed.filter( x => x != uidPrefixed );
+            this.data.dismissed = this.data.dismissed.filter( x => x != uidPrefixed );
             out = false;
         } else {
-            this.dismissed.push( uidPrefixed );
+            this.data.dismissed.push( uidPrefixed );
             out = true;
         }
-        this.setObject( 'dismissed', this.dismissed );
+        this.setObject( 'dismissed', this.data.dismissed );
         return out;
     }
 }
 
     
-MapStorage.LATEST_VERSION = 20220929;
+MapStorage.LATEST_VERSION = 20221114;
 
 
 module.exports = MapStorage;
