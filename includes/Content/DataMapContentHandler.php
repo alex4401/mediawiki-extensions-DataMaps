@@ -59,7 +59,6 @@ class DataMapContentHandler extends JsonContentHandler {
         $parserOptions = $cpoParams->getParserOptions();
 
         $shouldGenerateHtml = $cpoParams->getGenerateHtml();
-        $isVisualEditor = $parserOptions->getOption( 'isMapVisualEditor' );
         $isEditPreview = $parserOptions->getIsPreview();
 
         // Get documentation, if any
@@ -103,7 +102,7 @@ class DataMapContentHandler extends JsonContentHandler {
                 if ( !$status->isOK() ) {
                     $parserOutput->setText( $parserOutput->getRawText() . Html::errorBox(
                         wfMessage(
-                            'datamap-error-cannot-' . ( $isVisualEditor ? 'open-ve' : 'preview' ) . '-validation-errors',
+                            'datamap-error-cannot-preview-validation-errors',
                             $status->getMessage( false, false )
                         )
                     ) );
@@ -114,9 +113,7 @@ class DataMapContentHandler extends JsonContentHandler {
             // Initialise the embed renderer
             $parser = MediaWikiServices::getInstance()->getParser();
             $embed = $content->getEmbedRenderer( $pageRef, $parser, $parserOutput, [
-                'inlineData' => $isEditPreview,
-                // TODO: this can /probably/ be dropped as embed rendering has been moved into the CustomEditor hook
-                've' => $isVisualEditor
+                'inlineData' => $isEditPreview
             ] );
             // Add metadata
             $embed->prepareOutput( $parserOutput );

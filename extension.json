@@ -343,7 +343,6 @@
 		"GetPreferences": "MainHandler",
 		"SkinTemplateNavigation::Universal": "MainHandler",
 		"CustomEditor": "MainHandler",
-		"ParserOptionsRegister": "MainHandler",
 		"ChangeTagsListActive": "MainHandler",
 		"ListDefinedTags": "MainHandler",
 		"RecentChange_save": "MainHandler",

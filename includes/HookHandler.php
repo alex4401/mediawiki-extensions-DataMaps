@@ -16,7 +16,6 @@ class HookHandler implements
     \MediaWiki\Preferences\Hook\GetPreferencesHook,
     \MediaWiki\Hook\SkinTemplateNavigation__UniversalHook,
     \MediaWiki\Hook\CustomEditorHook,
-    \MediaWiki\Hook\ParserOptionsRegisterHook,
     \MediaWiki\ChangeTags\Hook\ChangeTagsListActiveHook,
     \MediaWiki\ChangeTags\Hook\ListDefinedTagsHook,
     \MediaWiki\Hook\RecentChange_saveHook
@@ -60,10 +59,6 @@ class HookHandler implements
             $languageCode = 'json';
         }
         return true;
-    }
-
-    public function onParserOptionsRegister( &$defaults, &$inCacheKey, &$lazyLoad ) {
-        $defaults['isMapVisualEditor'] = false;
     }
 
     public function onListDefinedTags( &$tags ) {
@@ -189,7 +184,6 @@ class HookHandler implements
             // Render an empty embed with no markers
             $parserOptions = ParserOptions::newFromAnon();
             $parserOptions->setIsPreview( true );
-            $parserOptions->setOption( 'isMapVisualEditor', true );
             $parser = MediaWikiServices::getInstance()->getParser();
             $parser->setOptions( $parserOptions );
             $parserOutput = new ParserOutput();
