@@ -56,8 +56,8 @@ class MapStorage {
     migrate() {
         const schemaVersion = parseInt( this.get( 'schemaVersion' ) || '-1' );
 
-        // Check if any saved properties exist, and if not, abort
-        if ( !( schemaVersion >= 20221114 ?
+        // Check if version's older than current and if any saved properties exist; otherwise abort
+        if ( schemaVersion < MapStorage.LATEST_VERSION && !( schemaVersion >= 20221114 ?
             // Post-20221114: Single object model
             ( this.has( '*' ) )
             :
