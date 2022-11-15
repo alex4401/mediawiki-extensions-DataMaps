@@ -15,8 +15,10 @@ class MapStorage {
     }
 
 
-    remove( name ) {
-        return localStorage.removeItem( `${MapStorage.NAMESPACE}.${this.id}:${name}` );
+    remove( name, namespace ) {
+        if ( this.isWritable ) {
+            localStorage.removeItem( `${namespace || MapStorage.NAMESPACE}.${this.id}:${name}` );
+        }
     }
 
 
