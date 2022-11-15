@@ -1,4 +1,20 @@
+/**
+ * Local storage interface class. It manages data migrations and handles writes.
+ * 
+ * Since 2022/11/15 data is stored as a single object (the `data` field). Call `commit()` to write it to browser
+ * storage.
+ * 
+ * Version history:
+ *   -1[*]      : Initial unversioned.
+ *   20220713   : Internal "#surface" layer removed, dismissed markers needed it removed.
+ *   20220803   : Fixed precision used on coordinates in generated marker identifiers.
+ *   20220929   : Dismissal entries require a namespace G(roup) or M(arker), to support global dismissals without conflicts.
+ *   20221114   : New model (single object).
+ *   20221115   : Namespace changed from ext.ark.datamaps to ext.datamaps.
+ */
 class MapStorage {
+    // TODO: mark functions no longer relevant as of 20221114 as internal.
+
     constructor( map, storageId ) {
         this.map = map;
         this.id = storageId || this.map.id;
@@ -129,6 +145,7 @@ class MapStorage {
                 } );
                 this.remove( 'dismissed' );
                 this.remove( 'background' );
+            // 20221114 migration is fundamental and runs ahead of all these
         }
     }
 
