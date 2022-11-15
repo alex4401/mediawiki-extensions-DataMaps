@@ -57,7 +57,13 @@ class MapStorage {
         const schemaVersion = parseInt( this.get( 'schemaVersion' ) || '-1' );
 
         // Check if any saved properties exist, and if not, abort
-        if ( !( schemaVersion >= 20221114 ? this.get( '*' ) : this.get( 'dismissed' ) ) ) {
+        if ( !( schemaVersion >= 20221114 ?
+            // Post-20221114: Single object model
+            ( this.has( '*' ) )
+            :
+            // Pre-20221114: Separate keys model
+            ( this.has( 'dismissed' ) || this.has( 'background' ) )
+        ) ) {
             return;
         }
 
@@ -86,9 +92,11 @@ class MapStorage {
             case 20220929:
                 shouldUpdateVersion = true;
                 this.setObject( '*', {
-                    dismissed: this.getArray( 'dismissed' )
+                    dismissed: this.getArray( 'dismissed' ),
+                    background: this.get( 'background' ) || 0
                 } );
                 this.remove( 'dismissed' );
+                this.remove( 'background' );
         }
 
         if ( shouldUpdateVersion ) {
