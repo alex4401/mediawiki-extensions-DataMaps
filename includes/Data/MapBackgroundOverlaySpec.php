@@ -38,6 +38,10 @@ class MapBackgroundOverlaySpec extends DataModel {
         return isset( $this->raw->path ) ? $this->raw->path : null;
     }
 
+    public function wantsImageGapWorkaround(): bool {
+        return $this->raw->reduceGaps ?? false;
+    }
+
     public function supportsDrawProperties(): bool {
         return $this->getType() != self::TYPE_IMAGE;
     }
@@ -86,6 +90,10 @@ class MapBackgroundOverlaySpec extends DataModel {
         // Placement location, only allowed if not a polyline
         if ( !isset( $this->raw->path ) ) {
             $this->checkField( $status, 'at', DataModel::TYPE_BOUNDS );
+        }
+
+        if ( isset( $this->raw->image ) ) {
+            $this->checkField( $status, 'reduceGaps', DataModel::TYPE_BOOL );
         }
 
         if ( $this->supportsDrawProperties() ) {

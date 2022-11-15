@@ -117,9 +117,8 @@ class EmbedConfigGenerator {
             $out['overlays'] = [];
         }
         if ( $spec->hasTiles() ) {
-            // Unused field corresponding to Leaflet.ImageOverlay.options.antiAliasing, this may be used by the frontend
-            // in future.
-            $out['aa'] = 0.5;
+            // Anti-aliasing opt-in used by the frontend
+            $out['aa'] = 1;
             // Translate all tiles into overlays
             $tileOffset = DataMapSpec::normalisePointCoordinates( $spec->getTilePlacementOffset() ?? [ 0, 0 ], $coordOrder );
             $tileSize = DataMapSpec::normalisePointCoordinates( $spec->getTileSize(), $coordOrder );
@@ -144,6 +143,10 @@ class EmbedConfigGenerator {
         if ( $spec->getImageName() != null ) {
             $image = DataMapFileUtils::getRequiredFile( $spec->getImageName() );
             $result['image'] = $image->getURL();
+
+            if ( $spec->wantsImageGapWorkaround() ) {
+                $result['aa'] = 1;
+            }
         }
         if ( $spec->getPath() != null ) {
             $result['path'] = $spec->getPath();

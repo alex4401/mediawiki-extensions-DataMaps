@@ -481,7 +481,7 @@ class DataMap extends EventEmitter {
             // Construct an image
             result = new Leaflet.ImageOverlay( overlay.image, this.translateBox( overlay.at ), {
                 // Expand the DOM element's width and height by 0.5 pixels. This helps with gaps between tiles.
-                antiAliasing: 0.5
+                antiAliasing: overlay.aa ? 0.5 : 0
             } );
         } else if ( overlay.path ) {
             // Construct a polyline
