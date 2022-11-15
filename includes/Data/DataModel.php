@@ -9,6 +9,7 @@ use stdClass;
 
 class DataModel {
     protected static string $publicName = '???';
+    protected static bool $permitAllMetadataFields = true;
 
     public const TYPE_ANY = 0;
     public const TYPE_ARRAY = 1;
@@ -76,7 +77,12 @@ class DataModel {
     }
 
     protected function allowOnly( Status $status, array $fields ) {
-        $unexpected = array_diff( array_keys( get_object_vars( $this->raw ) ), $fields );
+        $all = array_keys( get_object_vars( $this->raw ) );
+        if ( self::$permitAllMetadataFields ) {
+            $all = array_filter( $all, fn ( $key ) => $key[0] !== '$', ARRAY_FILTER_USE_KEY );
+        }
+        
+        $unexpected = array_diff( $all, $fields );
         if ( !empty( $unexpected ) ) {
             $status->fatal( 'datamap-error-validate-unexpected-fields', static::$publicName, wfEscapeWikiText(
                 implode( ', ', $unexpected ) ) );
