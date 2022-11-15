@@ -10,8 +10,13 @@ class MapStorage {
     }
 
 
-    get( name ) {
-        return localStorage.getItem( `${MapStorage.NAMESPACE}.${this.id}:${name}` );
+    get( name, namespace ) {
+        return localStorage.getItem( `${namespace || MapStorage.NAMESPACE}.${this.id}:${name}` );
+    }
+
+
+    has( name, namespace ) {
+        return localStorage.hasOwnProperty( `${namespace || MapStorage.NAMESPACE}.${this.id}:${name}` );
     }
 
 
@@ -22,10 +27,10 @@ class MapStorage {
     }
 
 
-    set( name, data ) {
+    set( name, data, namespace ) {
         if ( this.isWritable ) {
             this._initialiseVersioning();
-            localStorage.setItem( `${MapStorage.NAMESPACE}.${this.id}:${name}`, data );
+            localStorage.setItem( `${namespace || MapStorage.NAMESPACE}.${this.id}:${name}`, data );
         }
     }
 
@@ -67,14 +72,18 @@ class MapStorage {
             return;
         }
 
+        // Drop storage data prior to this version, we no longer support it
+        if ( schemaVersion < MapStorage.MIN_SUPPORTED_VERSION ) {
+            this.remove( 'background' );
+            this.remove( 'schemaVersion' );
+            this.remove( 'dismissed' );
+            return;
+        }
+
         this.hasSchemaVersion = true;
         let shouldUpdateVersion = false;
 
         switch ( schemaVersion ) {
-            case -1:
-                shouldUpdateVersion = true;
-                // Drop the #surface layer from memorised dismissed markers
-                this.setObject( 'dismissed', this.getArray( 'dismissed' ).map( x => x.replace( ' #surface', '' ) ) );
             case 20220713:
                 shouldUpdateVersion = true;
                 // Parse dismissed marker IDs and use fixed precision on coordinates
@@ -128,9 +137,11 @@ class MapStorage {
     }
 }
 
-    
-MapStorage.LATEST_VERSION = 20221114;
-MapStorage.NAMESPACE = 'ext.ark.datamaps';
+
+MapStorage.MIN_SUPPORTED_VERSION = 20220713;
+MapStorage.LATEST_VERSION = 20221115;
+MapStorage.NAMESPACE = 'ext.datamaps';
+MapStorage.LEGACY_NAMESPACE = 'ext.ark.datamaps';
 
 
 module.exports = MapStorage;
