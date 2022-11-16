@@ -157,7 +157,7 @@ class EmbedRenderer {
         } );
     }
 
-    public function getHtml( EmbedRenderOptions $options ): string {
+    public function getHtml( ?EmbedRenderOptions $options = null ): string {
         // Primary slots
         $containerMain = new \OOUI\PanelLayout( [
             'classes' => [ 'datamap-container' ],
@@ -205,7 +205,7 @@ class EmbedRenderer {
         }
 
         // Set data attribute with filters if they are specified
-        if ( $options->displayGroups != null ) {
+        if ( $options !== null && $options->displayGroups != null ) {
             $containerMain->setAttributes( [ 'data-filter-groups' => implode( '|', $options->displayGroups ) ] );
         }
 
