@@ -165,6 +165,7 @@ class HookHandler implements
             $out->setRevisionId( $req->getInt( 'oldid', $article->getRevIdFetched() ) );
 
             // Fetch the content object
+            /** @var Content\DataMapContent */
             $content = $article->fetchRevisionRecord()->getContent( SlotRecord::MAIN, RevisionRecord::FOR_THIS_USER, $user );
 
             // Ensure this is not a mix-in
