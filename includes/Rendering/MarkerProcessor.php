@@ -134,7 +134,7 @@ class MarkerProcessor {
         return $converted;
     }
 
-    private function shouldParseString( MarkerSpec $marker, string $text ): bool {
+    public static function shouldParseString( MarkerSpec $marker, string $text ): bool {
         $mIsWikitext = $marker->isWikitext();
         if ( $mIsWikitext === false ) {
             return false;
@@ -176,7 +176,7 @@ class MarkerProcessor {
     }
 
     private function parseText( MarkerSpec $marker, string $text ): string {
-        if ( $this->shouldParseString( $marker, $text ) ) {
+        if ( self::shouldParseString( $marker, $text ) ) {
             return $this->parseWikitext( $text );
         }
         return wfEscapeWikiText( $text );

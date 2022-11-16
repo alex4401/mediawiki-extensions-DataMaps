@@ -1,12 +1,15 @@
 <?php
 namespace MediaWiki\Extension\Ark\DataMaps;
 
-use MediaWiki\Extension\Ark\DataMaps\Content\VisualMapEditPage;
+use MediaWiki\Extension\Ark\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\PermissionManager;
+use MediaWiki\Revision\RevisionRecord;
+use MediaWiki\Revision\SlotRecord;
+use ParserOptions;
+use ParserOutput;
 use RequestContext;
 use Title;
-use PageProps;
 use User;
 
 class HookHandler implements
@@ -18,7 +21,8 @@ class HookHandler implements
     \MediaWiki\Hook\CustomEditorHook,
     \MediaWiki\ChangeTags\Hook\ChangeTagsListActiveHook,
     \MediaWiki\ChangeTags\Hook\ListDefinedTagsHook,
-    \MediaWiki\Hook\RecentChange_saveHook
+    \MediaWiki\Hook\RecentChange_saveHook,
+    \MediaWiki\Storage\Hook\RevisionDataUpdatesHook
 {
     public static function onRegistration(): bool {
         define( 'ARK_CONTENT_MODEL_DATAMAP', 'datamap' );
@@ -97,7 +101,7 @@ class HookHandler implements
     private function canUseVE( User $user, Title $title ): bool {
         $prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
         $pageProps = MediaWikiServices::getInstance()->getPageProps();
-        
+
         return ExtensionConfig::isVisualEditorEnabled()
             && $title->getNamespace() === ExtensionConfig::getNamespaceId()
             && $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP )
@@ -106,7 +110,7 @@ class HookHandler implements
             && count( $pageProps->getProperties( $title, 'ext.datamaps.isIneligibleForVE' ) ) <= 0;
     }
 
-    private function canCreateMapWithGui( Title $title ): bool {        
+    private function canCreateMapWithGui( Title $title ): bool {
         return ExtensionConfig::isCreateMapEnabled()
             && $title->getNamespace() === ExtensionConfig::getNamespaceId()
             && $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP )
@@ -128,7 +132,7 @@ class HookHandler implements
             $skinTemplate->getOutput()->addModules( [
                 'ext.datamaps.createMapLazy'
             ] );
-        } else if ( self::canUseVE( $skinTemplate->getAuthority()->getUser(), $title ) ) {
+        } elseif ( self::canUseVE( $skinTemplate->getAuthority()->getUser(), $title ) ) {
             $links['views']['edit']['href'] = $title->getLocalURL( $skinTemplate->editUrlOptions() + [
                 'visual' => 1
             ] );
@@ -147,10 +151,9 @@ class HookHandler implements
         if ( RequestContext::getMain()->getRequest()->getBool( 'visual' ) && self::canUseVE( $user, $article->getTitle() ) ) {
             $req = $article->getContext()->getRequest();
             $out = $article->getContext()->getOutput();
-            $contentHandlerFactory = MediaWikiServices::getInstance()->getContentHandlerFactory();
 
             // Check if the user can edit this page, and resort back to source editor (which should display the errors and
-            // a source view) if they can't. 
+            // a source view) if they can't.
             $permErrors = MediaWikiServices::getInstance()->getPermissionManager()
                 ->getPermissionErrors( 'edit', $user, $article->getTitle(), PermissionManager::RIGOR_FULL );
             if ( $permErrors ) {
@@ -206,5 +209,50 @@ class HookHandler implements
             return false;
         }
         return true;
+    }
+
+    public function onRevisionDataUpdates( $title, $renderedRevision, &$updates ) {
+        if ( ExtensionConfig::shouldLinksUpdatesUseMarkers()
+            && $title->getNamespace() === ExtensionConfig::getNamespaceId()
+            && $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
+            foreach ( $updates as &$updater ) {
+                if ( $updater instanceof \MediaWiki\Deferred\LinksUpdate\LinksUpdate ) {
+                    $parserOutput = $updater->getParserOutput();
+                    $revision = $renderedRevision->getRevision();
+                    $content = $revision->getContent( SlotRecord::MAIN, RevisionRecord::FOR_PUBLIC, null );
+                    // Cast content to a data model
+                    $dataMap = $content->asModel();
+                    // Prepare a parser
+                    $parser = MediaWikiServices::getInstance()->getParser();
+                    $parserOptions = \ParserOptions::newFromAnon();
+                    $parser->setOptions( $parserOptions );
+                    $parser->parse( '', $title, $parserOptions, false, true );
+                    // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
+                    // creating thousands of small, very short-lived (only one at a time) objects
+                    $marker = new Data\MarkerSpec( new \stdclass() );
+
+                    $dataMap->iterateRawMarkerMap( static function ( string $_, array $rawCollection )
+                        use ( &$parser, &$title, &$parserOptions, &$marker ) {
+                        // Parse labels and descriptions of each marker, and drop the text. We only care about the metadata here.
+                        foreach ( $rawCollection as &$rawMarker ) {
+                            $marker->reassignTo( $rawMarker );
+                            if ( $marker->getLabel() !== null
+                                && MarkerProcessor::shouldParseString( $marker, $marker->getLabel() ) ) {
+                                $parser->parse( $marker->getLabel(), $title, $parserOptions, false, false );
+                            }
+                            if ( $marker->getDescription() !== null
+                                && MarkerProcessor::shouldParseString( $marker, $marker->getDescription() ) ) {
+                                $parser->parse( $marker->getDescription(), $title, $parserOptions, false, false );
+                            }
+                            $parser->getOutput()->setText( '' );
+                        }
+                    } );
+
+                    // Merge the metadata gathered after parsing all the markers
+                    $parserOutput->mergeTrackingMetaDataFrom( $parser->getOutput() );
+                    break;
+                }
+            }
+        }
     }
 }

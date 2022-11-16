@@ -346,6 +346,7 @@
 		"ChangeTagsListActive": "MainHandler",
 		"ListDefinedTags": "MainHandler",
 		"RecentChange_save": "MainHandler",
+		"RevisionDataUpdates": "MainHandler",
 		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
 	},
     "HookHandlers": {
@@ -399,6 +400,9 @@
 				"Search": false,
 				"SortChecklistsByAmount": false
 			}
+		},
+		"FullyUpdateLinkTables": {
+			"value": true
 		},
 		"EnableVisualEditor": {
 			"value": true

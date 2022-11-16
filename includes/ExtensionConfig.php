@@ -74,6 +74,10 @@ class ExtensionConfig {
         return self::getDefaultFeatureStates()[$feature];
     }
 
+    public static function shouldLinksUpdatesUseMarkers( string $feature ) {
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsFullyUpdateLinkTables' );
+    }
+
     public static function isVisualEditorEnabled(): bool {
         return self::isBleedingEdge()
             && MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsEnableVisualEditor' );
