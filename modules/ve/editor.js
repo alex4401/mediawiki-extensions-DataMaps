@@ -111,7 +111,10 @@ module.exports = class MapVisualEditor extends EventEmitter {
                     this.map.fire( 'chunkStreamingDone' );
                 } );
             } )
-            .catch( () => this.map.$status.show().html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' ) );
+            .catch( ex => {
+                this.map.$status.show().html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' );
+                throw ex;
+            } );
 
         
         const streamingCallback = () => {
