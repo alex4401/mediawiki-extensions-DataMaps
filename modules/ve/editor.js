@@ -107,7 +107,7 @@ module.exports = class MapVisualEditor extends EventEmitter {
                 }
 
                 this.map.waitForLeaflet( () => {
-                    this.map.instantiateMarkers( markerStore );
+                    this.map.streaming.instantiateMarkers( markerStore );
                     this.map.fire( 'chunkStreamingDone' );
                 } );
             } )
