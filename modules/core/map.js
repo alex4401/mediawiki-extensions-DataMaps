@@ -697,6 +697,16 @@ class DataMap extends EventEmitter {
 
 
     _initialiseLegend() {
+        this.$legendRoot = new OO.ui.Widget( {
+            classes: [ 'datamap-container-legend' ],
+            content: [
+                new OO.ui.LabelWidget( {
+                    label: mw.msg( 'datamap-legend-label' ),
+                    classes: [ 'datamap-legend-label', 'oo-ui-tabSelectWidget-framed' ]
+                } )
+            ]
+        } ).$element.prependTo( this.$root.find( '> .datamap-container-content' ) );
+
         // Determine if we'll need a layer dropdown
         const hasCaves = this.isLayerUsed( 'cave' );
         const withLayerDropdown = hasCaves;

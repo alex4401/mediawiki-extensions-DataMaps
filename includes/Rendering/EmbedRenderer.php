@@ -209,11 +209,6 @@ class EmbedRenderer {
             $containerMain->setAttributes( [ 'data-filter-groups' => implode( '|', $options->displayGroups ) ] );
         }
 
-        // Legend
-        if ( !$this->data->wantsLegendHidden() ) {
-            $containerContent->appendContent( $this->getLegendContainerWidget() );
-        }
-
         // Leaflet area
         $containerMap = new \OOUI\PanelLayout( [
             'framed' => true,
@@ -232,19 +227,6 @@ class EmbedRenderer {
         $containerMain->appendContent( new \OOUI\HtmlSnippet( $config->makeElement() ) );
 
         return $containerMain;
-    }
-
-    public function getLegendContainerWidget(): \OOUI\Widget {
-        $legend = new \OOUI\Widget( [
-            'classes' => [ 'datamap-container-legend' ]
-        ] );
-
-        $legend->appendContent( new \OOUI\LabelWidget( [
-            'label' => wfMessage( 'datamap-legend-label' ),
-            'classes' => [ 'datamap-legend-label', 'oo-ui-tabSelectWidget-framed' ]
-        ] ) );
-
-        return $legend;
     }
 
     public function getLeafletContainerHtml(): string {
