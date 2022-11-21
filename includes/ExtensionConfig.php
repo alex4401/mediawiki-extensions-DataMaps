@@ -75,7 +75,11 @@ class ExtensionConfig {
     }
 
     public static function shouldLinksUpdatesUseMarkers( string $feature ) {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsFullyUpdateLinkTables' );
+        return self::getLinksUpdateBudget() > 0;
+    }
+
+    public static function getLinksUpdateBudget() {
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsFullLinksUpdateBudget' );
     }
 
     public static function isVisualEditorEnabled(): bool {

@@ -402,8 +402,8 @@
 				"SortChecklistsByAmount": false
 			}
 		},
-		"FullyUpdateLinkTables": {
-			"value": true
+		"FullLinksUpdateBudget": {
+			"value": 0.5
 		},
 		"EnableVisualEditor": {
 			"value": true

@@ -143,7 +143,8 @@ Box is a array of two locations, where first describes the start point of the bo
 * * `$wgDataMapsDefaultFeatures['Search']`: whether marker search will be enabled by default. Defaults to `false`.
 * * `$wgDataMapsDefaultFeatures['SortChecklistsByAmount']`: whether collectible checklists will be sorted by number of markers inside. Defaults to `false`.
 * `$wgDataMapsReportTimingInfo`: if set to `true`, marker processing time will be reported in API responses. Defaults to `false`.
-* `$wgDataMapsEnableVisualEditor`: 
+* `$wgDataMapsFullLinksUpdateBudget`: controls total time (in seconds) that can be spent on parsing marker wikitext to perform complete links table updates. Set to `0` to disable.
+* `$wgDataMapsEnableVisualEditor`: enables the visual map editor.
 * `$wgDataMapsAllowExperimentalFeatures`: if set to `true`, enables features listed below - all of which are in development and not ready for production. Defaults to `false`.
 * * Visual editor
 

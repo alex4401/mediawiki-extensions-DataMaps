@@ -231,9 +231,12 @@ class HookHandler implements
                     // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
                     // creating thousands of small, very short-lived (only one at a time) objects
                     $marker = new Data\MarkerSpec( new \stdclass() );
+                    // The budget controls remaining time we may spend on parsing wikitext in the markers
+                    $budget = ExtensionConfig::getLinksUpdateBudget();
+                    $startTime = microtime( true );
 
                     $dataMap->iterateRawMarkerMap( static function ( string $_, array $rawCollection )
-                        use ( &$parser, &$title, &$parserOptions, &$marker ) {
+                        use ( &$parser, &$title, &$parserOptions, &$marker, &$budget, &$startTime ) {
                         // Parse labels and descriptions of each marker, and drop the text. We only care about the metadata here.
                         foreach ( $rawCollection as &$rawMarker ) {
                             $marker->reassignTo( $rawMarker );
@@ -246,6 +249,12 @@ class HookHandler implements
                                 $parser->parse( $marker->getDescription(), $title, $parserOptions, false, false );
                             }
                             $parser->getOutput()->setText( '' );
+
+                            // Subtract the budget and stop iteration 
+                            $budget -= microtime( true ) - $startTime;
+                            if ( $budget <= 0 ) {
+                                return false;
+                            }
                         }
                     } );
 
