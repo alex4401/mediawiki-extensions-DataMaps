@@ -177,7 +177,9 @@ class DataMapSpec extends DataModel {
     public function iterateGroups( callable $callback ) {
         foreach ( $this->getGroupNames() as &$name ) {
             $data = $this->getGroup( $name );
-            $callback( $data );
+            if ( $callback( $data ) === false ) {
+                break;
+            }
         }
     }
 
@@ -185,20 +187,26 @@ class DataMapSpec extends DataModel {
         foreach ( $this->getLayerNames() as &$name ) {
             $data = $this->getLayer( $name );
             if ( $data !== null ) {
-                $callback( $data );
+                if ( $callback( $data ) === false ) {
+                    break;
+                }
             }
         }
     }
 
     public function iterateRawMarkerMap( callable $callback ) {
         foreach ( get_object_vars( $this->getRawMarkerMap() ) as $id => $data ) {
-            $callback( $id, $data );
+            if ( $callback( $id, $data ) === false ) {
+                break;
+            }
         }
     }
 
     public function iterateRawLayerMap( callable $callback ) {
         foreach ( get_object_vars( $this->getRawMarkerLayerMap() ) as $id => $data ) {
-            $callback( $id, $data );
+            if ( $callback( $id, $data ) === false ) {
+                break;
+            }
         }
     }
 
