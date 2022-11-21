@@ -2,14 +2,22 @@ module.exports = class MapLegend {
     constructor( map ) {
         this.map = map;
         // DOM element of the legend container
-        this.$legendRoot = this.map.$root.find( '.datamap-container-legend' );
+        this.$root = new OO.ui.Widget( {
+            classes: [ 'datamap-container-legend' ],
+            content: [
+                new OO.ui.LabelWidget( {
+                    label: mw.msg( 'datamap-legend-label' ),
+                    classes: [ 'datamap-legend-label', 'oo-ui-tabSelectWidget-framed' ]
+                } )
+            ]
+        } ).$element.prependTo( this.map.$root.find( '> .datamap-container-content' ) );
         // IndexLayout of the legend panel
         this.tabLayout = new OO.ui.IndexLayout( {
             expanded: false
         } );
 
         // Append the IndexLayout to the root
-        this.tabLayout.$element.appendTo( this.$legendRoot );
+        this.tabLayout.$element.appendTo( this.$root );
     }
 
 
@@ -44,12 +52,12 @@ module.exports = class MapLegend {
 
     reevaluateVisibility() {
         if ( this.tabLayout.getTabs().getItems().some( item => item.isVisible() ) ) {
-            if ( !this.$legendRoot.is( ':visible' ) ) {
+            if ( !this.$root.is( ':visible' ) ) {
                 this.tabLayout.selectFirstSelectableTabPanel();
             }
-            this.$legendRoot.show();
+            this.$root.show();
         } else {
-            this.$legendRoot.hide();
+            this.$root.hide();
         }
     }
 
