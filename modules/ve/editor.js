@@ -57,7 +57,7 @@ module.exports = class MapVisualEditor extends EventEmitter {
                 include: [ 'sourceEditor', 'commit' ]
             }
         ] );
-        this.toolbar.$element.prependTo( this.map.$root.find( '.leaflet-control-container' ).parent() );
+        this.toolbar.$element.prependTo( this.map.$root.find( '.leaflet-control-container' ) );
         this.toolbar.initialize();
         this.toolbar.emit( 'updateState', {
             ve: this
