@@ -1,10 +1,32 @@
 .datamap-is-ve-active {
-    .oo-ui-toolbar-bar {
-        background-color: #ddd;
-        border-color: #a2a9b1;
+    .leaflet-top {
+        top: 38px;
     }
 
-    .oo-ui-toolbar-tools > .oo-ui-toolGroup:last-child {
-        float: right;
+    .oo-ui-toolbar {
+        padding: 4px 7px 3px;
+        z-index: 1100;
+        top: 0;
+        left: 0;
+        right: 0;
+        position: absolute;
+        box-sizing: border-box;
+    
+        .oo-ui-toolbar-bar {
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+        }
+
+        .oo-ui-toolbar-tools > .oo-ui-toolGroup {
+            background-color: #fff;
+            border-color: #a2a9b1;
+            box-shadow: 0 0 4px 0 #0008;
+            border-radius: 4px;
+
+            &:last-child {
+                float: right;
+            }
+        }
     }
 }
