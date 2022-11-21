@@ -1,3 +1,6 @@
+const Enums = require( './enums.js' );
+
+
 module.exports = class MapLegend {
     constructor( map ) {
         this.map = map;
@@ -51,6 +54,11 @@ module.exports = class MapLegend {
 
 
     reevaluateVisibility() {
+        if ( this.map.isFeatureBitSet( Enums.MapFlags.VisualEditor ) ) {
+            this.$root.show();
+            return;
+        }
+
         if ( this.tabLayout.getTabs().getItems().some( item => item.isVisible() ) ) {
             if ( !this.$root.is( ':visible' ) ) {
                 this.tabLayout.selectFirstSelectableTabPanel();
