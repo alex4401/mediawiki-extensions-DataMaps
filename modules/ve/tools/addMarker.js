@@ -6,7 +6,7 @@ function AddMarkerTool( toolGroup, config ) {
 }
 OO.inheritClass( AddMarkerTool, OO.ui.Tool );
 AddMarkerTool.static.name = 'addMarker';
-AddMarkerTool.static.icon = 'check';
+AddMarkerTool.static.icon = 'speechBubbleAdd';
 AddMarkerTool.static.title = mw.msg( 'datamap-ve-tool-add-marker' );
 
 

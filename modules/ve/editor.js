@@ -2,7 +2,8 @@ const EventEmitter = mw.dataMaps.EventEmitter,
     Util = mw.dataMaps.Util,
     Enums = mw.dataMaps.Enums,
     EditableMarkerPopup = require( './editablePopup.js' ),
-    MarkerGroupEditor = require( './widgets/markerGroupEditor.js' );
+    MarkerGroupEditor = require( './widgets/markerGroupEditor.js' ),
+    MapVeIntegrationControl = require( './veControl.js' );
 
 
 module.exports = class MapVisualEditor extends EventEmitter {
@@ -63,9 +64,10 @@ module.exports = class MapVisualEditor extends EventEmitter {
             ve: this
         } );
 
-        this.map.on( 'legendLoaded', this._enhanceGroups, this );
+        // Set up the mouse controls
+        this.control = new MapVeIntegrationControl( this );
 
-        require( './editablePopup.js' );
+        this.map.on( 'legendLoaded', this._enhanceGroups, this );
 
         this._requestRevisionData();
     }
