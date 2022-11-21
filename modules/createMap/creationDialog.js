@@ -15,6 +15,12 @@ CreationDialog.static.actions = [
         modes: [ 'create' ],
 		label: mw.msg( 'datamap-ve-cancel' ),
 		flags: [ 'safe', 'close' ]
+	},
+	{
+        action: 'sourceeditor',
+        modes: [ 'create' ],
+		label: mw.msg( 'datamap-ve-skip' ),
+		flags: [ 'safe' ]
 	}
 ];
 
@@ -216,10 +222,22 @@ CreationDialog.prototype.initialize = function () {
 };
 
 
-// Set up the initial mode of the window ('edit', in this example.)  
+// Set up the initial mode of the window  
 CreationDialog.prototype.getSetupProcess = function ( data ) {
 	return OO.ui.ProcessDialog.prototype.getSetupProcess.call( this, data )
 	    .next( () => this.actions.setMode( 'create' ), this );
+};
+
+
+CreationDialog.prototype.getActionProcess = function ( action ) {
+    if ( action === 'sourceeditor' ) {
+        return new OO.ui.Process( function () {
+            location.href = mw.util.getUrl( mw.config.get( 'wgPageName' ), {
+                action: 'edit'
+            } );
+        } ).next( 60 );
+    }
+    return OO.ui.ProcessDialog.prototype.getActionProcess.call( this, action );
 };
 
 
