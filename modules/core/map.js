@@ -646,17 +646,26 @@ class DataMap extends EventEmitter {
     }
 
 
+    _makeControlButton( $parent, title, icon, cssClass ) {
+        return $( `<a role="button" aria-disabled="false"><span class="oo-ui-icon-${icon}"></span></a>` )
+            .attr( {
+                title,
+                'aria-label': title,
+                'class': cssClass
+            } )
+            .appendTo( $parent );
+    }
+
+
     _buildControls() {
+        // Create a button to toggle the legend on small screens
         this.$legendPopupBtn = this.addControl( DataMap.anchors.topLeft,
             $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-legend-toggle">' ), true );
-        $( '<a role="button" aria-disabled="false"><span class="oo-ui-icon-settings"></span></a>' )
-            .attr( 'title', mw.msg( 'datamap-control-toggle-legend' ) )
+        this._makeControlButton( this.$legendPopupBtn, mw.msg( 'datamap-control-toggle-legend' ), 'settings' )
             .on( 'click', event => {
                 event.stopPropagation();
                 this.legend.$root.toggleClass( 'is-toggled-on' );
-            } )
-            .appendTo( this.$legendPopupBtn );
-        
+            } );
 
         // Create a coordinate-under-cursor display
         if ( this.isFeatureBitSet( Enums.MapFlags.ShowCoordinates ) ) {
@@ -684,40 +693,22 @@ class DataMap extends EventEmitter {
         }
 
         // Extend zoom control to add buttons to reset or centre the view
-        const $viewControls = this.addControl( DataMap.anchors.topLeft,
+        this.$viewControls = this.addControl( DataMap.anchors.topLeft,
             $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-viewcontrols">' ) );
-        $viewControls.append(
-            $( '<a role="button" class="datamap-control-viewreset" aria-disabled="false"><span class="oo-ui-icon-fullScreen">'
-                + '</span></a>' )
-            .attr( {
-                title: mw.msg( 'datamap-control-reset-view' ),
-                'aria-label': mw.msg( 'datamap-control-reset-view' )
-            } )
-            .on( 'click', () => this.restoreDefaultView() )
-        );
-        $viewControls.append(
-            $( '<a role="button" class="datamap-control-viewcentre" aria-disabled="false"><span class="oo-ui-icon-exitFullscreen">'
-                + '</span></a>' )
-            .attr( {
-                title: mw.msg( 'datamap-control-centre-view' ),
-                'aria-label': mw.msg( 'datamap-control-centre-view' )
-            } )
-            .on( 'click', () => this.centreView() )
-        );
+        this._makeControlButton( this.$viewControls, 'datamap-control-reset-view', 'fullScreen', 'datamap-control-viewreset' )
+            .on( 'click', () => this.restoreDefaultView() );
+        this._makeControlButton( this.$viewControls, 'datamap-control-centre-view', 'exitFullscreen', 'datamap-control-viewcentre' )
+            .on( 'click', () => this.centreView() );
 
         // Display an edit button for logged in users
         if ( !this.isFeatureBitSet( Enums.MapFlags.IsPreview ) && mw.config.get( 'wgUserName' ) !== null ) {
-            const $editControl = this.addControl( DataMap.anchors.topRight,
+            this.$editControl = this.addControl( DataMap.anchors.topRight,
                 $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-edit">' ) );
             const editLink = `${mw.util.wikiScript()}?curid=${this.id}&action=edit` + (
                 mw.user.options.get( 'datamaps-enable-visual-editor' ) ? '&visual=1' : ''
             );
-            $editControl.append(
-                $( '<a role="button" class="datamap-control-viewreset" aria-disabled="false"><span class="oo-ui-icon-edit">'
-                    + '</span></a>' )
-                .attr( 'title', mw.msg( 'edit' ) )
-                .attr( 'href', editLink )
-            );
+            this._makeControlButton( this.$editControl, 'edit', 'edit' )
+                .attr( 'href', editLink );
         }
     }
 
