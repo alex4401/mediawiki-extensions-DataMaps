@@ -82,13 +82,13 @@ class MarkerLegendPanel {
 
 
     addMarkerGroupToggle( groupId, group ) {
-        this.groupToggles[groupId] = new MarkerLegendPanel.MarkerGroupToggleField( this, groupId, group );
+        this.groupToggles[groupId] = new MarkerLegendPanel.MarkerGroupField( this, groupId, group );
         this.legend.setTabVisibility( this.tab, true );
     }
 }
 
 
-MarkerLegendPanel.MarkerGroupToggleField = class MarkerGroupToggleField {
+MarkerLegendPanel.MarkerGroupField = class MarkerGroupField {
     constructor( legendPanel, groupId, group ) {
         this.legendPanel = legendPanel;
         this.legend = this.legendPanel.legend;
