@@ -662,7 +662,7 @@ class DataMap extends EventEmitter {
         this.$legendPopupBtn = this.addControl( DataMap.anchors.topLeft,
             $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-legend-toggle">' ), true );
         this._makeControlButton( this.$legendPopupBtn, mw.msg( 'datamap-control-toggle-legend' ), 'funnel' )
-            .prepend( mw.msg( 'datamap-legend-label' ) )
+            .prepend( mw.msg( 'datamap-legend-label-toggle' ) )
             .on( 'click', event => {
                 event.stopPropagation();
                 this.$root.toggleClass( 'datamap-is-legend-toggled-on' );

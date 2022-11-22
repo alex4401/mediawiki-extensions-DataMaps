@@ -134,6 +134,8 @@
 				"datamap-popup-marker-link-copied",
 				"datamap-coordinate-control-text",
 				"datamap-coordinate-control-text-xy",
+				"datamap-legend-label-toggle",
+				"datamap-control-toggle-legend",
 				"datamap-control-reset-view",
 				"datamap-control-centre-view",
 				"datamap-checklist-prelude"
