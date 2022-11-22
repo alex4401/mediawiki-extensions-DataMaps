@@ -156,7 +156,7 @@
 		},
 
 		"ext.datamaps.site": {
-			"class": "MediaWiki\\Extension\\Ark\\DataMaps\\Rendering\\ResourceLoaderDataMapsSiteModule"
+			"class": "MediaWiki\\Extension\\DataMaps\\Rendering\\ResourceLoaderDataMapsSiteModule"
 		},
 
 		"ext.datamaps.inlineloader": {
@@ -335,17 +335,17 @@
 	},
 
 	"AutoloadNamespaces": {
-		"MediaWiki\\Extension\\Ark\\DataMaps\\": "includes/"
+		"MediaWiki\\Extension\\DataMaps\\": "includes/"
 	},
 
 	"APIModules": {
-		"queryDataMap": "MediaWiki\\Extension\\Ark\\DataMaps\\API\\ApiQueryDataMapEndpoint"
+		"queryDataMap": "MediaWiki\\Extension\\DataMaps\\API\\ApiQueryDataMapEndpoint"
 	},
 	"ContentHandlers": {
-		"datamap": "MediaWiki\\Extension\\Ark\\DataMaps\\Content\\DataMapContentHandler"
+		"datamap": "MediaWiki\\Extension\\DataMaps\\Content\\DataMapContentHandler"
 	},
 	
-	"callback": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onRegistration",
+	"callback": "MediaWiki\\Extension\\DataMaps\\HookHandler::onRegistration",
 	"Hooks": {
 		"ParserFirstCallInit": "MainHandler",
 		"ContentHandlerDefaultModelFor": "MainHandler",
@@ -357,11 +357,11 @@
 		"ListDefinedTags": "MainHandler",
 		"RecentChange_save": "MainHandler",
 		"RevisionDataUpdates": "MainHandler",
-		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
+		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
 	},
     "HookHandlers": {
         "MainHandler": {
-            "class": "MediaWiki\\Extension\\Ark\\DataMaps\\HookHandler"
+            "class": "MediaWiki\\Extension\\DataMaps\\HookHandler"
         }
     },
 

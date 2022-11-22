@@ -1,5 +1,5 @@
 <?php
-namespace MediaWiki\Extension\Ark\DataMaps\Rendering\Utils;
+namespace MediaWiki\Extension\DataMaps\Rendering\Utils;
 
 use InvalidArgumentException;
 use MediaWiki\MediaWikiServices;

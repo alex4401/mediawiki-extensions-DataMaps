@@ -1,5 +1,5 @@
 <?php
-namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
+namespace MediaWiki\Extension\DataMaps\Rendering;
 
 use MediaWiki\ResourceLoader\Context;
 use MediaWiki\ResourceLoader\WikiModule;

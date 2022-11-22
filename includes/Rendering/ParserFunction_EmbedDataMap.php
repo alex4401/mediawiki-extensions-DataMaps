@@ -1,9 +1,9 @@
 <?php
-namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
+namespace MediaWiki\Extension\DataMaps\Rendering;
 
-use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
-use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
-use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
+use MediaWiki\Extension\DataMaps\Content\DataMapContent;
+use MediaWiki\Extension\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\DataMaps\ExtensionConfig;
 use Parser;
 use Title;
 

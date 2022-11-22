@@ -1,12 +1,12 @@
 <?php
-namespace MediaWiki\Extension\Ark\DataMaps\Content;
+namespace MediaWiki\Extension\DataMaps\Content;
 
 use FormatJson;
 use JsonContent;
-use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\DataModelMixinTransformer;
-use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\EmbedRenderer;
+use MediaWiki\Extension\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\DataMaps\Data\DataModelMixinTransformer;
+use MediaWiki\Extension\DataMaps\ExtensionConfig;
+use MediaWiki\Extension\DataMaps\Rendering\EmbedRenderer;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use Parser;

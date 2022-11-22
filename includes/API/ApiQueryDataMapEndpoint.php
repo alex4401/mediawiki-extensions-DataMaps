@@ -1,11 +1,11 @@
 <?php
-namespace MediaWiki\Extension\Ark\DataMaps\API;
+namespace MediaWiki\Extension\DataMaps\API;
 
 use ApiBase;
 use LogicException;
-use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
-use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\MarkerProcessor;
+use MediaWiki\Extension\DataMaps\Content\DataMapContent;
+use MediaWiki\Extension\DataMaps\ExtensionConfig;
+use MediaWiki\Extension\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;

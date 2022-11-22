@@ -1,6 +1,6 @@
 <?php
-use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
+use MediaWiki\Extension\DataMaps\Content\DataMapContent;
+use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapFileUtils;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;

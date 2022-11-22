@@ -1,17 +1,17 @@
 <?php
-namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
+namespace MediaWiki\Extension\DataMaps\Rendering;
 
 use FormatJson;
 use Html;
 use InvalidArgumentException;
-use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundOverlaySpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MapBackgroundTileSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MarkerGroupSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MarkerLayerSpec;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
+use MediaWiki\Extension\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\DataMaps\Data\MapBackgroundOverlaySpec;
+use MediaWiki\Extension\DataMaps\Data\MapBackgroundSpec;
+use MediaWiki\Extension\DataMaps\Data\MapBackgroundTileSpec;
+use MediaWiki\Extension\DataMaps\Data\MarkerGroupSpec;
+use MediaWiki\Extension\DataMaps\Data\MarkerLayerSpec;
+use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapColourUtils;
+use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapFileUtils;
 use Title;
 
 class EmbedConfigGenerator {

@@ -1,8 +1,8 @@
 <?php
-namespace MediaWiki\Extension\Ark\DataMaps\Data;
+namespace MediaWiki\Extension\DataMaps\Data;
 
-use MediaWiki\Extension\Ark\DataMaps\Content\DataMapContent;
-use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
+use MediaWiki\Extension\DataMaps\Content\DataMapContent;
+use MediaWiki\Extension\DataMaps\ExtensionConfig;
 use Status;
 use Title;
 

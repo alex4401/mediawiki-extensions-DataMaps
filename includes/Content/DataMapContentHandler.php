@@ -1,13 +1,13 @@
 <?php
-namespace MediaWiki\Extension\Ark\DataMaps\Content;
+namespace MediaWiki\Extension\DataMaps\Content;
 
 use Content;
 use Html;
 use JsonContentHandler;
 use MediaWiki\Content\Renderer\ContentParseParams;
 use MediaWiki\Content\ValidationParams;
-use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\EmbedRenderOptions;
+use MediaWiki\Extension\DataMaps\ExtensionConfig;
+use MediaWiki\Extension\DataMaps\Rendering\EmbedRenderOptions;
 use MediaWiki\MediaWikiServices;
 use ParserOutput;
 use Title;

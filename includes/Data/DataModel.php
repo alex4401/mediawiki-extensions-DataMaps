@@ -1,9 +1,9 @@
 <?php
-namespace MediaWiki\Extension\Ark\DataMaps\Data;
+namespace MediaWiki\Extension\DataMaps\Data;
 
 use InvalidArgumentException;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapColourUtils;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
+use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapColourUtils;
+use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapFileUtils;
 use Status;
 use stdClass;
 

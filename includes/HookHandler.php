@@ -1,7 +1,7 @@
 <?php
-namespace MediaWiki\Extension\Ark\DataMaps;
+namespace MediaWiki\Extension\DataMaps;
 
-use MediaWiki\Extension\Ark\DataMaps\Rendering\MarkerProcessor;
+use MediaWiki\Extension\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\Revision\RevisionRecord;

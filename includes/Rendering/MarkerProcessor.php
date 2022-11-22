@@ -1,11 +1,11 @@
 <?php
-namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
+namespace MediaWiki\Extension\DataMaps\Rendering;
 
 use MapCacheLRU;
-use MediaWiki\Extension\Ark\DataMaps\Data\DataMapSpec;
-use MediaWiki\Extension\Ark\DataMaps\Data\MarkerSpec;
-use MediaWiki\Extension\Ark\DataMaps\ExtensionConfig;
-use MediaWiki\Extension\Ark\DataMaps\Rendering\Utils\DataMapFileUtils;
+use MediaWiki\Extension\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\DataMaps\Data\MarkerSpec;
+use MediaWiki\Extension\DataMaps\ExtensionConfig;
+use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapFileUtils;
 use MediaWiki\MediaWikiServices;
 use Parser;
 use ParserOptions;

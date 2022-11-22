@@ -1,5 +1,5 @@
 <?php
-namespace MediaWiki\Extension\Ark\DataMaps;
+namespace MediaWiki\Extension\DataMaps;
 
 use MediaWiki\MediaWikiServices;
 

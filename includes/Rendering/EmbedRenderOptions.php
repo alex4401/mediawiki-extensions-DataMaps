@@ -1,5 +1,5 @@
 <?php
-namespace MediaWiki\Extension\Ark\DataMaps\Rendering;
+namespace MediaWiki\Extension\DataMaps\Rendering;
 
 class EmbedRenderOptions {
     public ?array $displayGroups = null;
