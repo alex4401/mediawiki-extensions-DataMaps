@@ -709,7 +709,7 @@ class DataMap extends EventEmitter {
             const editLink = `${mw.util.wikiScript()}?curid=${this.id}&action=edit` + (
                 mw.user.options.get( 'datamaps-enable-visual-editor' ) ? '&visual=1' : ''
             );
-            this._makeControlButton( this.$editControl, 'edit', 'edit' )
+            this._makeControlButton( this.$editControl, 'datamap-control-edit', 'edit' )
                 .attr( 'href', editLink );
         }
     }

@@ -138,6 +138,7 @@
 				"datamap-control-toggle-legend",
 				"datamap-control-reset-view",
 				"datamap-control-centre-view",
+				"datamap-control-edit",
 				"datamap-checklist-prelude"
 			],
 			"targets": [ "desktop", "mobile" ]
