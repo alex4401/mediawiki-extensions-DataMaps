@@ -665,7 +665,8 @@ class DataMap extends EventEmitter {
             .prepend( mw.msg( 'datamap-legend-label' ) )
             .on( 'click', event => {
                 event.stopPropagation();
-                this.legend.$root.toggleClass( 'is-toggled-on' );
+                this.$root.toggleClass( 'datamap-is-legend-toggled-on' );
+                this.$legendPopupBtn.find( 'span' ).toggleClass( 'oo-ui-image-progressive' );
             } );
 
         // Create a coordinate-under-cursor display
