@@ -24,12 +24,49 @@ AddMarkerDialog.static.actions = [
 AddMarkerDialog.prototype.initialize = function () {
 	OO.ui.ProcessDialog.prototype.initialize.apply( this, arguments );
 	
+	// TODO: calculate the centre from CRS
+    this.lat = new OO.ui.TextInputWidget( {
+        type: 'number',
+        value: 50
+    } );
+    this.lon = new OO.ui.TextInputWidget( {
+        type: 'number',
+        value: 50
+    } );
+    this.submitButton = new OO.ui.ButtonInputWidget( {
+        label: mw.msg( 'datamap-ve-create' ),
+        flags: [ 'primary', 'progressive' ],
+        disabled: true
+    } );
+
     this.panel = new OO.ui.PanelLayout( {
         framed: false,
         expanded: false,
         padded: true,
         content: [
-            $( '<p>' ).text( mw.msg( 'datamap-ve-tool-add-marker-intro' ) )
+            $( '<p>' ).text( mw.msg( 'datamap-ve-tool-add-marker-intro' ) ),
+            new OO.ui.FormLayout( {
+                items: [
+                    new OO.ui.FieldsetLayout( {
+                        items: [
+                            new OO.ui.PanelLayout( {
+                                expanded: false,
+                                content: [
+                                    new OO.ui.FieldLayout( this.lat, {
+                                        label: mw.msg( 'datamap-ve-lat' ),
+                                        align: 'left'
+                                    } ),
+                                    new OO.ui.FieldLayout( this.lon, {
+                                        label: mw.msg( 'datamap-ve-lon' ),
+                                        align: 'left'
+                                    } )
+                                ]
+                            } ),
+                            new OO.ui.FieldLayout( this.submitButton )
+                        ]
+                    } )
+                ]
+            } )
         ]
     } );
 
