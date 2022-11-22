@@ -296,7 +296,11 @@ class DataMapSpec extends DataModel {
                     if ( empty( $name ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-no-group-name' );
                     }
-                
+
+                    if ( preg_match( '/\s/', $name ) ) {
+                        $status->fatal( 'datamap-error-validatespec-map-illegal-group-name', $name );
+                    }
+
                     $spec = new MarkerGroupSpec( $name, $group );
                     if ( !$spec->validate( $status ) ) {
                         return false;
@@ -313,7 +317,11 @@ class DataMapSpec extends DataModel {
                     if ( empty( $name ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-no-layer-name' );
                     }
-                
+
+                    if ( preg_match( '/\s/', $name ) ) {
+                        $status->fatal( 'datamap-error-validatespec-map-illegal-layer-name', $name );
+                    }
+
                     $spec = new MarkerLayerSpec( $name, $layer );
                     if ( !$spec->validate( $status ) ) {
                         return false;
