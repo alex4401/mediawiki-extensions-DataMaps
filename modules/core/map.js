@@ -3,7 +3,7 @@ const MapStorage = require( './storage.js' ),
     MarkerLayerManager = require( './layerManager.js' ),
     MarkerPopup = require( './popup.js' ),
     MarkerStreamingManager = require( './stream.js' ),
-    MapLegend = require( './legend.js' ),
+    LegendTabManager = require( './legend.js' ),
     MarkerLegendPanel = require( './markerLegend.js' ),
     EventEmitter = require( './events.js' ),
     DismissableMarkersLegend = require( './dismissables.js' ),
@@ -40,7 +40,7 @@ class DataMap extends EventEmitter {
         }
         // DOM element to display any status messages
         this.$status = $root.find( '.datamap-status' );
-        // MapLegend instance
+        // LegendTabManager instance
         this.legend = null;
         // Leaflet.Map instance
         this.leaflet = null;
@@ -721,7 +721,7 @@ class DataMap extends EventEmitter {
         const withLayerDropdown = hasCaves;
 
         // Initialise legend objects
-        this.legend = new MapLegend( this );
+        this.legend = new LegendTabManager( this );
         this.markerLegend = new MarkerLegendPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ), true, withLayerDropdown );
 
         // Build the surface and caves toggle

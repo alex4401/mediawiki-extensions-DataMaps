@@ -1,7 +1,7 @@
 const Enums = require( './enums.js' );
 
 
-module.exports = class MapLegend {
+module.exports = class LegendTabManager {
     constructor( map ) {
         this.map = map;
         // DOM element of the legend container
