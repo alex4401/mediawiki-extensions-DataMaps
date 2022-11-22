@@ -713,7 +713,7 @@ class DataMap extends EventEmitter {
             $editControl.append(
                 $( '<a role="button" class="datamap-control-viewreset" aria-disabled="false"><span class="oo-ui-icon-edit">'
                     + '</span></a>' )
-                .attr( 'title', mw.msg( 'edit' ) )
+                .attr( 'title', mw.msg( 'datamap-control-edit' ) )
                 .attr( 'href', editLink )
             );
         }
