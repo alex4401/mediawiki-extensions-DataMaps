@@ -647,6 +647,17 @@ class DataMap extends EventEmitter {
 
 
     _buildControls() {
+        this.$legendPopupBtn = this.addControl( DataMap.anchors.topLeft,
+            $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-legend-toggle">' ), true );
+        $( '<a role="button" aria-disabled="false"><span class="oo-ui-icon-settings"></span></a>' )
+            .attr( 'title', mw.msg( 'datamap-control-toggle-legend' ) )
+            .on( 'click', event => {
+                event.stopPropagation();
+                this.legend.$root.toggleClass( 'is-toggled-on' );
+            } )
+            .appendTo( this.$legendPopupBtn );
+        
+
         // Create a coordinate-under-cursor display
         if ( this.isFeatureBitSet( Enums.MapFlags.ShowCoordinates ) ) {
             this.$coordTracker = this.addControl( DataMap.anchors.bottomLeft,

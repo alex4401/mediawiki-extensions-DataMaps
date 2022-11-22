@@ -12,6 +12,30 @@
     }
 }
 
+.dmLegendAsPopup() {
+    .datamap-container-legend {
+        position: absolute;
+        inset: 50px 0 0 0;
+        width: unset;
+        margin: 0 6px 6px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 0 6px #0005;
+        z-index: 4000;
+        transform: translate(-45%, -53%) scale(0);
+        transition: transform .12s ease-in-out;
+
+        &.is-toggled-on {
+            transform: none;
+        }
+    }
+
+    .datamap-container .datamap-control.datamap-control-legend-toggle {
+        display: block;
+    }
+}
+
 .datamap-legend-is-above .datamap-container-legend {
     .dmLegendAboveMap();
 }
@@ -22,7 +46,7 @@
     box-sizing: border-box;
     overflow-y: auto;
 
-    @media screen and (max-width: 1200px) {
+    @media screen and (min-width: 901px) and (max-width: 1200px) {
         .dmLegendAboveMap();
     }
 
@@ -115,6 +139,10 @@
     .oo-ui-labelElement-label {
         vertical-align: middle;
     }
+}
+
+@media screen and (max-width: 900px) {
+    .dmLegendAsPopup();
 }
 
 .datamap-container-collectibles {
