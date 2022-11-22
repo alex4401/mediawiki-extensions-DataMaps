@@ -2,52 +2,7 @@ const Enums = require( './enums.js' ),
     Util = require( './util.js' );
 
 
-class MarkerGroupToggleField {
-    constructor( legendPanel, groupId, group ) {
-        this.legendPanel = legendPanel;
-        this.legend = this.legendPanel.legend;
-        this.map = this.legendPanel.map;
-        this.groupId = groupId;
-
-        // Create a backing checkbox field
-        const pair = this.legend.createCheckboxField( this.legendPanel.$groupContainer, group.name,
-            !Util.isBitSet( group.flags, Enums.MarkerGroupFlags.IsUnselected ),
-            state => this.map.layerManager.setExclusion( this.groupId, !state ) );
-        this.field = pair[1];
-        this.checkbox = pair[0];
-
-        // Optional elements
-        this.$circle = null;
-        this.$badge = null;
-        this.$icon = null;
-
-        // Add a coloured circle if circle marker group
-        if ( group.fillColor ) {
-            this.$circle = Util.createGroupCircleElement( group ).prependTo( this.field.$header );
-        }
-
-        // Add an icon if one is specified in the group
-        if ( group.legendIcon ) {
-            this.$icon = Util.createGroupIconElement( group ).attr( 'src', group.legendIcon ).prependTo( this.field.$header );
-        }
-    }
-
-
-    setBadge( text ) {
-        if ( text && text.length > 0 ) {
-            if ( this.$badge == null ) {
-                this.$badge = $( '<span class="datamap-legend-badge">' ).appendTo( this.field.$header );
-            }
-            this.$badge.text( text );
-        } else if ( this.$badge ) {
-            this.$badge.remove();
-            this.$badge = null;
-        }
-    }
-}
-
-
-module.exports = class MarkerLegendPanel {
+class MarkerLegendPanel {
     constructor( legend, name, addTotalToggles, withLayerDropdown ) {
         this.legend = legend;
         this.map = this.legend.map;
@@ -127,7 +82,55 @@ module.exports = class MarkerLegendPanel {
 
 
     addMarkerGroupToggle( groupId, group ) {
-        this.groupToggles[groupId] = new MarkerGroupToggleField( this, groupId, group );
+        this.groupToggles[groupId] = new MarkerLegendPanel.MarkerGroupToggleField( this, groupId, group );
         this.legend.setTabVisibility( this.tab, true );
     }
 }
+
+
+MarkerLegendPanel.MarkerGroupToggleField = class MarkerGroupToggleField {
+    constructor( legendPanel, groupId, group ) {
+        this.legendPanel = legendPanel;
+        this.legend = this.legendPanel.legend;
+        this.map = this.legendPanel.map;
+        this.groupId = groupId;
+
+        // Create a backing checkbox field
+        const pair = this.legend.createCheckboxField( this.legendPanel.$groupContainer, group.name,
+            !Util.isBitSet( group.flags, Enums.MarkerGroupFlags.IsUnselected ),
+            state => this.map.layerManager.setExclusion( this.groupId, !state ) );
+        this.field = pair[1];
+        this.checkbox = pair[0];
+
+        // Optional elements
+        this.$circle = null;
+        this.$badge = null;
+        this.$icon = null;
+
+        // Add a coloured circle if circle marker group
+        if ( group.fillColor ) {
+            this.$circle = Util.createGroupCircleElement( group ).prependTo( this.field.$header );
+        }
+
+        // Add an icon if one is specified in the group
+        if ( group.legendIcon ) {
+            this.$icon = Util.createGroupIconElement( group ).attr( 'src', group.legendIcon ).prependTo( this.field.$header );
+        }
+    }
+
+
+    setBadge( text ) {
+        if ( text && text.length > 0 ) {
+            if ( this.$badge == null ) {
+                this.$badge = $( '<span class="datamap-legend-badge">' ).appendTo( this.field.$header );
+            }
+            this.$badge.text( text );
+        } else if ( this.$badge ) {
+            this.$badge.remove();
+            this.$badge = null;
+        }
+    }
+}
+
+
+module.exports = MarkerLegendPanel;
