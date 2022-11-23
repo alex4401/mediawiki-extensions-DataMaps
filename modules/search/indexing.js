@@ -1,5 +1,5 @@
 const Util = require( './util.js' ),
-    Fuzzysort = require( 'ext.ark.datamaps.fuzzysort' );
+    Fuzzysort = require( 'ext.datamaps.fuzzysort' );
 
 
 /**

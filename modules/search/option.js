@@ -1,4 +1,4 @@
-const Leaflet = require( 'ext.ark.datamaps.leaflet' );
+const Leaflet = require( 'ext.datamaps.leaflet' );
 
 
 function MenuOptionWidget( config ) {
