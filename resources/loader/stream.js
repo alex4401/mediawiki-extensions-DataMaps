@@ -4,6 +4,7 @@ module.exports = class MarkerStreamingManager {
         this.mwApi = new mw.Api();
     }
 
+
     callApiUnreliable( options ) {
         return this.mwApi.get( $.extend( {
             action: 'queryDataMap'
@@ -12,6 +13,7 @@ module.exports = class MarkerStreamingManager {
             reason => Promise.reject( reason )
         );
     }
+
 
     callApiReliable( options, retries, waitTime ) {
         retries = retries != null ? retries : 2;

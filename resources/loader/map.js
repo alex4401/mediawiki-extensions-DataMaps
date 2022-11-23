@@ -702,6 +702,21 @@ class DataMap extends EventEmitter {
             } )
             .on( 'click', () => this.centreView() )
         );
+
+        // Display an edit button for logged in users
+        if ( !this.isFeatureBitSet( Enums.MapFlags.IsPreview ) && mw.config.get( 'wgUserName' ) !== null ) {
+            const $editControl = this.addControl( DataMap.anchors.topRight,
+                $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-edit">' ) );
+            const editLink = `${mw.util.wikiScript()}?curid=${this.id}&action=edit` + (
+                mw.user.options.get( 'datamaps-enable-visual-editor' ) ? '&visual=1' : ''
+            );
+            $editControl.append(
+                $( '<a role="button" class="datamap-control-viewreset" aria-disabled="false"><span class="oo-ui-icon-edit">'
+                    + '</span></a>' )
+                .attr( 'title', mw.msg( 'datamap-control-edit' ) )
+                .attr( 'href', editLink )
+            );
+        }
     }
 
 

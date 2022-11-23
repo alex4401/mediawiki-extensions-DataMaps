@@ -11,7 +11,8 @@ module.exports = {
         Search: 1<<3,
         SortChecklistsByAmount: 1<<4,
         LinkedSearch: 1<<5,
-        VisualEditor: 1<<6
+        VisualEditor: 1<<6,
+        IsPreview: 1<<7
     },
 
     CollectibleType: {

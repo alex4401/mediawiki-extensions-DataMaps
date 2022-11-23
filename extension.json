@@ -1,6 +1,6 @@
 {
 	"name": "Interactive Data Maps",
-	"version": "0.13.4",
+	"version": "0.13.5",
 
 	"author": [
 		"alex4401"
@@ -78,7 +78,8 @@
 				"fullScreen",
 				"expand",
 				"link",
-				"search"
+				"search",
+				"edit"
 			]
 		},
 
@@ -139,6 +140,7 @@
 				"datamap-coordinate-control-text-xy",
 				"datamap-control-reset-view",
 				"datamap-control-centre-view",
+				"datamap-control-edit",
 				"datamap-checklist-prelude"
 			],
 			"targets": [ "desktop", "mobile" ]

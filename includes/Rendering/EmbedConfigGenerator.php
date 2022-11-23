@@ -103,6 +103,7 @@ class EmbedConfigGenerator {
         $out |= $this->data->wantsChecklistSortedByAmount() ? 1<<4 : 0;
         $out |= $this->data->wantsSearch() === DataMapSpec::SM_TABBER ? 1<<5 : 0;
         $out |= $this->forVisualEditor ? 1<<6 : 0;
+        $out |= ( $this->useInlineData || $this->forVisualEditor ) ? 1 << 7 : 0;
         return $out;
     }
 
