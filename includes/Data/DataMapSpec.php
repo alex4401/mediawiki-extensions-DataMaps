@@ -347,6 +347,12 @@ class DataMapSpec extends DataModel {
                 $uidMap = [];
                 $this->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection )
                     use ( &$status, &$requireOwnIDs, &$uidMap, $isFull ) {
+                    // Verify the association has no duplicate layers specified
+                    $split = explode( ' ', $layers );
+                    if ( count( $split ) !== count( array_unique( $split ) ) ) {
+                        $status->fatal( 'datamap-error-validatespec-map-duplicate-assoc-layers', wfEscapeWikiText( $layers ) );
+                    }
+
                     // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
                     // creating thousands of small, very short-lived (only one at a time) objects
                     $marker = new MarkerSpec( new \stdclass() );
