@@ -268,13 +268,14 @@ class DataMapSpec extends DataModel {
                     'type' => DataModel::TYPE_ARRAY,
                     'check' => static function ( $status, $backgrounds ) {
                         $multipleBgs = count( $backgrounds ) > 1;
+                        $out = true;
                         foreach ( $backgrounds as &$raw ) {
                             $spec = new MapBackgroundSpec( $raw );
                             if ( !$spec->validate( $status, !$multipleBgs ) ) {
-                                return false;
+                                $out = false;
                             }
                         }
-                        return true;
+                        return $out;
                     }
                 ] );
             } elseif ( $isFull ) {
@@ -300,42 +301,48 @@ class DataMapSpec extends DataModel {
             'type' => DataModel::TYPE_OBJECT,
             'required' => $isFull,
             'check' => static function ( $status, &$rawMap ) {
+                $out = true;
                 foreach ( $rawMap as $name => $group ) {
                     if ( empty( $name ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-no-group-name' );
+                        $out = false;
                     }
 
                     if ( preg_match( '/\s/', $name ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-illegal-group-name', $name );
+                        $out = false;
                     }
 
                     $spec = new MarkerGroupSpec( $name, $group );
                     if ( !$spec->validate( $status ) ) {
-                        return false;
+                        $out = false;
                     }
                 }
-                return true;
+                return $out;
             }
         ] );
         $this->checkField( $status, [
             'name' => 'layers',
             'type' => DataModel::TYPE_OBJECT,
             'check' => static function ( $status, &$rawMap ) {
+                $out = true;
                 foreach ( $rawMap as $name => $layer ) {
                     if ( empty( $name ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-no-layer-name' );
+                        $out = false;
                     }
 
                     if ( preg_match( '/\s/', $name ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-illegal-layer-name', $name );
+                        $out = false;
                     }
 
                     $spec = new MarkerLayerSpec( $name, $layer );
                     if ( !$spec->validate( $status ) ) {
-                        return false;
+                        $out = false;
                     }
                 }
-                return true;
+                return $out;
             }
         ] );
         $this->checkField( $status, 'custom', DataModel::TYPE_OBJECT );
@@ -345,12 +352,14 @@ class DataMapSpec extends DataModel {
             'check' => function ( $status, &$rawMap ) use ( $isFull ) {
                 $requireOwnIDs = $this->wantsCustomMarkerIDs();
                 $uidMap = [];
+                $out = true;
                 $this->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection )
-                    use ( &$status, &$requireOwnIDs, &$uidMap, $isFull ) {
+                    use ( &$status, &$requireOwnIDs, &$uidMap, $isFull, &$out ) {
                     // Verify the association has no duplicate layers specified
                     $split = explode( ' ', $layers );
                     if ( count( $split ) !== count( array_unique( $split ) ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-duplicate-assoc-layers', wfEscapeWikiText( $layers ) );
+                        $out = false;
                     }
 
                     // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
@@ -363,24 +372,29 @@ class DataMapSpec extends DataModel {
                     $groupName = $layers[0];
                     if ( $isFull && !isset( $this->raw->groups->$groupName ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-missing-group', wfEscapeWikiText( $groupName ) );
+                        $out = false;
                         return;
                     }
 
                     // Validate each marker
                     foreach ( $rawMarkerCollection as &$rawMarker ) {
                         $marker->reassignTo( $rawMarker );
-                        $marker->validate( $status, $requireOwnIDs );
+                        if ( !$marker->validate( $status, $requireOwnIDs ) ) {
+                            $out = false;
+                        }
 
                         $uid = $marker->getCustomPersistentId();
                         if ( $uid !== null ) {
                             if ( isset( $uidMap[$uid] ) ) {
                                 $status->fatal( 'datamap-error-validatespec-map-uid-conflict', wfEscapeWikiText( $uid ) );
+                                $out = false;
                             }
 
                             $uidMap[$uid] = true;
                         }
                     }
                 } );
+                return $out;
             }
         ] );
         $this->disallowOtherFields( $status );
