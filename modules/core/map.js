@@ -601,6 +601,11 @@ class DataMap extends EventEmitter {
             markerZoomAnimation: true,
             // Do not allow pinch-zooming to surpass max zoom even temporarily. This seems to cause a mispositioning.
             bounceAtZoomLimits: false,
+            // Zoom control text injection
+            zoomControlOptions: {
+        		zoomInTitle: mw.msg( 'datamap-control-zoom-in' ),
+		        zoomOutTitle: mw.msg( 'datamap-control-zoom-out' )
+            },
             // Pan settings
             inertia: false,
             // Zoom-based marker scaling

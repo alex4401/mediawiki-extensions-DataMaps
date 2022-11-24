@@ -75,6 +75,8 @@
 
     "datamap-coordinate-control-text": "lat $1, lon $2",
     "datamap-coordinate-control-text-xy": "x: $2, y: $1",
+    "datamap-control-zoom-in": "Zoom in",
+    "datamap-control-zoom-out": "Zoom out",
     "datamap-control-toggle-legend": "Tap to expand the legend to toggle markers",
     "datamap-control-reset-view": "Restore default view",
     "datamap-control-centre-view": "Center view at current zoom level",
