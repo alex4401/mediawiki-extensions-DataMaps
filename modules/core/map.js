@@ -449,13 +449,12 @@ class DataMap extends EventEmitter {
 
     restoreDefaultView() {
         this.leaflet.setZoom( this.leaflet.options.minZoom );
-        this.leaflet.fitBounds( this.translateBox( this.background.at ) );
+        this.leaflet.fitBounds( this.getCurrentContentBounds() );
     }
 
 
     centreView() {
-        const box = this.translateBox( this.background.at );
-        this.leaflet.setView( [ (box[1][0] + box[0][0])/2, (box[1][1] + box[0][1])/2 ] );
+        this.leaflet.setView( this.getCurrentContentBounds().getCenter() );
     }
 
 
