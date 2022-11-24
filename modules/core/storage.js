@@ -13,8 +13,6 @@
  *   20221115   : Namespace changed from ext.ark.datamaps to ext.datamaps.
  */
 class MapStorage {
-    // TODO: mark functions no longer relevant as of 20221114 as internal.
-
     constructor( map, storageId ) {
         this.map = map;
         this.id = storageId || this.map.id;
@@ -68,17 +66,12 @@ class MapStorage {
     }
 
 
-    getArray( name ) {
-        return JSON.parse( this.get( name ) || '[]' );
+    getJSON( name, fallback ) {
+        return JSON.parse( this.get( name ) || fallback );
     }
 
 
-    getObject( name ) {
-        return JSON.parse( this.get( name ) || '{}' );
-    }
-
-
-    setObject( name, data ) {
+    setJSON( name, data ) {
         this.set( name, JSON.stringify( data ) );
     }
 
