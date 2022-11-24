@@ -515,10 +515,12 @@ class DataMap extends EventEmitter {
 
 
     /**
-     * Calculates max bounds for a map from its contents (all geometrical layers are included). This is usually done
-     * after a data chunk is streamed in, and is fairly expensive.
+     * Calculates content bounds at a given moment from all of the map's contents (all geometrical layers are included). This is
+     * uncached and fairly expensive.
+     * BUG: #50
+     * @returns {Leaflet.LatLngBounds}
      */
-    refreshMaxBounds() {
+    getCurrentContentBounds() {
     	const bounds = new Leaflet.LatLngBounds();
         // Collect content bounds
     	for ( const id in this.leaflet._layers ) {
@@ -527,13 +529,31 @@ class DataMap extends EventEmitter {
     		    bounds.extend( layer.getBounds ? layer.getBounds() : layer.getLatLng() );
             }
     	}
-        // Add padding
+        return bounds;
+    }
+
+
+    /**
+     * Calculates content bounds and includes extra padding around the area.
+     * @returns {Leaflet.LatLngBounds}
+     */
+    getPaddedContentBounds() {
+        const bounds = this.getCurrentContentBounds();
         const nw = bounds.getNorthWest(),
             se = bounds.getSouthEast();
         bounds.extend( [ [ se.lat - DataMap.BOUNDS_PADDING[0], se.lng + DataMap.BOUNDS_PADDING[1] ],
             [ nw.lat + DataMap.BOUNDS_PADDING[0], nw.lng - DataMap.BOUNDS_PADDING[1] ] ] );
-        // Update Leaflet instance
-        this.leaflet.setMaxBounds( bounds );
+        return bounds;
+    }
+
+
+    /**
+     * Updates Leaflet's max view bounds to padded content bounds in current state. This is usually done
+     * after a data chunk is streamed in, and is fairly expensive.
+     * BUG: #49
+     */
+    refreshMaxBounds() {
+        this.leaflet.setMaxBounds( this.getPaddedContentBounds() );
     }
 
 
