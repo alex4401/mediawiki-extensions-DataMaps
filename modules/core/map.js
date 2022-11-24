@@ -727,10 +727,10 @@ class DataMap extends EventEmitter {
         // Extend zoom control to add buttons to reset or centre the view
         this.$viewControls = this.addControl( DataMap.anchors.topLeft,
             $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-viewcontrols">' ) );
-        this._makeControlButton( this.$viewControls, 'datamap-control-reset-view', 'fullScreen', 'datamap-control-viewreset' )
-            .on( 'click', () => this.restoreDefaultView() );
-        this._makeControlButton( this.$viewControls, 'datamap-control-centre-view', 'exitFullscreen', 'datamap-control-viewcentre' )
-            .on( 'click', () => this.centreView() );
+        this._makeControlButton( this.$viewControls, mw.msg( 'datamap-control-reset-view' ), 'fullScreen',
+            'datamap-control-viewreset' ).on( 'click', () => this.restoreDefaultView() );
+        this._makeControlButton( this.$viewControls, mw.msg( 'datamap-control-centre-view' ), 'exitFullscreen',
+            'datamap-control-viewcentre' ).on( 'click', () => this.centreView() );
 
         // Display an edit button for logged in users
         if ( !this.isFeatureBitSet( Enums.MapFlags.IsPreview ) && mw.config.get( 'wgUserName' ) !== null ) {
@@ -739,7 +739,7 @@ class DataMap extends EventEmitter {
             const editLink = `${mw.util.wikiScript()}?curid=${this.id}&action=edit` + (
                 mw.user.options.get( 'datamaps-enable-visual-editor' ) ? '&visual=1' : ''
             );
-            this._makeControlButton( this.$editControl, 'datamap-control-edit', 'edit' )
+            this._makeControlButton( this.$editControl, mw.msg( 'datamap-control-edit' ), 'edit' )
                 .attr( 'href', editLink );
         }
     }
