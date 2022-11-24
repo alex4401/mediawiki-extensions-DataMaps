@@ -448,8 +448,11 @@ class DataMap extends EventEmitter {
 
 
     restoreDefaultView() {
+        const originalSnap = this.leaflet.options.zoomSnap;
+        this.leaflet.options.zoomSnap /= 4;
         this.leaflet.setZoom( this.leaflet.options.minZoom );
         this.leaflet.fitBounds( this.getCurrentContentBounds() );
+        this.leaflet.options.zoomSnap = originalSnap;
     }
 
 
