@@ -77,7 +77,7 @@ class MapStorage {
 
 
     commit() {
-        this.set( '*', this.data );
+        this.setJSON( '*', this.data );
     }
 
 
