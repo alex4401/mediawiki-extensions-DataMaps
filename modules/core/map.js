@@ -732,7 +732,7 @@ class DataMap extends EventEmitter {
         // Extend zoom control to add buttons to reset or centre the view
         this.$viewControls = this.addControl( DataMap.anchors.topLeft,
             $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-viewcontrols">' ) );
-        this._makeControlButton( this.$viewControls, mw.msg( 'datamap-control-reset-view' ), 'fullScreen',
+        this._makeControlButton( this.$viewControls, mw.msg( 'datamap-control-reset-view' ), 'imageLayoutFrame',
             'datamap-control-viewreset' ).on( 'click', () => this.restoreDefaultView() );
         this._makeControlButton( this.$viewControls, mw.msg( 'datamap-control-centre-view' ), 'exitFullscreen',
             'datamap-control-viewcentre' ).on( 'click', () => this.centreView() );
