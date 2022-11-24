@@ -475,6 +475,10 @@ class DataMap extends EventEmitter {
         } else {
             $element[ shouldPrepend ? 'prependTo' : 'appendTo' ]( this.$root.find( `.leaflet-control-container ${anchor}` ) );
         }
+
+        // Stop mouse event propagation onto Leaflet map
+        $element.on( 'click dblclick scroll mousewheel wheel', event => event.stopPropagation() );
+
         return $element;
     }
 

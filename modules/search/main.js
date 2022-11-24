@@ -58,7 +58,6 @@ class MarkerSearch {
             this.linkedToggle.$element.insertBefore( this.inputBox.$indicator );
         }
 
-        this.$root.on( 'click dblclick scroll mousewheel wheel', event => event.stopPropagation() );
         this.menu.$element.on( 'scroll mousewheel wheel', event => event.stopPropagation() );
 
         this.inputBox.on( 'change', this.onTextChange, null, this );
