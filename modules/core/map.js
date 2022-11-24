@@ -470,7 +470,11 @@ class DataMap extends EventEmitter {
      * @returns $element for chaining.
      */
     addControl( anchor, $element, shouldPrepend ) {
-        this.$root.find( `.leaflet-control-container ${anchor}` )[ shouldPrepend ? 'prepend' : 'append' ]( $element );
+        if ( shouldPrepend && this.$legendPopupBtn ) {
+            $element.insertAfter( this.$legendPopupBtn );
+        } else {
+            $element[ shouldPrepend ? 'prependTo' : 'appendTo' ]( this.$root.find( `.leaflet-control-container ${anchor}` ) );
+        }
         return $element;
     }
 
