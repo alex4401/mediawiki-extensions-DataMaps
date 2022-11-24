@@ -21,6 +21,15 @@ class MapStorage {
         this.migrate();
         
         this.data = this.getJSON( '*', '{}' );
+        this.initialiseField( 'dismissed', [] );
+        this.initialiseField( 'background', 0 );
+    }
+
+    
+    initialiseField( name, value ) {
+        if ( this.data[name] == null ) {
+            this.data[name] = value;
+        }
     }
 
 
