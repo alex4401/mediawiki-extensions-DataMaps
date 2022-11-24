@@ -20,7 +20,7 @@ class MapStorage {
         this.isWritable = true;
         this.migrate();
         
-        this.data = this.getObject( '*' );
+        this.data = this.getJSON( '*', '{}' );
     }
 
 
@@ -118,28 +118,37 @@ class MapStorage {
 
     
     _upgradeFrom( schemaVersion ) {
+        // 20221115 migration is fundamental and runs ahead of all these
+
+        // Convert loose properties onto a single object (20221114)
+        if ( schemaVersion < 20221114 && !this.has( '*' ) ) {
+            this.setJSON( '*', {
+                dismissed: this.getJSON( 'dismissed', '[]' ),
+                background: parseInt( this.get( 'background' ) || 0 )
+            } );
+            this.remove( 'dismissed' );
+            this.remove( 'background' );
+        }
+        
+        const data = this.getJSON( '*', '{}' );
+        // Run sequential migrations on the data object
         switch ( schemaVersion ) {
             case 20220713:
                 // Parse dismissed marker IDs and use fixed precision on coordinates
-                this.setObject( 'dismissed', this.getArray( 'dismissed' ).map( x => {
+                data.dismissed = data.dismissed.map( x => {
                     const a = x.split( '@' );
                     const b = a[1].split( ':' );
                     const lat = parseFloat( b[0] );
                     const lon = parseFloat( b[1] );
                     return ( lat == NaN || lon == NaN ) ? x : ( a[0] + '@' + lat.toFixed( 3 ) + ':' + lon.toFixed( 3 ) );
-                } ) );
+                } );
             case 20220803:
                 // Add marker namespace to every dismissed ID
-                this.setObject( 'dismissed', this.getArray( 'dismissed' ).map( x => 'M:' + x ) );
-            case 20220929:
-                this.setObject( '*', {
-                    dismissed: this.getArray( 'dismissed' ),
-                    background: this.get( 'background' ) || 0
-                } );
-                this.remove( 'dismissed' );
-                this.remove( 'background' );
-            // 20221114 migration is fundamental and runs ahead of all these
+                data.dismissed = data.dismissed.map( x => 'M:' + x );
         }
+
+        // Commit the changes
+        this.setJSON( '*', data );
     }
 
 
