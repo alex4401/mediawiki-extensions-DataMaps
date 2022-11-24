@@ -113,7 +113,6 @@ class MapStorage {
         }
 
         this._upgradeFrom( schemaVersion );
-        this._initialiseVersioning();
     }
 
     
@@ -130,7 +129,12 @@ class MapStorage {
             this.remove( 'background' );
         }
         
-        const data = this.getJSON( '*', '{}' );
+        // Do not continue if there's no data object
+        if ( !this.has( '*' ) ) {
+            return;
+        }
+
+        const data = this.getJSON( '*' );
         // Run sequential migrations on the data object
         switch ( schemaVersion ) {
             case 20220713:
@@ -147,8 +151,7 @@ class MapStorage {
                 data.dismissed = data.dismissed.map( x => 'M:' + x );
         }
 
-        // Commit the changes
-        this.setJSON( '*', data );
+        this._initialiseVersioning();
     }
 
 
