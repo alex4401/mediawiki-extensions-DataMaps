@@ -661,8 +661,8 @@ class DataMap extends EventEmitter {
         // Create a button to toggle the legend on small screens
         this.$legendPopupBtn = this.addControl( DataMap.anchors.topLeft,
             $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-legend-toggle">' ), true );
-        this._makeControlButton( this.$legendPopupBtn, mw.msg( 'datamap-control-toggle-legend' ), 'funnel' )
-            .prepend( mw.msg( 'datamap-legend-label-toggle' ) )
+        this._makeControlButton( this.$legendPopupBtn, mw.msg( 'datamap-legend-label' ), 'funnel' )
+            .prepend( mw.msg( 'datamap-legend-label' ) )
             .on( 'click', event => {
                 event.stopPropagation();
                 this.$root.toggleClass( 'datamap-is-legend-toggled-on' );

@@ -50,7 +50,7 @@
     "datamap-error-pf-page-invalid-content-model": "Content model of page \"[[$1]]\" is not <code>Interactive Data Map</code>.",
     "datamap-error-cannot-preview-validation-errors": "<b>Edit preview not shown due to error(s) in map's source code:</b><br/>$1",
 
-    "datamap-legend-label": "Legend",
+    "datamap-legend-label": "Contents",
     "datamap-javascript-required": "Interactive data maps require JavaScript to be enabled.",
     "datamap-loading-data": "Please wait, loading data",
     "datamap-error-dataload": "<b>Couldn't load data</b><br/>please refresh or try again later",
@@ -75,7 +75,6 @@
 
     "datamap-coordinate-control-text": "lat $1, lon $2",
     "datamap-coordinate-control-text-xy": "x: $2, y: $1",
-    "datamap-legend-label-toggle": "Contents",
     "datamap-control-toggle-legend": "Tap to expand the legend to toggle markers",
     "datamap-control-reset-view": "Restore default view",
     "datamap-control-centre-view": "Center view at current zoom level",
