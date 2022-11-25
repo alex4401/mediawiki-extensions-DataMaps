@@ -1,0 +1,27 @@
+{
+    "@metadata": {
+        "authors": [
+            "Chatmaigre888"
+        ]
+    },
+    "datamap-vec-intro": "Ajustez les informations suivantes selon vos besoins afin que nous puissions préparer une carte de base que vous pourrez éditer",
+    "datamap-vec-title": "Créer une carte",
+    "datamap-vec-select-crs-origin": "(0, 0) coin de coordonnée",
+    "datamap-vec-crs-top-left": "Haut gauche",
+    "datamap-vec-crs-bottom-left": "Bas gauche",
+    "datamap-vec-select-crs": "Système de coordonnées",
+    "datamap-vec-crs-percent": "Pourcentage (0-100%)",
+    "datamap-vec-crs-image": "Coordonnées de l'image correspondante",
+    "datamap-vec-crs-custom": "Personnalisé",
+    "datamap-vec-select-background": "Image de fond",
+    "datamap-vec-note-image-size": "Taille : $1 x $2",
+    "datamap-vec-error-bad-file-type": "Le type de fichier ($1) n'est pas soutenu ; sélectionnez un fichier JPEG, PNG, GIF ou SVG.",
+    "datamap-vec-error-poor-file-type": "Ce type de fichier est peu efficace sur un réseau limité. Utilisez le JPEG autant que faire se peut.",
+    "datamap-vec-extra-options": "Options supplémentaires",
+    "datamap-vec-toggle-coord-display": "Afficher les coordonnées sous le curseur",
+    "datamap-vec-toggle-zoom": "Activer le zoom",
+    "datamap-vec-toggle-search": "Activer la recherche de marqueurs",
+    "datamap-vec-toggle-search-tabber": "Partager les données de recherche dans un tableau",
+    "datamap-vec-toggle-uid-requirement": "Nécessite une ID de marqueur unique",
+    "datamap-vec-submit": "Poursuivre"
+}

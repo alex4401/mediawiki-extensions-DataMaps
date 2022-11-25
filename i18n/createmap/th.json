@@ -1,0 +1,27 @@
+{
+    "datamap-vec-title": "สร้างแผนที่",
+    "datamap-vec-select-crs-origin": "(0, 0) มุมพิกัด",
+    "datamap-vec-crs-bottom-left": "ซ้ายล่าง",
+    "datamap-vec-crs-top-left": "ซ้ายบน",
+    "datamap-vec-select-crs": "ระบบพิกัด",
+    "datamap-vec-crs-percent": "เปอร์เซ็นต์ (0-100%)",
+    "datamap-vec-crs-image": "จับคู่พิกัดภาพ",
+    "datamap-vec-crs-custom": "กำหนดเอง",
+    "datamap-vec-select-background": "ภาพพื้นหลัง",
+    "datamap-vec-note-image-size": "ขนาด: $1 x $2",
+    "datamap-vec-extra-options": "ตัวเลือกเสริม",
+    "datamap-vec-toggle-coord-display": "แสดงพิกัดใต้เคอร์เซอร์",
+    "datamap-vec-toggle-zoom": "เปิดใช้งานการซูม",
+    "datamap-vec-toggle-search": "เปิดใช้งานการค้นหาเครื่องหมาย",
+    "datamap-vec-toggle-search-tabber": "แชร์ข้อมูลที่ค้นหาผ่าน tabber",
+    "datamap-vec-toggle-uid-requirement": "ต้องมีไอดีเฉพาะของเครื่องหมาย",
+    "datamap-vec-submit": "กระบวนการ",
+    "@metadata": {
+        "authors": [
+            "bellbox"
+        ]
+    },
+    "datamap-vec-intro": "ปรับข้อมูลต่อไปนี้ให้ตรงกับความต้องการของคุณ เพื่อให้เราเตรียมแผนที่พื้นฐาน ก่อนที่คุณจะดำเนินการแก้ไข",
+    "datamap-vec-error-bad-file-type": "ไม่รองรับไฟล์ประเภท $1; โปรดเลือกเป็น JPEG, PNG, GIF หรือ SVG",
+    "datamap-vec-error-poor-file-type": "ไฟล์ประเภทนี้อาจทำงานได้ไม่ดีสำหรับข้อจำกัดทางเครือข่าย โปรดใช้ JPEG ทุกครั้งเท่าที่เป็นไปได้"
+}

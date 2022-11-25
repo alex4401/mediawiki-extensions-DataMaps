@@ -1,0 +1,27 @@
+{
+    "datamap-vec-title": "Crear un mapa",
+    "datamap-vec-select-crs-origin": "Esquina de coordenadas (0, 0)",
+    "datamap-vec-crs-top-left": "Superior (izquierda)",
+    "datamap-vec-crs-bottom-left": "Inferior (izquierda)",
+    "datamap-vec-select-crs": "Sistema de coordenadas",
+    "datamap-vec-crs-percent": "Porcentaje (0-100 %)",
+    "datamap-vec-crs-image": "Emparejar coordenadas de imagen",
+    "datamap-vec-crs-custom": "Personalizado",
+    "datamap-vec-select-background": "Imagen de fondo",
+    "datamap-vec-note-image-size": "Tamaño: $1 x $2",
+    "datamap-vec-error-bad-file-type": "Este tipo de archivo ($1) no es compatible. Elige un archivo JPEG, PNG, GIF o SVG.",
+    "datamap-vec-error-poor-file-type": "Este tipo de archivo podría tener un rendimiento bajo en redes limitadas. Usa archivos JPEG siempre que te sea posible.",
+    "datamap-vec-extra-options": "Opciones adicionales",
+    "datamap-vec-toggle-coord-display": "Mostrar coordenadas bajo el cursor",
+    "datamap-vec-toggle-zoom": "Activar zoom",
+    "datamap-vec-toggle-search": "Activar búsqueda de marcador",
+    "datamap-vec-toggle-search-tabber": "Compartir datos de búsqueda dentro del tabber",
+    "datamap-vec-toggle-uid-requirement": "Necesita IDs únicas para marcadores",
+    "datamap-vec-submit": "Continuar",
+    "@metadata": {
+        "authors": [
+            "Mirageionova"
+        ]
+    },
+    "datamap-vec-intro": "Ajusta la siguiente información a tus necesidades para que podamos preparar un mapa básico sobre el cual puedas hacer tus propias ediciones"
+}
