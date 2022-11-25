@@ -407,7 +407,6 @@
 		"DefaultFeatures": {
 			"value": {
 				"ShowCoordinates": true,
-				"ShowLegendAlwaysAbove": false,
 				"RequireCustomMarkerIDs": false,
 				"Search": false,
 				"SortChecklistsByAmount": false

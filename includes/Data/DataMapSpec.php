@@ -84,11 +84,6 @@ class DataMapSpec extends DataModel {
         return isset( $this->raw->hideLegend ) ? $this->raw->hideLegend : false;
     }
 
-    public function wantsLegendShownAbove(): bool {
-        return isset( $this->raw->showLegendAbove ) ? $this->raw->showLegendAbove
-            : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_SHOW_LEGEND_ABOVE );
-    }
-
     public function wantsZoomDisabled(): bool {
         return isset( $this->raw->disableZoom ) ? $this->raw->disableZoom : false;
     }
@@ -286,7 +281,6 @@ class DataMapSpec extends DataModel {
 
         $this->checkField( $status, 'showCoordinates', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'hideLegend', DataModel::TYPE_BOOL );
-        $this->checkField( $status, 'showLegendAbove', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'disableZoom', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'sortChecklistsByAmount', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'requireCustomMarkerIDs', DataModel::TYPE_BOOL );

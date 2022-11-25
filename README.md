@@ -60,7 +60,6 @@ Content of the page should be a valid JSON with following structure:
 * `hideLegend` (boolean, optional): if `true` does not show or load the legend at all. Defaults to `false`.
 * `enableSearch` (boolean, optional): if `true` enables marker search for this map. Controlled by `$wgDataMapsDefaultFeatures` identified by `Search`.
 * `showCoordinates` (boolean, optional): if `true` displays coordinates on mouse move and inside popups. Controlled by `$wgDataMapsDefaultFeatures` identified by `ShowCoordinates`.
-* `showLegendAbove` (boolean, optional): if `true` always displays the legend above the map. Controlled by `$wgDataMapsDefaultFeatures` identified by `ShowLegendAlwaysAbove`.
 * `sortChecklistsByAmount` (boolean, optional): if `true` sorts checklists by the number of markers inside. Controlled by `$wgDataMapsDefaultFeatures` identified by `SortChecklistsByAmount`.
 * `disableZoom` (boolean, optional): if `true` locks the map into zoom level of `2.75` (adjustable with `leafletSettings`), disables the zoom control and zoom interactions.
 * `requireCustomMarkerIDs` (boolean, optional): if `true` requires the `id` property to be always present on markers. Controlled by `$wgDataMapsDefaultFeatures` identified by `RequireCustomMarkerIDs`.
@@ -138,7 +137,6 @@ Box is a array of two locations, where first describes the start point of the bo
 * `$wgDataMapsUseInProcessParserCache`: whether wikitext parsing requests will be cached within the process (up to 128 entries). This can save a significant amount of time if marker descriptions or labels repeat often, but increases memory usage. Defaults to `true`.
 * `$wgDataMapsDefaultFeatures`: controls whether certain features are enabled by default on a map without a specific override in its source.
 * * `$wgDataMapsDefaultFeatures['ShowCoordinates']`: whether coordinates will be displayed in the user interface. Defaults to `true`.
-* * `$wgDataMapsDefaultFeatures['ShowLegendAlwaysAbove']`: whether the legend will be displayed above the map. Defaults to `false`.
 * * `$wgDataMapsDefaultFeatures['RequireCustomMarkerIDs']`: whether the `id` property will be required on markers. Defaults to `false`.
 * * `$wgDataMapsDefaultFeatures['Search']`: whether marker search will be enabled by default. Defaults to `false`.
 * * `$wgDataMapsDefaultFeatures['SortChecklistsByAmount']`: whether collectible checklists will be sorted by number of markers inside. Defaults to `false`.

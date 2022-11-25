@@ -1,16 +1,4 @@
-.dmLegendAboveMap() {
-    width: auto;
-    height: auto;
-    max-height: unset;
-
-    .datamap-container-groups {
-        column-width: 13em;
-        
-        .oo-ui-fieldLayout.oo-ui-fieldLayout-align-inline:first-child {
-            margin-top: 0;
-        }
-    }
-}
+@legend-popup-breakpoint-width: 1200px;
 
 .dmLegendAsPopup() {
     .datamap-container .datamap-control.datamap-control-legend-toggle {
@@ -56,19 +44,11 @@
     }
 }
 
-.datamap-legend-is-above .datamap-container-legend {
-    .dmLegendAboveMap();
-}
-
 .datamap-container-legend {
     width: 23.7em;
     max-height: 750px;
     box-sizing: border-box;
     overflow-y: auto;
-
-    @media screen and (min-width: 901px) and (max-width: 1200px) {
-        .dmLegendAboveMap();
-    }
 
     &,
     > .oo-ui-layout,
@@ -161,8 +141,14 @@
     }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1200px) {
     .dmLegendAsPopup();
+}
+
+@media screen and (min-width: 900px) and (max-width: 1200px) {
+    .datamap-container-legend {
+        width: 25em;
+    }
 }
 
 .datamap-container-collectibles {

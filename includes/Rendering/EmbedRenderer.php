@@ -199,11 +199,6 @@ class EmbedRenderer {
             $containerMain->addClasses( [ 'datamap-legend-is-hidden' ] );
         }
 
-        // Expose FF_SHOW_LEGEND_ABOVE flag
-        if ( $this->data->wantsLegendShownAbove() ) {
-            $containerMain->addClasses( [ 'datamap-legend-is-above' ] );
-        }
-
         // Set data attribute with filters if they are specified
         if ( $options !== null && $options->displayGroups != null ) {
             $containerMain->setAttributes( [ 'data-filter-groups' => implode( '|', $options->displayGroups ) ] );
