@@ -15,10 +15,6 @@ module.exports = class EventEmitter {
      * @param {object?} context 
      */
     on( event, callback, context ) {
-        if ( !this._handlers[event] ) {
-            this._handlers[event] = [];
-        }
-
         const handler = {
             context,
             method: callback
@@ -27,6 +23,9 @@ module.exports = class EventEmitter {
             // Event marked to set off right away with persistent parameters, invoke the handler now
             this._invokeEventHandler( handler, this._autoFiringEvents[event] );
         } else {
+            if ( !this._handlers[event] ) {
+                this._handlers[event] = [];
+            }
             // Event requires manual set-off, push the handler onto the list
             this._handlers[event].push( handler );
         }
