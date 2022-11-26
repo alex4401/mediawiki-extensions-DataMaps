@@ -4,7 +4,7 @@ const MapStorage = require( './storage.js' ),
     MarkerPopup = require( './popup.js' ),
     MarkerStreamingManager = require( './stream.js' ),
     LegendTabManager = require( './legend.js' ),
-    MarkerLegendPanel = require( './markerLegend.js' ),
+    MarkerFilteringPanel = require( './markerLegend.js' ),
     EventEmitter = require( './events.js' ),
     DismissableMarkersLegend = require( './dismissables.js' ),
     Util = require( './util.js' );
@@ -768,7 +768,7 @@ class DataMap extends EventEmitter {
         const withLayerDropdown = hasCaves;
 
         // Initialise legend objects
-        this.filtersPanel = new MarkerLegendPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ), true, withLayerDropdown );
+        this.filtersPanel = new MarkerFilteringPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ), true, withLayerDropdown );
         /* DEPRECATED(v0.14.0:v0.15.0) */
         this.markerLegend = this.filtersPanel;
 

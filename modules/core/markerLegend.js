@@ -2,7 +2,7 @@ const Enums = require( './enums.js' ),
     Util = require( './util.js' );
 
 
-class MarkerLegendPanel {
+class MarkerFilteringPanel {
     constructor( legend, name, addTotalToggles, withLayerDropdown ) {
         this.legend = legend;
         this.map = this.legend.map;
@@ -82,7 +82,7 @@ class MarkerLegendPanel {
 
 
     addMarkerGroupToggle( groupId, group ) {
-        this.groupToggles[groupId] = new MarkerLegendPanel.MarkerGroupField( this, groupId, group );
+        this.groupToggles[groupId] = new MarkerFilteringPanel.MarkerGroupField( this, groupId, group );
         this.legend.setTabVisibility( this.tab, true );
     }
 
@@ -95,7 +95,7 @@ class MarkerLegendPanel {
 }
 
 
-MarkerLegendPanel.MarkerGroupField = class MarkerGroupField {
+MarkerFilteringPanel.MarkerGroupField = class MarkerGroupField {
     constructor( legendPanel, groupId, group ) {
         this.legendPanel = legendPanel;
         this.legend = this.legendPanel.legend;
@@ -140,4 +140,4 @@ MarkerLegendPanel.MarkerGroupField = class MarkerGroupField {
 }
 
 
-module.exports = MarkerLegendPanel;
+module.exports = MarkerFilteringPanel;
