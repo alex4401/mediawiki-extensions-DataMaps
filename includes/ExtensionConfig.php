@@ -73,7 +73,7 @@ class ExtensionConfig {
         return self::getDefaultFeatureStates()[$feature];
     }
 
-    public static function shouldLinksUpdatesUseMarkers( string $feature ) {
+    public static function shouldLinksUpdatesUseMarkers() {
         return self::getLinksUpdateBudget() > 0;
     }
 
