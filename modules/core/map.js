@@ -794,6 +794,7 @@ class DataMap extends EventEmitter {
 
     _initialiseCollectiblesPanel() {
         this.collectiblesPanel = new DismissableMarkersLegend( this.legend );
+        this.fireMemorised( 'collectiblesPanel' );
     }
 }
 
