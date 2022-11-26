@@ -8,6 +8,7 @@ const MapStorage = require( './storage.js' ),
     EventEmitter = require( './events.js' ),
     DismissableMarkersLegend = require( './dismissables.js' ),
     Util = require( './util.js' );
+const MapFlags = Enums.MapFlags;
 let Leaflet = null;
 
 
@@ -81,7 +82,7 @@ class DataMap extends EventEmitter {
         this.on( 'linkedEvent', this._onLinkedEventReceived, this );
 
         // Request OOUI to be loaded and build the legend
-        if ( !( !this.isFeatureBitSet( Enums.MapFlags.VisualEditor ) && this.isFeatureBitSet( Enums.MapFlags.HideLegend ) ) ) {
+        if ( !( !this.isFeatureBitSet( MapFlags.VisualEditor ) && this.isFeatureBitSet( MapFlags.HideLegend ) ) ) {
             mw.loader.using( [
                 'oojs-ui-core',
                 'oojs-ui-widgets'
@@ -97,7 +98,7 @@ class DataMap extends EventEmitter {
         } );
 
         // Load search add-on
-        if ( !this.isFeatureBitSet( Enums.MapFlags.VisualEditor ) && this.isFeatureBitSet( Enums.MapFlags.Search ) ) {
+        if ( !this.isFeatureBitSet( MapFlags.VisualEditor ) && this.isFeatureBitSet( MapFlags.Search ) ) {
             mw.loader.using( [
                 'oojs-ui-core',
                 'ext.datamaps.search'
@@ -569,7 +570,7 @@ class DataMap extends EventEmitter {
 
     _initialiseLeaflet( $holder ) {
         // If FF_DISABLE_ZOOM is set, prevent all kind of zooming
-        if ( this.isFeatureBitSet( Enums.MapFlags.DisableZoom ) ) {
+        if ( this.isFeatureBitSet( MapFlags.DisableZoom ) ) {
             this.config.leafletSettings = $.extend( {
                 zoomControl: false,
                 boxZoom: false,
@@ -705,7 +706,7 @@ class DataMap extends EventEmitter {
             } );
 
         // Create a coordinate-under-cursor display
-        if ( this.isFeatureBitSet( Enums.MapFlags.ShowCoordinates ) ) {
+        if ( this.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
             this.$coordTracker = this.addControl( DataMap.anchors.bottomLeft,
                 $( '<div class="leaflet-control datamap-control datamap-control-coords">' ) );
             this.leaflet.on( 'mousemove', event => {
@@ -738,7 +739,7 @@ class DataMap extends EventEmitter {
             'datamap-control-viewcentre' ).on( 'click', () => this.centreView() );
 
         // Display an edit button for logged in users
-        if ( !this.isFeatureBitSet( Enums.MapFlags.IsPreview ) && mw.config.get( 'wgUserName' ) !== null ) {
+        if ( !this.isFeatureBitSet( MapFlags.IsPreview ) && mw.config.get( 'wgUserName' ) !== null ) {
             this.$editControl = this.addControl( DataMap.anchors.topRight,
                 $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-edit">' ) );
             const editLink = `${mw.util.wikiScript()}?curid=${this.id}&action=edit` + (
