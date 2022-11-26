@@ -140,11 +140,7 @@ class DataMap extends EventEmitter {
      * @param {object?} context Object to use as callback's context.
      */
     waitForLeaflet( callback, context ) {
-        if ( this.leaflet == null ) {
-            this.on( 'leafletLoaded', callback, context );
-        } else {
-            callback.call( context );
-        }
+        this.on( 'leafletLoaded', callback, context );
     }
 
 
@@ -154,11 +150,7 @@ class DataMap extends EventEmitter {
      * @param {object?} context Object to use as callback's context.
     */
     waitForLegend( callback, context ) {
-        if ( this.legend == null ) {
-            this.on( 'legendLoaded', callback, context );
-        } else {
-            callback.call( context );
-        }
+        this.on( 'markerFilteringPanel', callback, context );
     }
 
 
