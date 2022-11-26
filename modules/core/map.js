@@ -6,7 +6,7 @@ const MapStorage = require( './storage.js' ),
     LegendTabManager = require( './legend.js' ),
     MarkerFilteringPanel = require( './markerLegend.js' ),
     EventEmitter = require( './events.js' ),
-    DismissableMarkersLegend = require( './dismissables.js' ),
+    CollectiblesPanel = require( './dismissables.js' ),
     Util = require( './util.js' );
 const MapFlags = Enums.MapFlags;
 let Leaflet = null;
@@ -793,7 +793,7 @@ class DataMap extends EventEmitter {
 
 
     _initialiseCollectiblesPanel() {
-        this.collectiblesPanel = new DismissableMarkersLegend( this.legend );
+        this.collectiblesPanel = new CollectiblesPanel( this.legend );
         this.fireMemorised( 'collectiblesPanel' );
     }
 }

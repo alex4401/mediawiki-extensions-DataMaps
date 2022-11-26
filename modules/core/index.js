@@ -7,6 +7,6 @@ module.exports = mw.dataMaps = {
     LegendTabManager: require( './legend.js' ),
     MarkerFilteringPanel: require( './markerLegend.js' ),
     DataMap: require( './map.js' ),
-    CollectibleMarkersLegend: require( './dismissables.js' ),
+    CollectiblesPanel: require( './dismissables.js' ),
     Util: require( './util.js' )
 };

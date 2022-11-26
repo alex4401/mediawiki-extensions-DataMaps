@@ -1,14 +1,119 @@
 const Enums = require( './enums.js' ),
     Util = require( './util.js' );
+const MarkerGroupFlags = MarkerGroupFlags,
+    MapFlags = MapFlags;
 
 
-class CollectibleMarkerGroup {
+class CollectiblesPanel {
+    constructor( legend ) {
+        this.legend = legend;
+        this.map = this.legend.map;
+
+        // Root DOM element
+        this.$root = this.legend.addTab( mw.msg( 'datamap-legend-tab-checklist' ), 'datamap-container-collectibles' ).$element;
+        //
+        this.groups = {};
+
+        this.suppressBadgeUpdates = true;
+
+        // Insert an introduction paragraph
+        this.$root.append( mw.msg( 'datamap-checklist-prelude' ) );
+
+        // Prepare the checklist panel
+        this._initialisePanel();
+
+        // Register event handlers
+        this.map.on( 'markerDismissChange', this.updateGroupBadges, this );
+        this.map.on( 'markerDismissChange', this.onDismissalChange, this );
+        this.map.on( 'markerReady', this.pushMarker, this );
+        this.map.on( 'chunkStreamingDone', this.sort, this );
+        this.map.on( 'chunkStreamingDone', () => {
+            this.suppressBadgeUpdates = false;
+        }, this );
+        this.map.on( 'chunkStreamingDone', this.updateGroupBadges, this );
+
+        // Call updaters now to bring the main panel in sync
+        this.updateGroupBadges( true );
+
+        // Import existing markers if any have been loaded
+        for ( const groupName in this.map.config.groups ) {
+            const group = this.map.config.groups[groupName];
+            if ( Util.getGroupCollectibleType( group ) ) {
+                for ( const leafletMarker of ( this.map.layerManager.byLayer[groupName] || [] ) ) {
+                    this.pushMarker( leafletMarker );
+                }
+            }
+        }
+        this.sort();
+    }
+
+
+    _initialisePanel() {
+        for ( const groupName in this.map.config.groups ) {
+            const group = this.map.config.groups[groupName];
+            if ( Util.getGroupCollectibleType( group ) ) {
+                this.groups[groupName] = new CollectiblesPanel.MarkerGroup( this, group );
+                this.groups[groupName].$element.appendTo( this.$root );
+            }
+        }
+    }
+
+
+    pushMarker( leafletMarker ) {
+        if ( Util.getGroupCollectibleType( this.map.config.groups[leafletMarker.attachedLayers[0]] ) ) {
+            this.groups[leafletMarker.attachedLayers[0]].push( leafletMarker );
+        }
+    }
+
+
+    sort() {
+        for ( const group of Object.values( this.groups ) ) {
+            group.sort();
+        }
+
+        if ( this.map.isFeatureBitSet( MapFlags.SortChecklistsByAmount ) ) {
+            const groups = Object.values( this.groups ).sort( ( a, b ) => a.markers.length > b.markers.length );
+            for ( const group of groups ) {
+                group.$element.appendTo( this.$root );
+            }
+        }
+    }
+
+
+    onDismissalChange( leafletMarker ) {
+        this.groups[leafletMarker.attachedLayers[0]].replicateMarkerState( leafletMarker );
+    }
+
+
+    updateGroupBadges( force ) {
+        if ( !force && this.suppressBadgeUpdates ) {
+            return;
+        }
+
+        for ( const groupId in this.groups ) {
+            const markers = this.map.layerManager.byLayer[groupId];
+            if ( markers && this.map.markerLegend.groupToggles[groupId] ) {
+                const count = markers.filter( x => x.options.dismissed ).length,
+                    mode = Util.getGroupCollectibleType( this.map.config.groups[groupId] );
+                let text = mode == MarkerGroupFlags.Collectible_Individual ? `${count} / ${markers.length}` : '';
+                if ( count > 0 && count === markers.length ) {
+                    text += '✓';
+                }
+
+                this.map.markerLegend.groupToggles[groupId].setBadge( text );
+            }
+        }
+    }
+}
+
+
+CollectiblesPanel.MarkerGroup = class MarkerGroup {
     constructor( panel, group ) {
         this.panel = panel;
         this.map = this.panel.map;
         this.group = group;
         this.markers = [];
-        this.isIndividual = Util.getGroupCollectibleType( group ) == Enums.MarkerGroupFlags.Collectible_Individual;
+        this.isIndividual = Util.getGroupCollectibleType( group ) == MarkerGroupFlags.Collectible_Individual;
 
         if ( group.legendIcon ) {
             this.$icon = Util.createGroupIconElement( group );
@@ -57,7 +162,7 @@ class CollectibleMarkerGroup {
 
 
     push( leafletMarker ) {
-        this.markers.push( new CollectibleMarkerEntry( this, leafletMarker ) );
+        this.markers.push( new CollectiblesPanel.MarkerEntry( this, leafletMarker ) );
         this.updateCheckboxState();
     }
 
@@ -112,7 +217,7 @@ class CollectibleMarkerGroup {
 }
 
 
-class CollectibleMarkerEntry {
+CollectiblesPanel.MarkerEntry = class MarkerEntry {
     constructor( markerGroup, leafletMarker ) {
         this.markerGroup = markerGroup;
         this.panel = this.markerGroup.panel;
@@ -135,7 +240,7 @@ class CollectibleMarkerEntry {
         }
 
         // Build the label
-        const areCoordsEnabled = this.panel.map.isFeatureBitSet( Enums.MapFlags.ShowCoordinates );
+        const areCoordsEnabled = this.panel.map.isFeatureBitSet( MapFlags.ShowCoordinates );
         // Coordinates
         if ( areCoordsEnabled ) {
             this.$coordLabel = $( '<b>' ).text( this.panel.map.getCoordLabel( this.apiInstance ) ).appendTo( this.$label );
@@ -154,7 +259,7 @@ class CollectibleMarkerEntry {
             this.$labelText.html( labelText );
         }
 
-        if ( Util.isBitSet( this.markerGroup.group.flags, Enums.MarkerGroupFlags.IsNumberedInChecklists ) ) {
+        if ( Util.isBitSet( this.markerGroup.group.flags, MarkerGroupFlags.IsNumberedInChecklists ) ) {
             this.$index = $( '<span class="datamap-collapsible-index">' ).appendTo( this.$labelText );
             this.setIndex( this.markerGroup.markers.length + 1 );
         }
@@ -172,107 +277,4 @@ class CollectibleMarkerEntry {
 }
 
 
-class CollectiblesLegend {
-    constructor( legend ) {
-        this.legend = legend;
-        this.map = this.legend.map;
-
-        // Root DOM element
-        this.$root = this.legend.addTab( mw.msg( 'datamap-legend-tab-checklist' ), 'datamap-container-collectibles' ).$element;
-        //
-        this.groups = {};
-
-        this.suppressBadgeUpdates = true;
-
-        // Insert an introduction paragraph
-        this.$root.append( mw.msg( 'datamap-checklist-prelude' ) );
-
-        // Prepare the checklist panel
-        this._initialisePanel();
-
-        // Register event handlers
-        this.map.on( 'markerDismissChange', this.updateGroupBadges, this );
-        this.map.on( 'markerDismissChange', this.onDismissalChange, this );
-        this.map.on( 'markerReady', this.pushMarker, this );
-        this.map.on( 'chunkStreamingDone', this.sort, this );
-        this.map.on( 'chunkStreamingDone', () => {
-            this.suppressBadgeUpdates = false;
-        }, this );
-        this.map.on( 'chunkStreamingDone', this.updateGroupBadges, this );
-
-        // Call updaters now to bring the main panel in sync
-        this.updateGroupBadges( true );
-
-        // Import existing markers if any have been loaded
-        for ( const groupName in this.map.config.groups ) {
-            const group = this.map.config.groups[groupName];
-            if ( Util.getGroupCollectibleType( group ) ) {
-                for ( const leafletMarker of ( this.map.layerManager.byLayer[groupName] || [] ) ) {
-                    this.pushMarker( leafletMarker );
-                }
-            }
-        }
-        this.sort();
-    }
-
-
-    _initialisePanel() {
-        for ( const groupName in this.map.config.groups ) {
-            const group = this.map.config.groups[groupName];
-            if ( Util.getGroupCollectibleType( group ) ) {
-                this.groups[groupName] = new CollectibleMarkerGroup( this, group );
-                this.groups[groupName].$element.appendTo( this.$root );
-            }
-        }
-    }
-
-
-    pushMarker( leafletMarker ) {
-        if ( Util.getGroupCollectibleType( this.map.config.groups[leafletMarker.attachedLayers[0]] ) ) {
-            this.groups[leafletMarker.attachedLayers[0]].push( leafletMarker );
-        }
-    }
-
-
-    sort() {
-        for ( const group of Object.values( this.groups ) ) {
-            group.sort();
-        }
-
-        if ( this.map.isFeatureBitSet( Enums.MapFlags.SortChecklistsByAmount ) ) {
-            const groups = Object.values( this.groups ).sort( ( a, b ) => a.markers.length > b.markers.length );
-            for ( const group of groups ) {
-                group.$element.appendTo( this.$root );
-            }
-        }
-    }
-
-
-    onDismissalChange( leafletMarker ) {
-        this.groups[leafletMarker.attachedLayers[0]].replicateMarkerState( leafletMarker );
-    }
-
-
-    updateGroupBadges( force ) {
-        if ( !force && this.suppressBadgeUpdates ) {
-            return;
-        }
-
-        for ( const groupId in this.groups ) {
-            const markers = this.map.layerManager.byLayer[groupId];
-            if ( markers && this.map.markerLegend.groupToggles[groupId] ) {
-                const count = markers.filter( x => x.options.dismissed ).length,
-                    mode = Util.getGroupCollectibleType( this.map.config.groups[groupId] );
-                let text = mode == Enums.MarkerGroupFlags.Collectible_Individual ? `${count} / ${markers.length}` : '';
-                if ( count > 0 && count === markers.length ) {
-                    text += '✓';
-                }
-
-                this.map.markerLegend.groupToggles[groupId].setBadge( text );
-            }
-        }
-    }
-};
-
-
-module.exports = CollectiblesLegend;
+module.exports = CollectiblesPanel;
