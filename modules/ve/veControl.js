@@ -24,6 +24,7 @@ module.exports = class MapVeIntegrationControl {
 
 
     _onClick( event ) {
+        // eslint-disable-next-line no-jquery/no-sizzle
         if ( this.$root.is( ':visible' ) ) {
             this.$root.hide();
             return;
@@ -36,9 +37,10 @@ module.exports = class MapVeIntegrationControl {
         } );
 
         let lat = event.latlng.lat / this.map.crsScaleY;
-        let lon = event.latlng.lng / this.map.crsScaleX;
-        if ( this.map.crsOrigin == Enums.CRSOrigin.TopLeft )
-            lat = this.map.config.crs[1][0] - lat;
+        const lon = event.latlng.lng / this.map.crsScaleX;
+        if ( this.map.crsOrigin === Enums.CRSOrigin.TopLeft ) {
+            lat = this.map.config.crs[ 1 ][ 0 ] - lat;
+        }
         this.$coords.text( this.map.getCoordLabel( lat, lon ) );
     }
 
@@ -50,4 +52,4 @@ module.exports = class MapVeIntegrationControl {
         this.ve.windowManager.addWindows( [ dialog ] );
         this.ve.windowManager.openWindow( dialog );
     }
-}
+};

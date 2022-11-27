@@ -1,7 +1,7 @@
 const Enums = require( './enums.js' ),
     Util = require( './util.js' );
-const MarkerGroupFlags = MarkerGroupFlags,
-    MapFlags = MapFlags;
+const MarkerGroupFlags = Enums.MarkerGroupFlags,
+    MapFlags = Enums.MapFlags;
 
 
 class CollectiblesPanel {
@@ -37,9 +37,9 @@ class CollectiblesPanel {
 
         // Import existing markers if any have been loaded
         for ( const groupName in this.map.config.groups ) {
-            const group = this.map.config.groups[groupName];
+            const group = this.map.config.groups[ groupName ];
             if ( Util.getGroupCollectibleType( group ) ) {
-                for ( const leafletMarker of ( this.map.layerManager.byLayer[groupName] || [] ) ) {
+                for ( const leafletMarker of ( this.map.layerManager.byLayer[ groupName ] || [] ) ) {
                     this.pushMarker( leafletMarker );
                 }
             }
@@ -50,23 +50,24 @@ class CollectiblesPanel {
 
     _initialisePanel() {
         for ( const groupName in this.map.config.groups ) {
-            const group = this.map.config.groups[groupName];
+            const group = this.map.config.groups[ groupName ];
             if ( Util.getGroupCollectibleType( group ) ) {
-                this.groups[groupName] = new CollectiblesPanel.MarkerGroup( this, group );
-                this.groups[groupName].$element.appendTo( this.$root );
+                this.groups[ groupName ] = new CollectiblesPanel.MarkerGroup( this, group );
+                this.groups[ groupName ].$element.appendTo( this.$root );
             }
         }
     }
 
 
     pushMarker( leafletMarker ) {
-        if ( Util.getGroupCollectibleType( this.map.config.groups[leafletMarker.attachedLayers[0]] ) ) {
-            this.groups[leafletMarker.attachedLayers[0]].push( leafletMarker );
+        if ( Util.getGroupCollectibleType( this.map.config.groups[ leafletMarker.attachedLayers[ 0 ] ] ) ) {
+            this.groups[ leafletMarker.attachedLayers[ 0 ] ].push( leafletMarker );
         }
     }
 
 
     sort() {
+        // eslint-disable-next-line compat/compat
         for ( const group of Object.values( this.groups ) ) {
             group.sort();
         }
@@ -81,7 +82,7 @@ class CollectiblesPanel {
 
 
     onDismissalChange( leafletMarker ) {
-        this.groups[leafletMarker.attachedLayers[0]].replicateMarkerState( leafletMarker );
+        this.groups[ leafletMarker.attachedLayers[ 0 ] ].replicateMarkerState( leafletMarker );
     }
 
 
@@ -91,16 +92,16 @@ class CollectiblesPanel {
         }
 
         for ( const groupId in this.groups ) {
-            const markers = this.map.layerManager.byLayer[groupId];
-            if ( markers && this.map.markerLegend.groupToggles[groupId] ) {
+            const markers = this.map.layerManager.byLayer[ groupId ];
+            if ( markers && this.map.markerLegend.groupToggles[ groupId ] ) {
                 const count = markers.filter( x => x.options.dismissed ).length,
-                    mode = Util.getGroupCollectibleType( this.map.config.groups[groupId] );
-                let text = mode == MarkerGroupFlags.Collectible_Individual ? `${count} / ${markers.length}` : '';
+                    mode = Util.getGroupCollectibleType( this.map.config.groups[ groupId ] );
+                let text = mode === MarkerGroupFlags.Collectible_Individual ? `${count} / ${markers.length}` : '';
                 if ( count > 0 && count === markers.length ) {
                     text += '✓';
                 }
 
-                this.map.markerLegend.groupToggles[groupId].setBadge( text );
+                this.map.markerLegend.groupToggles[ groupId ].setBadge( text );
             }
         }
     }
@@ -113,7 +114,7 @@ CollectiblesPanel.MarkerGroup = class MarkerGroup {
         this.map = this.panel.map;
         this.group = group;
         this.markers = [];
-        this.isIndividual = Util.getGroupCollectibleType( group ) == MarkerGroupFlags.Collectible_Individual;
+        this.isIndividual = Util.getGroupCollectibleType( group ) === MarkerGroupFlags.Collectible_Individual;
 
         if ( group.legendIcon ) {
             this.$icon = Util.createGroupIconElement( group );
@@ -154,7 +155,7 @@ CollectiblesPanel.MarkerGroup = class MarkerGroup {
 
     toggleAll( newState ) {
         for ( const marker of this.markers ) {
-            if ( newState != marker.leafletMarker.options.dismissed ) {
+            if ( newState !== marker.leafletMarker.options.dismissed ) {
                 this.map.toggleMarkerDismissal( marker.leafletMarker );
             }
         }
@@ -172,29 +173,29 @@ CollectiblesPanel.MarkerGroup = class MarkerGroup {
         switch ( this.map.crsOrigin ) {
             case Enums.CRSOrigin.TopLeft:
                 sortKey = ( a, b ) => {
-                    if ( a.apiInstance[0] == b.apiInstance[0] ) {
-                        return a.apiInstance[1] > b.apiInstance[1];
+                    if ( a.apiInstance[ 0 ] === b.apiInstance[ 0 ] ) {
+                        return a.apiInstance[ 1 ] > b.apiInstance[ 1 ];
                     }
-                    return a.apiInstance[0] > b.apiInstance[0];
+                    return a.apiInstance[ 0 ] > b.apiInstance[ 0 ];
                 };
                 break;
             case Enums.CRSOrigin.BottomLeft:
                 sortKey = ( a, b ) => {
-                    if ( a.apiInstance[0] == b.apiInstance[0] ) {
-                        return a.apiInstance[1] < b.apiInstance[1];
+                    if ( a.apiInstance[ 0 ] === b.apiInstance[ 0 ] ) {
+                        return a.apiInstance[ 1 ] < b.apiInstance[ 1 ];
                     }
-                    return a.apiInstance[0] < b.apiInstance[0];
+                    return a.apiInstance[ 0 ] < b.apiInstance[ 0 ];
                 };
                 break;
-        };
+        }
 
         this.markers.sort( sortKey );
-        
+
         for ( let index = 0; index < this.markers.length; index++ ) {
-            const marker = this.markers[index];
+            const marker = this.markers[ index ];
             marker.field.$element.appendTo( this.container.$element );
             if ( marker.$index ) {
-                marker.setIndex( index+1 );
+                marker.setIndex( index + 1 );
             }
         }
     }
@@ -202,7 +203,7 @@ CollectiblesPanel.MarkerGroup = class MarkerGroup {
 
     replicateMarkerState( leafletMarker ) {
         for ( const marker of this.markers ) {
-            if ( marker.leafletMarker == leafletMarker ) {
+            if ( marker.leafletMarker === leafletMarker ) {
                 marker.checkbox.setSelected( leafletMarker.options.dismissed, true );
                 break;
             }
@@ -214,7 +215,7 @@ CollectiblesPanel.MarkerGroup = class MarkerGroup {
     updateCheckboxState() {
         this.checkbox.setSelected( this.markers.every( x => x.leafletMarker.options.dismissed ), true );
     }
-}
+};
 
 
 CollectiblesPanel.MarkerEntry = class MarkerEntry {
@@ -222,14 +223,14 @@ CollectiblesPanel.MarkerEntry = class MarkerEntry {
         this.markerGroup = markerGroup;
         this.panel = this.markerGroup.panel;
         this.apiInstance = leafletMarker.apiInstance;
-        this.slots = this.apiInstance[2] || {};
+        this.slots = this.apiInstance[ 2 ] || {};
         this.leafletMarker = leafletMarker;
         this.isIndividual = this.markerGroup.isIndividual;
 
         const pair = this.panel.legend.createCheckboxField( this.markerGroup.container.$element, '...',
-            leafletMarker.options.dismissed, _ => this.panel.map.toggleMarkerDismissal( this.leafletMarker ) );
-        this.field = pair[1];
-        this.checkbox = pair[0];
+            leafletMarker.options.dismissed, () => this.panel.map.toggleMarkerDismissal( this.leafletMarker ) );
+        this.field = pair[ 1 ];
+        this.checkbox = pair[ 0 ];
 
         this.$label = this.field.$label;
         this.$label.empty();
@@ -250,8 +251,8 @@ CollectiblesPanel.MarkerEntry = class MarkerEntry {
         if ( this.slots.label ) {
             const groupName = this.markerGroup.group.name;
             let labelText = this.slots.label;
-            if ( labelText.indexOf( groupName ) == 0 ) {
-                labelText = labelText.substr( groupName.length ).trim().replace( /(^\(|\)$)/g, '' );
+            if ( labelText.indexOf( groupName ) === 0 ) {
+                labelText = labelText.slice( groupName.length ).trim().replace( /(^\(|\)$)/g, '' );
                 if ( labelText.length <= 2 ) {
                     labelText = this.slots.label;
                 }
@@ -274,7 +275,7 @@ CollectiblesPanel.MarkerEntry = class MarkerEntry {
     setIndex( index ) {
         this.$index.text( ' #' + index );
     }
-}
+};
 
 
 module.exports = CollectiblesPanel;

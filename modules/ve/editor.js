@@ -1,6 +1,4 @@
 const EventEmitter = mw.dataMaps.EventEmitter,
-    Util = mw.dataMaps.Util,
-    Enums = mw.dataMaps.Enums,
     EditableMarkerPopup = require( './editablePopup.js' ),
     MarkerGroupEditor = require( './widgets/markerGroupEditor.js' ),
     MapVeIntegrationControl = require( './veControl.js' );
@@ -9,7 +7,7 @@ const EventEmitter = mw.dataMaps.EventEmitter,
 module.exports = class MapVisualEditor extends EventEmitter {
     constructor( map ) {
         super();
-        
+
         this.map = map;
         this.revisionId = mw.config.get( 'wgCurRevisionId' );
 
@@ -29,7 +27,7 @@ module.exports = class MapVisualEditor extends EventEmitter {
             .prependTo( this.map.$root.find( '.datamap-holder' ).parent() );
 
         this.windowManager = new OO.ui.WindowManager();
-        $( 'body' ).append( this.windowManager.$element );
+        $( document.body ).append( this.windowManager.$element );
 
         this.toolFactory = new OO.ui.ToolFactory();
         this.groupFactory = new OO.ui.ToolGroupFactory();
@@ -41,7 +39,7 @@ module.exports = class MapVisualEditor extends EventEmitter {
         this.map.$root.addClass( 'datamap-is-ve-active' );
 
         this.map.$status.show().text( mw.msg( 'datamap-ve-loading' ) );
-        
+
         // Register tools
         this.toolFactory.register( require( './tools/commit.js' ) );
         this.toolFactory.register( require( './tools/sourceEditor.js' ) );
@@ -88,7 +86,7 @@ module.exports = class MapVisualEditor extends EventEmitter {
             rvslots: 'main'
         } )
             .then( data => {
-                this.sourceData = JSON.parse( data.query.pages[this.map.id].revisions[0].slots.main['*'] );
+                this.sourceData = JSON.parse( data.query.pages[ this.map.id ].revisions[ 0 ].slots.main[ '*' ] );
 
                 if ( !this.sourceData.markers ) {
                     this.sourceData.markers = {};
@@ -96,15 +94,15 @@ module.exports = class MapVisualEditor extends EventEmitter {
 
                 const markerStore = {};
                 for ( const layers in this.sourceData.markers ) {
-                    markerStore[layers] = [];
-                    for ( const raw of this.sourceData.markers[layers] ) {
+                    markerStore[ layers ] = [];
+                    for ( const raw of this.sourceData.markers[ layers ] ) {
                         const apiInstance = [ raw.y || raw.lat, raw.x || raw.lon, {
                             raw,
                             ve: this,
-                            _ve_invalidate: [ '_ve_parsed_desc', '_ve_parsed_label' ],
+                            _veInvalidate: [ '_ve_parsed_desc', '_ve_parsed_label' ],
                             article: raw.article
                         } ];
-                        markerStore[layers].push( apiInstance );
+                        markerStore[ layers ].push( apiInstance );
                     }
                 }
 
@@ -118,7 +116,7 @@ module.exports = class MapVisualEditor extends EventEmitter {
                 throw ex;
             } );
 
-        
+
         const streamingCallback = () => {
             this.map.off( 'chunkStreamingDone', streamingCallback );
 
@@ -135,6 +133,7 @@ module.exports = class MapVisualEditor extends EventEmitter {
         this.map.markerLegend.tab.tabItem.setLabel( mw.msg( 'datamap-ve-legend-tab-marker-groups' ) );
 
         // Rebuild every marker group toggle into editor widgets
+        // eslint-disable-next-line compat/compat
         for ( const groupToggle of Object.values( this.map.markerLegend.groupToggles ) ) {
             groupToggle.veWidget = new MarkerGroupEditor( this, groupToggle );
         }
@@ -142,22 +141,22 @@ module.exports = class MapVisualEditor extends EventEmitter {
 
 
     markStale( obj ) {
-        obj._ve_stale = true;
+        obj._veStale = true;
 
-        if ( obj._ve_invalidate ) {
-            for ( const field of obj._ve_invalidate ) {
-                delete obj[field];
+        if ( obj._veInvalidate ) {
+            for ( const field of obj._veInvalidate ) {
+                delete obj[ field ];
             }
         }
     }
 
 
     destroyMarkerGroup( groupId ) {
-        this.map.markerLegend.groupToggles[groupId].field.$element.remove();
-        delete this.map.markerLegend.groupToggles[groupId];
-        delete this.map.config.groups[groupId];
-        delete this.sourceData.groups[groupId];
+        this.map.markerLegend.groupToggles[ groupId ].field.$element.remove();
+        delete this.map.markerLegend.groupToggles[ groupId ];
+        delete this.map.config.groups[ groupId ];
+        delete this.sourceData.groups[ groupId ];
         this.map.layerManager.nuke( groupId );
         this.map.layerManager.deregister( groupId );
     }
-}
+};

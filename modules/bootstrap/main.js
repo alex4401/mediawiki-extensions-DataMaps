@@ -22,6 +22,7 @@ function initialiseMapWithConfig( id, $root, config ) {
 
     // Notify external scripts waiting on maps
     for ( const handler of toNotify ) {
+        // eslint-disable-next-line no-underscore-dangle
         mw.dataMaps.EventEmitter.prototype._invokeEventHandler( handler, [ map ] );
     }
 
@@ -41,8 +42,9 @@ function initialiseMapWithConfig( id, $root, config ) {
 
 /**
  * Looks for a configuration element and parses its contents as JSON.
+ *
  * @param {Element} $root Root element of the map.
- * @returns {object} Configuration object.
+ * @return {Object} Configuration object.
  */
 function getConfig( $root ) {
     let config;
@@ -77,6 +79,7 @@ mw.dataMaps.registerMapAddedHandler = function ( callback, context ) {
     toNotify.push( handler );
 
     for ( const map of initialisedMaps ) {
+        // eslint-disable-next-line no-underscore-dangle
         mw.dataMaps.EventEmitter.prototype._invokeEventHandler( handler, [ map ] );
     }
 };

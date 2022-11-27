@@ -2,7 +2,7 @@ const Leaflet = require( 'ext.datamaps.leaflet' );
 
 
 function MenuOptionWidget( config ) {
-	MenuOptionWidget.super.call( this, config );
+    MenuOptionWidget.super.call( this, config );
 
     this.data = config.data;
     this.keywords = config.keywords;

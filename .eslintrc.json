@@ -2,18 +2,40 @@
 	"root": true,
 	"extends": [
 		"wikimedia/client-es6",
-		"wikimedia/mediawiki"
+		"wikimedia/mediawiki",
+        "wikimedia/jquery"
 	],
 	"globals": {
 		"require": "readonly",
 		"module": "readonly"
 	},
 	"rules": {
-		"one-var": "off",
-		"//": [
-			"off",
-			"ResourceLoader's `packageFiles` do not require wrapping but the `module` option is only available in ES6+."
-		],
-		"no-implicit-globals": "off"
+        "arrow-parens": [ "error", "as-needed" ],
+        "es-x/no-object-values": "off",
+		"indent": [ "error", 4, {
+            "SwitchCase": 1
+        } ],
+		"max-len": [ "warn", {
+			"code": 129
+        } ],
+        "no-bitwise": "off",
+		"no-implicit-globals": "off",
+        "no-jquery/no-class-state": [
+            "off",
+            "Alternative of classList.toggle is permitted, but until we fully switch away from JQuery it'll simply be awkward."
+        ],
+        "no-jquery/no-parse-html-literal": [
+            "off",
+            "Planning to enable once moved onto Vue."
+        ],
+        "no-multiple-empty-lines": [ "error", {
+            "max": 2
+        } ],
+        "no-underscore-dangle": [
+            "off",
+            "Private/internal/protected methods."
+        ],
+		"operator-linebreak": [ "error", "before" ],
+		"one-var": "off"
 	}
 }

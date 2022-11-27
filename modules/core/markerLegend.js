@@ -15,7 +15,7 @@ class MarkerFilteringPanel {
         this.$groupContainer = $( '<div class="datamap-container-groups">' ).appendTo( this.$root );
         //
         this.groupToggles = {};
-        // 
+        //
         this.$layersPopup = null;
 
         // Prepend the button group to the root element
@@ -27,7 +27,7 @@ class MarkerFilteringPanel {
         }
 
         if ( withLayerDropdown ) {
-            this.$layersPopup = this.createPopupButton( mw.msg( 'datamap-layer-control' ) )[1];
+            this.$layersPopup = this.createPopupButton( mw.msg( 'datamap-layer-control' ) )[ 1 ];
         }
     }
 
@@ -42,7 +42,7 @@ class MarkerFilteringPanel {
 
     createPopupButton( label ) {
         const $content = $( '<div>' );
-        const button = new OO.ui.PopupButtonWidget( { 
+        const button = new OO.ui.PopupButtonWidget( {
             label,
             indicator: 'down',
             popup: {
@@ -58,8 +58,10 @@ class MarkerFilteringPanel {
 
 
     toggleAllGroups( state ) {
-        for ( const toggle of Object.values( this.groupToggles ) )
+        // eslint-disable-next-line compat/compat
+        for ( const toggle of Object.values( this.groupToggles ) ) {
             toggle.checkbox.setSelected( state );
+        }
     }
 
 
@@ -82,14 +84,14 @@ class MarkerFilteringPanel {
 
 
     addMarkerGroupToggle( groupId, group ) {
-        this.groupToggles[groupId] = new MarkerFilteringPanel.MarkerGroupField( this, groupId, group );
+        this.groupToggles[ groupId ] = new MarkerFilteringPanel.MarkerGroupField( this, groupId, group );
         this.legend.setTabVisibility( this.tab, true );
     }
 
 
     includeGroups( ids ) {
         for ( const groupId of ids ) {
-            this.addMarkerGroupToggle( groupId, this.map.config.groups[groupId] );
+            this.addMarkerGroupToggle( groupId, this.map.config.groups[ groupId ] );
         }
     }
 }
@@ -106,8 +108,8 @@ MarkerFilteringPanel.MarkerGroupField = class MarkerGroupField {
         const pair = this.legend.createCheckboxField( this.legendPanel.$groupContainer, group.name,
             !Util.isBitSet( group.flags, Enums.MarkerGroupFlags.IsUnselected ),
             state => this.map.layerManager.setExclusion( this.groupId, !state ) );
-        this.field = pair[1];
-        this.checkbox = pair[0];
+        this.field = pair[ 1 ];
+        this.checkbox = pair[ 0 ];
 
         // Optional elements
         this.$circle = null;
@@ -128,7 +130,7 @@ MarkerFilteringPanel.MarkerGroupField = class MarkerGroupField {
 
     setBadge( text ) {
         if ( text && text.length > 0 ) {
-            if ( this.$badge == null ) {
+            if ( this.$badge === null ) {
                 this.$badge = $( '<span class="datamap-legend-badge">' ).appendTo( this.field.$header );
             }
             this.$badge.text( text );
@@ -137,7 +139,7 @@ MarkerFilteringPanel.MarkerGroupField = class MarkerGroupField {
             this.$badge = null;
         }
     }
-}
+};
 
 
 module.exports = MarkerFilteringPanel;

@@ -11,7 +11,7 @@ module.exports = Leaflet.Popup.extend( {
         return this;
     },
 
-	_updateContent() {
+    _updateContent() {
         if ( !this._contentNode ) {
             return;
         }
@@ -34,22 +34,22 @@ module.exports = Leaflet.Popup.extend( {
         this._content.build();
         // Build tools section
         this._content.$tools = $( '<ul class="datamap-popup-tools">' ).appendTo( this._content.$content );
-		this._content.buildTools();
-	},
+        this._content.buildTools();
+    },
 
-	_initLayout() {
-		Leaflet.Popup.prototype._initLayout.call( this );
+    _initLayout() {
+        Leaflet.Popup.prototype._initLayout.call( this );
 
         this.$customButtonArea = $( '<div class="datamap-popup-buttons">' ).appendTo( this._container );
-	},
+    },
 
-	onAdd( map ) {
+    onAdd( map ) {
         this._updateContent();
         Leaflet.Popup.prototype.onAdd.call( this, map );
         this._content.onAdd();
     },
 
-	onRemove( map ) {
+    onRemove( map ) {
         Leaflet.Popup.prototype.onRemove.call( this, map );
         this._content.onRemove();
     }

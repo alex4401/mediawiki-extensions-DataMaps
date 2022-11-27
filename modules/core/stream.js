@@ -1,3 +1,6 @@
+/* eslint-disable compat/compat */
+
+
 module.exports = class MarkerStreamingManager {
     constructor( map ) {
         this.map = map;
@@ -16,13 +19,15 @@ module.exports = class MarkerStreamingManager {
 
 
     callApiReliable( options, retries, waitTime ) {
-        retries = retries != null ? retries : 2;
+        retries = retries !== null ? retries : 2;
         waitTime = waitTime || 60;
         return new Promise( ( resolve, reject ) => {
+            // eslint-disable-next-line no-promise-executor-return
             return this.callApiUnreliable( options )
                 .then( resolve )
                 .catch( reason => {
                     if ( retries > 0 ) {
+                        // eslint-disable-next-line no-promise-executor-return
                         return new Promise( r => setTimeout( r, waitTime ) )
                             .then( this.callApiReliable.bind( this, options, retries - 1, waitTime ) )
                             .then( resolve )
@@ -42,11 +47,13 @@ module.exports = class MarkerStreamingManager {
         const query = {
             pageid: pageId
         };
+        /* eslint-disable curly */
         if ( version ) query.revid = version;
         if ( filter ) query.layers = filter.join( '|' );
         if ( start !== null ) query.continue = start;
         if ( limit ) query.limit = limit;
         if ( sector ) query.sector = sector;
+        /* eslint-enable curly */
         return this.callApiReliable( query );
     }
 
@@ -61,7 +68,7 @@ module.exports = class MarkerStreamingManager {
         const markers = [];
         for ( const markerType in data ) {
             const layers = markerType.split( ' ' );
-            const placements = data[markerType];
+            const placements = data[ markerType ];
             // Create markers for instances
             for ( const instance of placements ) {
                 markers.push( this.map.createMarkerFromApiInstance( layers, instance ) );
@@ -83,7 +90,7 @@ module.exports = class MarkerStreamingManager {
             } );
     }
 
-    
+
     loadSequential( pageId, version, filter, start, sector ) {
         return this.requestChunk( pageId, version, filter, start || 0, null, sector )
             .then( data => {
@@ -100,4 +107,4 @@ module.exports = class MarkerStreamingManager {
                 }
             } );
     }
-}
+};

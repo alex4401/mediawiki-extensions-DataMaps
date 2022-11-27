@@ -27,16 +27,17 @@ module.exports = class MarkerLayerManager {
 
 
     register( layerName ) {
-        if ( !this.byLayer[layerName] ) {
-            this.byLayer[layerName] = [];
+        if ( !this.byLayer[ layerName ] ) {
+            this.byLayer[ layerName ] = [];
         }
     }
 
 
     addMember( layers, leafletMarker ) {
         leafletMarker.attachedLayers = layers;
-        for ( const layer of layers )
-            this.byLayer[layer].push( leafletMarker );
+        for ( const layer of layers ) {
+            this.byLayer[ layer ].push( leafletMarker );
+        }
         this.markers.push( leafletMarker );
         this.updateMember( leafletMarker );
     }
@@ -44,16 +45,17 @@ module.exports = class MarkerLayerManager {
 
     addMarkerToLayer( leafletMarker, layer ) {
         leafletMarker.attachedLayers.push( layer );
-        this.byLayer[layer].push( leafletMarker );
+        this.byLayer[ layer ].push( leafletMarker );
         this.updateMember( leafletMarker );
     }
 
 
     removeMember( leafletMarker ) {
         this.map.leaflet.removeLayer( leafletMarker );
-        for ( const layer of leafletMarker.attachedLayers )
-            delete this.byLayer[layer][this.byLayer[layer].indexOf( leafletMarker )];
-        delete this.markers[this.markers.indexOf( leafletMarker )];
+        for ( const layer of leafletMarker.attachedLayers ) {
+            delete this.byLayer[ layer ][ this.byLayer[ layer ].indexOf( leafletMarker ) ];
+        }
+        delete this.markers[ this.markers.indexOf( leafletMarker ) ];
         leafletMarker.attachedLayers = null;
     }
 
@@ -85,7 +87,7 @@ module.exports = class MarkerLayerManager {
             // Check if this property is specified in the layers list
             if ( layers.some( name => name.indexOf( property + ':' ) >= 0 ) ) {
                 // Check if the value is matched
-                if ( layers.indexOf( `${property}:${this.includeMaskPr[property]}` ) < 0 ) {
+                if ( layers.indexOf( `${property}:${this.includeMaskPr[ property ]}` ) < 0 ) {
                     return false;
                 }
             }
@@ -103,16 +105,17 @@ module.exports = class MarkerLayerManager {
         // Get marker layers
         const layers = leafletMarker.attachedLayers;
         // Request new visibility state from cache, or compute it if missed
-        let shouldBeVisible = this.computeCache[layers];
-        if ( shouldBeVisible == null ) {
+        let shouldBeVisible = this.computeCache[ layers ];
+        if ( shouldBeVisible === null ) {
             shouldBeVisible = this.shouldBeVisible( layers );
-            this.computeCache[layers] = shouldBeVisible;
+            this.computeCache[ layers ] = shouldBeVisible;
         }
         // Add to Leaflet map if true, remove if false
-        if ( shouldBeVisible )
-            this.map.leaflet.addLayer( leafletMarker )
-        else
+        if ( shouldBeVisible ) {
+            this.map.leaflet.addLayer( leafletMarker );
+        } else {
             this.map.leaflet.removeLayer( leafletMarker );
+        }
     }
 
 
@@ -122,12 +125,13 @@ module.exports = class MarkerLayerManager {
             return;
         }
         // Exit early if layer does not exist
-        if ( layerName && !this.byLayer[layerName] ) {
+        if ( layerName && !this.byLayer[ layerName ] ) {
             return;
         }
         // Run an update on every member of the layer
-        for ( const m of ( layerName ? this.byLayer[layerName] : this.markers ) )
+        for ( const m of ( layerName ? this.byLayer[ layerName ] : this.markers ) ) {
             this.updateMember( m );
+        }
     }
 
 
@@ -135,10 +139,11 @@ module.exports = class MarkerLayerManager {
      * Sets a layer as *absolutely* required for a marker to be displayed. This updates ALL markers.
      */
     setRequirement( layerName, state ) {
-        if ( state )
+        if ( state ) {
             this.includeMaskHi.add( layerName );
-        else
+        } else {
             this.includeMaskHi.delete( layerName );
+        }
         this.clearCache();
         this.updateMembers();
     }
@@ -148,10 +153,10 @@ module.exports = class MarkerLayerManager {
      * Sets a layer as *absolutely* required for a marker to be displayed. This updates ALL markers.
      */
     setOptionalPropertyRequirement( propertyName, value ) {
-        if ( value == null && this.includeMaskPr[propertyName] ) {
-            delete this.includeMaskPr[propertyName];
-        } else if ( value != null ) {
-            this.includeMaskPr[propertyName] = value;
+        if ( value === null && this.includeMaskPr[ propertyName ] ) {
+            delete this.includeMaskPr[ propertyName ];
+        } else if ( value !== null ) {
+            this.includeMaskPr[ propertyName ] = value;
         }
         this.clearCache();
         this.updateMembers();
@@ -162,10 +167,11 @@ module.exports = class MarkerLayerManager {
      * Sets a layer as required for a marker to be displayed. This updates ALL markers.
      */
     setInclusion( layerName, state ) {
-        if ( state )
+        if ( state ) {
             this.includeMaskLo.add( layerName );
-        else
+        } else {
             this.includeMaskLo.delete( layerName );
+        }
         this.clearCache();
         this.updateMembers();
     }
@@ -173,13 +179,16 @@ module.exports = class MarkerLayerManager {
 
     /**
      * Sets a layer as preventing marker display. This updates only markers within the layer.
-     * @param {string} layerName 
+     *
+     * @param {string} layerName
+     * @param {boolean} state
      */
     setExclusion( layerName, state ) {
-        if ( state )
+        if ( state ) {
             this.excludeMask.add( layerName );
-        else
+        } else {
             this.excludeMask.delete( layerName );
+        }
         this.clearCache();
         this.updateMembers( layerName );
     }
@@ -197,14 +206,14 @@ module.exports = class MarkerLayerManager {
 
     /**
      * Destroys ALL markers in a layer from the whole map (all layers). The layer itself is not deregistered.
-     * 
+     *
      * Expensive if there are markers in a lot of layers: each of those layers' members will be scanned.
-     * 
+     *
      * @param {string} layerName Layer to purge.
      */
     nuke( layerName ) {
         const toPurge = new Set();
-        for ( const leafletMarker of this.byLayer[layerName] ) {
+        for ( const leafletMarker of this.byLayer[ layerName ] ) {
             // Remove the marker from map
             if ( leafletMarker._map ) {
                 this.map.leaflet.removeLayer( leafletMarker );
@@ -219,7 +228,7 @@ module.exports = class MarkerLayerManager {
 
         // Clean up other layer lists
         for ( const other of toPurge ) {
-            this.byLayer[other] = this.byLayer[other].filter( x => x.attachedLayers.indexOf( other ) >= 0 );
+            this.byLayer[ other ] = this.byLayer[ other ].filter( x => x.attachedLayers.indexOf( other ) >= 0 );
         }
     }
 
@@ -227,10 +236,10 @@ module.exports = class MarkerLayerManager {
     /**
      * Removes a layer list. This does not destroy the markers or tamper with any references. You must resolve that before
      * calling this method.
-     * 
+     *
      * @param {string} layerName Layer to remove.
      */
     deregister( layerName ) {
-        delete this.byLayer[layerName];
+        delete this.byLayer[ layerName ];
     }
-}
+};

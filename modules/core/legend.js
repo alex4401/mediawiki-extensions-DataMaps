@@ -25,6 +25,7 @@ module.exports = class LegendTabManager {
 
 
     addTab( name, cssClass, visible ) {
+        // eslint-disable-next-line mediawiki/class-doc
         const result = new OO.ui.TabPanelLayout( {
             name,
             label: name,
@@ -44,7 +45,7 @@ module.exports = class LegendTabManager {
         tab.toggle( value );
         tab.getTabItem().toggle( value );
 
-        if ( this.tabLayout.tabSelectWidget.findSelectedItem() == tab.getTabItem() ) {
+        if ( this.tabLayout.tabSelectWidget.findSelectedItem() === tab.getTabItem() ) {
             this.tabLayout.tabSelectWidget.selectItem( null );
             this.tabLayout.selectFirstSelectableTabPanel();
         }
@@ -60,6 +61,7 @@ module.exports = class LegendTabManager {
         }
 
         if ( this.tabLayout.getTabs().getItems().some( item => item.isVisible() ) ) {
+            // eslint-disable-next-line no-jquery/no-sizzle
             if ( !this.$root.is( ':visible' ) ) {
                 this.tabLayout.selectFirstSelectableTabPanel();
             }
@@ -80,4 +82,4 @@ module.exports = class LegendTabManager {
         field.$element.appendTo( $parent );
         return [ checkbox, field ];
     }
-}
+};

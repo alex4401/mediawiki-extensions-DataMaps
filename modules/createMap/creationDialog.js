@@ -3,7 +3,7 @@ const Enums = require( '../loader/enums.js' ),
 
 
 function CreationDialog( config ) {
-	OO.ui.ProcessDialog.call( this, config );
+    OO.ui.ProcessDialog.call( this, config );
 }
 OO.inheritClass( CreationDialog, OO.ui.ProcessDialog );
 
@@ -11,17 +11,17 @@ OO.inheritClass( CreationDialog, OO.ui.ProcessDialog );
 CreationDialog.static.name = 'mveCreationDialog';
 CreationDialog.static.title = mw.msg( 'datamap-vec-title' );
 CreationDialog.static.actions = [
-	{
+    {
         modes: [ 'create' ],
-		label: mw.msg( 'datamap-ve-cancel' ),
-		flags: [ 'safe', 'close' ]
-	},
-	{
+        label: mw.msg( 'datamap-ve-cancel' ),
+        flags: [ 'safe', 'close' ]
+    },
+    {
         action: 'sourceeditor',
         modes: [ 'create' ],
-		label: mw.msg( 'datamap-ve-skip' ),
-		flags: [ 'safe' ]
-	}
+        label: mw.msg( 'datamap-ve-skip' ),
+        flags: [ 'safe' ]
+    }
 ];
 
 
@@ -33,10 +33,10 @@ const CrsType = {
 
 
 CreationDialog.prototype.initialize = function () {
-	OO.ui.ProcessDialog.prototype.initialize.apply( this, arguments );
+    OO.ui.ProcessDialog.prototype.initialize.apply( this, arguments );
 
     this.imageSize = [ 100, 100 ];
-	
+
     this.originSelector = new OO.ui.DropdownInputWidget( {
         options: [
             { data: Enums.CRSOrigin.TopLeft, label: mw.msg( 'datamap-vec-crs-top-left' ) },
@@ -207,7 +207,7 @@ CreationDialog.prototype.initialize = function () {
     } );
 
     this.crsCustomPanel.toggle( false );
-    this.crsSelector.on( 'change', _ => this.updateCrs() );
+    this.crsSelector.on( 'change', () => this.updateCrs() );
 
     this.imageSelector.on( 'change', () => this.fetchImageInfo() );
     this.$extraCheckbox.on( 'change', () => this.updateSize() );
@@ -222,10 +222,10 @@ CreationDialog.prototype.initialize = function () {
 };
 
 
-// Set up the initial mode of the window  
+// Set up the initial mode of the window
 CreationDialog.prototype.getSetupProcess = function ( data ) {
-	return OO.ui.ProcessDialog.prototype.getSetupProcess.call( this, data )
-	    .next( () => this.actions.setMode( 'create' ), this );
+    return OO.ui.ProcessDialog.prototype.getSetupProcess.call( this, data )
+        .next( () => this.actions.setMode( 'create' ), this );
 };
 
 
@@ -258,12 +258,13 @@ CreationDialog.prototype.fetchImageInfo = function () {
         prop: 'imageinfo',
         iiprop: 'size|url|mime'
     } ).then( data => {
-        const pageInfo = Object.values( data.query.pages )[0];
+        // eslint-disable-next-line compat/compat
+        const pageInfo = Object.values( data.query.pages )[ 0 ];
         if ( !pageInfo.imageinfo ) {
             return;
         }
 
-        const imageInfo = pageInfo.imageinfo[0];
+        const imageInfo = pageInfo.imageinfo[ 0 ];
 
         this.imageField.setNotices( [
             mw.msg( 'datamap-vec-note-image-size', imageInfo.width, imageInfo.height )
@@ -280,7 +281,7 @@ CreationDialog.prototype.fetchImageInfo = function () {
                 mw.msg( 'datamap-vec-error-poor-file-type', imageInfo.mime )
             ] );
         }
-        
+
         this.imageSize = [ imageInfo.width, imageInfo.height ];
 
         this.updateCrs();
@@ -296,16 +297,16 @@ CreationDialog.prototype.updateButtonState = function () {
 
 
 CreationDialog.prototype.updateCrs = function () {
-    this.crsCustomPanel.toggle( this.crsSelector.getValue() == CrsType.Custom );
+    this.crsCustomPanel.toggle( this.crsSelector.getValue() === CrsType.Custom );
     this.updateSize();
-    switch ( this.crsSelector.getValue() ) {
-        case CrsType.Percent+'':
+    switch ( parseInt( this.crsSelector.getValue() ) ) {
+        case CrsType.Percent:
             this.crsWidth.setValue( 100 );
             this.crsHeight.setValue( 100 );
             break;
-        case CrsType.Image+'':
-            this.crsWidth.setValue( this.imageSize[0] );
-            this.crsHeight.setValue( this.imageSize[1] );
+        case CrsType.Image:
+            this.crsWidth.setValue( this.imageSize[ 0 ] );
+            this.crsHeight.setValue( this.imageSize[ 1 ] );
             break;
     }
 };
@@ -325,7 +326,7 @@ CreationDialog.prototype.updatePrefillValue = function () {
     };
 
     if ( this.originSelector.getValue() === Enums.CRSOrigin.BottomLeft ) {
-        out.crs = [ out.crs[1], out.crs[0] ];
+        out.crs = [ out.crs[ 1 ], out.crs[ 0 ] ];
     }
 
     // TODO: this should check against default feature sets
@@ -351,9 +352,9 @@ CreationDialog.prototype.updatePrefillValue = function () {
 
     out.groups = {};
     out.markers = {};
-    this.prefill.$element.attr( 'value', JSON.stringify( out, null, "\t" ) );
+    this.prefill.$element.attr( 'value', JSON.stringify( out, null, '\t' ) );
 
-    this.$body.find( 'form' ).submit();
+    this.$body.find( 'form' ).trigger( 'submit' );
 };
 
 

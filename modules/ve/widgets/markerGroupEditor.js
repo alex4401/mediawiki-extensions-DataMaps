@@ -7,13 +7,13 @@ module.exports = class MarkerGroupEditor {
     constructor( ve, coreWidget ) {
         this.ve = ve;
         this.coreWidget = coreWidget;
-        this.group = this.ve.map.config.groups[this.coreWidget.groupId];
+        this.group = this.ve.map.config.groups[ this.coreWidget.groupId ];
 
         this.nameEd = new OO.ui.TextInputWidget( {
             value: this.group.name,
             spellcheck: true
         } );
-        this.button = new OO.ui.PopupButtonWidget( { 
+        this.button = new OO.ui.PopupButtonWidget( {
             icon: 'menu',
             popup: {
                 $content: this._buildPopup(),
@@ -61,19 +61,19 @@ module.exports = class MarkerGroupEditor {
             expanded: false,
             padded: false,
             content: [
-                new OO.ui.FieldLayout( this.idEd, { 
+                new OO.ui.FieldLayout( this.idEd, {
                     label: mw.msg( 'datamap-ve-group-id' ),
                     align: 'top',
                     help: mw.msg( 'datamap-ve-group-id-cannot-modify' ),
                     helpInline: true
                 } ),
-                new OO.ui.FieldLayout( this.articleLinkEd, { 
+                new OO.ui.FieldLayout( this.articleLinkEd, {
                     label: mw.msg( 'datamap-ve-group-article-link' ),
                     align: 'top',
                     help: mw.msg( 'datamap-ve-group-article-link-subtext' ),
                     helpInline: true
                 } ),
-                new OO.ui.FieldLayout( this.collectibleModeEd, { 
+                new OO.ui.FieldLayout( this.collectibleModeEd, {
                     label: mw.msg( 'datamap-ve-group-collectible-mode' ),
                     align: 'top'
                 } ),
@@ -94,7 +94,7 @@ module.exports = class MarkerGroupEditor {
         this.ve.markStale( this.group );
     }
 
-    
+
     updateCollectibleMode() {
         this.group.flags = ( this.group.flags & ~Enums.MarkerGroupFlags.Collectible_Any ) | this.collectibleModeEd.getData();
         this.ve.markStale( this.group );
@@ -116,4 +116,4 @@ module.exports = class MarkerGroupEditor {
         this.ve.windowManager.addWindows( [ dialog ] );
         this.ve.windowManager.openWindow( dialog );
     }
-}
+};

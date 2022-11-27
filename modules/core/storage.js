@@ -1,9 +1,9 @@
 /**
  * Local storage interface class. It manages data migrations and handles writes.
- * 
+ *
  * Since 2022/11/15 data is stored as a single object (the `data` field). Call `commit()` to write it to browser
  * storage.
- * 
+ *
  * Version history:
  *   -1[*]      : Initial unversioned.
  *   20220713   : Internal "#surface" layer removed, dismissed markers needed it removed.
@@ -19,16 +19,16 @@ class MapStorage {
         this.hasSchemaVersion = false;
         this.isWritable = true;
         this.migrate();
-        
+
         this.data = this.getJSON( '*', '{}' );
         this.initialiseField( 'dismissed', [] );
         this.initialiseField( 'background', 0 );
     }
 
-    
+
     initialiseField( name, value ) {
-        if ( this.data[name] == null ) {
-            this.data[name] = value;
+        if ( this.data[ name ] === undefined ) {
+            this.data[ name ] = value;
         }
     }
 
@@ -39,7 +39,7 @@ class MapStorage {
 
 
     has( name, namespace ) {
-        return localStorage.hasOwnProperty( `${namespace || MapStorage.NAMESPACE}.${this.id}:${name}` );
+        return Object.prototype.hasOwnProperty.call( localStorage, `${namespace || MapStorage.NAMESPACE}.${this.id}:${name}` );
     }
 
 
@@ -111,20 +111,21 @@ class MapStorage {
         }
 
         // Check if version's older than current and if any saved properties exist; otherwise abort
-        if ( schemaVersion < MapStorage.LATEST_VERSION && !( schemaVersion >= 20221114 ?
-            // Post-20221114: Single object model
+        /* eslint-disable operator-linebreak */
+        if ( schemaVersion < MapStorage.LATEST_VERSION && !( schemaVersion >= 20221114
+            ? // Post-20221114: Single object model
             ( this.has( '*' ) )
-            :
-            // Pre-20221114: Separate keys model
+            : // Pre-20221114: Separate keys model
             ( this.has( 'dismissed' ) || this.has( 'background' ) )
         ) ) {
             return;
         }
+        /* eslint-enable operator-linebreak */
 
         this._upgradeFrom( schemaVersion );
     }
 
-    
+
     _upgradeFrom( schemaVersion ) {
         // 20221115 migration is fundamental and runs ahead of all these
 
@@ -137,7 +138,7 @@ class MapStorage {
             this.remove( 'dismissed' );
             this.remove( 'background' );
         }
-        
+
         // Do not continue if there's no data object
         if ( !this.has( '*' ) ) {
             return;
@@ -145,20 +146,22 @@ class MapStorage {
 
         const data = this.getJSON( '*' );
         // Run sequential migrations on the data object
+        /* eslint-disable no-fallthrough */
         switch ( schemaVersion ) {
             case 20220713:
                 // Parse dismissed marker IDs and use fixed precision on coordinates
                 data.dismissed = data.dismissed.map( x => {
                     const a = x.split( '@' );
-                    const b = a[1].split( ':' );
-                    const lat = parseFloat( b[0] );
-                    const lon = parseFloat( b[1] );
-                    return ( lat == NaN || lon == NaN ) ? x : ( a[0] + '@' + lat.toFixed( 3 ) + ':' + lon.toFixed( 3 ) );
+                    const b = a[ 1 ].split( ':' );
+                    const lat = parseFloat( b[ 0 ] );
+                    const lon = parseFloat( b[ 1 ] );
+                    return ( isNaN( lat ) || isNaN( lon ) ) ? x : ( a[ 0 ] + '@' + lat.toFixed( 3 ) + ':' + lon.toFixed( 3 ) );
                 } );
             case 20220803:
                 // Add marker namespace to every dismissed ID
                 data.dismissed = data.dismissed.map( x => 'M:' + x );
         }
+        /* eslint-enable no-fallthrough */
 
         this._initialiseVersioning();
     }
@@ -176,7 +179,7 @@ class MapStorage {
         let out;
         const uidPrefixed = ( isGroup ? 'G:' : 'M:' ) + uid;
         if ( this.isDismissed( uid, isGroup ) ) {
-            this.data.dismissed = this.data.dismissed.filter( x => x != uidPrefixed );
+            this.data.dismissed = this.data.dismissed.filter( x => x !== uidPrefixed );
             out = false;
         } else {
             this.data.dismissed.push( uidPrefixed );

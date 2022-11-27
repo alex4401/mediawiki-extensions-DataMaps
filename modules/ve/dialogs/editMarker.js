@@ -1,5 +1,5 @@
 function EditMarkerDialog( config ) {
-	OO.ui.ProcessDialog.call( this, config );
+    OO.ui.ProcessDialog.call( this, config );
 }
 OO.inheritClass( EditMarkerDialog, OO.ui.ProcessDialog );
 
@@ -7,23 +7,23 @@ OO.inheritClass( EditMarkerDialog, OO.ui.ProcessDialog );
 EditMarkerDialog.static.name = 'mveEditMarkerDialog';
 EditMarkerDialog.static.title = mw.msg( 'datamap-ve-tool-edit-marker' );
 EditMarkerDialog.static.actions = [
-	{
+    {
         modes: [ 'final' ],
-		action: 'continue',
-		label: mw.msg( 'datamap-ve-tool-edit-marker-continue' ),
-		flags: [ 'primary', 'progressive' ]
-	},
-	{
+        action: 'continue',
+        label: mw.msg( 'datamap-ve-tool-edit-marker-continue' ),
+        flags: [ 'primary', 'progressive' ]
+    },
+    {
         modes: [ 'intro', 'final' ],
-		label: mw.msg( 'datamap-ve-cancel' ),
-		flags: [ 'safe', 'close' ]
-	}
+        label: mw.msg( 'datamap-ve-cancel' ),
+        flags: [ 'safe', 'close' ]
+    }
 ];
 
 
 EditMarkerDialog.prototype.initialize = function () {
-	OO.ui.ProcessDialog.prototype.initialize.apply( this, arguments );
-	
+    OO.ui.ProcessDialog.prototype.initialize.apply( this, arguments );
+
     this.panel = new OO.ui.PanelLayout( {
         framed: false,
         expanded: false,
@@ -37,19 +37,19 @@ EditMarkerDialog.prototype.initialize = function () {
 };
 
 
-// Set up the initial mode of the window ('edit', in this example.)  
+// Set up the initial mode of the window ('edit', in this example.)
 EditMarkerDialog.prototype.getSetupProcess = function ( data ) {
-	return OO.ui.ProcessDialog.prototype.getSetupProcess.call( this, data )
-	    .next( () => this.actions.setMode( 'intro' ), this );
+    return OO.ui.ProcessDialog.prototype.getSetupProcess.call( this, data )
+        .next( () => this.actions.setMode( 'intro' ), this );
 };
 
 
 // Use the getActionProcess() method to set the modes and displayed item.
 EditMarkerDialog.prototype.getActionProcess = function ( action ) {
-	if ( action === 'continue' ) {
-		return new OO.ui.Process( () => this.close() );
-	}
-	return OO.ui.ProcessDialog.prototype.getActionProcess.call( this, action );
+    if ( action === 'continue' ) {
+        return new OO.ui.Process( () => this.close() );
+    }
+    return OO.ui.ProcessDialog.prototype.getActionProcess.call( this, action );
 };
 
 

@@ -30,7 +30,7 @@ class MarkerSearch {
     _initialiseUI() {
         this.$root = this.map.addControl( DataMap.anchors.topLeft,
             $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-search">' ), true );
-        
+
         this.inputBox = new OO.ui.TextInputWidget( {
             placeholder: mw.msg( 'datamap-control-search' ),
             icon: 'search'
@@ -46,7 +46,7 @@ class MarkerSearch {
         } );
 
         this.inputBox.$element.appendTo( this.$root );
-    	this.menu.$element.appendTo( this.inputBox.$element );
+        this.menu.$element.appendTo( this.inputBox.$element );
 
         if ( this.isLinked ) {
             this.linkedToggle = new OO.ui.ToggleButtonWidget( {
@@ -94,7 +94,7 @@ class MarkerSearch {
                 badge: this.isLinked ? Util.TabberNeue.getOwningPanel( item.map.$root ).attr( 'title' ) : null,
                 badgeCurrent: item.map === this.map,
                 $tab: this.isLinked && item.map !== this.map ? Util.TabberNeue.getOwningTabber( item.map.$root )
-                    .find( '#' + Util.TabberNeue.getOwningPanel( item.map.$root ).attr( 'aria-labelledby' ) ) : null,
+                    .find( '#' + Util.TabberNeue.getOwningPanel( item.map.$root ).attr( 'aria-labelledby' ) ) : null
             } ) );
         }
         this.menu.addItems( widgets );
@@ -143,13 +143,14 @@ class MarkerSearch {
 
     /**
      * Adds a single marker to the index owned by this control.
-     * @param {*} leafletMarker 
+     *
+     * @param {*} leafletMarker
      */
     addMarker( leafletMarker ) {
         this.ownedIndex.add( this.map, leafletMarker );
     }
 
-    
+
     onChunkStreamed() {
         this.ownedIndex.commit();
     }
@@ -164,8 +165,8 @@ mw.dataMaps.registerMapAddedHandler( map => {
         let index;
 
         if ( isLinked && $tabber ) {
-            const masterIndex = sharedTabberIndexMap[$tabber] || new MarkerSearchIndex();
-            sharedTabberIndexMap[$tabber] = masterIndex;
+            const masterIndex = sharedTabberIndexMap[ $tabber ] || new MarkerSearchIndex();
+            sharedTabberIndexMap[ $tabber ] = masterIndex;
             index = new MarkerSearchIndex.ChildIndex( masterIndex );
         } else {
             index = new MarkerSearchIndex();

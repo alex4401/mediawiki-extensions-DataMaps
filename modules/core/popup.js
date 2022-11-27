@@ -6,8 +6,8 @@ module.exports = class MarkerPopup {
     constructor( map, leafletMarker ) {
         this.map = map;
         this.leafletMarker = leafletMarker;
-        this.markerGroup = map.config.groups[this.leafletMarker.attachedLayers[0]];
-        this.slots = this.leafletMarker.apiInstance[2] || {};
+        this.markerGroup = map.config.groups[ this.leafletMarker.attachedLayers[ 0 ] ];
+        this.slots = this.leafletMarker.apiInstance[ 2 ] || {};
         this.uid = Util.getMarkerId( this.leafletMarker );
         // These two containers are provided by Leaflet.Ark.Popup
         this.$buttons = null;
@@ -17,11 +17,14 @@ module.exports = class MarkerPopup {
 
 
     static bindTo( map, leafletMarker ) {
-        leafletMarker.bindPopup( () => new (map.getPopupClass())( map, leafletMarker ), {}, Util.getLeaflet().Ark.Popup );
+        leafletMarker.bindPopup( () => new ( map.getPopupClass() )( map, leafletMarker ), {}, Util.getLeaflet().Ark.Popup );
     }
 
 
     getDismissToolText() {
+        // Messages that can be used here:
+        // * datamap-popup-dismissed
+        // * datamap-popup-mark-as-dismissed
         return mw.msg( 'datamap-popup-' + ( this.leafletMarker.options.dismissed ? 'dismissed' : 'mark-as-dismissed' ) );
     }
 
@@ -29,13 +32,14 @@ module.exports = class MarkerPopup {
     buildButtons() {
         const $getLink = $( '<a class="datamap-marker-link-button oo-ui-icon-link" role="button"></a>' )
             .attr( {
-                'title': mw.msg( 'datamap-popup-marker-link-get' ),
+                title: mw.msg( 'datamap-popup-marker-link-get' ),
                 'aria-label': mw.msg( 'datamap-popup-marker-link-get' ),
-                'href': Util.makeUrlWithParams( this.map, { marker: this.uid }, true )
+                href: Util.makeUrlWithParams( this.map, { marker: this.uid }, true )
             } )
             .appendTo( this.$buttons )
             .on( 'click', event => {
                 event.preventDefault();
+                // eslint-disable-next-line compat/compat
                 navigator.clipboard.writeText( $getLink.attr( 'href' ) )
                     .then( () => mw.notify( mw.msg( 'datamap-popup-marker-link-copied' ) ) );
             } );
@@ -57,7 +61,7 @@ module.exports = class MarkerPopup {
         // Collect layer discriminators
         const discrims = [];
         this.leafletMarker.attachedLayers.forEach( ( layerId, index ) => {
-            const layer = this.map.config.layers[layerId];
+            const layer = this.map.config.layers[ layerId ];
             if ( index > 0 && layer && layer.discrim ) {
                 discrims.push( layer.discrim );
             }
@@ -67,7 +71,7 @@ module.exports = class MarkerPopup {
         // TODO: this is not displayed if coordinates are disabled
         let coordText = this.map.getCoordLabel( this.leafletMarker.apiInstance );
         if ( discrims.length > 0 ) {
-            coordText += ` (${ discrims.join( ', ' ) })`;
+            coordText += ` (${discrims.join( ', ' )})`;
         }
         if ( this.map.isFeatureBitSet( Enums.MapFlags.ShowCoordinates ) ) {
             $( '<div class="datamap-popup-coordinates">' ).text( coordText ).appendTo( this.$content );
@@ -101,8 +105,8 @@ module.exports = class MarkerPopup {
             let msg = mw.msg( 'datamap-popup-related-article' );
             if ( article.indexOf( '|' ) >= 0 ) {
                 const split = article.split( '|', 2 );
-                msg = split[1];
-                article = split[0];
+                msg = split[ 1 ];
+                article = split[ 0 ];
             }
 
             this.addTool( 'datamap-popup-seemore',
@@ -133,4 +137,4 @@ module.exports = class MarkerPopup {
     onRemove() {
         Util.updateLocation( this.map, { marker: null } );
     }
-}
+};

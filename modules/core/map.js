@@ -64,18 +64,17 @@ class DataMap extends EventEmitter {
         }
 
         // Coordinate reference system
-        // If coordinate space spec is oriented [ lower lower upper upper ], assume top left corner as origin point (latitude will
-        // be flipped). If [ upper upper lower lower ], assume bottom left corner (latitude will be unchanged). Any other layout is
-        // invalid.
+        // If coordinate space spec is oriented [ lower lower upper upper ], assume top left corner as origin point (latitude
+        // will be flipped). If [ upper upper lower lower ], assume bottom left corner (latitude will be unchanged). Any other
+        // layout is invalid.
         if ( !this.config.crs ) {
             this.config.crs = [ [ 0, 0 ], [ 100, 100 ] ];
         }
-        this.crsOrigin = ( this.config.crs[0][0] < this.config.crs[1][0] && this.config.crs[0][1] < this.config.crs[1][1] )
-            ? Enums.CRSOrigin.TopLeft : Enums.CRSOrigin.BottomLeft;
-        // Y axis is authoritative, this is really just a cosmetic choice influenced by ARK (latitude first). X doesn't need to be
-        // mapped on a separate scale from Y, unless we want them to always be squares.
-        let crsYHigh = Math.max( this.config.crs[0][0], this.config.crs[1][0] );
-        this.crsScaleX = this.crsScaleY = 100 / crsYHigh;
+        this.crsOrigin = ( this.config.crs[ 0 ][ 0 ] < this.config.crs[ 1 ][ 0 ]
+            && this.config.crs[ 0 ][ 1 ] < this.config.crs[ 1 ][ 1 ] ) ? Enums.CRSOrigin.TopLeft : Enums.CRSOrigin.BottomLeft;
+        // Y axis is authoritative, this is really just a cosmetic choice influenced by ARK (latitude first). X doesn't need to
+        // be mapped on a separate scale from Y, unless we want them to always be squares.
+        this.crsScaleX = this.crsScaleY = 100 / Math.max( this.config.crs[ 0 ][ 0 ], this.config.crs[ 1 ][ 0 ] );
 
         // Set up internal event handlers
         this.on( 'chunkStreamingDone', this.refreshMaxBounds, this );
@@ -114,8 +113,9 @@ class DataMap extends EventEmitter {
 
     /**
      * Checks if all bits of a mask are set on the configured flags constant.
-     * @param {int} mask Feature's bit mask.
-     * @returns {boolean}
+     *
+     * @param {number} mask Feature's bit mask.
+     * @return {boolean}
      */
     isFeatureBitSet( mask ) {
         return Util.isBitSet( this.config.flags, mask );
@@ -124,10 +124,10 @@ class DataMap extends EventEmitter {
 
     _setUpUriMarkerHandler() {
         const tabberId = Util.TabberNeue.getOwningId( this.$root );
-        if ( tabberId && tabberId != window.location.hash.substr( 1 ) ) {
+        if ( tabberId && tabberId !== window.location.hash.slice( 1 ) ) {
             return;
         }
-        
+
         this.markerIdToAutoOpen = Util.getQueryParameter( 'marker' );
         this.on( 'markerReady', this.openPopupIfUriMarker, this );
     }
@@ -136,8 +136,9 @@ class DataMap extends EventEmitter {
     /**
      * Runs the callback function when the Leaflet map is initialised. If you only need access to Leaflet's API, require module
      * `ext.datamaps.leaflet` instead with ResourceLoader.
+     *
      * @param {Function} callback Function to run when Leaflet map is initialised.
-     * @param {object?} context Object to use as callback's context.
+     * @param {Object?} context Object to use as callback's context.
      */
     waitForLeaflet( callback, context ) {
         this.on( 'leafletLoaded', callback, context );
@@ -146,9 +147,10 @@ class DataMap extends EventEmitter {
 
     /**
      * Runs the callback function when the map legend is initialised.
+     *
      * @param {Function} callback Function to run when the legend is initialised.
-     * @param {object?} context Object to use as callback's context.
-    */
+     * @param {Object?} context Object to use as callback's context.
+     */
     waitForLegend( callback, context ) {
         this.on( 'markerFilteringPanel', callback, context );
     }
@@ -157,8 +159,9 @@ class DataMap extends EventEmitter {
     /**
      * Returns true if a layer is used on the map. This is a look-up on the static configuration provided by the server, and does
      * not depend on any data being loaded.
+     *
      * @param {string} name Layer name
-     * @returns {boolean} Whether a layer is used.
+     * @return {boolean} Whether a layer is used.
      */
     isLayerUsed( name ) {
         return this.config.layerIds.indexOf( name ) >= 0;
@@ -167,40 +170,47 @@ class DataMap extends EventEmitter {
 
     /**
      * Maps a point from map's coordinate reference system specified by the server, to the universal space [ 0 0 100 100 ].
-     * @note This is non-destructive, and clones the input.
-     * @param {array} point Array with two number elements: X and Y coordinates.
-     * @returns {array} New point in the universal space.
+     *
+     * This is non-destructive, and clones the input.
+     *
+     * @param {Array} point Array with two number elements: X and Y coordinates.
+     * @return {Array} New point in the universal space.
      */
     translatePoint( point ) {
-        return this.crsOrigin == Enums.CRSOrigin.TopLeft
-            ? [ ( this.config.crs[1][0] - point[0] ) * this.crsScaleY, point[1] * this.crsScaleX ]
-            : [ point[0] * this.crsScaleY, point[1] * this.crsScaleX ];
+        return this.crsOrigin === Enums.CRSOrigin.TopLeft
+            ? [ ( this.config.crs[ 1 ][ 0 ] - point[ 0 ] ) * this.crsScaleY, point[ 1 ] * this.crsScaleX ]
+            : [ point[ 0 ] * this.crsScaleY, point[ 1 ] * this.crsScaleX ];
     }
 
 
     /**
      * Maps a box from map's coordinate reference system specified by the server, to the universal space [ 0 0 100 100 ].
-     * @note This is non-destructive, and clones the input.
-     * @returns {array} New box in the universal space.
+     *
+     * This is non-destructive, and clones the input.
+     *
+     * @param {Array} box
+     * @return {Array} New box in the universal space.
      */
     translateBox( box ) {
-        return this.crsOrigin == Enums.CRSOrigin.TopLeft
-            ? [ [ ( this.config.crs[1][0] - box[0][0] ) * this.crsScaleY, box[0][1] * this.crsScaleX ],
-                [ ( this.config.crs[1][0] - box[1][0] ) * this.crsScaleY, box[1][1] * this.crsScaleX ] ]
-            : [ [ box[0][0] * this.crsScaleY, box[0][1] * this.crsScaleX ],
-                [ box[1][0] * this.crsScaleY, box[1][0] * this.crsScaleX ] ];
+        return this.crsOrigin === Enums.CRSOrigin.TopLeft
+            ? [ [ ( this.config.crs[ 1 ][ 0 ] - box[ 0 ][ 0 ] ) * this.crsScaleY, box[ 0 ][ 1 ] * this.crsScaleX ],
+                [ ( this.config.crs[ 1 ][ 0 ] - box[ 1 ][ 0 ] ) * this.crsScaleY, box[ 1 ][ 1 ] * this.crsScaleX ] ]
+            : [ [ box[ 0 ][ 0 ] * this.crsScaleY, box[ 0 ][ 1 ] * this.crsScaleX ],
+                [ box[ 1 ][ 0 ] * this.crsScaleY, box[ 1 ][ 0 ] * this.crsScaleX ] ];
     }
 
 
     /**
      * Returns a formatted datamap-coordinate-control-text message.
-     * @param {array|number} latOrInstance Latitude or API marker instance
-     * @returns {string}
+     *
+     * @param {Array|number} latOrInstance Latitude or API marker instance
+     * @param {number?} lon Longitude if no instance specified.
+     * @return {string}
      */
     getCoordLabel( latOrInstance, lon ) {
         if ( Array.isArray( latOrInstance ) ) {
-            lon = latOrInstance[1];
-            latOrInstance = latOrInstance[0];
+            lon = latOrInstance[ 1 ];
+            latOrInstance = latOrInstance[ 0 ];
         }
 
         const message = this.config.cOrder === 1 ? 'datamap-coordinate-control-text-xy' : 'datamap-coordinate-control-text';
@@ -210,8 +220,10 @@ class DataMap extends EventEmitter {
 
     /**
      * Returns global storage interface for global collectibles, local otherwise.
-     * @returns {MapStorage}
-    */
+     *
+     * @param {Object} group
+     * @return {MapStorage}
+     */
     getStorageForMarkerGroup( group ) {
         return Util.isBitSet( group.flags, Enums.MarkerGroupFlags.Collectible_GlobalGroup ) ? this.globalStorage : this.storage;
     }
@@ -222,20 +234,22 @@ class DataMap extends EventEmitter {
      * `event.map`.
      *
      * Message delivery is handled by the bootstrap itself, and not maps.
-     * @param {object} event External event information.
+     *
+     * @param {Object} event External event information.
      * @protected
-    */
+     */
     _onLinkedEventReceived( event ) {
         switch ( event.type ) {
             /*
              * Sent when a global group's collected status changes. Data contains affected `groupId` and `state` after changed.
             */
-            case 'groupDismissChange':
-                const group = this.config.groups[event.groupId];
+            case 'groupDismissChange': {
+                const group = this.config.groups[ event.groupId ];
                 if ( group && Util.isBitSet( group.flags, Enums.MarkerGroupFlags.Collectible_GlobalGroup ) ) {
                     this._updateGlobalDismissal( event.groupId, event.state );
                 }
                 break;
+            }
         }
     }
 
@@ -243,13 +257,13 @@ class DataMap extends EventEmitter {
     /**
      * For a group, updates each marker's dismissal state and notifies other components (such as checklists). This may be called
      * either by natural/direct user interaction or a linked event.
-     * 
+     *
      * @param {string} groupId Identifier of a group to update.
      * @param {boolean} state Whether dismissed.
      * @protected
-    */
+     */
     _updateGlobalDismissal( groupId, state ) {
-        for ( const leafletMarker of this.layerManager.byLayer[groupId] ) {
+        for ( const leafletMarker of this.layerManager.byLayer[ groupId ] ) {
             leafletMarker.setDismissed( state );
             this.fire( 'markerDismissChange', leafletMarker );
         }
@@ -260,12 +274,15 @@ class DataMap extends EventEmitter {
     /**
      * Switches marker's (or its group's) collected status in storage, updates visuals, and notifies other components. In case of
      * global collectibles also fires a linked event to notify other maps on the page.
-    */
+     *
+     * @param {Leaflet.Ark.CircleMarker|Leaflet.Ark.IconMarker} leafletMarker
+     * @return {boolean} New state.
+     */
     toggleMarkerDismissal( leafletMarker ) {
-        const groupId = leafletMarker.attachedLayers[0];
-        const mode = Util.getGroupCollectibleType( this.config.groups[groupId] );
+        const groupId = leafletMarker.attachedLayers[ 0 ];
+        const mode = Util.getGroupCollectibleType( this.config.groups[ groupId ] );
         const isIndividual = mode === Enums.MarkerGroupFlags.Collectible_Individual,
-            storage = this.getStorageForMarkerGroup( this.config.groups[groupId] );
+            storage = this.getStorageForMarkerGroup( this.config.groups[ groupId ] );
         const state = storage.toggleDismissal( isIndividual ? Util.getMarkerId( leafletMarker ) : groupId, !isIndividual );
         if ( isIndividual ) {
             // Update this marker only
@@ -290,7 +307,7 @@ class DataMap extends EventEmitter {
      * Opens a marker's popup if the UID matches the `marker` query parameter
      */
     openPopupIfUriMarker( leafletMarker ) {
-        if ( this.markerIdToAutoOpen != null && Util.getMarkerId( leafletMarker ) === this.markerIdToAutoOpen ) {
+        if ( this.markerIdToAutoOpen !== null && Util.getMarkerId( leafletMarker ) === this.markerIdToAutoOpen ) {
             leafletMarker.openPopup();
             this.off( 'markerReady', this.openPopupIfUriMarker );
         }
@@ -306,25 +323,26 @@ class DataMap extends EventEmitter {
     getIconFromLayers( layers ) {
         const markerType = layers.join( ' ' );
         // Construct the object if not found in cache
-        if ( !this.iconCache[markerType] ) {
-            const group = this.config.groups[layers[0]];
+        if ( !this.iconCache[ markerType ] ) {
+            const group = this.config.groups[ layers[ 0 ] ];
 
             // Look for the first layer of this marker that has an icon override property
             let markerIcon = group.markerIcon;
-            const override = layers.find( x => this.config.layers[x] && this.config.layers[x].markerIcon );
+            const override = layers.find( x => this.config.layers[ x ] && this.config.layers[ x ].markerIcon );
             if ( override ) {
-                markerIcon = this.config.layers[override].markerIcon;
+                markerIcon = this.config.layers[ override ].markerIcon;
             }
-        
-            this.iconCache[markerType] = new Leaflet.Icon( { iconUrl: markerIcon, iconSize: group.size } );
+
+            this.iconCache[ markerType ] = new Leaflet.Icon( { iconUrl: markerIcon, iconSize: group.size } );
         }
-        return this.iconCache[markerType];
+        return this.iconCache[ markerType ];
     }
 
 
     /**
      * Returns the class to be used for marker popup contents.
-     * @returns {Function}
+     *
+     * @return {Function}
      */
     getPopupClass() {
         return MarkerPopup;
@@ -334,12 +352,16 @@ class DataMap extends EventEmitter {
     /**
      * Creates a Leaflet marker instance from information provided by the API: layers, and an array with latitude, longitude,
      * and optional data (the "state").
-     * 
+     *
      * Produces a `markerReady(Marker)` event. This event should be used sparingly whenever there's a possibility for a
      * hot-path.
-    */
+     *
+     * @param {Array} layers
+     * @param {Array} instance
+     * @return {Leaflet.Ark.IconMarker|Leaflet.Ark.CircleMarker} A Leaflet marker instance.
+     */
     createMarkerFromApiInstance( layers, instance ) {
-        const group = this.config.groups[layers[0]],
+        const group = this.config.groups[ layers[ 0 ] ],
             position = this.translatePoint( instance );
         let leafletMarker;
 
@@ -352,7 +374,7 @@ class DataMap extends EventEmitter {
         } else {
             // Circular marker
             leafletMarker = new Leaflet.Ark.CircleMarker( position, {
-                baseRadius: group.size/2,
+                baseRadius: group.size / 2,
                 expandZoomInvEx: group.extraMinZoomSize,
                 fillColor: group.fillColor,
                 fillOpacity: 0.7,
@@ -362,8 +384,8 @@ class DataMap extends EventEmitter {
         }
 
         // Initialise state if it's missing
-        if ( !instance[2] ) {
-            instance[2] = {};
+        if ( !instance[ 2 ] ) {
+            instance[ 2 ] = {};
         }
 
         // Persist original coordinates and state
@@ -375,9 +397,9 @@ class DataMap extends EventEmitter {
         // Update dismissal status if storage says it's been dismissed
         const collectibleMode = Util.getGroupCollectibleType( group );
         if ( collectibleMode ) {
-            const isIndividual = collectibleMode == Enums.MarkerGroupFlags.Collectible_Individual,
+            const isIndividual = collectibleMode === Enums.MarkerGroupFlags.Collectible_Individual,
                 storage = this.getStorageForMarkerGroup( group );
-            leafletMarker.setDismissed( storage.isDismissed( isIndividual ? Util.getMarkerId( leafletMarker ) : layers[0],
+            leafletMarker.setDismissed( storage.isDismissed( isIndividual ? Util.getMarkerId( leafletMarker ) : layers[ 0 ],
                 !isIndividual ) );
         }
 
@@ -393,18 +415,19 @@ class DataMap extends EventEmitter {
 
     /**
      * Creates a Leaflet marker instance with given layers, position and API state object.
-     * @param {array} layers Array of string layer names.
-     * @param {array} position Point to place the marker at.
-     * @param {object?} state Optional object with fields: label, desc, image, article, search.
-     * @returns Leaflet marker instance of type Leaflet.Ark.IconMarker or Leaflet.Ark.CircleMarker.
+     *
+     * @param {Array} layers Array of string layer names.
+     * @param {Array} position Point to place the marker at.
+     * @param {Object?} state Optional object with fields: label, desc, image, article, search.
+     * @return {Leaflet.Ark.IconMarker|Leaflet.Ark.CircleMarker} Leaflet marker instance.
      */
     createMarker( layers, position, state ) {
-        return this.createMarkerFromApiInstance( layers, [ position[0], position[1], state ] );
+        return this.createMarkerFromApiInstance( layers, [ position[ 0 ], position[ 1 ], state ] );
     }
 
 
     /*
-     * 
+     *
      */
     setCurrentBackground( index ) {
         // Remove existing layers off the map
@@ -461,11 +484,13 @@ class DataMap extends EventEmitter {
 
     /**
      * Adds a custom control to Leaflet's container.
-     * @note Requires the Leaflet map to be initialised.
+     *
+     * Requires the Leaflet map to be initialised.
+     *
      * @param {string} anchor Anchor selector (common ones are found in DataMap.anchors).
      * @param {Element} $element DOM node of the custom control.
      * @param {boolean} shouldPrepend Whether to add the control to the beginning of the anchor.
-     * @returns $element for chaining.
+     * @return {jQuery} $element for chaining.
      */
     addControl( anchor, $element, shouldPrepend ) {
         if ( shouldPrepend && this.$legendPopupBtn ) {
@@ -481,12 +506,17 @@ class DataMap extends EventEmitter {
     }
 
 
+    /**
+     * @param {Object} overlay
+     * @return {Leaflet.Rectangle|Leaflet.Polyline|Leaflet.ImageOverlay}
+     */
     buildBackgroundOverlayObject( overlay ) {
         let result;
 
         // Construct a layer
         if ( overlay.image ) {
             // Construct an image
+            // eslint-disable-next-line es-x/no-array-string-prototype-at
             result = new Leaflet.ImageOverlay( overlay.image, this.translateBox( overlay.at ), {
                 // Expand the DOM element's width and height by 0.5 pixels. This helps with gaps between tiles.
                 antiAliasing: overlay.aa ? 0.5 : 0
@@ -499,6 +529,7 @@ class DataMap extends EventEmitter {
             } );
         } else {
             // Construct a rectangle
+            // eslint-disable-next-line es-x/no-array-string-prototype-at
             result = new Leaflet.Rectangle( this.translateBox( overlay.at ), {
                 color: overlay.strokeColour || Leaflet.Path.prototype.options.color,
                 fillColor: overlay.colour || Leaflet.Path.prototype.options.fillColor
@@ -525,32 +556,35 @@ class DataMap extends EventEmitter {
     /**
      * Calculates content bounds at a given moment from all of the map's contents (all geometrical layers are included). This is
      * uncached and fairly expensive.
+     *
      * BUG: #50
-     * @returns {Leaflet.LatLngBounds}
+     *
+     * @return {Leaflet.LatLngBounds}
      */
     getCurrentContentBounds() {
-    	const bounds = new Leaflet.LatLngBounds();
+        const bounds = new Leaflet.LatLngBounds();
         // Collect content bounds
-    	for ( const id in this.leaflet._layers ) {
-    		const layer = this.leaflet._layers[id];
+        for ( const id in this.leaflet._layers ) {
+            const layer = this.leaflet._layers[ id ];
             if ( layer.getBounds || layer.getLatLng ) {
-    		    bounds.extend( layer.getBounds ? layer.getBounds() : layer.getLatLng() );
+                bounds.extend( layer.getBounds ? layer.getBounds() : layer.getLatLng() );
             }
-    	}
+        }
         return bounds;
     }
 
 
     /**
      * Calculates content bounds and includes extra padding around the area.
-     * @returns {Leaflet.LatLngBounds}
+     *
+     * @return {Leaflet.LatLngBounds}
      */
     getPaddedContentBounds() {
         const bounds = this.getCurrentContentBounds();
         const nw = bounds.getNorthWest(),
             se = bounds.getSouthEast();
-        bounds.extend( [ [ se.lat - DataMap.BOUNDS_PADDING[0], se.lng + DataMap.BOUNDS_PADDING[1] ],
-            [ nw.lat + DataMap.BOUNDS_PADDING[0], nw.lng - DataMap.BOUNDS_PADDING[1] ] ] );
+        bounds.extend( [ [ se.lat - DataMap.BOUNDS_PADDING[ 0 ], se.lng + DataMap.BOUNDS_PADDING[ 1 ] ],
+            [ nw.lat + DataMap.BOUNDS_PADDING[ 0 ], nw.lng - DataMap.BOUNDS_PADDING[ 1 ] ] ] );
         return bounds;
     }
 
@@ -558,6 +592,7 @@ class DataMap extends EventEmitter {
     /**
      * Updates Leaflet's max view bounds to padded content bounds in current state. This is usually done
      * after a data chunk is streamed in, and is fairly expensive.
+     *
      * BUG: #49
      */
     refreshMaxBounds() {
@@ -601,8 +636,8 @@ class DataMap extends EventEmitter {
             bounceAtZoomLimits: false,
             // Zoom control text injection
             zoomControlOptions: {
-        		zoomInTitle: mw.msg( 'datamap-control-zoom-in' ),
-		        zoomOutTitle: mw.msg( 'datamap-control-zoom-out' )
+                zoomInTitle: mw.msg( 'datamap-control-zoom-in' ),
+                zoomOutTitle: mw.msg( 'datamap-control-zoom-out' )
             },
             // Pan settings
             inertia: false,
@@ -613,8 +648,8 @@ class DataMap extends EventEmitter {
             // outside of view for panning UX)
             preferCanvas: true,
             rendererSettings: {
-                padding: 1/3
-            },
+                padding: 1 / 3
+            }
         }, this.config.leafletSettings );
         // Specify the coordinate reference system and initialise the renderer
         leafletConfig.crs = Leaflet.CRS.Simple;
@@ -633,7 +668,7 @@ class DataMap extends EventEmitter {
         this.restoreDefaultView();
 
         for ( const groupName in this.config.groups ) {
-            const group = this.config.groups[groupName];
+            const group = this.config.groups[ groupName ];
 
             // Register with the layer manager
             this.layerManager.register( groupName );
@@ -655,7 +690,12 @@ class DataMap extends EventEmitter {
         this.fireMemorised( 'leafletLoaded' );
     }
 
-    
+
+    /**
+     * @param {Object} background
+     * @param {number} index
+     * @private
+     */
     _initialiseBackground( background, index ) {
         background.layers = [];
 
@@ -663,6 +703,7 @@ class DataMap extends EventEmitter {
         background.layer = background.layer || index;
 
         // Image overlay
+        /* eslint-disable es-x/no-array-string-prototype-at */
         background.at = background.at || this.config.crs;
         if ( background.image ) {
             background.layers.push( new Leaflet.ImageOverlay( background.image, this.translateBox( background.at ), {
@@ -670,6 +711,7 @@ class DataMap extends EventEmitter {
                 antiAliasing: 0.5
             } ) );
         }
+        /* eslint-enable es-x/no-array-string-prototype-at */
 
         // Prepare overlay layers
         if ( background.overlays ) {
@@ -684,7 +726,7 @@ class DataMap extends EventEmitter {
             .attr( {
                 title,
                 'aria-label': title,
-                'class': cssClass
+                class: cssClass
             } )
             .appendTo( $parent );
     }
@@ -708,9 +750,10 @@ class DataMap extends EventEmitter {
                 $( '<div class="leaflet-control datamap-control datamap-control-coords">' ) );
             this.leaflet.on( 'mousemove', event => {
                 let lat = event.latlng.lat / this.crsScaleY;
-                let lon = event.latlng.lng / this.crsScaleX;
-                if ( this.crsOrigin == Enums.CRSOrigin.TopLeft )
-                    lat = this.config.crs[1][0] - lat;
+                const lon = event.latlng.lng / this.crsScaleX;
+                if ( this.crsOrigin === Enums.CRSOrigin.TopLeft ) {
+                    lat = this.config.crs[ 1 ][ 0 ] - lat;
+                }
                 this.$coordTracker.text( this.getCoordLabel( lat, lon ) );
             } );
         }
@@ -719,7 +762,7 @@ class DataMap extends EventEmitter {
         if ( this.config.backgrounds.length > 1 ) {
             this.$backgroundSwitch = this.addControl( DataMap.anchors.topRight,
                 $( '<select class="leaflet-control datamap-control datamap-control-backgrounds leaflet-bar">' )
-                .on( 'change', () => this.setBackgroundPreference( this.$backgroundSwitch.val() ) )
+                    .on( 'change', () => this.setBackgroundPreference( this.$backgroundSwitch.val() ) )
             );
             this.config.backgrounds.forEach( ( background, index ) => {
                 $( '<option>' ).attr( 'value', index ).text( background.name ).appendTo( this.$backgroundSwitch );
@@ -760,15 +803,18 @@ class DataMap extends EventEmitter {
         const withLayerDropdown = hasCaves;
 
         // Initialise legend objects
-        this.filtersPanel = new MarkerFilteringPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ), true, withLayerDropdown );
+        this.filtersPanel = new MarkerFilteringPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ), true,
+            withLayerDropdown );
         /* DEPRECATED(v0.14.0:v0.15.0) */
         this.markerLegend = this.filtersPanel;
 
         // Build the surface and caves toggle
         // TODO: this should be gone by v0.15, preferably in v0.14 (though that one's going to be a 1.39 compat update)
         if ( hasCaves ) {
-            this.filtersPanel.addMarkerLayerToggleRequired( this.filtersPanel.$layersPopup, 'cave', mw.msg( 'datamap-layer-surface' ) );
-            this.filtersPanel.addMarkerLayerToggleExclusive( this.filtersPanel.$layersPopup, 'cave', mw.msg( 'datamap-layer-cave' ) );
+            this.filtersPanel.addMarkerLayerToggleRequired( this.filtersPanel.$layersPopup, 'cave',
+                mw.msg( 'datamap-layer-surface' ) );
+            this.filtersPanel.addMarkerLayerToggleExclusive( this.filtersPanel.$layersPopup, 'cave',
+                mw.msg( 'datamap-layer-cave' ) );
         }
 
         // Build individual group toggles

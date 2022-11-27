@@ -8,15 +8,15 @@ const Util = require( './util.js' ),
 class MarkerSearchIndex extends mw.dataMaps.EventEmitter {
     constructor() {
         super();
-        
+
         this.items = [];
         this._queue = [];
     }
 
 
     _transform( map, leafletMarker ) {
-        const state = leafletMarker.apiInstance[2];
-        const group = map.config.groups[leafletMarker.attachedLayers[0]];
+        const state = leafletMarker.apiInstance[ 2 ];
+        const group = map.config.groups[ leafletMarker.attachedLayers[ 0 ] ];
         const label = state.label || group.name;
 
         let keywords = state.search;
@@ -29,13 +29,13 @@ class MarkerSearchIndex extends mw.dataMaps.EventEmitter {
             }
         }
         // If string was provided by the API, turn into a pair
-        if ( typeof( keywords ) === 'string' ) {
+        if ( typeof keywords === 'string' ) {
             keywords = [ [ keywords, 1 ] ];
         }
         // Ensure search keywords are always an array of (text, weight) pairs
-        keywords = keywords.map( x => ( typeof( x ) === 'string' ) ? [ x, 1 ] : x );
+        keywords = keywords.map( x => ( typeof x === 'string' ) ? [ x, 1 ] : x );
         // Run normaliser and Fuzzysort preparator on each keyword
-        keywords = keywords.map( x => [ Fuzzysort.prepare( MarkerSearchIndex.normalisePhrase( x[0] ) ), x[1] ] );
+        keywords = keywords.map( x => [ Fuzzysort.prepare( MarkerSearchIndex.normalisePhrase( x[ 0 ] ) ), x[ 1 ] ] );
 
         return {
             leafletMarker,
@@ -52,8 +52,8 @@ class MarkerSearchIndex extends mw.dataMaps.EventEmitter {
 
 
     add( map, leafletMarker ) {
-        if ( leafletMarker.apiInstance[2].search == 0
-            || mw.dataMaps.Util.isBitSet( map.config.groups[leafletMarker.attachedLayers[0]].flags,
+        if ( leafletMarker.apiInstance[ 2 ].search === 0
+            || mw.dataMaps.Util.isBitSet( map.config.groups[ leafletMarker.attachedLayers[ 0 ] ].flags,
                 mw.dataMaps.Enums.MarkerGroupFlags.CannotBeSearched ) ) {
             return;
         }
@@ -70,10 +70,10 @@ class MarkerSearchIndex extends mw.dataMaps.EventEmitter {
 
 
     query( phrase ) {
-    	return Fuzzysort.go( MarkerSearchIndex.normalisePhrase( phrase ), this.items, {
-	    	threshold: -75000,
-		    weighedKey: 'keywords'
-	    } );
+        return Fuzzysort.go( MarkerSearchIndex.normalisePhrase( phrase ), this.items, {
+            threshold: -75000,
+            weighedKey: 'keywords'
+        } );
     }
 }
 
@@ -87,7 +87,7 @@ MarkerSearchIndex.normalisePhrase = function ( text ) {
 /**
  * A search index entry collection that replicates information into a shared index.
  */
- MarkerSearchIndex.ChildIndex = class ChildIndex extends MarkerSearchIndex {
+MarkerSearchIndex.ChildIndex = class ChildIndex extends MarkerSearchIndex {
     constructor( parent ) {
         super();
         this.parent = parent;
@@ -97,9 +97,12 @@ MarkerSearchIndex.normalisePhrase = function ( text ) {
     _enqueue( info ) {
         this._queue.push( info );
         // Propagate the entry to the master index: copy it, push tabber title to its keywords, enqueue.
+        // eslint-disable-next-line compat/compat
         const copy = Object.assign( {}, info );
+        // eslint-disable-next-line compat/compat
         copy.keywords = Array.from( info.keywords );
         copy.keywords.push( [ Util.TabberNeue.getOwningPanel( info.map.$root ).attr( 'title' ), 0.2 ] );
+        // eslint-disable-next-line no-underscore-dangle
         this.parent._enqueue( copy );
     }
 
@@ -109,7 +112,7 @@ MarkerSearchIndex.normalisePhrase = function ( text ) {
         // Propagate the commit operation to the master index
         this.parent.commit();
     }
-}
+};
 
 
 module.exports = MarkerSearchIndex;

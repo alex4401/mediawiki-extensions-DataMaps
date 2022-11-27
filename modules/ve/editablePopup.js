@@ -4,10 +4,10 @@ const MarkerPopup = mw.dataMaps.MarkerPopup,
 
 module.exports = class EditableMarkerPopup extends MarkerPopup {
     buildButtons() {
-        const $edit = $( '<a class="datamap-marker-ve-edit-button oo-ui-icon-link" role="button"></a>' )
+        $( '<a class="datamap-marker-ve-edit-button oo-ui-icon-link" role="button"></a>' )
             .attr( {
-                'title': mw.msg( 'datamap-ve-tool-edit-marker' ),
-                'href': '#'
+                title: mw.msg( 'datamap-ve-tool-edit-marker' ),
+                href: '#'
             } )
             .appendTo( this.$buttons )
             .on( 'click', event => {
@@ -23,6 +23,6 @@ module.exports = class EditableMarkerPopup extends MarkerPopup {
 
 
     build() {
-        const $placeholder = $( '<p>' ).text( mw.msg( 'datamap-ve-waiting-for-parse' ) ).appendTo( this.$content );
+        $( '<p>' ).text( mw.msg( 'datamap-ve-waiting-for-parse' ) ).appendTo( this.$content );
     }
-}
+};
