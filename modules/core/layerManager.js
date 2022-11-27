@@ -106,7 +106,7 @@ module.exports = class MarkerLayerManager {
         const layers = leafletMarker.attachedLayers;
         // Request new visibility state from cache, or compute it if missed
         let shouldBeVisible = this.computeCache[ layers ];
-        if ( shouldBeVisible === null ) {
+        if ( shouldBeVisible === undefined ) {
             shouldBeVisible = this.shouldBeVisible( layers );
             this.computeCache[ layers ] = shouldBeVisible;
         }
