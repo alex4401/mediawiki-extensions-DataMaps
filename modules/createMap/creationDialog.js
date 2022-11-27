@@ -15,12 +15,6 @@ CreationDialog.static.actions = [
         modes: [ 'create' ],
         label: mw.msg( 'datamap-ve-cancel' ),
         flags: [ 'safe', 'close' ]
-    },
-    {
-        action: 'sourceeditor',
-        modes: [ 'create' ],
-        label: mw.msg( 'datamap-ve-skip' ),
-        flags: [ 'safe' ]
     }
 ];
 
@@ -82,6 +76,9 @@ CreationDialog.prototype.initialize = function () {
     } );
     this.prefill = new OO.ui.HiddenInputWidget( {
         name: 'wpTextbox1'
+    } );
+    this.skipButton = new OO.ui.ButtonInputWidget( {
+        label: mw.msg( 'datamap-ve-skip' )
     } );
     this.submitButton = new OO.ui.ButtonInputWidget( {
         label: mw.msg( 'datamap-vec-submit' ),
@@ -198,7 +195,9 @@ CreationDialog.prototype.initialize = function () {
                                 name: 'wpUltimateParam',
                                 value: '1'
                             } ),
-                            new OO.ui.FieldLayout( this.submitButton )
+                            new OO.ui.FieldLayout( new OO.ui.ButtonGroupWidget( {
+                                items: [ this.skipButton, this.submitButton ]
+                            } ) )
                         ]
                     } )
                 ]
@@ -216,6 +215,7 @@ CreationDialog.prototype.initialize = function () {
         this.tabberSearchToggle.setDisabled( !this.searchToggle.getValue() );
     } );
 
+    this.skipButton.on( 'click', this.skip, null, this );
     this.submitButton.on( 'click', this.updatePrefillValue, null, this );
 
     this.$body.append( this.panel.$element );
@@ -226,18 +226,6 @@ CreationDialog.prototype.initialize = function () {
 CreationDialog.prototype.getSetupProcess = function ( data ) {
     return OO.ui.ProcessDialog.prototype.getSetupProcess.call( this, data )
         .next( () => this.actions.setMode( 'create' ), this );
-};
-
-
-CreationDialog.prototype.getActionProcess = function ( action ) {
-    if ( action === 'sourceeditor' ) {
-        return new OO.ui.Process( function () {
-            location.href = mw.util.getUrl( mw.config.get( 'wgPageName' ), {
-                action: 'edit'
-            } );
-        } ).next( 60 );
-    }
-    return OO.ui.ProcessDialog.prototype.getActionProcess.call( this, action );
 };
 
 
@@ -309,6 +297,14 @@ CreationDialog.prototype.updateCrs = function () {
             this.crsHeight.setValue( this.imageSize[ 1 ] );
             break;
     }
+};
+
+
+CreationDialog.prototype.skip = function () {
+    this.pushPending();
+    location.href = mw.util.getUrl( mw.config.get( 'wgPageName' ), {
+        action: 'edit'
+    } );
 };
 
 
