@@ -49,11 +49,11 @@ class CollectiblesPanel {
 
 
     _initialisePanel() {
-        for ( const groupName in this.map.config.groups ) {
-            const group = this.map.config.groups[ groupName ];
-            if ( Util.getGroupCollectibleType( group ) ) {
-                this.groups[ groupName ] = new CollectiblesPanel.MarkerGroup( this, group );
-                this.groups[ groupName ].$element.appendTo( this.$root );
+        for ( const groupId in this.map.config.groups ) {
+            const group = this.map.config.groups[ groupId ];
+            if ( !this.map.isLayerFilteredOut( groupId ) && Util.getGroupCollectibleType( group ) ) {
+                this.groups[ groupId ] = new CollectiblesPanel.MarkerGroup( this, group );
+                this.groups[ groupId ].$element.appendTo( this.$root );
             }
         }
     }

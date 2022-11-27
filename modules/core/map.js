@@ -81,7 +81,7 @@ class DataMap extends EventEmitter {
         this.on( 'linkedEvent', this._onLinkedEventReceived, this );
         this.on( 'legendManager', this._initialiseFiltersPanel, this );
         if ( !this.isFeatureBitSet( MapFlags.VisualEditor ) && Object.values( this.config.groups ).some( x =>
-            Util.getGroupCollectibleType( x ) ) ) {
+            Util.getGroupCollectibleType( x ) && !this.isLayerFilteredOut( x ) ) ) {
             this.on( 'legendManager', this._initialiseCollectiblesPanel, this );
         }
 
@@ -165,6 +165,11 @@ class DataMap extends EventEmitter {
      */
     isLayerUsed( name ) {
         return this.config.layerIds.indexOf( name ) >= 0;
+    }
+
+
+    isLayerFilteredOut( name ) {
+        return this.dataSetFilters && this.dataSetFilters.indexOf( name ) < 0;
     }
 
 
@@ -818,9 +823,7 @@ class DataMap extends EventEmitter {
         }
 
         // Build individual group toggles
-        const groupIds = Object.keys( this.config.groups );
-        this.filtersPanel.includeGroups( !this.dataSetFilters ? groupIds : groupIds.filter( x =>
-            this.dataSetFilters.indexOf( x ) >= 0 ) );
+        this.filtersPanel.includeGroups( Object.keys( this.config.groups ).filter( x => !this.isLayerFilteredOut( x ) ) );
 
         // Notify other components that the legend has been loaded, and remove all subscribers. All future subscribers
         // will be invoked right away.
