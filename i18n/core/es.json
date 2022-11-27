@@ -29,7 +29,7 @@
     "datamap-error-pf-page-does-not-exist": "La página del mapa de datos \"[[$1]]\" no existe.",
     "datamap-error-pf-page-invalid-content-model": "El modelo de contenido de la página \"[[$1]]\" no es <code>datamap</code>.",
     "datamap-error-cannot-preview-validation-errors": "<b>No se puede mostrar la vista previa de la edición debido a uno o varios errores en el código fuente del mapa:</b><br/>$1",
-    "datamap-legend-label": "Contenido",
+    "datamap-legend-label": "Leyenda",
     "datamap-javascript-required": "Los mapas de datos interactivos requieren de la activación de JavaScript.",
     "datamap-loading-data": "Espera. Cargando datos",
     "datamap-error-dataload": "<b>No se ha podido cargar los datos</b><br/>Actualiza la página o prueba de nuevo más tarde",
