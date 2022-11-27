@@ -85,6 +85,13 @@ class MarkerLegendPanel {
         this.groupToggles[groupId] = new MarkerLegendPanel.MarkerGroupField( this, groupId, group );
         this.legend.setTabVisibility( this.tab, true );
     }
+
+
+    includeGroups( ids ) {
+        for ( const groupId of ids ) {
+            this.addMarkerGroupToggle( groupId, this.map.config.groups[groupId] );
+        }
+    }
 }
 
 

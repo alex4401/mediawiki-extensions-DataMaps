@@ -80,13 +80,18 @@ class DataMap extends EventEmitter {
         // Set up internal event handlers
         this.on( 'chunkStreamingDone', this.refreshMaxBounds, this );
         this.on( 'linkedEvent', this._onLinkedEventReceived, this );
+        this.on( 'legendManager', this._initialiseFiltersPanel, this );
+        if ( !this.isFeatureBitSet( MapFlags.VisualEditor ) && Object.values( this.config.groups ).some( x =>
+            Util.getGroupCollectibleType( x ) ) ) {
+            this.on( 'legendManager', this._initialiseCollectiblesPanel, this );
+        }
 
         // Request OOUI to be loaded and build the legend
         if ( !( !this.isFeatureBitSet( MapFlags.VisualEditor ) && this.isFeatureBitSet( MapFlags.HideLegend ) ) ) {
             mw.loader.using( [
                 'oojs-ui-core',
                 'oojs-ui-widgets'
-            ], () => this._initialiseLegend() );
+            ], () => this._onOOUILoaded() );
         }
 
         // Prepare the Leaflet map view
@@ -751,37 +756,44 @@ class DataMap extends EventEmitter {
     }
 
 
-    _initialiseLegend() {
+    _onOOUILoaded() {
+        this.legend = new LegendTabManager( this );
+        this.fireMemorised( 'legendManager' );
+    }
+
+
+    _initialiseFiltersPanel() {
         // Determine if we'll need a layer dropdown
         const hasCaves = this.isLayerUsed( 'cave' );
         const withLayerDropdown = hasCaves;
 
         // Initialise legend objects
-        this.legend = new LegendTabManager( this );
-        this.markerLegend = new MarkerLegendPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ), true, withLayerDropdown );
+        this.filtersPanel = new MarkerLegendPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ), true, withLayerDropdown );
+        /* DEPRECATED(v0.14.0:v0.15.0) */
+        this.markerLegend = this.filtersPanel;
 
         // Build the surface and caves toggle
         // TODO: this should be gone by v0.15, preferably in v0.14 (though that one's going to be a 1.39 compat update)
         if ( hasCaves ) {
-            this.markerLegend.addMarkerLayerToggleRequired( this.markerLegend.$layersPopup, 'cave', mw.msg( 'datamap-layer-surface' ) );
-            this.markerLegend.addMarkerLayerToggleExclusive( this.markerLegend.$layersPopup, 'cave', mw.msg( 'datamap-layer-cave' ) );
+            this.filtersPanel.addMarkerLayerToggleRequired( this.filtersPanel.$layersPopup, 'cave', mw.msg( 'datamap-layer-surface' ) );
+            this.filtersPanel.addMarkerLayerToggleExclusive( this.filtersPanel.$layersPopup, 'cave', mw.msg( 'datamap-layer-cave' ) );
         }
 
         // Build individual group toggles
-        for ( const groupId in this.config.groups ) {
-            if ( !this.dataSetFilters || this.dataSetFilters.indexOf( groupId ) >= 0 ) {
-                this.markerLegend.addMarkerGroupToggle( groupId, this.config.groups[groupId] );
-            }
-        }
-        // Set up the dismissable marker interactions
-        if ( !this.isFeatureBitSet( Enums.MapFlags.VisualEditor )
-            && Object.values( this.config.groups ).some( x => Util.getGroupCollectibleType( x ) ) ) {
-            this.legend.dismissables = new DismissableMarkersLegend( this.legend );
-        }
+        const groupIds = Object.keys( this.config.groups );
+        this.filtersPanel.includeGroups( !this.dataSetFilters ? groupIds : groupIds.filter( x =>
+            this.dataSetFilters.indexOf( x ) >= 0 ) );
 
         // Notify other components that the legend has been loaded, and remove all subscribers. All future subscribers
         // will be invoked right away.
+        this.fireMemorised( 'markerFilteringPanel' );
+        /* DEPRECATED(v0.14.0:v0.15.0) */
         this.fireMemorised( 'legendLoaded' );
+    }
+
+
+    _initialiseCollectiblesPanel() {
+        this.collectiblesPanel = new DismissableMarkersLegend( this.legend );
     }
 }
 
