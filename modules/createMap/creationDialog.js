@@ -1,4 +1,4 @@
-const Enums = require( '../loader/enums.js' ),
+const Enums = require( '../core/enums.js' ),
     mwApi = new mw.Api();
 
 
