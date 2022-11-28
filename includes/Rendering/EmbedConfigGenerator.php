@@ -17,6 +17,7 @@ use Title;
 class EmbedConfigGenerator {
     public const MARKER_ICON_WIDTH = MarkerGroupSpec::DEFAULT_ICON_SIZE[0];
     public const LEGEND_ICON_WIDTH = 24;
+    public const NUMBER_OF_MARKERS_FOR_CANVAS = 500;
 
     public DataMapSpec $data;
     private Title $title;
@@ -97,6 +98,13 @@ class EmbedConfigGenerator {
         $out |= $this->data->wantsSearch() === DataMapSpec::SM_TABBER ? 1 << 5 : 0;
         $out |= $this->forVisualEditor ? 1 << 6 : 0;
         $out |= ( $this->useInlineData || $this->forVisualEditor ) ? 1 << 7 : 0;
+
+        $markerCount = 0;
+        $this->data->iterateRawMarkerMap( function ( string $_, array $rawCollection ) use ( &$markerCount ) {
+            $markerCount += count( $rawCollection );
+        } );
+        $out |= $markerCount >= self::NUMBER_OF_MARKERS_FOR_CANVAS ? 1 << 8 : 0;
+
         return $out;
     }
 
