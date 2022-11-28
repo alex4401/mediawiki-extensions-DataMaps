@@ -83,6 +83,7 @@ class DataMap extends EventEmitter {
         this.on( 'chunkStreamingDone', this.refreshMaxBounds, this );
         this.on( 'linkedEvent', this._onLinkedEventReceived, this );
         this.on( 'backgroundChange', this.refreshMaxBounds, this );
+        this.on( 'markerVisibilityUpdate', this.refreshMaxBounds, this );
         this.on( 'legendManager', this._initialiseFiltersPanel, this );
         if ( !this.isFeatureBitSet( MapFlags.VisualEditor ) && Object.values( this.config.groups ).some( x =>
             Util.getGroupCollectibleType( x ) && !this.isLayerFilteredOut( x ) ) ) {

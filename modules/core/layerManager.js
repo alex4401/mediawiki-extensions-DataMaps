@@ -15,6 +15,8 @@ module.exports = class MarkerLayerManager {
         this.includeMaskPr = {};
         // Initialise the cache
         this.clearCache();
+
+        this.map.on( 'markerVisibilityUpdate', () => this.map.leaflet._haveLayersMutated = false );
     }
 
 
@@ -97,7 +99,7 @@ module.exports = class MarkerLayerManager {
     }
 
 
-    updateMember( leafletMarker ) {
+    updateMember( leafletMarker, isInternalCall ) {
         // Exit early if updates are disabled
         if ( this.doNotUpdate ) {
             return;
@@ -111,10 +113,17 @@ module.exports = class MarkerLayerManager {
             this.computeCache[ layers ] = shouldBeVisible;
         }
         // Add to Leaflet map if true, remove if false
+        this.map.leaflet._layersMutated = false;
         if ( shouldBeVisible ) {
             this.map.leaflet.addLayer( leafletMarker );
         } else {
             this.map.leaflet.removeLayer( leafletMarker );
+        }
+
+        // Notify other components of the visibility change if not an internal call, and there has been a recorded
+        // ownership change.
+        if ( !isInternalCall && this.map.leaflet._haveLayersMutated ) {
+            this.map.fire( 'markerVisibilityUpdate' );
         }
     }
 
@@ -130,7 +139,12 @@ module.exports = class MarkerLayerManager {
         }
         // Run an update on every member of the layer
         for ( const m of ( layerName ? this.byLayer[ layerName ] : this.markers ) ) {
-            this.updateMember( m );
+            this.updateMember( m, true );
+        }
+
+        // Notify other components of the visibility change if there has been a recorded ownership change
+        if ( this.map.leaflet._haveLayersMutated ) {
+            this.map.fire( 'markerVisibilityUpdate' );
         }
     }
 
