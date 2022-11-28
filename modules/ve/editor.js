@@ -1,7 +1,8 @@
 const EventEmitter = mw.dataMaps.EventEmitter,
     EditableMarkerPopup = require( './editablePopup.js' ),
     MarkerGroupEditor = require( './widgets/markerGroupEditor.js' ),
-    MapVeIntegrationControl = require( './veControl.js' );
+    MapVeIntegrationControl = require( './veControl.js' ),
+    BetaWarningDialog = require( './dialogs/betaWarning.js' );
 
 
 module.exports = class MapVisualEditor extends EventEmitter {
@@ -18,16 +19,16 @@ module.exports = class MapVisualEditor extends EventEmitter {
         this.map.storage.isWritable = false;
         this.map.storage.dismissed = [];
 
-        $( '<div class="datamap-ve-info-bar datamap-ve-beta-notice">' )
-            .text( mw.msg( 'datamap-ve-beta-notice' ) )
-            .prependTo( this.map.$root.find( '.datamap-container-top' ) );
-
         $( '<div class="datamap-ve-info-bar warning">' )
             .text( mw.msg( 'datamap-ve-limited-preview-notice' ) )
             .prependTo( this.map.$root.find( '.datamap-holder' ).parent() );
 
         this.windowManager = new OO.ui.WindowManager();
         $( document.body ).append( this.windowManager.$element );
+
+        const betaWindow = new BetaWarningDialog();
+        this.windowManager.addWindows( [ betaWindow ] );
+        this.windowManager.openWindow( betaWindow );
 
         this.toolFactory = new OO.ui.ToolFactory();
         this.groupFactory = new OO.ui.ToolGroupFactory();

@@ -242,7 +242,8 @@
 				"ve/dialogs/commit.js",
 				"ve/dialogs/confirmDelete.js",
 				"ve/dialogs/addMarker.js",
-				"ve/dialogs/editMarker.js"
+				"ve/dialogs/editMarker.js",
+				"ve/dialogs/betaWarning.js"
 			],
 			"styles": [
 				"ve/css/placeholder.less",
@@ -273,6 +274,9 @@
 				"datamap-ve-tool-commit-continue",
 				"datamap-ve-tool-commit-edit-summary",
 				"datamap-ve-tool-commit-edit-summary-subtext",
+
+				"datamap-ve-dialog-beta-warning",
+				"datamap-ve-dialog-beta-warning-text",
 
 				"datamap-ve-tool-add-marker",
 				"datamap-ve-tool-add-marker-continue"
