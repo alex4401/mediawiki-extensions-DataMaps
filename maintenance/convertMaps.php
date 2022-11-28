@@ -202,6 +202,9 @@ class ConvertMaps extends Maintenance {
 		$fmMaxY = $coordSpace[0][1];
 		// Determine if coordinates have to be swapped places
 		$isSourceXY = $coordOrder == 'xy';
+		if ( $isSourceXY ) {
+			$dmData->coordinateOrder = 'xy';
+		}
 		// Handle bounds translation by origin
 		switch ( $coordOrigin ) {
 			case 'bottom-left':
