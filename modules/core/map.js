@@ -611,14 +611,7 @@ class DataMap extends EventEmitter {
      * BUG: #49
      */
     refreshMaxBounds() {
-        const bounds = this.getPaddedContentBounds( true );
-        this.leaflet.setMaxBounds( bounds );
-
-        if ( this.leaflet.options.autoMinZoom ) {
-            // TODO: casts zoomlevelschange twice, should modify the signature for getBoundsZoom
-            this.leaflet.setMinZoom( this.leaflet.options.autoMinZoomAbsolute );
-    		this.leaflet.setMinZoom( this.leaflet.getBoundsZoom( bounds, false, [ 0, 0 ] ) );
-        }
+        this.leaflet.setMaxBounds( this.getPaddedContentBounds( true ) );
     }
 
 
@@ -656,26 +649,21 @@ class DataMap extends EventEmitter {
             markerZoomAnimation: true,
             // Do not allow pinch-zooming to surpass max zoom even temporarily. This seems to cause a mispositioning.
             bounceAtZoomLimits: false,
+            // Zoom control text injection
+            zoomControlOptions: {
+                zoomInTitle: mw.msg( 'datamap-control-zoom-in' ),
+                zoomOutTitle: mw.msg( 'datamap-control-zoom-out' )
+            },
             // Pan settings
             inertia: false,
+            // Zoom-based marker scaling
+            shouldExpandZoomInvEx: true,
+            expandZoomInvEx: 1.8,
             // Canvas renderer settings - using canvas for performance with padding of 1/3rd (to draw some more markers
             // outside of view for panning UX)
             preferCanvas: true,
             rendererSettings: {
                 padding: 1 / 3
-            },
-            
-            // Non-standard extended options
-            // Automatic minimum zoom calculations
-            autoMinZoom: true,
-            autoMinZoomAbsolute: 0.05,
-            // Zoom-based marker scaling
-            shouldExpandZoomInvEx: true,
-            expandZoomInvEx: 1.8,
-            // Zoom control text injection
-            zoomControlOptions: {
-                zoomInTitle: mw.msg( 'datamap-control-zoom-in' ),
-                zoomOutTitle: mw.msg( 'datamap-control-zoom-out' )
             }
         }, this.config.leafletSettings );
         // Specify the coordinate reference system and initialise the renderer
