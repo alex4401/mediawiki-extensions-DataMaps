@@ -46,6 +46,7 @@ class DataMap extends EventEmitter {
         // Leaflet.Map instance
         this.leaflet = null;
         // Collection of Leaflet.Icons by group
+        // TODO: make private
         this.iconCache = {};
         // DOM element of the coordinates display control
         this.$coordTracker = null;
@@ -81,6 +82,7 @@ class DataMap extends EventEmitter {
         // Set up internal event handlers
         this.on( 'chunkStreamingDone', this.refreshMaxBounds, this );
         this.on( 'linkedEvent', this._onLinkedEventReceived, this );
+        this.on( 'backgroundChange', this.refreshMaxBounds, this );
         this.on( 'legendManager', this._initialiseFiltersPanel, this );
         if ( !this.isFeatureBitSet( MapFlags.VisualEditor ) && Object.values( this.config.groups ).some( x =>
             Util.getGroupCollectibleType( x ) && !this.isLayerFilteredOut( x ) ) ) {
@@ -460,6 +462,8 @@ class DataMap extends EventEmitter {
 
         // Hide any unmatching "bg" sub-layer
         this.layerManager.setOptionalPropertyRequirement( 'bg', this.background.layer );
+
+        this.fire( 'backgroundChange', index, this.background );
     }
 
 
