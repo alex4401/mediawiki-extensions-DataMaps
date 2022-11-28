@@ -53,6 +53,8 @@ class DataMap extends EventEmitter {
         this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
         // Retrieve a `marker` parameter from the query string if one is present
         this.markerIdToAutoOpen = null;
+        // Content bounds cache
+        this._contentBounds = null;
 
         const $tabberPanel = Util.TabberNeue.getOwningPanel( this.$root );
         if ( $tabberPanel === null || mw.loader.getState( 'ext.tabberNeue' ) === 'ready' ) {
@@ -566,16 +568,19 @@ class DataMap extends EventEmitter {
      *
      * @return {Leaflet.LatLngBounds}
      */
-    getCurrentContentBounds() {
-        const bounds = new Leaflet.LatLngBounds();
-        // Collect content bounds
-        for ( const id in this.leaflet._layers ) {
-            const layer = this.leaflet._layers[ id ];
-            if ( layer.getBounds || layer.getLatLng ) {
-                bounds.extend( layer.getBounds ? layer.getBounds() : layer.getLatLng() );
+    getCurrentContentBounds( invalidate ) {
+        if ( !invalidate || this._contentBounds === null ) {
+            this._contentBounds = new Leaflet.LatLngBounds();
+            // Extend with each layer's bounds
+            for ( const id in this.leaflet._layers ) {
+                const layer = this.leaflet._layers[ id ];
+                if ( layer.getBounds || layer.getLatLng ) {
+                    this._contentBounds.extend( layer.getBounds ? layer.getBounds() : layer.getLatLng() );
+                }
             }
         }
-        return bounds;
+        // Copy the cache into a new object
+        return new Leaflet.LatLngBounds().extend( this._contentBounds );
     }
 
 
@@ -584,8 +589,8 @@ class DataMap extends EventEmitter {
      *
      * @return {Leaflet.LatLngBounds}
      */
-    getPaddedContentBounds() {
-        const bounds = this.getCurrentContentBounds();
+    getPaddedContentBounds( invalidate ) {
+        const bounds = this.getCurrentContentBounds( invalidate );
         const nw = bounds.getNorthWest(),
             se = bounds.getSouthEast();
         bounds.extend( [ [ se.lat - DataMap.BOUNDS_PADDING[ 0 ], se.lng + DataMap.BOUNDS_PADDING[ 1 ] ],
@@ -601,7 +606,7 @@ class DataMap extends EventEmitter {
      * BUG: #49
      */
     refreshMaxBounds() {
-        this.leaflet.setMaxBounds( this.getPaddedContentBounds() );
+        this.leaflet.setMaxBounds( this.getPaddedContentBounds( true ) );
     }
 
 
