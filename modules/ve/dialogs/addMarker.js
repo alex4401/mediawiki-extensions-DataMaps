@@ -1,5 +1,6 @@
 function AddMarkerDialog( config ) {
     OO.ui.ProcessDialog.call( this, config );
+    this.ve = config.ve;
 }
 OO.inheritClass( AddMarkerDialog, OO.ui.ProcessDialog );
 
@@ -21,9 +22,30 @@ AddMarkerDialog.static.actions = [
 ];
 
 
+function MenuOptionWidget( config ) {
+    MenuOptionWidget.super.call( this, config );
+
+    this.data = config.data;
+}
+OO.inheritClass( MenuOptionWidget, OO.ui.MenuOptionWidget );
+
+
 AddMarkerDialog.prototype.initialize = function () {
     OO.ui.ProcessDialog.prototype.initialize.apply( this, arguments );
 
+    this.inputBox = new OO.ui.TextInputWidget( {
+        placeholder: mw.msg( 'datamap-ve-search-for-group' )
+    } );
+    this.groupMenu = new OO.ui.MenuSelectWidget( {
+        widget: this.inputBox,
+        input: this.inputBox,
+        $floatableContainer: this.inputBox.$element,
+        filterFromInput: true,
+        filterMode: 'substring',
+        verticalPosition: 'below',
+        width: '100%'
+    } );
+    this.groupMenu.$element.appendTo( this.inputBox.$element );
     // TODO: calculate the centre from CRS
     this.lat = new OO.ui.TextInputWidget( {
         type: 'number',
@@ -49,6 +71,7 @@ AddMarkerDialog.prototype.initialize = function () {
                 items: [
                     new OO.ui.FieldsetLayout( {
                         items: [
+                            this.inputBox,
                             new OO.ui.PanelLayout( {
                                 expanded: false,
                                 content: [
@@ -70,7 +93,22 @@ AddMarkerDialog.prototype.initialize = function () {
         ]
     } );
 
+    this.initialiseGroupOptions();
+
     this.$body.append( this.panel.$element );
+};
+
+
+AddMarkerDialog.prototype.initialiseGroupOptions = function () {
+    const widgets = [];
+    for ( const [ groupId, group ] of Object.entries( this.ve.map.config.groups ) ) {
+        widgets.push( new MenuOptionWidget( {
+            data: groupId,
+            // Display
+            label: new OO.ui.HtmlSnippet( group.name ),
+        } ) );
+    }
+    this.groupMenu.addItems( widgets );
 };
 
 

@@ -12,7 +12,8 @@ AddMarkerTool.static.title = mw.msg( 'datamap-ve-tool-add-marker' );
 
 AddMarkerTool.prototype.onSelect = function () {
     const dialog = new AddMarkerDialog( {
-        size: 'medium'
+        size: 'medium',
+        ve: this.ve
     } );
     this.ve.windowManager.addWindows( [ dialog ] );
     this.ve.windowManager.openWindow( dialog );
