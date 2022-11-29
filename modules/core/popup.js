@@ -69,15 +69,16 @@ module.exports = class MarkerPopup {
             }
         } );
 
-        // Coordinates
-        // TODO: this is not displayed if coordinates are disabled
-        let coordText = this.map.getCoordLabel( this.leafletMarker.apiInstance );
-        if ( discrims.length > 0 ) {
-            coordText += ` (${discrims.join( ', ' )})`;
-        }
+        // Gather detail text from layers
+        let detailText = discrims.join( ', ' );
+        // Reformat if coordinates are to be shown
         if ( this.map.isFeatureBitSet( Enums.MapFlags.ShowCoordinates ) ) {
-            $( '<div class="datamap-popup-coordinates">' ).text( coordText ).appendTo( this.$content );
+            const coordText = this.map.getCoordLabel( this.leafletMarker.apiInstance );
+            detailText = detailText ? `${coordText} (${detailText})` : coordText;
         }
+        // Push onto the contents
+        /* DEPRECATED(v0.14.1:v0.15.0): datamap-popup-coordinates replaced with datamap-popup-location */
+        $( '<div class="datamap-popup-location datamap-popup-coordinates">' ).text( detailText ).appendTo( this.$content );
 
         // Description
         if ( this.slots.desc ) {
