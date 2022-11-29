@@ -90,7 +90,7 @@ module.exports = class MarkerPopup {
 
         // Image
         if ( this.slots.image ) {
-            this.$image = $( '<img class="datamap-popup-image" width=240 />' )
+            this.$image = $( '<img class="datamap-popup-image" width=250 />' )
                 .attr( {
                     src: this.slots.image,
                     'data-file-width': 240,
