@@ -105,7 +105,12 @@ class MarkerProcessor {
 
         // Popup image thumbnail link
         if ( $marker->getPopupImage() != null ) {
-            $slots['image'] = DataMapFileUtils::getFileUrl( $marker->getPopupImage(), self::POPUP_IMAGE_WIDTH );
+            $thumb = DataMapFileUtils::getRequiredFile( $marker->getPopupImage(), self::POPUP_IMAGE_WIDTH );
+            $slots['image'] = [
+                $thumb->getURL(),
+                $thumb->getFile()->getWidth(),
+                $thumb->getFile()->getHeight()
+            ];
         }
 
         // Related article title
