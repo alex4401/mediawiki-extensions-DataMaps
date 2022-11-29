@@ -3,6 +3,8 @@ const Util = require( './util.js' ),
 
 
 module.exports = class MarkerPopup {
+    // TODO: document lifetime
+
     constructor( map, leafletMarker ) {
         this.map = map;
         this.leafletMarker = leafletMarker;
@@ -87,8 +89,15 @@ module.exports = class MarkerPopup {
 
         // Image
         if ( this.slots.image ) {
-            $( '<img class="datamap-popup-image" width=240 />' ).attr( 'src', this.slots.image )
+            this.$image = $( '<img class="datamap-popup-image" width=240 />' )
+                .attr( {
+                    src: this.slots.image,
+                    'data-file-width': 240,
+                    'data-file-height': 120 // TODO: API needs to ship extra info about the file
+                } )
                 .appendTo( this.$content );
+
+            this._setupMMVIntegration();
         }
     }
 
@@ -136,5 +145,30 @@ module.exports = class MarkerPopup {
 
     onRemove() {
         Util.updateLocation( this.map, { marker: null } );
+    }
+
+
+    _setupMMVIntegration() {
+        if ( mw.config.get( 'wgMediaViewer' ) ) {
+            mw.loader.using( 'mmv.bootstrap', () => {
+                const title = mw.Title.newFromImg( this.$image );
+                let caption = this.markerGroup.name;
+                if ( this.map.isFeatureBitSet( Enums.MapFlags.ShowCoordinates ) ) {
+                    caption += ` (${this.map.getCoordLabel( this.leafletMarker.apiInstance )})`;
+                }
+
+                mw.mmv.bootstrap.thumbs.push( {
+                    thumb: this.$image[ 0 ],
+                    $thumb: this.$image,
+                    title,
+                    link: title.getUrl(),
+                    alt: caption,
+                    caption
+                } );
+                this.thumbIndex = mw.mmv.bootstrap.thumbs.length - 1;
+
+                this.$image.on( 'click', event => mw.mmv.bootstrap.click( this.$image[ 0 ], event, title ) );
+            } );
+        }
     }
 };
