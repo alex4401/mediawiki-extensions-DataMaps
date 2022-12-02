@@ -5,7 +5,7 @@ module.exports = class LegendTabManager {
     constructor( map ) {
         this.map = map;
         // DOM element of the legend container
-        this.$root = new OO.ui.Widget( {
+        this.rootWidget = new OO.ui.Widget( {
             classes: [ 'datamap-container-legend' ],
             content: [
                 new OO.ui.LabelWidget( {
@@ -13,7 +13,8 @@ module.exports = class LegendTabManager {
                     classes: [ 'datamap-legend-label', 'oo-ui-tabSelectWidget-framed' ]
                 } )
             ]
-        } ).$element.prependTo( this.map.$root.find( '> .datamap-container-content' ) );
+        } );
+        this.$root = this.rootWidget.$element.prependTo( this.map.$root.find( '> .datamap-container-content' ) );
         // IndexLayout of the legend panel
         this.tabLayout = new OO.ui.IndexLayout( {
             expanded: false
@@ -56,7 +57,7 @@ module.exports = class LegendTabManager {
 
     reevaluateVisibility() {
         if ( this.map.isFeatureBitSet( Enums.MapFlags.VisualEditor ) ) {
-            this.$root.show();
+            this.rootWidget.setDisabled( false );
             return;
         }
 
@@ -65,9 +66,9 @@ module.exports = class LegendTabManager {
             if ( !this.$root.is( ':visible' ) ) {
                 this.tabLayout.selectFirstSelectableTabPanel();
             }
-            this.$root.show();
+            this.rootWidget.setDisabled( false );
         } else {
-            this.$root.hide();
+            this.rootWidget.setDisabled( true );
         }
     }
 

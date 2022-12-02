@@ -33,6 +33,10 @@
         }
     }
 
+    .datamap-container-legend.oo-ui-widget-disabled + .oo-ui-layout .datamap-control.datamap-control-legend-toggle {
+        display: none;
+    }
+
     .datamap-is-legend-toggled-on {
         .datamap-control.datamap-control-legend-toggle a {
             color: #36c;
@@ -49,6 +53,10 @@
     max-height: 750px;
     box-sizing: border-box;
     overflow-y: auto;
+
+    &.oo-ui-widget-disabled {
+        display: none;
+    }
 
     &,
     > .oo-ui-layout,
