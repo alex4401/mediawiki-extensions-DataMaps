@@ -800,7 +800,7 @@ class DataMap extends EventEmitter {
             $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-viewcontrols">' ) );
         this._makeControlButton( this.$viewControls, mw.msg( 'datamap-control-reset-view' ), 'imageLayoutFrame',
             'datamap-control-viewreset' ).on( 'click', () => this.restoreDefaultView() );
-        this._makeControlButton( this.$viewControls, mw.msg( 'datamap-control-centre-view' ), 'exitFullscreen',
+        this._makeControlButton( this.$viewControls, mw.msg( 'datamap-control-centre-view' ), 'alignCenter',
             'datamap-control-viewcentre' ).on( 'click', () => this.centreView() );
 
         // Display an edit button for logged in users
