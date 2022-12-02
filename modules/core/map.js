@@ -472,11 +472,9 @@ class DataMap extends EventEmitter {
      * Updates map options regarding our custom marker scaling behaviour.
      */
     updateMarkerScaling() {
-        const zoom = this.leaflet.getZoom();
-        // Inverse scale: zoom to minimum value
-        this.leaflet.options.markerScaleI = zoom / this.leaflet.options.minZoom;
-        // Percentage scale: zoom to maximum value
-        this.leaflet.options.markerScaleA = zoom / this.leaflet.options.maxZoom;
+        const zoomPercent = this.leaflet.getZoom() / this.leaflet.options.maxZoom;
+        this.leaflet.options.markerScaleI = zoomPercent * DataMap.VECTOR_ZOOM_SCALING_MAX;
+        this.leaflet.options.markerScaleA = zoomPercent * DataMap.ICON_ZOOM_SCALING_MAX;
     }
 
 
@@ -617,7 +615,7 @@ class DataMap extends EventEmitter {
         if ( this.leaflet.options.autoMinZoom ) {
             // TODO: casts zoomlevelschange twice, should modify the signature for getBoundsZoom
             this.leaflet.setMinZoom( this.leaflet.options.autoMinZoomAbsolute );
-    		this.leaflet.setMinZoom( this.leaflet.getBoundsZoom( bounds, false, [ 0, 0 ] ) );
+            this.leaflet.setMinZoom( this.leaflet.getBoundsZoom( bounds, false, [ 0, 0 ] ) );
         }
     }
 
@@ -868,6 +866,8 @@ DataMap.anchors = {
     topLeft: '.leaflet-top.leaflet-left'
 };
 DataMap.BOUNDS_PADDING = [ 150, 200 ];
+DataMap.VECTOR_ZOOM_SCALING_MAX = 2.5;
+DataMap.ICON_ZOOM_SCALING_MAX = 1;
 
 
 module.exports = DataMap;
