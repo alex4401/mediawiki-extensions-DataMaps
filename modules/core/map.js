@@ -385,7 +385,8 @@ class DataMap extends EventEmitter {
             // Circular marker
             leafletMarker = new Leaflet.Ark.CircleMarker( position, {
                 baseRadius: group.size / 2,
-                expandZoomInvEx: group.extraMinZoomSize,
+                /* TODO: rename config prop to zoomScaleFactor */
+                zoomScaleFactor: group.extraMinZoomSize,
                 fillColor: group.fillColor,
                 fillOpacity: 0.7,
                 color: group.strokeColor || group.fillColor,
@@ -473,8 +474,8 @@ class DataMap extends EventEmitter {
      */
     updateMarkerScaling() {
         const zoomPercent = this.leaflet.getZoom() / this.leaflet.options.maxZoom;
-        this.leaflet.options.markerScaleI = zoomPercent * DataMap.VECTOR_ZOOM_SCALING_MAX;
-        this.leaflet.options.markerScaleA = zoomPercent * DataMap.ICON_ZOOM_SCALING_MAX;
+        this.leaflet.options.vecMarkerScale = zoomPercent * DataMap.VECTOR_ZOOM_SCALING_MAX;
+        this.leaflet.options.iconMarkerScale = zoomPercent * DataMap.ICON_ZOOM_SCALING_MAX;
     }
 
 
@@ -665,8 +666,8 @@ class DataMap extends EventEmitter {
             autoMinZoom: true,
             autoMinZoomAbsolute: 0.05,
             // Zoom-based marker scaling
-            shouldExpandZoomInvEx: true,
-            expandZoomInvEx: 1.8,
+            shouldScaleMarkers: true,
+            markerZoomScaleFactor: 1.8,
             // Zoom control text injection
             zoomControlOptions: {
                 zoomInTitle: mw.msg( 'datamap-control-zoom-in' ),
