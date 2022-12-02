@@ -23,14 +23,6 @@ module.exports = class MarkerPopup {
     }
 
 
-    getDismissToolText() {
-        // Messages that can be used here:
-        // * datamap-popup-dismissed
-        // * datamap-popup-mark-as-dismissed
-        return mw.msg( 'datamap-popup-' + ( this.leafletMarker.options.dismissed ? 'dismissed' : 'mark-as-dismissed' ) );
-    }
-
-
     buildButtons() {
         const $getLink = $( '<a class="datamap-marker-link-button oo-ui-icon-link" role="button"></a>' )
             .attr( {
@@ -125,14 +117,11 @@ module.exports = class MarkerPopup {
 
         // Dismissables
         if ( Util.getGroupCollectibleType( this.markerGroup ) ) {
-            this.addTool( 'datamap-popup-dismiss',
-                $( '<a>' )
-                    .text( this.getDismissToolText() )
-                    .on( 'click', () => {
-                        this.map.toggleMarkerDismissal( this.leafletMarker );
-                        this.map.leaflet.closePopup();
-                    } )
-            );
+            this.$dismiss = $( '<a>' ).on( 'click', () => {
+                this.map.toggleMarkerDismissal( this.leafletMarker );
+                this.map.leaflet.closePopup();
+            } );
+            this.addTool( 'datamap-popup-dismiss', this.$dismiss );
         }
 
         return this.$tools;
@@ -146,6 +135,21 @@ module.exports = class MarkerPopup {
 
     onRemove() {
         Util.updateLocation( this.map, { marker: null } );
+    }
+
+
+    getDismissToolText() {
+        // Messages that can be used here:
+        // * datamap-popup-dismissed
+        // * datamap-popup-mark-as-dismissed
+        return mw.msg( 'datamap-popup-' + ( this.leafletMarker.options.dismissed ? 'dismissed' : 'mark-as-dismissed' ) );
+    }
+
+
+    onUpdate() {
+        if ( this.$dismiss ) {
+            this.$dismiss.text( this.getDismissToolText() );
+        }
     }
 
 

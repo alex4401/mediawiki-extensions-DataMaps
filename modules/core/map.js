@@ -662,7 +662,7 @@ class DataMap extends EventEmitter {
             rendererSettings: {
                 padding: 1 / 3
             },
-            
+
             // Non-standard extended options
             // Automatic minimum zoom calculations
             autoMinZoom: true,

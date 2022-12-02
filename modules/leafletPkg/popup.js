@@ -16,25 +16,23 @@ module.exports = Leaflet.Popup.extend( {
             return;
         }
 
+        // Call the content manager getter and build its content
         if ( !this._content ) {
             this._content = this.getContentManager();
+            // Inject node references
+            this._content.$content = $( this._contentNode );
+            this._content.$buttons = this.$customButtonArea;
+            this._content.$tools = $( '<ul class="datamap-popup-tools">' );
+            // Build the contents
+            this._content.buildButtons();
+            this._content.build();
+            this._content.buildTools();
+            // Push the tools onto the content
+            this._content.$tools.appendTo( this._content.$content );
         }
 
-        // Grant content node reference
-        this._content.$content = $( this._contentNode );
-        // Clear custom button area
-        this.$customButtonArea.children().remove();
-        // Grant custom button area reference
-        this._content.$buttons = this.$customButtonArea;
-        // Build custom buttons
-        this._content.buildButtons();
-        // Clear the content node
-        this._content.$content.children().remove();
-        // Build content
-        this._content.build();
-        // Build tools section
-        this._content.$tools = $( '<ul class="datamap-popup-tools">' ).appendTo( this._content.$content );
-        this._content.buildTools();
+        // Call the update callback on the content manager
+        this._content.onUpdate();
     },
 
     _initLayout() {
