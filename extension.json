@@ -174,7 +174,7 @@
 		},
 
 		"ext.datamaps.fuzzysort": {
-			"scripts": [
+			"packageFiles": [
 				"vendor/fuzzysort/fuzzysort.min.js"
 			],
 			"targets": [ "desktop", "mobile" ]
