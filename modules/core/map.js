@@ -567,8 +567,7 @@ class DataMap extends EventEmitter {
      * Calculates content bounds at a given moment from all of the map's contents (all geometrical layers are included). This is
      * uncached and fairly expensive.
      *
-     * BUG: #50
-     *
+     * @param {boolean} invalidate Whether the bounds should be recalculated.
      * @return {Leaflet.LatLngBounds}
      */
     getCurrentContentBounds( invalidate ) {
@@ -590,6 +589,7 @@ class DataMap extends EventEmitter {
     /**
      * Calculates content bounds and includes extra padding around the area.
      *
+     * @param {boolean} invalidate Whether the bounds should be recalculated.
      * @return {Leaflet.LatLngBounds}
      */
     getPaddedContentBounds( invalidate ) {
@@ -605,16 +605,13 @@ class DataMap extends EventEmitter {
     /**
      * Updates Leaflet's max view bounds to padded content bounds in current state. This is usually done
      * after a data chunk is streamed in, and is fairly expensive.
-     *
-     * BUG: #49
      */
     refreshMaxBounds() {
         const bounds = this.getPaddedContentBounds( true );
         this.leaflet.setMaxBounds( bounds );
 
         if ( this.leaflet.options.autoMinZoom ) {
-            // TODO: casts zoomlevelschange twice, should modify the signature for getBoundsZoom
-            this.leaflet.setMinZoom( this.leaflet.options.autoMinZoomAbsolute );
+            this.leaflet.options.minZoom = this.leaflet.options.autoMinZoomAbsolute;
             this.leaflet.setMinZoom( this.leaflet.getBoundsZoom( bounds, false, [ 0, 0 ] ) );
         }
     }
