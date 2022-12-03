@@ -384,7 +384,7 @@ class DataMap extends EventEmitter {
         } else {
             // Circular marker
             leafletMarker = new Leaflet.Ark.CircleMarker( position, {
-                baseRadius: group.size / 2,
+                radius: group.size / 2,
                 /* TODO: rename config prop to zoomScaleFactor */
                 zoomScaleFactor: group.extraMinZoomSize,
                 fillColor: group.fillColor,
