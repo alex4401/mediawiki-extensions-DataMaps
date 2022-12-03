@@ -458,13 +458,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	width: 24px;
 	height: 24px;
 	font: 16px/24px Tahoma, Verdana, sans-serif;
-	color: #757575;
+	color: #000;
 	text-decoration: none;
 	background: transparent;
+	opacity: 0.7;
 	}
 .leaflet-container a.leaflet-popup-close-button:hover,
 .leaflet-container a.leaflet-popup-close-button:focus {
-	color: #585858;
+	color: #000;
+	opacity: 0.85;
 	}
 .leaflet-popup-scrolled {
 	overflow: auto;
