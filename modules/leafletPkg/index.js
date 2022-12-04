@@ -5,5 +5,6 @@ module.exports.Ark = {
     /** @deprecated */
     IconMarker: require( './iconMarker.js' ),
 
-    Popup: require( './popup.js' )
+    Popup: require( './popup.js' ),
+    InteractionControl: require( './interaction.js' )
 };

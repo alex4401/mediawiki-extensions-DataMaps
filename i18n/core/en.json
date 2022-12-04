@@ -55,14 +55,16 @@
     "datamap-loading-data": "Please wait, loading data",
     "datamap-error-dataload": "<b>Couldn't load data</b><br/>please refresh or try again later",
     "datamap-lazy-click-to-load": "Click to load the data map",
-
     "datamap-legend-tab-locations": "Markers",
     "datamap-toggle-show-all": "Show all",
     "datamap-toggle-hide-all": "Hide all",
     "datamap-layer-control": "Toggle",
-
     "datamap-legend-tab-checklist": "Checklists",
     "datamap-checklist-prelude": "These are the items you can mark as collected:",
+
+    "datamap-interact-touch": "Use two fingers to move the map",
+    "datamap-interact-scroll": "Use CTRL + Scroll to zoom the map",
+    "datamap-interact-scroll-mac": "Use \u2318 + Scroll to zoom the map",
 
     "datamap-layer-surface": "Surface",
     "datamap-layer-cave": "Caves",
