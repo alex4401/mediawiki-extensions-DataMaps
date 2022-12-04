@@ -672,7 +672,10 @@ class DataMap extends EventEmitter {
             zoomControlOptions: {
                 zoomInTitle: mw.msg( 'datamap-control-zoom-in' ),
                 zoomOutTitle: mw.msg( 'datamap-control-zoom-out' )
-            }
+            },
+
+            // Disable interaction stalling
+            stallInteractions: false
         }, this.config.leafletSettings );
         // Specify the coordinate reference system and initialise the renderer
         leafletConfig.crs = Leaflet.CRS.Simple;
