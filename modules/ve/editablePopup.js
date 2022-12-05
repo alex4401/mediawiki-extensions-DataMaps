@@ -3,8 +3,37 @@ const MarkerPopup = mw.dataMaps.MarkerPopup,
 
 
 module.exports = class EditableMarkerPopup extends MarkerPopup {
+    shouldKeepAround() {
+        return false;
+    }
+
+
     build() {
-        $( '<p>' ).text( mw.msg( 'datamap-ve-waiting-for-parse' ) ).appendTo( this.$content );
+        this.$status = $( '<label class="datamap-ve-popup-state">' ).text( mw.msg( 'datamap-ve-state-preview' ) )
+            .appendTo( this.$content );
+
+        this.$subTitle = $( '<b class="datamap-popup-subtitle">' ).text( this.markerGroup.name ).hide();
+        this.label = new OO.ui.TextInputWidget( {
+            classes: [ 'datamap-popup-title' ],
+            type: 'text',
+            value: this.slots.label,
+            placeholder: this.markerGroup.name
+        } );
+        this.description = new OO.ui.MultilineTextInputWidget( {
+            classes: [ 'datamap-popup-description' ],
+            value: this.slots.desc,
+            placeholder: mw.msg( 'datamap-ve-description-placeholder' ),
+            maxLength: 300,
+            spellcheck: true
+        } );
+
+        this.label.on( 'change', this._onPropertyChange, null, this );
+        this.description.on( 'change', this._onPropertyChange, null, this );
+        
+        this.$content
+            .append( this.$subTitle )
+            .append( this.label.$element )
+            .append( this.description.$element );
     }
 
     
@@ -19,6 +48,8 @@ module.exports = class EditableMarkerPopup extends MarkerPopup {
         } );
         this.$seeMore = this.addTool( 'datamap-popup-seemore', new OO.ui.PopupButtonWidget( {
             label: mw.msg( 'datamap-popup-related-article' ),
+            flags: [ 'progressive' ],
+            framed: false,
             popup: {
                 $content: $( '<div>' )
                     .append( new OO.ui.FieldLayout( this.articleLinkTarget, {
@@ -44,5 +75,10 @@ module.exports = class EditableMarkerPopup extends MarkerPopup {
         }*/
 
         return this.$tools;
+    }
+
+
+    _onPropertyChange() {
+
     }
 };

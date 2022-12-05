@@ -261,7 +261,8 @@
 				"ve/css/groups.less",
 				"ve/css/extension.less",
 				"ve/css/popup.less",
-				"ve/css/control.less"
+				"ve/css/control.less",
+				"ve/css/markerPopup.less"
 			],
 			"messages": [
 				"datamap-ve-beta-notice",
