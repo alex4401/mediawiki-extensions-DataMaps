@@ -71,6 +71,7 @@ module.exports = class MapVisualEditor extends EventEmitter {
         this._requestRevisionData();
     }
 
+
     getPopupClass() {
         return EditableMarkerPopup;
     }

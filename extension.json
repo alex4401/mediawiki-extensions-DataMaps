@@ -231,10 +231,11 @@
 		"ext.datamaps.ve": {
 			"es6": true,
 			"dependencies": [
-				"ext.datamaps.core",
-				"ext.datamaps.leaflet",
 				"oojs-ui-toolbars",
 				"oojs-ui-windows",
+				"mediawiki.widgets",
+				"ext.datamaps.core",
+				"ext.datamaps.leaflet",
 				"ext.datamaps.ve.icons"
 			],
 			"packageFiles": [
