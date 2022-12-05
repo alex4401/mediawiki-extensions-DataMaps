@@ -586,6 +586,9 @@ class DataMap extends EventEmitter {
             rendererSettings: {
                 padding: 1/3
             },
+
+            // Enable bundled interaction rejection control
+            interactionControl: true
         }, this.config.leafletSettings );
         // Specify the coordinate reference system and initialise the renderer
         leafletConfig.crs = Leaflet.CRS.Simple;
@@ -620,6 +623,9 @@ class DataMap extends EventEmitter {
 
         // Build extra controls
         this._buildControls();
+
+        // Install the interaction rejection controller
+        this.leaflet.addHandler( 'interactionControl', Leaflet.Ark.InteractionControl );
 
         // Notify other components that the Leaflet component has been loaded, and remove all subscribers. All future
         // subscribers will be invoked right away.

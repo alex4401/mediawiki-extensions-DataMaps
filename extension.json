@@ -63,10 +63,16 @@
 				"vendor/leaflet/leaflet.js",
 				"leafletPkg/iconMarker.js",
 				"leafletPkg/circleMarker.js",
-				"leafletPkg/popup.js"
+				"leafletPkg/popup.js",
+				"leafletPkg/interaction.js"
 			],
 			"styles": [
 				"vendor/leaflet/leaflet.css"
+			],
+			"messages": [
+				"datamap-interact-touch",
+				"datamap-interact-scroll",
+				"datamap-interact-scroll-mac"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},
