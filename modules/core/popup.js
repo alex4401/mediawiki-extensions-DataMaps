@@ -123,8 +123,6 @@ module.exports = class MarkerPopup {
             } );
             this.addTool( 'datamap-popup-dismiss', this.$dismiss );
         }
-
-        return this.$tools;
     }
 
 
