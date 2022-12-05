@@ -8,16 +8,35 @@ module.exports = {
     isBleedingEdge: require( './settings.json' ).DataMapsAllowExperimentalFeatures,
 
 
+    /**
+     * Returns whether a bit is set in a bit field.
+     *
+     * @param {number} a The field.
+     * @param {number} b The bit.
+     * @returns {boolean}
+     */
     isBitSet( a, b ) {
         return a && ( a & b ) === b;
     },
 
 
+    /**
+     * Returns whether the bit mask masks any bit in a bit field.
+     *
+     * @param {number} a The field.
+     * @param {number} b The bit mask.
+     * @returns {boolean}
+     */
     isAnyBitSet( a, b ) {
         return a && ( a & b ) !== 0;
     },
 
 
+    /**
+     * Retrieves Leaflet exports if they've been loaded.
+     *
+     * @returns {Leaflet}
+     */
     getLeaflet() {
         if ( Leaflet === null ) {
             Leaflet = require( 'ext.datamaps.leaflet' );
@@ -49,8 +68,11 @@ module.exports = {
     },
 
 
-    /*
+    /**
      * Generates an identifier of a marker using type and coordinates.
+     *
+     * @param {Leaflet.CircleMarker|Leaflet.Marker} leafletMarker Marker to get the identifier of.
+     * @returns {string}
      */
     getGeneratedMarkerId( leafletMarker ) {
         const type = leafletMarker.attachedLayers.join( ' ' );
@@ -59,8 +81,11 @@ module.exports = {
     },
 
 
-    /*
+    /**
      * Retrieves an identifier of a marker to use with local storage or in permanent links.
+     *
+     * @param {Leaflet.CircleMarker|Leaflet.Marker} leafletMarker Marker to get the identifier of.
+     * @returns {string|number}
      */
     getMarkerId( leafletMarker ) {
         return leafletMarker.apiInstance[ 2 ] && leafletMarker.apiInstance[ 2 ].uid
@@ -68,12 +93,26 @@ module.exports = {
     },
 
 
+    /**
+     * Retrieves a query (GET) parameter from current URL.
+     *
+     * @param {string} name Parameter name.
+     * @returns {string?}
+     */
     getQueryParameter( name ) {
         // eslint-disable-next-line compat/compat
         return new URLSearchParams( window.location.search ).get( name );
     },
 
 
+    /**
+     * Constructs a URL with specified parameters (appended) and keeps TabberNeue's hash.
+     *
+     * @param {DataMap} map 
+     * @param {Object} paramsToSet 
+     * @param {boolean} [withHost]
+     * @returns {string}
+     */
     makeUrlWithParams( map, paramsToSet, withHost ) {
         // eslint-disable-next-line compat/compat
         const params = new URLSearchParams( window.location.search );
@@ -93,6 +132,12 @@ module.exports = {
     },
 
 
+    /**
+     * Replaces current URL in the browser with a new URL with specified parameters and preserved TabberNeue hash.
+     *
+     * @param {DataMap} map 
+     * @param {Object} paramsToSet 
+     */
     updateLocation( map, paramsToSet ) {
         history.replaceState( {}, '', module.exports.makeUrlWithParams( map, paramsToSet, false ) );
     },
