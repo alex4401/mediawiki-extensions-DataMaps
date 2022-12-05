@@ -12,9 +12,21 @@ module.exports = class MarkerPopup {
         this.slots = this.leafletMarker.apiInstance[ 2 ] || {};
         this.uid = Util.getMarkerId( this.leafletMarker );
         // These two containers are provided by Leaflet.Ark.Popup
+        /** @type {jQuery?} */
         this.$buttons = null;
+        /** @type {jQuery?} */
         this.$content = null;
+        /** @type {jQuery?} */
         this.$tools = null;
+        // These elements are created during building
+        /** @type {jQuery?} */
+        this.$subTitle = null;
+        /** @type {jQuery?} */
+        this.$title = null;
+        /** @type {jQuery?} */
+        this.$location = null;
+        /** @type {jQuery?} */
+        this.$image = null;
     }
 
 
@@ -46,10 +58,12 @@ module.exports = class MarkerPopup {
     build() {
         // Build the title
         if ( this.slots.label && this.markerGroup.name !== this.slots.label ) {
-            $( '<b class="datamap-popup-subtitle">' ).text( this.markerGroup.name ).appendTo( this.$content );
-            $( '<b class="datamap-popup-title">' ).html( this.slots.label ).appendTo( this.$content );
+            this.$subTitle = $( '<b class="datamap-popup-subtitle">' ).text( this.markerGroup.name )
+                .appendTo( this.$content );
+            this.$title = $( '<b class="datamap-popup-title">' ).html( this.slots.label ).appendTo( this.$content );
         } else {
-            $( '<b class="datamap-popup-title">' ).text( this.markerGroup.name ).appendTo( this.$content );
+            this.$title = $( '<b class="datamap-popup-title">' ).text( this.markerGroup.name )
+                .appendTo( this.$content );
         }
 
         // Collect layer discriminators
@@ -70,7 +84,8 @@ module.exports = class MarkerPopup {
         }
         // Push onto the contents
         /* DEPRECATED(v0.14.1:v0.15.0): datamap-popup-coordinates replaced with datamap-popup-location */
-        $( '<div class="datamap-popup-location datamap-popup-coordinates">' ).text( detailText ).appendTo( this.$content );
+        this.$location = $( '<div class="datamap-popup-location datamap-popup-coordinates">' ).text( detailText )
+            .appendTo( this.$content );
 
         // Description
         if ( this.slots.desc ) {
