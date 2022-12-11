@@ -473,7 +473,7 @@ class DataMap extends EventEmitter {
      * Updates map options regarding our custom marker scaling behaviour.
      */
     updateMarkerScaling() {
-        const zoomPercent = this.leaflet.getZoom() / this.leaflet.options.maxZoom;
+        const zoomPercent = Math.round( this.leaflet.getZoom() / this.leaflet.options.maxZoom * 100 ) / 100;
         this.leaflet.options.vecMarkerScale = zoomPercent * DataMap.VECTOR_ZOOM_SCALING_MAX;
         this.leaflet.options.iconMarkerScale = zoomPercent * DataMap.ICON_ZOOM_SCALING_MAX;
     }
