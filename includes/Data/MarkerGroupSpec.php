@@ -15,6 +15,7 @@ class MarkerGroupSpec extends DataModel {
     // Display modes
     public const DM_CIRCLE = 1;
     public const DM_ICON = 2;
+    public const DM_PIN = 3;
     public const DM_UNKNOWN = -1;
 
     // Collectible modes
@@ -46,6 +47,9 @@ class MarkerGroupSpec extends DataModel {
         switch ( $this->getDisplayMode() ) {
             case self::DM_CIRCLE:
                 return $this->getSizePropertyInternal() ?? self::DEFAULT_CIRCLE_SIZE;
+            case self::DM_PIN:
+                $out = $this->getSizePropertyInternal() ?? self::DEFAULT_ICON_SIZE[0];
+                return [ $out, $out ];
             case self::DM_ICON:
                 $out = $this->getSizePropertyInternal() ?? self::DEFAULT_ICON_SIZE;
                 // Ensure 2D
@@ -66,12 +70,20 @@ class MarkerGroupSpec extends DataModel {
         return isset( $this->raw->fillColor ) ? $this->raw->fillColor : null;
     }
 
+    public function getRawPinColour() /*: ?array|string*/ {
+        return isset( $this->raw->pinColor ) ? $this->raw->pinColor : null;
+    }
+
     public function getRawStrokeColour() /*: ?array|string*/ {
         return isset( $this->raw->borderColor ) ? $this->raw->borderColor : null;
     }
 
     public function getFillColour(): array {
         return DataMapColourUtils::decode( $this->getRawFillColour() );
+    }
+
+    public function getPinColour(): array {
+        return DataMapColourUtils::decode( $this->getRawPinColour() );
     }
 
     public function getStrokeColour(): array {
@@ -91,7 +103,9 @@ class MarkerGroupSpec extends DataModel {
     }
 
     public function getDisplayMode(): int {
-        if ( $this->getRawFillColour() !== null ) {
+        if ( $this->getRawPinColour() !== null ) {
+            return self::DM_PIN;
+        } elseif ( $this->getRawFillColour() !== null ) {
             return self::DM_CIRCLE;
         } elseif ( $this->getIcon() !== null ) {
             return self::DM_ICON;
@@ -161,6 +175,14 @@ class MarkerGroupSpec extends DataModel {
                     'required' => true
                 ] );
                 $this->checkField( $status, 'size', DataModel::TYPE_DIMENSIONS );
+                break;
+            case self::DM_PIN:
+                $this->checkField( $status, [
+                    'name' => 'pinColor',
+                    'type' => DataModel::TYPE_COLOUR3,
+                    'required' => true
+                ] );
+                $this->checkField( $status, 'size', DataModel::TYPE_NUMBER );
                 break;
             case self::DM_UNKNOWN:
                 $status->fatal( 'datamap-error-validatespec-group-no-display', wfEscapeWikiText( $this->id ) );

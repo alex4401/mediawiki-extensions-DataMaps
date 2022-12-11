@@ -336,14 +336,18 @@ class DataMap extends EventEmitter {
         if ( !this.iconCache[ markerType ] ) {
             const group = this.config.groups[ layers[ 0 ] ];
 
-            // Look for the first layer of this marker that has an icon override property
-            let markerIcon = group.markerIcon;
-            const override = layers.find( x => this.config.layers[ x ] && this.config.layers[ x ].markerIcon );
-            if ( override ) {
-                markerIcon = this.config.layers[ override ].markerIcon;
-            }
+            if ( group.pinColor ) {
+                this.iconCache[ markerType ] = new Leaflet.Ark.PinIcon( { colour: group.pinColor, iconSize: group.size } );
+            } else {
+                // Look for the first layer of this marker that has an icon override property
+                let markerIcon = group.markerIcon;
+                const override = layers.find( x => this.config.layers[ x ] && this.config.layers[ x ].markerIcon );
+                if ( override ) {
+                    markerIcon = this.config.layers[ override ].markerIcon;
+                }
 
-            this.iconCache[ markerType ] = new Leaflet.Icon( { iconUrl: markerIcon, iconSize: group.size } );
+                this.iconCache[ markerType ] = new Leaflet.Icon( { iconUrl: markerIcon, iconSize: group.size } );
+            }
         }
         return this.iconCache[ markerType ];
     }
@@ -376,7 +380,7 @@ class DataMap extends EventEmitter {
         let leafletMarker;
 
         // Construct the marker
-        if ( group.markerIcon ) {
+        if ( group.markerIcon || group.pinColor ) {
             // Fancy icon marker
             leafletMarker = new Leaflet.Ark.IconMarker( position, {
                 icon: this.getIconFromLayers( layers )

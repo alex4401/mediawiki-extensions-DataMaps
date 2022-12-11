@@ -64,7 +64,8 @@
 				"leafletPkg/iconMarker.js",
 				"leafletPkg/circleMarker.js",
 				"leafletPkg/popup.js",
-				"leafletPkg/interaction.js"
+				"leafletPkg/interaction.js",
+				"leafletPkg/pinIcon.js"
 			],
 			"styles": [
 				"vendor/leaflet/leaflet.css"

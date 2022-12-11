@@ -6,5 +6,6 @@ module.exports.Ark = {
     IconMarker: require( './iconMarker.js' ),
 
     Popup: require( './popup.js' ),
+    PinIcon: require( './pinIcon.js' ),
     InteractionControl: require( './interaction.js' )
 };

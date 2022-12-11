@@ -247,6 +247,9 @@ class EmbedConfigGenerator {
                 }
                 $out['markerIcon'] = DataMapFileUtils::getFileUrl( $spec->getIcon(), $size );
                 break;
+            case MarkerGroupSpec::DM_PIN:
+                $out['pinColor'] = DataMapColourUtils::asHex( $spec->getPinColour() );
+                break;
             default:
                 throw new InvalidArgumentException( wfMessage( 'datamap-error-render-unsupported-displaymode',
                     $spec->getDisplayMode() ) );
