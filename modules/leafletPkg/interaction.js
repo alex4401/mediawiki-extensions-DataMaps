@@ -24,7 +24,7 @@ module.exports = Leaflet.Handler.extend( {
             DomEvent.on( this._map, eventName, this._onDrag, this );
         }
 
-        this._enableHandlers( [ 'scrollWheelZoom' ] );
+        this._enableHandlers( [ 'scrollWheelZoom', 'dragging' ] );
     },
 
 
