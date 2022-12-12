@@ -26,6 +26,8 @@ module.exports = class MarkerPopup {
         /** @type {jQuery?} */
         this.$location = null;
         /** @type {jQuery?} */
+        this.$description = null;
+        /** @type {jQuery?} */
         this.$image = null;
     }
 
@@ -92,7 +94,8 @@ module.exports = class MarkerPopup {
             if ( !this.slots.desc.startsWith( '<p>' ) ) {
                 this.slots.desc = `<p>${this.slots.desc}</p>`;
             }
-            this.$content.append( this.slots.desc );
+            this.$description = $( '<div class="datamap-popup-description">' ).html( this.slots.desc )
+                .appendTo( this.$content );
         }
 
         // Image
