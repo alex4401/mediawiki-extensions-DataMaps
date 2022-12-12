@@ -50,5 +50,11 @@ module.exports = Leaflet.Popup.extend( {
     onRemove( map ) {
         Leaflet.Popup.prototype.onRemove.call( this, map );
         this._content.onRemove();
+
+        // Wipe the pre-built content nodes if the provider does not want them to be kept around
+        if ( !this._content.shouldKeepAround() ) {
+            this._content = null;
+            this._contentNode = null;
+        }
     }
 } );

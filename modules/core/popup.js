@@ -37,6 +37,11 @@ module.exports = class MarkerPopup {
     }
 
 
+    shouldKeepAround() {
+        return true;
+    }
+
+
     buildButtons() {
         const $getLink = $( '<a class="datamap-marker-link-button oo-ui-icon-link" role="button"></a>' )
             .attr( {
