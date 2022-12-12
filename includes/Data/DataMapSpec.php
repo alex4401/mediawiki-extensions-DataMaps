@@ -209,6 +209,7 @@ class DataMapSpec extends DataModel {
         // Perform full strict validation if this is a full map, otherwise limit it to certain fields and lenience
         $isFull = !$this->isMixin();
 
+        $this->checkField( $status, '$schema', DataModel::TYPE_STRING );
         $this->checkField( $status, '$mixin', DataModel::TYPE_BOOL );
         $this->checkField( $status, [
             'name' => 'mixins',
