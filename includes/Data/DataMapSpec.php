@@ -289,7 +289,13 @@ class DataMapSpec extends DataModel {
             'type' => [ DataModel::TYPE_BOOL, DataModel::TYPE_STRING ],
             'values' => [ true, false, 'tabberWide' ]
         ] );
-        $this->checkField( $status, 'leafletSettings', DataModel::TYPE_OBJECT );
+        $this->checkField( $status, [
+            'name' => 'leafletSettings',
+            'type' => DataModel::TYPE_OBJECT,
+            'check' => static function ( $status, $raw ) {
+                return ( new LeafletSettingsSpec( $raw ) )->validate( $status );
+            }
+        ] );
         $this->checkField( $status, [
             'name' => 'groups',
             'type' => DataModel::TYPE_OBJECT,
