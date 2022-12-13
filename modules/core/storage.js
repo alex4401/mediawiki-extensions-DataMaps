@@ -144,7 +144,7 @@ class MapStorage {
             return;
         }
 
-        const data = this.getJSON( '*' );
+        const data = this.getJSON( '*', '{}' );
         // Run sequential migrations on the data object
         /* eslint-disable no-fallthrough */
         switch ( schemaVersion ) {
