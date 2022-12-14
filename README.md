@@ -145,6 +145,7 @@ Box is a array of two locations, where first describes the start point of the bo
 * `$wgDataMapsEnableVisualEditor`: enables the visual map editor.
 * `$wgDataMapsAllowExperimentalFeatures`: if set to `true`, enables features listed below - all of which are in development and not ready for production. Defaults to `false`.
 * * Visual editor
+* * Pin-shaped markers
 
 ## Gadgets
 External scripts can hook into Data Maps to provide additional functionality without modifying core code.
