@@ -1,8 +1,7 @@
 # DataMaps extension
 
-This is free software licensed under the GNU General Public License. Please
-see http://www.gnu.org/copyleft/gpl.html for further details, including the
-full text and terms of the license.
+This is free software licensed under the GNU General Public License. Please see http://www.gnu.org/copyleft/gpl.html for further
+details, including the full text and terms of the license.
 
 ## Overview
 A modern replacement for ARK Wiki's [interactive maps on DOM nodes](https://ark.wiki.gg/wiki/Module:ResourceMap). Built on top of
@@ -10,16 +9,12 @@ A modern replacement for ARK Wiki's [interactive maps on DOM nodes](https://ark.
 and extensibility, reduced server load (same work in hacky Lua is done in PHP), better automation possibilities with bots
 (extracted data imports), and less data transfered to the browser.
 
-Currently no feature parity with the existing solution. [Roadmap (T75 on ARK Wiki's Trello board)](https://trello.com/c/CiLfCspG/75-datamaps-extension-for-fjordurs-release).
-
-[Test installation link (may be broken)](https://1.37.wiki-dev.mglolenstine.xyz/wiki/Map_transclusion_01).
+[Repository](https://github.com/alex4401/mediawiki-extensions-DataMaps) | [Issue tracker](https://github.com/alex4401/mediawiki-extensions-DataMaps/issues)
 
 ## Installation
 If your wiki is hosted on [wiki.gg](https://wiki.gg), simply request the extension via their representatives.
 
-Manual installation:
-1. Clone the repository to `extensions/DataMaps`.
-2. `wfLoadExtension` in site configuration.
+Check the [MediaWiki.org page](https://www.mediawiki.org/wiki/Extension:DataMaps) otherwise.
 
 ### MediaWiki support schedule
 This extension's development tracks [wiki.gg](https://wiki.gg)'s platform - currently MediaWiki **1.37**. All versioned releases
@@ -129,23 +124,7 @@ Box is a array of two locations, where first describes the start point of the bo
 * * Example: `{{DataMap:Maps/Resources/Aberration|filter=metal,crystal}}`.
 
 ## Configuration
-* `$wgDataMapsNamespaceId`: namespace where data maps will be allowed. Defaults to `managed`, which means the extension will provide a `Map` (ID: 2900) namespace by itself.
-* `$wgDataMapsCacheType`: cache type to use for `queryDataMap` API endpoint output. Defaults to `CACHE_ANYTHING`.
-* `$wgDataMapsCacheTTL`: time after which cached `queryDataMap` API endpoint responses expire. Set to `0` to disable caching. Defaults to `86400` (a day).
-* `$wgDataMapsExtendCacheTTL`: if not `false`, extends TTL to `override` of cached maps on requests `threshold` seconds away from expiry. Defaults to `[ 'threshold' => 43200, 'override' => 57600 ]`.
-* `$wgDataMapsMarkerParserExpansionLimit`: controls wikitext parser expansion size limit for each marker. Defaults to `800`.
-* `$wgDataMapsUseInProcessParserCache`: whether wikitext parsing requests will be cached within the process (up to 128 entries). This can save a significant amount of time if marker descriptions or labels repeat often, but increases memory usage. Defaults to `true`.
-* `$wgDataMapsDefaultFeatures`: controls whether certain features are enabled by default on a map without a specific override in its source.
-* * `$wgDataMapsDefaultFeatures['ShowCoordinates']`: whether coordinates will be displayed in the user interface. Defaults to `true`.
-* * `$wgDataMapsDefaultFeatures['RequireCustomMarkerIDs']`: whether the `id` property will be required on markers. Defaults to `false`.
-* * `$wgDataMapsDefaultFeatures['Search']`: whether marker search will be enabled by default. Defaults to `false`.
-* * `$wgDataMapsDefaultFeatures['SortChecklistsByAmount']`: whether collectible checklists will be sorted by number of markers inside. Defaults to `false`.
-* `$wgDataMapsReportTimingInfo`: if set to `true`, marker processing time will be reported in API responses. Defaults to `false`.
-* `$wgDataMapsFullLinksUpdateBudget`: controls total time (in seconds) that can be spent on parsing marker wikitext to perform complete links table updates. Set to `0` to disable.
-* `$wgDataMapsEnableVisualEditor`: enables the visual map editor.
-* `$wgDataMapsAllowExperimentalFeatures`: if set to `true`, enables features listed below - all of which are in development and not ready for production. Defaults to `false`.
-* * Visual editor
-* * Pin-shaped markers
+Check the [MediaWiki.org page](https://www.mediawiki.org/wiki/Extension:DataMaps).
 
 ## Gadgets
 External scripts can hook into Data Maps to provide additional functionality without modifying core code.
@@ -153,13 +132,10 @@ External scripts can hook into Data Maps to provide additional functionality wit
 * All Leaflet APIs are public and left exposed under the `ext.datamaps.leaflet` module. 
 * * Custom Leaflet layers are exposed under `ext.datamaps.leaflet.Ark`.
 * * Lazy-loaded. Depend (via `mw.loader.using`) on `ext.datamaps.leaflet`.
-* * `DataMap` objects provide `waitForLeaflet( function callback )`.
-* All public APIs of this extension are exposed under `window.mw.dataMaps`. Check `resources/loader/index.js` for all exposed classes.
-* `mw.dataMaps.subscribeHook( string hookName, function callback )` may be used to register a hook callback for every map on current page. `hookName` must not include the `ext.datamaps` namespace. The callback receives one parameter, a `DataMap` instance.
+* * `DataMap` objects provide `waitForLeaflet( function callback, [object? context] )`.
+* All public APIs of this extension are exposed under `window.mw.dataMaps`. Check `resources/core/index.js` for all exposed classes.
+* `mw.dataMaps.registerMapAddedHandler( function callback, [object? context] )` may be used to have a function called on every map initialised on current page. The callback receives one parameter, a `DataMap` instance.
 * * Depend (via `mw.loader.using`) on `ext.datamaps.bootstrap` to use this.
-* Instance hooks:
-* * `ext.datamaps.afterInitialisation.[id]( DataMap )`: called after the `DataMap` instance is created, and secondary modules and marker data set have been requested.
-* * `ext.datamaps.afterLegendInitialisation.[id]( DataMap )`: called after OOUI loads and the legend panel is set up.
 * Refer to the source code for information about the classes.
 
 ## Leaflet
