@@ -83,7 +83,7 @@ module.exports = class MarkerStreamingManager {
     loadChunk( pageId, version, filter, start, limit, sector ) {
         return this.requestChunk( pageId, version, filter, start, limit, sector )
             .then( data => {
-                this.map.waitForLeaflet( () => {
+                this.map.on( 'leafletLoaded', () => {
                     this.instantiateMarkers( data.query.markers );
                     this.map.fire( 'chunkStreamingDone' );
                 } );
@@ -94,13 +94,13 @@ module.exports = class MarkerStreamingManager {
     loadSequential( pageId, version, filter, start, sector ) {
         return this.requestChunk( pageId, version, filter, start || 0, null, sector )
             .then( data => {
-                this.map.waitForLeaflet( () => {
+                this.map.on( 'leafletLoaded', () => {
                     this.instantiateMarkers( data.query.markers );
                 } );
                 if ( data.query.continue ) {
                     return this.loadSequential( pageId, version, filter, data.query.continue );
                 } else {
-                    this.map.waitForLeaflet( () => {
+                    this.map.on( 'leafletLoaded', () => {
                         // Notify other components that all chunks have been streamed in this request
                         this.map.fire( 'chunkStreamingDone' );
                     } );

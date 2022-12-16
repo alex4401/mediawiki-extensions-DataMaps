@@ -13,8 +13,8 @@ class MarkerSearch {
         this.displayIndex = null;
         this.isLinked = isLinked;
 
-        this.map.waitForLegend( () => {
-            this.map.waitForLeaflet( () => {
+        this.map.on( 'markerFilteringPanel', () => {
+            this.map.on( 'leafletLoaded', () => {
                 this._initialiseUI();
 
                 this._setDisplayIndex( this.isLinked ? this.ownedIndex.parent : this.ownedIndex );

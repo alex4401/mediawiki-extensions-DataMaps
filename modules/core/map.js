@@ -144,6 +144,8 @@ class DataMap extends EventEmitter {
      *
      * @param {Function} callback Function to run when Leaflet map is initialised.
      * @param {Object?} context Object to use as callback's context.
+     *
+     * @deprecated since version 0.14.3, to be removed in 0.15.0. Bind to the leafletLoaded event instead.
      */
     waitForLeaflet( callback, context ) {
         this.on( 'leafletLoaded', callback, context );
@@ -155,6 +157,8 @@ class DataMap extends EventEmitter {
      *
      * @param {Function} callback Function to run when the legend is initialised.
      * @param {Object?} context Object to use as callback's context.
+     *
+     * @deprecated since version 0.14.3, to be removed in 0.15.0. Bind to the markerFilteringPanel event instead.
      */
     waitForLegend( callback, context ) {
         this.on( 'markerFilteringPanel', callback, context );
