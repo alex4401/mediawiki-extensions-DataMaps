@@ -651,11 +651,11 @@ class DataMap extends EventEmitter {
             zoomSnap: 0.25,
             zoomDelta: 0.25,
             maxZoom: 5,
-            wheelPxPerZoomLevel: 240,
+            wheelPxPerZoomLevel: 90,
             minZoom: Leaflet.Browser.mobile ? ( Leaflet.Browser.retina ? 1 : 1.75 ) : 2,
-            // Zoom animation causes some awkward locking as Leaflet waits for the animation to finish before processing
-            // more zoom requests, but disabling it causes some updates to be distorted (for example, the canvas renderer
-            // will drift). We include a patch in our Leaflet builds to disable animations on desktop-style zooms.
+            // Zoom animation causes some awkward locking as Leaflet waits for the animation to finish before processing more
+            // zoom requests, but disabling it causes some updates to be distorted (for example, the canvas renderer will drift).
+            // We include a patch in our Leaflet builds to disable animations on desktop-style zooms.
             zoomAnimation: true,
             markerZoomAnimation: true,
             // Do not allow pinch-zooming to surpass max zoom even temporarily. This seems to cause a mispositioning.
