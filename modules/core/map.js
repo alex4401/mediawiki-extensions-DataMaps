@@ -46,7 +46,7 @@ class DataMap extends EventEmitter {
         // Leaflet.Map instance
         this.leaflet = null;
         // Collection of Leaflet.Icons by group
-        // TODO: make private
+        /** @deprecated Public access is deprecated since v0.14.0 */
         this.iconCache = {};
         // DOM element of the coordinates display control
         this.$coordTracker = null;
