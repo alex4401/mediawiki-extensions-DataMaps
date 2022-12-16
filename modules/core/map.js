@@ -376,9 +376,10 @@ class DataMap extends EventEmitter {
      *
      * @param {Array} layers
      * @param {Array} instance
+     * @param {Object?} [properties]
      * @return {Leaflet.Ark.IconMarker|Leaflet.Ark.CircleMarker} A Leaflet marker instance.
      */
-    createMarkerFromApiInstance( layers, instance ) {
+    createMarkerFromApiInstance( layers, instance, properties ) {
         const group = this.config.groups[ layers[ 0 ] ],
             position = this.translatePoint( instance );
         let leafletMarker;
@@ -410,6 +411,11 @@ class DataMap extends EventEmitter {
         // Persist original coordinates and state
         leafletMarker.apiInstance = instance;
 
+        // Extract properties from the ownership string for quicker access
+        if ( properties ) {
+            leafletMarker.assignedProperties = properties;
+        }
+
         // Add marker to the layer
         this.layerManager.addMember( layers, leafletMarker );
 
@@ -437,11 +443,12 @@ class DataMap extends EventEmitter {
      *
      * @param {Array} layers Array of string layer names.
      * @param {Array} position Point to place the marker at.
-     * @param {Object?} state Optional object with fields: label, desc, image, article, search.
+     * @param {Object?} [state] Optional object with fields: label, desc, image, article, search.
+     * @param {Object?} [properties] Optional object with arbitrary fields.
      * @return {Leaflet.Ark.IconMarker|Leaflet.Ark.CircleMarker} Leaflet marker instance.
      */
-    createMarker( layers, position, state ) {
-        return this.createMarkerFromApiInstance( layers, [ position[ 0 ], position[ 1 ], state ] );
+    createMarker( layers, position, state, properties ) {
+        return this.createMarkerFromApiInstance( layers, [ position[ 0 ], position[ 1 ], state ], properties );
     }
 
 

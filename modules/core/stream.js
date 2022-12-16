@@ -67,11 +67,24 @@ module.exports = class MarkerStreamingManager {
         // Unpack markers
         const markers = [];
         for ( const markerType in data ) {
-            const layers = markerType.split( ' ' );
-            const placements = data[ markerType ];
+            const layers = markerType.split( ' ' ),
+                  placements = data[ markerType ];
+            let properties = null;
+
+            // Extract properties (sub-layers) from the layers
+            if ( markerType.indexOf( ':' ) > 0 ) {
+                properties = {};
+                for ( const layer of layers ) {
+                    if ( layer.indexOf( ':' ) > 0 ) {
+                        const [ key, value ] = layer.split( ':', 2 );
+                        properties[ key ] = value;
+                    }
+                }
+            }
+
             // Create markers for instances
             for ( const instance of placements ) {
-                markers.push( this.map.createMarkerFromApiInstance( layers, instance ) );
+                markers.push( this.map.createMarkerFromApiInstance( layers, instance, properties ) );
             }
         }
 
