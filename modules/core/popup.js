@@ -1,10 +1,15 @@
 const Util = require( './util.js' ),
     Enums = require( './enums.js' );
+/** @typedef {import( './map.js' )} DataMap */
 
 
 module.exports = class MarkerPopup {
     // TODO: document lifetime
 
+    /**
+     * @param {DataMap} map
+     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     */
     constructor( map, leafletMarker ) {
         this.map = map;
         this.leafletMarker = leafletMarker;
@@ -12,11 +17,14 @@ module.exports = class MarkerPopup {
         this.slots = this.leafletMarker.apiInstance[ 2 ] || {};
         this.uid = Util.getMarkerId( this.leafletMarker );
         // These two containers are provided by Leaflet.Ark.Popup
-        /** @type {jQuery?} */
+        /** @type {!jQuery} */
+        // @ts-ignore: Initialised by Leaflet.Ark.Popup, ideally we'd use null assertions here
         this.$buttons = null;
-        /** @type {jQuery?} */
+        /** @type {!jQuery} */
+        // @ts-ignore: Initialised by Leaflet.Ark.Popup, ideally we'd use null assertions here
         this.$content = null;
-        /** @type {jQuery?} */
+        /** @type {!jQuery} */
+        // @ts-ignore: Initialised by Leaflet.Ark.Popup, ideally we'd use null assertions here
         this.$tools = null;
         // These elements are created during building
         /** @type {jQuery?} */
@@ -32,6 +40,10 @@ module.exports = class MarkerPopup {
     }
 
 
+    /**
+     * @param {DataMap} map
+     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     */
     static bindTo( map, leafletMarker ) {
         leafletMarker.bindPopup( () => new ( map.getPopupClass() )( map, leafletMarker ), {}, Util.getLeaflet().Ark.Popup );
     }
@@ -118,6 +130,11 @@ module.exports = class MarkerPopup {
     }
 
 
+    /**
+     * @param {string} cssClass
+     * @param {jQuery} $child
+     * @return {jQuery}
+     */
     addTool( cssClass, $child ) {
         return $( `<li class="${cssClass}">` ).append( $child ).appendTo( this.$tools );
     }

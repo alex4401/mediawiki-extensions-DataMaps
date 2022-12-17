@@ -1,6 +1,15 @@
+/**
+ * @typedef {Object} EventHandlerRef
+ * @property {Object|null|undefined} context
+ * @property {Function} method
+ */
+
+
 module.exports = class EventEmitter {
     constructor() {
+        /** @type {Object<string, EventHandlerRef[]>} */
         this._handlers = {};
+        /** @type {Object<string, any[]} */
         this._autoFiringEvents = {};
     }
 
@@ -13,7 +22,7 @@ module.exports = class EventEmitter {
      *
      * @param {string} event
      * @param {Function} callback
-     * @param {Object?} context
+     * @param {Object?} [context]
      */
     on( event, callback, context ) {
         const handler = {
@@ -38,8 +47,8 @@ module.exports = class EventEmitter {
      * the event.
      *
      * @param {string} event Event name.
-     * @param {Function?} callback
-     * @param {object?} context
+     * @param {Function?} [callback]
+     * @param {Object?} [context]
      */
     off( event, callback, context ) {
         // If no callback function given, remove all bound handlers
@@ -62,8 +71,8 @@ module.exports = class EventEmitter {
 
 
     /**
-     * @param {Object} handler Callback descriptor.
-     * @param {Array?} args Arguments.
+     * @param {EventHandlerRef} handler Callback descriptor.
+     * @param {Array<any>?} args Arguments.
      * @private
      */
     _invokeEventHandler( handler, args ) {
@@ -105,6 +114,7 @@ module.exports = class EventEmitter {
     fireMemorised( event ) {
         // eslint-disable-next-line compat/compat
         this._autoFiringEvents[ event ] = Object.values( arguments ).slice( 2 );
+        // @ts-ignore
         this.fire.apply( this, [ event ].concat( this._autoFiringEvents[ event ] ) );
         this.off( event );
     }

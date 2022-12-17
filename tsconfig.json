@@ -1,0 +1,29 @@
+{
+    "include": [
+      "modules/**/*.js",
+      "modules/**/*.ts",
+      "node_modules/types-mediawiki"
+    ],
+	"exclude": [
+		"vendor"
+    ],
+	"compilerOptions": {
+		"target": "ES6",
+		"lib": [
+            "ES6",
+            "ES2017.Object",
+            "DOM"
+        ],
+		"allowJs": true,
+		"checkJs": true,
+		"noEmit": true,
+		"strict": true,
+		"esModuleInterop": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"newLine": "lf",
+		"forceConsistentCasingInFileNames": true,
+		"pretty": true
+	}
+}

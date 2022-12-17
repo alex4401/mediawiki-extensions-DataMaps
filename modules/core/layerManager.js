@@ -1,22 +1,67 @@
-module.exports = class MarkerLayerManager {
-    constructor( map ) {
-        this.map = map;
-        // Collection of all bound markers
-        this.markers = [];
-        // Map of markers by layer
-        this.byLayer = {};
-        // Permitted layer names
-        this.includeMaskHi = new Set();
-        // Required layer names (that must be present on a marker for it to be displayed)
-        this.includeMaskLo = new Set();
-        // Excluded layer names
-        this.excludeMask = new Set();
-        // Parametrized requirements
-        this.includeMaskPr = {};
-        // Initialise the cache
-        this.clearCache();
+/** @typedef {import( './map.js' )} DataMap */
 
-        this.map.on( 'markerVisibilityUpdate', () => this.map.leaflet._haveLayersMutated = false );
+
+module.exports = class MarkerLayerManager {
+    /**
+     * @param {DataMap} map Owning map.
+     */
+    constructor( map ) {
+        /**
+         * Owning map.
+         *
+         * @type {DataMap}
+         */
+        this.map = map;
+        /**
+         * Collection of all bound markers.
+         *
+         * @type {LeafletModule.CircleMarker[]|LeafletModule.Marker[]}
+         */
+        this.markers = [];
+        /**
+         * Map of markers by layer.
+         *
+         * @type {Object<string, LeafletModule.CircleMarker[]|LeafletModule.Marker[]>}
+         */
+        this.byLayer = {};
+        /**
+         * Permitted layer names
+         *
+         * @type {Set<string>}
+         */
+        this.includeMaskHi = new Set();
+        /**
+         * Required layer names (that must be present on a marker for it to be displayed)
+         *
+         * @type {Set<string>}
+         */
+        this.includeMaskLo = new Set();
+        /**
+         * Excluded layer names
+         *
+         * @type {Set<string>}
+         */
+        this.excludeMask = new Set();
+        /**
+         * Parametrised requirements
+         *
+         * @type {Object<string, string>}
+         */
+        this.includeMaskPr = {};
+        /**
+         * Computed visibility cache.
+         *
+         * @type {Object<string, boolean>}
+         * @deprecated Public access deprecated in v0.14.3, will be removed in v0.15.0.
+         */
+        this.computeCache = {};
+        /**
+         * @type {boolean}
+         * @deprecated Public access deprecated in v0.14.3, will be removed in v0.15.0.
+         */
+        this.doNotUpdate = false;
+
+        this.map.on( 'markerVisibilityUpdate', () => ( this.map.leaflet._haveLayersMutated = false ) );
     }
 
 
@@ -28,6 +73,9 @@ module.exports = class MarkerLayerManager {
     }
 
 
+    /**
+     * @param {string} layerName
+     */
     register( layerName ) {
         if ( !this.byLayer[ layerName ] ) {
             this.byLayer[ layerName ] = [];
@@ -35,6 +83,10 @@ module.exports = class MarkerLayerManager {
     }
 
 
+    /**
+     * @param {string[]} layers
+     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     */
     addMember( layers, leafletMarker ) {
         leafletMarker.attachedLayers = layers;
         for ( const layer of layers ) {
@@ -45,6 +97,10 @@ module.exports = class MarkerLayerManager {
     }
 
 
+    /**
+     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     * @param {string} layer
+     */
     addMarkerToLayer( leafletMarker, layer ) {
         leafletMarker.attachedLayers.push( layer );
         this.byLayer[ layer ].push( leafletMarker );
@@ -52,16 +108,23 @@ module.exports = class MarkerLayerManager {
     }
 
 
+    /**
+     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     */
     removeMember( leafletMarker ) {
         this.map.leaflet.removeLayer( leafletMarker );
         for ( const layer of leafletMarker.attachedLayers ) {
             delete this.byLayer[ layer ][ this.byLayer[ layer ].indexOf( leafletMarker ) ];
         }
         delete this.markers[ this.markers.indexOf( leafletMarker ) ];
-        leafletMarker.attachedLayers = null;
+        leafletMarker.attachedLayers = [];
     }
 
 
+    /**
+     * @param {string[]} layers
+     * @return {boolean}
+     */
     shouldBeVisible( layers ) {
         // If requirement mask is not empty, and there is a layer inside the list does not have, return invisible
         if ( this.includeMaskHi.size > 0 && !( () => {
@@ -99,7 +162,12 @@ module.exports = class MarkerLayerManager {
     }
 
 
-    updateMember( leafletMarker, isInternalCall ) {
+    /**
+     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     * @param {boolean} isInternalCall
+     * @return {void}
+     */
+    updateMember( leafletMarker, isInternalCall = false ) {
         // Exit early if updates are disabled
         if ( this.doNotUpdate ) {
             return;
@@ -107,13 +175,14 @@ module.exports = class MarkerLayerManager {
         // Get marker layers
         const layers = leafletMarker.attachedLayers;
         // Request new visibility state from cache, or compute it if missed
-        let shouldBeVisible = this.computeCache[ layers ];
+        const cacheKey = layers.join( ' ' );
+        let shouldBeVisible = this.computeCache[ cacheKey ];
         if ( shouldBeVisible === undefined ) {
             shouldBeVisible = this.shouldBeVisible( layers );
-            this.computeCache[ layers ] = shouldBeVisible;
+            this.computeCache[ cacheKey ] = shouldBeVisible;
         }
         // Add to Leaflet map if true, remove if false
-        this.map.leaflet._layersMutated = false;
+        this.map.leaflet._haveLayersMutated = false;
         if ( shouldBeVisible ) {
             this.map.leaflet.addLayer( leafletMarker );
         } else {
@@ -128,6 +197,9 @@ module.exports = class MarkerLayerManager {
     }
 
 
+    /**
+     * @param {string?} [layerName]
+     */
     updateMembers( layerName ) {
         // Exit early if updates are disabled
         if ( this.doNotUpdate ) {
@@ -149,8 +221,11 @@ module.exports = class MarkerLayerManager {
     }
 
 
-    /*
+    /**
      * Sets a layer as *absolutely* required for a marker to be displayed. This updates ALL markers.
+     *
+     * @param {string} layerName
+     * @param {boolean} state
      */
     setRequirement( layerName, state ) {
         if ( state ) {
@@ -163,8 +238,11 @@ module.exports = class MarkerLayerManager {
     }
 
 
-    /*
+    /**
      * Sets a layer as *absolutely* required for a marker to be displayed. This updates ALL markers.
+     *
+     * @param {string} propertyName
+     * @param {string} value
      */
     setOptionalPropertyRequirement( propertyName, value ) {
         if ( value === null && this.includeMaskPr[ propertyName ] ) {
@@ -177,8 +255,11 @@ module.exports = class MarkerLayerManager {
     }
 
 
-    /*
+    /**
      * Sets a layer as required for a marker to be displayed. This updates ALL markers.
+     *
+     * @param {string} layerName
+     * @param {boolean} state
      */
     setInclusion( layerName, state ) {
         if ( state ) {
@@ -207,7 +288,9 @@ module.exports = class MarkerLayerManager {
         this.updateMembers( layerName );
     }
 
-
+    /**
+     * @param {boolean} state
+     */
     setDeferVisibilityUpdates( state ) {
         if ( !state && this.doNotUpdate !== state ) {
             // Updates are being enabled back on, force a visibility update

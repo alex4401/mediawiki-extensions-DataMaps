@@ -1,0 +1,1 @@
+type jQuery = JQuery<HTMLElement>

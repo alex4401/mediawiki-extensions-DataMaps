@@ -37,6 +37,16 @@
         ],
 		"operator-linebreak": [ "error", "before" ],
 		"one-var": "off",
-        "one-var-declaration-per-line": [ "error", "initializations" ]
-	}
+        "one-var-declaration-per-line": [ "error", "initializations" ],
+        "jsdoc/no-undefined-types": [ "error", {
+            "definedTypes": [
+                "LeafletModule"
+            ]
+        } ]
+	},
+    "settings": {
+        "jsdoc": {
+            "mode": "typescript"
+        }
+    }
 }

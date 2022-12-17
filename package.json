@@ -1,9 +1,13 @@
 {
 	"private": true,
 	"scripts": {
-		"lint:js": "eslint --cache --max-warnings 0 ."
+		"lint:js": "eslint --cache --max-warnings 0 .",
+		"lint:styles": "stylelint \"**/*.{less,css}\""
 	},
 	"devDependencies": {
-		"eslint-config-wikimedia": "0.23.0"
+		"eslint-config-wikimedia": "0.23.0",
+		"stylelint-config-idiomatic-order": "9.0.0",
+		"stylelint-config-wikimedia": "0.13.1",
+		"types-mediawiki": "^1.3.0"
 	}
 }
