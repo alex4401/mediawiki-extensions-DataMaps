@@ -23,12 +23,18 @@ class EmbedConfigGenerator {
     private Title $title;
     private bool $useInlineData;
     private bool $forVisualEditor;
+    private ?array $requireLayers;
 
-    public function __construct( Title $title, DataMapSpec $data, bool $useInlineData = false, bool $forVisualEditor = false ) {
+    public function __construct( Title $title, DataMapSpec $data, array $options ) {
         $this->title = $title;
         $this->data = $data;
-        $this->useInlineData = $useInlineData;
-        $this->forVisualEditor = $forVisualEditor;
+        $this->useInlineData = $options['inlineData'] ?? false;
+        $this->forVisualEditor = $options['ve'] ?? false;
+
+        $this->requireLayers = null;
+        if ( is_array( $options['layers'] ) && count ( $options['layers'] ) > 0 ) {
+            $this->requireLayers = $options['layers'];
+        }
     }
 
     public function getId(): int {
@@ -69,6 +75,10 @@ class EmbedConfigGenerator {
         // Marker groups
         $out['groups'] = [];
         $this->data->iterateGroups( function ( MarkerGroupSpec $spec ) use ( &$out ) {
+            if ( $this->requireLayers && !in_array( $spec->getId(), $this->requireLayers ) ) {
+                return;
+            }
+
             $out['groups'][$spec->getId()] = $this->getMarkerGroupConfig( $spec );
         } );
         // Marker layers
@@ -100,7 +110,7 @@ class EmbedConfigGenerator {
         $out |= ( $this->useInlineData || $this->forVisualEditor ) ? 1 << 7 : 0;
 
         $markerCount = 0;
-        $this->data->iterateRawMarkerMap( function ( string $_, array $rawCollection ) use ( &$markerCount ) {
+        $this->data->iterateRawMarkerMap( static function ( string $_, array $rawCollection ) use ( &$markerCount ) {
             $markerCount += count( $rawCollection );
         } );
         $out |= $markerCount >= self::NUMBER_OF_MARKERS_FOR_CANVAS ? 1 << 8 : 0;

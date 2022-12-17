@@ -218,7 +218,11 @@ class EmbedRenderer {
         // This configuration is used to set up the map before any data sets are downloaded. It allows for environment to be
         // prepared.
         // TODO: possibly deliver some of this stuff via API? tho dunno if there's any real benefits to that
-        $config = new EmbedConfigGenerator( $this->title, $this->data, $this->useInlineData, $this->forVisualEditor );
+        $config = new EmbedConfigGenerator( $this->title, $this->data, [
+            'inlineData' => $this->useInlineData,
+            've' => $this->forVisualEditor,
+            'layers' => $options && $options->displayGroups || null
+        ] );
         $containerMain->appendContent( new \OOUI\HtmlSnippet( $config->makeElement() ) );
 
         return $containerMain;
