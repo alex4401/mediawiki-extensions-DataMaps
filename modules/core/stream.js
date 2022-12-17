@@ -68,7 +68,7 @@ module.exports = class MarkerStreamingManager {
         const markers = [];
         for ( const markerType in data ) {
             const layers = markerType.split( ' ' ),
-                  placements = data[ markerType ];
+                placements = data[ markerType ];
             let properties = null;
 
             // Extract properties (sub-layers) from the layers

@@ -13,7 +13,7 @@ module.exports = {
      *
      * @param {number} a The field.
      * @param {number} b The bit.
-     * @returns {boolean}
+     * @return {boolean}
      */
     isBitSet( a, b ) {
         return a && ( a & b ) === b;
@@ -25,7 +25,7 @@ module.exports = {
      *
      * @param {number} a The field.
      * @param {number} b The bit mask.
-     * @returns {boolean}
+     * @return {boolean}
      */
     isAnyBitSet( a, b ) {
         return a && ( a & b ) !== 0;
@@ -35,7 +35,7 @@ module.exports = {
     /**
      * Retrieves Leaflet exports if they've been loaded.
      *
-     * @returns {Leaflet}
+     * @return {Leaflet}
      */
     getLeaflet() {
         if ( Leaflet === null ) {
@@ -72,7 +72,7 @@ module.exports = {
      * Generates an identifier of a marker using type and coordinates.
      *
      * @param {Leaflet.CircleMarker|Leaflet.Marker} leafletMarker Marker to get the identifier of.
-     * @returns {string}
+     * @return {string}
      */
     getGeneratedMarkerId( leafletMarker ) {
         const type = leafletMarker.attachedLayers.join( ' ' );
@@ -85,7 +85,7 @@ module.exports = {
      * Retrieves an identifier of a marker to use with local storage or in permanent links.
      *
      * @param {Leaflet.CircleMarker|Leaflet.Marker} leafletMarker Marker to get the identifier of.
-     * @returns {string|number}
+     * @return {string|number}
      */
     getMarkerId( leafletMarker ) {
         return leafletMarker.apiInstance[ 2 ] && leafletMarker.apiInstance[ 2 ].uid
@@ -97,7 +97,7 @@ module.exports = {
      * Retrieves a query (GET) parameter from current URL.
      *
      * @param {string} name Parameter name.
-     * @returns {string?}
+     * @return {string?}
      */
     getQueryParameter( name ) {
         // eslint-disable-next-line compat/compat
@@ -111,7 +111,7 @@ module.exports = {
      * @param {DataMap} map 
      * @param {Object} paramsToSet 
      * @param {boolean} [withHost]
-     * @returns {string}
+     * @return {string}
      */
     makeUrlWithParams( map, paramsToSet, withHost ) {
         // eslint-disable-next-line compat/compat
