@@ -121,9 +121,14 @@ MarkerFilteringPanel.MarkerGroupField = class MarkerGroupField {
             this.$circle = Util.createGroupCircleElement( group ).prependTo( this.field.$header );
         }
 
+        // Add a pin icon if pin marker group
+        if ( group.pinColor ) {
+            this.$pin = Util.createGroupPinIconElement( group ).prependTo( this.field.$header );
+        }
+
         // Add an icon if one is specified in the group
         if ( group.legendIcon ) {
-            this.$icon = Util.createGroupIconElement( group ).attr( 'src', group.legendIcon ).prependTo( this.field.$header );
+            this.$icon = Util.createGroupIconElement( group ).prependTo( this.field.$header );
         }
     }
 
