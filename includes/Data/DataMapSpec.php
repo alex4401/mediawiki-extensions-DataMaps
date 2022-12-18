@@ -363,10 +363,6 @@ class DataMapSpec extends DataModel {
                         $out = false;
                     }
 
-                    // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
-                    // creating thousands of small, very short-lived (only one at a time) objects
-                    $marker = new MarkerSpec( new \stdclass() );
-
                     // Check if the group is defined. Don't check layers, as it's not required for any of them to be actually
                     // defined - such layers will be treated as transparent by default.
                     $layers = explode( ' ', $layers );
@@ -376,6 +372,10 @@ class DataMapSpec extends DataModel {
                         $out = false;
                         return;
                     }
+
+                    // Creating a marker model backed by an empty object, as it will later get reassigned to actual data to avoid
+                    // creating thousands of small, very short-lived (only one at a time) objects
+                    $marker = new MarkerSpec( new \stdclass() );
 
                     // Validate each marker
                     foreach ( $rawMarkerCollection as &$rawMarker ) {

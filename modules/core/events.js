@@ -5,6 +5,9 @@
  */
 
 
+/**
+ * @template {string} T
+ */
 module.exports = class EventEmitter {
     constructor() {
         /** @type {Object<string, EventHandlerRef[]>} */
@@ -20,7 +23,7 @@ module.exports = class EventEmitter {
      * If an event is set to fire immediately with memorised arguments, the handler will be invoked right away and won't
      * be enqueued for the next time.
      *
-     * @param {string} event
+     * @param {T} event
      * @param {Function} callback
      * @param {Object?} [context]
      */
@@ -46,7 +49,7 @@ module.exports = class EventEmitter {
      * Deregisters all event handlers with the same callback. If no callback function is given, clears ALL handlers for
      * the event.
      *
-     * @param {string} event Event name.
+     * @param {T} event Event name.
      * @param {Function?} [callback]
      * @param {Object?} [context]
      */
@@ -90,7 +93,7 @@ module.exports = class EventEmitter {
     /**
      * Invokes all bound event handlers with given arguments.
      *
-     * @param {string} event Event name.
+     * @param {T} event Event name.
      */
     fire( event ) {
         if ( !this._handlers[ event ] ) {
@@ -109,7 +112,7 @@ module.exports = class EventEmitter {
      * Invokes all bound event handlers and saves given arguments to invoke any future handler right away. All handlers already
      * bound are invoked and dropped.
      *
-     * @param {string} event Event name.
+     * @param {T} event Event name.
      */
     fireMemorised( event ) {
         // eslint-disable-next-line compat/compat

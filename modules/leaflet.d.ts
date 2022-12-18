@@ -107,6 +107,8 @@ declare namespace LeafletModule {
 
     class Popup {}
 
+    class Icon {}
+
     class Canvas extends Layer {
         constructor( options: CanvasOptions );
     }
@@ -124,4 +126,8 @@ declare namespace LeafletModule {
         attachedLayers: string[];
         assignedProperties: { [key: string]: string };
     }
+
+    class ImageOverlay extends Layer {}
+    class Polyline extends Layer {}
+    class Rectangle extends Polyline {}
 }

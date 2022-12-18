@@ -16,6 +16,8 @@ let Leaflet = null;
 
 /**
  * A class that initialises, manages and represents a data map.
+ *
+ * @extends EventEmitter<DataMaps.MapEventTypes>
  */
 class DataMap extends EventEmitter {
     /**
@@ -26,8 +28,17 @@ class DataMap extends EventEmitter {
     constructor( id, $root, config ) {
         super();
 
+        /**
+         * Page ID of the map source data.
+         *
+         * @type {number}
+         */
         this.id = id;
-        // Root DOM element of the data map
+        /**
+         * Root DOM element of the data map
+         *
+         * @type {jQuery}
+         */
         this.$root = $root;
         /**
          * Setup configuration
@@ -35,8 +46,17 @@ class DataMap extends EventEmitter {
          * @type {DataMaps.Configuration.Map}
          */
         this.config = config;
-        // Local storage driver
+        /**
+         * Local map storage interface.
+         *
+         * @type {MapStorage}
+         */
         this.storage = new MapStorage( this );
+        /**
+         * Global map storage interface.
+         *
+         * @type {MapStorage}
+         */
         this.globalStorage = new MapStorage( this, 'global' );
         // Layering driver
         this.layerManager = new MarkerLayerManager( this );
@@ -54,7 +74,11 @@ class DataMap extends EventEmitter {
         if ( this.dataSetFilters ) {
             this.dataSetFilters = this.dataSetFilters.split( '|' );
         }
-        // DOM element to display any status messages
+        /**
+         * DOM element to display any status messages
+         *
+         * @type {jQuery}
+         */
         this.$status = $root.find( '.datamap-status' );
         // LegendTabManager instance
         this.legend = null;
@@ -65,16 +89,37 @@ class DataMap extends EventEmitter {
          */
         // @ts-ignore: Lazily initialised. Ideally we'd suppress this with post-fix assertion, but we're not in TypeScript.
         this.leaflet = null;
-        // Collection of Leaflet.Icons by group
-        /** @deprecated Public access is deprecated since v0.14.0 */
+        /**
+         * Collection of Leaflet.Icons by group
+         *
+         * @type {Object<string, LeafletModule.Icon>}
+         * @private
+         * @deprecated Public access is deprecated since v0.14.0
+         */
         this.iconCache = {};
-        // DOM element of the coordinates display control
+        /**
+         * DOM element of the coordinates display control
+         *
+         * @type {jQuery?}
+         */
         this.$coordTracker = null;
-        // Cached value of the 'datamap-coordinate-control-text' message
+        /**
+         * Cached value of the 'datamap-coordinate-control-text' message
+         *
+         * @deprecated Unused since v0.14.0, will be removed in v0.15.0.
+         */
         this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
-        // Retrieve a `marker` parameter from the query string if one is present
+        /**
+         * Retrieve a `marker` parameter from the query string if one is present.
+         *
+         * @type {string?}
+         */
         this.markerIdToAutoOpen = null;
-        // Content bounds cache
+        /**
+         * Content bounds cache.
+         *
+         * @type {LeafletModule.LatLngBounds?}
+         */
         this._contentBounds = null;
 
         const $tabberPanel = Util.TabberNeue.getOwningPanel( this.$root );
@@ -93,6 +138,11 @@ class DataMap extends EventEmitter {
         if ( !this.config.crs ) {
             this.config.crs = [ [ 0, 0 ], [ 100, 100 ] ];
         }
+        /**
+         * Coordinate origin.
+         *
+         * @type {DataMaps.ECoordinateOrigin}
+         */
         this.crsOrigin = ( this.config.crs[ 0 ][ 0 ] < this.config.crs[ 1 ][ 0 ]
             && this.config.crs[ 0 ][ 1 ] < this.config.crs[ 1 ][ 1 ] ) ? Enums.CRSOrigin.TopLeft : Enums.CRSOrigin.BottomLeft;
         // Y axis is authoritative, this is really just a cosmetic choice influenced by ARK (latitude first). X doesn't need to
@@ -148,6 +198,9 @@ class DataMap extends EventEmitter {
     }
 
 
+    /**
+     * @private
+     */
     _setUpUriMarkerHandler() {
         const tabberId = Util.TabberNeue.getOwningId( this.$root );
         if ( tabberId && tabberId !== window.location.hash.slice( 1 ) ) {
@@ -275,18 +328,18 @@ class DataMap extends EventEmitter {
      *
      * Message delivery is handled by the bootstrap itself, and not maps.
      *
-     * @param {Object} event External event information.
      * @protected
+     * @param {DataMaps.ILinkedEventData} event External event information.
      */
     _onLinkedEventReceived( event ) {
         switch ( event.type ) {
-            /*
-             * Sent when a global group's collected status changes. Data contains affected `groupId` and `state` after changed.
-            */
+            // Sent when a global group's collected status changes. Data contains affected `groupId` and `state` after
+            // changed.
             case 'groupDismissChange': {
-                const group = this.config.groups[ event.groupId ];
+                const gdeEvent = /** @type {DataMaps.IGroupDismissChangeLinkedEventData} */ ( event );
+                const group = this.config.groups[ gdeEvent.groupId ];
                 if ( group && Util.isBitSet( group.flags, Enums.MarkerGroupFlags.Collectible_GlobalGroup ) ) {
-                    this._updateGlobalDismissal( event.groupId, event.state );
+                    this._updateGlobalDismissal( gdeEvent.groupId, gdeEvent.state );
                 }
                 break;
             }
@@ -343,8 +396,10 @@ class DataMap extends EventEmitter {
     }
 
 
-    /*
+    /**
      * Opens a marker's popup if the UID matches the `marker` query parameter
+     *
+     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
      */
     openPopupIfUriMarker( leafletMarker ) {
         if ( this.markerIdToAutoOpen !== null && Util.getMarkerId( leafletMarker ) === this.markerIdToAutoOpen ) {
@@ -354,11 +409,14 @@ class DataMap extends EventEmitter {
     }
 
 
-    /*
+    /**
      * Returns a Leaflet icon object for marker layers. All access is cached.
      *
      * Group icon is used if there is no layer overriding it. However, if there is one, first such layer is used and rest are
      * discarded.
+     *
+     * @param {string[]} layers
+     * @return {LeafletModule.Icon?}
     */
     getIconFromLayers( layers ) {
         const markerType = layers.join( ' ' );
@@ -399,9 +457,9 @@ class DataMap extends EventEmitter {
      *
      * Produces a `markerReady(Marker)` event. This event should be used sparingly whenever there's a possibility for a hot-path.
      *
-     * @param {Array} layers
+     * @param {string[]} layers
      * @param {DataMaps.ApiMarkerInstance} instance
-     * @param {Object?} [properties]
+     * @param {DataMaps.RuntimeMarkerProperties?} [properties]
      * @return {LeafletModule.CircleMarker|LeafletModule.Marker} A Leaflet marker instance.
      */
     createMarkerFromApiInstance( layers, instance, properties ) {
@@ -467,9 +525,9 @@ class DataMap extends EventEmitter {
      * Creates a Leaflet marker instance with given layers, position and API state object.
      *
      * @param {string[]} layers Array of string layer names.
-     * @param {Array} position Point to place the marker at.
-     * @param {Object?} [state] Optional object with fields: label, desc, image, article, search.
-     * @param {Object?} [properties] Optional object with arbitrary fields.
+     * @param {LeafletModule.PointTuple} position Point to place the marker at.
+     * @param {DataMaps.IApiMarkerState?} [state] Optional object with fields: label, desc, image, article, search.
+     * @param {DataMaps.RuntimeMarkerProperties?} [properties] Optional object with arbitrary fields.
      * @return {LeafletModule.CircleMarker|LeafletModule.Marker} Leaflet marker instance.
      */
     createMarker( layers, position, state, properties ) {
@@ -556,7 +614,7 @@ class DataMap extends EventEmitter {
      *
      * @param {string} anchor Anchor selector (common ones are found in DataMap.anchors).
      * @param {jQuery} $element DOM node of the custom control.
-     * @param {boolean} shouldPrepend Whether to add the control to the beginning of the anchor.
+     * @param {boolean} [shouldPrepend] Whether to add the control to the beginning of the anchor.
      * @return {jQuery} $element for chaining.
      */
     addControl( anchor, $element, shouldPrepend ) {
@@ -574,8 +632,8 @@ class DataMap extends EventEmitter {
 
 
     /**
-     * @param {Object} overlay
-     * @return {Leaflet.Rectangle|Leaflet.Polyline|Leaflet.ImageOverlay}
+     * @param {DataMaps.Configuration.BackgroundOverlay} overlay
+     * @return {LeafletModule.Rectangle|LeafletModule.Polyline|LeafletModule.ImageOverlay}
      */
     buildBackgroundOverlayObject( overlay ) {
         let result;
@@ -678,6 +736,10 @@ class DataMap extends EventEmitter {
     }
 
 
+    /**
+     * @param {jQuery} $holder Container for the Leaflet map.
+     * @private
+     */
     _initialiseLeaflet( $holder ) {
         // If FF_DISABLE_ZOOM is set, prevent all kind of zooming
         if ( this.isFeatureBitSet( MapFlags.DisableZoom ) ) {
@@ -742,7 +804,7 @@ class DataMap extends EventEmitter {
         leafletConfig.renderer = new Leaflet.Canvas( leafletConfig.rendererSettings );
 
         // Initialise the Leaflet map
-        this.leaflet = new Leaflet.Map( $holder.get( 0 ), leafletConfig );
+        this.leaflet = new Leaflet.Map( /** @type {HTMLElement!} */ ( $holder.get( 0 ) ), leafletConfig );
 
         // Prepare all backgrounds
         this.config.backgrounds.forEach( ( background, index ) => this._initialiseBackground( background, index ) );
@@ -811,6 +873,14 @@ class DataMap extends EventEmitter {
     }
 
 
+    /**
+     * @private
+     * @param {jQuery} $parent
+     * @param {string} title
+     * @param {string} icon
+     * @param {string?} [cssClass]
+     * @return {jQuery}
+     */
     _makeControlButton( $parent, title, icon, cssClass ) {
         return $( `<a role="button" aria-disabled="false"><span class="oo-ui-icon-${icon}"></span></a>` )
             .attr( {
@@ -822,6 +892,9 @@ class DataMap extends EventEmitter {
     }
 
 
+    /**
+     * @private
+     */
     _buildControls() {
         // Create a button to toggle the legend on small screens
         this.$legendPopupBtn = this.addControl( DataMap.anchors.topLeft,
