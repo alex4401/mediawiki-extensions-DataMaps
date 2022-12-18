@@ -192,6 +192,7 @@
 			"es6": true,
 			"dependencies": [
 				"oojs-ui-core",
+				"oojs-ui-widgets",
 				"ext.datamaps.core",
 				"ext.datamaps.bootstrap",
 				"ext.datamaps.leaflet",

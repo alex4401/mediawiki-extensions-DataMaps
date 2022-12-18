@@ -13,16 +13,14 @@ class MarkerSearch {
         this.displayIndex = null;
         this.isLinked = isLinked;
 
-        this.map.on( 'markerFilteringPanel', () => {
-            this.map.on( 'leafletLoaded', () => {
-                this._initialiseUI();
+        this.map.on( 'leafletLoaded', () => {
+            this._initialiseUI();
 
-                this._setDisplayIndex( this.isLinked ? this.ownedIndex.parent : this.ownedIndex );
-                this.addExistingMarkersToOwnIndex();
+            this._setDisplayIndex( this.isLinked ? this.ownedIndex.parent : this.ownedIndex );
+            this.addExistingMarkersToOwnIndex();
 
-                this.map.on( 'markerReady', this.addMarker, this );
-                this.map.on( 'chunkStreamingDone', this.onChunkStreamed, this );
-            } );
+            this.map.on( 'markerReady', this.addMarker, this );
+            this.map.on( 'chunkStreamingDone', this.onChunkStreamed, this );
         } );
     }
 

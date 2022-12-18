@@ -130,6 +130,7 @@ class DataMap extends EventEmitter {
         if ( !this.isFeatureBitSet( MapFlags.VisualEditor ) && this.isFeatureBitSet( MapFlags.Search ) ) {
             mw.loader.using( [
                 'oojs-ui-core',
+                'oojs-ui-widgets',
                 'ext.datamaps.search'
             ] );
         }
