@@ -80,6 +80,7 @@ module.exports = class MarkerStreamingManager {
                         properties[ key ] = value;
                     }
                 }
+                properties = Object.freeze( properties );
             }
 
             // Create markers for instances
