@@ -178,14 +178,12 @@ class MarkerGroupSpec extends DataModel {
                 $this->checkField( $status, 'size', DataModel::TYPE_DIMENSIONS );
                 break;
             case self::DM_PIN:
-                if ( ExtensionConfig::isBleedingEdge() ) {
-                    $this->checkField( $status, [
-                        'name' => 'pinColor',
-                        'type' => DataModel::TYPE_COLOUR3,
-                        'required' => true
-                    ] );
-                    $this->checkField( $status, 'size', DataModel::TYPE_NUMBER );
-                }
+                $this->checkField( $status, [
+                    'name' => 'pinColor',
+                    'type' => DataModel::TYPE_COLOUR3,
+                    'required' => true
+                ] );
+                $this->checkField( $status, 'size', DataModel::TYPE_NUMBER );
                 break;
             case self::DM_UNKNOWN:
                 $status->fatal( 'datamap-error-validatespec-group-no-display', wfEscapeWikiText( $this->id ) );
