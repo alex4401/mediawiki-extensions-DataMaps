@@ -584,6 +584,7 @@ class DataMap extends EventEmitter {
             // Construct an image
             // eslint-disable-next-line es-x/no-array-string-prototype-at
             result = new Leaflet.ImageOverlay( overlay.image, this.translateBox( overlay.at ), {
+                decoding: 'async',
                 // Expand the DOM element's width and height by 0.5 pixels. This helps with gaps between tiles.
                 antiAliasing: overlay.aa ? 0.5 : 0
             } );
@@ -794,6 +795,7 @@ class DataMap extends EventEmitter {
         background.at = background.at || this.config.crs;
         if ( background.image ) {
             background.layers.push( new Leaflet.ImageOverlay( background.image, this.translateBox( background.at ), {
+                decoding: 'async',
                 // Expand the DOM element's width and height by 0.5 pixels. This helps with gaps between tiles.
                 antiAliasing: 0.5
             } ) );
