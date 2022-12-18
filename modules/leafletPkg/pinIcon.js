@@ -22,9 +22,15 @@ module.exports = Leaflet.DivIcon.extend( {
         const root = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' );
         root.setAttribute( 'viewBox', '0 0 20 20' );
         const path = document.createElementNS( 'http://www.w3.org/2000/svg', 'path' );
-        path.setAttribute( 'd', 'M10 0a7.65 7.65 0 0 0-8 8c0 2.52 2 5 3 6s5 6 5 6 4-5 5-6 3-3.48 3-6a7.65 7.65 0 0 0-8-8zm0 '
-            + '11.25A3.25 3.25 0 1 1 13.25 8 3.25 3.25 0 0 1 10 11.25z' );
+        path.setAttribute( 'd', 'M 10,0 C 5.4971441,-0.21118927 1.7888107,3.4971441 2,8 c 0,2.52 2,5 3,6 1,1 5,6 5,6 0,0 4,-5 5,'
+            + '-6 1,-1 3,-3.48 3,-6 0.211189,-4.5028559 -3.497144,-8.21118927 -8,-8 z' );
+        const circle = document.createElementNS( 'http://www.w3.org/2000/svg', 'circle' );
+        circle.setAttribute( 'cx', '10' );
+        circle.setAttribute( 'cy', '8' );
+        circle.setAttribute( 'r', '3.3' );
+        circle.style.fill = '#0009';
         root.appendChild( path );
+        root.appendChild( circle );
 
         return root;
     }
