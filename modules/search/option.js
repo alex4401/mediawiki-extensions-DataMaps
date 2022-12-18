@@ -20,11 +20,18 @@ function MenuOptionWidget( config ) {
     const icon = this.data.leafletMarker instanceof Leaflet.Ark.IconMarker
         ? this.data.map.getIconFromLayers( this.data.leafletMarker.attachedLayers ) : null;
     if ( icon ) {
-        this.$arkIcon = $( '<img width=16 height=16 />' )
-            .attr( {
-                src: icon.options.iconUrl
-            } )
-            .prependTo( this.$label );
+        if ( icon instanceof Leaflet.Ark.PinIcon ) {
+            this.$arkIcon = $( mw.dataMaps.Util.createPinIconElement( icon.options.colour ) ).attr( {
+                width: 16,
+                height: 16
+            } );
+        } else {
+            this.$arkIcon = $( '<img width=16 height=16 />' )
+                .attr( {
+                    src: icon.options.iconUrl
+                } );
+        }
+        this.$arkIcon.prependTo( this.$label );
     }
 }
 OO.inheritClass( MenuOptionWidget, OO.ui.MenuOptionWidget );
