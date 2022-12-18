@@ -144,15 +144,7 @@ class MarkerSearch {
         this.close();
         this.inputBox.setValue( '', true );
         setTimeout( () => {
-            const properties = item.data.leafletMarker.assignedProperties;
-            if ( properties && properties.bg !== undefined ) {
-                const backgroundIndex = item.data.map.config.backgrounds.findIndex( x => x.layer === properties.bg );
-                if ( backgroundIndex >= -1 ) {
-                    item.data.map.setCurrentBackground( backgroundIndex );
-                }
-            }
-
-            item.data.leafletMarker.openPopup();
+            item.map.openMarkerPopup( item.data.leafletMarker );
             if ( item.$tab ) {
                 item.$tab.get( 0 ).click();
             }

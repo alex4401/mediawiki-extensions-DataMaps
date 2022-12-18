@@ -347,7 +347,7 @@ class DataMap extends EventEmitter {
      */
     openPopupIfUriMarker( leafletMarker ) {
         if ( this.markerIdToAutoOpen !== null && Util.getMarkerId( leafletMarker ) === this.markerIdToAutoOpen ) {
-            leafletMarker.openPopup();
+            this.openMarkerPopup( leafletMarker );
             this.off( 'markerReady', this.openPopupIfUriMarker );
         }
     }
@@ -473,6 +473,22 @@ class DataMap extends EventEmitter {
      */
     createMarker( layers, position, state, properties ) {
         return this.createMarkerFromApiInstance( layers, [ position[ 0 ], position[ 1 ], state ], properties );
+    }
+
+
+    /**
+     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     */
+    openMarkerPopup( leafletMarker ) {
+        const properties = leafletMarker.assignedProperties;
+        if ( properties && properties.bg !== undefined ) {
+            const backgroundIndex = this.config.backgrounds.findIndex( x => x.layer === properties.bg );
+            if ( backgroundIndex >= -1 ) {
+                this.setCurrentBackground( backgroundIndex );
+            }
+        }
+
+        leafletMarker.openPopup();
     }
 
 
