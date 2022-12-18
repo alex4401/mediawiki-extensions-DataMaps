@@ -165,7 +165,7 @@ module.exports = {
          */
         getOwningId( $element ) {
             const $panel = module.exports.TabberNeue.getOwningPanel( $element );
-            return $panel ? ( $panel.attr( 'id' ) || ( $panel.attr( 'data-title' ) || $panel.attr( 'title' ) )
+            return $panel ? ( $panel.attr( 'id' ) || ( $panel.attr( 'data-title' ) )
                 .replace( ' ', '_' ) ) : null;
         }
     }

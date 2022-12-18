@@ -84,20 +84,42 @@ class MarkerSearch {
     _acceptOptions( items ) {
         const widgets = [];
         for ( const item of items ) {
-            widgets.push( new MenuOptionWidget( {
-                // Reference to index entry
-                data: item,
-                // Query backing info
-                keywords: item.keywords,
-                // Display
-                label: new OO.ui.HtmlSnippet( item.label ),
-                badge: this.isLinked ? Util.TabberNeue.getOwningPanel( item.map.$root ).attr( 'title' ) : null,
-                badgeCurrent: item.map === this.map,
-                $tab: this.isLinked && item.map !== this.map ? Util.TabberNeue.getOwningTabber( item.map.$root )
-                    .find( '#' + Util.TabberNeue.getOwningPanel( item.map.$root ).attr( 'aria-labelledby' ) ) : null
-            } ) );
+            widgets.push( new MenuOptionWidget( this._getItemInfo( item ) ) );
         }
         this.menu.addItems( widgets );
+    }
+
+
+    _getItemInfo( item ) {
+        return {
+            // Reference to index entry
+            data: item,
+            // Query backing info
+            keywords: item.keywords,
+            // Display
+            label: new OO.ui.HtmlSnippet( item.label ),
+            badge: this._getItemBadge( item ),
+            badgeCurrent: item.map === this.map,
+            $tab: this.isLinked && item.map !== this.map ? Util.TabberNeue.getOwningTabber( item.map.$root )
+                .find( '#' + Util.TabberNeue.getOwningPanel( item.map.$root ).attr( 'aria-labelledby' ) ) : null
+        };
+    }
+
+
+    _getItemBadge( item ) {
+        if ( this.isLinked ) {
+            return Util.TabberNeue.getOwningPanel( item.map.$root ).attr( 'data-title' );
+        }
+
+        const properties = item.leafletMarker.assignedProperties;
+        if ( properties && properties.bg !== undefined ) {
+            const background = item.map.config.backgrounds.find( x => x.layer === properties.bg );
+            if ( background ) {
+                return background.name;
+            }
+        }
+
+        return null;
     }
 
 
