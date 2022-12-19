@@ -39,13 +39,31 @@ module.exports = class EditableMarkerPopup extends MarkerPopup {
     
     buildTools() {
         this.articleLinkTarget = new mw.widgets.TitleInputWidget( {
-            namespace: 0,
-            value: this.slots.article || this.markerGroup.article
+            namespace: 0
         } );
         this.articleLinkText = new OO.ui.TextInputWidget( {
             type: 'text',
             placeholder: mw.msg( 'datamap-popup-related-article' )
         } );
+
+        if ( this.slots.article ) {
+            if ( this.slots.article.indexOf( '|' ) >= 0 ) {
+                const split = this.slots.article.split( '|', 2 );
+                this.articleLinkTarget.setValue( split[ 0 ] );
+                this.articleLinkText.setValue( split[ 1 ] );
+            } else {
+                this.articleLinkTarget.setValue( this.slots.article );
+            }
+        } else if ( this.markerGroup.article ) {
+            if ( this.markerGroup.article.indexOf( '|' ) >= 0 ) {
+                const split = this.markerGroup.article.split( '|', 2 );
+                this.articleLinkTarget.setPlaceholder( split[ 0 ] );
+                this.articleLinkText.setPlaceholder( split[ 1 ] );
+            } else {
+                this.articleLinkTarget.setPlaceholder( this.markerGroup.article );
+            }
+        }
+        
         this.$seeMore = this.addTool( 'datamap-popup-seemore', new OO.ui.PopupButtonWidget( {
             label: mw.msg( 'datamap-popup-related-article' ),
             flags: [ 'progressive' ],
@@ -64,21 +82,23 @@ module.exports = class EditableMarkerPopup extends MarkerPopup {
             }
         } ).$element );
 
-        /*if ( article ) {
-            let msg = mw.msg( 'datamap-popup-related-article' );
-            if ( article.indexOf( '|' ) >= 0 ) {
-                const split = article.split( '|', 2 );
-                msg = split[ 1 ];
-                article = split[ 0 ];
-            }
-
-        }*/
-
         return this.$tools;
     }
 
 
     _onPropertyChange() {
+        this.slots.label = this.label.getValue();
+        this.slots.desc = this.description.getValue();
 
+        let articleValue = this.articleLinkTarget.getValue();
+        if ( ( !articleValue || articleValue.length === 0 ) && this.slots.article !== undefined ) {
+            delete this.slots.article;
+        } else {
+            if ( this.articleLinkText.getValue() ) {
+                articleValue += `|${this.articleLinkText.getValue()}`;
+            }
+
+            this.slots.article = articleValue;
+        }
     }
 };

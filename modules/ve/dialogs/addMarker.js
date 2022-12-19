@@ -1,6 +1,7 @@
 function AddMarkerDialog( config ) {
     OO.ui.ProcessDialog.call( this, config );
     this.ve = config.ve;
+    this.config = config;
 }
 OO.inheritClass( AddMarkerDialog, OO.ui.ProcessDialog );
 
@@ -45,15 +46,15 @@ AddMarkerDialog.prototype.initialize = function () {
         verticalPosition: 'below',
         width: '100%'
     } );
-    this.groupMenu.$element.appendTo( this.inputBox.$element );
-    // TODO: calculate the centre from CRS
+    // TODO: values unscaled by CRS
+    const contentCentre = this.ve.map.getCurrentContentBounds().getCenter();
     this.lat = new OO.ui.TextInputWidget( {
         type: 'number',
-        value: 50
+        value: this.config.lat || contentCentre.lat
     } );
     this.lon = new OO.ui.TextInputWidget( {
         type: 'number',
-        value: 50
+        value: this.config.lon || contentCentre.lng
     } );
     this.submitButton = new OO.ui.ButtonInputWidget( {
         label: mw.msg( 'datamap-ve-create' ),
@@ -92,6 +93,8 @@ AddMarkerDialog.prototype.initialize = function () {
             } )
         ]
     } );
+
+    this.groupMenu.$element.appendTo( this.inputBox.$element );
 
     this.initialiseGroupOptions();
 

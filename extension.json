@@ -246,6 +246,7 @@
 				"ve/editablePopup.js",
 				"ve/veControl.js",
 				"ve/widgets/markerGroupEditor.js",
+				"ve/tools/dialogTool.js",
 				"ve/tools/commit.js",
 				"ve/tools/sourceEditor.js",
 				"ve/tools/addMarker.js",
@@ -253,7 +254,8 @@
 				"ve/dialogs/confirmDelete.js",
 				"ve/dialogs/addMarker.js",
 				"ve/dialogs/editMarker.js",
-				"ve/dialogs/betaWarning.js"
+				"ve/dialogs/betaWarning.js",
+				"ve/dialogs/switchSource.js"
 			],
 			"styles": [
 				"ve/css/placeholder.less",

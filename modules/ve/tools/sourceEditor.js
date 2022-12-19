@@ -1,19 +1,14 @@
+const DialogTool = require( './dialogTool.js' ),
+    SwitchToSourceDialog = require( '../dialogs/switchSource.js' );
+
+
 function SourceEditorTool( toolGroup, config ) {
-    OO.ui.Tool.call( this, toolGroup, config );
+    DialogTool.call( this, toolGroup, config, SwitchToSourceDialog );
 }
-OO.inheritClass( SourceEditorTool, OO.ui.Tool );
+OO.inheritClass( SourceEditorTool, DialogTool );
 SourceEditorTool.static.name = 'sourceEditor';
 SourceEditorTool.static.icon = 'code';
 SourceEditorTool.static.title = mw.msg( 'datamap-ve-tool-source-editor' );
-
-
-SourceEditorTool.prototype.onSelect = function () {
-};
-
-
-SourceEditorTool.prototype.onUpdateState = function ( event ) {
-    this.ve = event.ve;
-};
 
 
 module.exports = SourceEditorTool;
