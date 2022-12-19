@@ -858,6 +858,9 @@ class DataMap extends EventEmitter {
                 $( '<option>' ).attr( 'value', index ).text( background.name ).appendTo( this.$backgroundSwitch );
             } );
             this.$backgroundSwitch.val( this.backgroundIndex );
+            this.on( 'backgroundChange', () => {
+                this.$backgroundSwitch.val( this.backgroundIndex );
+            }, this );
         }
 
         // Extend zoom control to add buttons to reset or centre the view
