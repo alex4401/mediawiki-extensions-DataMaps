@@ -27,8 +27,12 @@ module.exports = Leaflet.Popup.extend( {
             this._content.buildButtons();
             this._content.build();
             this._content.buildTools();
-            // Push the tools onto the content
-            this._content.$tools.appendTo( this._content.$content );
+            // If tools are not empty, push them onto the content. Otherwise destroy the node and remove the reference.
+            if ( this._content.$tools.children().length > 0 ) {
+                this._content.$tools.appendTo( this._content.$content );
+            } else {
+                delete this._content.$tools;
+            }
         }
 
         // Call the update callback on the content manager
