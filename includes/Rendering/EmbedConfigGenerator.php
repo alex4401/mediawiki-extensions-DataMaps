@@ -199,6 +199,7 @@ class EmbedConfigGenerator {
 
         $result['image'] = DataMapFileUtils::getRequiredFile( $spec->getImageName() )->getURL();
         $result['at'] = $at;
+        $result['aa'] = 1;
         return $result;
     }
 

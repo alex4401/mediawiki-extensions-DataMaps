@@ -644,8 +644,8 @@ class DataMap extends EventEmitter {
             // eslint-disable-next-line es-x/no-array-string-prototype-at
             result = new Leaflet.ImageOverlay( overlay.image, this.translateBox( overlay.at ), {
                 decoding: 'async',
-                // Expand the DOM element's width and height by 0.5 pixels. This helps with gaps between tiles.
-                antiAliasing: overlay.aa ? 0.5 : 0
+                // Expand the DOM element's width and height by 0.51 pixels. This helps with gaps between tiles.
+                antiAliasing: overlay.aa ? 0.51 : 0
             } );
         } else if ( overlay.path ) {
             // Construct a polyline
