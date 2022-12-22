@@ -1,4 +1,7 @@
+/** @typedef {import( './map.js' )} DataMap */
 const Enums = require( './enums.js' );
+
+/** @type {LeafletModule?} */
 let Leaflet = null;
 
 
@@ -11,50 +14,63 @@ module.exports = {
     /**
      * Returns whether a bit is set in a bit field.
      *
-     * @param {number} a The field.
+     * @param {number|undefined?} a The field.
      * @param {number} b The bit.
      * @return {boolean}
      */
     isBitSet( a, b ) {
-        return a && ( a & b ) === b;
+        return !!a && ( a & b ) === b;
     },
 
 
     /**
      * Returns whether the bit mask masks any bit in a bit field.
      *
-     * @param {number} a The field.
+     * @param {number|undefined?} a The field.
      * @param {number} b The bit mask.
      * @return {boolean}
      */
     isAnyBitSet( a, b ) {
-        return a && ( a & b ) !== 0;
+        return !!a && ( a & b ) !== 0;
     },
 
 
     /**
      * Retrieves Leaflet exports if they've been loaded.
      *
-     * @return {Leaflet}
+     * @return {LeafletModule}
      */
     getLeaflet() {
         if ( Leaflet === null ) {
             Leaflet = require( 'ext.datamaps.leaflet' );
         }
-        return Leaflet;
+        return /** @type {LeafletModule} */ ( Leaflet );
     },
 
 
+    /**
+     * @param {DataMaps.Configuration.MarkerGroup} group
+     * @return {number}
+     */
     getGroupCollectibleType( group ) {
         return ( group.flags || 0 ) & Enums.MarkerGroupFlags.Collectible_Any;
     },
 
 
+    /**
+     * @param {DataMaps.Configuration.MarkerGroup} group
+     * @return {jQuery}
+     */
     createGroupIconElement( group ) {
-        return $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src', group.legendIcon );
+        return $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src',
+            /** @type {!string} */ ( group.legendIcon ) );
     },
 
 
+    /**
+     * @param {DataMaps.Configuration.PinMarkerGroup} group
+     * @return {jQuerySVG}
+     */
     createGroupPinIconElement( group ) {
         return $( this.createPinIconElement( group.pinColor ) ).attr( {
             class: 'datamap-legend-group-icon',
@@ -64,6 +80,10 @@ module.exports = {
     },
 
 
+    /**
+     * @param {DataMaps.Configuration.CircleMarkerGroup} group
+     * @return {jQuery}
+     */
     createGroupCircleElement( group ) {
         const size = Math.min( module.exports.MAX_GROUP_CIRCLE_SIZE, group.size + 4 );
         return $( '<div class="datamap-legend-circle">' ).css( {
@@ -77,6 +97,10 @@ module.exports = {
     },
 
 
+    /**
+     * @param {string} colour
+     * @return {SVGElement}
+     */
     createPinIconElement( colour ) {
         const root = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' );
         root.setAttribute( 'viewBox', '0 0 20 20' );
@@ -102,7 +126,7 @@ module.exports = {
     /**
      * Generates an identifier of a marker using type and coordinates.
      *
-     * @param {Leaflet.CircleMarker|Leaflet.Marker} leafletMarker Marker to get the identifier of.
+     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker Marker to get the identifier of.
      * @return {string}
      */
     getGeneratedMarkerId( leafletMarker ) {
@@ -115,7 +139,7 @@ module.exports = {
     /**
      * Retrieves an identifier of a marker to use with local storage or in permanent links.
      *
-     * @param {Leaflet.CircleMarker|Leaflet.Marker} leafletMarker Marker to get the identifier of.
+     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker Marker to get the identifier of.
      * @return {string|number}
      */
     getMarkerId( leafletMarker ) {
@@ -139,8 +163,8 @@ module.exports = {
     /**
      * Constructs a URL with specified parameters (appended) and keeps TabberNeue's hash.
      *
-     * @param {DataMap} map 
-     * @param {Object} paramsToSet 
+     * @param {DataMap} map
+     * @param {Object<string, string|number|null>} paramsToSet
      * @param {boolean} [withHost]
      * @return {string}
      */
@@ -149,7 +173,7 @@ module.exports = {
         const params = new URLSearchParams( window.location.search );
         for ( const paramName in paramsToSet ) {
             if ( paramsToSet[ paramName ] ) {
-                params.set( paramName, paramsToSet[ paramName ] );
+                params.set( paramName, `${paramsToSet[ paramName ]}` );
             } else {
                 params.delete( paramName );
             }
@@ -166,8 +190,8 @@ module.exports = {
     /**
      * Replaces current URL in the browser with a new URL with specified parameters and preserved TabberNeue hash.
      *
-     * @param {DataMap} map 
-     * @param {Object} paramsToSet 
+     * @param {DataMap} map
+     * @param {Object<string, string|number|null>} paramsToSet
      */
     updateLocation( map, paramsToSet ) {
         history.replaceState( {}, '', module.exports.makeUrlWithParams( map, paramsToSet, false ) );
@@ -175,6 +199,10 @@ module.exports = {
 
 
     TabberNeue: {
+        /**
+         * @param {jQuery} $element
+         * @return {jQuery?}
+         */
         getOwningPanel( $element ) {
             // TODO: use native functions
             const $panel = $element.closest( 'article.tabber__panel' );
@@ -182,6 +210,10 @@ module.exports = {
         },
 
 
+        /**
+         * @param {jQuery} $element
+         * @return {jQuery?}
+         */
         getOwningTabber( $element ) {
             const $tabber = $element.closest( 'div.tabber' );
             return $tabber && $tabber.length > 0 ? $tabber : null;
@@ -196,8 +228,7 @@ module.exports = {
          */
         getOwningId( $element ) {
             const $panel = module.exports.TabberNeue.getOwningPanel( $element );
-            return $panel ? ( $panel.attr( 'id' ) || ( $panel.attr( 'data-title' ) )
-                .replace( ' ', '_' ) ) : null;
+            return $panel ? ( $panel.attr( 'id' ) || $panel.attr( 'data-title' ).replace( ' ', '_' ) ) : null;
         }
     }
 };

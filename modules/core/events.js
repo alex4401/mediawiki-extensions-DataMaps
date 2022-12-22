@@ -12,7 +12,7 @@ module.exports = class EventEmitter {
     constructor() {
         /** @type {Object<string, EventHandlerRef[]>} */
         this._handlers = {};
-        /** @type {Object<string, any[]} */
+        /** @type {Object<string, any[]>} */
         this._autoFiringEvents = {};
     }
 
@@ -100,7 +100,6 @@ module.exports = class EventEmitter {
             return;
         }
 
-        // eslint-disable-next-line compat/compat
         const args = Object.values( arguments ).slice( 1 );
         for ( const handler of this._handlers[ event ] ) {
             this._invokeEventHandler( handler, args );
@@ -115,7 +114,6 @@ module.exports = class EventEmitter {
      * @param {T} event Event name.
      */
     fireMemorised( event ) {
-        // eslint-disable-next-line compat/compat
         this._autoFiringEvents[ event ] = Object.values( arguments ).slice( 2 );
         // @ts-ignore
         this.fire.apply( this, [ event ].concat( this._autoFiringEvents[ event ] ) );

@@ -15,13 +15,13 @@ module.exports = class MarkerLayerManager {
         /**
          * Collection of all bound markers.
          *
-         * @type {LeafletModule.CircleMarker[]|LeafletModule.Marker[]}
+         * @type {( LeafletModule.CircleMarker|LeafletModule.Marker )[]}
          */
         this.markers = [];
         /**
          * Map of markers by layer.
          *
-         * @type {Object<string, LeafletModule.CircleMarker[]|LeafletModule.Marker[]>}
+         * @type {Object<string, ( LeafletModule.CircleMarker|LeafletModule.Marker )[]>}
          */
         this.byLayer = {};
         /**

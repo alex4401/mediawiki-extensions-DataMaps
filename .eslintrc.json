@@ -41,7 +41,8 @@
         "jsdoc/no-undefined-types": [ "error", {
             "definedTypes": [
                 "LeafletModule",
-                "DataMaps"
+                "DataMaps",
+                "jQuerySVG"
             ]
         } ]
 	},

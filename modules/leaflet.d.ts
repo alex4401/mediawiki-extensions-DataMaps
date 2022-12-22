@@ -1,9 +1,9 @@
 declare namespace LeafletModule {
     class LatLng {
         constructor(latitude: number, longitude: number, altitude?: number);
-        equals(otherLatLng: LatLngExpression, maxMargin?: number): boolean;
+        equals(otherLatLng: LatLngLike, maxMargin?: number): boolean;
         toString(): string;
-        distanceTo(otherLatLng: LatLngExpression): number;
+        distanceTo(otherLatLng: LatLngLike): number;
         wrap(): LatLng;
         toBounds(sizeInMeters: number): LatLngBounds;
         clone(): LatLng;
@@ -16,13 +16,16 @@ declare namespace LeafletModule {
 
     type PointTuple = [ number, number ];
     type LatLngTuple = [ number, number ];
-    type LatLngExpression = LatLng | LatLngTuple;
+    type LatLngLike = LatLng | LatLngTuple;
+    /** @deprecated */
+    type LatLngExpression = LatLngLike;
 
 
     class LatLngBounds {
-        constructor(southWest: LatLngExpression, northEast: LatLngExpression);
-        constructor(latlngs: LatLngBounds);
-        extend(latlngOrBounds: LatLngExpression | LatLngBoundsTuple): this;
+        constructor();
+        constructor( southWest: LatLngLike, northEast: LatLngLike );
+        constructor( latlngs: LatLngBounds );
+        extend(latlngOrBounds: LatLngLike | LatLngBounds | LatLngBoundsTuple): this;
         pad(bufferRatio: number): LatLngBounds;
         getCenter(): LatLng;
         getSouthWest(): LatLng;
@@ -33,7 +36,7 @@ declare namespace LeafletModule {
         getSouth(): number;
         getEast(): number;
         getNorth(): number;
-        contains(otherBoundsOrLatLng: LatLngBoundsTuple | LatLngExpression): boolean;
+        contains(otherBoundsOrLatLng: LatLngBoundsTuple | LatLngLike): boolean;
         intersects(otherBounds: LatLngBoundsTuple): boolean;
         overlaps(otherBounds: LatLngBoundsTuple): boolean;
         toBBoxString(): string;
@@ -43,13 +46,22 @@ declare namespace LeafletModule {
 
 
     type LatLngBoundsTuple = [ LatLngTuple, LatLngTuple ];
+    type LatLngBoundsLike = LatLngBoundsTuple | LatLngBounds;
 
 
     namespace Ark {
+        interface PinIconOptions {
+            colour: string;
+            iconSize: PointTuple;
+        }
+
         class CircleMarker extends LeafletModule.CircleMarker {}
         class IconMarker extends LeafletModule.Marker {}
         class Popup extends LeafletModule.Popup {}
         class InteractionControl extends LeafletModule.Handler {}
+        class PinIcon extends LeafletModule.Icon {
+            constructor( options: PinIconOptions );
+        }
 
         interface IPopupRenderer {
             shouldKeepAround(): boolean;
@@ -67,11 +79,36 @@ declare namespace LeafletModule {
         
     }
 
+    interface IconOptions {
+        iconUrl: string;
+        iconSize: PointTuple;
+    }
+
     interface CanvasOptions {
         padding: number;
     }
 
     interface PopupOptions {}
+
+    interface MarkerOptions {
+        icon: Icon;
+    }
+
+    interface CircleMarkerOptions {
+        radius: number;
+        zoomScaleFactor?: number;
+        fillColor: string;
+        fillOpacity: number;
+        color: string;
+        weight: number;
+    }
+
+
+    interface ImageOverlayOptions {
+        className?: string;
+        decoding?: 'auto' | 'sync' | 'async';
+        antiAliasing?: number;
+    }
 
 
     class Class {
@@ -82,8 +119,19 @@ declare namespace LeafletModule {
     class Layer {
         _map?: Map;
 
+        getLatLng(): LatLng;
         addTo(map: Map): this;
+        remove(): this;
+        bringToBack(): this;
         bindPopup( fn: () => Ark.IPopupRenderer, options: PopupOptions, classOverride: typeof Popup ): this;
+        openPopup(): this;
+        bindTooltip( text: string ): this;
+    }
+
+    type LayerMap = { [key: number]: Layer };
+
+    interface IHasBoundsGetter {
+        getBounds(): LatLngBounds;
     }
 
 
@@ -93,10 +141,18 @@ declare namespace LeafletModule {
         addLayer(layer: Layer): this;
         removeLayer(layer: Layer): this;
         addHandler(name: string, handlerClass: typeof Handler): this;
+        closePopup(): void;
+        getZoom(): number;
+        setZoom( zoom: number ): this;
+        fitBounds( bounds: LatLngBounds ): this;
+        setView( center: LatLng, zoom?: number ): this;
 
         on( types: string, fn: Function, context?: object ): void;
+        off( types: string, fn: Function, context?: object ): void;
 
         _haveLayersMutated: boolean;
+        _layers: LayerMap;
+        options: MapOptions;
     }
 
     class Handler {
@@ -107,13 +163,20 @@ declare namespace LeafletModule {
 
     class Popup {}
 
-    class Icon {}
+    class Icon {
+        constructor( options: IconOptions );
+    }
 
     class Canvas extends Layer {
         constructor( options: CanvasOptions );
     }
 
     class CircleMarker extends Layer implements DataMaps.IHasRuntimeMarkerState {
+        constructor( position: LatLngLike, options: CircleMarkerOptions );
+
+        getBounds(): LatLngBounds;
+        setDismissed( value: boolean ): void;
+
         /* Fields internally used and set by the extension */
         apiInstance: DataMaps.ApiMarkerInstance;
         attachedLayers: string[];
@@ -121,13 +184,22 @@ declare namespace LeafletModule {
     }
 
     class Marker extends Layer implements DataMaps.IHasRuntimeMarkerState {
+        constructor( position: LatLngLike, options: MarkerOptions );
+        setDismissed( value: boolean ): void;
+
         /* Fields internally used and set by the extension */
         apiInstance: DataMaps.ApiMarkerInstance;
         attachedLayers: string[];
         assignedProperties: { [key: string]: string };
     }
 
-    class ImageOverlay extends Layer {}
-    class Polyline extends Layer {}
+    class ImageOverlay extends Layer {
+        constructor( url: string, bounds: LatLngBoundsLike, options: ImageOverlayOptions );
+
+        getBounds(): LatLngBounds;
+    }
+    class Polyline extends Layer {
+        getBounds(): LatLngBounds;
+    }
     class Rectangle extends Polyline {}
 }

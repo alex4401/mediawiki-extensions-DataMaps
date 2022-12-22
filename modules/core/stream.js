@@ -1,13 +1,26 @@
 /* eslint-disable compat/compat */
+/** @typedef {import( './map.js' )} DataMap */
 
 
+/**
+ * Requests data from the extension's API
+ */
 module.exports = class MarkerStreamingManager {
+    /**
+     * @param {DataMap} map Owning map.
+     */
     constructor( map ) {
         this.map = map;
         this.mwApi = new mw.Api();
     }
 
 
+    /**
+     * Retrieves data from the API. Default action is `queryDataMap`.
+     *
+     * @param {Object<string, string|number>} options
+     * @return {any}
+     */
     callApiUnreliable( options ) {
         return this.mwApi.get( $.extend( {
             action: 'queryDataMap'
@@ -18,6 +31,14 @@ module.exports = class MarkerStreamingManager {
     }
 
 
+    /**
+     * Retrieves data from the API, retrying a limited number of times until success assuming a single call may fail.
+     *
+     * @param {Object<string, string|number>} options
+     * @param {number} retries Number of re-attempts. Defaults to 3.
+     * @param {number} waitTime Wait time between retries, in milliseconds. Doubles on every attempt.
+     * @return {any}
+     */
     callApiReliable( options, retries, waitTime ) {
         retries = retries !== null ? retries : 2;
         waitTime = waitTime || 60;
@@ -28,8 +49,8 @@ module.exports = class MarkerStreamingManager {
                 .catch( reason => {
                     if ( retries > 0 ) {
                         // eslint-disable-next-line no-promise-executor-return
-                        return new Promise( r => setTimeout( r, waitTime ) )
-                            .then( this.callApiReliable.bind( this, options, retries - 1, waitTime ) )
+                        return new Promise( r => setTimeout( r, waitTime * 2 ) )
+                            .then( this.callApiReliable.bind( this, options, retries - 1, waitTime * 2 ) )
                             .then( resolve )
                             .catch( reject );
                     }
@@ -58,6 +79,13 @@ module.exports = class MarkerStreamingManager {
     }
 
 
+    /**
+     * Creates instances of markers from an API response.
+     *
+     * Properties are extracted from ownership strings, and frozen, as they're shared between all instances within a data set.
+     *
+     * @param {Object<string, DataMaps.UncheckedApiMarkerInstance[]>} data
+     */
     instantiateMarkers( data ) {
         // Register all layers in this package
         for ( const markerType in data ) {
@@ -69,6 +97,7 @@ module.exports = class MarkerStreamingManager {
         for ( const markerType in data ) {
             const layers = markerType.split( ' ' ),
                 placements = data[ markerType ];
+            /** @type {Object<string, string>?} */
             let properties = null;
 
             // Extract properties (sub-layers) from the layers

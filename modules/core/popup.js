@@ -86,6 +86,7 @@ module.exports = class MarkerPopup {
         }
 
         // Collect layer discriminators
+        /** @type {string[]} */
         const discrims = [];
         this.leafletMarker.attachedLayers.forEach( ( layerId, index ) => {
             const layer = this.map.config.layers[ layerId ];
