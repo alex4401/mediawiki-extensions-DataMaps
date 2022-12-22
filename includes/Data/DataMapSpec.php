@@ -60,6 +60,11 @@ class DataMapSpec extends DataModel {
         }
     }
 
+    /**
+     * If coordinate space spec is oriented [ lower lower upper upper ], assume top left corner as origin point (latitude will
+     * be flipped). If [ upper upper lower lower ], assume bottom left corner (latitude will be unchanged). Any other layout is
+     * invalid.
+     */
     public function getCoordinateReferenceSpace(): array {
         return isset( $this->raw->crs ) ? $this->raw->crs : self::DEFAULT_COORDINATE_SPACE;
     }

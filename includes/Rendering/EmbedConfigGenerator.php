@@ -60,9 +60,7 @@ class EmbedConfigGenerator {
         }
         $out['cOrder'] = $coordOrder = $this->data->getCoordinateOrder();
         // Coordinate transformation
-        if ( $this->data->getCoordinateReferenceSpace() != DataMapSpec::DEFAULT_COORDINATE_SPACE ) {
-            $out['crs'] = DataMapSpec::normaliseBoxCoordinates( $this->data->getCoordinateReferenceSpace(), $coordOrder );
-        }
+        $out['crs'] = DataMapSpec::normaliseBoxCoordinates( $this->data->getCoordinateReferenceSpace(), $coordOrder );
         // Feature management
         $bitmask = $this->getPublicFeatureBitMask();
         if ( $bitmask != 0 ) {

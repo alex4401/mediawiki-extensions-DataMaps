@@ -131,13 +131,12 @@ class DataMap extends EventEmitter {
             } );
         }
 
-        // Coordinate reference system
-        // If coordinate space spec is oriented [ lower lower upper upper ], assume top left corner as origin point (latitude
-        // will be flipped). If [ upper upper lower lower ], assume bottom left corner (latitude will be unchanged). Any other
-        // layout is invalid.
+        // Ensure the CRS field on the config is initialised.
+        // TODO: Drop in v0.15. Field is now enforced server-side.
         if ( !this.config.crs ) {
             this.config.crs = [ [ 0, 0 ], [ 100, 100 ] ];
         }
+
         /**
          * Coordinate origin.
          *
