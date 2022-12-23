@@ -288,7 +288,7 @@ class EmbedConfigGenerator {
 
         if ( $spec->getIconOverride() !== null ) {
             // Upsize by 50% to mitigate quality loss at max zoom
-            $size = floor( $out['size'][0] * 1.5 );
+            $size = floor( MarkerGroupSpec::DEFAULT_ICON_SIZE[0] * 1.5 );
             // Ensure it's a multiple of 2
             if ( $size % 2 !== 0 ) {
                 $size++;
