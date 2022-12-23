@@ -10,7 +10,8 @@ use Title;
 final class ParserFunction_EmbedDataMap {
     public static function run( Parser $parser ): array {
         $params = func_get_args();
-        array_shift( $params ); // we know the parser already
+        // We already know the parser
+        array_shift( $params );
 
         $title = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $params[0] );
         $content = DataMapContent::loadPage( $title );
@@ -21,6 +22,11 @@ final class ParserFunction_EmbedDataMap {
         } elseif ( $content === DataMapContent::LERR_NOT_DATAMAP ) {
             $msg = wfMessage( 'datamap-error-pf-page-invalid-content-model', wfEscapeWikiText( $title->getFullText() ) )
                 ->inContentLanguage()->escaped();
+            return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true ];
+        } elseif ( !$content->getValidationStatus()->isGood() ) {
+            $msg = wfMessage( 'datamap-error-pf-map-validation-fail', $title->getEditURL() )
+                ->inContentLanguage()->escaped();
+            $parser->addTrackingCategory( 'datamap-category-pages-including-broken-maps' );
             return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true ];
         }
 

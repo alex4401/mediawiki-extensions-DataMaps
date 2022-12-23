@@ -16,6 +16,7 @@
     "datamap-doc-page-header": "'''This is the documentation page for [[$1]]'''",
 
     "datamap-category-pages-including-maps": "Pages including data maps",
+    "datamap-category-pages-including-broken-maps": "Pages including data maps failing validation",
 
     "datamap-error-validate-check-docs": "Check the [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps extension's documentation] for information about the proper structure.",
     "datamap-error-validate-invalid-json": "This is not a valid JSON document.",
@@ -48,6 +49,7 @@
     "datamap-error-render-unsupported-displaymode": "Display mode $1 has been reported for a marker, but support is missing for it. This is a bug in the extension's code.",
     "datamap-error-pf-page-does-not-exist": "Data map page \"[[$1]]\" does not exist.",
     "datamap-error-pf-page-invalid-content-model": "Content model of page \"[[$1]]\" is not <code>Interactive Data Map</code>.",
+    "datamap-error-pf-map-validation-fail": "The data map no longer passes validation. Please [$1 fix the errors].",
     "datamap-error-cannot-preview-validation-errors": "<b>Edit preview not shown due to error(s) in map's source code:</b><br/>$1",
 
     "datamap-legend-label": "Contents",
