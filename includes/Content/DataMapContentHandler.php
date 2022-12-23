@@ -49,17 +49,24 @@ class DataMapContentHandler extends JsonContentHandler {
     protected function fillParserOutput( Content $content, ContentParseParams $cpoParams, ParserOutput &$parserOutput ) {
         '@phan-var DataMapContent $content';
 
-        if ( !$content->isValid() ) {
-            // FIXME:
-            $parserOutput->setText( 'Invalid JSON content' );
-            return;
-        }
-
         $pageRef = $cpoParams->getPage();
         $parserOptions = $cpoParams->getParserOptions();
-
         $shouldGenerateHtml = $cpoParams->getGenerateHtml();
         $isEditPreview = $parserOptions->getIsPreview();
+
+        // If validation fails, do not render the map embed
+        if ( !$content->getValidationStatus()->isGood() ) {
+            if ( $shouldGenerateHtml && $isEditPreview ) {
+                // Edit preview, display a message box. This is something MediaWiki should be handling out of box though.
+                $parserOutput->setText( $parserOutput->getRawText() . Html::errorBox(
+                    wfMessage( 'datamap-error-cannot-preview-validation-errors', $status->getMessage( false, false ) )
+                ) );
+            } else {
+                // No HTML requested, or we're not in a preview
+                $parserOutput->setText( null );
+            }
+            return;
+        }
 
         // Get documentation, if any
         $doc = self::getDocPage( $cpoParams->getPage() );
@@ -96,20 +103,6 @@ class DataMapContentHandler extends JsonContentHandler {
 
         // Render the map if it isn't a mix-in
         if ( !$content->isMixin() ) {
-            // If previewing an edit, run validation and end early on failure
-            if ( $shouldGenerateHtml && $isEditPreview ) {
-                $status = $content->getValidationStatus();
-                if ( !$status->isOK() ) {
-                    $parserOutput->setText( $parserOutput->getRawText() . Html::errorBox(
-                        wfMessage(
-                            'datamap-error-cannot-preview-validation-errors',
-                            $status->getMessage( false, false )
-                        )
-                    ) );
-                    return;
-                }
-            }
-
             // Initialise the embed renderer
             $parser = MediaWikiServices::getInstance()->getParser();
             $embed = $content->getEmbedRenderer( $pageRef, $parser, $parserOutput, [
