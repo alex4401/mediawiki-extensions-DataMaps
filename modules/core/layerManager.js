@@ -165,6 +165,7 @@ module.exports = class MarkerLayerManager {
     /**
      * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
      * @param {boolean} isInternalCall
+     * @fires DataMap#markerVisibilityUpdate
      * @return {void}
      */
     updateMember( leafletMarker, isInternalCall = false ) {
@@ -199,6 +200,7 @@ module.exports = class MarkerLayerManager {
 
     /**
      * @param {string?} [layerName]
+     * @fires DataMap#markerVisibilityUpdate
      */
     updateMembers( layerName ) {
         // Exit early if updates are disabled

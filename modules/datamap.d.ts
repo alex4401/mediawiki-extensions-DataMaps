@@ -113,20 +113,40 @@ declare namespace DataMaps {
     }
 
     namespace EventHandling {
-        type MapTypes = 'backgroundChange' | 'chunkStreamingDone' | 'linkedEvent' | 'markerVisibilityUpdate' | 'legendManager'
-            | 'markerReady' | 'leafletLoaded' | 'markerFilteringPanel' | 'markerDismissChange' | 'sendLinkedEvent'
-            | 'legendLoaded' | 'collectiblesPanel' | 'groupDismissChange' | 'chunkStreamed';
-        
-        type MapBackgroundChangeHandler = (  ) => void;
-    }
+        export type ListenerSignature = Record<string, (...args: any[]) => any>;
+
+        type MapListenerSignatures = {
+            'backgroundChange': MapBackgroundChangeListenerFn;
+            'chunkStreamingDone': EventListenerFn;
+            'chunkStreamed': ( markers: ( LeafletModule.CircleMarker|LeafletModule.Marker )[] ) => void;
+            'linkedEvent': LinkedEventListenerFn;
+            'sendLinkedEvent': LinkedEventListenerFn;
+            'markerVisibilityUpdate': EventListenerFn;
+            'legendManager': EventListenerFn;
+            'markerReady': ( marker: LeafletModule.CircleMarker|LeafletModule.Marker ) => void;
+            'leafletLoaded': EventListenerFn;
+            'legendLoaded': EventListenerFn;
+            'collectiblesPanel': EventListenerFn;
+            'markerFilteringPanel': EventListenerFn;
+            'markerDismissChange': ( marker: LeafletModule.CircleMarker|LeafletModule.Marker ) => void;
+            'groupDismissChange': ( groupId: string ) => void;
+        }
+
+        type EventListenerFn = () => void;
+        type MapBackgroundChangeListenerFn = ( index: number, config: Configuration.Background ) => void;
+        type LinkedEventListenerFn = ( event: LinkedEventData ) => void;
 
 
-    interface ILinkedEventData {
-        type: string;
-    }
+        interface IGenericLinkedEventData {
+            type: string;
+        }
+    
+        interface IGroupDismissChangeLinkedEventData extends IGenericLinkedEventData {
+            type: 'groupDismissChange';
+            groupId: string;
+            state: boolean;
+        }
 
-    interface IGroupDismissChangeLinkedEventData extends ILinkedEventData {
-        groupId: string;
-        state: boolean;
+        type LinkedEventData = IGenericLinkedEventData | IGroupDismissChangeLinkedEventData;
     }
 }

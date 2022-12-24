@@ -6,11 +6,14 @@
 
 
 /**
- * @template {string} T
+ * @abstract
+ * @template {DataMaps.EventHandling.ListenerSignature} Signatures
  */
 module.exports = class EventEmitter {
     constructor() {
-        /** @type {Record<string, EventHandlerRef[]>} */
+        /**
+         * @type {Record<string, EventHandlerRef[]>}
+         */
         this._handlers = {};
         /** @type {Record<string, any[]>} */
         this._autoFiringEvents = {};
@@ -23,8 +26,9 @@ module.exports = class EventEmitter {
      * If an event is set to fire immediately with memorised arguments, the handler will be invoked right away and won't
      * be enqueued for the next time.
      *
-     * @param {T} event
-     * @param {Function} callback
+     * @template {Extract<keyof Signatures, string>} EventId
+     * @param {EventId} event
+     * @param {Signatures[EventId]} callback
      * @param {any?} [context]
      */
     on( event, callback, context ) {
@@ -49,8 +53,9 @@ module.exports = class EventEmitter {
      * Deregisters all event handlers with the same callback. If no callback function is given, clears ALL handlers for
      * the event.
      *
-     * @param {T} event Event name.
-     * @param {Function?} [callback]
+     * @template {Extract<keyof Signatures, string>} EventId
+     * @param {EventId} event
+     * @param {Signatures[EventId]?} [callback]
      * @param {any?} [context]
      */
     off( event, callback, context ) {
@@ -93,16 +98,17 @@ module.exports = class EventEmitter {
     /**
      * Invokes all bound event handlers with given arguments.
      *
-     * @param {T} event Event name.
+     * @template {Extract<keyof Signatures, string>} EventId
+     * @param {EventId} event
+     * @param {Parameters<Signatures[EventId]>} params
      */
-    fire( event ) {
+    fire( event, ...params ) {
         if ( !this._handlers[ event ] ) {
             return;
         }
 
-        const args = Object.values( arguments ).slice( 1 );
         for ( const handler of this._handlers[ event ] ) {
-            this._invokeEventHandler( handler, args );
+            this._invokeEventHandler( handler, params );
         }
     }
 
@@ -111,10 +117,12 @@ module.exports = class EventEmitter {
      * Invokes all bound event handlers and saves given arguments to invoke any future handler right away. All handlers already
      * bound are invoked and dropped.
      *
-     * @param {T} event Event name.
+     * @template {Extract<keyof Signatures, string>} EventId
+     * @param {EventId} event
+     * @param {...Parameters<Signatures[EventId]>} params
      */
-    fireMemorised( event ) {
-        this._autoFiringEvents[ event ] = Object.values( arguments ).slice( 2 );
+    fireMemorised( event, ...params ) {
+        this._autoFiringEvents[ event ] = params;
         // @ts-ignore
         this.fire.apply( this, [ event ].concat( this._autoFiringEvents[ event ] ) );
         this.off( event );

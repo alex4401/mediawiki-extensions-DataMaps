@@ -17,7 +17,7 @@ let Leaflet = null;
 /**
  * A class that initialises, manages and represents a data map.
  *
- * @extends EventEmitter<DataMaps.EventHandling.MapTypes>
+ * @extends EventEmitter<DataMaps.EventHandling.MapListenerSignatures>
  */
 class DataMap extends EventEmitter {
     /**
@@ -257,7 +257,7 @@ class DataMap extends EventEmitter {
      * Runs the callback function when the Leaflet map is initialised. If you only need access to Leaflet's API, require module
      * `ext.datamaps.leaflet` instead with ResourceLoader.
      *
-     * @param {Function} callback Function to run when Leaflet map is initialised.
+     * @param {DataMaps.EventHandling.EventListenerFn} callback Function to run when Leaflet map is initialised.
      * @param {Object?} context Object to use as callback's context.
      * @deprecated since version 0.14.3, to be removed in 0.15.0. Bind to the leafletLoaded event instead.
      */
@@ -269,7 +269,7 @@ class DataMap extends EventEmitter {
     /**
      * Runs the callback function when the map legend is initialised.
      *
-     * @param {Function} callback Function to run when the legend is initialised.
+     * @param {DataMaps.EventHandling.EventListenerFn} callback Function to run when the legend is initialised.
      * @param {Object?} context Object to use as callback's context.
      * @deprecated since version 0.14.3, to be removed in 0.15.0. Bind to the markerFilteringPanel event instead.
      */
@@ -367,14 +367,14 @@ class DataMap extends EventEmitter {
      * Message delivery is handled by the bootstrap itself, and not maps.
      *
      * @protected
-     * @param {DataMaps.ILinkedEventData} event External event information.
+     * @param {DataMaps.EventHandling.LinkedEventData} event External event information.
      */
     _onLinkedEventReceived( event ) {
         switch ( event.type ) {
             // Sent when a global group's collected status changes. Data contains affected `groupId` and `state` after
             // changed.
             case 'groupDismissChange': {
-                const gdeEvent = /** @type {DataMaps.IGroupDismissChangeLinkedEventData} */ ( event );
+                const gdeEvent = /** @type {DataMaps.EventHandling.IGroupDismissChangeLinkedEventData} */ ( event );
                 const group = this.config.groups[ gdeEvent.groupId ];
                 if ( group && Util.isBitSet( group.flags, Enums.MarkerGroupFlags.Collectible_GlobalGroup ) ) {
                     this._updateGlobalDismissal( gdeEvent.groupId, gdeEvent.state );
