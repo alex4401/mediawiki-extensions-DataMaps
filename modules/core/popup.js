@@ -52,7 +52,10 @@ module.exports = class MarkerPopup {
         /** @type {!jQuery} */
         // @ts-ignore: Initialised by Leaflet.Ark.Popup, ideally we'd use null assertions here
         this.$content = null;
-        /** @type {!jQuery} */
+        /**
+         * @type {!jQuery}
+         * @deprecated To be renamed to $actions in v0.15.0.
+         */
         // @ts-ignore: Initialised by Leaflet.Ark.Popup, ideally we'd use null assertions here
         this.$tools = null;
 
@@ -78,7 +81,9 @@ module.exports = class MarkerPopup {
      * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
      */
     static bindTo( map, leafletMarker ) {
-        leafletMarker.bindPopup( () => new ( map.getPopupClass() )( map, leafletMarker ), {}, Util.getLeaflet().Ark.Popup );
+        leafletMarker.bindPopup( () => new ( map.getPopupClass() )( map, leafletMarker ), {
+            keepInView: true
+        }, Util.getLeaflet().Ark.Popup );
     }
 
 
@@ -175,17 +180,31 @@ module.exports = class MarkerPopup {
     /**
      * Initialises an action node.
      *
+     * @since 0.14.4
      * @param {string} cssClass
      * @param {jQuery} $child
      * @return {jQuery}
      */
-    addTool( cssClass, $child ) {
+    addAction( cssClass, $child ) {
         return $( `<li class="${cssClass}">` ).append( $child ).appendTo( this.$tools );
     }
 
 
     /**
+     * @deprecated Renamed to addAction in v0.14.4; to be removed in v0.15.0.
+     * @param {string} cssClass
+     * @param {jQuery} $child
+     * @return {jQuery}
+     */
+    addTool( cssClass, $child ) {
+        return this.addAction( cssClass, $child );
+    }
+
+
+    /**
      * Builds the action list of this popup.
+     *
+     * @deprecated To be renamed to buildActions in v0.15.0.
      */
     buildTools() {
         // Related article
@@ -198,7 +217,7 @@ module.exports = class MarkerPopup {
                 article = split[ 0 ];
             }
 
-            this.addTool( 'datamap-popup-seemore',
+            this.addAction( 'datamap-popup-seemore',
                 $( '<a>' ).attr( 'href', mw.util.getUrl( article ) ).text( msg ) );
         }
 
@@ -208,7 +227,7 @@ module.exports = class MarkerPopup {
                 this.map.toggleMarkerDismissal( this.leafletMarker );
                 this.map.leaflet.closePopup();
             } );
-            this.addTool( 'datamap-popup-dismiss', this.$dismiss );
+            this.addAction( 'datamap-popup-dismiss', this.$dismiss );
         }
     }
 

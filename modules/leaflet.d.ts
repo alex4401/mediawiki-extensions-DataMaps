@@ -65,10 +65,20 @@ declare namespace LeafletModule {
             shouldKeepAround(): boolean;
             buildButtons(): void;
             build(): void;
+            /**
+             * @deprecated To be renamed to buildActions in v0.15.0.
+             */
             buildTools(): void;
 
             onAdd(): void;
             onRemove(): void;
+
+            $buttons: JQuery<HTMLElement>;
+            $content: JQuery<HTMLElement>;
+            /**
+             * @deprecated To be renamed to $actions in v0.15.0.
+             */
+            $tools: JQuery<HTMLElement>;
         }
 
         type PopupContentRendererGetterFn = () => Ark.IPopupContentRenderer;
