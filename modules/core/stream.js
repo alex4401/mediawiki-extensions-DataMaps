@@ -18,8 +18,8 @@ module.exports = class MarkerStreamingManager {
     /**
      * Retrieves data from the API. Default action is `queryDataMap`.
      *
-     * @param {Object<string, string|number>} options
-     * @return {any}
+     * @param {Record<string, string|number>} options
+     * @return {JQuery.Promise<Record<string, any>>}
      */
     callApiUnreliable( options ) {
         return this.mwApi.get( $.extend( {
@@ -34,23 +34,25 @@ module.exports = class MarkerStreamingManager {
     /**
      * Retrieves data from the API, retrying a limited number of times until success assuming a single call may fail.
      *
-     * @param {Object<string, string|number>} options
-     * @param {number} retries Number of re-attempts. Defaults to 3.
-     * @param {number} waitTime Wait time between retries, in milliseconds. Doubles on every attempt.
-     * @return {any}
+     * @param {Record<string, string|number>} options
+     * @param {number?} [retries] Number of re-attempts. Defaults to 3.
+     * @param {number?} [waitTime] Wait time between retries, in milliseconds. Doubles on every attempt.
+     * @default retries 0
+     * @return {Promise<Record<string, any>>}
      */
     callApiReliable( options, retries, waitTime ) {
-        retries = retries !== null ? retries : 2;
+        retries = retries || retries === 0 ? retries : 2;
         waitTime = waitTime || 60;
         return new Promise( ( resolve, reject ) => {
             // eslint-disable-next-line no-promise-executor-return
             return this.callApiUnreliable( options )
                 .then( resolve )
                 .catch( reason => {
-                    if ( retries > 0 ) {
+                    if ( /** @type {number} */ ( retries ) > 0 ) {
                         // eslint-disable-next-line no-promise-executor-return
-                        return new Promise( r => setTimeout( r, waitTime * 2 ) )
-                            .then( this.callApiReliable.bind( this, options, retries - 1, waitTime * 2 ) )
+                        return new Promise( r => setTimeout( r, /** @type {number} */ ( waitTime ) * 2 ) )
+                            .then( this.callApiReliable.bind( this, options, /** @type {number} */ ( retries ) - 1,
+                                /** @type {number} */ ( waitTime ) * 2 ) )
                             .then( resolve )
                             .catch( reject );
                     }
@@ -60,18 +62,28 @@ module.exports = class MarkerStreamingManager {
     }
 
 
+    /**
+     * @param {number?} [pageId]
+     * @param {number?} [version]
+     * @param {string[]?} [filter]
+     * @param {number?} [start]
+     * @param {number?} [limit]
+     * @param {number?} [sector]
+     * @return {Promise<Record<string, any>>}
+     */
     requestChunk( pageId, version, filter, start, limit, sector ) {
         pageId = pageId || this.map.id;
         version = version || this.map.config.version;
         filter = filter || this.map.dataSetFilters;
 
+        /** @type {Record<string, string|number>} */
         const query = {
             pageid: pageId
         };
         /* eslint-disable curly */
         if ( version ) query.revid = version;
         if ( filter ) query.layers = filter.join( '|' );
-        if ( start !== null ) query.continue = start;
+        if ( start !== null && start !== undefined ) query.continue = start;
         if ( limit ) query.limit = limit;
         if ( sector ) query.sector = sector;
         /* eslint-enable curly */
@@ -84,7 +96,8 @@ module.exports = class MarkerStreamingManager {
      *
      * Properties are extracted from ownership strings, and frozen, as they're shared between all instances within a data set.
      *
-     * @param {Object<string, DataMaps.UncheckedApiMarkerInstance[]>} data
+     * @param {Record<string, DataMaps.UncheckedApiMarkerInstance[]>} data
+     * @fires DataMap#chunkStreamed
      */
     instantiateMarkers( data ) {
         // Register all layers in this package
@@ -97,7 +110,7 @@ module.exports = class MarkerStreamingManager {
         for ( const markerType in data ) {
             const layers = markerType.split( ' ' ),
                 placements = data[ markerType ];
-            /** @type {Object<string, string>?} */
+            /** @type {Record<string, string>?} */
             let properties = null;
 
             // Extract properties (sub-layers) from the layers
@@ -123,6 +136,16 @@ module.exports = class MarkerStreamingManager {
     }
 
 
+    /**
+     * @param {number?} [pageId]
+     * @param {number?} [version]
+     * @param {string[]?} [filter]
+     * @param {number?} [start]
+     * @param {number?} [limit]
+     * @param {number?} [sector]
+     * @fires DataMap#chunkStreamingDone
+     * @return {Promise<void>}
+     */
     loadChunk( pageId, version, filter, start, limit, sector ) {
         return this.requestChunk( pageId, version, filter, start, limit, sector )
             .then( data => {
@@ -134,6 +157,15 @@ module.exports = class MarkerStreamingManager {
     }
 
 
+    /**
+     * @param {number?} [pageId]
+     * @param {number?} [version]
+     * @param {string[]?} [filter]
+     * @param {number?} [start]
+     * @param {number?} [sector]
+     * @fires DataMap#chunkStreamingDone
+     * @return {Promise<void>}
+     */
     loadSequential( pageId, version, filter, start, sector ) {
         return this.requestChunk( pageId, version, filter, start || 0, null, sector )
             .then( data => {
@@ -143,11 +175,10 @@ module.exports = class MarkerStreamingManager {
                 if ( data.query.continue ) {
                     return this.loadSequential( pageId, version, filter, data.query.continue );
                 } else {
-                    this.map.on( 'leafletLoaded', () => {
-                        // Notify other components that all chunks have been streamed in this request
-                        this.map.fire( 'chunkStreamingDone' );
-                    } );
+                    // Notify other components that all chunks have been streamed in this request
+                    this.map.on( 'leafletLoaded', () => this.map.fire( 'chunkStreamingDone' ) );
                 }
+                return;
             } );
     }
 };

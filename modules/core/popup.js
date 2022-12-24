@@ -3,6 +3,9 @@ const Util = require( './util.js' ),
 /** @typedef {import( './map.js' )} DataMap */
 
 
+/**
+ * @implements {LeafletModule.Ark.IPopupContentRenderer}
+ */
 module.exports = class MarkerPopup {
     // TODO: document lifetime
 
@@ -11,12 +14,38 @@ module.exports = class MarkerPopup {
      * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
      */
     constructor( map, leafletMarker ) {
+        /**
+         * Owning map.
+         *
+         * @type {DataMap}
+         */
         this.map = map;
+        /**
+         * Associated marker.
+         *
+         * @type {LeafletModule.CircleMarker|LeafletModule.Marker}
+         */
         this.leafletMarker = leafletMarker;
+        /**
+         * Marker group configuration.
+         *
+         * @type {DataMaps.Configuration.MarkerGroup}
+         */
         this.markerGroup = map.config.groups[ this.leafletMarker.attachedLayers[ 0 ] ];
+        /**
+         * Slot data of the associated marker.
+         *
+         * @type {DataMaps.IApiMarkerSlots}
+         */
         this.slots = this.leafletMarker.apiInstance[ 2 ] || {};
+        /**
+         * Unique identifier of the associated marker.
+         *
+         * @type {string|number}
+         */
         this.uid = Util.getMarkerId( this.leafletMarker );
-        // These two containers are provided by Leaflet.Ark.Popup
+
+        // These three containers are provided by Leaflet.Ark.Popup
         /** @type {!jQuery} */
         // @ts-ignore: Initialised by Leaflet.Ark.Popup, ideally we'd use null assertions here
         this.$buttons = null;
@@ -26,6 +55,7 @@ module.exports = class MarkerPopup {
         /** @type {!jQuery} */
         // @ts-ignore: Initialised by Leaflet.Ark.Popup, ideally we'd use null assertions here
         this.$tools = null;
+
         // These elements are created during building
         /** @type {jQuery?} */
         this.$subTitle = null;
@@ -41,6 +71,9 @@ module.exports = class MarkerPopup {
 
 
     /**
+     * Binds a dynamically initialised popup to a marker. The renderer class is provided by the map via the
+     * {@link DataMap.getPopupClass} method.
+     *
      * @param {DataMap} map
      * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
      */
@@ -49,11 +82,19 @@ module.exports = class MarkerPopup {
     }
 
 
+    /**
+     * Whether the popup manager should retain the DOM nodes after the popup is closed.
+     *
+     * @return {boolean}
+     */
     shouldKeepAround() {
         return true;
     }
 
 
+    /**
+     * Builds the buttons.
+     */
     buildButtons() {
         const $getLink = $( '<a class="datamap-marker-link-button oo-ui-icon-link" role="button"></a>' )
             .attr( {
@@ -65,14 +106,14 @@ module.exports = class MarkerPopup {
             .on( 'click', event => {
                 event.preventDefault();
                 // eslint-disable-next-line compat/compat
-                navigator.clipboard.writeText( $getLink.attr( 'href' ) )
+                navigator.clipboard.writeText( /** @type {string} */ ( $getLink.attr( 'href' ) ) )
                     .then( () => mw.notify( mw.msg( 'datamap-popup-marker-link-copied' ) ) );
             } );
     }
 
 
-    /*
-     * Builds popup contents for a marker instance
+    /**
+     * Builds contents of this popup.
      */
     build() {
         // Build the title
@@ -132,6 +173,8 @@ module.exports = class MarkerPopup {
 
 
     /**
+     * Initialises an action node.
+     *
      * @param {string} cssClass
      * @param {jQuery} $child
      * @return {jQuery}
@@ -141,6 +184,9 @@ module.exports = class MarkerPopup {
     }
 
 
+    /**
+     * Builds the action list of this popup.
+     */
     buildTools() {
         // Related article
         let article = this.slots.article || this.markerGroup.article;
@@ -167,16 +213,29 @@ module.exports = class MarkerPopup {
     }
 
 
+    /**
+     * Updates URL with currently opened marker.
+     */
     onAdd() {
         Util.updateLocation( this.map, { marker: this.uid } );
     }
 
 
+    /**
+     * Updates URL to remove the marker parameter.
+     */
     onRemove() {
         Util.updateLocation( this.map, { marker: null } );
     }
 
 
+    /**
+     * Returns a label for the collectible status change action.
+     *
+     * @protected
+     * @deprecated Public access is deprecated as of v0.14.4, and will be fully removed in v0.15.0.
+     * @return {string}
+     */
     getDismissToolText() {
         // Messages that can be used here:
         // * datamap-popup-dismissed
@@ -185,6 +244,9 @@ module.exports = class MarkerPopup {
     }
 
 
+    /**
+     * Updates the label of the collectible status change action.
+     */
     onUpdate() {
         if ( this.$dismiss ) {
             this.$dismiss.text( this.getDismissToolText() );
@@ -192,26 +254,32 @@ module.exports = class MarkerPopup {
     }
 
 
+    /**
+     * Sets up MultimediaViewer integration on the popup's image.
+     *
+     * @private
+     */
     _setupMMVIntegration() {
         if ( mw.config.get( 'wgMediaViewer' ) ) {
+            const $image = /** @type {jQuery!} */ ( this.$image );
             mw.loader.using( 'mmv.bootstrap', () => {
-                const title = mw.Title.newFromImg( this.$image );
+                const title = mw.Title.newFromImg( $image );
                 let caption = this.markerGroup.name;
                 if ( this.map.isFeatureBitSet( Enums.MapFlags.ShowCoordinates ) ) {
                     caption += ` (${this.map.getCoordLabel( this.leafletMarker.apiInstance )})`;
                 }
 
                 mw.mmv.bootstrap.thumbs.push( {
-                    thumb: this.$image[ 0 ],
+                    thumb: $image[ 0 ],
                     $thumb: this.$image,
                     title,
-                    link: title.getUrl(),
+                    link: title.getUrl( {} ),
                     alt: caption,
                     caption
                 } );
                 this.thumbIndex = mw.mmv.bootstrap.thumbs.length - 1;
 
-                this.$image.on( 'click', event => mw.mmv.bootstrap.click( this.$image[ 0 ], event, title ) );
+                $image.on( 'click', event => mw.mmv.bootstrap.click( $image[ 0 ], event, title ) );
             } );
         }
     }

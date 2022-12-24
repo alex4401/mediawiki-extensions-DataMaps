@@ -1,10 +1,23 @@
+/** @typedef {import( './map.js' )} DataMap */
 const Enums = require( './enums.js' );
 
 
 module.exports = class LegendTabManager {
+    /**
+     * @param {DataMap} map Owning map.
+     */
     constructor( map ) {
+        /**
+         * Owning map.
+         *
+         * @type {DataMap}
+         */
         this.map = map;
-        // DOM element of the legend container
+        /**
+         * Legend container widget.
+         *
+         * @type {OO.ui.Widget}
+         */
         this.rootWidget = new OO.ui.Widget( {
             classes: [ 'datamap-container-legend' ],
             content: [
@@ -14,8 +27,17 @@ module.exports = class LegendTabManager {
                 } )
             ]
         } );
+        /**
+         * Root DOM element of the legend container.
+         *
+         * @type {jQuery}
+         */
         this.$root = this.rootWidget.$element.prependTo( this.map.$root.find( '> .datamap-container-content' ) );
-        // IndexLayout of the legend panel
+        /**
+         * Tabber layout of the legend.
+         *
+         * @type {OO.ui.IndexLayout}
+         */
         this.tabLayout = new OO.ui.IndexLayout( {
             expanded: false
         } );
@@ -25,6 +47,12 @@ module.exports = class LegendTabManager {
     }
 
 
+    /**
+     * @param {string} name Tab name.
+     * @param {string?} [cssClass] CSS class.
+     * @param {boolean} [visible] If not hidden by default.
+     * @return {OO.ui.TabPanelLayout}
+     */
     addTab( name, cssClass, visible ) {
         // eslint-disable-next-line mediawiki/class-doc
         const result = new OO.ui.TabPanelLayout( {
@@ -42,6 +70,12 @@ module.exports = class LegendTabManager {
     }
 
 
+    /**
+     * Changes a tab's visibility, and updates the legend's visibility as well.
+     *
+     * @param {OO.ui.TabPanelLayout} tab
+     * @param {boolean} value
+     */
     setTabVisibility( tab, value ) {
         tab.toggle( value );
         tab.getTabItem().toggle( value );
@@ -55,6 +89,9 @@ module.exports = class LegendTabManager {
     }
 
 
+    /**
+     * Hides the legend if there's no visible tabs.
+     */
     reevaluateVisibility() {
         if ( this.map.isFeatureBitSet( Enums.MapFlags.VisualEditor ) ) {
             this.rootWidget.setDisabled( false );
@@ -73,6 +110,13 @@ module.exports = class LegendTabManager {
     }
 
 
+    /**
+     * @param {jQuery} $parent
+     * @param {string} label
+     * @param {boolean} defaultState
+     * @param {( value: boolean ) => void} changeCallback
+     * @return {[ OO.ui.CheckboxInputWidget, OO.ui.FieldLayout ]}
+     */
     createCheckboxField( $parent, label, defaultState, changeCallback ) {
         const checkbox = new OO.ui.CheckboxInputWidget( { selected: defaultState } );
         const field = new OO.ui.FieldLayout( checkbox, {

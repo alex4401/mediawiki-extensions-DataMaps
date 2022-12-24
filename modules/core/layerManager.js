@@ -21,7 +21,7 @@ module.exports = class MarkerLayerManager {
         /**
          * Map of markers by layer.
          *
-         * @type {Object<string, ( LeafletModule.CircleMarker|LeafletModule.Marker )[]>}
+         * @type {Record<string, ( LeafletModule.CircleMarker|LeafletModule.Marker )[]>}
          */
         this.byLayer = {};
         /**
@@ -45,13 +45,13 @@ module.exports = class MarkerLayerManager {
         /**
          * Parametrised requirements
          *
-         * @type {Object<string, string>}
+         * @type {Record<string, string>}
          */
         this.includeMaskPr = {};
         /**
          * Computed visibility cache.
          *
-         * @type {Object<string, boolean>}
+         * @type {Record<string, boolean>}
          * @deprecated Public access deprecated in v0.14.3, will be removed in v0.15.0.
          */
         this.computeCache = {};

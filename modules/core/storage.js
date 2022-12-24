@@ -1,11 +1,5 @@
 /** @typedef {import( './map.js' )} DataMap */
 
-/**
- * @typedef {Object<string, any>} LocalDataMapUserData
- * @property {number} background
- * @property {string[]} dismissed List of dismissed marker/group IDs.
- */
-
 
 /**
  * Local storage interface class. It manages data migrations and handles writes.
@@ -50,7 +44,7 @@ class MapStorage {
         /**
          * Typed data store.
          *
-         * @type {LocalDataMapUserData}
+         * @type {DataMaps.LocalMapUserData}
          */
         this.data = this.getJSON( '*', '{}' );
         // Initialise known fields
@@ -268,7 +262,9 @@ class MapStorage {
             return;
         }
 
+        /** @type {DataMaps.LocalMapUserData} */
         const data = this.getJSON( '*', '{}' );
+
         // Run sequential migrations on the data object
         /* eslint-disable no-fallthrough */
         switch ( schemaVersion ) {
@@ -291,6 +287,13 @@ class MapStorage {
     }
 
 
+    /**
+     * Checks whether a marker or a group has been dismissed.
+     *
+     * @param {string|number} uid Marker's unique identifier, or a group's identifier.
+     * @param {boolean} isGroup
+     * @return {boolean}
+     */
     isDismissed( uid, isGroup ) {
         if ( this.data.dismissed.length === 0 ) {
             return false;
@@ -299,6 +302,13 @@ class MapStorage {
     }
 
 
+    /**
+     * Toggles the collected status of a marker or a group.
+     *
+     * @param {string|number} uid Marker's unique identifier, or a group identifier.
+     * @param {boolean} isGroup
+     * @return {boolean} New collected status.
+     */
     toggleDismissal( uid, isGroup ) {
         let out;
         const uidPrefixed = ( isGroup ? 'G:' : 'M:' ) + uid;

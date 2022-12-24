@@ -1,3 +1,4 @@
+// @ts-nocheck
 module.exports = require( '../vendor/leaflet/leaflet.js' );
 module.exports.Ark = {
     /** @deprecated */

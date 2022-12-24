@@ -6,9 +6,23 @@ let Leaflet = null;
 
 
 module.exports = {
+    /**
+     * Max circle size in legend elements.
+     *
+     * @constant
+     * @type {number}
+     */
     MAX_GROUP_CIRCLE_SIZE: 20,
 
-    isBleedingEdge: require( './settings.json' ).DataMapsAllowExperimentalFeatures,
+    /**
+     * Whether experimental features have been enabled server-side.
+     *
+     * @constant
+     * @type {boolean}
+     */
+    // @ts-ignore: module resolution error
+    isBleedingEdge: /** @type {DataMaps.IExposedServerSettings} */ ( require( './settings.json' ) )
+        .DataMapsAllowExperimentalFeatures,
 
 
     /**
@@ -42,6 +56,7 @@ module.exports = {
      */
     getLeaflet() {
         if ( Leaflet === null ) {
+            // @ts-ignore: module resolution error
             Leaflet = require( 'ext.datamaps.leaflet' );
         }
         return /** @type {LeafletModule} */ ( Leaflet );
@@ -49,6 +64,8 @@ module.exports = {
 
 
     /**
+     * Returns the collectible type of a marker group, or zero if none.
+     *
      * @param {DataMaps.Configuration.MarkerGroup} group
      * @return {number}
      */
@@ -58,6 +75,8 @@ module.exports = {
 
 
     /**
+     * Creates an image DOM element showing a marker group's icon.
+     *
      * @param {DataMaps.Configuration.MarkerGroup} group
      * @return {jQuery}
      */
@@ -68,6 +87,8 @@ module.exports = {
 
 
     /**
+     * Creates an SVG element showing a marker group's pin icon.
+     *
      * @param {DataMaps.Configuration.PinMarkerGroup} group
      * @return {jQuerySVG}
      */
@@ -81,6 +102,8 @@ module.exports = {
 
 
     /**
+     * Creates a DOM element showing a marker group's coloured circle representation.
+     *
      * @param {DataMaps.Configuration.CircleMarkerGroup} group
      * @return {jQuery}
      */
@@ -98,6 +121,8 @@ module.exports = {
 
 
     /**
+     * Creates an SVG element of a pin-shaped icon.
+     *
      * @param {string} colour
      * @return {SVGElement}
      */
@@ -164,7 +189,7 @@ module.exports = {
      * Constructs a URL with specified parameters (appended) and keeps TabberNeue's hash.
      *
      * @param {DataMap} map
-     * @param {Object<string, string|number|null>} paramsToSet
+     * @param {Record<string, string|number|null>} paramsToSet
      * @param {boolean} [withHost]
      * @return {string}
      */
@@ -191,7 +216,7 @@ module.exports = {
      * Replaces current URL in the browser with a new URL with specified parameters and preserved TabberNeue hash.
      *
      * @param {DataMap} map
-     * @param {Object<string, string|number|null>} paramsToSet
+     * @param {Record<string, string|number|null>} paramsToSet
      */
     updateLocation( map, paramsToSet ) {
         history.replaceState( {}, '', module.exports.makeUrlWithParams( map, paramsToSet, false ) );
@@ -228,7 +253,8 @@ module.exports = {
          */
         getOwningId( $element ) {
             const $panel = module.exports.TabberNeue.getOwningPanel( $element );
-            return $panel ? ( $panel.attr( 'id' ) || $panel.attr( 'data-title' ).replace( ' ', '_' ) ) : null;
+            return $panel ? ( $panel.attr( 'id' ) || /** @type {!string} */ ( $panel.attr( 'data-title' ) ).replace( ' ', '_' ) )
+                : null;
         }
     }
 };

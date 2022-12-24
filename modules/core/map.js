@@ -17,7 +17,7 @@ let Leaflet = null;
 /**
  * A class that initialises, manages and represents a data map.
  *
- * @extends EventEmitter<DataMaps.MapEventTypes>
+ * @extends EventEmitter<DataMaps.EventHandling.MapTypes>
  */
 class DataMap extends EventEmitter {
     /**
@@ -110,8 +110,8 @@ class DataMap extends EventEmitter {
         /**
          * Collection of Leaflet.Icons by group.
          *
-         * @type {Object<string, LeafletModule.Icon>}
          * @private
+         * @type {Record<string, LeafletModule.Icon>}
          * @deprecated Public access is deprecated since v0.14.0
          */
         this.iconCache = {};
@@ -142,6 +142,7 @@ class DataMap extends EventEmitter {
         /**
          * Cached value of the 'datamap-coordinate-control-text' message.
          *
+         * @type {string}
          * @deprecated Unused since v0.14.0, will be removed in v0.15.0.
          */
         this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
@@ -176,7 +177,7 @@ class DataMap extends EventEmitter {
         /**
          * Coordinate origin.
          *
-         * @type {DataMaps.ECoordinateOrigin}
+         * @type {DataMaps.CoordinateOrigin}
          */
         this.crsOrigin = ( this.config.crs[ 0 ][ 0 ] < this.config.crs[ 1 ][ 0 ]
             && this.config.crs[ 0 ][ 1 ] < this.config.crs[ 1 ][ 1 ] ) ? Enums.CRSOrigin.TopLeft : Enums.CRSOrigin.BottomLeft;
@@ -344,8 +345,7 @@ class DataMap extends EventEmitter {
         }
 
         const message = this.config.cOrder === 1 ? 'datamap-coordinate-control-text-xy' : 'datamap-coordinate-control-text';
-        // @ts-ignore
-        return mw.msg( message, latOrInstance.toFixed( 2 ), lon.toFixed( 2 ) );
+        return mw.msg( message, latOrInstance.toFixed( 2 ), /** @type {number} */ ( lon ).toFixed( 2 ) );
     }
 
 
@@ -392,6 +392,8 @@ class DataMap extends EventEmitter {
      * @protected
      * @param {string} groupId Identifier of a group to update.
      * @param {boolean} state Whether dismissed.
+     * @fires DataMap#markerDismissChange For each updated marker.
+     * @fires DataMap#groupDismissChange For the group.
      */
     _updateGlobalDismissal( groupId, state ) {
         for ( const leafletMarker of this.layerManager.byLayer[ groupId ] ) {
@@ -407,6 +409,8 @@ class DataMap extends EventEmitter {
      * global collectibles also fires a linked event to notify other maps on the page.
      *
      * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     * @fires DataMap#markerDismissChange For the marker if it's an individual collectible.
+     * @fires DataMap#sendLinkedEvent (groupDismissChange) When a group has its status updated instead.
      * @return {boolean} New state.
      */
     toggleMarkerDismissal( leafletMarker ) {
@@ -455,7 +459,7 @@ class DataMap extends EventEmitter {
      *
      * @param {string[]} layers
      * @return {LeafletModule.Icon}
-    */
+     */
     getIconFromLayers( layers ) {
         const markerType = layers.join( ' ' );
         // Construct the object if not found in cache
@@ -498,6 +502,7 @@ class DataMap extends EventEmitter {
      * @param {string[]} layers
      * @param {DataMaps.UncheckedApiMarkerInstance} uncheckedInstance
      * @param {DataMaps.RuntimeMarkerProperties?} [properties]
+     * @fires DataMap#markerReady
      * @return {LeafletModule.CircleMarker|LeafletModule.Marker} A Leaflet marker instance.
      */
     createMarkerFromApiInstance( layers, uncheckedInstance, properties ) {
@@ -565,7 +570,7 @@ class DataMap extends EventEmitter {
      *
      * @param {string[]} layers Array of string layer names.
      * @param {LeafletModule.PointTuple} position Point to place the marker at.
-     * @param {DataMaps.IApiMarkerState?} [state] Optional object with fields: label, desc, image, article, search.
+     * @param {DataMaps.IApiMarkerSlots?} [state] Optional object with fields: label, desc, image, article, search.
      * @param {DataMaps.RuntimeMarkerProperties?} [properties] Optional object with arbitrary fields.
      * @return {LeafletModule.CircleMarker|LeafletModule.Marker} Leaflet marker instance.
      */
@@ -593,7 +598,10 @@ class DataMap extends EventEmitter {
 
 
     /**
+     * Changes currently shown background without affecting the user preference.
+     *
      * @param {number} index
+     * @fires DataMap#backgroundChange
      */
     setCurrentBackground( index ) {
         // Remove existing layers off the map
@@ -634,6 +642,9 @@ class DataMap extends EventEmitter {
     }
 
 
+    /**
+     * Snaps the viewport to the content. Zooms out entirely on a double click.
+     */
     restoreDefaultView() {
         const originalSnap = this.leaflet.options.zoomSnap;
         this.leaflet.options.zoomSnap /= 4;
@@ -642,6 +653,9 @@ class DataMap extends EventEmitter {
     }
 
 
+    /**
+     * Moves the viewport to the centre of the content bounds without affecting zoom.
+     */
     centreView() {
         this.leaflet.setView( this.getCurrentContentBounds().getCenter() );
     }
@@ -672,7 +686,9 @@ class DataMap extends EventEmitter {
 
 
     /**
+     * @private
      * @param {DataMaps.Configuration.BackgroundOverlay} overlay
+     * @deprecated Public access is deprecated as of v0.14.4, and will be removed in v0.15.0.
      * @return {LeafletModule.Rectangle|LeafletModule.Polyline|LeafletModule.ImageOverlay}
      */
     buildBackgroundOverlayObject( overlay ) {
@@ -712,6 +728,8 @@ class DataMap extends EventEmitter {
 
 
     /**
+     * Changes currently shown background and updates user preferences.
+     *
      * @param {number} index
      */
     setBackgroundPreference( index ) {
@@ -779,8 +797,9 @@ class DataMap extends EventEmitter {
 
 
     /**
-     * @param {jQuery} $holder Container for the Leaflet map.
      * @private
+     * @param {jQuery} $holder Container for the Leaflet map.
+     * @fires DataMap#leafletLoaded
      */
     _initialiseLeaflet( $holder ) {
         // If FF_DISABLE_ZOOM is set, prevent all kind of zooming
@@ -798,7 +817,8 @@ class DataMap extends EventEmitter {
         }
 
         // Prepare settings for Leaflet
-        const leafletConfig = $.extend( true, {
+        /** @type {LeafletModule.MapOptions} */
+        const leafletConfig = $.extend( true, /** @type {LeafletModule.IPublicMapOptions} */ ( {
             // Boundaries
             center: [ 50, 50 ],
             maxBounds: [ [ -100, -100 ], [ 200, 200 ] ],
@@ -840,7 +860,7 @@ class DataMap extends EventEmitter {
 
             // Enable bundled interaction rejection control
             interactionControl: true
-        }, this.config.leafletSettings );
+        } ), this.config.leafletSettings );
         // Specify the coordinate reference system and initialise the renderer
         leafletConfig.crs = Leaflet.CRS.Simple;
         leafletConfig.renderer = new Leaflet.Canvas( leafletConfig.rendererSettings );
@@ -967,10 +987,14 @@ class DataMap extends EventEmitter {
         if ( this.config.backgrounds.length > 1 ) {
             this.$backgroundSwitch = this.addControl( DataMap.anchors.topRight,
                 $( '<select class="leaflet-control datamap-control datamap-control-backgrounds leaflet-bar">' )
-                    .on( 'change', () => this.setBackgroundPreference( this.$backgroundSwitch.val() ) )
+                    .on( 'change', () => {
+                        const index = /** @type {number} */ ( /** @type {!jQuery} */ ( this.$backgroundSwitch ).val() );
+                        this.setBackgroundPreference( index );
+                    } )
             );
             this.config.backgrounds.forEach( ( background, index ) => {
-                $( '<option>' ).attr( 'value', index ).text( background.name ).appendTo( this.$backgroundSwitch );
+                $( '<option>' ).attr( 'value', index ).text( /** @type {string} */ ( background.name ) )
+                    .appendTo( /** @type {!jQuery} */ ( this.$backgroundSwitch ) );
             } );
             this.$backgroundSwitch.val( this.backgroundIndex );
             this.on( 'backgroundChange', () => {
@@ -990,6 +1014,7 @@ class DataMap extends EventEmitter {
         if ( !this.isFeatureBitSet( MapFlags.IsPreview ) && mw.config.get( 'wgUserName' ) !== null ) {
             this.$editControl = this.addControl( DataMap.anchors.topRight,
                 $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-edit">' ) );
+            // @ts-ignore: wrong type signature for wikiScript in the package, argument is optional
             const editLink = `${mw.util.wikiScript()}?curid=${this.id}&action=edit` + (
                 mw.user.options.get( 'datamaps-enable-visual-editor' ) ? '&visual=1' : ''
             );
@@ -1001,6 +1026,7 @@ class DataMap extends EventEmitter {
 
     /**
      * @private
+     * @fires DataMap#legendManager
      */
     _onOOUILoaded() {
         this.legend = new LegendTabManager( this );
@@ -1010,6 +1036,8 @@ class DataMap extends EventEmitter {
 
     /**
      * @private
+     * @fires markerFilteringPanel
+     * @fires DataMap#legendLoaded Deprecated as of v0.14.0; to be removed in v0.15.0.
      */
     _initialiseFiltersPanel() {
         // Determine if we'll need a layer dropdown
@@ -1017,9 +1045,9 @@ class DataMap extends EventEmitter {
         const withLayerDropdown = hasCaves;
 
         // Initialise legend objects
-        this.filtersPanel = new MarkerFilteringPanel( this.legend, mw.msg( 'datamap-legend-tab-locations' ), true,
-            withLayerDropdown );
-        /* DEPRECATED(v0.14.0:v0.15.0) */
+        this.filtersPanel = new MarkerFilteringPanel( /** @type {!LegendTabManager} */ ( this.legend ),
+            mw.msg( 'datamap-legend-tab-locations' ), true, withLayerDropdown );
+        /** @deprecated in v0.14.0, to be gone in v0.15.0 */
         this.markerLegend = this.filtersPanel;
 
         // Build the surface and caves toggle
@@ -1044,6 +1072,7 @@ class DataMap extends EventEmitter {
 
     /**
      * @private
+     * @fires DataMap#collectiblesPanel
      */
     _initialiseCollectiblesPanel() {
         this.collectiblesPanel = new CollectiblesPanel( this.legend );
@@ -1068,9 +1097,18 @@ DataMap.anchors = Object.freeze( {
  */
 DataMap.BOUNDS_PADDING = [ 150, 200 ];
 /**
- * 
+ * Max zoom-caused scale value for vector markers.
+ *
+ * @constant
+ * @type {number}
  */
 DataMap.VECTOR_ZOOM_SCALING_MAX = 2.5;
+/**
+ * Max zoom-caused scale value for icon markers.
+ *
+ * @constant
+ * @type {number}
+ */
 DataMap.ICON_ZOOM_SCALING_MAX = 1;
 
 

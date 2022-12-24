@@ -42,7 +42,8 @@
             "definedTypes": [
                 "LeafletModule",
                 "DataMaps",
-                "jQuerySVG"
+                "jQuerySVG",
+                "JQuery"
             ]
         } ]
 	},

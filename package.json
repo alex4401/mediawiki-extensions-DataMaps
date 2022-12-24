@@ -5,6 +5,7 @@
 		"lint:styles": "stylelint \"**/*.{less,css}\""
 	},
 	"devDependencies": {
+		"@types/oojs-ui": "^0.46.0",
 		"eslint-config-wikimedia": "0.23.0",
 		"stylelint-config-idiomatic-order": "9.0.0",
 		"stylelint-config-wikimedia": "0.13.1",

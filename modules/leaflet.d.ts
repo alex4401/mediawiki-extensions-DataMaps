@@ -17,8 +17,6 @@ declare namespace LeafletModule {
     type PointTuple = [ number, number ];
     type LatLngTuple = [ number, number ];
     type LatLngLike = LatLng | LatLngTuple;
-    /** @deprecated */
-    type LatLngExpression = LatLngLike;
 
 
     class LatLngBounds {
@@ -63,35 +61,136 @@ declare namespace LeafletModule {
             constructor( options: PinIconOptions );
         }
 
-        interface IPopupRenderer {
+        interface IPopupContentRenderer {
             shouldKeepAround(): boolean;
             buildButtons(): void;
             build(): void;
             buildTools(): void;
+
+            onAdd(): void;
+            onRemove(): void;
         }
+
+        type PopupContentRendererGetterFn = () => Ark.IPopupContentRenderer;
+    }
+
+
+    namespace Browser {
+        export const mobile: boolean;
+        export const retina: boolean;
     }
 
 
     namespace DomUtil {}
 
 
-    interface MapOptions {
-        
+    export interface CRS {
+        latLngToPoint(latlng: LatLngLike, zoom: number): PointTuple;
+        pointToLatLng(point: PointTuple, zoom: number): LatLng;
+        project(latlng: LatLngLike): PointTuple;
+        unproject(point: PointTuple): LatLng;
+        scale(zoom: number): number;
+        zoom(scale: number): number;
+        getProjectedBounds(zoom: number): LatLngBoundsLike;
+        distance(latlng1: LatLngLike, latlng2: LatLngLike): number;
+        wrapLatLng(latlng: LatLngLike): LatLng;
+
+        code?: string | undefined;
+        wrapLng?: [number, number] | undefined;
+        wrapLat?: [number, number] | undefined;
+        infinite: boolean;
     }
+
+
+    export namespace CRS {
+        const Simple: CRS;
+    }
+
+
+    interface IPublicMapOptions {
+        center?: LatLngLike;
+        maxBoundsViscosity?: number;
+        zoomSnap: number;
+        zoomDelta?: number;
+        maxZoom: number;
+        wheelPxPerZoomLevel?: number;
+        minZoom: number;
+        zoomAnimation?: boolean;
+        markerZoomAnimation?: boolean;
+        bounceAtZoomLimits?: boolean;
+        inertia?: boolean;
+        /* Control settings */
+        zoomControl?: boolean;
+        boxZoom?: boolean;
+        doubleClickZoom?: boolean;
+        scrollWheelZoom?: boolean;
+        touchZoom?: boolean;
+        zoomControlOptions?: {
+            zoomInTitle?: string;
+            zoomOutTitle?: string;
+        };
+        /* Non-standard options */
+        rendererSettings: CanvasOptions;
+        autoMinZoom?: boolean;
+        autoMinZoomAbsolute: number;
+        shouldScaleMarkers?: boolean;
+        markerZoomScaleFactor?: number;
+        interactionControl?: boolean;
+    }
+
+
+    interface MapOptions extends IPublicMapOptions {
+        maxBounds?: LatLngBoundsLike;
+        crs?: CRS;
+        renderer?: Renderer;
+        /** @deprecated To be removed in v0.15.0 */
+        preferCanvas?: boolean;
+        /* Non-standard options */
+        vecMarkerScale?: number;
+        iconMarkerScale?: number;
+    }
+
 
     interface IconOptions {
         iconUrl: string;
         iconSize: PointTuple;
     }
 
+
     interface CanvasOptions {
         padding: number;
     }
 
-    interface PopupOptions {}
+    interface PopupOptions {
+        keepInView?: boolean;
+    }
 
     interface MarkerOptions {
         icon: Icon;
+        dismissed?: boolean;
+    }
+
+    interface PathOptions {
+        stroke?: boolean;
+        color?: string;
+        weight?: number;
+        opacity?: number;
+        dashArray?: string;
+        dashOffset?: string;
+        fill?: boolean;
+        fillColor?: string;
+        fillOpacity?: number;
+        interactive?: boolean;
+        bubblingMouseEvents?: boolean;
+    }
+
+    interface PolylineOptions extends PathOptions {
+        smoothFactor?: number;
+        noClip?: boolean;
+    }
+
+    interface PolygonOptions extends PolylineOptions {
+        fill?: boolean;
     }
 
     interface CircleMarkerOptions {
@@ -101,6 +200,7 @@ declare namespace LeafletModule {
         fillOpacity: number;
         color: string;
         weight: number;
+        dismissed?: boolean;
     }
 
 
@@ -111,63 +211,106 @@ declare namespace LeafletModule {
     }
 
 
-    class Class {
+    abstract class Class {
         static extend(props: any): {new(...args: any[]): any} & typeof Class;
     }
 
 
-    class Layer {
+    abstract class Layer extends Class {
         _map?: Map;
 
         getLatLng(): LatLng;
         addTo(map: Map): this;
         remove(): this;
         bringToBack(): this;
-        bindPopup( fn: () => Ark.IPopupRenderer, options: PopupOptions, classOverride: typeof Popup ): this;
-        openPopup(): this;
+        bindPopup( fn: Ark.PopupContentRendererGetterFn, options: PopupOptions, classOverride: typeof Popup ): this;
+        openPopup( latlng?: LatLngLike ): this;
+        closePopup(): this;
         bindTooltip( text: string ): this;
     }
 
-    type LayerMap = { [key: number]: Layer };
+    type LayerMap = Record<number, Layer>;
+
 
     interface IHasBoundsGetter {
         getBounds(): LatLngBounds;
     }
 
+    
+    namespace EventHandling {
+        interface EventContext {
+            type: string;
+            popup: any;
+            target: any;
+            sourceTarget: any;
+            propagatedFrom: any;
+        }
 
-    class Map {
+        interface MouseEvent extends EventContext {
+            latlng: LatLng;
+            layerPoint: PointTuple;
+            containerPoint: PointTuple;
+            originalEvent: MouseEvent;
+        }
+
+        type EventHandlerFn = ( event: EventHandling.EventContext ) => void;
+        type MouseEventHandlerFn = ( event: EventHandling.MouseEvent ) => void;
+    }
+
+
+    class Map extends Class {
         constructor(element: HTMLElement, options: MapOptions);
 
         addLayer(layer: Layer): this;
         removeLayer(layer: Layer): this;
         addHandler(name: string, handlerClass: typeof Handler): this;
-        closePopup(): void;
+        closePopup( popup?: Popup ): this;
         getZoom(): number;
         setZoom( zoom: number ): this;
         fitBounds( bounds: LatLngBounds ): this;
         setView( center: LatLng, zoom?: number ): this;
+        setMinZoom( zoom: number ): this;
+        getBoundsZoom( bounds: LatLngBounds, inside?: boolean, padding?: PointTuple ): number;
+        setMaxBounds( bounds: LatLngBounds ): this;
 
-        on( types: string, fn: Function, context?: object ): void;
-        off( types: string, fn: Function, context?: object ): void;
+        on( type: 'click' | 'dblclick' | 'mousedown' | 'mouseup' | 'mouseover' | 'mouseout' | 'mousemove' | 'contextmenu'
+            | 'preclick', fn: EventHandling.MouseEventHandlerFn, context?: any ): this;
+        on( type: string, fn: EventHandling.EventHandlerFn, context?: any ): this;
+        off( type: string, fn: Function, context?: object ): void;
 
         _haveLayersMutated: boolean;
         _layers: LayerMap;
         options: MapOptions;
     }
 
-    class Handler {
+    class Handler extends Class {
         enable(): void;
         disable(): void;
         enabled(): boolean;
     }
 
-    class Popup {}
+    class DivOverlay extends Layer {}
+
+    class Popup extends DivOverlay {
+        constructor( options: PopupOptions, source: Layer );
+        constructor( latlng: LatLng, options: PopupOptions );
+
+        onAdd( map: Map ): void;
+        onRemove( map: Map ): void;
+
+        _initLayout(): void;
+        _updateLayout(): void;
+    }
 
     class Icon {
         constructor( options: IconOptions );
     }
 
-    class Canvas extends Layer {
+    abstract class Renderer extends Layer {
+        _layers: Layer[];
+    }
+
+    class Canvas extends Renderer {
         constructor( options: CanvasOptions );
     }
 
@@ -177,20 +320,22 @@ declare namespace LeafletModule {
         getBounds(): LatLngBounds;
         setDismissed( value: boolean ): void;
 
+        options: CircleMarkerOptions;
         /* Fields internally used and set by the extension */
         apiInstance: DataMaps.ApiMarkerInstance;
         attachedLayers: string[];
-        assignedProperties: { [key: string]: string };
+        assignedProperties: DataMaps.RuntimeMarkerProperties;
     }
 
     class Marker extends Layer implements DataMaps.IHasRuntimeMarkerState {
         constructor( position: LatLngLike, options: MarkerOptions );
         setDismissed( value: boolean ): void;
 
+        options: MarkerOptions;
         /* Fields internally used and set by the extension */
         apiInstance: DataMaps.ApiMarkerInstance;
         attachedLayers: string[];
-        assignedProperties: { [key: string]: string };
+        assignedProperties: DataMaps.RuntimeMarkerProperties;
     }
 
     class ImageOverlay extends Layer {
@@ -198,8 +343,26 @@ declare namespace LeafletModule {
 
         getBounds(): LatLngBounds;
     }
-    class Polyline extends Layer {
-        getBounds(): LatLngBounds;
+
+    abstract class Path extends Layer {
+        options: PathOptions;
     }
-    class Rectangle extends Polyline {}
+    
+    class Polyline extends Path {
+        constructor( latlngs: LatLngLike[], options: PolylineOptions );
+
+        getBounds(): LatLngBounds;
+
+        options: PolylineOptions;
+    }
+
+    class Polygon extends Polyline {
+        constructor( latlngs: LatLngLike[], options: PolygonOptions );
+
+        options: PolygonOptions;
+    }
+
+    class Rectangle extends Polygon {
+        constructor( latLngBounds: LatLngBoundsLike, options: PolygonOptions );
+    }
 }

@@ -10,9 +10,9 @@
  */
 module.exports = class EventEmitter {
     constructor() {
-        /** @type {Object<string, EventHandlerRef[]>} */
+        /** @type {Record<string, EventHandlerRef[]>} */
         this._handlers = {};
-        /** @type {Object<string, any[]>} */
+        /** @type {Record<string, any[]>} */
         this._autoFiringEvents = {};
     }
 
@@ -25,7 +25,7 @@ module.exports = class EventEmitter {
      *
      * @param {T} event
      * @param {Function} callback
-     * @param {Object?} [context]
+     * @param {any?} [context]
      */
     on( event, callback, context ) {
         const handler = {
@@ -51,7 +51,7 @@ module.exports = class EventEmitter {
      *
      * @param {T} event Event name.
      * @param {Function?} [callback]
-     * @param {Object?} [context]
+     * @param {any?} [context]
      */
     off( event, callback, context ) {
         // If no callback function given, remove all bound handlers

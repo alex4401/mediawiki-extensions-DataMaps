@@ -1,13 +1,41 @@
+/** @typedef {import( './map.js' )} DataMap */
+/** @typedef {import( './legend.js' )} LegendTabManager */
 const Enums = require( './enums.js' ),
     Util = require( './util.js' );
 
 
 class MarkerFilteringPanel {
+    /**
+     * 
+     * @param {LegendTabManager} legend 
+     * @param {*} name 
+     * @param {*} addTotalToggles 
+     * @param {*} withLayerDropdown 
+     */
     constructor( legend, name, addTotalToggles, withLayerDropdown ) {
+        /**
+         * Legend tab manager this panel belongs to.
+         *
+         * @type {LegendTabManager}
+         */
         this.legend = legend;
+        /**
+         * Owning map.
+         *
+         * @type {DataMap}
+         */
         this.map = this.legend.map;
-        // Root DOM element
+        /**
+         * OOUI tab widget.
+         *
+         * @type {OO.ui.TabPanelLayout}
+         */
         this.tab = this.legend.addTab( name, null, false );
+        /**
+         * Root DOM element.
+         *
+         * @type {jQuery}
+         */
         this.$root = this.tab.$element;
         //
         this.buttonGroup = new OO.ui.ButtonGroupWidget( {} );

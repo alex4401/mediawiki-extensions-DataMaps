@@ -1,10 +1,16 @@
 /* eslint-disable camelcase */
 module.exports = {
+    /**
+     * @readonly
+     */
     CRSOrigin: {
         TopLeft: 1,
         BottomLeft: 2
     },
 
+    /**
+     * @readonly
+     */
     MapFlags: {
         ShowCoordinates: 1 << 0,
         HideLegend: 1 << 1,
@@ -16,6 +22,9 @@ module.exports = {
         IsPreview: 1 << 7
     },
 
+    /**
+     * @readonly
+     */
     CollectibleType: {
         // Corresponds to CM_ constants in Data\MarkerGroupSpec
         Individual: 1,
@@ -23,6 +32,9 @@ module.exports = {
         GlobalGroup: 3
     },
 
+    /**
+     * @readonly
+     */
     MarkerGroupFlags: {
         IsNumberedInChecklists: 1 << 0,
         CannotBeSearched: 1 << 1,

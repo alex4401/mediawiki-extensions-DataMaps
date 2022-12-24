@@ -1,4 +1,6 @@
 declare namespace DataMaps {
+    type PointTupleRepr = ApiMarkerInstance | LeafletModule.LatLngTuple;
+
     enum CoordinateOrder {
         YX,
         XY
@@ -9,10 +11,17 @@ declare namespace DataMaps {
         BottomLeft = 2
     }
 
-    /** @deprecated */
-    type ECoordinateOrder = CoordinateOrder;
-    /** @deprecated */
-    type ECoordinateOrigin = CoordinateOrigin;
+
+    interface IExposedServerSettings {
+        DataMapsAllowExperimentalFeatures: boolean;
+    }
+
+
+    interface LocalMapUserData extends Record<string, any> {
+        background: number;
+        dismissed: string[];
+    }
+
 
     namespace Configuration {
         interface BaseMarkerGroup {
@@ -55,9 +64,9 @@ declare namespace DataMaps {
             image?: string;
             aa?: boolean;
             path?: LeafletModule.PointTuple[];
-            weight?: number;
-            color?: string;
-            fillColor?: string;
+            thickness?: number;
+            colour?: string;
+            strokeColour?: string;
         }
 
         interface Background {
@@ -75,35 +84,42 @@ declare namespace DataMaps {
             cOrder: CoordinateOrder;
             crs: LeafletModule.LatLngBoundsTuple;
             flags: number;
+            leafletSettings: LeafletModule.IPublicMapOptions;
             backgrounds: Background[];
             layerIds: string[];
-            groups: { [key: string]: MarkerGroup };
-            layers: { [key: string]: MarkerLayer };
+            groups: Record<string, MarkerGroup>;
+            layers: Record<string, MarkerLayer>;
         }
     }
 
-    type RuntimeMarkerProperties = { [key: string]: string };
-    interface IApiMarkerState {
+    type RuntimeMarkerProperties = Record<string, string>;
+    type SearchKeywordWeighing = [ number, string ];
+    interface IApiMarkerSlots {
         uid?: string;
         label?: string;
         desc?: string;
         article?: string;
         image?: [ string, number, number ];
+        search?: 0 | SearchKeywordWeighing[];
     }
-    type ApiMarkerInstance = [ number, number, IApiMarkerState ];
-    type UncheckedApiMarkerInstance = [ number, number, IApiMarkerState|null ];
-    type PointTupleRepr = ApiMarkerInstance | LeafletModule.LatLngTuple;
+    type ApiMarkerInstance = [ number, number, IApiMarkerSlots ];
+    type UncheckedApiMarkerInstance = [ number, number, IApiMarkerSlots|null ];
 
     interface IHasRuntimeMarkerState {
         /* Fields internally used and set by the extension */
         apiInstance: ApiMarkerInstance;
         attachedLayers: string[];
-        assignedProperties: { [key: string]: string };
+        assignedProperties: RuntimeMarkerProperties;
     }
 
-    type MapEventTypes = 'backgroundChange' | 'chunkStreamingDone' | 'linkedEvent' | 'markerVisibilityUpdate'
-        | 'legendManager' | 'markerReady' | 'leafletLoaded' | 'markerFilteringPanel' | 'markerDismissChange'
-        | 'sendLinkedEvent' | 'legendLoaded' | 'collectiblesPanel' | 'groupDismissChange' | 'chunkStreamed';
+    namespace EventHandling {
+        type MapTypes = 'backgroundChange' | 'chunkStreamingDone' | 'linkedEvent' | 'markerVisibilityUpdate' | 'legendManager'
+            | 'markerReady' | 'leafletLoaded' | 'markerFilteringPanel' | 'markerDismissChange' | 'sendLinkedEvent'
+            | 'legendLoaded' | 'collectiblesPanel' | 'groupDismissChange' | 'chunkStreamed';
+        
+        type MapBackgroundChangeHandler = (  ) => void;
+    }
+
 
     interface ILinkedEventData {
         type: string;
