@@ -472,7 +472,11 @@ class DataMap extends EventEmitter {
             const group = /** @type {DataMaps.Configuration.IconBasedMarkerGroup} */ ( this.config.groups[ layers[ 0 ] ] );
 
             if ( 'pinColor' in group ) {
-                this.iconCache[ markerType ] = new Leaflet.Ark.PinIcon( { colour: group.pinColor, iconSize: group.size } );
+                this.iconCache[ markerType ] = new Leaflet.Ark.PinIcon( {
+                    colour: group.pinColor,
+                    iconSize: group.size,
+                    useWithCanvas: false
+                } );
             } else if ( 'markerIcon' in group ) {
                 // Look for the first layer of this marker that has an icon override property
                 let markerIcon = group.markerIcon;
@@ -481,7 +485,11 @@ class DataMap extends EventEmitter {
                     markerIcon = /** @type {!string} */ ( this.config.layers[ override ].markerIcon );
                 }
 
-                this.iconCache[ markerType ] = new Leaflet.Icon( { iconUrl: markerIcon, iconSize: group.size } );
+                this.iconCache[ markerType ] = new Leaflet.Icon( {
+                    iconUrl: markerIcon,
+                    iconSize: group.size,
+                    useWithCanvas: this.shouldRenderIconsOnCanvas()
+                } );
             }
         }
         return this.iconCache[ markerType ];
@@ -495,6 +503,16 @@ class DataMap extends EventEmitter {
      */
     getPopupClass() {
         return MarkerPopup;
+    }
+
+
+    /**
+     * Returns whether icon markers may be rendered onto a canvas.
+     *
+     * @return {boolean}
+     */
+    shouldRenderIconsOnCanvas() {
+        return !!( this.leaflet.options.allowIconsOnCanvas && this.isFeatureBitSet( MapFlags.RenderMarkersOntoCanvas ) );
     }
 
 
@@ -524,8 +542,7 @@ class DataMap extends EventEmitter {
         // Construct the marker
         if ( 'markerIcon' in group || 'pinColor' in group ) {
             // Fancy icon marker
-            const shouldUseCanvas = this.leaflet.options.allowIconsOnCanvas
-                && this.isFeatureBitSet( MapFlags.RenderMarkersOntoCanvas );
+            const shouldUseCanvas = !( 'pinColor' in group ) && this.shouldRenderIconsOnCanvas();
             leafletMarker = new ( shouldUseCanvas ? Leaflet.CanvasIconMarker : Leaflet.Marker )( position, {
                 icon: this.getIconFromLayers( layers )
             } );

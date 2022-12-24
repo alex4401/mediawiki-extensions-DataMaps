@@ -51,6 +51,7 @@ declare namespace LeafletModule {
         interface PinIconOptions {
             colour: string;
             iconSize: PointTuple;
+            useWithCanvas?: boolean;
         }
 
         class CircleMarker extends LeafletModule.CircleMarker {}
@@ -165,6 +166,7 @@ declare namespace LeafletModule {
     interface IconOptions {
         iconUrl: string;
         iconSize: PointTuple;
+        useWithCanvas?: boolean;
     }
 
 
