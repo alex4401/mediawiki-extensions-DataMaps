@@ -146,6 +146,7 @@ declare namespace LeafletModule {
         shouldScaleMarkers?: boolean;
         markerZoomScaleFactor?: number;
         interactionControl?: boolean;
+        allowIconsOnCanvas?: boolean;
     }
 
 

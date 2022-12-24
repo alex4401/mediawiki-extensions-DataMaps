@@ -190,7 +190,7 @@ class DataMap extends EventEmitter {
          */
         this.crsScaleX = this.crsScaleY = 100 / Math.max( this.config.crs[ 0 ][ 0 ], this.config.crs[ 1 ][ 0 ] );
 
-        // Set the RenderMarkersOntoCanvas flag if dmfullcanvas in the URL
+        // Force the RenderMarkersOntoCanvas flag if dmfullcanvas in the URL
         if ( Util.getQueryParameter( 'dmfullcanvas' ) ) {
             this.config.flags = this.config.flags | MapFlags.RenderMarkersOntoCanvas;
         }
@@ -524,8 +524,9 @@ class DataMap extends EventEmitter {
         // Construct the marker
         if ( 'markerIcon' in group || 'pinColor' in group ) {
             // Fancy icon marker
-            leafletMarker = new ( this.isFeatureBitSet( MapFlags.RenderMarkersOntoCanvas ) ? Leaflet.CanvasIconMarker
-                : Leaflet.Marker )( position, {
+            const shouldUseCanvas = this.leaflet.options.allowIconsOnCanvas
+                && this.isFeatureBitSet( MapFlags.RenderMarkersOntoCanvas );
+            leafletMarker = new ( shouldUseCanvas ? Leaflet.CanvasIconMarker : Leaflet.Marker )( position, {
                 icon: this.getIconFromLayers( layers )
             } );
         } else {
@@ -863,6 +864,8 @@ class DataMap extends EventEmitter {
                 zoomInTitle: mw.msg( 'datamap-control-zoom-in' ),
                 zoomOutTitle: mw.msg( 'datamap-control-zoom-out' )
             },
+            // Allow rendering icon markers on a canvas
+            allowIconsOnCanvas: true,
 
             // Enable bundled interaction rejection control
             interactionControl: true

@@ -45,6 +45,7 @@ class LeafletSettingsSpec extends DataModel {
         $this->checkField( $status, 'shouldScaleMarkers', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'markerZoomScaleFactor', DataModel::TYPE_NUMBER );
         $this->checkField( $status, 'interactionControl', DataModel::TYPE_BOOL );
+        $this->checkField( $status, 'allowIconsOnCanvas', DataModel::TYPE_BOOL );
 
         $this->disallowOtherFields( $status );
     }
