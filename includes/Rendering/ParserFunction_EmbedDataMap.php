@@ -24,10 +24,10 @@ final class ParserFunction_EmbedDataMap {
                 ->inContentLanguage()->escaped();
             return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true ];
         } elseif ( !$content->getValidationStatus()->isGood() ) {
-            $msg = wfMessage( 'datamap-error-pf-map-validation-fail', $title->getEditURL() )
-                ->inContentLanguage()->escaped();
+            $msg = wfMessage( 'datamap-error-map-validation-fail', wfEscapeWikiText( $title->getFullText() ) )
+                ->inContentLanguage()->parse();
             $parser->addTrackingCategory( 'datamap-category-pages-including-broken-maps' );
-            return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true ];
+            return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true, 'isHTML' => true ];
         }
 
         $options = self::getRenderOptions( $content->asModel(), $params );

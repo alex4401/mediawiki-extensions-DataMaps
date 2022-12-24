@@ -29,7 +29,9 @@
 	},
 
 	"TrackingCategories": [
-		"datamap-category-pages-including-maps"
+		"datamap-category-pages-including-maps",
+		"datamap-category-maps-failing-validation",
+		"datamap-category-pages-including-broken-maps"
 	],
 
 	"namespaces": [

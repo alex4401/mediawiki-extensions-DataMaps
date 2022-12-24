@@ -55,15 +55,22 @@ class DataMapContentHandler extends JsonContentHandler {
         $isEditPreview = $parserOptions->getIsPreview();
 
         // If validation fails, do not render the map embed
-        if ( !$content->getValidationStatus()->isGood() ) {
+        $validationStatus = $content->getValidationStatus();
+        if ( !$validationStatus->isGood() ) {
             if ( $shouldGenerateHtml && $isEditPreview ) {
                 // Edit preview, display a message box. This is something MediaWiki should be handling out of box though.
-                $parserOutput->setText( $parserOutput->getRawText() . Html::errorBox(
-                    wfMessage( 'datamap-error-cannot-preview-validation-errors', $status->getMessage( false, false ) )
+                $parserOutput->setText( Html::errorBox(
+                    wfMessage( 'datamap-error-cannot-preview-validation-errors', $validationStatus->getMessage( false, false ) )
                 ) );
             } else {
-                // No HTML requested, or we're not in a preview
-                $parserOutput->setText( null );
+                // Add to a tracking category and display a message if HTML is requested
+                MediaWikiServices::getInstance()->getTrackingCategories()
+                    ->addTrackingCategory( $parserOutput, 'datamap-category-maps-failing-validation', $pageRef );
+                if ( $shouldGenerateHtml ) {
+                    $parserOutput->setText( Html::errorBox(
+                        wfMessage( 'datamap-error-map-validation-fail-full', $validationStatus->getMessage( false, false ) )
+                    ) );
+                }
             }
             return;
         }
