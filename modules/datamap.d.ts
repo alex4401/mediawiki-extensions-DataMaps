@@ -118,17 +118,17 @@ declare namespace DataMaps {
         type MapListenerSignatures = {
             'backgroundChange': MapBackgroundChangeListenerFn;
             'chunkStreamingDone': EventListenerFn;
-            'chunkStreamed': ( markers: ( LeafletModule.CircleMarker|LeafletModule.Marker )[] ) => void;
+            'chunkStreamed': ( markers: ( LeafletModule.AnyMarker )[] ) => void;
             'linkedEvent': LinkedEventListenerFn;
             'sendLinkedEvent': LinkedEventListenerFn;
             'markerVisibilityUpdate': EventListenerFn;
             'legendManager': EventListenerFn;
-            'markerReady': ( marker: LeafletModule.CircleMarker|LeafletModule.Marker ) => void;
+            'markerReady': ( marker: LeafletModule.AnyMarker ) => void;
             'leafletLoaded': EventListenerFn;
             'legendLoaded': EventListenerFn;
             'collectiblesPanel': EventListenerFn;
             'markerFilteringPanel': EventListenerFn;
-            'markerDismissChange': ( marker: LeafletModule.CircleMarker|LeafletModule.Marker ) => void;
+            'markerDismissChange': ( marker: LeafletModule.AnyMarker ) => void;
             'groupDismissChange': ( groupId: string ) => void;
         }
 

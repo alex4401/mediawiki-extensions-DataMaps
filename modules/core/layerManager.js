@@ -15,13 +15,13 @@ module.exports = class MarkerLayerManager {
         /**
          * Collection of all bound markers.
          *
-         * @type {( LeafletModule.CircleMarker|LeafletModule.Marker )[]}
+         * @type {LeafletModule.AnyMarker[]}
          */
         this.markers = [];
         /**
          * Map of markers by layer.
          *
-         * @type {Record<string, ( LeafletModule.CircleMarker|LeafletModule.Marker )[]>}
+         * @type {Record<string, LeafletModule.AnyMarker[]>}
          */
         this.byLayer = {};
         /**
@@ -85,7 +85,7 @@ module.exports = class MarkerLayerManager {
 
     /**
      * @param {string[]} layers
-     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     * @param {LeafletModule.AnyMarker} leafletMarker
      */
     addMember( layers, leafletMarker ) {
         leafletMarker.attachedLayers = layers;
@@ -98,7 +98,7 @@ module.exports = class MarkerLayerManager {
 
 
     /**
-     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     * @param {LeafletModule.AnyMarker} leafletMarker
      * @param {string} layer
      */
     addMarkerToLayer( leafletMarker, layer ) {
@@ -109,7 +109,7 @@ module.exports = class MarkerLayerManager {
 
 
     /**
-     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     * @param {LeafletModule.AnyMarker} leafletMarker
      */
     removeMember( leafletMarker ) {
         this.map.leaflet.removeLayer( leafletMarker );
@@ -163,7 +163,7 @@ module.exports = class MarkerLayerManager {
 
 
     /**
-     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     * @param {LeafletModule.AnyMarker} leafletMarker
      * @param {boolean} isInternalCall
      * @fires DataMap#markerVisibilityUpdate
      * @return {void}

@@ -19,7 +19,12 @@ module.exports = {
         SortChecklistsByAmount: 1 << 4,
         LinkedSearch: 1 << 5,
         VisualEditor: 1 << 6,
-        IsPreview: 1 << 7
+        IsPreview: 1 << 7,
+        FUTURE__RenderMarkersOntoCanvas: 1 << 8,
+        /**
+         * @internal
+         */
+        RenderMarkersOntoCanvas: 1 << 9
     },
 
     /**

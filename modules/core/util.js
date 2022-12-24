@@ -151,7 +151,7 @@ module.exports = {
     /**
      * Generates an identifier of a marker using type and coordinates.
      *
-     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker Marker to get the identifier of.
+     * @param {LeafletModule.AnyMarker} leafletMarker Marker to get the identifier of.
      * @return {string}
      */
     getGeneratedMarkerId( leafletMarker ) {
@@ -164,7 +164,7 @@ module.exports = {
     /**
      * Retrieves an identifier of a marker to use with local storage or in permanent links.
      *
-     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker Marker to get the identifier of.
+     * @param {LeafletModule.AnyMarker} leafletMarker Marker to get the identifier of.
      * @return {string|number}
      */
     getMarkerId( leafletMarker ) {

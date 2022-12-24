@@ -11,7 +11,7 @@ module.exports = class MarkerPopup {
 
     /**
      * @param {DataMap} map
-     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     * @param {LeafletModule.AnyMarker} leafletMarker
      */
     constructor( map, leafletMarker ) {
         /**
@@ -23,7 +23,7 @@ module.exports = class MarkerPopup {
         /**
          * Associated marker.
          *
-         * @type {LeafletModule.CircleMarker|LeafletModule.Marker}
+         * @type {LeafletModule.AnyMarker}
          */
         this.leafletMarker = leafletMarker;
         /**
@@ -78,7 +78,7 @@ module.exports = class MarkerPopup {
      * {@link DataMap.getPopupClass} method.
      *
      * @param {DataMap} map
-     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     * @param {LeafletModule.AnyMarker} leafletMarker
      */
     static bindTo( map, leafletMarker ) {
         leafletMarker.bindPopup( () => new ( map.getPopupClass() )( map, leafletMarker ), {

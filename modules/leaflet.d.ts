@@ -203,6 +203,11 @@ declare namespace LeafletModule {
         fill?: boolean;
     }
 
+    interface CanvasIconMarkerOptions extends PathOptions {
+        icon: Icon;
+        dismissed?: boolean;
+    }
+
     interface CircleMarkerOptions {
         radius: number;
         zoomScaleFactor?: number;
@@ -324,7 +329,7 @@ declare namespace LeafletModule {
         constructor( options: CanvasOptions );
     }
 
-    class CircleMarker extends Layer implements DataMaps.IHasRuntimeMarkerState {
+    class CircleMarker extends Path implements DataMaps.IHasRuntimeMarkerState {
         constructor( position: LatLngLike, options: CircleMarkerOptions );
 
         getBounds(): LatLngBounds;
@@ -347,6 +352,19 @@ declare namespace LeafletModule {
         attachedLayers: string[];
         assignedProperties: DataMaps.RuntimeMarkerProperties;
     }
+
+    class CanvasIconMarker extends Path implements DataMaps.IHasRuntimeMarkerState {
+        constructor( position: LatLngLike, options: MarkerOptions );
+        setDismissed( value: boolean ): void;
+
+        options: CanvasIconMarkerOptions;
+        /* Fields internally used and set by the extension */
+        apiInstance: DataMaps.ApiMarkerInstance;
+        attachedLayers: string[];
+        assignedProperties: DataMaps.RuntimeMarkerProperties;
+    }
+
+    type AnyMarker = Marker|CanvasIconMarker|CircleMarker;
 
     class ImageOverlay extends Layer {
         constructor( url: string, bounds: LatLngBoundsLike, options: ImageOverlayOptions );

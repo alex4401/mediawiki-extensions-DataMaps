@@ -190,6 +190,11 @@ class DataMap extends EventEmitter {
          */
         this.crsScaleX = this.crsScaleY = 100 / Math.max( this.config.crs[ 0 ][ 0 ], this.config.crs[ 1 ][ 0 ] );
 
+        // Set the RenderMarkersOntoCanvas flag if dmfullcanvas in the URL
+        if ( Util.getQueryParameter( 'dmfullcanvas' ) ) {
+            this.config.flags = this.config.flags | MapFlags.RenderMarkersOntoCanvas;
+        }
+
         // Set up internal event handlers
         this.on( 'chunkStreamingDone', this.refreshMaxBounds, this );
         this.on( 'linkedEvent', this._onLinkedEventReceived, this );
@@ -408,7 +413,7 @@ class DataMap extends EventEmitter {
      * Switches marker's (or its group's) collected status in storage, updates visuals, and notifies other components. In case of
      * global collectibles also fires a linked event to notify other maps on the page.
      *
-     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     * @param {LeafletModule.AnyMarker} leafletMarker
      * @fires DataMap#markerDismissChange For the marker if it's an individual collectible.
      * @fires DataMap#sendLinkedEvent (groupDismissChange) When a group has its status updated instead.
      * @return {boolean} New state.
@@ -441,7 +446,7 @@ class DataMap extends EventEmitter {
     /**
      * Opens a marker's popup if the UID matches the `marker` query parameter
      *
-     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     * @param {LeafletModule.AnyMarker} leafletMarker
      */
     openPopupIfUriMarker( leafletMarker ) {
         if ( this.markerIdToAutoOpen !== null && Util.getMarkerId( leafletMarker ) === this.markerIdToAutoOpen ) {
@@ -503,7 +508,7 @@ class DataMap extends EventEmitter {
      * @param {DataMaps.UncheckedApiMarkerInstance} uncheckedInstance
      * @param {DataMaps.RuntimeMarkerProperties?} [properties]
      * @fires DataMap#markerReady
-     * @return {LeafletModule.CircleMarker|LeafletModule.Marker} A Leaflet marker instance.
+     * @return {LeafletModule.AnyMarker} A Leaflet marker instance.
      */
     createMarkerFromApiInstance( layers, uncheckedInstance, properties ) {
         // Initialise state if it's missing, thus reaching a null-safe state.
@@ -519,7 +524,8 @@ class DataMap extends EventEmitter {
         // Construct the marker
         if ( 'markerIcon' in group || 'pinColor' in group ) {
             // Fancy icon marker
-            leafletMarker = new Leaflet.Ark.IconMarker( position, {
+            leafletMarker = new ( this.isFeatureBitSet( MapFlags.RenderMarkersOntoCanvas ) ? Leaflet.CanvasIconMarker
+                : Leaflet.Marker )( position, {
                 icon: this.getIconFromLayers( layers )
             } );
         } else {
@@ -572,7 +578,7 @@ class DataMap extends EventEmitter {
      * @param {LeafletModule.PointTuple} position Point to place the marker at.
      * @param {DataMaps.IApiMarkerSlots?} [state] Optional object with fields: label, desc, image, article, search.
      * @param {DataMaps.RuntimeMarkerProperties?} [properties] Optional object with arbitrary fields.
-     * @return {LeafletModule.CircleMarker|LeafletModule.Marker} Leaflet marker instance.
+     * @return {LeafletModule.AnyMarker} Leaflet marker instance.
      */
     createMarker( layers, position, state, properties ) {
         return this.createMarkerFromApiInstance( layers, [ position[ 0 ], position[ 1 ], state || null ], properties );
@@ -582,7 +588,7 @@ class DataMap extends EventEmitter {
     /**
      * Opens a marker's popup, while respecting its background ties.
      *
-     * @param {LeafletModule.CircleMarker|LeafletModule.Marker} leafletMarker
+     * @param {LeafletModule.AnyMarker} leafletMarker
      */
     openMarkerPopup( leafletMarker ) {
         const properties = leafletMarker.assignedProperties;
