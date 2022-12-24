@@ -833,7 +833,7 @@ class DataMap extends EventEmitter {
             // Zoom settings
             zoomSnap: 0.25,
             zoomDelta: 0.25,
-            maxZoom: 5,
+            maxZoom: 6,
             wheelPxPerZoomLevel: 90,
             minZoom: Leaflet.Browser.mobile ? ( Leaflet.Browser.retina ? 1 : 1.75 ) : 2,
             // Zoom animation causes some awkward locking as Leaflet waits for the animation to finish before processing more
