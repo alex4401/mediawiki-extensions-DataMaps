@@ -188,7 +188,7 @@ class DataMap extends EventEmitter {
         this.on( 'markerVisibilityUpdate', this.refreshMaxBounds, this );
         this.on( 'legendManager', this._initialiseFiltersPanel, this );
         if ( !this.isFeatureBitSet( MapFlags.VisualEditor ) && Object.values( this.config.groups ).some( x =>
-            Util.getGroupCollectibleType( x ) && !this.isLayerFilteredOut( x ) ) ) {
+            Util.getGroupCollectibleType( x ) ) ) {
             this.on( 'legendManager', this._initialiseCollectiblesPanel, this );
         }
 
@@ -1041,7 +1041,7 @@ class DataMap extends EventEmitter {
         }
 
         // Build individual group toggles
-        this.filtersPanel.includeGroups( Object.keys( this.config.groups ).filter( x => !this.isLayerFilteredOut( x ) ) );
+        this.filtersPanel.includeGroups( Object.keys( this.config.groups ) );
 
         // Notify other components that the legend has been loaded, and remove all subscribers. All future subscribers
         // will be invoked right away.
