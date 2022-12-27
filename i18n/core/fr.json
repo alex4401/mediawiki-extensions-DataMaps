@@ -42,7 +42,7 @@
     "datamap-checklist-prelude": "Voici les objets qui peuvent être marqués récoltés :",
     "datamap-layer-surface": "Surface",
     "datamap-layer-cave": "Grottes",
-    "datamap-popup-related-article": "Voir plus",
+    "datamap-popup-related-article": "Lire plus",
     "datamap-popup-dismissed": "Récoltée",
     "datamap-popup-mark-as-dismissed": "Marquer comme récoltée",
     "datamap-popup-marker-link-get": "Partager le lien",
@@ -66,5 +66,12 @@
     "datamap-coordinate-control-text-xy": "x: $2, y: $1",
     "datamap-control-zoom-in": "Agrandir",
     "datamap-control-zoom-out": "Zoom arrière",
-    "datamap-control-edit": "Éditer les données de la carte"
+    "datamap-control-edit": "Éditer les données de la carte",
+    "datamap-category-pages-including-broken-maps": "Pages incluant des échecs de validation de cartes de données",
+    "datamap-error-map-validation-fail": "Le [[$1|code source de la carte de données]] ne réussit plus à valider les données. Veuillez corriger les erreurs.",
+    "datamap-interact-scroll-mac": "Utilisez ⌘ + Dérouler pour zoomer la carte",
+    "datamap-category-maps-failing-validation": "Cartes échouant à valider les données",
+    "datamap-error-map-validation-fail-full": "La carte de données ne réussit plus à valider les données. Veuillez corriger les erreurs d'abord:<br/>$1",
+    "datamap-interact-touch": "Utilisez deux doigts pour déplacer la carte",
+    "datamap-interact-scroll": "Utilisez CTRL + Dérouler pour zoomer la carte"
 }

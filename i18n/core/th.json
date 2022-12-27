@@ -22,7 +22,7 @@
     "datamap-layer-control": "สลับ",
     "datamap-layer-surface": "พื้นผิว",
     "datamap-layer-cave": "ถ้ำ",
-    "datamap-popup-related-article": "ดูเพิ่มเติมได้ที่",
+    "datamap-popup-related-article": "อ่านเพิ่มเติมได้ที่",
     "datamap-popup-dismissed": "สะสมแล้ว",
     "datamap-popup-mark-as-dismissed": "ทำเครื่องหมายว่าสะสมแล้ว",
     "datamap-popup-marker-link-get": "รับลิงก์สำหรับแชร์",
@@ -68,5 +68,12 @@
     "datamap-control-zoom-in": "ซูมเข้า",
     "datamap-control-zoom-out": "ซูมออก",
     "datamap-control-toggle-legend": "แตะเพื่อขยายคำอธิบายในการสลับเครื่องหมาย",
-    "datamap-control-edit": "แก้ไขข้อมูลแผนที่"
+    "datamap-control-edit": "แก้ไขข้อมูลแผนที่",
+    "datamap-category-pages-including-broken-maps": "บทความที่มีแผนที่ข้อมูลที่ยังไม่ได้รับการตรวจสอบ",
+    "datamap-error-map-validation-fail": "[[$1|ซอร์สโค้ดของแผนที่ข้อมูล]]ยังไม่ผ่านการตรวจสอบ โปรดแก้ไขข้อผิดพลาด",
+    "datamap-interact-scroll": "ใช้ CTRL + ลูกกลิ้งเมาส์ เพื่อซูมแผนที่",
+    "datamap-category-maps-failing-validation": "แผนที่นี้ไม่ผ่านการตรวจสอบข้อมูล",
+    "datamap-error-map-validation-fail-full": "แผนที่ข้อมูลนี้ไม่ผ่านการตรวจสอบ โปรดแก้ไขข้อผิดพลาด: <br/>$1",
+    "datamap-interact-touch": "ใช้สองนิ้วเพื่อขยับแผนที่",
+    "datamap-interact-scroll-mac": "ใช้ ⌘ + ลูกกลิ้งเมาส์ เพื่อซูมแผนที่"
 }
