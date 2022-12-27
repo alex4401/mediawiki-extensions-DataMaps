@@ -44,6 +44,12 @@ module.exports = class MarkerPopup {
          * @type {string|number}
          */
         this.uid = Util.getMarkerId( this.leafletMarker );
+        /**
+         * MultimediaViewer thumbnail index.
+         *
+         * @type {number?}
+         */
+        this.mmvThumbIndex = null;
 
         // These three containers are provided by Leaflet.Ark.Popup
         /** @type {!jQuery} */
@@ -288,17 +294,55 @@ module.exports = class MarkerPopup {
                     caption += ` (${this.map.getCoordLabel( this.leafletMarker.apiInstance )})`;
                 }
 
-                mw.mmv.bootstrap.thumbs.push( {
-                    thumb: $image[ 0 ],
-                    $thumb: this.$image,
-                    title,
-                    link: title.getUrl( {} ),
-                    alt: caption,
-                    caption
-                } );
-                this.thumbIndex = mw.mmv.bootstrap.thumbs.length - 1;
+                $image.on( 'click', event => {
+                    // Do not interfere with non-left clicks or if modifier keys are pressed.
+                    if ( ( event.button !== 0 && event.which !== 1 ) || event.altKey || event.ctrlKey || event.shiftKey
+                        || event.metaKey ) {
+                        return true;
+                    }
 
-                $image.on( 'click', event => mw.mmv.bootstrap.click( $image[ 0 ], event, title ) );
+                    mw.mmv.bootstrap.ensureEventHandlersAreSetUp();
+                    mw.mmv.bootstrap.loadViewer( true ).then( viewer => {
+                        if ( this.mmvThumbIndex === null ) {
+                            const mmvThumb = {
+                                thumb: $image[ 0 ],
+                                $thumb: $image,
+                                title,
+                                link: title.getUrl( {} ),
+                                alt: caption,
+                                caption,
+                                extraStatsDeferred: $.Deferred(),
+                                image: null
+                            };
+                            if ( !viewer.thumbs ) {
+                                viewer.thumbs = [];
+                            }
+                            viewer.thumbs.push( mmvThumb );
+                            this.mmvThumbIndex = viewer.thumbs.length - 1;
+
+                            mmvThumb.image = viewer.createNewImage(
+                                mmvThumb.$thumb.prop( 'src' ),
+                                mmvThumb.link,
+                                mmvThumb.title,
+                                this.mmvThumbIndex,
+                                mmvThumb.thumb,
+                                mmvThumb.caption,
+                                mmvThumb.alt
+                            );
+                        }
+
+                        // HACK: suppress MMV's setMediaHash on the whole page
+                        if ( viewer._noSMH ) {
+                            viewer.setMediaHash = () => {};
+                            viewer._noSMH = true;
+                        }
+
+                        const thumb = viewer.thumbs[ this.mmvThumbIndex ];
+                        viewer.loadImage( thumb.image, thumb.$thumb.clone()[ 0 ], false );
+                    } );
+                    event.preventDefault();
+                    return false;
+                } );
             } );
         }
     }
