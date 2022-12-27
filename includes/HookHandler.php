@@ -3,11 +3,8 @@ namespace MediaWiki\Extension\DataMaps;
 
 use MediaWiki\Extension\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
-use ParserOptions;
-use ParserOutput;
 use RequestContext;
 use Title;
 use User;
@@ -18,7 +15,6 @@ class HookHandler implements
     \MediaWiki\Hook\CanonicalNamespacesHook,
     \MediaWiki\Preferences\Hook\GetPreferencesHook,
     \MediaWiki\Hook\SkinTemplateNavigation__UniversalHook,
-    \MediaWiki\Hook\CustomEditorHook,
     \MediaWiki\ChangeTags\Hook\ChangeTagsListActiveHook,
     \MediaWiki\ChangeTags\Hook\ListDefinedTagsHook,
     \MediaWiki\Hook\RecentChange_saveHook,
@@ -103,7 +99,10 @@ class HookHandler implements
         }
     }
 
-    private function canUseVE( User $user, Title $title ): bool {
+    /**
+     * @internal
+     */
+    public static function canUseVE( User $user, Title $title ): bool {
         $prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
         $pageProps = MediaWikiServices::getInstance()->getPageProps();
 
@@ -139,7 +138,7 @@ class HookHandler implements
             ] );
         } elseif ( self::canUseVE( $skinTemplate->getAuthority()->getUser(), $title ) ) {
             $links['views']['edit']['href'] = $title->getLocalURL( $skinTemplate->editUrlOptions() + [
-                'visual' => 1
+                'action' => 'editmap'
             ] );
             $injection = [
                 'editsource' => [
@@ -150,71 +149,6 @@ class HookHandler implements
             $links['views'] = array_slice( $links['views'], 0, 2, true ) + $injection +
                 array_slice( $links['views'], 2, null, true );
         }
-    }
-
-    public function onCustomEditor( $article, $user ) {
-        if ( RequestContext::getMain()->getRequest()->getBool( 'visual' ) && self::canUseVE( $user, $article->getTitle() ) ) {
-            $req = $article->getContext()->getRequest();
-            $out = $article->getContext()->getOutput();
-
-            // Check if the user can edit this page, and resort back to source editor (which should display the errors and
-            // a source view) if they can't.
-            $permErrors = MediaWikiServices::getInstance()->getPermissionManager()
-                ->getPermissionErrors( 'edit', $user, $article->getTitle(), PermissionManager::RIGOR_FULL );
-            if ( $permErrors ) {
-                return true;
-            }
-
-            // Set up page title and revision ID
-            $out->setPageTitle( wfMessage( 'editing', $article->getTitle()->getPrefixedText() ) );
-            $out->setRevisionId( $req->getInt( 'oldid', $article->getRevIdFetched() ) );
-
-            // Fetch the content object
-            /** @var Content\DataMapContent */
-            $content = $article->fetchRevisionRecord()->getContent( SlotRecord::MAIN, RevisionRecord::FOR_THIS_USER, $user );
-
-            // Ensure this is not a mix-in
-            if ( $content->isMixin() ) {
-                $out->addWikiMsg( 'datamap-ve-cannot-edit-mixins' );
-                $out->addWikiMsg( 'datamap-ve-needs-fallback-to-source'/*, $sourceUrl*/ );
-                return false;
-            }
-
-            // Run validation as the visual editor cannot handle source-level errors
-            $status = $content->getValidationStatus();
-            if ( !$status->isOk() ) {
-                $out->addWikiMsg( 'datamap-ve-cannot-edit-validation-errors', $status->getMessage( false, false ) );
-                return false;
-            }
-
-            // Render a placeholder message for the editor
-            $out->addWikiMsg( 'datamap-ve-to-load' );
-
-            // Render an empty embed with no markers
-            $parserOptions = ParserOptions::newFromAnon();
-            $parserOptions->setIsPreview( true );
-            $parser = MediaWikiServices::getInstance()->getParser();
-            $parser->setOptions( $parserOptions );
-            $parserOutput = new ParserOutput();
-
-            // Get an embed renderer
-            $embedRenderer = $content->getEmbedRenderer( $article->getTitle(), $parser, $parserOutput, [
-                've' => true
-            ] );
-
-            // Render a marker-less embed
-            $embedRenderer->prepareOutput();
-            $out->addParserOutputMetadata( $parserOutput );
-            $out->addHTML( $embedRenderer->getHtml() );
-
-            // Inject the JavaScript module
-            $out->addModules( [
-                'ext.datamaps.ve'
-            ] );
-
-            return false;
-        }
-        return true;
     }
 
     public function onRevisionDataUpdates( $title, $renderedRevision, &$updates ) {
