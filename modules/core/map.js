@@ -996,7 +996,7 @@ class DataMap extends EventEmitter {
 
         // Display an edit button for logged in users
         if ( !this.isFeatureBitSet( MapFlags.IsPreview ) && mw.config.get( 'wgUserName' ) !== null ) {
-            this.$editControl = this.addControl( DataMap.anchors.topRight,
+            this.$editControl = this.addControl( DataMap.anchors.topLeft,
                 $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-edit">' ) );
             // @ts-ignore: wrong type signature for wikiScript in the package, argument is optional
             const editLink = `${mw.util.wikiScript()}?curid=${this.id}&action=edit` + (
