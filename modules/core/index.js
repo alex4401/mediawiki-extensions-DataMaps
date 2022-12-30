@@ -1,6 +1,7 @@
 module.exports = mw.dataMaps = {
     Enums: require( './enums.js' ),
     EventEmitter: require( './events.js' ),
+    Controls: require( './controls.js' ),
     MapStorage: require( './storage.js' ),
     MarkerLayerManager: require( './layerManager.js' ),
     MarkerPopup: require( './popup.js' ),

@@ -107,6 +107,7 @@
 				"core/stream.js",
 				"core/layerManager.js",
 				"core/map.js",
+				"core/controls.js",
 				"core/legend.js",
 				"core/markerLegend.js",
 				"core/popup.js",

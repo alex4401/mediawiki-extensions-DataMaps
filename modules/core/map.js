@@ -3,6 +3,7 @@ const MapStorage = require( './storage.js' ),
     MarkerLayerManager = require( './layerManager.js' ),
     MarkerPopup = require( './popup.js' ),
     MarkerStreamingManager = require( './stream.js' ),
+    Controls = require( './controls.js' ),
     LegendTabManager = require( './legend.js' ),
     MarkerFilteringPanel = require( './markerLegend.js' ),
     EventEmitter = require( './events.js' ),
@@ -117,27 +118,33 @@ class DataMap extends EventEmitter {
         /**
          * DOM element of the coordinates display control.
          *
-         * @type {jQuery?}
+         * @type {Controls.ExtraViewControls?}
          */
-        this.$coordTracker = null;
+        this.extraViewControls = null;
+        /**
+         * DOM element of the coordinates display control.
+         *
+         * @type {Controls.Coordinates?}
+         */
+        this.coordTracker = null;
         /**
          * DOM element of the legend popup button shown on mobile-grade displays.
          *
-         * @type {jQuery?}
+         * @type {Controls.LegendPopup?}
          */
-        this.$legendPopupBtn = null;
+        this.legendPopupButton = null;
         /**
          * DOM element of the edit button shown to registered users.
          *
-         * @type {jQuery?}
+         * @type {Controls.EditButton?}
          */
-        this.$editControl = null;
+        this.editControl = null;
         /**
          * DOM element of the background switcher dropdown.
          *
-         * @type {jQuery?}
+         * @type {Controls.BackgroundSwitcher?}
          */
-        this.$backgroundSwitch = null;
+        this.backgroundSwitch = null;
         /**
          * `marker` parameter from the query string if one is present.
          *
@@ -646,30 +653,6 @@ class DataMap extends EventEmitter {
 
 
     /**
-     * Adds a custom control to Leaflet's container.
-     *
-     * Requires the Leaflet map to be initialised.
-     *
-     * @param {string} anchor Anchor selector (common ones are found in DataMap.anchors).
-     * @param {jQuery} $element DOM node of the custom control.
-     * @param {boolean} [shouldPrepend] Whether to add the control to the beginning of the anchor.
-     * @return {jQuery} $element for chaining.
-     */
-    addControl( anchor, $element, shouldPrepend ) {
-        if ( shouldPrepend && this.$legendPopupBtn ) {
-            $element.insertAfter( this.$legendPopupBtn );
-        } else {
-            $element[ shouldPrepend ? 'prependTo' : 'appendTo' ]( this.$root.find( `.leaflet-control-container ${anchor}` ) );
-        }
-
-        // Stop mouse event propagation onto Leaflet map
-        $element.on( 'click dblclick scroll mousewheel wheel', event => event.stopPropagation() );
-
-        return $element;
-    }
-
-
-    /**
      * @private
      * @param {DataMaps.Configuration.BackgroundOverlay} overlay
      * @return {LeafletModule.Rectangle|LeafletModule.Polyline|LeafletModule.ImageOverlay}
@@ -920,21 +903,29 @@ class DataMap extends EventEmitter {
 
 
     /**
-     * @private
-     * @param {jQuery} $parent
-     * @param {string} title
-     * @param {string} icon
-     * @param {string?} [cssClass]
-     * @return {jQuery}
+     * Adds a custom control to Leaflet's container.
+     *
+     * Requires the Leaflet map to be initialised.
+     *
+     * @template {jQuery|Controls.MapControl} T
+     * @param {string} anchor Anchor selector (common ones are found in DataMap.anchors).
+     * @param {T} control Control to add.
+     * @param {boolean} [prepend] Whether to add the control to the beginning of the anchor.
+     * @return {T} {@link control} for chaining.
      */
-    _makeControlButton( $parent, title, icon, cssClass ) {
-        return $( `<a role="button" aria-disabled="false"><span class="oo-ui-icon-${icon}"></span></a>` )
-            .attr( {
-                title,
-                'aria-label': title,
-                class: cssClass
-            } )
-            .appendTo( $parent );
+    addControl( anchor, control, prepend ) {
+        const $element = /** @type {jQuery} */ ( control instanceof Controls.MapControl ? control.$element : control );
+
+        if ( prepend && this.legendPopupButton ) {
+            $element.insertAfter( this.legendPopupButton.$element );
+        } else {
+            $element[ prepend ? 'prependTo' : 'appendTo' ]( this.$root.find( `.leaflet-control-container ${anchor}` ) );
+        }
+
+        // Stop mouse event propagation onto Leaflet map
+        $element.on( 'click dblclick scroll mousewheel wheel', event => event.stopPropagation() );
+
+        return control;
     }
 
 
@@ -943,67 +934,24 @@ class DataMap extends EventEmitter {
      */
     _buildControls() {
         // Create a button to toggle the legend on small screens
-        this.$legendPopupBtn = this.addControl( DataMap.anchors.topLeft,
-            $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-legend-toggle">' ), true );
-        this._makeControlButton( this.$legendPopupBtn, mw.msg( 'datamap-legend-label' ), 'funnel' )
-            .prepend( mw.msg( 'datamap-legend-label' ) )
-            .on( 'click', event => {
-                event.stopPropagation();
-                this.$root.toggleClass( 'datamap-is-legend-toggled-on' );
-                /** @type {!jQuery} */ ( this.$legendPopupBtn ).find( 'span' ).toggleClass( 'oo-ui-image-progressive' );
-            } );
+        this.legendPopupButton = this.addControl( DataMap.anchors.topLeft, new Controls.LegendPopup( this ), true );
 
         // Create a coordinate-under-cursor display
         if ( this.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
-            this.$coordTracker = this.addControl( DataMap.anchors.bottomLeft,
-                $( '<div class="leaflet-control datamap-control datamap-control-coords">' ) );
-            this.leaflet.on( 'mousemove', event => {
-                let lat = event.latlng.lat / this.crsScaleY;
-                const lon = event.latlng.lng / this.crsScaleX;
-                if ( this.crsOrigin === Enums.CRSOrigin.TopLeft ) {
-                    lat = this.config.crs[ 1 ][ 0 ] - lat;
-                }
-                /** @type {!jQuery} */ ( this.$coordTracker ).text( this.getCoordLabel( lat, lon ) );
-            } );
+            this.coordTracker = this.addControl( DataMap.anchors.bottomLeft, new Controls.Coordinates( this ) );
         }
 
         // Create a background toggle
         if ( this.config.backgrounds.length > 1 ) {
-            this.$backgroundSwitch = this.addControl( DataMap.anchors.topRight,
-                $( '<select class="leaflet-control datamap-control datamap-control-backgrounds leaflet-bar">' )
-                    .on( 'change', () => {
-                        const index = /** @type {number} */ ( /** @type {!jQuery} */ ( this.$backgroundSwitch ).val() );
-                        this.setBackgroundPreference( index );
-                    } )
-            );
-            this.config.backgrounds.forEach( ( background, index ) => {
-                $( '<option>' ).attr( 'value', index ).text( /** @type {string} */ ( background.name ) )
-                    .appendTo( /** @type {!jQuery} */ ( this.$backgroundSwitch ) );
-            } );
-            this.$backgroundSwitch.val( this.backgroundIndex );
-            this.on( 'backgroundChange', () => {
-                /** @type {!jQuery} */ ( this.$backgroundSwitch ).val( this.backgroundIndex );
-            }, this );
+            this.backgroundSwitch = this.addControl( DataMap.anchors.topRight, new Controls.BackgroundSwitcher( this ) );
         }
 
         // Extend zoom control to add buttons to reset or centre the view
-        this.$viewControls = this.addControl( DataMap.anchors.topLeft,
-            $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-viewcontrols">' ) );
-        this._makeControlButton( this.$viewControls, mw.msg( 'datamap-control-reset-view' ), 'imageLayoutFrame',
-            'datamap-control-viewreset' ).on( 'click', () => this.restoreDefaultView() );
-        this._makeControlButton( this.$viewControls, mw.msg( 'datamap-control-centre-view' ), 'alignCenter',
-            'datamap-control-viewcentre' ).on( 'click', () => this.centreView() );
+        this.viewControls = this.addControl( DataMap.anchors.topLeft, new Controls.ExtraViewControls( this ) );
 
-        // Display an edit button for logged in users
+        // Display an edit button to logged in users
         if ( !this.isFeatureBitSet( MapFlags.IsPreview ) && mw.config.get( 'wgUserName' ) !== null ) {
-            this.$editControl = this.addControl( DataMap.anchors.topLeft,
-                $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-edit">' ) );
-            // @ts-ignore: wrong type signature for wikiScript in the package, argument is optional
-            const editLink = `${mw.util.wikiScript()}?curid=${this.id}&action=edit` + (
-                mw.user.options.get( 'datamaps-enable-visual-editor' ) ? '&visual=1' : ''
-            );
-            this._makeControlButton( this.$editControl, mw.msg( 'datamap-control-edit' ), 'edit' )
-                .attr( 'href', editLink );
+            this.editControl = this.addControl( DataMap.anchors.topLeft, new Controls.EditButton( this ) );
         }
     }
 
@@ -1064,9 +1012,10 @@ class DataMap extends EventEmitter {
  * @constant
  */
 DataMap.anchors = Object.freeze( {
-    bottomLeft: '.leaflet-bottom.leaflet-left',
     topRight: '.leaflet-top.leaflet-right',
-    topLeft: '.leaflet-top.leaflet-left'
+    topLeft: '.leaflet-top.leaflet-left',
+    bottomLeft: '.leaflet-bottom.leaflet-left',
+    bottomRight: '.leaflet-bottom.leaflet-right'
 } );
 /**
  * Content bounds padding.
