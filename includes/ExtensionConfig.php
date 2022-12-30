@@ -4,11 +4,6 @@ namespace MediaWiki\Extension\DataMaps;
 use MediaWiki\MediaWikiServices;
 
 class ExtensionConfig {
-    public const FF_SHOW_COORDINATES = 'ShowCoordinates';
-    public const FF_REQUIRE_CUSTOM_MARKER_IDS = 'RequireCustomMarkerIDs';
-    public const FF_SEARCH = 'Search';
-    public const FF_SORT_CHECKLIST_BY_AMOUNT = 'SortChecklistsByAmount';
-
     public static function getParserExpansionLimit(): int {
         return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsMarkerParserExpansionLimit' );
     }
@@ -63,14 +58,6 @@ class ExtensionConfig {
 
     public static function shouldCacheWikitextInProcess(): bool {
         return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsUseInProcessParserCache' );
-    }
-
-    public static function getDefaultFeatureStates(): array {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsDefaultFeatures' );
-    }
-
-    public static function getDefaultFeatureState( string $feature ) {
-        return self::getDefaultFeatureStates()[$feature];
     }
 
     public static function shouldLinksUpdatesUseMarkers() {

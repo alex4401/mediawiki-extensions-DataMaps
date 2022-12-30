@@ -421,14 +421,6 @@
 			"description": "Attaches data map marker processing time in API requests.",
 			"value": false
 		},
-		"DefaultFeatures": {
-			"value": {
-				"ShowCoordinates": true,
-				"RequireCustomMarkerIDs": false,
-				"Search": false,
-				"SortChecklistsByAmount": false
-			}
-		},
 		"FullLinksUpdateBudget": {
 			"value": 0.5
 		},

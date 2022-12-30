@@ -81,8 +81,7 @@ class DataMapSpec extends DataModel {
     }
 
     public function wantsCoordinatesShown(): bool {
-        return isset( $this->raw->showCoordinates ) ? $this->raw->showCoordinates
-            : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_SHOW_COORDINATES );
+        return isset( $this->raw->showCoordinates ) ? $this->raw->showCoordinates : true;
     }
 
     public function wantsLegendHidden(): bool {
@@ -94,13 +93,11 @@ class DataMapSpec extends DataModel {
     }
 
     public function wantsCustomMarkerIDs(): bool {
-        return isset( $this->raw->requireCustomMarkerIDs ) ? $this->raw->requireCustomMarkerIDs
-            : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_REQUIRE_CUSTOM_MARKER_IDS );
+        return isset( $this->raw->requireCustomMarkerIDs ) ? $this->raw->requireCustomMarkerIDs : false;
     }
 
     public function wantsSearch(): int {
-        $value = isset( $this->raw->enableSearch ) ? $this->raw->enableSearch
-            : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_SEARCH );
+        $value = isset( $this->raw->enableSearch ) ? $this->raw->enableSearch : false;
         if ( $value === true ) {
             return self::SM_SELF;
         } elseif ( $value === 'tabberWide' ) {
@@ -110,8 +107,7 @@ class DataMapSpec extends DataModel {
     }
 
     public function wantsChecklistSortedByAmount(): bool {
-        return isset( $this->raw->sortChecklistsByAmount ) ? $this->raw->sortChecklistsByAmount
-            : ExtensionConfig::getDefaultFeatureState( ExtensionConfig::FF_SORT_CHECKLIST_BY_AMOUNT );
+        return isset( $this->raw->sortChecklistsByAmount ) ? $this->raw->sortChecklistsByAmount : false;
     }
 
     public function getInjectedLeafletSettings(): ?object {
