@@ -21,6 +21,23 @@ module.exports = class EventEmitter {
 
 
     /**
+     * @internal
+     * @param {EventHandlerRef} handler Callback descriptor.
+     * @param {Array<any>?} args Arguments.
+     */
+    static invokeHandler( handler, args ) {
+        try {
+            handler.method.apply( handler.context, args );
+        } catch ( error ) {
+            // If a listener throws an exception, do not disrupt the emitter's routine, and rethrow the exception later
+            setTimeout( () => {
+                throw error;
+            } );
+        }
+    }
+
+
+    /**
      * Registers an event handler.
      *
      * If an event is set to fire immediately with memorised arguments, the handler will be invoked right away and won't
@@ -38,7 +55,7 @@ module.exports = class EventEmitter {
         };
         if ( this._autoFiringEvents[ event ] ) {
             // Event marked to set off right away with persistent parameters, invoke the handler now
-            this._invokeEventHandler( handler, this._autoFiringEvents[ event ] );
+            EventEmitter.invokeHandler( handler, this._autoFiringEvents[ event ] );
         } else {
             if ( !this._handlers[ event ] ) {
                 this._handlers[ event ] = [];
@@ -79,23 +96,6 @@ module.exports = class EventEmitter {
 
 
     /**
-     * @param {EventHandlerRef} handler Callback descriptor.
-     * @param {Array<any>?} args Arguments.
-     * @private
-     */
-    _invokeEventHandler( handler, args ) {
-        try {
-            handler.method.apply( handler.context, args );
-        } catch ( error ) {
-            // If a listener throws an exception, do not disrupt the emitter's routine, and rethrow the exception later
-            setTimeout( () => {
-                throw error;
-            } );
-        }
-    }
-
-
-    /**
      * Invokes all bound event handlers with given arguments.
      *
      * @template {Extract<keyof Signatures, string>} EventId
@@ -108,7 +108,7 @@ module.exports = class EventEmitter {
         }
 
         for ( const handler of this._handlers[ event ] ) {
-            this._invokeEventHandler( handler, params );
+            EventEmitter.invokeHandler( handler, params );
         }
     }
 

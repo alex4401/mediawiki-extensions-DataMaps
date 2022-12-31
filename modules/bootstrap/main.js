@@ -1,11 +1,20 @@
-const initialisedMaps = [],
-    ids = [],
-    toNotify = [];
+const
+    /** @type {typeof import( '../core/map.js' )} */ DataMap = mw.dataMaps.DataMap,
+    /** @type {typeof import( '../core/events.js' )} */ EventEmitter = mw.dataMaps.EventEmitter,
+    /** @type {import( '../core/map.js' )[]} */ initialisedMaps = [],
+    /** @type {number[]} */ ids = [],
+    /** @type {import( '../core/events.js' ).EventHandlerRef[]} */ toNotify = [];
 
 
-function initialiseMapWithConfig( id, $root, config ) {
+/**
+ * @param {number} id
+ * @param {HTMLElement} rootElement
+ * @param {DataMaps.Configuration.Map} config
+ * @return {import( '../core/map.js' )}
+ */
+function initialiseMapWithConfig( id, rootElement, config ) {
     // Set the map up
-    const map = new mw.dataMaps.DataMap( id, $root, config );
+    const map = new DataMap( id, $( rootElement ), config );
 
     // Push onto internal tracking list
     initialisedMaps.push( map );
@@ -22,8 +31,7 @@ function initialiseMapWithConfig( id, $root, config ) {
 
     // Notify external scripts waiting on maps
     for ( const handler of toNotify ) {
-        // eslint-disable-next-line no-underscore-dangle
-        mw.dataMaps.EventEmitter.prototype._invokeEventHandler( handler, [ map ] );
+        EventEmitter.invokeHandler( handler, [ map ] );
     }
 
     // Request markers from the API
@@ -43,14 +51,14 @@ function initialiseMapWithConfig( id, $root, config ) {
 /**
  * Looks for a configuration element and parses its contents as JSON.
  *
- * @param {Element} $root Root element of the map.
- * @return {Object} Configuration object.
+ * @param {HTMLElement} rootElement Root element of the map.
+ * @return {DataMaps.Configuration.Map} Configuration object.
  */
-function getConfig( $root ) {
+function getConfig( rootElement ) {
     let config;
-    const $data = $root.find( '> script[type="application/datamap+json"]' );
-    if ( $data.length > 0 ) {
-        config = JSON.parse( $data.text() );
+    const dataElement = rootElement.querySelector( ':scope > script[type="application/datamap+json"]' );
+    if ( dataElement !== null ) {
+        config = JSON.parse( /** @type {HTMLElement} */ ( dataElement ).innerText );
     }
     return config;
 }
@@ -59,19 +67,22 @@ function getConfig( $root ) {
 // Begin initialisation once the document is loaded
 mw.hook( 'wikipage.content' ).add( $content => {
     // Run initialisation for every map, followed by events for gadgets to listen to
-    $content.find( '.datamap-container[data-datamap-id]' ).each( function () {
-        const $root = $( this );
-        const id = $root.data( 'datamap-id' );
-        const config = getConfig( $root );
+    for ( const rootElement of /** @type {HTMLElement[]} */ ( $content.find( '.datamap-container[data-datamap-id]' ) ) ) {
+        const id = parseInt( /** @type {!string} */ ( rootElement.dataset.datamapId ) ),
+            config = getConfig( rootElement );
         if ( config ) {
             ids.push( id );
-            initialiseMapWithConfig( id, $root, config );
+            initialiseMapWithConfig( id, rootElement, config );
         }
-    } );
+    }
 } );
 
 
-mw.dataMaps.registerMapAddedHandler = function ( callback, context ) {
+/**
+ * @param {( map: DataMap[] ) => void} callback
+ * @param {any} [context]
+ */
+mw.dataMaps.registerMapAddedHandler = mw.dataMaps.onMapInitialised = function ( callback, context ) {
     const handler = {
         method: callback,
         context
@@ -79,7 +90,6 @@ mw.dataMaps.registerMapAddedHandler = function ( callback, context ) {
     toNotify.push( handler );
 
     for ( const map of initialisedMaps ) {
-        // eslint-disable-next-line no-underscore-dangle
-        mw.dataMaps.EventEmitter.prototype._invokeEventHandler( handler, [ map ] );
+        EventEmitter.invokeHandler( handler, [ map ] );
     }
 };
