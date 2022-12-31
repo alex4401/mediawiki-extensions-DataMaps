@@ -5,7 +5,8 @@
       "node_modules/types-mediawiki"
     ],
 	"exclude": [
-		"vendor"
+		"vendor",
+		"modules/search"
     ],
 	"compilerOptions": {
 		"target": "ES6",
