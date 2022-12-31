@@ -1,13 +1,11 @@
 const Leaflet = require( '../vendor/leaflet/leaflet.js' ),
-    DomEvent = Leaflet.DomEvent,
-    DomUtil = Leaflet.DomUtil;
+    DomEvent = Leaflet.DomEvent;
 
 
 module.exports = Leaflet.Handler.extend( {
     addHooks() {
         this._pane = this._map.createPane( 'interactionWarningPane', this._map._container );
-        // eslint-disable-next-line mediawiki/class-doc
-        DomUtil.addClass( this._pane, 'datamap-overlay-status' );
+        this._pane.classList.add( 'datamap-overlay-status' );
 
         this._disableHandlers();
 
@@ -52,7 +50,7 @@ module.exports = Leaflet.Handler.extend( {
         // * datamap-interact-touch
         this._pane.innerText = mw.msg( `datamap-interact-${reason}${Leaflet.Browser.mac && reason === 'scroll' ? '-mac' : ''}` );
         // eslint-disable-next-line mediawiki/class-doc
-        DomUtil.addClass( this._pane, 'datamap-is-interaction-rejected' );
+        this._pane.classList.add( 'datamap-is-interaction-rejected' );
 
         if ( this._isRejectingInteraction ) {
             clearTimeout( this._isRejectingInteraction );
@@ -73,7 +71,7 @@ module.exports = Leaflet.Handler.extend( {
     removeWarning( reason ) {
         if ( this._isRejectingInteraction ) {
             // eslint-disable-next-line mediawiki/class-doc
-            DomUtil.removeClass( this._pane, 'datamap-is-interaction-rejected' );
+            this._pane.classList.remove( 'datamap-is-interaction-rejected' );
             clearTimeout( this._isRejectingInteraction );
             this._isRejectingInteraction = null;
 
@@ -129,7 +127,7 @@ module.exports = Leaflet.Handler.extend( {
 
 
     _onTouch( e ) {
-        if ( DomUtil.hasClass( e.target, 'leaflet-interactive' ) ) {
+        if ( e.target.classList.contains( 'leaflet-interactive' ) ) {
             if ( e.type === 'touchmove' && e.touches.length === 1 ) {
                 this.showWarning( 'touch' );
             } else {
