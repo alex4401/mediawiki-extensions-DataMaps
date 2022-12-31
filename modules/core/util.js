@@ -5,7 +5,7 @@ const Enums = require( './enums.js' );
 let Leaflet = null;
 
 
-module.exports = {
+module.exports = Object.freeze( {
     /**
      * Max circle size in legend elements.
      *
@@ -257,4 +257,4 @@ module.exports = {
                 : null;
         }
     }
-};
+} );
