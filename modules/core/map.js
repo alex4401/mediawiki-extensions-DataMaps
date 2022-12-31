@@ -340,14 +340,14 @@ class DataMap extends EventEmitter {
      * Message delivery is handled by the bootstrap itself, and not maps.
      *
      * @protected
-     * @param {DataMaps.EventHandling.LinkedEventData} event External event information.
+     * @param {DataMaps.EventHandling.Linked.Event} event External event information.
      */
     _onLinkedEventReceived( event ) {
         switch ( event.type ) {
             // Sent when a global group's collected status changes. Data contains affected `groupId` and `state` after
             // changed.
             case 'groupDismissChange': {
-                const gdeEvent = /** @type {DataMaps.EventHandling.IGroupDismissChangeLinkedEventData} */ ( event );
+                const gdeEvent = /** @type {DataMaps.EventHandling.Linked.IGroupDismissChangeEvent} */ ( event );
                 const group = this.config.groups[ gdeEvent.groupId ];
                 if ( group && Util.isBitSet( group.flags, Enums.MarkerGroupFlags.Collectible_GlobalGroup ) ) {
                     this._updateGlobalDismissal( gdeEvent.groupId, gdeEvent.state );

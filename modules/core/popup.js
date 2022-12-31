@@ -1,6 +1,6 @@
+/** @typedef {import( './map.js' )} DataMap */
 const Util = require( './util.js' ),
     Enums = require( './enums.js' );
-/** @typedef {import( './map.js' )} DataMap */
 
 
 /**

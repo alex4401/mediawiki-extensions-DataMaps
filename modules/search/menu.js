@@ -1,5 +1,5 @@
 const MarkerSearchIndex = require( './indexing.js' ),
-    IsDebug = mw.config.get( 'debug' ) === 1;
+    IsDebug = mw.config.get( 'debug' );
 
 
 function MenuWidget( config ) {

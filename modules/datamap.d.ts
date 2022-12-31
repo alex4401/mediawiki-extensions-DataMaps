@@ -118,7 +118,7 @@ declare namespace DataMaps {
         type MapListenerSignatures = {
             'backgroundChange': MapBackgroundChangeListenerFn;
             'chunkStreamingDone': EventListenerFn;
-            'chunkStreamed': ( markers: ( LeafletModule.AnyMarker )[] ) => void;
+            'chunkStreamed': ( markers: LeafletModule.AnyMarker[] ) => void;
             'linkedEvent': LinkedEventListenerFn;
             'sendLinkedEvent': LinkedEventListenerFn;
             'markerVisibilityUpdate': EventListenerFn;
@@ -134,19 +134,22 @@ declare namespace DataMaps {
 
         type EventListenerFn = () => void;
         type MapBackgroundChangeListenerFn = ( index: number, config: Configuration.Background ) => void;
-        type LinkedEventListenerFn = ( event: LinkedEventData ) => void;
+        type LinkedEventListenerFn = ( event: Linked.Event ) => void;
 
 
-        interface IGenericLinkedEventData {
-            type: string;
-        }
+        namespace Linked {
+            interface IGenericEvent {
+                type: string;
+                map?: import( './core/map.js' );
+            }
     
-        interface IGroupDismissChangeLinkedEventData extends IGenericLinkedEventData {
-            type: 'groupDismissChange';
-            groupId: string;
-            state: boolean;
-        }
+            interface IGroupDismissChangeEvent extends IGenericEvent {
+                type: 'groupDismissChange';
+                groupId: string;
+                state: boolean;
+            }
 
-        type LinkedEventData = IGenericLinkedEventData | IGroupDismissChangeLinkedEventData;
+            type Event = IGenericEvent | IGroupDismissChangeEvent;
+        }
     }
 }

@@ -1,11 +1,20 @@
 const Util = require( './util.js' ),
+    EventEmitter = mw.dataMaps.EventEmitter,
     Fuzzysort = require( 'ext.datamaps.fuzzysort' );
 
 
 /**
- * A search index entry collection.
+ * @typedef {Object} ListenerSignatures
+ * @property {() => void} commit
  */
-class MarkerSearchIndex extends mw.dataMaps.EventEmitter {
+
+
+/**
+ * A search index entry collection.
+ *
+ * @extends EventEmitter<ListenerSignatures>
+ */
+class MarkerSearchIndex extends EventEmitter {
     constructor() {
         super();
 
