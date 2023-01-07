@@ -1,24 +1,41 @@
-const MarkerSearchIndex = require( './indexing.js' ),
+const
+    /** @type {import( '../core' )} */ CoreModule = require( 'ext.datamaps.core' ),
+    DataMap = CoreModule.DataMap,
+    Enums = CoreModule.Enums,
+    Util = CoreModule.Util,
+    MapControl = CoreModule.Controls.MapControl;
+const
+    MarkerSearchIndex = require( './indexing.js' ),
     MenuWidget = require( './menu.js' ),
-    MenuOptionWidget = require( './option.js' ),
-    DataMap = mw.dataMaps.DataMap,
-    Enums = mw.dataMaps.Enums,
-    Util = mw.dataMaps.Util;
+    MenuOptionWidget = require( './option.js' );
 
 
-class MarkerSearch {
+class MarkerSearch extends MapControl {
+    /**
+     * @param {DataMap} map Owning map.
+     * @param {MarkerSearchIndex} index
+     * @param {boolean} isLinked
+     */
     constructor( map, index, isLinked ) {
+        super( map, 'search', undefined, [ MapControl.BAR ] );
+
+        /** @type {DataMap} */
         this.map = map;
+        /** @type {MarkerSearchIndex} */
         this.ownedIndex = index;
+        /** @type {MarkerSearchIndex?} */
         this.displayIndex = null;
+        /** @type {boolean} */
         this.isLinked = isLinked;
 
-        this.map.on( 'leafletLoaded', () => {
-            this._initialiseUI();
-
-            this._setDisplayIndex( this.isLinked ? this.ownedIndex.parent : this.ownedIndex );
+        map.on( 'leafletLoaded', () => {
+            // Push self into the map and initialise the user interface
+            this.map.addControl( DataMap.anchors.topLeft, this, true )._initialiseUI();
+            // Build the index from markers that have been loaded so far
+            this._setDisplayIndex( this.isLinked ? /** @type {MarkerSearchIndex.ChildIndex} */ ( this.ownedIndex ).parent
+                : this.ownedIndex );
             this.addExistingMarkersToOwnIndex();
-
+            // Set up event handlers
             this.map.on( 'markerReady', this.addMarker, this );
             this.map.on( 'chunkStreamingDone', this.onChunkStreamed, this );
         } );
@@ -26,9 +43,6 @@ class MarkerSearch {
 
 
     _initialiseUI() {
-        this.$root = this.map.addControl( DataMap.anchors.topLeft,
-            $( '<div class="leaflet-control datamap-control leaflet-bar datamap-control-search">' ), true );
-
         this.inputBox = new OO.ui.TextInputWidget( {
             placeholder: mw.msg( 'datamap-control-search' ),
             icon: 'search'
@@ -43,7 +57,7 @@ class MarkerSearch {
             width: '100%'
         } );
 
-        this.inputBox.$element.appendTo( this.$root );
+        this.inputBox.$element.appendTo( this.$element );
         this.menu.$element.appendTo( this.inputBox.$element );
 
         if ( this.isLinked ) {
@@ -66,6 +80,9 @@ class MarkerSearch {
     }
 
 
+    /**
+     * @param {MarkerSearchIndex} index
+     */
     _setDisplayIndex( index ) {
         if ( this.displayIndex ) {
             this.displayIndex.off( 'commit', this._acceptOptions, this );
