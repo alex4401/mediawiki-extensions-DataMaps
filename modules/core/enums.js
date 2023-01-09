@@ -26,16 +26,6 @@ module.exports = {
     /**
      * @readonly
      */
-    CollectibleType: {
-        // Corresponds to CM_ constants in Data\MarkerGroupSpec
-        Individual: 1,
-        Group: 2,
-        GlobalGroup: 3
-    },
-
-    /**
-     * @readonly
-     */
     MarkerGroupFlags: {
         IsNumberedInChecklists: 1 << 0,
         CannotBeSearched: 1 << 1,
