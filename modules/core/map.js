@@ -187,6 +187,18 @@ class DataMap extends EventEmitter {
             this.config.flags = this.config.flags | MapFlags.RenderMarkersOntoCanvas;
         }
 
+        // Register groups from the configuration with the layer visibility manager, and set their default state
+        for ( const groupName in this.config.groups ) {
+            const group = this.config.groups[ groupName ];
+
+            // Register with the layer manager
+            this.layerManager.register( groupName );
+
+            if ( Util.isBitSet( group.flags, MarkerGroupFlags.IsUnselected ) ) {
+                this.layerManager.setExclusion( groupName, true );
+            }
+        }
+
         // Set up internal event handlers
         this.on( 'chunkStreamingDone', this.refreshMaxBounds, this );
         this.on( 'linkedEvent', this._onLinkedEventReceived, this );
@@ -838,28 +850,14 @@ class DataMap extends EventEmitter {
         this.config.backgrounds.forEach( ( background, index ) => this._initialiseBackground( background, index ) );
         // Switch to the last chosen one or first defined
         this.setCurrentBackground( this.storage.data.background || 0 );
-        // Update max bounds
+        // Bring to a valid state and call further initialisation methods
         this.refreshMaxBounds();
-        // Restore default view
         this.restoreDefaultView();
-
-        for ( const groupName in this.config.groups ) {
-            const group = this.config.groups[ groupName ];
-
-            // Register with the layer manager
-            this.layerManager.register( groupName );
-
-            if ( Util.isBitSet( group.flags, MarkerGroupFlags.IsUnselected ) ) {
-                this.layerManager.setExclusion( groupName, true );
-            }
-        }
+        this.updateMarkerScaling();
+        this._buildControls();
 
         // Recalculate marker sizes when zoom ends
         this.leaflet.on( 'zoom', this.updateMarkerScaling, this );
-        this.updateMarkerScaling();
-
-        // Build extra controls
-        this._buildControls();
 
         // Install the interaction rejection controller
         this.leaflet.addHandler( 'interactionControl', Leaflet.Ark.InteractionControl );
