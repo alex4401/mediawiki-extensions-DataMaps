@@ -1,5 +1,5 @@
 const MapStorage = require( './storage.js' ),
-    Enums = require( './enums.js' ),
+    { MapFlags, MarkerGroupFlags, CRSOrigin } = require( './enums.js' ),
     MarkerLayerManager = require( './layerManager.js' ),
     MarkerPopup = require( './popup.js' ),
     MarkerStreamingManager = require( './stream.js' ),
@@ -9,7 +9,6 @@ const MapStorage = require( './storage.js' ),
     EventEmitter = require( './events.js' ),
     CollectiblesPanel = require( './dismissables.js' ),
     Util = require( './util.js' );
-const MapFlags = Enums.MapFlags;
 /** @type {!LeafletModule} */
 // @ts-ignore: Lazily initialised, this'd be ideally solved with post-fix assertions but we're in JS land.
 let Leaflet = null;
@@ -173,7 +172,7 @@ class DataMap extends EventEmitter {
          * @type {DataMaps.CoordinateOrigin}
          */
         this.crsOrigin = ( this.config.crs[ 0 ][ 0 ] < this.config.crs[ 1 ][ 0 ]
-            && this.config.crs[ 0 ][ 1 ] < this.config.crs[ 1 ][ 1 ] ) ? Enums.CRSOrigin.TopLeft : Enums.CRSOrigin.BottomLeft;
+            && this.config.crs[ 0 ][ 1 ] < this.config.crs[ 1 ][ 1 ] ) ? CRSOrigin.TopLeft : CRSOrigin.BottomLeft;
         // Y axis is authoritative, this is really just a cosmetic choice influenced by ARK (latitude first). X doesn't need to
         // be mapped on a separate scale from Y, unless we want them to always be squares.
         /**
@@ -281,7 +280,7 @@ class DataMap extends EventEmitter {
      * @return {LeafletModule.PointTuple} New point in the universal space.
      */
     translatePoint( point ) {
-        return this.crsOrigin === Enums.CRSOrigin.TopLeft
+        return this.crsOrigin === CRSOrigin.TopLeft
             ? [ ( this.config.crs[ 1 ][ 0 ] - point[ 0 ] ) * this.crsScaleY, point[ 1 ] * this.crsScaleX ]
             : [ point[ 0 ] * this.crsScaleY, point[ 1 ] * this.crsScaleX ];
     }
@@ -296,7 +295,7 @@ class DataMap extends EventEmitter {
      * @return {LeafletModule.LatLngBoundsTuple} New box in the universal space.
      */
     translateBox( box ) {
-        return this.crsOrigin === Enums.CRSOrigin.TopLeft
+        return this.crsOrigin === CRSOrigin.TopLeft
             ? [ [ ( this.config.crs[ 1 ][ 0 ] - box[ 0 ][ 0 ] ) * this.crsScaleY, box[ 0 ][ 1 ] * this.crsScaleX ],
                 [ ( this.config.crs[ 1 ][ 0 ] - box[ 1 ][ 0 ] ) * this.crsScaleY, box[ 1 ][ 1 ] * this.crsScaleX ] ]
             : [ [ box[ 0 ][ 0 ] * this.crsScaleY, box[ 0 ][ 1 ] * this.crsScaleX ],
@@ -329,7 +328,7 @@ class DataMap extends EventEmitter {
      * @return {MapStorage}
      */
     getStorageForMarkerGroup( group ) {
-        return Util.isBitSet( group.flags, Enums.MarkerGroupFlags.Collectible_GlobalGroup ) ? this.globalStorage : this.storage;
+        return Util.isBitSet( group.flags, MarkerGroupFlags.Collectible_GlobalGroup ) ? this.globalStorage : this.storage;
     }
 
 
@@ -349,7 +348,7 @@ class DataMap extends EventEmitter {
             case 'groupDismissChange': {
                 const gdeEvent = /** @type {DataMaps.EventHandling.Linked.IGroupDismissChangeEvent} */ ( event );
                 const group = this.config.groups[ gdeEvent.groupId ];
-                if ( group && Util.isBitSet( group.flags, Enums.MarkerGroupFlags.Collectible_GlobalGroup ) ) {
+                if ( group && Util.isBitSet( group.flags, MarkerGroupFlags.Collectible_GlobalGroup ) ) {
                     this._updateGlobalDismissal( gdeEvent.groupId, gdeEvent.state );
                 }
                 break;
@@ -389,7 +388,7 @@ class DataMap extends EventEmitter {
     toggleMarkerDismissal( leafletMarker ) {
         const groupId = leafletMarker.attachedLayers[ 0 ];
         const mode = Util.getGroupCollectibleType( this.config.groups[ groupId ] );
-        const isIndividual = mode === Enums.MarkerGroupFlags.Collectible_Individual,
+        const isIndividual = mode === MarkerGroupFlags.Collectible_Individual,
             storage = this.getStorageForMarkerGroup( this.config.groups[ groupId ] );
         const state = storage.toggleDismissal( isIndividual ? Util.getMarkerId( leafletMarker ) : groupId, !isIndividual );
         if ( isIndividual ) {
@@ -399,7 +398,7 @@ class DataMap extends EventEmitter {
         } else {
             this._updateGlobalDismissal( groupId, state );
             // If global, broadcast an event to other maps on this page
-            if ( mode === Enums.MarkerGroupFlags.Collectible_GlobalGroup ) {
+            if ( mode === MarkerGroupFlags.Collectible_GlobalGroup ) {
                 this.fire( 'sendLinkedEvent', {
                     type: 'groupDismissChange',
                     groupId,
@@ -540,7 +539,7 @@ class DataMap extends EventEmitter {
         // Update dismissal status if storage says it's been dismissed
         const collectibleMode = Util.getGroupCollectibleType( group );
         if ( collectibleMode ) {
-            const isIndividual = collectibleMode === Enums.MarkerGroupFlags.Collectible_Individual,
+            const isIndividual = collectibleMode === MarkerGroupFlags.Collectible_Individual,
                 storage = this.getStorageForMarkerGroup( group );
             leafletMarker.setDismissed( storage.isDismissed( isIndividual ? Util.getMarkerId( leafletMarker ) : layers[ 0 ],
                 !isIndividual ) );
@@ -850,7 +849,7 @@ class DataMap extends EventEmitter {
             // Register with the layer manager
             this.layerManager.register( groupName );
 
-            if ( Util.isBitSet( group.flags, Enums.MarkerGroupFlags.IsUnselected ) ) {
+            if ( Util.isBitSet( group.flags, MarkerGroupFlags.IsUnselected ) ) {
                 this.layerManager.setExclusion( groupName, true );
             }
         }

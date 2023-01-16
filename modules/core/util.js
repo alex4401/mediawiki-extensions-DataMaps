@@ -1,5 +1,5 @@
 /** @typedef {import( './map.js' )} DataMap */
-const Enums = require( './enums.js' );
+const { MarkerGroupFlags } = require( './enums.js' );
 
 /** @type {LeafletModule?} */
 let Leaflet = null;
@@ -70,7 +70,7 @@ module.exports = Object.freeze( {
      * @return {number}
      */
     getGroupCollectibleType( group ) {
-        return ( group.flags || 0 ) & Enums.MarkerGroupFlags.Collectible_Any;
+        return ( group.flags || 0 ) & MarkerGroupFlags.Collectible_Any;
     },
 
 

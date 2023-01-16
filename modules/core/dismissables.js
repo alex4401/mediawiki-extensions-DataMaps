@@ -1,7 +1,5 @@
-const Enums = require( './enums.js' ),
+const { CRSOrigin, MarkerGroupFlags, MapFlags } = require( './enums.js' ),
     Util = require( './util.js' );
-const MarkerGroupFlags = Enums.MarkerGroupFlags,
-    MapFlags = Enums.MapFlags;
 
 
 class CollectiblesPanel {
@@ -171,7 +169,7 @@ CollectiblesPanel.MarkerGroup = class MarkerGroup {
     sort() {
         let sortKey;
         switch ( this.map.crsOrigin ) {
-            case Enums.CRSOrigin.TopLeft:
+            case CRSOrigin.TopLeft:
                 sortKey = ( a, b ) => {
                     if ( a.apiInstance[ 0 ] === b.apiInstance[ 0 ] ) {
                         return a.apiInstance[ 1 ] > b.apiInstance[ 1 ];
@@ -179,7 +177,7 @@ CollectiblesPanel.MarkerGroup = class MarkerGroup {
                     return a.apiInstance[ 0 ] > b.apiInstance[ 0 ];
                 };
                 break;
-            case Enums.CRSOrigin.BottomLeft:
+            case CRSOrigin.BottomLeft:
                 sortKey = ( a, b ) => {
                     if ( a.apiInstance[ 0 ] === b.apiInstance[ 0 ] ) {
                         return a.apiInstance[ 1 ] < b.apiInstance[ 1 ];

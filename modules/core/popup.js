@@ -1,6 +1,6 @@
 /** @typedef {import( './map.js' )} DataMap */
 const Util = require( './util.js' ),
-    Enums = require( './enums.js' );
+    { MapFlags } = require( './enums.js' );
 
 
 /**
@@ -149,7 +149,7 @@ module.exports = class MarkerPopup {
         // Gather detail text from layers
         let detailText = discrims.join( ', ' );
         // Reformat if coordinates are to be shown
-        if ( this.map.isFeatureBitSet( Enums.MapFlags.ShowCoordinates ) ) {
+        if ( this.map.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
             const coordText = this.map.getCoordLabel( this.leafletMarker.apiInstance );
             detailText = detailText ? `${coordText} (${detailText})` : coordText;
         }
@@ -274,7 +274,7 @@ module.exports = class MarkerPopup {
             mw.loader.using( 'mmv.bootstrap', () => {
                 const title = mw.Title.newFromImg( $image );
                 let caption = this.markerGroup.name;
-                if ( this.map.isFeatureBitSet( Enums.MapFlags.ShowCoordinates ) ) {
+                if ( this.map.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
                     caption += ` (${this.map.getCoordLabel( this.leafletMarker.apiInstance )})`;
                 }
 

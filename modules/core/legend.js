@@ -1,5 +1,5 @@
 /** @typedef {import( './map.js' )} DataMap */
-const Enums = require( './enums.js' );
+const { MapFlags } = require( './enums.js' );
 
 
 module.exports = class LegendTabManager {
@@ -93,7 +93,7 @@ module.exports = class LegendTabManager {
      * Hides the legend if there's no visible tabs.
      */
     reevaluateVisibility() {
-        if ( this.map.isFeatureBitSet( Enums.MapFlags.VisualEditor ) ) {
+        if ( this.map.isFeatureBitSet( MapFlags.VisualEditor ) ) {
             this.rootWidget.setDisabled( false );
             return;
         }

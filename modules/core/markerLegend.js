@@ -1,6 +1,6 @@
 /** @typedef {import( './map.js' )} DataMap */
 /** @typedef {import( './legend.js' )} LegendTabManager */
-const MarkerGroupFlags = require( './enums.js' ).MarkerGroupFlags,
+const { MarkerGroupFlags } = require( './enums.js' ),
     Util = require( './util.js' );
 
 

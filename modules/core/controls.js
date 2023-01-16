@@ -1,5 +1,5 @@
 /** @typedef {import( './map.js' )} DataMap */
-const CRSOrigin = require( './enums.js' ).CRSOrigin;
+const { CRSOrigin } = require( './enums.js' );
 
 
 /**
