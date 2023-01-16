@@ -4,6 +4,7 @@ const { CRSOrigin } = require( './enums.js' );
 
 /**
  * @typedef {Object} ControlButtonOptions
+ * @property {boolean} [addToSelf]
  * @property {string} [icon]
  * @property {string} [label]
  * @property {string} [tooltip]
@@ -86,6 +87,10 @@ class MapControl {
             $result.on( 'click', options.clickHandler );
         }
 
+        if ( options.addToSelf ) {
+            $result.appendTo( this.$element );
+        }
+
         return $result;
     }
 }
@@ -146,13 +151,14 @@ class EditButton extends MapControl {
 
     _build() {
         this._makeButton( {
+            addToSelf: true,
             icon: 'edit',
             tooltip: mw.msg( 'datamap-control-edit' ),
             // @ts-ignore: wrong type signature for wikiScript in the package, argument is optional
             href: `${mw.util.wikiScript()}?curid=${this.map.id}&action=edit` + (
                 mw.user.options.get( 'datamaps-enable-visual-editor' ) ? '&visual=1' : ''
             )
-        } ).appendTo( this.$element );
+        } );
     }
 }
 
@@ -168,12 +174,14 @@ class ExtraViewControls extends MapControl {
 
     _build() {
         this._makeButton( {
+            addToSelf: true,
             icon: 'imageLayoutFrame',
             tooltip: mw.msg( 'datamap-control-reset-view' ),
             classes: [ 'datamap-control-viewreset' ],
             clickHandler: () => this.map.restoreDefaultView()
         } );
         this._makeButton( {
+            addToSelf: true,
             icon: 'alignCenter',
             tooltip: mw.msg( 'datamap-control-centre-view' ),
             classes: [ 'datamap-control-viewcentre' ],
@@ -194,6 +202,7 @@ class LegendPopup extends MapControl {
 
     _build() {
         this._makeButton( {
+            addToSelf: true,
             icon: 'funnel',
             label: mw.msg( 'datamap-legend-label' ),
             clickHandler: () => {
