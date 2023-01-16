@@ -203,14 +203,11 @@ module.exports = class MarkerLayerManager {
      * @fires DataMap#markerVisibilityUpdate
      */
     updateMembers( layerName ) {
-        // Exit early if updates are disabled
-        if ( this._doNotUpdate ) {
+        // Exit if Leaflet map is not initialised yet, updates are disabled, or the layer has not been registered
+        if ( !this.map.leaflet || this._doNotUpdate || ( layerName && !this.byLayer[ layerName ] ) ) {
             return;
         }
-        // Exit early if layer does not exist
-        if ( layerName && !this.byLayer[ layerName ] ) {
-            return;
-        }
+
         // Run an update on every member of the layer
         for ( const m of ( layerName ? this.byLayer[ layerName ] : this.markers ) ) {
             this.updateMember( m, true );
