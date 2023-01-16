@@ -91,7 +91,7 @@ class CollectiblesPanel {
 
         for ( const groupId in this.groups ) {
             const markers = this.map.layerManager.byLayer[ groupId ];
-            if ( markers && this.map.markerLegend.groupToggles[ groupId ] ) {
+            if ( markers && this.map.filtersPanel.groupToggles[ groupId ] ) {
                 const count = markers.filter( x => x.options.dismissed ).length,
                     mode = Util.getGroupCollectibleType( this.map.config.groups[ groupId ] );
                 let text = mode === MarkerGroupFlags.Collectible_Individual ? `${count} / ${markers.length}` : '';
@@ -99,7 +99,7 @@ class CollectiblesPanel {
                     text += '✓';
                 }
 
-                this.map.markerLegend.groupToggles[ groupId ].setBadge( text );
+                this.map.filtersPanel.groupToggles[ groupId ].setBadge( text );
             }
         }
     }
