@@ -372,7 +372,6 @@
 		"CanonicalNamespaces": "MainHandler",
 		"GetPreferences": "MainHandler",
 		"SkinTemplateNavigation::Universal": "MainHandler",
-		"CustomEditor": "MainHandler",
 		"ChangeTagsListActive": "MainHandler",
 		"ListDefinedTags": "MainHandler",
 		"RecentChange_save": "MainHandler",
