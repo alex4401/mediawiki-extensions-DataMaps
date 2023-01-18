@@ -1,4 +1,4 @@
-module.exports = mw.dataMaps = Object.assign( {}, require( './enums.js' ), {
+module.exports = Object.assign( {}, require( './enums.js' ), {
     /** @deprecated since v0.15.0; will be removed in v0.16.0. All members are now available directly in the module export. */
     Enums: require( './enums.js' ),
     EventEmitter: require( './events.js' ),
@@ -12,3 +12,8 @@ module.exports = mw.dataMaps = Object.assign( {}, require( './enums.js' ), {
     CollectiblesPanel: require( './legend/collectibles.js' ),
     Util: require( './util.js' )
 } );
+/**
+ * @deprecated since v0.15.0 with the exclusion of bootstrap methods. To be removed in v0.16.0. Access the exports over
+ * mw.loader.require( 'ext.datamaps.core' )
+ */
+mw.dataMaps = module.exports;
