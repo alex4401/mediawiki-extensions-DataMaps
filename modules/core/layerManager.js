@@ -51,15 +51,15 @@ module.exports = class MarkerLayerManager {
         /**
          * Computed visibility cache.
          *
+         * @private
          * @type {Record<string, boolean>}
-         * @deprecated Public access deprecated in v0.14.3, will be removed in v0.15.0.
          */
-        this.computeCache = {};
+        this._computeCache = {};
         /**
+         * @private
          * @type {boolean}
-         * @deprecated Public access deprecated in v0.14.3, will be removed in v0.15.0.
          */
-        this.doNotUpdate = false;
+        this._doNotUpdate = false;
 
         this.map.on( 'markerVisibilityUpdate', () => ( this.map.leaflet._haveLayersMutated = false ) );
     }
@@ -69,7 +69,7 @@ module.exports = class MarkerLayerManager {
      * Resets internal visibility computation cache. This must be called whenever any parameters are modified.
      */
     clearCache() {
-        this.computeCache = {};
+        this._computeCache = {};
     }
 
 
@@ -170,17 +170,17 @@ module.exports = class MarkerLayerManager {
      */
     updateMember( leafletMarker, isInternalCall = false ) {
         // Exit early if updates are disabled
-        if ( this.doNotUpdate ) {
+        if ( this._doNotUpdate ) {
             return;
         }
         // Get marker layers
         const layers = leafletMarker.attachedLayers;
         // Request new visibility state from cache, or compute it if missed
         const cacheKey = layers.join( ' ' );
-        let shouldBeVisible = this.computeCache[ cacheKey ];
+        let shouldBeVisible = this._computeCache[ cacheKey ];
         if ( shouldBeVisible === undefined ) {
             shouldBeVisible = this.shouldBeVisible( layers );
-            this.computeCache[ cacheKey ] = shouldBeVisible;
+            this._computeCache[ cacheKey ] = shouldBeVisible;
         }
         // Add to Leaflet map if true, remove if false
         this.map.leaflet._haveLayersMutated = false;
@@ -204,7 +204,7 @@ module.exports = class MarkerLayerManager {
      */
     updateMembers( layerName ) {
         // Exit early if updates are disabled
-        if ( this.doNotUpdate ) {
+        if ( this._doNotUpdate ) {
             return;
         }
         // Exit early if layer does not exist
@@ -294,12 +294,12 @@ module.exports = class MarkerLayerManager {
      * @param {boolean} state
      */
     setDeferVisibilityUpdates( state ) {
-        if ( !state && this.doNotUpdate !== state ) {
+        if ( !state && this._doNotUpdate !== state ) {
             // Updates are being enabled back on, force a visibility update
-            this.doNotUpdate = state;
+            this._doNotUpdate = state;
             this.updateMembers();
         }
-        this.doNotUpdate = state;
+        this._doNotUpdate = state;
     }
 
 

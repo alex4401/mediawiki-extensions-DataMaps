@@ -31,16 +31,16 @@ module.exports = Leaflet.Popup.extend( /** @lends LeafletModule.Popup.prototype 
             // Inject node references
             this._content.$content = $( this._contentNode );
             this._content.$buttons = this.$customButtonArea;
-            this._content.$tools = $( '<ul class="datamap-popup-tools">' );
+            this._content.$actions = $( '<ul class="datamap-popup-tools">' );
             // Build the contents
             this._content.buildButtons();
             this._content.build();
-            this._content.buildTools();
+            this._content.buildActions();
             // If tools are not empty, push them onto the content. Otherwise destroy the node and remove the reference.
-            if ( this._content.$tools.children().length > 0 ) {
-                this._content.$tools.appendTo( this._content.$content );
+            if ( this._content.$actions.children().length > 0 ) {
+                this._content.$actions.appendTo( this._content.$content );
             } else {
-                delete this._content.$tools;
+                delete this._content.$actions;
             }
         }
 

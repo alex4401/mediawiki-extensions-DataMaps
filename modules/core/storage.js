@@ -4,7 +4,8 @@
 /**
  * Local storage interface class. It manages data migrations and handles writes.
  *
- * Since 2022/11/15 data is stored as a single object (the `data` field). Call `commit()` to write it to browser storage.
+ * Since 2022/11/15 data is stored as a single object (the `data` field). Call {@link MapStorage.commit} to write it to browser
+ * storage.
  */
 class MapStorage {
     /**
@@ -28,10 +29,9 @@ class MapStorage {
          * Whether browser's local storage holds a saved schema version for this interface's data.
          *
          * @private
-         * @deprecated Public access has been deprecated in v0.14.4, to be removed in v0.15.0.
          * @type {boolean}
          */
-        this.hasSchemaVersion = false;
+        this._hasSchemaVersion = false;
         /**
          * Whether this interface can write data to browser's local storage for persistence.
          *
@@ -40,13 +40,13 @@ class MapStorage {
         this.isWritable = true;
 
         // Run data migrations and retrieve the data store object
-        this.migrate();
+        this._migrate();
         /**
          * Typed data store.
          *
          * @type {DataMaps.LocalMapUserData}
          */
-        this.data = this.getJSON( '*', '{}' );
+        this.data = this._getJSON( '*', '{}' );
         // Initialise known fields
         this.initialiseField( 'dismissed', [] );
         this.initialiseField( 'background', 0 );
@@ -72,10 +72,9 @@ class MapStorage {
      * @private
      * @param {string} name Field name.
      * @param {string?} [namespace] Key namespace override. Defaults to {@link MapStorage.NAMESPACE}.
-     * @deprecated Public access has been deprecated in v0.14.4, to be removed in v0.15.0.
      * @return {any}
      */
-    get( name, namespace ) {
+    _get( name, namespace ) {
         return localStorage.getItem( `${namespace || MapStorage.NAMESPACE}.${this.id}:${name}` );
     }
 
@@ -86,10 +85,9 @@ class MapStorage {
      * @private
      * @param {string} name Field name.
      * @param {string?} [namespace] Key namespace override. Defaults to {@link MapStorage.NAMESPACE}.
-     * @deprecated Public access has been deprecated in v0.14.4, to be removed in v0.15.0.
      * @return {boolean}
      */
-    has( name, namespace ) {
+    _has( name, namespace ) {
         return Object.prototype.hasOwnProperty.call( localStorage, `${namespace || MapStorage.NAMESPACE}.${this.id}:${name}` );
     }
 
@@ -100,9 +98,8 @@ class MapStorage {
      * @private
      * @param {string} name Field name.
      * @param {string?} [namespace] Key namespace override. Defaults to {@link MapStorage.NAMESPACE}.
-     * @deprecated Public access has been deprecated in v0.14.4, to be removed in v0.15.0.
      */
-    remove( name, namespace ) {
+    _remove( name, namespace ) {
         if ( this.isWritable ) {
             localStorage.removeItem( `${namespace || MapStorage.NAMESPACE}.${this.id}:${name}` );
         }
@@ -116,9 +113,8 @@ class MapStorage {
      * @param {string} name Field name.
      * @param {any} data Data to write.
      * @param {string?} [namespace] Key namespace override. Defaults to {@link MapStorage.NAMESPACE}.
-     * @deprecated Public access has been deprecated in v0.14.4, to be removed in v0.15.0.
      */
-    set( name, data, namespace ) {
+    _set( name, data, namespace ) {
         if ( this.isWritable ) {
             this._initialiseVersioning();
             localStorage.setItem( `${namespace || MapStorage.NAMESPACE}.${this.id}:${name}`, data );
@@ -133,13 +129,12 @@ class MapStorage {
      * @param {string} oldName Old field name (to rename from).
      * @param {string?} [newName] New field name (to rename to). If blank, preserves original name for copies across namespaces.
      * @param {string?} [oldNamespace] Key namespace override. Defaults to {@link MapStorage.NAMESPACE}.
-     * @deprecated Public access has been deprecated in v0.14.4, to be removed in v0.15.0.
      */
-    rename( oldName, newName, oldNamespace ) {
-        const value = this.get( oldName, oldNamespace || MapStorage.NAMESPACE );
+    _rename( oldName, newName, oldNamespace ) {
+        const value = this._get( oldName, oldNamespace || MapStorage.NAMESPACE );
         if ( value !== null ) {
-            this.set( newName || oldName, value );
-            this.remove( oldName, oldNamespace );
+            this._set( newName || oldName, value );
+            this._remove( oldName, oldNamespace );
         }
     }
 
@@ -150,9 +145,9 @@ class MapStorage {
      * @private
      */
     _initialiseVersioning() {
-        if ( !this.hasSchemaVersion ) {
-            this.hasSchemaVersion = true;
-            this.set( 'schemaVersion', MapStorage.LATEST_VERSION );
+        if ( !this._hasSchemaVersion ) {
+            this._hasSchemaVersion = true;
+            this._set( 'schemaVersion', MapStorage.LATEST_VERSION );
         }
     }
 
@@ -163,11 +158,10 @@ class MapStorage {
      * @private
      * @param {string} name Field name.
      * @param {string} fallback Fallback value as string.
-     * @deprecated Public access has been deprecated in v0.14.4, to be removed in v0.15.0.
      * @return {any}
      */
-    getJSON( name, fallback ) {
-        return JSON.parse( this.get( name ) || fallback );
+    _getJSON( name, fallback ) {
+        return JSON.parse( this._get( name ) || fallback );
     }
 
 
@@ -177,10 +171,9 @@ class MapStorage {
      * @private
      * @param {string} name Field name.
      * @param {any} data Data to write.
-     * @deprecated Public access has been deprecated in v0.14.4, to be removed in v0.15.0.
      */
-    setJSON( name, data ) {
-        this.set( name, JSON.stringify( data ) );
+    _setJSON( name, data ) {
+        this._set( name, JSON.stringify( data ) );
     }
 
 
@@ -188,7 +181,7 @@ class MapStorage {
      * Writes the data object into browser's local storage.
      */
     commit() {
-        this.setJSON( '*', this.data );
+        this._setJSON( '*', this.data );
     }
 
 
@@ -197,25 +190,24 @@ class MapStorage {
      * removed from local storage and a blank state is adopted.
      *
      * @private
-     * @deprecated Public access has been deprecated in v0.14.4, to be removed in v0.15.0.
      */
-    migrate() {
+    _migrate() {
         // Move data from legacy namespace to the new one if saved prior to 20221115 - all keys that we use or used.
         // Schema version is not bumped right away, so migrations can still be done with no interruption (running on old
         // structures).
-        if ( this.has( 'schemaVersion', MapStorage.LEGACY_NAMESPACE ) ) {
-            this.rename( 'schemaVersion', null, MapStorage.LEGACY_NAMESPACE );
-            this.rename( 'dismissed', null, MapStorage.LEGACY_NAMESPACE );
-            this.rename( 'background', null, MapStorage.LEGACY_NAMESPACE );
+        if ( this._has( 'schemaVersion', MapStorage.LEGACY_NAMESPACE ) ) {
+            this._rename( 'schemaVersion', null, MapStorage.LEGACY_NAMESPACE );
+            this._rename( 'dismissed', null, MapStorage.LEGACY_NAMESPACE );
+            this._rename( 'background', null, MapStorage.LEGACY_NAMESPACE );
         }
 
-        const schemaVersion = parseInt( this.get( 'schemaVersion' ) || MapStorage.LATEST_VERSION );
+        const schemaVersion = parseInt( this._get( 'schemaVersion' ) || MapStorage.LATEST_VERSION );
 
         // Drop storage data prior to this version, we no longer support it
         if ( schemaVersion < MapStorage.MIN_SUPPORTED_VERSION ) {
-            this.remove( 'schemaVersion' );
-            this.remove( 'dismissed' );
-            this.remove( 'background' );
+            this._remove( 'schemaVersion' );
+            this._remove( 'dismissed' );
+            this._remove( 'background' );
             return;
         }
 
@@ -223,9 +215,9 @@ class MapStorage {
         /* eslint-disable operator-linebreak */
         if ( schemaVersion < MapStorage.LATEST_VERSION && !( schemaVersion >= 20221114
             ? // Post-20221114: Single object model
-            ( this.has( '*' ) )
+            ( this._has( '*' ) )
             : // Pre-20221114: Separate keys model
-            ( this.has( 'dismissed' ) || this.has( 'background' ) )
+            ( this._has( 'dismissed' ) || this._has( 'background' ) )
         ) ) {
             return;
         }
@@ -239,7 +231,7 @@ class MapStorage {
      * Performs data migration from a given version to the {@link MapStorage.LATEST_VERSION current one}.
      *
      * This should not be called directly, as it may result in an invalid state or leave leftover data. Instead use
-     * {@link MapStorage.migrate}, which runs necessary checks and important migrations first.
+     * {@link MapStorage._migrate}, which runs necessary checks and important migrations first.
      *
      * @private
      * @param {number} schemaVersion
@@ -248,22 +240,22 @@ class MapStorage {
         // 20221115 migration is fundamental and runs ahead of all these
 
         // Convert loose properties onto a single object (20221114)
-        if ( schemaVersion < 20221114 && !this.has( '*' ) ) {
-            this.setJSON( '*', {
-                dismissed: this.getJSON( 'dismissed', '[]' ),
-                background: parseInt( this.get( 'background' ) || 0 )
+        if ( schemaVersion < 20221114 && !this._has( '*' ) ) {
+            this._setJSON( '*', {
+                dismissed: this._getJSON( 'dismissed', '[]' ),
+                background: parseInt( this._get( 'background' ) || 0 )
             } );
-            this.remove( 'dismissed' );
-            this.remove( 'background' );
+            this._remove( 'dismissed' );
+            this._remove( 'background' );
         }
 
         // Do not continue if there's no data object
-        if ( !this.has( '*' ) ) {
+        if ( !this._has( '*' ) ) {
             return;
         }
 
         /** @type {DataMaps.LocalMapUserData} */
-        const data = this.getJSON( '*', '{}' );
+        const data = this._getJSON( '*', '{}' );
 
         // Run sequential migrations on the data object
         /* eslint-disable no-fallthrough */
@@ -328,12 +320,12 @@ class MapStorage {
  * Current schema version.
  *
  * Version history:
- *   -1[*]      : Initial unversioned.
- *   20220713   : Internal "#surface" layer removed, dismissed markers needed it removed.
- *   20220803   : Fixed precision used on coordinates in generated marker identifiers.
- *   20220929   : Dismissal entries require a namespace G(roup) or M(arker), to support global dismissals without conflicts.
- *   20221114   : New model (single object).
- *   20221115   : Namespace changed from ext.ark.datamaps to ext.datamaps.
+ * - -1[*]      : Initial unversioned.
+ * - 20220713   : Internal "#surface" layer removed, dismissed markers needed it removed.
+ * - 20220803   : Fixed precision used on coordinates in generated marker identifiers.
+ * - 20220929   : Dismissal entries require a namespace G(roup) or M(arker), to support global dismissals without conflicts.
+ * - 20221114   : New model (single object).
+ * - 20221115   : Namespace changed from ext.ark.datamaps to ext.datamaps.
  *
  * @constant
  * @type {number}

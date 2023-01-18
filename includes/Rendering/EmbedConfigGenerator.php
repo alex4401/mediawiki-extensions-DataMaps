@@ -244,7 +244,7 @@ class EmbedConfigGenerator {
                 }
 
                 if ( $spec->getExtraMinZoomSize() != null ) {
-                    $out['extraMinZoomSize'] = $spec->getExtraMinZoomSize();
+                    $out['zoomScaleFactor'] = $spec->getExtraMinZoomSize();
                 }
                 break;
             case MarkerGroupSpec::DM_ICON:

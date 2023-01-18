@@ -63,8 +63,6 @@
 			"packageFiles": [
 				"leafletPkg/index.js",
 				"vendor/leaflet/leaflet.js",
-				"leafletPkg/iconMarker.js",
-				"leafletPkg/circleMarker.js",
 				"leafletPkg/popup.js",
 				"leafletPkg/interaction.js",
 				"leafletPkg/pinIcon.js"

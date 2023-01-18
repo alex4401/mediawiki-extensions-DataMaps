@@ -17,7 +17,7 @@ function MenuOptionWidget( config ) {
         }
     }
 
-    const icon = this.data.leafletMarker instanceof Leaflet.Ark.IconMarker
+    const icon = this.data.leafletMarker instanceof Leaflet.Marker
         ? this.data.map.getIconFromLayers( this.data.leafletMarker.attachedLayers ) : null;
     if ( icon ) {
         if ( icon instanceof Leaflet.Ark.PinIcon ) {

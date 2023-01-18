@@ -112,9 +112,8 @@ class DataMap extends EventEmitter {
          *
          * @private
          * @type {Record<string, LeafletModule.Icon>}
-         * @deprecated Public access is deprecated since v0.14.0
          */
-        this.iconCache = {};
+        this._iconCache = {};
         /**
          * DOM element of the coordinates display control.
          *
@@ -140,13 +139,6 @@ class DataMap extends EventEmitter {
          */
         this.$backgroundSwitch = null;
         /**
-         * Cached value of the 'datamap-coordinate-control-text' message.
-         *
-         * @type {string}
-         * @deprecated Unused since v0.14.0, will be removed in v0.15.0.
-         */
-        this.coordTrackingMsg = mw.msg( 'datamap-coordinate-control-text' );
-        /**
          * `marker` parameter from the query string if one is present.
          *
          * @type {string?}
@@ -166,12 +158,6 @@ class DataMap extends EventEmitter {
             mw.loader.using( 'ext.tabberNeue', () => {
                 this._setUpUriMarkerHandler();
             } );
-        }
-
-        // Ensure the CRS field on the config is initialised.
-        // TODO: Drop in v0.15. Field is now enforced server-side.
-        if ( !this.config.crs ) {
-            this.config.crs = [ [ 0, 0 ], [ 100, 100 ] ];
         }
 
         /**
@@ -255,31 +241,6 @@ class DataMap extends EventEmitter {
 
         this.markerIdToAutoOpen = Util.getQueryParameter( 'marker' );
         this.on( 'markerReady', this.openPopupIfUriMarker, this );
-    }
-
-
-    /**
-     * Runs the callback function when the Leaflet map is initialised. If you only need access to Leaflet's API, require module
-     * `ext.datamaps.leaflet` instead with ResourceLoader.
-     *
-     * @param {DataMaps.EventHandling.EventListenerFn} callback Function to run when Leaflet map is initialised.
-     * @param {Object?} context Object to use as callback's context.
-     * @deprecated since version 0.14.3, to be removed in 0.15.0. Bind to the leafletLoaded event instead.
-     */
-    waitForLeaflet( callback, context ) {
-        this.on( 'leafletLoaded', callback, context );
-    }
-
-
-    /**
-     * Runs the callback function when the map legend is initialised.
-     *
-     * @param {DataMaps.EventHandling.EventListenerFn} callback Function to run when the legend is initialised.
-     * @param {Object?} context Object to use as callback's context.
-     * @deprecated since version 0.14.3, to be removed in 0.15.0. Bind to the markerFilteringPanel event instead.
-     */
-    waitForLegend( callback, context ) {
-        this.on( 'markerFilteringPanel', callback, context );
     }
 
 
@@ -468,11 +429,11 @@ class DataMap extends EventEmitter {
     getIconFromLayers( layers ) {
         const markerType = layers.join( ' ' );
         // Construct the object if not found in cache
-        if ( !this.iconCache[ markerType ] ) {
+        if ( !this._iconCache[ markerType ] ) {
             const group = /** @type {DataMaps.Configuration.IconBasedMarkerGroup} */ ( this.config.groups[ layers[ 0 ] ] );
 
             if ( 'pinColor' in group ) {
-                this.iconCache[ markerType ] = new Leaflet.Ark.PinIcon( {
+                this._iconCache[ markerType ] = new Leaflet.Ark.PinIcon( {
                     colour: group.pinColor,
                     iconSize: group.size,
                     useWithCanvas: false
@@ -485,14 +446,14 @@ class DataMap extends EventEmitter {
                     markerIcon = /** @type {!string} */ ( this.config.layers[ override ].markerIcon );
                 }
 
-                this.iconCache[ markerType ] = new Leaflet.Icon( {
+                this._iconCache[ markerType ] = new Leaflet.Icon( {
                     iconUrl: markerIcon,
                     iconSize: group.size,
                     useWithCanvas: this.shouldRenderIconsOnCanvas()
                 } );
             }
         }
-        return this.iconCache[ markerType ];
+        return this._iconCache[ markerType ];
     }
 
 
@@ -548,10 +509,9 @@ class DataMap extends EventEmitter {
             } );
         } else {
             // Circular marker
-            leafletMarker = new Leaflet.Ark.CircleMarker( position, {
+            leafletMarker = new Leaflet.CircleMarker( position, {
                 radius: group.size / 2,
-                /* TODO: rename config prop to zoomScaleFactor */
-                zoomScaleFactor: group.extraMinZoomSize,
+                zoomScaleFactor: group.zoomScaleFactor,
                 fillColor: group.fillColor,
                 fillOpacity: 0.7,
                 color: group.strokeColor || group.fillColor,
@@ -712,10 +672,9 @@ class DataMap extends EventEmitter {
     /**
      * @private
      * @param {DataMaps.Configuration.BackgroundOverlay} overlay
-     * @deprecated Public access is deprecated as of v0.14.4, and will be removed in v0.15.0.
      * @return {LeafletModule.Rectangle|LeafletModule.Polyline|LeafletModule.ImageOverlay}
      */
-    buildBackgroundOverlayObject( overlay ) {
+    _buildBackgroundOverlayObject( overlay ) {
         let result;
 
         // Construct a layer
@@ -864,7 +823,6 @@ class DataMap extends EventEmitter {
             inertia: false,
             // Canvas renderer settings - using canvas for performance with padding of 1/3rd (to draw some more markers outside
             // of view for panning UX)
-            preferCanvas: true,
             rendererSettings: {
                 padding: 1 / 3
             },
@@ -956,7 +914,7 @@ class DataMap extends EventEmitter {
         // Prepare overlay layers
         if ( background.overlays ) {
             background.overlays.forEach( overlay => background.layers.push(
-                this.buildBackgroundOverlayObject( overlay ) ) );
+                this._buildBackgroundOverlayObject( overlay ) ) );
         }
     }
 
@@ -1063,7 +1021,6 @@ class DataMap extends EventEmitter {
     /**
      * @private
      * @fires markerFilteringPanel
-     * @fires DataMap#legendLoaded Deprecated as of v0.14.0; to be removed in v0.15.0.
      */
     _initialiseFiltersPanel() {
         // Determine if we'll need a layer dropdown
@@ -1073,8 +1030,6 @@ class DataMap extends EventEmitter {
         // Initialise legend objects
         this.filtersPanel = new MarkerFilteringPanel( /** @type {!LegendTabManager} */ ( this.legend ),
             mw.msg( 'datamap-legend-tab-locations' ), true, withLayerDropdown );
-        /** @deprecated in v0.14.0, to be gone in v0.15.0 */
-        this.markerLegend = this.filtersPanel;
 
         // Build the surface and caves toggle
         // TODO: this should be gone by v0.15, preferably in v0.14 (though that one's going to be a 1.39 compat update)
@@ -1091,8 +1046,6 @@ class DataMap extends EventEmitter {
         // Notify other components that the legend has been loaded, and remove all subscribers. All future subscribers
         // will be invoked right away.
         this.fireMemorised( 'markerFilteringPanel' );
-        /* DEPRECATED(v0.14.0:v0.15.0) */
-        this.fireMemorised( 'legendLoaded' );
     }
 
 

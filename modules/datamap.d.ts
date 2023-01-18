@@ -46,7 +46,7 @@ declare namespace DataMaps {
             fillColor: string;
             strokeColor?: string;
             strokeWidth?: number;
-            extraMinZoomSize?: number;
+            zoomScaleFactor?: number;
         }
 
         type MarkerGroup = IconMarkerGroup|PinMarkerGroup|CircleMarkerGroup;

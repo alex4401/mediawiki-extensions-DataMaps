@@ -60,10 +60,9 @@ module.exports = class MarkerPopup {
         this.$content = null;
         /**
          * @type {!jQuery}
-         * @deprecated To be renamed to $actions in v0.15.0.
          */
         // @ts-ignore: Initialised by Leaflet.Ark.Popup, ideally we'd use null assertions here
-        this.$tools = null;
+        this.$actions = null;
 
         // These elements are created during building
         /** @type {jQuery?} */
@@ -155,8 +154,7 @@ module.exports = class MarkerPopup {
             detailText = detailText ? `${coordText} (${detailText})` : coordText;
         }
         // Push onto the contents
-        /* DEPRECATED(v0.14.1:v0.15.0): datamap-popup-coordinates replaced with datamap-popup-location */
-        this.$location = $( '<div class="datamap-popup-location datamap-popup-coordinates">' ).text( detailText )
+        this.$location = $( '<div class="datamap-popup-location">' ).text( detailText )
             .appendTo( this.$content );
 
         // Description
@@ -192,27 +190,14 @@ module.exports = class MarkerPopup {
      * @return {jQuery}
      */
     addAction( cssClass, $child ) {
-        return $( `<li class="${cssClass}">` ).append( $child ).appendTo( this.$tools );
-    }
-
-
-    /**
-     * @deprecated Renamed to addAction in v0.14.4; to be removed in v0.15.0.
-     * @param {string} cssClass
-     * @param {jQuery} $child
-     * @return {jQuery}
-     */
-    addTool( cssClass, $child ) {
-        return this.addAction( cssClass, $child );
+        return $( `<li class="${cssClass}">` ).append( $child ).appendTo( this.$actions );
     }
 
 
     /**
      * Builds the action list of this popup.
-     *
-     * @deprecated To be renamed to buildActions in v0.15.0.
      */
-    buildTools() {
+    buildActions() {
         // Related article
         let article = this.slots.article || this.markerGroup.article;
         if ( article ) {
@@ -258,10 +243,9 @@ module.exports = class MarkerPopup {
      * Returns a label for the collectible status change action.
      *
      * @protected
-     * @deprecated Public access is deprecated as of v0.14.4, and will be fully removed in v0.15.0.
      * @return {string}
      */
-    getDismissToolText() {
+    _getDismissToolText() {
         // Messages that can be used here:
         // * datamap-popup-dismissed
         // * datamap-popup-mark-as-dismissed
@@ -274,7 +258,7 @@ module.exports = class MarkerPopup {
      */
     onUpdate() {
         if ( this.$dismiss ) {
-            this.$dismiss.text( this.getDismissToolText() );
+            this.$dismiss.text( this._getDismissToolText() );
         }
     }
 

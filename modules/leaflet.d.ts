@@ -54,8 +54,6 @@ declare namespace LeafletModule {
             useWithCanvas?: boolean;
         }
 
-        class CircleMarker extends LeafletModule.CircleMarker {}
-        class IconMarker extends LeafletModule.Marker {}
         class Popup extends LeafletModule.Popup {}
         class InteractionControl extends LeafletModule.Handler {}
         class PinIcon extends LeafletModule.Icon {
@@ -66,20 +64,14 @@ declare namespace LeafletModule {
             shouldKeepAround(): boolean;
             buildButtons(): void;
             build(): void;
-            /**
-             * @deprecated To be renamed to buildActions in v0.15.0.
-             */
-            buildTools(): void;
+            buildActions(): void;
 
             onAdd(): void;
             onRemove(): void;
 
             $buttons: JQuery<HTMLElement>;
             $content: JQuery<HTMLElement>;
-            /**
-             * @deprecated To be renamed to $actions in v0.15.0.
-             */
-            $tools: JQuery<HTMLElement>;
+            $actions: JQuery<HTMLElement>;
         }
 
         type PopupContentRendererGetterFn = () => Ark.IPopupContentRenderer;
@@ -155,8 +147,6 @@ declare namespace LeafletModule {
         maxBounds?: LatLngBoundsLike;
         crs?: CRS;
         renderer?: Renderer;
-        /** @deprecated To be removed in v0.15.0 */
-        preferCanvas?: boolean;
         /* Non-standard options */
         vecMarkerScale?: number;
         iconMarkerScale?: number;
