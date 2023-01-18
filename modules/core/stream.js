@@ -102,7 +102,9 @@ module.exports = class MarkerStreamingManager {
     instantiateMarkers( data ) {
         // Register all layers in this package
         for ( const markerType in data ) {
-            markerType.split( ' ' ).forEach( name => this.map.layerManager.register( name ) );
+            for ( const name of markerType.split( ' ' ) ) {
+                this.map.layerManager.register( name );
+            }
         }
 
         // Unpack markers
@@ -169,9 +171,7 @@ module.exports = class MarkerStreamingManager {
     loadSequential( pageId, version, filter, start, sector ) {
         return this.requestChunk( pageId, version, filter, start || 0, null, sector )
             .then( data => {
-                this.map.on( 'leafletLoaded', () => {
-                    this.instantiateMarkers( data.query.markers );
-                } );
+                this.map.on( 'leafletLoaded', () => this.instantiateMarkers( data.query.markers ) );
                 if ( data.query.continue ) {
                     return this.loadSequential( pageId, version, filter, data.query.continue );
                 } else {
