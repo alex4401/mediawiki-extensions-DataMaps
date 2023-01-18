@@ -63,60 +63,109 @@ module.exports = Object.freeze( {
     },
 
 
+    Groups: {
+        /**
+         * Returns the collectible type of a marker group, or zero if none.
+         *
+         * @param {DataMaps.Configuration.MarkerGroup} group
+         * @return {number}
+         */
+        getCollectibleType( group ) {
+            return ( group.flags || 0 ) & MarkerGroupFlags.Collectible_Any;
+        },
+
+
+        /**
+         * Creates an image DOM element showing a marker group's icon.
+         *
+         * @param {DataMaps.Configuration.MarkerGroup} group
+         * @return {jQuery}
+         */
+        createIconElement( group ) {
+            return $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src',
+                /** @type {!string} */ ( group.legendIcon ) );
+        },
+
+
+        /**
+         * Creates an SVG element showing a marker group's pin icon.
+         *
+         * @param {DataMaps.Configuration.PinMarkerGroup} group
+         * @return {jQuerySVG}
+         */
+        createPinIconElement( group ) {
+            return $( module.exports.createPinIconElement( group.pinColor ) ).attr( {
+                class: 'datamap-legend-group-icon',
+                width: 24,
+                height: 24
+            } );
+        },
+
+
+        /**
+         * Creates a DOM element showing a marker group's coloured circle representation.
+         *
+         * @param {DataMaps.Configuration.CircleMarkerGroup} group
+         * @return {jQuery}
+         */
+        createCircleElement( group ) {
+            const size = Math.min( module.exports.MAX_GROUP_CIRCLE_SIZE, group.size + 4 );
+            return $( '<div class="datamap-legend-circle">' ).css( {
+                minWidth: size,
+                width: size,
+                height: size,
+                backgroundColor: group.fillColor,
+                borderColor: group.strokeColor || group.fillColor,
+                borderWidth: group.strokeWidth || 1
+            } );
+        }
+    },
+
     /**
      * Returns the collectible type of a marker group, or zero if none.
      *
+     * @deprecated To be removed before v0.15 release, no known usages in external code; use Util.groups.getCollectibleType
      * @param {DataMaps.Configuration.MarkerGroup} group
      * @return {number}
      */
     getGroupCollectibleType( group ) {
-        return ( group.flags || 0 ) & MarkerGroupFlags.Collectible_Any;
+        return module.exports.Groups.getCollectibleType( group );
     },
 
 
     /**
      * Creates an image DOM element showing a marker group's icon.
      *
+     * @deprecated To be removed before v0.15 release, no known usages in external code; use Util.groups.createIconElement
      * @param {DataMaps.Configuration.MarkerGroup} group
      * @return {jQuery}
      */
     createGroupIconElement( group ) {
-        return $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src',
-            /** @type {!string} */ ( group.legendIcon ) );
+        return module.exports.Groups.createIconElement( group );
     },
 
 
     /**
      * Creates an SVG element showing a marker group's pin icon.
      *
+     * @deprecated To be removed before v0.15 release, no known usages in external code; use Util.groups.createPinIconElement
      * @param {DataMaps.Configuration.PinMarkerGroup} group
      * @return {jQuerySVG}
      */
     createGroupPinIconElement( group ) {
-        return $( this.createPinIconElement( group.pinColor ) ).attr( {
-            class: 'datamap-legend-group-icon',
-            width: 24,
-            height: 24
-        } );
+        return module.exports.Groups.createPinIconElement( group );
     },
 
 
     /**
      * Creates a DOM element showing a marker group's coloured circle representation.
      *
+     * @deprecated To be removed before v0.15 release, no known usages in external code; use Util.groups.createCircleElement
      * @param {DataMaps.Configuration.CircleMarkerGroup} group
      * @return {jQuery}
      */
     createGroupCircleElement( group ) {
-        const size = Math.min( module.exports.MAX_GROUP_CIRCLE_SIZE, group.size + 4 );
-        return $( '<div class="datamap-legend-circle">' ).css( {
-            minWidth: size,
-            width: size,
-            height: size,
-            backgroundColor: group.fillColor,
-            borderColor: group.strokeColor || group.fillColor,
-            borderWidth: group.strokeWidth || 1
-        } );
+        return module.exports.Groups.createCircleElement( group );
     },
 
 
