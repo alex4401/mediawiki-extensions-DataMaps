@@ -7,6 +7,7 @@ const { CRSOrigin } = require( './enums.js' );
  * @property {boolean} [addToSelf]
  * @property {string} [icon]
  * @property {string} [label]
+ * @property {boolean} [labelBeforeIcon]
  * @property {string} [tooltip]
  * @property {string[]} [classes]
  * @property {string} [href]
@@ -80,7 +81,7 @@ class MapControl {
         }
 
         if ( options.label ) {
-            $result.append( options.label );
+            $result[ options.labelBeforeIcon ? 'prepend' : 'append' ]( options.label );
         }
 
         if ( options.clickHandler ) {
@@ -205,6 +206,7 @@ class LegendPopup extends MapControl {
             addToSelf: true,
             icon: 'funnel',
             label: mw.msg( 'datamap-legend-label' ),
+            labelBeforeIcon: true,
             clickHandler: () => {
                 this.map.$root.toggleClass( 'datamap-is-legend-toggled-on' );
                 this.$element.find( 'span' ).toggleClass( 'oo-ui-image-progressive' );
