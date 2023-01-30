@@ -1,135 +1,180 @@
-const { CRSOrigin, MarkerGroupFlags, MapFlags } = require( './enums.js' ),
-    Util = require( './util.js' );
+/** @typedef {import( './filters.js' )} MarkerFilteringPanel */
+const LegendTabber = require( './tabber.js' ),
+    { CRSOrigin, MarkerGroupFlags, MapFlags } = require( '../enums.js' ),
+    Util = require( '../util.js' );
 
 
-class CollectiblesPanel {
-    constructor( legend ) {
-        this.legend = legend;
-        this.map = this.legend.map;
+class CollectiblesPanel extends LegendTabber.Tab {
+    /**
+     * @param {LegendTabber} tabber
+     */
+    constructor( tabber ) {
+        super( tabber, mw.msg( 'datamap-legend-tab-checklist' ), [ 'datamap-container-collectibles' ] );
 
-        // Root DOM element
-        this.$root = this.legend.addTab( mw.msg( 'datamap-legend-tab-checklist' ), 'datamap-container-collectibles' ).$element;
-        //
-        this.groups = {};
-
+        /**
+         * @type {Record<string, Section>}
+         */
+        this.sections = {};
+        /**
+         * Whether badge updates are disabled.
+         *
+         * @type {boolean}
+         */
         this.suppressBadgeUpdates = true;
 
-        // Insert an introduction paragraph
-        this.$root.append( mw.msg( 'datamap-checklist-prelude' ) );
-
-        // Prepare the checklist panel
-        this._initialisePanel();
-
         // Register event handlers
-        this.map.on( 'markerDismissChange', this.updateGroupBadges, this );
+        this.map.on( 'markerDismissChange', () => this.updateGroupBadges(), this );
         this.map.on( 'markerDismissChange', this.onDismissalChange, this );
         this.map.on( 'markerReady', this.pushMarker, this );
         this.map.on( 'chunkStreamingDone', this.sort, this );
-        this.map.on( 'chunkStreamingDone', () => {
-            this.suppressBadgeUpdates = false;
-        }, this );
+        this.map.on( 'chunkStreamingDone', () => ( this.suppressBadgeUpdates = false ), this );
         this.map.on( 'chunkStreamingDone', this.updateGroupBadges, this );
 
         // Call updaters now to bring the main panel in sync
         this.updateGroupBadges( true );
 
+        // Insert an introduction paragraph
+        this.$content.append( mw.msg( 'datamap-checklist-prelude' ) );
+
         // Import existing markers if any have been loaded
         for ( const groupName in this.map.config.groups ) {
             const group = this.map.config.groups[ groupName ];
-            if ( Util.getGroupCollectibleType( group ) ) {
+            if ( Util.Groups.getCollectibleType( group ) ) {
                 for ( const leafletMarker of ( this.map.layerManager.byLayer[ groupName ] || [] ) ) {
                     this.pushMarker( leafletMarker );
                 }
             }
         }
         this.sort();
+
+        // Initialise marker group views
+        // eslint-disable-next-line es-x/no-object-entries
+        this.includeGroups( Object.entries( this.map.config.groups ).filter( x => Util.Groups.getCollectibleType( x[ 1 ] ) )
+            .map( x => x[ 0 ] ) );
     }
 
 
-    _initialisePanel() {
-        for ( const groupId in this.map.config.groups ) {
-            const group = this.map.config.groups[ groupId ];
-            if ( !this.map.isLayerFilteredOut( groupId ) && Util.getGroupCollectibleType( group ) ) {
-                this.groups[ groupId ] = new CollectiblesPanel.MarkerGroup( this, group );
-                this.groups[ groupId ].$element.appendTo( this.$root );
-            }
+    /**
+     * Sets up sections for marker groups.
+     *
+     * @param {string[]} ids
+     */
+    includeGroups( ids ) {
+        for ( const id of ids ) {
+            const group = this.map.config.groups[ id ];
+            this.sections[ id ] = new CollectiblesPanel.Section( this, group );
+            this.sections[ id ].$element.appendTo( this.$content );
         }
     }
 
 
+    /**
+     * @param {LeafletModule.AnyMarker} leafletMarker
+     */
     pushMarker( leafletMarker ) {
-        if ( Util.getGroupCollectibleType( this.map.config.groups[ leafletMarker.attachedLayers[ 0 ] ] ) ) {
-            this.groups[ leafletMarker.attachedLayers[ 0 ] ].push( leafletMarker );
+        if ( Util.Groups.getCollectibleType( this.map.config.groups[ leafletMarker.attachedLayers[ 0 ] ] ) ) {
+            this.sections[ leafletMarker.attachedLayers[ 0 ] ].push( leafletMarker );
         }
     }
 
 
+    /**
+     * Sorts sections.
+     */
     sort() {
-        // eslint-disable-next-line compat/compat
-        for ( const group of Object.values( this.groups ) ) {
-            group.sort();
+        for ( const section of Object.values( this.sections ) ) {
+            section.sort();
         }
 
         if ( this.map.isFeatureBitSet( MapFlags.SortChecklistsByAmount ) ) {
-            const groups = Object.values( this.groups ).sort( ( a, b ) => a.markers.length > b.markers.length );
-            for ( const group of groups ) {
-                group.$element.appendTo( this.$root );
+            for ( const section of Object.values( this.sections ).sort( ( a, b ) => b.markers.length - a.markers.length ) ) {
+                this.$content.append( section.$content );
             }
         }
     }
 
 
+    /**
+     * @param {LeafletModule.AnyMarker} leafletMarker
+     */
     onDismissalChange( leafletMarker ) {
-        this.groups[ leafletMarker.attachedLayers[ 0 ] ].replicateMarkerState( leafletMarker );
+        this.sections[ leafletMarker.attachedLayers[ 0 ] ].replicateMarkerState( leafletMarker );
     }
 
 
+    /**
+     * Updates badges in the filtering panel with current collected / available counts.
+     *
+     * @param {boolean} [force]
+     */
     updateGroupBadges( force ) {
         if ( !force && this.suppressBadgeUpdates ) {
             return;
         }
 
-        for ( const groupId in this.groups ) {
-            const markers = this.map.layerManager.byLayer[ groupId ];
-            if ( markers && this.map.filtersPanel.groupToggles[ groupId ] ) {
+        for ( const groupId in this.sections ) {
+            const markers = this.map.layerManager.byLayer[ groupId ],
+                filterEntry = /** @type {MarkerFilteringPanel} */ ( this.map.filtersPanel ).groupToggles[ groupId ];
+            // Check if the layer is registered in the visibility manager, and if a group toggle is ready
+            if ( markers && filterEntry ) {
                 const count = markers.filter( x => x.options.dismissed ).length,
-                    mode = Util.getGroupCollectibleType( this.map.config.groups[ groupId ] );
-                let text = mode === MarkerGroupFlags.Collectible_Individual ? `${count} / ${markers.length}` : '';
-                if ( count > 0 && count === markers.length ) {
-                    text += '✓';
-                }
-
-                this.map.filtersPanel.groupToggles[ groupId ].setBadge( text );
+                    mode = Util.Groups.getCollectibleType( this.map.config.groups[ groupId ] );
+                filterEntry.setBadge( ( mode === MarkerGroupFlags.Collectible_Individual ? `${count} / ${markers.length}` : '' )
+                    + ( count > 0 && count === markers.length ? '✓' : '' ) );
             }
         }
     }
 }
 
 
-CollectiblesPanel.MarkerGroup = class MarkerGroup {
+class Section {
+    /**
+     * @param {CollectiblesPanel} panel
+     * @param {DataMaps.Configuration.MarkerGroup} group
+     */
     constructor( panel, group ) {
+        /**
+         * @type {CollectiblesPanel}
+         */
         this.panel = panel;
-        this.map = this.panel.map;
+        /**
+         * @type {DataMaps.Configuration.MarkerGroup}
+         */
         this.group = group;
+        /**
+         * @type {LeafletModule.AnyMarker[]}
+         */
         this.markers = [];
-        this.isIndividual = Util.getGroupCollectibleType( group ) === MarkerGroupFlags.Collectible_Individual;
-
-        if ( group.legendIcon ) {
-            this.$icon = Util.createGroupIconElement( group );
-        } else {
-            this.$icon = Util.createGroupCircleElement( group );
+        /**
+         * @readonly
+         * @type {boolean}
+         */
+        this.isIndividual = Util.Groups.getCollectibleType( group ) === MarkerGroupFlags.Collectible_Individual;
+        /**
+         * @type {jQuery?}
+         */
+        this.$icon = null;
+        if ( 'legendIcon' in group ) {
+            this.$icon = Util.Groups.createIconElement( group );
+        } else if ( 'fillColor' in group ) {
+            this.$icon = Util.Groups.createCircleElement( group );
         }
-
+        /**
+         * @type {OO.ui.Widget}
+         */
         this.container = new OO.ui.Widget( {
             classes: [ 'datamap-collectible-group-markers' ]
         } );
-
+        /**
+         * @type {OO.ui.CheckboxInputWidget}
+         */
         this.checkbox = new OO.ui.CheckboxInputWidget( {
             selected: false
         } );
-        this.checkbox.on( 'change', () => this.toggleAll( this.checkbox.isSelected() ) );
-
-        this.$element = new OO.ui.PanelLayout( {
+        /**
+         * @type {jQuery}
+         */
+        this.$content = new OO.ui.PanelLayout( {
             framed: true,
             expanded: false,
             content: [
@@ -139,7 +184,7 @@ CollectiblesPanel.MarkerGroup = class MarkerGroup {
                     classes: [ 'datamap-collectible-group-header' ],
                     content: [
                         this.checkbox,
-                        this.$icon,
+                        this.$icon || '',
                         new OO.ui.LabelWidget( {
                             label: group.name
                         } )
@@ -148,6 +193,8 @@ CollectiblesPanel.MarkerGroup = class MarkerGroup {
                 this.container
             ]
         } ).$element;
+
+        this.checkbox.on( 'change', () => this.toggleAll( this.checkbox.isSelected() ) );
     }
 
 
@@ -213,7 +260,10 @@ CollectiblesPanel.MarkerGroup = class MarkerGroup {
     updateCheckboxState() {
         this.checkbox.setSelected( this.markers.every( x => x.leafletMarker.options.dismissed ), true );
     }
-};
+}
+
+
+CollectiblesPanel.Section = Section;
 
 
 CollectiblesPanel.MarkerEntry = class MarkerEntry {

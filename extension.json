@@ -108,17 +108,19 @@
 				"core/layerManager.js",
 				"core/map.js",
 				"core/controls.js",
-				"core/legend.js",
-				"core/markerLegend.js",
 				"core/popup.js",
-				"core/dismissables.js",
+				"core/util.js",
+
+				"core/legend/tabber.js",
+				"core/legend/filters.js",
+				"core/legend/collectibles.js",
+
 				{
 					"name": "core/settings.json",
 					"config": [
 						"DataMapsAllowExperimentalFeatures"
 					]
-				},
-				"core/util.js"
+				}
 			],
 			"styles": [
 				"core/css/main.less",

@@ -1,76 +1,45 @@
-/** @typedef {import( './map.js' )} DataMap */
-/** @typedef {import( './legend.js' )} LegendTabManager */
-const { MarkerGroupFlags } = require( './enums.js' ),
-    Util = require( './util.js' );
+/** @typedef {import( '../map.js' )} DataMap */
+const LegendTabber = require( './tabber.js' ),
+    { MarkerGroupFlags } = require( '../enums.js' ),
+    Util = require( '../util.js' );
 
 
-class MarkerFilteringPanel {
+class MarkerFilteringPanel extends LegendTabber.Tab {
     /**
-     * @param {LegendTabManager} legend
-     * @param {string} name
+     * @param {LegendTabber} tabber
      * @param {boolean} addTotalToggles
      * @param {boolean} withLayerDropdown
      */
-    constructor( legend, name, addTotalToggles, withLayerDropdown ) {
-        /**
-         * Legend tab manager this panel belongs to.
-         *
-         * @public
-         * @type {LegendTabManager}
-         */
-        this.legend = legend;
-        /**
-         * Owning map.
-         *
-         * @public
-         * @type {DataMap}
-         */
-        this.map = this.legend.map;
-        /**
-         * OOUI tab widget.
-         *
-         * @public
-         * @type {OO.ui.TabPanelLayout}
-         */
-        this.tab = this.legend.addTab( name, null, false );
-        /**
-         * Root DOM element.
-         *
-         * @public
-         * @type {jQuery}
-         */
-        this.$root = this.tab.$element;
+    constructor( tabber, addTotalToggles, withLayerDropdown ) {
+        super( tabber, mw.msg( 'datamap-legend-tab-locations' ) );
+
         /**
          * Top button group for quick manipulation actions.
          *
-         * @public
          * @type {OO.ui.ButtonGroupWidget}
          */
         this.buttonGroup = new OO.ui.ButtonGroupWidget( {} );
         /**
          * Marker group container.
          *
-         * @public
          * @type {jQuery}
          */
-        this.$groupContainer = $( '<div class="datamap-container-groups">' ).appendTo( this.$root );
+        this.$groupContainer = $( '<div class="datamap-container-groups">' ).appendTo( this.$content );
         /**
          * Mapping of group IDs to {@link MarkerFilteringPanel.MarkerGroupField}.
          *
-         * @public
          * @type {Object<string, MarkerFilteringPanel.MarkerGroupField>}
          */
         this.groupToggles = {};
         /**
          * Layer toggles popup container.
          *
-         * @public
          * @type {jQuery?}
          */
         this.$layersPopup = null;
 
         // Prepend the button group to the root element
-        this.buttonGroup.$element.prependTo( this.$root );
+        this.buttonGroup.$element.prependTo( this.$content );
 
         if ( addTotalToggles ) {
             this.createActionButton( mw.msg( 'datamap-toggle-show-all' ), this.toggleAllGroups.bind( this, true ) );
@@ -84,7 +53,6 @@ class MarkerFilteringPanel {
 
 
     /**
-     * @public
      * @param {string} label
      * @param {() => void} clickCallback
      * @return {OO.ui.ButtonWidget}
@@ -100,7 +68,6 @@ class MarkerFilteringPanel {
     /**
      * Creates a popup button and pushes into the button group.
      *
-     * @public
      * @param {string} label
      * @return {[ OO.ui.PopupButtonWidget, jQuery ]}
      */
@@ -139,7 +106,7 @@ class MarkerFilteringPanel {
      * @param {string} layerName
      */
     addMarkerLayerToggleExclusive( $parent, layerId, layerName ) {
-        this.legend.createCheckboxField( $parent, layerName, true,
+        this.tabber.createCheckboxField( $parent, layerName, true,
             state => this.map.layerManager.setExclusion( layerId, !state ) );
     }
 
@@ -151,7 +118,7 @@ class MarkerFilteringPanel {
      * @param {boolean} [invert]
      */
     addMarkerLayerToggleInclusive( $parent, layerId, layerName, invert ) {
-        this.legend.createCheckboxField( $parent, layerName, true,
+        this.tabber.createCheckboxField( $parent, layerName, true,
             state => this.map.layerManager.setInclusion( layerId, ( invert ? state : !state ) ) );
     }
 
@@ -163,7 +130,7 @@ class MarkerFilteringPanel {
      * @param {boolean} [invert]
      */
     addMarkerLayerToggleRequired( $parent, layerId, layerName, invert ) {
-        this.legend.createCheckboxField( $parent, layerName, true,
+        this.tabber.createCheckboxField( $parent, layerName, true,
             state => this.map.layerManager.setRequirement( layerId, ( invert ? state : !state ) ) );
     }
 
@@ -174,7 +141,7 @@ class MarkerFilteringPanel {
      */
     addMarkerGroupToggle( groupId, group ) {
         this.groupToggles[ groupId ] = new MarkerFilteringPanel.MarkerGroupField( this, groupId, group );
-        this.legend.setTabVisibility( this.tab, true );
+        this.setVisible( true );
     }
 
 
@@ -201,13 +168,13 @@ MarkerFilteringPanel.MarkerGroupField = class MarkerGroupField {
          */
         this.legendPanel = legendPanel;
         /**
-         * @type {LegendTabManager}
+         * @type {LegendTabber}
          */
-        this.legend = this.legendPanel.legend;
+        this.legend = this.legendPanel.tabber;
         /**
          * @type {DataMap}
          */
-        this.map = this.legendPanel.map;
+        this.map = this.legend.map;
         /**
          * @type {string}
          */
@@ -242,17 +209,17 @@ MarkerFilteringPanel.MarkerGroupField = class MarkerGroupField {
 
         // Add a coloured circle if circle marker group
         if ( 'fillColor' in group ) {
-            this.$circle = Util.createGroupCircleElement( group ).prependTo( this.field.$header );
+            this.$circle = Util.Groups.createCircleElement( group ).prependTo( this.field.$header );
         }
 
         // Add a pin icon if pin marker group
         if ( 'pinColor' in group ) {
-            this.$pin = Util.createGroupPinIconElement( group ).prependTo( this.field.$header );
+            this.$pin = Util.Groups.createPinIconElement( group ).prependTo( this.field.$header );
         }
 
         // Add an icon if one is specified in the group
         if ( group.legendIcon ) {
-            this.$icon = Util.createGroupIconElement( group ).prependTo( this.field.$header );
+            this.$icon = Util.Groups.createIconElement( group ).prependTo( this.field.$header );
         }
     }
 

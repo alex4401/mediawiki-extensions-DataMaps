@@ -6,9 +6,9 @@ module.exports = mw.dataMaps = Object.assign( {}, require( './enums.js' ), {
     MapStorage: require( './storage.js' ),
     MarkerLayerManager: require( './layerManager.js' ),
     MarkerPopup: require( './popup.js' ),
-    LegendTabManager: require( './legend.js' ),
-    MarkerFilteringPanel: require( './markerLegend.js' ),
+    LegendTabber: require( './legend/tabber.js' ),
+    MarkerFilteringPanel: require( './legend/filters.js' ),
     DataMap: require( './map.js' ),
-    CollectiblesPanel: require( './dismissables.js' ),
+    CollectiblesPanel: require( './legend/collectibles.js' ),
     Util: require( './util.js' )
 } );

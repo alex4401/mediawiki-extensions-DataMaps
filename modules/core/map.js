@@ -4,10 +4,10 @@ const MapStorage = require( './storage.js' ),
     MarkerPopup = require( './popup.js' ),
     MarkerStreamingManager = require( './stream.js' ),
     Controls = require( './controls.js' ),
-    LegendTabManager = require( './legend.js' ),
-    MarkerFilteringPanel = require( './markerLegend.js' ),
+    LegendTabber = require( './legend/tabber.js' ),
+    MarkerFilteringPanel = require( './legend/filters.js' ),
     EventEmitter = require( './events.js' ),
-    CollectiblesPanel = require( './dismissables.js' ),
+    CollectiblesPanel = require( './legend/collectibles.js' ),
     Util = require( './util.js' );
 /** @type {!LeafletModule} */
 // @ts-ignore: Lazily initialised, this'd be ideally solved with post-fix assertions but we're in JS land.
@@ -97,7 +97,7 @@ class DataMap extends EventEmitter {
         /**
          * Instance of the tab manager in the legend. Only initialised when legend is done loading, if it's enabled.
          *
-         * @type {LegendTabManager?}
+         * @type {LegendTabber?}
          */
         this.legend = null;
         /**
@@ -958,7 +958,7 @@ class DataMap extends EventEmitter {
      * @fires DataMap#legendManager
      */
     _onOOUILoaded() {
-        this.legend = new LegendTabManager( this );
+        this.legend = new LegendTabber( this );
         this.fireMemorised( 'legendManager' );
     }
 
@@ -973,8 +973,8 @@ class DataMap extends EventEmitter {
         const withLayerDropdown = hasCaves;
 
         // Initialise legend objects
-        this.filtersPanel = new MarkerFilteringPanel( /** @type {!LegendTabManager} */ ( this.legend ),
-            mw.msg( 'datamap-legend-tab-locations' ), true, withLayerDropdown );
+        this.filtersPanel = new MarkerFilteringPanel( /** @type {LegendTabber} */ ( this.legend ), true, withLayerDropdown )
+            .setVisible( true );
 
         // Build the surface and caves toggle
         // TODO: this should be gone by v0.15, preferably in v0.14 (though that one's going to be a 1.39 compat update)
@@ -999,7 +999,7 @@ class DataMap extends EventEmitter {
      * @fires DataMap#collectiblesPanel
      */
     _initialiseCollectiblesPanel() {
-        this.collectiblesPanel = new CollectiblesPanel( this.legend );
+        this.collectiblesPanel = new CollectiblesPanel( /** @type {LegendTabber} */ ( this.legend ) ).setVisible( true );
         this.fireMemorised( 'collectiblesPanel' );
     }
 }
