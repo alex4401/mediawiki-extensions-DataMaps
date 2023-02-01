@@ -28,6 +28,7 @@ class DataModel {
     protected stdClass $raw;
     private array $validationCheckedFields = [];
     protected bool $validationAreRequiredFieldsPresent = true;
+    protected bool $isValidationSuccessful = true;
 
     public function __construct( stdClass $raw ) {
         if ( is_array( $raw ) ) {
@@ -84,6 +85,7 @@ class DataModel {
 
         $unexpected = array_diff( $all, $fields );
         if ( !empty( $unexpected ) ) {
+            $this->isValidationSuccessful = false;
             $status->fatal( 'datamap-error-validate-unexpected-fields', static::$publicName, wfEscapeWikiText(
                 implode( ', ', $unexpected ) ) );
         }
@@ -105,6 +107,7 @@ class DataModel {
             }
         }
         if ( $count > 1 ) {
+            $this->isValidationSuccessful = false;
             $status->fatal( 'datamap-error-validate-exclusive-fields', static::$publicName, implode( ', ', $fields ) );
             return true;
         }
@@ -153,6 +156,7 @@ class DataModel {
                     wfMessage( 'datamap-error-validate-check-docs' ) );
             }
             $this->validationAreRequiredFieldsPresent = false;
+            $this->isValidationSuccessful = false;
             return false;
         }
 
@@ -188,24 +192,28 @@ class DataModel {
         if ( $type === null ) {
             $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, $name,
                 wfMessage( 'datamap-error-validate-check-docs' ) );
+            $this->isValidationSuccessful = false;
             return false;
         }
 
         if ( $type === self::TYPE_FILE && ( $spec['fileMustExist'] ?? false ) ) {
             if ( empty( $value ) ) {
                 $status->fatal( 'datamap-error-validate-field-no-value', static::$publicName, $name );
+                $this->isValidationSuccessful = false;
                 return false;
             }
 
             $file = DataMapFileUtils::getFile( $value );
             if ( !$file || !$file->exists() ) {
                 $status->fatal( 'datamap-error-validate-no-file', wfEscapeWikiText( trim( $value ) ) );
+                $this->isValidationSuccessful = false;
                 return false;
             }
         }
 
         if ( isset( $spec['check'] ) ) {
             if ( !$spec['check']( $status, $value ) ) {
+                $this->isValidationSuccessful = false;
                 return false;
             }
         }
@@ -216,6 +224,7 @@ class DataModel {
                     if ( !in_array( $item, $spec['values'] ) ) {
                         $status->fatal( 'datamap-error-validate-disallowed-value', static::$publicName, $name,
                             wfMessage( 'datamap-error-validate-check-docs' ) );
+                        $this->isValidationSuccessful = false;
                         return false;
                     }
                 }
@@ -227,6 +236,7 @@ class DataModel {
                     if ( !$this->verifyType( $item, $spec['itemType'] ) ) {
                         $status->fatal( 'datamap-error-validate-wrong-item-type', static::$publicName, $name, $index,
                             wfMessage( 'datamap-error-validate-check-docs' ) );
+                        $this->isValidationSuccessful = false;
                         return false;
                     }
                     $index++;
@@ -236,6 +246,7 @@ class DataModel {
             if ( isset( $spec['itemCheck'] ) ) {
                 foreach ( $value as &$item ) {
                     if ( !$spec['itemCheck']( $status, $item ) ) {
+                        $this->isValidationSuccessful = false;
                         return false;
                     }
                 }
@@ -244,6 +255,7 @@ class DataModel {
             if ( isset( $spec['values'] ) && !in_array( $value, $spec['values'] ) ) {
                 $status->fatal( 'datamap-error-validate-disallowed-value', static::$publicName, $name,
                     wfMessage( 'datamap-error-validate-check-docs' ) );
+                $this->isValidationSuccessful = false;
                 return false;
             }
         }
@@ -252,5 +264,6 @@ class DataModel {
     }
 
     public function validate( Status $status ) {
+        return $this->isValidationSuccessful;
     }
 }

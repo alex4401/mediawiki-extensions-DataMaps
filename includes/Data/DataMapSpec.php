@@ -22,6 +22,8 @@ class DataMapSpec extends DataModel {
     public const CO_YX = 0;
     public const CO_XY = 1;
 
+    public const MARKER_ERROR_LIMIT = 30;
+
     public static function normalisePointCoordinates( array $value, int $order ): array {
         if ( $order === self::CO_XY ) {
             $value = [ $value[1], $value[0] ];
@@ -348,6 +350,7 @@ class DataMapSpec extends DataModel {
             }
         ] );
         $this->checkField( $status, 'custom', DataModel::TYPE_OBJECT );
+        $markerErrorCount = 0;
         $this->checkField( $status, [
             'name' => 'markers',
             'type' => DataModel::TYPE_OBJECT,
@@ -356,7 +359,12 @@ class DataMapSpec extends DataModel {
                 $uidMap = [];
                 $out = true;
                 $this->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection )
-                    use ( &$status, &$requireOwnIDs, &$uidMap, $isFull, &$out ) {
+                    use ( &$status, &$requireOwnIDs, &$uidMap, $isFull, &$out, &$markerErrorCount ) {
+                    // Skip this collection if error limit has been surpassed
+                    if ( $markerErrorCount >= self::MARKER_ERROR_LIMIT ) {
+                        return;
+                    }
+
                     // Verify the association has no duplicate layers specified
                     $split = explode( ' ', $layers );
                     if ( count( $split ) !== count( array_unique( $split ) ) ) {
@@ -383,6 +391,13 @@ class DataMapSpec extends DataModel {
                         $marker->reassignTo( $rawMarker );
                         if ( !$marker->validate( $status, $requireOwnIDs ) ) {
                             $out = false;
+                            $markerErrorCount++;
+
+                            // Stop iterating if error limit has been surpassed
+                            if ( $markerErrorCount >= self::MARKER_ERROR_LIMIT ) {
+                                $status->fatal( 'datamap-error-validate-limit', 'MarkerSpec' );
+                                return;
+                            }
                         }
 
                         $uid = $marker->getCustomPersistentId();

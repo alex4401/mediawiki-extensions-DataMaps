@@ -131,5 +131,6 @@ class MarkerSpec extends DataModel {
         ] );
         $this->checkField( $status, 'canSearchFor', DataModel::TYPE_BOOL );
         $this->disallowOtherFields( $status );
+        return $this->isValidationSuccessful;
     }
 }

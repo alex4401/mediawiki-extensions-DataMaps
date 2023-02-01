@@ -33,6 +33,7 @@
     "datamap-error-validate-replaced-field": "Field <code>$2</code> in structure $1 has been replaced with <code>$3</code> in version $4, and will be removed in version $5.",
     "datamap-error-validate-deprecated-field": "Field <code>$2</code> in structure $1 has been deprecated in version $3, and will be removed in version $4.",
     "datamap-error-validate-no-file": "File [[:File:$1|$1]] linked, but it has not been uploaded yet to the wiki.",
+    "datamap-error-validate-limit": "Too many errors encountered during structure validation: $1.",
 
     "datamap-error-validatespec-group-no-display": "Marker group \"$1\" has no display settings. Add the <code>icon</code> and/or <code>fillColor</code> properties.",
     "datamap-error-validatespec-map-no-group-name": "A marker group with no (or an empty) name has been defined. Assign it a unique name.",
