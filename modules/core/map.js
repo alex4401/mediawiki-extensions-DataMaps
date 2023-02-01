@@ -806,10 +806,11 @@ class DataMap extends EventEmitter {
             maxZoom: 6,
             wheelPxPerZoomLevel: 90,
             minZoom: Leaflet.Browser.mobile ? ( Leaflet.Browser.retina ? 1 : 1.75 ) : 2,
-            // Zoom animation causes some awkward locking as Leaflet waits for the animation to finish before processing more
-            // zoom requests, but disabling it causes some updates to be distorted (for example, the canvas renderer will drift).
-            // We include a patch in our Leaflet builds to disable animations on desktop-style zooms.
-            zoomAnimation: true,
+            // Zoom animations cause some awkward locking as Leaflet waits for the animation to finish before processing more
+            // zoom requests.
+            // However, before v0.15.0 they had to be enabled to mitigate vector drift, which has been since fixed by Leaflet's
+            // PR#8794. Before that merge request we had explicitly called zoom in desktop handlers with animations turned off.
+            zoomAnimation: false,
             markerZoomAnimation: true,
             // Do not allow pinch-zooming to surpass max zoom even temporarily. This seems to cause a mispositioning.
             bounceAtZoomLimits: false,
