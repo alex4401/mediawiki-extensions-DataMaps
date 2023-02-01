@@ -79,9 +79,9 @@ class DataModel {
     protected function allowOnly( Status $status, array $fields ) {
         $all = array_keys( get_object_vars( $this->raw ) );
         if ( self::$permitAllMetadataFields ) {
-            $all = array_filter( $all, fn ( $key ) => $key[0] !== '$', ARRAY_FILTER_USE_KEY );
+            $all = array_filter( $all, fn ( $key ) => !is_string( $key ) || $key[0] !== '$', ARRAY_FILTER_USE_KEY );
         }
-        
+
         $unexpected = array_diff( $all, $fields );
         if ( !empty( $unexpected ) ) {
             $status->fatal( 'datamap-error-validate-unexpected-fields', static::$publicName, wfEscapeWikiText(
