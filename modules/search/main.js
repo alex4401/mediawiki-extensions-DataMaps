@@ -17,7 +17,7 @@ class MarkerSearch extends MapControl {
      * @param {boolean} isLinked
      */
     constructor( map, index, isLinked ) {
-        super( map, 'search', undefined, [ MapControl.BAR ] );
+        super( map, 'search' );
 
         /** @type {DataMap} */
         this.map = map;
@@ -30,7 +30,7 @@ class MarkerSearch extends MapControl {
 
         map.on( 'leafletLoaded', () => {
             // Push self into the map and initialise the user interface
-            this.map.addControl( DataMap.anchors.topLeft, this, true )._initialiseUI();
+            this.map.addControl( DataMap.anchors.topLeftInline, this )._initialiseUI();
             // Build the index from markers that have been loaded so far
             this._setDisplayIndex( this.isLinked ? /** @type {MarkerSearchIndex.ChildIndex} */ ( this.ownedIndex ).parent
                 : this.ownedIndex );

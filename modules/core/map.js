@@ -900,28 +900,35 @@ class DataMap extends EventEmitter {
 
 
     /**
+     * @param {string} anchor
+     * @return {jQuery}
+     */
+    resolveControlAnchor( anchor ) {
+        return this.$root.find( `.leaflet-control-container ${anchor}` );
+    }
+
+
+    /**
      * Adds a custom control to Leaflet's container.
      *
      * Requires the Leaflet map to be initialised.
      *
      * @template {jQuery|Controls.MapControl} T
-     * @param {string} anchor Anchor selector (common ones are found in DataMap.anchors).
+     * @param {DataMap.anchors[ keyof DataMap.anchors ]} anchor Anchor selector.
      * @param {T} control Control to add.
      * @param {boolean} [prepend] Whether to add the control to the beginning of the anchor.
      * @return {T} {@link control} for chaining.
      */
     addControl( anchor, control, prepend ) {
-        const $element = /** @type {jQuery} */ ( control instanceof Controls.MapControl ? control.$element : control );
-
-        if ( prepend && this.legendPopupButton ) {
-            $element.insertAfter( this.legendPopupButton.$element );
+        const $element = /** @type {jQuery} */ ( control instanceof Controls.MapControl ? control.$element : control ),
+            $anchor = this.resolveControlAnchor( anchor );
+        if ( prepend && $anchor[ 0 ].querySelector( ':scope > .datamap-control-group' ) ) {
+            $element.insertAfter( $anchor.find( ':scope > .datamap-control-group' ) );
         } else {
-            $element[ prepend ? 'prependTo' : 'appendTo' ]( this.$root.find( `.leaflet-control-container ${anchor}` ) );
+            $element[ prepend ? 'prependTo' : 'appendTo' ]( $anchor );
         }
-
         // Stop mouse event propagation onto Leaflet map
         $element.on( 'click dblclick scroll mousewheel wheel', event => event.stopPropagation() );
-
         return control;
     }
 
@@ -930,8 +937,13 @@ class DataMap extends EventEmitter {
      * @private
      */
     _buildControls() {
+        // Create inline control containers (DataMap.anchors.topLeftInline and DataMap.anchors.topRightInline)
+        for ( const anchor of [ DataMap.anchors.topLeft, DataMap.anchors.topRight ] ) {
+            $( '<div class="datamap-control-group">' ).prependTo( this.resolveControlAnchor( anchor ) );
+        }
+
         // Create a button to toggle the legend on small screens
-        this.legendPopupButton = this.addControl( DataMap.anchors.topLeft, new Controls.LegendPopup( this ), true );
+        this.legendPopupButton = this.addControl( DataMap.anchors.topLeftInline, new Controls.LegendPopup( this ), true );
 
         // Create a coordinate-under-cursor display
         if ( this.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
@@ -940,7 +952,7 @@ class DataMap extends EventEmitter {
 
         // Create a background toggle
         if ( this.config.backgrounds.length > 1 ) {
-            this.backgroundSwitch = this.addControl( DataMap.anchors.topRight, new Controls.BackgroundSwitcher( this ) );
+            this.backgroundSwitch = this.addControl( DataMap.anchors.topRightInline, new Controls.BackgroundSwitcher( this ) );
         }
 
         // Extend zoom control to add buttons to reset or centre the view
@@ -948,7 +960,7 @@ class DataMap extends EventEmitter {
 
         // Display an edit button to logged in users
         if ( !this.isFeatureBitSet( MapFlags.IsPreview ) && mw.config.get( 'wgUserName' ) !== null ) {
-            this.editControl = this.addControl( DataMap.anchors.topLeft, new Controls.EditButton( this ) );
+            this.editControl = this.addControl( DataMap.anchors.topRightInline, new Controls.EditButton( this ) );
         }
     }
 
@@ -1012,7 +1024,10 @@ DataMap.anchors = Object.freeze( {
     topRight: '.leaflet-top.leaflet-right',
     topLeft: '.leaflet-top.leaflet-left',
     bottomLeft: '.leaflet-bottom.leaflet-left',
-    bottomRight: '.leaflet-bottom.leaflet-right'
+    bottomRight: '.leaflet-bottom.leaflet-right',
+
+    topRightInline: '.leaflet-top.leaflet-right > .datamap-control-group',
+    topLeftInline: '.leaflet-top.leaflet-left > .datamap-control-group'
 } );
 /**
  * Content bounds padding.

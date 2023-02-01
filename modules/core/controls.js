@@ -34,17 +34,28 @@ class MapControl {
             'datamap-control',
             `datamap-control-${id}`
         ];
+        if ( this.isButtonGroup() ) {
+            finalClasses.push( 'leaflet-bar' );
+        }
         if ( classes ) {
             finalClasses = finalClasses.concat( classes );
         }
 
         // The following classes are used here:
-        // * leaflet-control
         // * datamap-control
+        // * datamap-control-${id}
         /** @type {jQuery} */
         this.$element = $( document.createElement( tagName || 'div' ) ).addClass( finalClasses );
 
         this._build();
+    }
+
+
+    /**
+     * @return {boolean}
+     */
+    isButtonGroup() {
+        return true;
     }
 
 
@@ -95,6 +106,9 @@ class MapControl {
         return $result;
     }
 }
+/**
+ * @deprecated since v0.15.0; override isButtonGroup() instead if you need to
+ */
 MapControl.BAR = 'leaflet-bar';
 
 
@@ -103,7 +117,7 @@ class BackgroundSwitcher extends MapControl {
      * @param {DataMap} map Owning map.
      */
     constructor( map ) {
-        super( map, 'backgrounds', 'select', [ MapControl.BAR ] );
+        super( map, 'backgrounds', 'select' );
     }
 
 
@@ -128,6 +142,11 @@ class Coordinates extends MapControl {
     }
 
 
+    isButtonGroup() {
+        return false;
+    }
+
+
     _build() {
         this.map.leaflet.on( 'mousemove', event => {
             let lat = event.latlng.lat / this.map.crsScaleY;
@@ -146,7 +165,7 @@ class EditButton extends MapControl {
      * @param {DataMap} map Owning map.
      */
     constructor( map ) {
-        super( map, 'edit', undefined, [ MapControl.BAR ] );
+        super( map, 'edit' );
     }
 
 
@@ -169,7 +188,7 @@ class ExtraViewControls extends MapControl {
      * @param {DataMap} map Owning map.
      */
     constructor( map ) {
-        super( map, 'viewcontrols', undefined, [ MapControl.BAR ] );
+        super( map, 'viewcontrols' );
     }
 
 
@@ -197,7 +216,7 @@ class LegendPopup extends MapControl {
      * @param {DataMap} map Owning map.
      */
     constructor( map ) {
-        super( map, 'legend-toggle', undefined, [ MapControl.BAR ] );
+        super( map, 'legend-toggle' );
     }
 
 
