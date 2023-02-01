@@ -342,7 +342,10 @@
 				"datamap-vec-toggle-search",
 				"datamap-vec-toggle-search-tabber",
 				"datamap-vec-toggle-uid-requirement",
-				"datamap-vec-submit"
+				"datamap-vec-submit",
+				"datamap-vec-example-group-id",
+    			"datamap-vec-example-group-name",
+    			"datamap-vec-example-marker"
 			],
 			"targets": [ "desktop" ]
 		},

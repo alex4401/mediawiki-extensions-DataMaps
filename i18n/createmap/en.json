@@ -24,5 +24,8 @@
     "datamap-vec-toggle-search": "Enable marker search",
     "datamap-vec-toggle-search-tabber": "Share search data within tabber",
     "datamap-vec-toggle-uid-requirement": "Require unique marker IDs",
-    "datamap-vec-submit": "Proceed"
+    "datamap-vec-submit": "Proceed",
+    "datamap-vec-example-group-id": "example",
+    "datamap-vec-example-group-name": "Example group",
+    "datamap-vec-example-marker": "Example marker"
 }

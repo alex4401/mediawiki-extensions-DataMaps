@@ -316,7 +316,9 @@ CreationDialog.prototype.updatePrefillValue = function () {
         parseFloat( this.crsHeight.getValue() )
     ];
 
+    /** @type {any} */
     const out = {
+        coordinateOrder: 'xy',
         crs: [ [ 0, 0 ], imageSize ],
         image: this.imageSelector.getValue()
     };
@@ -346,8 +348,21 @@ CreationDialog.prototype.updatePrefillValue = function () {
         out.requireCustomMarkerIDs = true;
     }
 
-    out.groups = {};
-    out.markers = {};
+    out.groups = {
+        [ mw.msg( 'datamap-vec-example-group-id' ) ]: {
+            name: mw.msg( 'datamap-vec-example-group-name' ),
+            pinColor: '#f00'
+        }
+    };
+    out.markers = {
+        [ mw.msg( 'datamap-vec-example-group-id' ) ]: [
+            {
+                x: 50,
+                y: 50,
+                name: mw.msg( 'datamap-vec-example-marker' )
+            }
+        ]
+    };
     this.prefill.$element.attr( 'value', JSON.stringify( out, null, '\t' ) );
 
     this.$body.find( 'form' ).trigger( 'submit' );
