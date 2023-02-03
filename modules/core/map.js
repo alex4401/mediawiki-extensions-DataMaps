@@ -944,6 +944,9 @@ class DataMap extends EventEmitter {
         }
 
         // Create a button to toggle the legend on small screens
+        if ( !( !this.isFeatureBitSet( MapFlags.VisualEditor ) && this.isFeatureBitSet( MapFlags.HideLegend ) ) ) {
+            this.legendPopupButton = this.addControl( DataMap.anchors.topLeftInline, new Controls.LegendPopup( this ), true );
+        }
         this.legendPopupButton = this.addControl( DataMap.anchors.topLeftInline, new Controls.LegendPopup( this ), true );
 
         // Create a coordinate-under-cursor display
