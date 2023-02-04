@@ -24,6 +24,18 @@ module.exports = Object.freeze( {
     isBleedingEdge: /** @type {DataMaps.IExposedServerSettings} */ ( require( './settings.json' ) )
         .DataMapsAllowExperimentalFeatures,
 
+    /**
+     * @template T
+     * @param {T|null|undefined} value
+     * @return {T}
+     */
+    getNonNull( value ) {
+        if ( value === null || value === undefined ) {
+            throw new Error( 'Encountered a null value in non-nullable context' );
+        }
+        return value;
+    },
+
 
     /**
      * Returns whether a bit is set in a bit field.
