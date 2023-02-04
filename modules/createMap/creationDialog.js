@@ -320,32 +320,36 @@ CreationDialog.prototype.updatePrefillValue = function () {
     const out = {
         coordinateOrder: 'xy',
         crs: [ [ 0, 0 ], imageSize ],
-        image: this.imageSelector.getValue()
+        image: this.imageSelector.getValue(),
+        settings: {}
     };
 
     if ( this.originSelector.getValue() === Enums.CRSOrigin.BottomLeft ) {
         out.crs = [ out.crs[ 1 ], out.crs[ 0 ] ];
     }
 
-    // TODO: this should check against default feature sets
-    if ( !this.coordsToggle.getValue() ) {
-        out.showCoordinates = false;
-    }
-
     if ( !this.zoomToggle.getValue() ) {
-        out.disableZoom = true;
+        out.settings.disableZoom = true;
     }
 
     if ( this.searchToggle.getValue() ) {
-        out.enableSearch = true;
+        out.settings.enableSearch = true;
 
         if ( this.tabberSearchToggle.getValue() ) {
-            out.enableSearch = 'tabberWide';
+            out.settings.enableSearch = 'tabberWide';
         }
     }
 
     if ( this.requireUIDsToggle.getValue() ) {
-        out.requireCustomMarkerIDs = true;
+        out.settings.requireCustomMarkerIDs = true;
+    }
+
+    if ( !this.coordsToggle.getValue() ) {
+        out.settings.showCoordinates = false;
+    }
+
+    if ( Object.keys( out.settings ).length === 0 ) {
+        delete out.settings;
     }
 
     out.groups = {

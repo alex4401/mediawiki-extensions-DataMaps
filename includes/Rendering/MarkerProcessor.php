@@ -3,6 +3,7 @@ namespace MediaWiki\Extension\DataMaps\Rendering;
 
 use MapCacheLRU;
 use MediaWiki\Extension\DataMaps\Data\DataMapSpec;
+use MediaWiki\Extension\DataMaps\Data\MapSettingsSpec;
 use MediaWiki\Extension\DataMaps\Data\MarkerSpec;
 use MediaWiki\Extension\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapFileUtils;
@@ -35,7 +36,7 @@ class MarkerProcessor {
         $this->title = $title;
         $this->dataMap = $dataMap;
         $this->filter = $filter;
-        $this->isSearchEnabled = $this->dataMap->wantsSearch();
+        $this->isSearchEnabled = $this->dataMap->getSettings()->getSearchMode() !== MapSettingsSpec::SM_NONE;
         // Pull configuration options
         $this->useLocalParserCache = ExtensionConfig::shouldCacheWikitextInProcess();
         $this->collectTimings = ExtensionConfig::shouldApiReturnProcessingTime();

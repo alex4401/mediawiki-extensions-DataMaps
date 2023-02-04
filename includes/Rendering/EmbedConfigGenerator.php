@@ -8,6 +8,7 @@ use MediaWiki\Extension\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\DataMaps\Data\MapBackgroundOverlaySpec;
 use MediaWiki\Extension\DataMaps\Data\MapBackgroundSpec;
 use MediaWiki\Extension\DataMaps\Data\MapBackgroundTileSpec;
+use MediaWiki\Extension\DataMaps\Data\MapSettingsSpec;
 use MediaWiki\Extension\DataMaps\Data\MarkerGroupSpec;
 use MediaWiki\Extension\DataMaps\Data\MarkerLayerSpec;
 use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapColourUtils;
@@ -86,8 +87,8 @@ class EmbedConfigGenerator {
             $out['layers'][$spec->getId()] = $this->getMarkerLayerConfig( $spec );
         } );
         // Settings and extensions
-        if ( $this->data->getInjectedLeafletSettings() != null ) {
-            $out['leafletSettings'] = $this->data->getInjectedLeafletSettings();
+        if ( $this->data->getSettings()->getCustomLeafletConfig() != null ) {
+            $out['leafletSettings'] = $this->data->getSettings()->getCustomLeafletConfig();
         }
         if ( $this->data->getCustomData() != null ) {
             $out['custom'] = $this->data->getCustomData();
@@ -97,13 +98,14 @@ class EmbedConfigGenerator {
     }
 
     public function getPublicFeatureBitMask(): int {
+        $settings = $this->data->getSettings();
         $out = 0;
-        $out |= $this->data->wantsCoordinatesShown() ? 1 << 0 : 0;
-        $out |= $this->data->wantsLegendHidden() ? 1 << 1 : 0;
-        $out |= $this->data->wantsZoomDisabled() ? 1 << 2 : 0;
-        $out |= $this->data->wantsSearch() ? 1 << 3 : 0;
-        $out |= $this->data->wantsChecklistSortedByAmount() ? 1 << 4 : 0;
-        $out |= $this->data->wantsSearch() === DataMapSpec::SM_TABBER ? 1 << 5 : 0;
+        $out |= $settings->shouldShowCoordinates() ? 1 << 0 : 0;
+        $out |= $settings->isLegendDisabled() ? 1 << 1 : 0;
+        $out |= $settings->isZoomDisabled() ? 1 << 2 : 0;
+        $out |= $settings->getSearchMode() ? 1 << 3 : 0;
+        $out |= $settings->getChecklistSortMode() ? 1 << 4 : 0;
+        $out |= $settings->getSearchMode() === MapSettingsSpec::SM_TABBER ? 1 << 5 : 0;
         $out |= $this->forVisualEditor ? 1 << 6 : 0;
         $out |= ( $this->useInlineData || $this->forVisualEditor ) ? 1 << 7 : 0;
 

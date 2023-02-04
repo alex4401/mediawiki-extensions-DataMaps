@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\DataMaps\Data;
 use MediaWiki\Extension\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\DataMaps\ExtensionConfig;
 use Status;
+use stdClass;
 use Title;
 
 class DataMapSpec extends DataModel {
@@ -14,10 +15,7 @@ class DataMapSpec extends DataModel {
     private ?array $cachedMarkerGroups = null;
     private ?array $cachedMarkerLayers = null;
     private ?array $cachedBackgrounds = null;
-
-    public const SM_NONE = 0;
-    public const SM_SELF = 1;
-    public const SM_TABBER = 2;
+    private ?MapSettingsSpec $cachedSettings = null;
 
     public const CO_YX = 0;
     public const CO_XY = 1;
@@ -82,38 +80,11 @@ class DataMapSpec extends DataModel {
         return $this->cachedBackgrounds;
     }
 
-    public function wantsCoordinatesShown(): bool {
-        return isset( $this->raw->showCoordinates ) ? $this->raw->showCoordinates : true;
-    }
-
-    public function wantsLegendHidden(): bool {
-        return isset( $this->raw->hideLegend ) ? $this->raw->hideLegend : false;
-    }
-
-    public function wantsZoomDisabled(): bool {
-        return isset( $this->raw->disableZoom ) ? $this->raw->disableZoom : false;
-    }
-
-    public function wantsCustomMarkerIDs(): bool {
-        return isset( $this->raw->requireCustomMarkerIDs ) ? $this->raw->requireCustomMarkerIDs : false;
-    }
-
-    public function wantsSearch(): int {
-        $value = isset( $this->raw->enableSearch ) ? $this->raw->enableSearch : false;
-        if ( $value === true ) {
-            return self::SM_SELF;
-        } elseif ( $value === 'tabberWide' ) {
-            return self::SM_TABBER;
+    public function getSettings(): MapSettingsSpec {
+        if ( $this->cachedSettings === null ) {
+            $this->cachedSettings = new MapSettingsSpec( $this->raw->settings ?? new stdClass() );
         }
-        return self::SM_NONE;
-    }
-
-    public function wantsChecklistSortedByAmount(): bool {
-        return isset( $this->raw->sortChecklistsByAmount ) ? $this->raw->sortChecklistsByAmount : false;
-    }
-
-    public function getInjectedLeafletSettings(): ?object {
-        return isset( $this->raw->leafletSettings ) ? $this->raw->leafletSettings : null;
+        return $this->cachedSettings;
     }
 
     public function getCustomData(): ?object {
@@ -121,7 +92,7 @@ class DataMapSpec extends DataModel {
     }
 
     public function getRawMarkerMap(): object {
-        return isset( $this->raw->markers ) ? $this->raw->markers : new \stdclass();
+        return isset( $this->raw->markers ) ? $this->raw->markers : new stdClass();
     }
 
     public function getRawMarkerGroupMap(): object {
@@ -283,21 +254,11 @@ class DataMapSpec extends DataModel {
             }
         }
 
-        $this->checkField( $status, 'showCoordinates', DataModel::TYPE_BOOL );
-        $this->checkField( $status, 'hideLegend', DataModel::TYPE_BOOL );
-        $this->checkField( $status, 'disableZoom', DataModel::TYPE_BOOL );
-        $this->checkField( $status, 'sortChecklistsByAmount', DataModel::TYPE_BOOL );
-        $this->checkField( $status, 'requireCustomMarkerIDs', DataModel::TYPE_BOOL );
         $this->checkField( $status, [
-            'name' => 'enableSearch',
-            'type' => [ DataModel::TYPE_BOOL, DataModel::TYPE_STRING ],
-            'values' => [ true, false, 'tabberWide' ]
-        ] );
-        $this->checkField( $status, [
-            'name' => 'leafletSettings',
+            'name' => 'settings',
             'type' => DataModel::TYPE_OBJECT,
-            'check' => static function ( $status, $raw ) {
-                return ( new LeafletSettingsSpec( $raw ) )->validate( $status );
+            'check' => function ( $status, $raw ) {
+                return $this->getSettings()->validate( $status );
             }
         ] );
         $this->checkField( $status, [
@@ -350,14 +311,14 @@ class DataMapSpec extends DataModel {
             }
         ] );
         $this->checkField( $status, 'custom', DataModel::TYPE_OBJECT );
-        $markerErrorCount = 0;
         $this->checkField( $status, [
             'name' => 'markers',
             'type' => DataModel::TYPE_OBJECT,
             'check' => function ( $status, &$rawMap ) use ( $isFull ) {
-                $requireOwnIDs = $this->wantsCustomMarkerIDs();
+                $requireOwnIDs = $this->getSettings()->requiresMarkerIDs();
                 $uidMap = [];
                 $out = true;
+                $markerErrorCount = 0;
                 $this->iterateRawMarkerMap( function ( string $layers, array $rawMarkerCollection )
                     use ( &$status, &$requireOwnIDs, &$uidMap, $isFull, &$out, &$markerErrorCount ) {
                     // Skip this collection if error limit has been surpassed

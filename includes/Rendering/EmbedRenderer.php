@@ -195,7 +195,7 @@ class EmbedRenderer {
         $containerMain->appendContent( $containerBottom );
 
         // Expose FF_HIDE_LEGEND flag
-        if ( $this->data->wantsLegendHidden() ) {
+        if ( $this->data->getSettings()->isLegendDisabled() ) {
             $containerMain->addClasses( [ 'datamap-legend-is-hidden' ] );
         }
 
