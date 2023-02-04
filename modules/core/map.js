@@ -8,7 +8,8 @@ const MapStorage = require( './storage.js' ),
     MarkerFilteringPanel = require( './legend/filters.js' ),
     EventEmitter = require( './events.js' ),
     CollectiblesPanel = require( './legend/collectibles.js' ),
-    Util = require( './util.js' );
+    Util = require( './util.js' ),
+    { createDomElement } = Util;
 /** @type {!LeafletModule} */
 // @ts-ignore: Lazily initialised, this'd be ideally solved with post-fix assertions but we're in JS land.
 let Leaflet = null;
@@ -22,10 +23,10 @@ let Leaflet = null;
 class DataMap extends EventEmitter {
     /**
      * @param {number} id
-     * @param {jQuery} $root
+     * @param {HTMLElement} rootElement
      * @param {DataMaps.Configuration.Map} config
      */
-    constructor( id, $root, config ) {
+    constructor( id, rootElement, config ) {
         super();
 
         /**
@@ -35,13 +36,20 @@ class DataMap extends EventEmitter {
          */
         this.id = id;
         /**
-         * Root DOM element of the data map
+         * Root DOM element of the data map.
          *
+         * @type {HTMLElement}
+         */
+        this.rootElement = rootElement;
+        /**
+         * Root DOM element of the data map, jQuery.
+         *
+         * @deprecated since v0.15.0; will be removed in v0.16.0. Use {@link DataMap.rootElement}.
          * @type {jQuery}
          */
-        this.$root = $root;
+        this.$root = $( rootElement );
         /**
-         * Setup configuration
+         * Setup configuration.
          *
          * @type {DataMaps.Configuration.Map}
          */
@@ -59,7 +67,7 @@ class DataMap extends EventEmitter {
          */
         this.globalStorage = new MapStorage( this, 'global' );
         /**
-         * Visibility manager.
+         * Layer visibility manager.
          *
          * @type {MarkerLayerManager}
          */
@@ -87,13 +95,20 @@ class DataMap extends EventEmitter {
          *
          * @type {string[]?}
          */
-        this.dataSetFilters = this.$root.data( 'filter-groups' ) ? this.$root.data( 'filter-groups' ).split( '|' ) : null;
+        this.dataSetFilters = this.rootElement.dataset.filterGroups ? this.rootElement.dataset.filterGroups.split( '|' ) : null;
         /**
          * DOM element to display any status messages.
          *
+         * @type {HTMLElement}
+         */
+        this.statusElement = /** @type {!HTMLElement} */ ( rootElement.querySelector( '.datamap-status' ) );
+        /**
+         * DOM element to display any status messages.
+         *
+         * @deprecated since v0.15.0; will be removed in v0.16.0. Use {@link DataMap.statusElement}.
          * @type {jQuery}
          */
-        this.$status = $root.find( '.datamap-status' );
+        this.$status = $( this.statusElement );
         /**
          * Instance of the tab manager in the legend. Only initialised when legend is done loading, if it's enabled.
          *
@@ -157,7 +172,7 @@ class DataMap extends EventEmitter {
          */
         this._contentBounds = null;
 
-        const $tabberPanel = Util.TabberNeue.getOwningPanel( this.$root );
+        const $tabberPanel = Util.TabberNeue.getOwningPanel( this.rootElement );
         if ( $tabberPanel === null || mw.loader.getState( 'ext.tabberNeue' ) === 'ready' ) {
             this._setUpUriMarkerHandler();
         } else if ( $tabberPanel !== null ) {
@@ -176,7 +191,7 @@ class DataMap extends EventEmitter {
         // Y axis is authoritative, this is really just a cosmetic choice influenced by ARK (latitude first). X doesn't need to
         // be mapped on a separate scale from Y, unless we want them to always be squares.
         /**
-         * Coordinate scale value. Prefer `translateBox` and `translatePoint` over custom calculations.
+         * Coordinate scale value. Prefer `translateBox` and `translatePoint` over manual calculations.
          *
          * @type {number}
          */
@@ -223,7 +238,7 @@ class DataMap extends EventEmitter {
             if ( Leaflet === null ) {
                 Leaflet = Util.getLeaflet();
             }
-            this._initialiseLeaflet( this.$root.find( '.datamap-holder' ) );
+            this._initialiseLeaflet( /** @type {!HTMLElement} */ ( this.rootElement.querySelector( '.datamap-holder' ) ) );
         } );
 
         // Load search add-on
@@ -252,7 +267,7 @@ class DataMap extends EventEmitter {
      * @private
      */
     _setUpUriMarkerHandler() {
-        const tabberId = Util.TabberNeue.getOwningId( this.$root );
+        const tabberId = Util.TabberNeue.getOwningId( this.rootElement );
         if ( tabberId && tabberId !== window.location.hash.slice( 1 ) ) {
             return;
         }
@@ -508,7 +523,7 @@ class DataMap extends EventEmitter {
      * @return {LeafletModule.AnyMarker} A Leaflet marker instance.
      */
     createMarkerFromApiInstance( layers, uncheckedInstance, properties ) {
-        // Initialise state if it's missing, thus reaching a null-safe state.
+        // Initialise state if it's missing, thus reaching a null-safe state
         if ( !uncheckedInstance[ 2 ] ) {
             uncheckedInstance[ 2 ] = {};
         }
@@ -622,10 +637,10 @@ class DataMap extends EventEmitter {
         this.backgroundIndex = index;
 
         // Push layers back onto the map
-        this.background.layers.forEach( x => {
-            x.addTo( this.leaflet );
-            x.bringToBack();
-        } );
+        for ( const layer of this.background.layers ) {
+            layer.addTo( this.leaflet );
+            layer.bringToBack();
+        }
 
         // Hide any unmatching "bg" sub-layer
         this.layerManager.setOptionalPropertyRequirement( 'bg', this.background.layer );
@@ -674,7 +689,6 @@ class DataMap extends EventEmitter {
         // Construct a layer
         if ( overlay.image ) {
             // Construct an image
-            // eslint-disable-next-line es-x/no-array-string-prototype-at
             result = new Leaflet.ImageOverlay( overlay.image, this.translateBox( overlay.at ), {
                 decoding: 'async',
                 // Expand the DOM element's width and height by 0.51 pixels. This helps with gaps between tiles.
@@ -688,7 +702,6 @@ class DataMap extends EventEmitter {
             } );
         } else {
             // Construct a rectangle
-            // eslint-disable-next-line es-x/no-array-string-prototype-at
             result = new Leaflet.Rectangle( this.translateBox( overlay.at ), {
                 color: overlay.strokeColour || Leaflet.Path.prototype.options.color,
                 fillColor: overlay.colour || Leaflet.Path.prototype.options.fillColor
@@ -759,8 +772,8 @@ class DataMap extends EventEmitter {
 
 
     /**
-     * Updates Leaflet's max view bounds to padded content bounds in current state. This is usually done
-     * after a data chunk is streamed in, and is fairly expensive.
+     * Updates Leaflet's max view bounds to padded content bounds in current state. This is usually done after a data chunk is
+     * streamed in, and is fairly expensive.
      */
     refreshMaxBounds() {
         const bounds = this.getPaddedContentBounds( true );
@@ -775,10 +788,10 @@ class DataMap extends EventEmitter {
 
     /**
      * @private
-     * @param {jQuery} $holder Container for the Leaflet map.
+     * @param {HTMLElement} holderElement Container for the Leaflet map.
      * @fires DataMap#leafletLoaded
      */
-    _initialiseLeaflet( $holder ) {
+    _initialiseLeaflet( holderElement ) {
         // If FF_DISABLE_ZOOM is set, prevent all kind of zooming
         if ( this.isFeatureBitSet( MapFlags.DisableZoom ) ) {
             this.config.leafletSettings = $.extend( {
@@ -845,7 +858,7 @@ class DataMap extends EventEmitter {
         leafletConfig.renderer = new Leaflet.Canvas( leafletConfig.rendererSettings );
 
         // Initialise the Leaflet map
-        this.leaflet = new Leaflet.Map( /** @type {HTMLElement!} */ ( $holder.get( 0 ) ), leafletConfig );
+        this.leaflet = new Leaflet.Map( holderElement, leafletConfig );
 
         // Prepare all backgrounds
         this.config.backgrounds.forEach( ( background, index ) => this._initialiseBackground( background, index ) );
@@ -881,7 +894,6 @@ class DataMap extends EventEmitter {
         background.layer = background.layer || `${index}`;
 
         // Image overlay
-        /* eslint-disable es-x/no-array-string-prototype-at */
         background.at = background.at || this.config.crs;
         if ( background.image ) {
             background.layers.push( new Leaflet.ImageOverlay( background.image, this.translateBox( background.at ), {
@@ -890,22 +902,22 @@ class DataMap extends EventEmitter {
                 antiAliasing: 0.5
             } ) );
         }
-        /* eslint-enable es-x/no-array-string-prototype-at */
 
         // Prepare overlay layers
         if ( background.overlays ) {
-            background.overlays.forEach( overlay => background.layers.push(
-                this._buildBackgroundOverlayObject( overlay ) ) );
+            for ( const overlay of background.overlays ) {
+                background.layers.push( this._buildBackgroundOverlayObject( overlay ) );
+            }
         }
     }
 
 
     /**
-     * @param {string} anchor
-     * @return {jQuery}
+     * @param {DataMap.anchors[ keyof DataMap.anchors ]} anchor
+     * @return {HTMLElement}
      */
     resolveControlAnchor( anchor ) {
-        return this.$root.find( `.leaflet-control-container ${anchor}` );
+        return /** @type {!HTMLElement} */ ( this.rootElement.querySelector( `.leaflet-control-container ${anchor}` ) );
     }
 
 
@@ -914,22 +926,26 @@ class DataMap extends EventEmitter {
      *
      * Requires the Leaflet map to be initialised.
      *
-     * @template {jQuery|Controls.MapControl} T
+     * @deprecated Passing in a jQuery object since v0.15.0. Use {@link Controls.MapControl} or raw HTML elements.
+     * @template {jQuery|HTMLElement|Controls.MapControl} T
      * @param {DataMap.anchors[ keyof DataMap.anchors ]} anchor Anchor selector.
      * @param {T} control Control to add.
      * @param {boolean} [prepend] Whether to add the control to the beginning of the anchor.
      * @return {T} {@link control} for chaining.
      */
     addControl( anchor, control, prepend ) {
-        const $element = /** @type {jQuery} */ ( control instanceof Controls.MapControl ? control.$element : control ),
-            $anchor = this.resolveControlAnchor( anchor );
-        if ( prepend && $anchor[ 0 ].querySelector( ':scope > .datamap-control-group' ) ) {
-            $element.insertAfter( $anchor.find( ':scope > .datamap-control-group' ) );
+        const controlElement = $( control instanceof Controls.MapControl ? control.element : control )[ 0 ],
+            anchorElement = this.resolveControlAnchor( anchor ),
+            beforeInlineGroup = prepend && anchorElement.querySelector( ':scope > .datamap-control-group' );
+        if ( beforeInlineGroup ) {
+            anchorElement.insertBefore( controlElement, beforeInlineGroup );
         } else {
-            $element[ prepend ? 'prependTo' : 'appendTo' ]( $anchor );
+            anchorElement[ prepend ? 'prepend' : 'appendChild' ]( controlElement );
         }
         // Stop mouse event propagation onto Leaflet map
-        $element.on( 'click dblclick scroll mousewheel wheel', event => event.stopPropagation() );
+        for ( const eventName of [ 'click', 'dblclick', 'scroll', 'mousewheel', 'wheel' ] ) {
+            controlElement.addEventListener( eventName, event => event.stopPropagation() );
+        }
         return control;
     }
 
@@ -940,14 +956,16 @@ class DataMap extends EventEmitter {
     _buildControls() {
         // Create inline control containers (DataMap.anchors.topLeftInline and DataMap.anchors.topRightInline)
         for ( const anchor of [ DataMap.anchors.topLeft, DataMap.anchors.topRight ] ) {
-            $( '<div class="datamap-control-group">' ).prependTo( this.resolveControlAnchor( anchor ) );
+            createDomElement( 'div', {
+                classes: [ 'datamap-control-group' ],
+                prependTo: this.resolveControlAnchor( anchor )
+            } );
         }
 
         // Create a button to toggle the legend on small screens
         if ( !( !this.isFeatureBitSet( MapFlags.VisualEditor ) && this.isFeatureBitSet( MapFlags.HideLegend ) ) ) {
             this.legendPopupButton = this.addControl( DataMap.anchors.topLeftInline, new Controls.LegendPopup( this ), true );
         }
-        this.legendPopupButton = this.addControl( DataMap.anchors.topLeftInline, new Controls.LegendPopup( this ), true );
 
         // Create a coordinate-under-cursor display
         if ( this.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {

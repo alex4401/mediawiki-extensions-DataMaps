@@ -26,21 +26,20 @@ module.exports = Leaflet.Popup.extend( /** @lends LeafletModule.Popup.prototype 
 
         // Call the content manager getter and build its content
         if ( !this._content ) {
-            /** @type {LeafletModule.Ark.IPopupContentRenderer} */
-            this._content = this.getContentManager();
+            this._content = /** @type {LeafletModule.Ark.IPopupContentRenderer} */ ( this.getContentManager() );
             // Inject node references
-            this._content.$content = $( this._contentNode );
-            this._content.$buttons = this.$customButtonArea;
-            this._content.$actions = $( '<ul class="datamap-popup-tools">' );
+            this._content.contentElement = this._contentNode;
+            this._content.buttonsElement = this._buttonArea;
+            this._content.actionsElement = Leaflet.DomUtil.create( 'ul', 'datamap-popup-tools' );
             // Build the contents
             this._content.buildButtons();
             this._content.build();
             this._content.buildActions();
             // If tools are not empty, push them onto the content. Otherwise destroy the node and remove the reference.
-            if ( this._content.$actions.children().length > 0 ) {
-                this._content.$actions.appendTo( this._content.$content );
+            if ( this._content.actionsElement.children.length > 0 ) {
+                this._content.contentElement.appendChild( this._content.actionsElement );
             } else {
-                delete this._content.$actions;
+                delete this._content.actionsElement;
             }
         }
 
@@ -53,8 +52,7 @@ module.exports = Leaflet.Popup.extend( /** @lends LeafletModule.Popup.prototype 
      */
     _initLayout() {
         Leaflet.Popup.prototype._initLayout.call( this );
-
-        this.$customButtonArea = $( '<div class="datamap-popup-buttons">' ).appendTo( this._container );
+        this._buttonArea = Leaflet.DomUtil.create( 'div', 'datamap-popup-buttons', this._container );
     },
 
     /**
@@ -76,6 +74,7 @@ module.exports = Leaflet.Popup.extend( /** @lends LeafletModule.Popup.prototype 
         // Wipe the pre-built content nodes if the provider does not want them to be kept around
         if ( !this._content.shouldKeepAround() ) {
             delete this._container;
+            delete this._buttonArea;
             delete this._content;
             delete this._contentNode;
         }

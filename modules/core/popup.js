@@ -1,6 +1,7 @@
 /** @typedef {import( './map.js' )} DataMap */
 const Util = require( './util.js' ),
-    { MapFlags } = require( './enums.js' );
+    { MapFlags } = require( './enums.js' ),
+    { createDomElement } = Util;
 
 
 /**
@@ -52,29 +53,29 @@ module.exports = class MarkerPopup {
         this.mmvThumbIndex = null;
 
         // These three containers are provided by Leaflet.Ark.Popup
-        /** @type {!jQuery} */
+        /** @type {!HTMLElement} */
         // @ts-ignore: Initialised by Leaflet.Ark.Popup, ideally we'd use null assertions here
-        this.$buttons = null;
-        /** @type {!jQuery} */
+        this.buttonsElement = null;
+        /** @type {!HTMLElement} */
         // @ts-ignore: Initialised by Leaflet.Ark.Popup, ideally we'd use null assertions here
-        this.$content = null;
-        /**
-         * @type {!jQuery}
-         */
+        this.contentElement = null;
+        /** @type {!HTMLElement} */
         // @ts-ignore: Initialised by Leaflet.Ark.Popup, ideally we'd use null assertions here
-        this.$actions = null;
+        this.actionsElement = null;
 
         // These elements are created during building
-        /** @type {jQuery?} */
-        this.$subTitle = null;
-        /** @type {jQuery?} */
-        this.$title = null;
-        /** @type {jQuery?} */
-        this.$location = null;
-        /** @type {jQuery?} */
-        this.$description = null;
-        /** @type {jQuery?} */
-        this.$image = null;
+        /** @type {HTMLElement?} */
+        this.subTitle = null;
+        /** @type {HTMLElement?} */
+        this.title = null;
+        /** @type {HTMLElement?} */
+        this.location = null;
+        /** @type {HTMLElement?} */
+        this.description = null;
+        /** @type {HTMLElement?} */
+        this.image = null;
+        /** @type {HTMLElement?} */
+        this.dismiss = null;
     }
 
 
@@ -106,19 +107,24 @@ module.exports = class MarkerPopup {
      * Builds the buttons.
      */
     buildButtons() {
-        const $getLink = $( '<a class="datamap-marker-link-button oo-ui-icon-link" role="button"></a>' )
-            .attr( {
+        const getLink = createDomElement( 'a', {
+            classes: [ 'datamap-marker-link-button', 'oo-ui-icon-link' ],
+            attributes: {
+                role: 'button',
                 title: mw.msg( 'datamap-popup-marker-link-get' ),
                 'aria-label': mw.msg( 'datamap-popup-marker-link-get' ),
                 href: Util.makeUrlWithParams( this.map, { marker: this.uid }, true )
-            } )
-            .appendTo( this.$buttons )
-            .on( 'click', event => {
-                event.preventDefault();
-                // eslint-disable-next-line compat/compat
-                navigator.clipboard.writeText( /** @type {string} */ ( $getLink.attr( 'href' ) ) )
-                    .then( () => mw.notify( mw.msg( 'datamap-popup-marker-link-copied' ) ) );
-            } );
+            },
+            events: {
+                click: event => {
+                    event.preventDefault();
+                    // eslint-disable-next-line compat/compat
+                    navigator.clipboard.writeText( /** @type {string} */ ( getLink.getAttribute( 'href' ) ) )
+                        .then( () => mw.notify( mw.msg( 'datamap-popup-marker-link-copied' ) ) );
+                }
+            },
+            appendTo: this.buttonsElement
+        } );
     }
 
 
@@ -128,12 +134,22 @@ module.exports = class MarkerPopup {
     build() {
         // Build the title
         if ( this.slots.label && this.markerGroup.name !== this.slots.label ) {
-            this.$subTitle = $( '<b class="datamap-popup-subtitle">' ).text( this.markerGroup.name )
-                .appendTo( this.$content );
-            this.$title = $( '<b class="datamap-popup-title">' ).html( this.slots.label ).appendTo( this.$content );
+            this.$subTitle = $( createDomElement( 'b', {
+                classes: [ 'datamap-popup-subtitle' ],
+                text: this.markerGroup.name,
+                appendTo: this.contentElement
+            } ) );
+            this.$title = $( createDomElement( 'b', {
+                classes: [ 'datamap-popup-title' ],
+                html: this.slots.label,
+                appendTo: this.contentElement
+            } ) );
         } else {
-            this.$title = $( '<b class="datamap-popup-title">' ).text( this.markerGroup.name )
-                .appendTo( this.$content );
+            this.$title = $( createDomElement( 'b', {
+                classes: [ 'datamap-popup-title' ],
+                text: this.markerGroup.name,
+                appendTo: this.contentElement
+            } ) );
         }
 
         // Collect layer discriminators
@@ -154,28 +170,36 @@ module.exports = class MarkerPopup {
             detailText = detailText ? `${coordText} (${detailText})` : coordText;
         }
         // Push onto the contents
-        this.$location = $( '<div class="datamap-popup-location">' ).text( detailText )
-            .appendTo( this.$content );
+        this.$location = $( createDomElement( 'div', {
+            classes: [ 'datamap-popup-location' ],
+            text: detailText,
+            appendTo: this.contentElement
+        } ) );
 
         // Description
         if ( this.slots.desc ) {
             if ( !this.slots.desc.startsWith( '<p>' ) ) {
                 this.slots.desc = `<p>${this.slots.desc}</p>`;
             }
-            this.$description = $( '<div class="datamap-popup-description">' ).html( this.slots.desc )
-                .appendTo( this.$content );
+            this.$description = $( createDomElement( 'div', {
+                classes: [ 'datamap-popup-description' ],
+                html: this.slots.desc,
+                appendTo: this.contentElement
+            } ) );
         }
 
         // Image
         if ( this.slots.image ) {
-            this.$image = $( '<img class="datamap-popup-image" width=250 />' )
-                .attr( {
+            this.$image = $( createDomElement( 'img', {
+                classes: [ 'datamap-popup-image' ],
+                attributes: {
                     src: this.slots.image[ 0 ],
+                    width: 250,
                     'data-file-width': this.slots.image[ 1 ],
                     'data-file-height': this.slots.image[ 2 ]
-                } )
-                .appendTo( this.$content );
-
+                },
+                appendTo: this.contentElement
+            } ) );
             this._setupMMVIntegration();
         }
     }
@@ -186,11 +210,17 @@ module.exports = class MarkerPopup {
      *
      * @since 0.14.4
      * @param {string} cssClass
-     * @param {jQuery} $child
-     * @return {jQuery}
+     * @param {HTMLElement} child
+     * @return {HTMLElement}
      */
-    addAction( cssClass, $child ) {
-        return $( `<li class="${cssClass}">` ).append( $child ).appendTo( this.$actions );
+    addAction( cssClass, child ) {
+        // eslint-disable-next-line mediawiki/class-doc
+        const result = createDomElement( 'li', {
+            classes: [ cssClass ],
+            appendTo: this.actionsElement
+        } );
+        result.appendChild( $( child )[ 0 ] );
+        return result;
     }
 
 
@@ -208,17 +238,25 @@ module.exports = class MarkerPopup {
                 article = split[ 0 ];
             }
 
-            this.addAction( 'datamap-popup-seemore',
-                $( '<a>' ).attr( 'href', mw.util.getUrl( article ) ).text( msg ) );
+            this.addAction( 'datamap-popup-seemore', createDomElement( 'a', {
+                text: msg,
+                attributes: {
+                    href: mw.util.getUrl( article )
+                }
+            } ) );
         }
 
         // Dismissables
-        if ( Util.getGroupCollectibleType( this.markerGroup ) ) {
-            this.$dismiss = $( '<a>' ).on( 'click', () => {
-                this.map.toggleMarkerDismissal( this.leafletMarker );
-                this.map.leaflet.closePopup();
+        if ( Util.Groups.getCollectibleType( this.markerGroup ) ) {
+            this.dismiss = createDomElement( 'a', {
+                events: {
+                    click: () => {
+                        this.map.toggleMarkerDismissal( this.leafletMarker );
+                        this.map.leaflet.closePopup();
+                    }
+                }
             } );
-            this.addAction( 'datamap-popup-dismiss', this.$dismiss );
+            this.addAction( 'datamap-popup-dismiss', this.dismiss );
         }
     }
 
@@ -257,8 +295,8 @@ module.exports = class MarkerPopup {
      * Updates the label of the collectible status change action.
      */
     onUpdate() {
-        if ( this.$dismiss ) {
-            this.$dismiss.text( this._getDismissToolText() );
+        if ( this.dismiss ) {
+            this.dismiss.innerText = this._getDismissToolText();
         }
     }
 

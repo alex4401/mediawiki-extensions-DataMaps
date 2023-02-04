@@ -14,7 +14,7 @@ const
  */
 function initialiseMapWithConfig( id, rootElement, config ) {
     // Set the map up
-    const map = new DataMap( id, $( rootElement ), config );
+    const map = new DataMap( id, rootElement, config );
 
     // Push onto internal tracking list
     initialisedMaps.push( map );

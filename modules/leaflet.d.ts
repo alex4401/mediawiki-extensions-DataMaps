@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 declare namespace LeafletModule {
     class LatLng {
         constructor(latitude: number, longitude: number, altitude?: number);
@@ -69,9 +70,9 @@ declare namespace LeafletModule {
             onAdd(): void;
             onRemove(): void;
 
-            $buttons: JQuery<HTMLElement>;
-            $content: JQuery<HTMLElement>;
-            $actions: JQuery<HTMLElement>;
+            buttonsElement: HTMLElement;
+            contentElement: HTMLElement;
+            actionsElement: HTMLElement;
         }
 
         type PopupContentRendererGetterFn = () => Ark.IPopupContentRenderer;
@@ -84,7 +85,9 @@ declare namespace LeafletModule {
     }
 
 
-    namespace DomUtil {}
+    namespace DomUtil {
+        export function create( tagName: string, className: string, container?: HTMLElement ): HTMLElement;
+    }
 
 
     export interface CRS {

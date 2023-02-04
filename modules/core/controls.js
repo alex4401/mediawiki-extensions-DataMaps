@@ -1,5 +1,6 @@
 /** @typedef {import( './map.js' )} DataMap */
-const { CRSOrigin } = require( './enums.js' );
+const { CRSOrigin } = require( './enums.js' ),
+    { createDomElement } = require( './util.js' );
 
 
 /**
@@ -11,7 +12,7 @@ const { CRSOrigin } = require( './enums.js' );
  * @property {string} [tooltip]
  * @property {string[]} [classes]
  * @property {string} [href]
- * @property {() => void} [clickHandler]
+ * @property {EventListenerOrEventListenerObject} [clickHandler]
  */
 
 
@@ -29,23 +30,20 @@ class MapControl {
         /** @type {DataMap} */
         this.map = map;
 
-        let finalClasses = [
-            'leaflet-control',
-            'datamap-control',
-            `datamap-control-${id}`
-        ];
-        if ( this.isButtonGroup() ) {
-            finalClasses.push( 'leaflet-bar' );
-        }
-        if ( classes ) {
-            finalClasses = finalClasses.concat( classes );
-        }
+        /** @type {HTMLElement} */
+        this.element = document.createElement( tagName || 'div' );
 
         // The following classes are used here:
         // * datamap-control
         // * datamap-control-${id}
-        /** @type {jQuery} */
-        this.$element = $( document.createElement( tagName || 'div' ) ).addClass( finalClasses );
+        this.element.classList.add( 'leaflet-control', 'datamap-control', `datamap-control-${id}` );
+        if ( this.isButtonGroup() ) {
+            this.element.classList.add( 'leaflet-bar' );
+        }
+        if ( classes ) {
+            // eslint-disable-next-line mediawiki/class-doc
+            this.element.classList.add( ...classes );
+        }
 
         this._build();
     }
@@ -69,47 +67,39 @@ class MapControl {
     /**
      * @protected
      * @param {ControlButtonOptions} options
-     * @return {jQuery}
+     * @return {HTMLElement}
      */
     _makeButton( options ) {
-        const $result = $( '<a>' )
-            .attr( {
+        // eslint-disable-next-line mediawiki/class-doc
+        const result = createDomElement( 'a', {
+            classes: options.classes,
+            html: options.label,
+            attributes: {
                 role: 'button',
+                href: options.href,
                 title: options.tooltip,
                 'aria-disabled': 'false',
-                'aria-label': options.tooltip,
-                href: options.href
-            } );
-
-        if ( options.classes ) {
-            // eslint-disable-next-line mediawiki/class-doc
-            $result.addClass( options.classes );
-        }
+                'aria-label': options.tooltip
+            },
+            events: {
+                click: options.clickHandler
+            }
+        } );
 
         if ( options.icon ) {
             // eslint-disable-next-line mediawiki/class-doc
-            $result.append( $( '<span>' ).addClass( `oo-ui-icon-${options.icon}` ) );
-        }
-
-        if ( options.label ) {
-            $result[ options.labelBeforeIcon ? 'prepend' : 'append' ]( options.label );
-        }
-
-        if ( options.clickHandler ) {
-            $result.on( 'click', options.clickHandler );
+            result[ options.labelBeforeIcon ? 'appendChild' : 'prepend' ]( createDomElement( 'span', {
+                classes: [ `oo-ui-icon-${options.icon}` ]
+            } ) );
         }
 
         if ( options.addToSelf ) {
-            $result.appendTo( this.$element );
+            this.element.appendChild( result );
         }
 
-        return $result;
+        return result;
     }
 }
-/**
- * @deprecated since v0.15.0; override isButtonGroup() instead if you need to
- */
-MapControl.BAR = 'leaflet-bar';
 
 
 class BackgroundSwitcher extends MapControl {
@@ -122,13 +112,19 @@ class BackgroundSwitcher extends MapControl {
 
 
     _build() {
+        const element = /** @type {HTMLSelectElement} */ ( this.element );
         for ( const [ index, background ] of this.map.config.backgrounds.entries() ) {
-            $( '<option>' ).attr( 'value', index ).text( /** @type {string} */ ( background.name ) ).appendTo( this.$element );
+            createDomElement( 'option', {
+                text: background.name,
+                attributes: {
+                    value: index
+                },
+                appendTo: element
+            } );
         }
-        this.$element.val( this.map.backgroundIndex ).on( 'change', () => {
-            this.map.setBackgroundPreference( /** @type {number} */ ( this.$element.val() ) );
-        } );
-        this.map.on( 'backgroundChange', () => this.$element.val( this.map.backgroundIndex ) );
+        element.value = `${this.map.backgroundIndex}`;
+        element.addEventListener( 'change', () => this.map.setBackgroundPreference( parseInt( element.value ) ) );
+        this.map.on( 'backgroundChange', () => ( element.value = `${this.map.backgroundIndex}` ) );
     }
 }
 
@@ -154,7 +150,7 @@ class Coordinates extends MapControl {
             if ( this.map.crsOrigin === CRSOrigin.TopLeft ) {
                 lat = this.map.config.crs[ 1 ][ 0 ] - lat;
             }
-            this.$element.text( this.map.getCoordLabel( lat, lon ) );
+            this.element.innerText = this.map.getCoordLabel( lat, lon );
         } );
     }
 }
@@ -227,8 +223,9 @@ class LegendPopup extends MapControl {
             label: mw.msg( 'datamap-legend-label' ),
             labelBeforeIcon: true,
             clickHandler: () => {
-                this.map.$root.toggleClass( 'datamap-is-legend-toggled-on' );
-                this.$element.find( 'span' ).toggleClass( 'oo-ui-image-progressive' );
+                this.map.rootElement.classList.toggle( 'datamap-is-legend-toggled-on' );
+                /** @type {!HTMLElement} */ ( this.element.querySelector( 'span' ) ).classList
+                    .toggle( 'oo-ui-image-progressive' );
             }
         } );
     }

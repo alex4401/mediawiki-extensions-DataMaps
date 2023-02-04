@@ -35,7 +35,8 @@ class LegendTabber {
          *
          * @type {jQuery}
          */
-        this.$root = this.rootWidget.$element.prependTo( this.map.$root.find( '> .datamap-container-content' ) );
+        this.$root = this.rootWidget.$element.prependTo( /** @type {!HTMLElement} */ ( this.map.rootElement.querySelector(
+            ':scope > .datamap-container-content' ) ) );
         /**
          * Tabber layout of the legend.
          *
@@ -74,6 +75,7 @@ class LegendTabber {
 
     /**
      * TODO: move into a separate class
+     *
      * @param {jQuery} $parent
      * @param {string} label
      * @param {boolean} defaultState

@@ -50,6 +50,60 @@ module.exports = Object.freeze( {
 
 
     /**
+     * @typedef {Object} DomElementFactoryOptions
+     * @property {string[]?} [classes]
+     * @property {string} [text]
+     * @property {string} [html]
+     * @property {Record<string, string|undefined|boolean|number>} [attributes]
+     * @property {Record<string, EventListenerOrEventListenerObject|undefined>} [events]
+     * @property {HTMLElement} [appendTo]
+     * @property {HTMLElement} [prependTo]
+     */
+
+    /**
+     * @param {keyof HTMLElementTagNameMap} tag
+     * @param {DomElementFactoryOptions} options
+     * @return {HTMLElement}
+     */
+    createDomElement( tag, options ) {
+        const result = document.createElement( tag );
+        if ( options.text ) {
+            result.innerText = options.text;
+        }
+        if ( options.html ) {
+            result.innerHTML = options.html;
+        }
+        if ( options.classes ) {
+            // eslint-disable-next-line mediawiki/class-doc
+            result.classList.add( ...options.classes );
+        }
+        if ( options.attributes ) {
+            for ( const key in options.attributes ) {
+                const value = options.attributes[ key ];
+                if ( value !== undefined && value !== null ) {
+                    result.setAttribute( key, `${value}` );
+                }
+            }
+        }
+        if ( options.events ) {
+            for ( const name in options.events ) {
+                const listener = options.events[ name ];
+                if ( listener ) {
+                    result.addEventListener( name, listener );
+                }
+            }
+        }
+        if ( options.appendTo ) {
+            options.appendTo.appendChild( result );
+        }
+        if ( options.prependTo ) {
+            options.prependTo.prepend( result );
+        }
+        return result;
+    },
+
+
+    /**
      * Retrieves Leaflet exports if they've been loaded.
      *
      * @return {LeafletModule}
@@ -253,7 +307,7 @@ module.exports = Object.freeze( {
             }
         }
 
-        const tabber = module.exports.TabberNeue.getOwningId( map.$root );
+        const tabber = module.exports.TabberNeue.getOwningId( map.rootElement );
         const hash = ( tabber ? ( '#' + tabber ) : window.location.hash );
         return ( withHost ? `https://${window.location.hostname}` : '' )
             + decodeURIComponent( `${window.location.pathname}?${params}`.replace( /\?$/, '' )
@@ -274,35 +328,33 @@ module.exports = Object.freeze( {
 
     TabberNeue: {
         /**
-         * @param {jQuery} $element
-         * @return {jQuery?}
+         * @param {HTMLElement} element
+         * @return {HTMLElement?}
          */
-        getOwningPanel( $element ) {
+        getOwningPanel( element ) {
             // TODO: use native functions
-            const $panel = $element.closest( 'article.tabber__panel' );
-            return $panel && $panel.length > 0 ? $panel : null;
+            return element.closest( 'article.tabber__panel' );
         },
 
 
         /**
-         * @param {jQuery} $element
-         * @return {jQuery?}
+         * @param {HTMLElement} element
+         * @return {HTMLElement?}
          */
-        getOwningTabber( $element ) {
-            const $tabber = $element.closest( 'div.tabber' );
-            return $tabber && $tabber.length > 0 ? $tabber : null;
+        getOwningTabber( element ) {
+            return element.closest( 'div.tabber' );
         },
 
 
         /**
          * Finds ID of the TabberNeue tab this map is in. If not inside tabber, this will be null.
          *
-         * @param {jQuery} $element
+         * @param {HTMLElement} element
          * @return {string?}
          */
-        getOwningId( $element ) {
-            const $panel = module.exports.TabberNeue.getOwningPanel( $element );
-            return $panel ? ( $panel.attr( 'id' ) || /** @type {!string} */ ( $panel.attr( 'data-title' ) ).replace( ' ', '_' ) )
+        getOwningId( element ) {
+            const panel = module.exports.TabberNeue.getOwningPanel( element );
+            return panel ? ( panel.getAttribute( 'id' ) || /** @type {!string} */ ( panel.dataset.title ).replace( ' ', '_' ) )
                 : null;
         }
     }
