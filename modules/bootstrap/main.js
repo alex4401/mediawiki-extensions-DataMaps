@@ -1,6 +1,7 @@
 const
-    /** @type {typeof import( '../core/map.js' )} */ DataMap = mw.dataMaps.DataMap,
-    /** @type {typeof import( '../core/events.js' )} */ EventEmitter = mw.dataMaps.EventEmitter,
+    /** @type {import( '../core' )} */ CoreModule = require( 'ext.datamaps.core' ),
+    DataMap = CoreModule.DataMap,
+    /** @type {typeof import( '../core/events.js' )} */ EventEmitter = CoreModule.EventEmitter,
     /** @type {import( '../core/map.js' )[]} */ initialisedMaps = [],
     /** @type {number[]} */ ids = [],
     /** @type {import( '../core/events.js' ).EventHandlerRef[]} */ toNotify = [];
