@@ -35,14 +35,6 @@
         } ],
         "no-bitwise": "off",
 		"no-implicit-globals": "off",
-        "no-jquery/no-class-state": [
-            "off",
-            "Alternative of classList.toggle is permitted, but until we fully switch away from JQuery it'll simply be awkward."
-        ],
-        "no-jquery/no-parse-html-literal": [
-            "off",
-            "Planning to enable once moved onto Vue."
-        ],
         "no-multiple-empty-lines": [ "error", {
             "max": 2
         } ],
