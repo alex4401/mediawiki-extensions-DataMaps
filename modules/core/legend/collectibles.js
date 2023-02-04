@@ -12,7 +12,7 @@ class CollectiblesPanel extends LegendTabber.Tab {
         super( tabber, mw.msg( 'datamap-legend-tab-checklist' ), [ 'datamap-container-collectibles' ] );
 
         /**
-         * @type {Record<string, Section>}
+         * @type {Record<string, CollectiblesPanel.Section>}
          */
         this.sections = {};
         /**
@@ -34,7 +34,15 @@ class CollectiblesPanel extends LegendTabber.Tab {
         this.updateGroupBadges( true );
 
         // Insert an introduction paragraph
-        this.$content.append( mw.msg( 'datamap-checklist-prelude' ) );
+        Util.createDomElement( 'p', {
+            html: mw.msg( 'datamap-checklist-prelude' ),
+            appendTo: this.contentElement
+        } );
+
+        // Initialise marker group views
+        // eslint-disable-next-line es-x/no-object-entries
+        this.includeGroups( Object.entries( this.map.config.groups ).filter( x => Util.Groups.getCollectibleType( x[ 1 ] ) )
+            .map( x => x[ 0 ] ) );
 
         // Import existing markers if any have been loaded
         for ( const groupName in this.map.config.groups ) {
@@ -46,11 +54,6 @@ class CollectiblesPanel extends LegendTabber.Tab {
             }
         }
         this.sort();
-
-        // Initialise marker group views
-        // eslint-disable-next-line es-x/no-object-entries
-        this.includeGroups( Object.entries( this.map.config.groups ).filter( x => Util.Groups.getCollectibleType( x[ 1 ] ) )
-            .map( x => x[ 0 ] ) );
     }
 
 
@@ -61,9 +64,8 @@ class CollectiblesPanel extends LegendTabber.Tab {
      */
     includeGroups( ids ) {
         for ( const id of ids ) {
-            const group = this.map.config.groups[ id ];
-            this.sections[ id ] = new CollectiblesPanel.Section( this, group );
-            this.sections[ id ].$element.appendTo( this.$content );
+            this.sections[ id ] = new CollectiblesPanel.Section( this, this.map.config.groups[ id ] );
+            this.contentElement.appendChild( this.sections[ id ].contentElement );
         }
     }
 
@@ -87,8 +89,8 @@ class CollectiblesPanel extends LegendTabber.Tab {
         }
 
         if ( this.map.isFeatureBitSet( MapFlags.SortChecklistsByAmount ) ) {
-            for ( const section of Object.values( this.sections ).sort( ( a, b ) => b.markers.length - a.markers.length ) ) {
-                this.$content.append( section.$content );
+            for ( const section of Object.values( this.sections ).sort( ( a, b ) => b.rows.length - a.rows.length ) ) {
+                this.contentElement.appendChild( section.contentElement );
             }
         }
     }
@@ -127,7 +129,7 @@ class CollectiblesPanel extends LegendTabber.Tab {
 }
 
 
-class Section {
+CollectiblesPanel.Section = class Section {
     /**
      * @param {CollectiblesPanel} panel
      * @param {DataMaps.Configuration.MarkerGroup} group
@@ -142,14 +144,22 @@ class Section {
          */
         this.group = group;
         /**
-         * @type {LeafletModule.AnyMarker[]}
+         * @type {CollectiblesPanel.Row[]}
          */
-        this.markers = [];
+        this.rows = [];
         /**
          * @readonly
          * @type {boolean}
          */
         this.isIndividual = Util.Groups.getCollectibleType( group ) === MarkerGroupFlags.Collectible_Individual;
+
+        // UI construction
+        /**
+         * @type {OO.ui.CheckboxInputWidget}
+         */
+        this.checkbox = new OO.ui.CheckboxInputWidget( {
+            selected: false
+        } ).on( 'change', () => this.toggleAll( this.checkbox.isSelected() ) );
         /**
          * @type {jQuery?}
          */
@@ -160,21 +170,15 @@ class Section {
             this.$icon = Util.Groups.createCircleElement( group );
         }
         /**
-         * @type {OO.ui.Widget}
+         * @type {HTMLElement}
          */
-        this.container = new OO.ui.Widget( {
+        this.containerElement = Util.createDomElement( 'div', {
             classes: [ 'datamap-collectible-group-markers' ]
         } );
         /**
-         * @type {OO.ui.CheckboxInputWidget}
+         * @type {HTMLElement}
          */
-        this.checkbox = new OO.ui.CheckboxInputWidget( {
-            selected: false
-        } );
-        /**
-         * @type {jQuery}
-         */
-        this.$content = new OO.ui.PanelLayout( {
+        this.contentElement = new OO.ui.PanelLayout( {
             framed: true,
             expanded: false,
             content: [
@@ -190,66 +194,75 @@ class Section {
                         } )
                     ]
                 } ),
-                this.container
+                this.containerElement
             ]
-        } ).$element;
-
-        this.checkbox.on( 'change', () => this.toggleAll( this.checkbox.isSelected() ) );
+        } ).$element[ 0 ];
     }
 
 
+    /**
+     * @param {boolean} newState
+     */
     toggleAll( newState ) {
-        for ( const marker of this.markers ) {
-            if ( newState !== marker.leafletMarker.options.dismissed ) {
-                this.map.toggleMarkerDismissal( marker.leafletMarker );
+        for ( const row of this.rows ) {
+            if ( newState !== row.marker.options.dismissed ) {
+                this.panel.map.toggleMarkerDismissal( row.marker );
             }
         }
     }
 
 
+    /**
+     * @param {LeafletModule.AnyMarker} leafletMarker
+     */
     push( leafletMarker ) {
-        this.markers.push( new CollectiblesPanel.MarkerEntry( this, leafletMarker ) );
+        this.rows.push( new CollectiblesPanel.Row( this, leafletMarker ) );
         this.updateCheckboxState();
     }
 
 
-    sort() {
-        let sortKey;
-        switch ( this.map.crsOrigin ) {
-            case CRSOrigin.TopLeft:
-                sortKey = ( a, b ) => {
-                    if ( a.apiInstance[ 0 ] === b.apiInstance[ 0 ] ) {
-                        return a.apiInstance[ 1 ] > b.apiInstance[ 1 ];
-                    }
-                    return a.apiInstance[ 0 ] > b.apiInstance[ 0 ];
-                };
-                break;
-            case CRSOrigin.BottomLeft:
-                sortKey = ( a, b ) => {
-                    if ( a.apiInstance[ 0 ] === b.apiInstance[ 0 ] ) {
-                        return a.apiInstance[ 1 ] < b.apiInstance[ 1 ];
-                    }
-                    return a.apiInstance[ 0 ] < b.apiInstance[ 0 ];
-                };
-                break;
+    /**
+     * @private
+     * @param {number} origin
+     * @param {CollectiblesPanel.Row} a
+     * @param {CollectiblesPanel.Row} b
+     * @return {number}
+     */
+    static _compareSort( origin, a, b ) {
+        if ( origin === CRSOrigin.BottomLeft ) {
+            const t = b;
+            b = a;
+            a = t;
         }
 
-        this.markers.sort( sortKey );
+        if ( a.marker.apiInstance[ 0 ] - b.marker.apiInstance[ 0 ] === 0 ) {
+            return a.marker.apiInstance[ 1 ] - b.marker.apiInstance[ 1 ];
+        }
+        return a.marker.apiInstance[ 0 ] - b.marker.apiInstance[ 0 ];
+    }
 
-        for ( let index = 0; index < this.markers.length; index++ ) {
-            const marker = this.markers[ index ];
-            marker.field.$element.appendTo( this.container.$element );
-            if ( marker.$index ) {
-                marker.setIndex( index + 1 );
+
+    sort() {
+        this.rows.sort( CollectiblesPanel.Section._compareSort.bind( null, this.panel.map.crsOrigin ) );
+
+        for ( let index = 0; index < this.rows.length; index++ ) {
+            const row = this.rows[ index ];
+            row.field.$element.appendTo( this.containerElement );
+            if ( row.indexElement ) {
+                row.setIndex( index + 1 );
             }
         }
     }
 
 
+    /**
+     * @param {LeafletModule.AnyMarker} leafletMarker
+     */
     replicateMarkerState( leafletMarker ) {
-        for ( const marker of this.markers ) {
-            if ( marker.leafletMarker === leafletMarker ) {
-                marker.checkbox.setSelected( leafletMarker.options.dismissed, true );
+        for ( const row of this.rows ) {
+            if ( row.marker === leafletMarker ) {
+                // @ts-ignore: second parameter ("is internal") is missing in the type defs
+                row.checkbox.setSelected( leafletMarker.options.dismissed, true );
                 break;
             }
         }
@@ -258,46 +271,80 @@ class Section {
 
 
     updateCheckboxState() {
-        this.checkbox.setSelected( this.markers.every( x => x.leafletMarker.options.dismissed ), true );
+        // @ts-ignore: second parameter ("is internal") is missing in the type defs
+        this.checkbox.setSelected( this.rows.every( x => x.marker.options.dismissed ), true );
     }
-}
+};
 
 
-CollectiblesPanel.Section = Section;
+/**
+ * A row component representing a Leaflet marker in the collectibles UI.
+ */
+CollectiblesPanel.Row = class Row {
+    /**
+     * @param {CollectiblesPanel.Section} outerSection
+     * @param {LeafletModule.AnyMarker} leafletMarker
+     */
+    constructor( outerSection, leafletMarker ) {
+        /**
+         * @type {CollectiblesPanel.Section}
+         */
+        this.outerSection = outerSection;
+        /**
+         * @type {LeafletModule.AnyMarker}
+         */
+        this.marker = leafletMarker;
+        /**
+         * @type {DataMaps.IApiMarkerSlots}
+         */
+        this.slots = this.marker.apiInstance[ 2 ] || {};
 
+        // UI construction
 
-CollectiblesPanel.MarkerEntry = class MarkerEntry {
-    constructor( markerGroup, leafletMarker ) {
-        this.markerGroup = markerGroup;
-        this.panel = this.markerGroup.panel;
-        this.apiInstance = leafletMarker.apiInstance;
-        this.slots = this.apiInstance[ 2 ] || {};
-        this.leafletMarker = leafletMarker;
-        this.isIndividual = this.markerGroup.isIndividual;
+        /**
+         * @type {OO.ui.CheckboxInputWidget}
+         */
+        this.checkbox = new OO.ui.CheckboxInputWidget( {
+            selected: this.marker.options.dismissed
+        } ).on( 'change', () => this.outerSection.panel.map.toggleMarkerDismissal( this.marker ) );
+        /**
+         * @type {OO.ui.FieldLayout}
+         */
+        this.field = new OO.ui.FieldLayout( this.checkbox, {
+            label: '...',
+            align: 'inline'
+        } );
+        this.field.$element.appendTo( this.outerSection.containerElement );
+        /**
+         * @type {HTMLElement}
+         */
+        this.labelElement = this.field.$label[ 0 ];
+        /**
+         * @type {HTMLElement?}
+         */
+        this.indexElement = null;
 
-        const pair = this.panel.legend.createCheckboxField( this.markerGroup.container.$element, '...',
-            leafletMarker.options.dismissed, () => this.panel.map.toggleMarkerDismissal( this.leafletMarker ) );
-        this.field = pair[ 1 ];
-        this.checkbox = pair[ 0 ];
-
-        this.$label = this.field.$label;
-        this.$label.empty();
-
+        this.field.$label.empty();
         // Hide field input area if for group
-        if ( !this.isIndividual ) {
+        if ( !this.outerSection.isIndividual ) {
             this.field.getField().toggle( false );
         }
 
-        // Build the label
-        const areCoordsEnabled = this.panel.map.isFeatureBitSet( MapFlags.ShowCoordinates );
-        // Coordinates
-        if ( areCoordsEnabled ) {
-            this.$coordLabel = $( '<b>' ).text( this.panel.map.getCoordLabel( this.apiInstance ) ).appendTo( this.$label );
+        if ( this.outerSection.panel.map.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
+            Util.createDomElement( 'b', {
+                text: this.outerSection.panel.map.getCoordLabel( this.marker.apiInstance ),
+                appendTo: this.labelElement
+            } );
         }
-        // Marker label
-        this.$labelText = $( '<span>' ).appendTo( this.$label );
+
+        /**
+         * @type {HTMLElement}
+         */
+        this.labelTextElement = Util.createDomElement( 'span', {
+            appendTo: this.labelElement
+        } );
         if ( this.slots.label ) {
-            const groupName = this.markerGroup.group.name;
+            const groupName = this.outerSection.group.name;
             let labelText = this.slots.label;
             if ( labelText.indexOf( groupName ) === 0 ) {
                 labelText = labelText.slice( groupName.length ).trim().replace( /(^\(|\)$)/g, '' );
@@ -305,23 +352,31 @@ CollectiblesPanel.MarkerEntry = class MarkerEntry {
                     labelText = this.slots.label;
                 }
             }
-            this.$labelText.html( labelText );
+            this.labelTextElement.innerHTML = labelText;
         }
 
-        if ( Util.isBitSet( this.markerGroup.group.flags, MarkerGroupFlags.IsNumberedInChecklists ) ) {
-            this.$index = $( '<span class="datamap-collapsible-index">' ).appendTo( this.$labelText );
-            this.setIndex( this.markerGroup.markers.length + 1 );
+        if ( Util.isBitSet( this.outerSection.group.flags, MarkerGroupFlags.IsNumberedInChecklists ) ) {
+            this.setIndex( this.outerSection.rows.length + 1 );
         }
 
         this.field.$header.on( 'click', event => {
-            this.leafletMarker.openPopup();
-            event.preventDefault( true );
+            event.preventDefault();
+            this.marker.openPopup();
         } );
     }
 
 
+    /**
+     * @param {number} index
+     */
     setIndex( index ) {
-        this.$index.text( ' #' + index );
+        if ( this.indexElement === null ) {
+            this.indexElement = Util.createDomElement( 'span', {
+                classes: [ 'datamap-collapsible-index' ],
+                appendTo: this.labelTextElement
+            } );
+        }
+        this.indexElement.innerText = ` #${index}`;
     }
 };
 

@@ -8,9 +8,8 @@ class MarkerFilteringPanel extends LegendTabber.Tab {
     /**
      * @param {LegendTabber} tabber
      * @param {boolean} addTotalToggles
-     * @param {boolean} withLayerDropdown
      */
-    constructor( tabber, addTotalToggles, withLayerDropdown ) {
+    constructor( tabber, addTotalToggles ) {
         super( tabber, mw.msg( 'datamap-legend-tab-locations' ) );
 
         /**
@@ -22,13 +21,16 @@ class MarkerFilteringPanel extends LegendTabber.Tab {
         /**
          * Marker group container.
          *
-         * @type {jQuery}
+         * @type {HTMLElement}
          */
-        this.$groupContainer = $( '<div class="datamap-container-groups">' ).appendTo( this.$content );
+        this.groupContainer = Util.createDomElement( 'div', {
+            classes: [ 'datamap-container-groups' ],
+            appendTo: this.contentElement
+        } );
         /**
-         * Mapping of group IDs to {@link MarkerFilteringPanel.MarkerGroupField}.
+         * Mapping of group IDs to {@link MarkerFilteringPanel.MarkerGroupRow}.
          *
-         * @type {Object<string, MarkerFilteringPanel.MarkerGroupField>}
+         * @type {Object<string, MarkerFilteringPanel.MarkerGroupRow>}
          */
         this.groupToggles = {};
         /**
@@ -39,15 +41,11 @@ class MarkerFilteringPanel extends LegendTabber.Tab {
         this.$layersPopup = null;
 
         // Prepend the button group to the root element
-        this.buttonGroup.$element.prependTo( this.$content );
+        this.buttonGroup.$element.prependTo( this.contentElement );
 
         if ( addTotalToggles ) {
             this.createActionButton( mw.msg( 'datamap-toggle-show-all' ), this.toggleAllGroups.bind( this, true ) );
             this.createActionButton( mw.msg( 'datamap-toggle-hide-all' ), this.toggleAllGroups.bind( this, false ) );
-        }
-
-        if ( withLayerDropdown ) {
-            this.$layersPopup = this.createPopupButton( mw.msg( 'datamap-layer-control' ) )[ 1 ];
         }
     }
 
@@ -66,29 +64,6 @@ class MarkerFilteringPanel extends LegendTabber.Tab {
 
 
     /**
-     * Creates a popup button and pushes into the button group.
-     *
-     * @param {string} label
-     * @return {[ OO.ui.PopupButtonWidget, jQuery ]}
-     */
-    createPopupButton( label ) {
-        const $content = $( '<div>' );
-        const button = new OO.ui.PopupButtonWidget( {
-            label,
-            indicator: 'down',
-            popup: {
-                $content,
-                padded: true,
-                width: 220,
-                align: 'forwards'
-            }
-        } );
-        this.buttonGroup.addItems( [ button ] );
-        return [ button, $content ];
-    }
-
-
-    /**
      * Sets every group's visibility to {@link state}.
      *
      * @param {boolean} state
@@ -100,38 +75,80 @@ class MarkerFilteringPanel extends LegendTabber.Tab {
     }
 
 
-    /**
-     * @param {jQuery} $parent
-     * @param {string} layerId
-     * @param {string} layerName
-     */
-    addMarkerLayerToggleExclusive( $parent, layerId, layerName ) {
-        this.tabber.createCheckboxField( $parent, layerName, true,
-            state => this.map.layerManager.setExclusion( layerId, !state ) );
+    setupLayersPopup() {
+        if ( this.$layersPopup === null ) {
+            this.$layersPopup = $( '<div>' );
+            this.buttonGroup.addItems( [
+                new OO.ui.PopupButtonWidget( {
+                    label: mw.msg( 'datamap-layer-control' ),
+                    indicator: 'down',
+                    popup: {
+                        $content: this.$layersPopup,
+                        padded: true,
+                        width: 220,
+                        align: 'forwards'
+                    }
+                } )
+            ] );
+        }
     }
 
 
     /**
-     * @param {jQuery} $parent
+     * @package
+     * @param {jQuery|HTMLElement} parentElement
      * @param {string} layerId
-     * @param {string} layerName
-     * @param {boolean} [invert]
+     * @param {string} name
+     * @param {'setExclusion' | 'setInclusion' | 'setRequirement'} fnName
+     * @param {boolean} invert
+     * @param {boolean} tickByDefault
+     * @return {[ OO.ui.FieldLayout, OO.ui.CheckboxInputWidget ]}
      */
-    addMarkerLayerToggleInclusive( $parent, layerId, layerName, invert ) {
-        this.tabber.createCheckboxField( $parent, layerName, true,
-            state => this.map.layerManager.setInclusion( layerId, ( invert ? state : !state ) ) );
+    _makeLayerToggleField( parentElement, layerId, name, fnName, invert, tickByDefault ) {
+        const checkbox = new OO.ui.CheckboxInputWidget( {
+            selected: tickByDefault
+        } ).on( 'change', () => {
+            const state = checkbox.isSelected();
+            this.map.layerManager[ fnName ]( layerId, ( invert ? state : !state ) );
+        } );
+        const field = new OO.ui.FieldLayout( checkbox, {
+            label: name,
+            align: 'inline'
+        } );
+        field.$element.appendTo( parentElement );
+        return [ field, checkbox ];
     }
 
 
     /**
-     * @param {jQuery} $parent
      * @param {string} layerId
-     * @param {string} layerName
-     * @param {boolean} [invert]
+     * @param {string} name
      */
-    addMarkerLayerToggleRequired( $parent, layerId, layerName, invert ) {
-        this.tabber.createCheckboxField( $parent, layerName, true,
-            state => this.map.layerManager.setRequirement( layerId, ( invert ? state : !state ) ) );
+    addMarkerLayerToggleExclusive( layerId, name ) {
+        this.setupLayersPopup();
+        this._makeLayerToggleField( Util.getNonNull( this.$layersPopup ), layerId, name, 'setExclusion', false, true );
+    }
+
+
+    /**
+     * @param {string} layerId
+     * @param {string} name
+     * @param {boolean} invert
+     */
+    addMarkerLayerToggleInclusive( layerId, name, invert ) {
+        this.setupLayersPopup();
+        this._makeLayerToggleField( Util.getNonNull( this.$layersPopup ), layerId, name, 'setInclusion', invert, true );
+    }
+
+
+    /**
+     * @param {string} layerId
+     * @param {string} name
+     * @param {boolean} invert
+     */
+    addMarkerLayerToggleRequired( layerId, name, invert ) {
+        this.setupLayersPopup();
+        this._makeLayerToggleField( Util.getNonNull( this.$layersPopup ), layerId, name, 'setRequirement', invert, true );
     }
 
 
@@ -140,7 +157,7 @@ class MarkerFilteringPanel extends LegendTabber.Tab {
      * @param {DataMaps.Configuration.MarkerGroup} group
      */
     addMarkerGroupToggle( groupId, group ) {
-        this.groupToggles[ groupId ] = new MarkerFilteringPanel.MarkerGroupField( this, groupId, group );
+        this.groupToggles[ groupId ] = new MarkerFilteringPanel.MarkerGroupRow( this, groupId, group );
         this.setVisible( true );
     }
 
@@ -156,42 +173,33 @@ class MarkerFilteringPanel extends LegendTabber.Tab {
 }
 
 
-MarkerFilteringPanel.MarkerGroupField = class MarkerGroupField {
+MarkerFilteringPanel.MarkerGroupRow = class MarkerGroupRow {
     /**
-     * @param {MarkerFilteringPanel} legendPanel
+     * @param {MarkerFilteringPanel} outerPanel
      * @param {string} groupId
      * @param {DataMaps.Configuration.MarkerGroup} group
      */
-    constructor( legendPanel, groupId, group ) {
+    constructor( outerPanel, groupId, group ) {
         /**
          * @type {MarkerFilteringPanel}
          */
-        this.legendPanel = legendPanel;
-        /**
-         * @type {LegendTabber}
-         */
-        this.legend = this.legendPanel.tabber;
-        /**
-         * @type {DataMap}
-         */
-        this.map = this.legend.map;
+        this.outerPanel = outerPanel;
         /**
          * @type {string}
          */
         this.groupId = groupId;
 
         // Create a backing checkbox field
-        const pair = this.legend.createCheckboxField( this.legendPanel.$groupContainer, group.name,
-            !Util.isBitSet( group.flags, MarkerGroupFlags.IsUnselected ),
-            state => this.map.layerManager.setExclusion( this.groupId, !state ) );
+        const pair = this.outerPanel._makeLayerToggleField( this.outerPanel.groupContainer, groupId, group.name, 'setExclusion',
+            false, !Util.isBitSet( group.flags, MarkerGroupFlags.IsUnselected ) );
         /**
          * @type {OO.ui.FieldLayout}
          */
-        this.field = pair[ 1 ];
+        this.field = pair[ 0 ];
         /**
          * @type {OO.ui.CheckboxInputWidget}
          */
-        this.checkbox = pair[ 0 ];
+        this.checkbox = pair[ 1 ];
 
         // Optional elements
         /**

@@ -1004,19 +1004,15 @@ class DataMap extends EventEmitter {
     _initialiseFiltersPanel() {
         // Determine if we'll need a layer dropdown
         const hasCaves = this.isLayerUsed( 'cave' );
-        const withLayerDropdown = hasCaves;
 
         // Initialise legend objects
-        this.filtersPanel = new MarkerFilteringPanel( /** @type {LegendTabber} */ ( this.legend ), true, withLayerDropdown )
-            .setVisible( true );
+        this.filtersPanel = new MarkerFilteringPanel( /** @type {LegendTabber} */ ( this.legend ), true ).setVisible( true );
 
         // Build the surface and caves toggle
         // TODO: this should be gone by v0.15, preferably in v0.14 (though that one's going to be a 1.39 compat update)
         if ( hasCaves ) {
-            this.filtersPanel.addMarkerLayerToggleRequired( this.filtersPanel.$layersPopup, 'cave',
-                mw.msg( 'datamap-layer-surface' ) );
-            this.filtersPanel.addMarkerLayerToggleExclusive( this.filtersPanel.$layersPopup, 'cave',
-                mw.msg( 'datamap-layer-cave' ) );
+            this.filtersPanel.addMarkerLayerToggleRequired( 'cave', mw.msg( 'datamap-layer-surface' ), false );
+            this.filtersPanel.addMarkerLayerToggleExclusive( 'cave', mw.msg( 'datamap-layer-cave' ) );
         }
 
         // Build individual group toggles

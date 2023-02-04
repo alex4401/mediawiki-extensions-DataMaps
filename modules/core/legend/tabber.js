@@ -129,10 +129,10 @@ class Tab {
         /**
          * Content node.
          *
-         * @protected
-         * @type {jQuery}
+         * @public
+         * @type {HTMLElement}
          */
-        this.$content = this.tab.$element;
+        this.contentElement = this.tab.$element[ 0 ];
     }
 
 
@@ -141,6 +141,7 @@ class Tab {
      * @return {this}
      */
     setVisible( value ) {
+        // @ts-ignore: second parameter "index" not needed
         this.tabber.layout[ value ? 'addTabPanels' : 'removeTabPanels' ]( [ this.tab ] );
         this.tabber.updateVisibility();
         return this;
