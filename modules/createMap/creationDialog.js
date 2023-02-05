@@ -286,7 +286,7 @@ CreationDialog.prototype.updateButtonState = function () {
 
 
 CreationDialog.prototype.updateCrs = function () {
-    this.crsCustomPanel.toggle( this.crsSelector.getValue() === CrsType.Custom );
+    this.crsCustomPanel.toggle( this.crsSelector.getValue() === `${CrsType.Custom}` );
     this.updateSize();
     switch ( parseInt( this.crsSelector.getValue() ) ) {
         case CrsType.Percent:
@@ -327,7 +327,7 @@ CreationDialog.prototype.updatePrefillValue = function () {
         settings: {}
     };
 
-    if ( this.originSelector.getValue() === Enums.CRSOrigin.BottomLeft ) {
+    if ( this.originSelector.getValue() === `${Enums.CRSOrigin.BottomLeft}` ) {
         out.crs = [ out.crs[ 1 ], out.crs[ 0 ] ];
     }
 
