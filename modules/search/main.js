@@ -1,16 +1,17 @@
 const
-    /** @type {import( '../core' )} */ CoreModule = require( 'ext.datamaps.core' ),
-    DataMap = CoreModule.DataMap,
-    Enums = CoreModule.Enums,
-    Util = CoreModule.Util,
-    MapControl = CoreModule.Controls.MapControl;
+    {
+        MapFlags,
+        DataMap,
+        Util,
+        Controls
+    } = /** @type {import( '../core' )} */ ( require( 'ext.datamaps.core' ) );
 const
     MarkerSearchIndex = require( './indexing.js' ),
     MenuWidget = require( './menu.js' ),
     MenuOptionWidget = require( './option.js' );
 
 
-class MarkerSearch extends MapControl {
+class MarkerSearch extends Controls.MapControl {
     /**
      * @param {DataMap} map Owning map.
      * @param {MarkerSearchIndex} index
@@ -19,8 +20,6 @@ class MarkerSearch extends MapControl {
     constructor( map, index, isLinked ) {
         super( map, 'search' );
 
-        /** @type {DataMap} */
-        this.map = map;
         /** @type {MarkerSearchIndex} */
         this.ownedIndex = index;
         /** @type {MarkerSearchIndex?} */
@@ -28,21 +27,8 @@ class MarkerSearch extends MapControl {
         /** @type {boolean} */
         this.isLinked = isLinked;
 
-        map.on( 'leafletLoaded', () => {
-            // Push self into the map and initialise the user interface
-            this.map.addControl( DataMap.anchors.topLeftInline, this )._initialiseUI();
-            // Build the index from markers that have been loaded so far
-            this._setDisplayIndex( this.isLinked ? /** @type {MarkerSearchIndex.ChildIndex} */ ( this.ownedIndex ).parent
-                : this.ownedIndex );
-            this.addExistingMarkersToOwnIndex();
-            // Set up event handlers
-            this.map.on( 'markerReady', this.addMarker, this );
-            this.map.on( 'chunkStreamingDone', this.onChunkStreamed, this );
-        } );
-    }
+        // UI construction
 
-
-    _initialiseUI() {
         this.inputBox = new OO.ui.TextInputWidget( {
             placeholder: mw.msg( 'datamap-control-search' ),
             icon: 'search'
@@ -57,7 +43,7 @@ class MarkerSearch extends MapControl {
             width: '100%'
         } );
 
-        this.inputBox.$element.appendTo( this.$element );
+        this.inputBox.$element.appendTo( this.element );
         this.menu.$element.appendTo( this.inputBox.$element );
 
         if ( this.isLinked ) {
@@ -77,6 +63,16 @@ class MarkerSearch extends MapControl {
         this.menu.on( 'choose', this.onMenuItemChosen, null, this );
 
         this.map.leaflet.on( 'click', this.close, this );
+
+        // Initialisation logic
+
+        // Build the index from markers that have been loaded so far
+        this._setDisplayIndex( this.isLinked ? /** @type {MarkerSearchIndex.ChildIndex} */ ( this.ownedIndex ).parent
+            : this.ownedIndex );
+        this.addExistingMarkersToOwnIndex();
+        // Set up event handlers
+        this.map.on( 'markerReady', this.addMarker, this );
+        this.map.on( 'chunkStreamingDone', this.onChunkStreamed, this );
     }
 
 
@@ -115,15 +111,16 @@ class MarkerSearch extends MapControl {
             label: new OO.ui.HtmlSnippet( item.label ),
             badge: this._getItemBadge( item ),
             badgeCurrent: item.map === this.map,
-            $tab: this.isLinked && item.map !== this.map ? Util.TabberNeue.getOwningTabber( item.map.$root )
-                .find( '#' + Util.TabberNeue.getOwningPanel( item.map.$root ).attr( 'aria-labelledby' ) ) : null
+            $tab: this.isLinked && item.map !== this.map ? Util.TabberNeue.getOwningTabber( item.map.rootElement )
+                .querySelector( '#' + Util.TabberNeue.getOwningPanel( item.map.rootElement ).getAttribute( 'aria-labelledby' ) )
+                : null
         };
     }
 
 
     _getItemBadge( item ) {
         if ( this.isLinked ) {
-            return Util.TabberNeue.getOwningPanel( item.map.$root ).attr( 'data-title' );
+            return Util.TabberNeue.getOwningPanel( item.map.rootElement ).attr( 'data-title' );
         }
 
         const properties = item.leafletMarker.assignedProperties;
@@ -196,19 +193,20 @@ class MarkerSearch extends MapControl {
 
 const sharedTabberIndexMap = {};
 mw.dataMaps.registerMapAddedHandler( map => {
-    if ( map.isFeatureBitSet( Enums.MapFlags.Search ) ) {
-        const isLinked = map.isFeatureBitSet( Enums.MapFlags.LinkedSearch ),
-            $tabber = Util.TabberNeue.getOwningTabber( map.$root );
-        let index;
+    if ( map.isFeatureBitSet( MapFlags.Search ) ) {
+        map.on( 'leafletLoaded', () => {
+            const isLinked = map.isFeatureBitSet( MapFlags.LinkedSearch ),
+                $tabber = Util.TabberNeue.getOwningTabber( map.$root );
+            let index;
+            if ( isLinked && $tabber ) {
+                const masterIndex = sharedTabberIndexMap[ $tabber ] || new MarkerSearchIndex();
+                sharedTabberIndexMap[ $tabber ] = masterIndex;
+                index = new MarkerSearchIndex.ChildIndex( masterIndex );
+            } else {
+                index = new MarkerSearchIndex();
+            }
 
-        if ( isLinked && $tabber ) {
-            const masterIndex = sharedTabberIndexMap[ $tabber ] || new MarkerSearchIndex();
-            sharedTabberIndexMap[ $tabber ] = masterIndex;
-            index = new MarkerSearchIndex.ChildIndex( masterIndex );
-        } else {
-            index = new MarkerSearchIndex();
-        }
-
-        map.search = new MarkerSearch( map, index, isLinked && $tabber );
+            map.search = map.addControl( DataMap.anchors.topLeftInline, new MarkerSearch( map, index, isLinked && $tabber ) );
+        } );
     }
 } );
