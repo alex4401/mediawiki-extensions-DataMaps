@@ -7,8 +7,10 @@ use MediaWiki\Extension\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\DataMaps\Data\DataModelMixinTransformer;
 use MediaWiki\Extension\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\DataMaps\Rendering\EmbedRenderer;
+use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
+use MediaWiki\Utils\UrlUtils;
 use Parser;
 use ParserOutput;
 use Status;
@@ -16,6 +18,15 @@ use stdClass;
 use Title;
 
 class DataMapContent extends JsonContent {
+    public const SUPPORTED_SCHEMA_VERSIONS = [
+        'v0.15',
+        'latest'
+    ];
+    public const PREFERRED_SCHEMA_VERSION = 'v0.15';
+    public const DEPRECATED_SCHEMA_VERSIONS = [
+        // schema version => extension version to be removed in
+    ];
+
     public const LERR_NOT_FOUND = 1;
     public const LERR_NOT_DATAMAP = 2;
 
@@ -107,6 +118,10 @@ class DataMapContent extends JsonContent {
         return $content;
     }
 
+    public function isMixin(): bool {
+        return DataMapSpec::staticIsMixin( $this->getData()->getValue() );
+    }
+
     private function mergeMixins( stdClass $main ) {
         if ( !isset( $main->mixins ) ) {
             return $main;
@@ -159,11 +174,41 @@ class DataMapContent extends JsonContent {
         return $this->modelCached;
     }
 
-    public function isMixin(): bool {
-        return DataMapSpec::staticIsMixin( $this->getData()->getValue() );
+    public static function getSchemaVersion( string $url ): ?string {
+        // TODO: there is surely a better way to do this
+        $services = MediaWikiServices::getInstance();
+        $config = $services->getMainConfig();
+        $urlUtils = $services->getUrlUtils();
+        $prefixTable = [
+            'raw.githubusercontent.com' => '/alex4401/mediawiki-extensions-DataMaps/main/schemas/',
+            $config->get( MainConfigNames::ServerName ) => $config->get( MainConfigNames::ExtensionAssetsPath ) .
+                '/DataMaps/schemas/'
+        ];
+
+        if ( !str_ends_with( $url, '.json' ) ) {
+            return null;
+        }
+
+        $url = $urlUtils->expand( $url, PROTO_CANONICAL );
+        $parsed = $urlUtils->parse( $url );
+        if ( $parsed === null || !isset( $parsed['host'] ) || !isset( $parsed['path'] )
+            || !array_key_exists( $parsed['host'], $prefixTable ) ) {
+            return null;
+        }
+
+        $prefix = $prefixTable[$parsed['host']];
+        if ( !str_starts_with( $parsed['path'], $prefix ) ) {
+            return null;
+        }
+        return substr( $parsed['path'], strlen( $prefix ), -5 );
     }
 
-    public function getEmbedRenderer( Title $title, Parser $parser, ParserOutput $parserOutput, array $options = [] ): EmbedRenderer {
+    public function getEmbedRenderer(
+        Title $title,
+        Parser $parser,
+        ParserOutput $parserOutput,
+        array $options = []
+    ): EmbedRenderer {
         return new EmbedRenderer( $title, $this->asModel(), $parser, $parserOutput, $options );
     }
 
@@ -173,15 +218,43 @@ class DataMapContent extends JsonContent {
 
     public function getValidationStatus() {
         $status = new Status();
+
         if ( !$this->isValid() ) {
+            // Check if valid JSON
             $status->fatal( 'datamap-error-validate-invalid-json' );
         } else {
+            // Disallow mixins with mixins
             if ( $this->isMixin() && isset( $this->getData()->getValue()->mixins ) ) {
                 $status->fatal( 'datamap-error-validatespec-map-mixin-with-mixins' );
-                return;
+                return $status;
             }
-            $this->asModel()->validate( $status );
+
+            $modelled = $this->asModel();
+
+            // Check if the schema is specified, and if the origin is right and version is supported
+            $schemaValue = $modelled->unwrap()->{'$schema'} ?? null;
+            $schemaVersion = $schemaValue !== null ? self::getSchemaVersion( $schemaValue ) : null;
+            if ( $schemaVersion === null ) {
+                $services = MediaWikiServices::getInstance();
+                $exampleUrl = $services->getUrlUtils()->expand(
+                    $services->getMainConfig()->get( MainConfigNames::ExtensionAssetsPath ) . '/DataMaps/schemas/' .
+                    self::PREFERRED_SCHEMA_VERSION . '.json' );
+                $status->fatal( 'datamap-error-bad-schema-origin', $exampleUrl );
+                return $status;
+            }
+            if ( !in_array( $schemaVersion, self::SUPPORTED_SCHEMA_VERSIONS ) ) {
+                $status->fatal( 'datamap-error-bad-schema-version', implode( ', ', self::SUPPORTED_SCHEMA_VERSIONS ) );
+                return $status;
+            }
+            if ( array_key_exists( $schemaVersion, self::DEPRECATED_SCHEMA_VERSIONS ) ) {
+                $status->warning( 'datamap-error-deprecated-schema-version', self::DEPRECATED_SCHEMA_VERSIONS[$schemaVersion],
+                    implode( ', ', self::SUPPORTED_SCHEMA_VERSIONS ) );
+                return $status;
+            }
+
+            $modelled->validate( $status );
         }
+
         return $status;
     }
 }

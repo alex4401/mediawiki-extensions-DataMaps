@@ -21,6 +21,9 @@
 
     "datamap-error-validate-check-docs": "Check the [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps extension's documentation] for information about the proper structure.",
     "datamap-error-validate-invalid-json": "This is not a valid JSON document.",
+    "datamap-error-bad-schema-origin": "Missing or invalid <code>$schema</code> field. This must point at a supported schema definition, like <code>$1</code>.",
+    "datamap-error-bad-schema-version": "The <code>$schema</code> field points at an unknown or unsupported schema definition. The following identifiers are supported: $1.",
+    "datamap-error-deprecated-schema-version": "The schema used in this map is no longer supported and will be removed in $1. Check the [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps extension's documentation] and update the data to a supported schema version ($2).",
     "datamap-error-validate-unexpected-fields": "Found unknown field(s) in structure $1: $2.",
     "datamap-error-validate-field-no-value": "Field <code>$2</code> in structure $1 requires a value.",
     "datamap-error-validate-field-required": "Field <code>$2</code> is required in structure $1. $3",

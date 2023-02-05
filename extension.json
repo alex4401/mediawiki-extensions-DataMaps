@@ -307,12 +307,18 @@
 				"oojs-ui-widgets",
 				"oojs-ui-windows",
 				"mediawiki.widgets",
+				"mediawiki.Uri",
 				"ext.datamaps.ve.icons"
 			],
 			"packageFiles": [
 				"createMap/main.js",
 				"createMap/creationDialog.js",
-				"core/enums.js"
+				"core/enums.js",
+
+				{
+					"name": "config.json",
+					"callback": "MediaWiki\\Extension\\DataMaps\\HookHandler::getCreateMapConfig"
+				}
 			],
 			"styles": [
 				"ve/css/collapsibles.less",

@@ -37,6 +37,10 @@ class DataModel {
         $this->raw = $raw;
     }
 
+    public function unwrap(): stdClass {
+        return $this->raw;
+    }
+
     protected function verifyType( $var, int $typeId ): bool {
         switch ( $typeId ) {
             case self::TYPE_ANY:

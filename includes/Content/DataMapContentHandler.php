@@ -22,10 +22,10 @@ class DataMapContentHandler extends JsonContentHandler {
     }
 
     public function getActionOverrides() {
-		return [
-			'editmap' => EditMapAction::class,
-		];
-	}
+        return [
+            'editmap' => EditMapAction::class,
+        ];
+    }
 
     /**
      * Only allow this content handler to be used in the configured data namespace

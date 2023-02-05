@@ -1,5 +1,6 @@
 const Enums = require( '../core/enums.js' ),
-    mwApi = new mw.Api();
+    mwApi = new mw.Api(),
+    { PREFERRED_SCHEMA_VERSION } = require( '../config.json' );
 
 
 function CreationDialog( config ) {
@@ -318,6 +319,8 @@ CreationDialog.prototype.updatePrefillValue = function () {
 
     /** @type {any} */
     const out = {
+        $schema: new mw.Uri( `${mw.config.get( 'wgExtensionAssetsPath' )}/DataMaps/schemas/${PREFERRED_SCHEMA_VERSION}.json` )
+            .toString(),
         coordinateOrder: 'xy',
         crs: [ [ 0, 0 ], imageSize ],
         image: this.imageSelector.getValue(),

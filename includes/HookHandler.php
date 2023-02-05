@@ -1,6 +1,8 @@
 <?php
 namespace MediaWiki\Extension\DataMaps;
 
+use Config;
+use MediaWiki\Extension\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
@@ -203,5 +205,11 @@ class HookHandler implements
                 }
             }
         }
+    }
+
+    public static function getCreateMapConfig( \MediaWiki\ResourceLoader\Context $context, Config $config ): array {
+        return [
+            'PREFERRED_SCHEMA_VERSION' => DataMapContent::PREFERRED_SCHEMA_VERSION
+        ];
     }
 }
