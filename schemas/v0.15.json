@@ -1,0 +1,1031 @@
+{
+  "$ref": "#/definitions/DataMap",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Box": {
+      "items": {
+        "$ref": "#/definitions/Point"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "Colour3": {
+      "anyOf": [
+        {
+          "pattern": "#([a-z]{3}|[a-z]{6})",
+          "type": "string"
+        },
+        {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array"
+        }
+      ]
+    },
+    "Colour4": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Colour3"
+        },
+        {
+          "pattern": "#([a-z]{4}|[a-z]{8})",
+          "type": "string"
+        },
+        {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "type": "array"
+        }
+      ]
+    },
+    "CoordinateReferenceSystem": {
+      "items": {
+        "$ref": "#/definitions/Point"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "DataMap": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "$mixin": {
+              "description": "Indicates whether this is a fragment meant to be included in actual maps.",
+              "type": "boolean"
+            },
+            "coordinateOrder": {
+              "enum": [
+                "yx",
+                "latlon",
+                "xy",
+                "lonlat"
+              ],
+              "type": "string"
+            },
+            "crs": {
+              "$ref": "#/definitions/CoordinateReferenceSystem",
+              "description": "Reference coordinate space, which also determines whether the system origin will be top-left or bottom-left.\n\nDefaults to `[ [0, 0], [100, 100] ]`, which places the origin point in the top-left corner - swap the points for bottom-left."
+            },
+            "custom": {
+              "type": "object"
+            },
+            "groups": {
+              "additionalProperties": {
+                "$ref": "#/definitions/MarkerGroup"
+              },
+              "type": "object"
+            },
+            "image": {
+              "$ref": "#/definitions/Title",
+              "description": "Title (with or without the File namespace) of the image to be used as the background."
+            },
+            "layers": {
+              "additionalProperties": {
+                "$ref": "#/definitions/MarkerLayer"
+              },
+              "type": "object"
+            },
+            "markers": {
+              "additionalProperties": {
+                "items": {
+                  "$ref": "#/definitions/Marker"
+                },
+                "type": "array"
+              },
+              "type": "object"
+            },
+            "mixins": {
+              "description": "List of mix-ins that must be imported by the parser.",
+              "items": {
+                "$ref": "#/definitions/Title"
+              },
+              "type": "array"
+            },
+            "settings": {
+              "$ref": "#/definitions/MapSettings"
+            }
+          },
+          "required": [
+            "$mixin",
+            "coordinateOrder",
+            "crs",
+            "groups",
+            "image",
+            "layers",
+            "markers",
+            "mixins",
+            "settings"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "$mixin": {
+              "description": "Indicates whether this is a fragment meant to be included in actual maps.",
+              "type": "boolean"
+            },
+            "backgrounds": {
+              "anyOf": [
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "associatedLayer": {
+                            "type": "string"
+                          },
+                          "at": {
+                            "$ref": "#/definitions/Box"
+                          },
+                          "image": {
+                            "$ref": "#/definitions/Title"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "overlays": {
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "$ref": "#/definitions/MapBackground.ImageOverlay"
+                                },
+                                {
+                                  "$ref": "#/definitions/MapBackground.PolylineOverlay"
+                                },
+                                {
+                                  "$ref": "#/definitions/MapBackground.BoxOverlay"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "image",
+                          "name",
+                          "overlays"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "associatedLayer": {
+                            "type": "string"
+                          },
+                          "at": {
+                            "$ref": "#/definitions/Point"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "overlays": {
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "$ref": "#/definitions/MapBackground.ImageOverlay"
+                                },
+                                {
+                                  "$ref": "#/definitions/MapBackground.PolylineOverlay"
+                                },
+                                {
+                                  "$ref": "#/definitions/MapBackground.BoxOverlay"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          },
+                          "tileSize": {
+                            "$ref": "#/definitions/Box"
+                          },
+                          "tiles": {
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "image": {
+                                  "$ref": "#/definitions/Title"
+                                },
+                                "position": {
+                                  "anyOf": [
+                                    {
+                                      "$ref": "#/definitions/Point"
+                                    },
+                                    {
+                                      "type": "number"
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "position",
+                                "image"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "at",
+                          "name",
+                          "overlays",
+                          "tileSize",
+                          "tiles"
+                        ],
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                },
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "associatedLayer": {
+                            "type": "string"
+                          },
+                          "at": {
+                            "$ref": "#/definitions/Box"
+                          },
+                          "image": {
+                            "$ref": "#/definitions/Title"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "overlays": {
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "$ref": "#/definitions/MapBackground.ImageOverlay"
+                                },
+                                {
+                                  "$ref": "#/definitions/MapBackground.PolylineOverlay"
+                                },
+                                {
+                                  "$ref": "#/definitions/MapBackground.BoxOverlay"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "image",
+                          "overlays"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "associatedLayer": {
+                            "type": "string"
+                          },
+                          "at": {
+                            "$ref": "#/definitions/Point"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "overlays": {
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "$ref": "#/definitions/MapBackground.ImageOverlay"
+                                },
+                                {
+                                  "$ref": "#/definitions/MapBackground.PolylineOverlay"
+                                },
+                                {
+                                  "$ref": "#/definitions/MapBackground.BoxOverlay"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          },
+                          "tileSize": {
+                            "$ref": "#/definitions/Box"
+                          },
+                          "tiles": {
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "image": {
+                                  "$ref": "#/definitions/Title"
+                                },
+                                "position": {
+                                  "anyOf": [
+                                    {
+                                      "$ref": "#/definitions/Point"
+                                    },
+                                    {
+                                      "type": "number"
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "position",
+                                "image"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "at",
+                          "overlays",
+                          "tileSize",
+                          "tiles"
+                        ],
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "maxItems": 1,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ],
+              "description": "List of background configurations."
+            },
+            "coordinateOrder": {
+              "enum": [
+                "yx",
+                "latlon",
+                "xy",
+                "lonlat"
+              ],
+              "type": "string"
+            },
+            "crs": {
+              "$ref": "#/definitions/CoordinateReferenceSystem",
+              "description": "Reference coordinate space, which also determines whether the system origin will be top-left or bottom-left.\n\nDefaults to `[ [0, 0], [100, 100] ]`, which places the origin point in the top-left corner - swap the points for bottom-left."
+            },
+            "custom": {
+              "type": "object"
+            },
+            "groups": {
+              "additionalProperties": {
+                "$ref": "#/definitions/MarkerGroup"
+              },
+              "type": "object"
+            },
+            "layers": {
+              "additionalProperties": {
+                "$ref": "#/definitions/MarkerLayer"
+              },
+              "type": "object"
+            },
+            "markers": {
+              "additionalProperties": {
+                "items": {
+                  "$ref": "#/definitions/Marker"
+                },
+                "type": "array"
+              },
+              "type": "object"
+            },
+            "mixins": {
+              "description": "List of mix-ins that must be imported by the parser.",
+              "items": {
+                "$ref": "#/definitions/Title"
+              },
+              "type": "array"
+            },
+            "settings": {
+              "$ref": "#/definitions/MapSettings"
+            }
+          },
+          "required": [
+            "$mixin",
+            "backgrounds",
+            "coordinateOrder",
+            "crs",
+            "groups",
+            "layers",
+            "markers",
+            "mixins",
+            "settings"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "MapBackground.BoxOverlay": {
+      "additionalProperties": false,
+      "properties": {
+        "at": {
+          "$ref": "#/definitions/Box"
+        },
+        "color": {
+          "$ref": "#/definitions/Colour4"
+        },
+        "name": {
+          "type": "string"
+        },
+        "thickness": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "at"
+      ],
+      "type": "object"
+    },
+    "MapBackground.ImageOverlay": {
+      "additionalProperties": false,
+      "properties": {
+        "at": {
+          "$ref": "#/definitions/Box"
+        },
+        "image": {
+          "$ref": "#/definitions/Title"
+        },
+        "name": {
+          "type": "string"
+        },
+        "reduceGaps": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "image",
+        "at",
+        "reduceGaps"
+      ],
+      "type": "object"
+    },
+    "MapBackground.PolylineOverlay": {
+      "additionalProperties": false,
+      "properties": {
+        "borderColor": {
+          "$ref": "#/definitions/Colour3"
+        },
+        "color": {
+          "$ref": "#/definitions/Colour4"
+        },
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "items": {
+            "$ref": "#/definitions/Point"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "type": "object"
+    },
+    "MapSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "disableZoom": {
+          "type": "boolean"
+        },
+        "enableSearch": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "const": "tabberWide",
+              "type": "string"
+            }
+          ]
+        },
+        "hideLegend": {
+          "type": "boolean"
+        },
+        "leaflet": {
+          "additionalProperties": false,
+          "properties": {
+            "allowIconsOnCanvas": {
+              "type": "boolean"
+            },
+            "autoMinZoom": {
+              "type": "boolean"
+            },
+            "autoMinZoomAbsolute": {
+              "type": "number"
+            },
+            "bounceAtZoomLimits": {
+              "type": "boolean"
+            },
+            "boxZoom": {
+              "type": "boolean"
+            },
+            "closePopupOnClick": {
+              "type": "boolean"
+            },
+            "doubleClickZoom": {
+              "type": "boolean"
+            },
+            "dragging": {
+              "type": "boolean"
+            },
+            "easeLinearity": {
+              "type": "number"
+            },
+            "inertia": {
+              "type": "boolean"
+            },
+            "inertiaDeceleration": {
+              "type": "number"
+            },
+            "inertiaMaxSpeed": {
+              "type": "number"
+            },
+            "interactionControl": {
+              "type": "boolean"
+            },
+            "keyboard": {
+              "type": "boolean"
+            },
+            "keyboardPanDelta": {
+              "type": "number"
+            },
+            "markerZoomAnimation": {
+              "type": "boolean"
+            },
+            "markerZoomScaleFactor": {
+              "type": "number"
+            },
+            "maxBoundsViscosity": {
+              "type": "number"
+            },
+            "maxZoom": {
+              "type": "number"
+            },
+            "minZoom": {
+              "type": "number"
+            },
+            "rendererSettings": {
+              "additionalProperties": false,
+              "properties": {
+                "padding": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "scrollWheelZoom": {
+              "type": "boolean"
+            },
+            "shouldScaleMarkers": {
+              "type": "boolean"
+            },
+            "tapHold": {
+              "type": "boolean"
+            },
+            "tapTolerance": {
+              "type": "number"
+            },
+            "touchZoom": {
+              "type": "boolean"
+            },
+            "wheelDebounceTime": {
+              "type": "number"
+            },
+            "wheelPxPerZoomLevel": {
+              "type": "number"
+            },
+            "zoomAnimation": {
+              "type": "boolean"
+            },
+            "zoomAnimationThreshold": {
+              "type": "number"
+            },
+            "zoomControl": {
+              "type": "boolean"
+            },
+            "zoomDelta": {
+              "type": "number"
+            },
+            "zoomSnap": {
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "requireCustomMarkerIDs": {
+          "type": "boolean"
+        },
+        "showCoordinates": {
+          "type": "boolean"
+        },
+        "sortChecklistsBy": {
+          "enum": [
+            "location",
+            "amount"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "disableZoom",
+        "enableSearch",
+        "hideLegend",
+        "requireCustomMarkerIDs",
+        "showCoordinates",
+        "sortChecklistsBy"
+      ],
+      "type": "object"
+    },
+    "Marker": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "article": {
+              "type": "string"
+            },
+            "canSearchFor": {
+              "type": "boolean"
+            },
+            "description": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "id": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "image": {
+              "$ref": "#/definitions/Title"
+            },
+            "isWikitext": {
+              "type": "boolean"
+            },
+            "lat": {
+              "type": "number"
+            },
+            "lon": {
+              "type": "number"
+            },
+            "name": {
+              "type": "string"
+            },
+            "searchKeywords": {
+              "anyOf": [
+                {
+                  "items": {
+                    "items": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
+                    "maxItems": 2,
+                    "minItems": 2,
+                    "type": "array"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "required": [
+            "canSearchFor",
+            "lat",
+            "lon"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "article": {
+              "type": "string"
+            },
+            "canSearchFor": {
+              "type": "boolean"
+            },
+            "description": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "id": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "image": {
+              "$ref": "#/definitions/Title"
+            },
+            "isWikitext": {
+              "type": "boolean"
+            },
+            "name": {
+              "type": "string"
+            },
+            "searchKeywords": {
+              "anyOf": [
+                {
+                  "items": {
+                    "items": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
+                    "maxItems": 2,
+                    "minItems": 2,
+                    "type": "array"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "canSearchFor",
+            "x",
+            "y"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "MarkerGroup": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/MarkerGroup.Circle"
+        },
+        {
+          "$ref": "#/definitions/MarkerGroup.Icon"
+        },
+        {
+          "$ref": "#/definitions/MarkerGroup.Pin"
+        }
+      ]
+    },
+    "MarkerGroup.Circle": {
+      "additionalProperties": false,
+      "properties": {
+        "article": {
+          "type": "string"
+        },
+        "autoNumberInChecklist": {
+          "type": "boolean"
+        },
+        "borderColor": {
+          "$ref": "#/definitions/Colour3"
+        },
+        "borderWidth": {
+          "type": "number"
+        },
+        "canSearchFor": {
+          "type": "boolean"
+        },
+        "extraMinZoomSize": {
+          "type": "number"
+        },
+        "fillColor": {
+          "$ref": "#/definitions/Colour3"
+        },
+        "icon": {
+          "$ref": "#/definitions/Title"
+        },
+        "isCollectible": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "const": "individual",
+              "type": "string"
+            },
+            {
+              "const": "group",
+              "type": "string"
+            },
+            {
+              "const": "globalGroup",
+              "type": "string"
+            }
+          ]
+        },
+        "isDefault": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "size": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "autoNumberInChecklist",
+        "canSearchFor",
+        "fillColor",
+        "isCollectible",
+        "isDefault",
+        "name",
+        "size"
+      ],
+      "type": "object"
+    },
+    "MarkerGroup.Icon": {
+      "additionalProperties": false,
+      "properties": {
+        "article": {
+          "type": "string"
+        },
+        "autoNumberInChecklist": {
+          "type": "boolean"
+        },
+        "canSearchFor": {
+          "type": "boolean"
+        },
+        "icon": {
+          "$ref": "#/definitions/Title"
+        },
+        "isCollectible": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "const": "individual",
+              "type": "string"
+            },
+            {
+              "const": "group",
+              "type": "string"
+            },
+            {
+              "const": "globalGroup",
+              "type": "string"
+            }
+          ]
+        },
+        "isDefault": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "size": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/definitions/Point"
+            }
+          ]
+        }
+      },
+      "required": [
+        "autoNumberInChecklist",
+        "canSearchFor",
+        "icon",
+        "isCollectible",
+        "isDefault",
+        "name",
+        "size"
+      ],
+      "type": "object"
+    },
+    "MarkerGroup.Pin": {
+      "additionalProperties": false,
+      "properties": {
+        "article": {
+          "type": "string"
+        },
+        "autoNumberInChecklist": {
+          "type": "boolean"
+        },
+        "canSearchFor": {
+          "type": "boolean"
+        },
+        "isCollectible": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "const": "individual",
+              "type": "string"
+            },
+            {
+              "const": "group",
+              "type": "string"
+            },
+            {
+              "const": "globalGroup",
+              "type": "string"
+            }
+          ]
+        },
+        "isDefault": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "pinColor": {
+          "$ref": "#/definitions/Colour3"
+        },
+        "size": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "autoNumberInChecklist",
+        "canSearchFor",
+        "isCollectible",
+        "isDefault",
+        "name",
+        "pinColor",
+        "size"
+      ],
+      "type": "object"
+    },
+    "MarkerLayer": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "overrideIcon": {
+          "$ref": "#/definitions/Title"
+        },
+        "subtleText": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Point": {
+      "items": {
+        "type": "number"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "Title": {
+      "pattern": "[A-Za-z0-9_-]+",
+      "type": "string"
+    }
+  }
+}

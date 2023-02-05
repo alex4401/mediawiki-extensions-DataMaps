@@ -2,7 +2,8 @@
 	"private": true,
 	"scripts": {
 		"lint:js": "eslint --cache --max-warnings 0 .",
-		"lint:styles": "stylelint \"**/*.{less,css}\""
+		"lint:styles": "stylelint \"**/*.{less,css}\"",
+		"schema": "ts-json-schema-generator --path \"schemas/src/**/*.ts\" --strict-tuples --type DataMap -o schemas/generated.json"
 	},
 	"devDependencies": {
 		"@types/oojs-ui": "^0.46.0",
@@ -11,6 +12,7 @@
 		"eslint-plugin-deprecation": "^1.3.3",
 		"stylelint-config-idiomatic-order": "9.0.0",
 		"stylelint-config-wikimedia": "0.13.1",
+		"ts-json-schema-generator": "^1.2.0",
 		"types-mediawiki": "^1.3.0"
 	}
 }
