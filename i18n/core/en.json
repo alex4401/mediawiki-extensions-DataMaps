@@ -4,21 +4,16 @@
             "alex4401"
         ]
     },
-
     "datamap-desc": "Allows embedding of interactive maps into wiki pages.",
-
-	"content-model-datamap": "Interactive Data Map",
+    "content-model-datamap": "Interactive Data Map",
     "datamap-standard-title-prefix": "",
-
     "datamap-doc-page-suffix": "/doc",
     "datamap-doc-page-does-not-exist": "''Documentation for this data page may be created at [[$1]]''",
     "datamap-doc-page-show": "{{$1}}\n<hr />",
     "datamap-doc-page-header": "'''This is the documentation page for [[$1]]'''",
-
     "datamap-category-pages-including-maps": "Pages including data maps",
     "datamap-category-pages-including-broken-maps": "Pages including data maps failing validation",
     "datamap-category-maps-failing-validation": "Maps failing data validation",
-
     "datamap-error-validate-check-docs": "Check the [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps extension's documentation] for information about the proper structure.",
     "datamap-error-validate-invalid-json": "This is not a valid JSON document.",
     "datamap-error-bad-schema-origin": "Missing or invalid <code>$schema</code> field. This must point at a supported schema definition, like <code>$1</code>.",
@@ -37,7 +32,6 @@
     "datamap-error-validate-deprecated-field": "Field <code>$2</code> in structure $1 has been deprecated in version $3, and will be removed in version $4.",
     "datamap-error-validate-no-file": "File [[:File:$1|$1]] linked, but it has not been uploaded yet to the wiki.",
     "datamap-error-validate-limit": "Too many errors encountered during structure validation: $1.",
-
     "datamap-error-validatespec-group-no-display": "Marker group \"$1\" has no display settings. Add the <code>icon</code> and/or <code>fillColor</code> properties.",
     "datamap-error-validatespec-map-no-group-name": "A marker group with no (or an empty) name has been defined. Assign it a unique name.",
     "datamap-error-validatespec-map-illegal-group-name": "White-space (such as spaces) is not allowed in names of marker groups: <code>$1</code>.",
@@ -49,7 +43,6 @@
     "datamap-error-validatespec-map-uid-conflict": "Found a non-unique marker identifier: <code>$1</code>.",
     "datamap-error-validatespec-map-mixin-with-mixins": "A mix-in must not use other mix-ins.",
     "datamap-error-validatespec-bgoverlay-invalid-polyline": "Polyline background overlay's <code>path</code> property must be a list of points.",
-
     "datamap-error-internal-unknown-field-type": "No validation support implemented for field type with ID of $1. This is a bug in the extension's code.",
     "datamap-error-render-unsupported-displaymode": "Display mode $1 has been reported for a marker, but support is missing for it. This is a bug in the extension's code.",
     "datamap-error-pf-page-does-not-exist": "Data map page \"[[$1]]\" does not exist.",
@@ -57,7 +50,6 @@
     "datamap-error-map-validation-fail": "The [[$1|data map's source code]] no longer passes data validation. Please fix the errors.",
     "datamap-error-map-validation-fail-full": "The data map no longer passes data validation. Please fix the errors first:<br/>$1",
     "datamap-error-cannot-preview-validation-errors": "<b>Edit preview not shown due to error(s) in map's source code:</b><br/>$1",
-
     "datamap-legend-label": "Contents",
     "datamap-javascript-required": "Interactive data maps require JavaScript to be enabled.",
     "datamap-loading-data": "Please wait, loading data",
@@ -69,20 +61,16 @@
     "datamap-layer-control": "Toggle",
     "datamap-legend-tab-checklist": "Checklists",
     "datamap-checklist-prelude": "These are the items you can mark as collected:",
-
     "datamap-interact-touch": "Use two fingers to move the map",
     "datamap-interact-scroll": "Use CTRL + Scroll to zoom the map",
-    "datamap-interact-scroll-mac": "Use \u2318 + Scroll to zoom the map",
-
+    "datamap-interact-scroll-mac": "Use ⌘ + Scroll to zoom the map",
     "datamap-layer-surface": "Surface",
     "datamap-layer-cave": "Caves",
-
     "datamap-popup-related-article": "Read more",
     "datamap-popup-dismissed": "Collected",
     "datamap-popup-mark-as-dismissed": "Mark as collected",
     "datamap-popup-marker-link-get": "Get a shareable link",
     "datamap-popup-marker-link-copied": "Link copied to your clipboard.",
-
     "datamap-coordinate-control-text": "lat $1, lon $2",
     "datamap-coordinate-control-text-xy": "x: $2, y: $1",
     "datamap-control-zoom-in": "Zoom in",
@@ -91,6 +79,6 @@
     "datamap-control-reset-view": "Restore default view",
     "datamap-control-centre-view": "Center view at current zoom level",
     "datamap-control-edit": "Edit map data",
-    "datamap-control-search": "Type here to search markers...",
+    "datamap-control-search": "Type here to search markers…",
     "datamap-control-search-toggle-sharing": "All maps"
 }
