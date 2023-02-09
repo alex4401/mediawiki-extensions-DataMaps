@@ -192,6 +192,8 @@ class ConvertMaps extends Maintenance {
 
         // Create a new object that will contain the output
         $dmData = new stdclass();
+        // Set schema
+        $dmData->{'$schema'} = DataMapContent::getPublicSchemaUrl( 'v0.15' );
         // Retrieve coordinate system information
         $coordOrder = $fmData->coordinateOrder;
         $coordSpace = $fmData->mapBounds;
