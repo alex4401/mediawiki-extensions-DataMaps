@@ -88,12 +88,12 @@ class HookHandler implements
 
     public function onGetPreferences( $user, &$preferences ) {
         if ( ExtensionConfig::isVisualEditorEnabled() ) {
-            $preferences['datamaps-enable-visual-editor'] = [
+            $preferences[Constants::PREFERENCE_ENABLE_VE__FUTURE] = [
                 'type' => 'toggle',
                 'label-message' => 'datamap-userpref-enable-ve',
                 'section' => 'editing/editor'
             ];
-            $preferences['datamaps-opt-in-visual-editor-beta'] = [
+            $preferences[Constants::PREFERENCE_ENABLE_VE] = [
                 'type' => 'toggle',
                 'label-message' => 'datamap-userpref-enable-ve-beta',
                 'section' => 'editing/editor'
@@ -111,9 +111,9 @@ class HookHandler implements
         return ExtensionConfig::isVisualEditorEnabled()
             && $title->getNamespace() === ExtensionConfig::getNamespaceId()
             && $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP )
-            && $prefsLookup->getOption( $user, /*datamaps-enable-visual-editor*/ 'datamaps-opt-in-visual-editor-beta' )
             && $title->exists()
-            && count( $pageProps->getProperties( $title, 'ext.datamaps.isIneligibleForVE' ) ) <= 0;
+            && $prefsLookup->getBoolOption( $user, Constants::PREFERENCE_ENABLE_VE )
+            && count( $pageProps->getProperties( $title, Constants::PAGEPROP_DISABLE_VE ) ) <= 0;
     }
 
     private function canCreateMapWithGui( Title $title ): bool {

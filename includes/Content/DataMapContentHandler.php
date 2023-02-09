@@ -6,6 +6,7 @@ use Html;
 use JsonContentHandler;
 use MediaWiki\Content\Renderer\ContentParseParams;
 use MediaWiki\Content\ValidationParams;
+use MediaWiki\Extension\DataMaps\Constants;
 use MediaWiki\Extension\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\DataMaps\Rendering\EmbedRenderOptions;
 use MediaWiki\MediaWikiServices;
@@ -136,8 +137,8 @@ class DataMapContentHandler extends JsonContentHandler {
                 $parserOutput->setText( $parserOutput->getRawText() . $embed->getHtml( new EmbedRenderOptions() ) );
             }
         } else {
-            $parserOutput->setPageProperty( 'ext.datamaps.isMapMixin', true );
-            $parserOutput->setPageProperty( 'ext.datamaps.isIneligibleForVE', true );
+            $parserOutput->setPageProperty( Constants::PAGEPROP_IS_MIXIN, true );
+            $parserOutput->setPageProperty( Constants::PAGEPROP_DISABLE_VE, true );
         }
     }
 }
