@@ -251,6 +251,19 @@ class DataMap extends EventEmitter {
 
 
     /**
+     * @param {null|'info'|'error'} severity
+     * @param {string} [html]
+     */
+    setStatusOverlay( severity, html ) {
+        this.statusElement.classList[ severity === 'error' ? 'add' : 'remove' ]( 'error' );
+        this.statusElement.style.display = severity ? 'block' : 'none';
+        if ( html ) {
+            this.statusElement.innerHTML = html;
+        }
+    }
+
+
+    /**
      * @private
      */
     _setUpUriMarkerHandler() {

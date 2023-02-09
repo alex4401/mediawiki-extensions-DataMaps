@@ -55,11 +55,11 @@ mw.dataMaps = {
         // Request markers from the API
         if ( map.config.version ) {
             map.streaming.loadSequential()
-                .then( () => map.$status.hide() )
-                .catch( () => map.$status.show().html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' ) );
+                .then( () => map.setStatusOverlay( null ) )
+                .catch( () => map.setStatusOverlay( 'error', mw.msg( 'datamap-error-dataload' ) ) );
         } else {
             // No page to request markers from, hide the status message
-            map.$status.hide();
+            map.setStatusOverlay( null );
         }
 
         return map;
