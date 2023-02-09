@@ -1,5 +1,6 @@
 /** @typedef {import( '../map.js' )} DataMap */
-const { MapFlags } = require( '../enums.js' );
+const { MapFlags } = require( '../enums.js' ),
+    Util = require( '../util.js' );
 
 
 /**
@@ -35,7 +36,7 @@ class LegendTabber {
          *
          * @type {jQuery}
          */
-        this.$root = this.rootWidget.$element.prependTo( /** @type {!HTMLElement} */ ( this.map.rootElement.querySelector(
+        this.$root = this.rootWidget.$element.prependTo( Util.getNonNull( this.map.rootElement.querySelector(
             ':scope > .datamap-container-content' ) ) );
         /**
          * Tabber layout of the legend.
@@ -57,7 +58,7 @@ class LegendTabber {
      * @param {string} name
      * @param {string[]} [cssClasses]
      * @param {boolean} [visible]
-     * @return {Tab}
+     * @return {LegendTabber.Tab}
      */
     createTab( name, cssClasses, visible ) {
         return new LegendTabber.Tab( this, name, cssClasses ).setVisible( !!visible );
@@ -71,27 +72,6 @@ class LegendTabber {
         this.rootWidget.setDisabled( !( this.map.isFeatureBitSet( MapFlags.VisualEditor )
             || this.layout.getTabs().getItemCount() > 0 ) );
     }
-
-
-    /**
-     * TODO: move into a separate class
-     *
-     * @param {jQuery} $parent
-     * @param {string} label
-     * @param {boolean} defaultState
-     * @param {( value: boolean ) => void} changeCallback
-     * @return {[ OO.ui.CheckboxInputWidget, OO.ui.FieldLayout ]}
-     */
-    createCheckboxField( $parent, label, defaultState, changeCallback ) {
-        const checkbox = new OO.ui.CheckboxInputWidget( { selected: defaultState } );
-        const field = new OO.ui.FieldLayout( checkbox, {
-            label,
-            align: 'inline'
-        } );
-        checkbox.on( 'change', () => changeCallback( checkbox.isSelected() ) );
-        field.$element.appendTo( $parent );
-        return [ checkbox, field ];
-    }
 }
 
 
@@ -101,7 +81,7 @@ class LegendTabber {
  *
  * You should {@link LegendTabber.addTab add the tab} first to a {@link LegendTabber} before calling any of its methods.
  */
-class Tab {
+LegendTabber.Tab = class Tab {
     /**
      * @param {LegendTabber} tabber
      * @param {string} name
@@ -146,11 +126,7 @@ class Tab {
         this.tabber.updateVisibility();
         return this;
     }
-}
-
-
-// Workaround for TypeScript not recognising classes when they're a property on another class
-LegendTabber.Tab = Tab;
+};
 
 
 module.exports = LegendTabber;

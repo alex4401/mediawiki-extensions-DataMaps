@@ -39,7 +39,7 @@ module.exports = class MarkerGroupEditor {
             disabled: true
         } );
         this.collectibleModeEd = new OO.ui.RadioSelectInputWidget( {
-            value: Util.getGroupCollectibleType( this.group ),
+            value: Util.Groups.getCollectibleType( this.group ),
             options: [
                 { data: null, label: 'None' },
                 { data: Enums.MarkerGroupFlags.Collectible_Individual, label: 'Individual' },

@@ -42,13 +42,6 @@ class DataMap extends EventEmitter {
          */
         this.rootElement = rootElement;
         /**
-         * Root DOM element of the data map, jQuery.
-         *
-         * @deprecated since v0.15.0; will be removed in v0.16.0. Use {@link DataMap.rootElement}.
-         * @type {jQuery}
-         */
-        this.$root = $( rootElement );
-        /**
          * Setup configuration.
          *
          * @type {DataMaps.Configuration.Map}
@@ -101,14 +94,7 @@ class DataMap extends EventEmitter {
          *
          * @type {HTMLElement}
          */
-        this.statusElement = /** @type {!HTMLElement} */ ( rootElement.querySelector( '.datamap-status' ) );
-        /**
-         * DOM element to display any status messages.
-         *
-         * @deprecated since v0.15.0; will be removed in v0.16.0. Use {@link DataMap.statusElement}.
-         * @type {jQuery}
-         */
-        this.$status = $( this.statusElement );
+        this.statusElement = /** @type {HTMLElement} */ ( Util.getNonNull( rootElement.querySelector( '.datamap-status' ) ) );
         /**
          * Instance of the tab manager in the legend. Only initialised when legend is done loading, if it's enabled.
          *
@@ -221,7 +207,7 @@ class DataMap extends EventEmitter {
         this.on( 'markerVisibilityUpdate', this.refreshMaxBounds, this );
         this.on( 'legendManager', this._initialiseFiltersPanel, this );
         if ( !this.isFeatureBitSet( MapFlags.VisualEditor ) && Object.values( this.config.groups ).some( x =>
-            Util.getGroupCollectibleType( x ) ) ) {
+            Util.Groups.getCollectibleType( x ) ) ) {
             this.on( 'legendManager', this._initialiseCollectiblesPanel, this );
         }
 
@@ -238,7 +224,8 @@ class DataMap extends EventEmitter {
             if ( Leaflet === null ) {
                 Leaflet = Util.getLeaflet();
             }
-            this._initialiseLeaflet( /** @type {!HTMLElement} */ ( this.rootElement.querySelector( '.datamap-holder' ) ) );
+            this._initialiseLeaflet( /** @type {HTMLElement} */ ( Util.getNonNull( this.rootElement.querySelector(
+                '.datamap-holder' ) ) ) );
         } );
 
         // Load search add-on
@@ -413,11 +400,11 @@ class DataMap extends EventEmitter {
      * @return {boolean} New state.
      */
     toggleMarkerDismissal( leafletMarker ) {
-        const groupId = leafletMarker.attachedLayers[ 0 ];
-        const mode = Util.getGroupCollectibleType( this.config.groups[ groupId ] );
-        const isIndividual = mode === MarkerGroupFlags.Collectible_Individual,
-            storage = this.getStorageForMarkerGroup( this.config.groups[ groupId ] );
-        const state = storage.toggleDismissal( isIndividual ? Util.getMarkerId( leafletMarker ) : groupId, !isIndividual );
+        const groupId = leafletMarker.attachedLayers[ 0 ],
+            mode = Util.Groups.getCollectibleType( this.config.groups[ groupId ] ),
+            isIndividual = mode === MarkerGroupFlags.Collectible_Individual,
+            storage = this.getStorageForMarkerGroup( this.config.groups[ groupId ] ),
+            state = storage.toggleDismissal( isIndividual ? Util.getMarkerId( leafletMarker ) : groupId, !isIndividual );
         if ( isIndividual ) {
             // Update this marker only
             leafletMarker.setDismissed( state );
@@ -476,7 +463,7 @@ class DataMap extends EventEmitter {
                 let markerIcon = group.markerIcon;
                 const override = layers.find( x => this.config.layers[ x ] && this.config.layers[ x ].markerIcon );
                 if ( override ) {
-                    markerIcon = /** @type {!string} */ ( this.config.layers[ override ].markerIcon );
+                    markerIcon = Util.getNonNull( this.config.layers[ override ].markerIcon );
                 }
 
                 this._iconCache[ markerType ] = new Leaflet.Icon( {
@@ -564,7 +551,7 @@ class DataMap extends EventEmitter {
         this.layerManager.addMember( layers, leafletMarker );
 
         // Update dismissal status if storage says it's been dismissed
-        const collectibleMode = Util.getGroupCollectibleType( group );
+        const collectibleMode = Util.Groups.getCollectibleType( group );
         if ( collectibleMode ) {
             const isIndividual = collectibleMode === MarkerGroupFlags.Collectible_Individual,
                 storage = this.getStorageForMarkerGroup( group );
@@ -917,7 +904,8 @@ class DataMap extends EventEmitter {
      * @return {HTMLElement}
      */
     resolveControlAnchor( anchor ) {
-        return /** @type {!HTMLElement} */ ( this.rootElement.querySelector( `.leaflet-control-container ${anchor}` ) );
+        return /** @type {HTMLElement} */ ( Util.getNonNull( this.rootElement.querySelector(
+            `.leaflet-control-container ${anchor}` ) ) );
     }
 
 
@@ -926,15 +914,14 @@ class DataMap extends EventEmitter {
      *
      * Requires the Leaflet map to be initialised.
      *
-     * @deprecated Passing in a jQuery object since v0.15.0. Use {@link Controls.MapControl} or raw HTML elements.
-     * @template {jQuery|HTMLElement|Controls.MapControl} T
+     * @template {HTMLElement|Controls.MapControl} T
      * @param {DataMap.anchors[ keyof DataMap.anchors ]} anchor Anchor selector.
      * @param {T} control Control to add.
      * @param {boolean} [prepend] Whether to add the control to the beginning of the anchor.
      * @return {T} {@link control} for chaining.
      */
     addControl( anchor, control, prepend ) {
-        const controlElement = $( control instanceof Controls.MapControl ? control.element : control )[ 0 ],
+        const controlElement = /** @type {HTMLElement} */ ( control instanceof Controls.MapControl ? control.element : control ),
             anchorElement = this.resolveControlAnchor( anchor ),
             beforeInlineGroup = prepend && anchorElement.querySelector( ':scope > .datamap-control-group' );
         if ( beforeInlineGroup ) {

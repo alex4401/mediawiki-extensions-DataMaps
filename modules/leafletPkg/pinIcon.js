@@ -8,7 +8,8 @@ module.exports = Leaflet.DivIcon.extend( {
 
 
     createIcon( oldIcon ) {
-        const root = ( oldIcon && oldIcon.tagName === 'SVG' ) ? oldIcon : mw.dataMaps.Util.createPinIconElement();
+        const root = ( oldIcon && oldIcon.tagName === 'SVG' ) ? oldIcon
+            : require( 'ext.datamaps.core' ).Util.createPinIconElement();
         root.setAttribute( 'fill', this.options.colour );
         root.style.marginLeft = `${-this.options.iconSize[ 0 ] / 2}px`;
         root.style.marginTop = `${-this.options.iconSize[ 1 ] / 2}px`;

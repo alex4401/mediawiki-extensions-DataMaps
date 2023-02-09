@@ -1,5 +1,9 @@
 const Util = require( './util.js' ),
-    EventEmitter = mw.dataMaps.EventEmitter,
+    {
+        EventEmitter,
+        MarkerGroupFlags,
+        Util: CoreUtil,
+    } = require( 'ext.datamaps.core' ),
     Fuzzysort = require( 'ext.datamaps.fuzzysort' );
 
 
@@ -62,8 +66,8 @@ class MarkerSearchIndex extends EventEmitter {
 
     add( map, leafletMarker ) {
         if ( leafletMarker.apiInstance[ 2 ].search === 0
-            || mw.dataMaps.Util.isBitSet( map.config.groups[ leafletMarker.attachedLayers[ 0 ] ].flags,
-                mw.dataMaps.Enums.MarkerGroupFlags.CannotBeSearched ) ) {
+            || CoreUtil.isBitSet( map.config.groups[ leafletMarker.attachedLayers[ 0 ] ].flags,
+                MarkerGroupFlags.CannotBeSearched ) ) {
             return;
         }
 
@@ -110,7 +114,7 @@ MarkerSearchIndex.ChildIndex = class ChildIndex extends MarkerSearchIndex {
         const copy = Object.assign( {}, info );
         // eslint-disable-next-line compat/compat
         copy.keywords = Array.from( info.keywords );
-        copy.keywords.push( [ Util.TabberNeue.getOwningPanel( info.map.$root ).attr( 'title' ), 0.2 ] );
+        copy.keywords.push( [ CoreUtil.TabberNeue.getOwningPanel( info.map.$root ).attr( 'title' ), 0.2 ] );
         // eslint-disable-next-line no-underscore-dangle
         this.parent._enqueue( copy );
     }

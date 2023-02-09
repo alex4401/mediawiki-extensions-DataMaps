@@ -41,18 +41,18 @@ module.exports = class MarkerStreamingManager {
      * @return {Promise<Record<string, any>>}
      */
     callApiReliable( options, retries, waitTime ) {
-        retries = retries || retries === 0 ? retries : 2;
-        waitTime = waitTime || 60;
+        const safeRetries = retries || retries === 0 ? retries : 2,
+            safeWaitTime = waitTime || 60;
         return new Promise( ( resolve, reject ) => {
             // eslint-disable-next-line no-promise-executor-return
             return this.callApiUnreliable( options )
                 .then( resolve )
                 .catch( reason => {
-                    if ( /** @type {number} */ ( retries ) > 0 ) {
+                    if ( safeRetries > 0 ) {
                         // eslint-disable-next-line no-promise-executor-return
-                        return new Promise( r => setTimeout( r, /** @type {number} */ ( waitTime ) * 2 ) )
-                            .then( this.callApiReliable.bind( this, options, /** @type {number} */ ( retries ) - 1,
-                                /** @type {number} */ ( waitTime ) * 2 ) )
+                        return new Promise( r => setTimeout( r, safeWaitTime ) * 2 )
+                            .then( this.callApiReliable.bind( this, options, safeRetries - 1,
+                                safeWaitTime * 2 ) )
                             .then( resolve )
                             .catch( reject );
                     }

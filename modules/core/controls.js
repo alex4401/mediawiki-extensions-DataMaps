@@ -1,6 +1,6 @@
 /** @typedef {import( './map.js' )} DataMap */
 const { CRSOrigin } = require( './enums.js' ),
-    { createDomElement } = require( './util.js' );
+    { createDomElement, getNonNull } = require( './util.js' );
 
 
 /**
@@ -224,8 +224,7 @@ class LegendPopup extends MapControl {
             labelBeforeIcon: true,
             clickHandler: () => {
                 this.map.rootElement.classList.toggle( 'datamap-is-legend-toggled-on' );
-                /** @type {!HTMLElement} */ ( this.element.querySelector( 'span' ) ).classList
-                    .toggle( 'oo-ui-image-progressive' );
+                getNonNull( this.element.querySelector( 'span' ) ).classList.toggle( 'oo-ui-image-progressive' );
             }
         } );
     }

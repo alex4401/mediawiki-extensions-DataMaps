@@ -25,6 +25,9 @@ module.exports = Object.freeze( {
         .DataMapsAllowExperimentalFeatures,
 
     /**
+     * Throws an exception if the value is null or undefined. Returns it back otherwise. This exists primarily to satisfy
+     * TypeScript's type checking.
+     *
      * @template T
      * @param {T|null|undefined} value
      * @return {T}
@@ -122,10 +125,9 @@ module.exports = Object.freeze( {
      */
     getLeaflet() {
         if ( Leaflet === null ) {
-            // @ts-ignore: module resolution error
-            Leaflet = require( 'ext.datamaps.leaflet' );
+            Leaflet = /** @type {LeafletModule} */ ( require( 'ext.datamaps.leaflet' ) );
         }
-        return /** @type {LeafletModule} */ ( Leaflet );
+        return Leaflet;
     },
 
 
@@ -149,7 +151,7 @@ module.exports = Object.freeze( {
          */
         createIconElement( group ) {
             return $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src',
-                /** @type {!string} */ ( group.legendIcon ) );
+                module.exports.getNonNull( group.legendIcon ) );
         },
 
 
@@ -187,53 +189,6 @@ module.exports = Object.freeze( {
         }
     },
 
-    /**
-     * Returns the collectible type of a marker group, or zero if none.
-     *
-     * @deprecated To be removed before v0.15 release, no known usages in external code; use Util.groups.getCollectibleType
-     * @param {DataMaps.Configuration.MarkerGroup} group
-     * @return {number}
-     */
-    getGroupCollectibleType( group ) {
-        return module.exports.Groups.getCollectibleType( group );
-    },
-
-
-    /**
-     * Creates an image DOM element showing a marker group's icon.
-     *
-     * @deprecated To be removed before v0.15 release, no known usages in external code; use Util.groups.createIconElement
-     * @param {DataMaps.Configuration.MarkerGroup} group
-     * @return {jQuery}
-     */
-    createGroupIconElement( group ) {
-        return module.exports.Groups.createIconElement( group );
-    },
-
-
-    /**
-     * Creates an SVG element showing a marker group's pin icon.
-     *
-     * @deprecated To be removed before v0.15 release, no known usages in external code; use Util.groups.createPinIconElement
-     * @param {DataMaps.Configuration.PinMarkerGroup} group
-     * @return {jQuerySVG}
-     */
-    createGroupPinIconElement( group ) {
-        return module.exports.Groups.createPinIconElement( group );
-    },
-
-
-    /**
-     * Creates a DOM element showing a marker group's coloured circle representation.
-     *
-     * @deprecated To be removed before v0.15 release, no known usages in external code; use Util.groups.createCircleElement
-     * @param {DataMaps.Configuration.CircleMarkerGroup} group
-     * @return {jQuery}
-     */
-    createGroupCircleElement( group ) {
-        return module.exports.Groups.createCircleElement( group );
-    },
-
 
     /**
      * Creates an SVG element of a pin-shaped icon.
@@ -254,11 +209,9 @@ module.exports = Object.freeze( {
         circle.setAttribute( 'fill', '#0009' );
         root.appendChild( path );
         root.appendChild( circle );
-
         if ( colour ) {
             root.setAttribute( 'fill', colour );
         }
-
         return root;
     },
 
@@ -271,8 +224,7 @@ module.exports = Object.freeze( {
      */
     getGeneratedMarkerId( leafletMarker ) {
         const type = leafletMarker.attachedLayers.join( ' ' );
-        const out = `M${type}@${leafletMarker.apiInstance[ 0 ].toFixed( 3 )}:${leafletMarker.apiInstance[ 1 ].toFixed( 3 )}`;
-        return out;
+        return `M${type}@${leafletMarker.apiInstance[ 0 ].toFixed( 3 )}:${leafletMarker.apiInstance[ 1 ].toFixed( 3 )}`;
     },
 
 
@@ -344,7 +296,6 @@ module.exports = Object.freeze( {
          * @return {HTMLElement?}
          */
         getOwningPanel( element ) {
-            // TODO: use native functions
             return element.closest( 'article.tabber__panel' );
         },
 
@@ -366,7 +317,7 @@ module.exports = Object.freeze( {
          */
         getOwningId( element ) {
             const panel = module.exports.TabberNeue.getOwningPanel( element );
-            return panel ? ( panel.getAttribute( 'id' ) || /** @type {!string} */ ( panel.dataset.title ).replace( ' ', '_' ) )
+            return panel ? ( panel.getAttribute( 'id' ) || module.exports.getNonNull( panel.dataset.title ).replace( ' ', '_' ) )
                 : null;
         }
     }

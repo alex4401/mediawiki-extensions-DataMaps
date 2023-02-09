@@ -1,4 +1,5 @@
-const Leaflet = require( 'ext.datamaps.leaflet' );
+const Leaflet = require( 'ext.datamaps.leaflet' ),
+    CoreModule = require( 'ext.datamaps.core' );
 
 
 function MenuOptionWidget( config ) {
@@ -21,7 +22,7 @@ function MenuOptionWidget( config ) {
         ? this.data.map.getIconFromLayers( this.data.leafletMarker.attachedLayers ) : null;
     if ( icon ) {
         if ( icon instanceof Leaflet.Ark.PinIcon ) {
-            this.$arkIcon = $( mw.dataMaps.Util.createPinIconElement( icon.options.colour ) ).attr( {
+            this.$arkIcon = $( CoreModule.Util.createPinIconElement( icon.options.colour ) ).attr( {
                 width: 16,
                 height: 16
             } );
