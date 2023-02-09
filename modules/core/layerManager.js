@@ -27,27 +27,31 @@ module.exports = class MarkerLayerManager {
         /**
          * Permitted layer names
          *
+         * @private
          * @type {Set<string>}
          */
-        this.includeMaskHi = new Set();
+        this._includeMaskHi = new Set();
         /**
          * Required layer names (that must be present on a marker for it to be displayed)
          *
+         * @private
          * @type {Set<string>}
          */
-        this.includeMaskLo = new Set();
+        this._includeMaskLo = new Set();
         /**
          * Excluded layer names
          *
+         * @private
          * @type {Set<string>}
          */
-        this.excludeMask = new Set();
+        this._excludeMask = new Set();
         /**
          * Parametrised requirements
          *
+         * @private
          * @type {Record<string, string>}
          */
-        this.includeMaskPr = {};
+        this._includeMaskPr = {};
         /**
          * Computed visibility cache.
          *
@@ -127,9 +131,9 @@ module.exports = class MarkerLayerManager {
      */
     shouldBeVisible( layers ) {
         // If requirement mask is not empty, and there is a layer inside the list does not have, return invisible
-        if ( this.includeMaskHi.size > 0 && !( () => {
+        if ( this._includeMaskHi.size > 0 && !( () => {
             let result = true;
-            for ( const name of this.includeMaskHi ) {
+            for ( const name of this._includeMaskHi ) {
                 result = result && layers.indexOf( name ) > 0;
             }
             return result;
@@ -138,21 +142,21 @@ module.exports = class MarkerLayerManager {
         }
 
         // If inclusion mask is not empty, and there is no overlap between it and queried layers, return invisible
-        if ( this.includeMaskLo.size > 0 && !layers.some( name => this.includeMaskLo.has( name ) ) ) {
+        if ( this._includeMaskLo.size > 0 && !layers.some( name => this._includeMaskLo.has( name ) ) ) {
             return false;
         }
 
         // If exclusion mask is not empty, and there is overlap between it and queried layers, return invisible
-        if ( this.excludeMask.size > 0 && layers.some( name => this.excludeMask.has( name ) ) ) {
+        if ( this._excludeMask.size > 0 && layers.some( name => this._excludeMask.has( name ) ) ) {
             return false;
         }
 
         // Compare against the property mask: if (and only if) there's a sub-layer with a differing value, return invisible
-        for ( const property in this.includeMaskPr ) {
+        for ( const property in this._includeMaskPr ) {
             // Check if this property is specified in the layers list
             if ( layers.some( name => name.indexOf( property + ':' ) >= 0 ) ) {
                 // Check if the value is matched
-                if ( layers.indexOf( `${property}:${this.includeMaskPr[ property ]}` ) < 0 ) {
+                if ( layers.indexOf( `${property}:${this._includeMaskPr[ property ]}` ) < 0 ) {
                     return false;
                 }
             }
@@ -227,11 +231,7 @@ module.exports = class MarkerLayerManager {
      * @param {boolean} state
      */
     setRequirement( layerName, state ) {
-        if ( state ) {
-            this.includeMaskHi.add( layerName );
-        } else {
-            this.includeMaskHi.delete( layerName );
-        }
+        this._includeMaskHi[ state ? 'add' : 'delete' ]( layerName );
         this.clearCache();
         this.updateMembers();
     }
@@ -244,10 +244,10 @@ module.exports = class MarkerLayerManager {
      * @param {string} value
      */
     setOptionalPropertyRequirement( propertyName, value ) {
-        if ( value === null && this.includeMaskPr[ propertyName ] ) {
-            delete this.includeMaskPr[ propertyName ];
+        if ( value === null && this._includeMaskPr[ propertyName ] ) {
+            delete this._includeMaskPr[ propertyName ];
         } else if ( value !== null ) {
-            this.includeMaskPr[ propertyName ] = value;
+            this._includeMaskPr[ propertyName ] = value;
         }
         this.clearCache();
         this.updateMembers();
@@ -261,11 +261,7 @@ module.exports = class MarkerLayerManager {
      * @param {boolean} state
      */
     setInclusion( layerName, state ) {
-        if ( state ) {
-            this.includeMaskLo.add( layerName );
-        } else {
-            this.includeMaskLo.delete( layerName );
-        }
+        this._includeMaskLo[ state ? 'add' : 'delete' ]( layerName );
         this.clearCache();
         this.updateMembers();
     }
@@ -278,11 +274,7 @@ module.exports = class MarkerLayerManager {
      * @param {boolean} state
      */
     setExclusion( layerName, state ) {
-        if ( state ) {
-            this.excludeMask.add( layerName );
-        } else {
-            this.excludeMask.delete( layerName );
-        }
+        this._excludeMask[ state ? 'add' : 'delete' ]( layerName );
         this.clearCache();
         this.updateMembers( layerName );
     }
