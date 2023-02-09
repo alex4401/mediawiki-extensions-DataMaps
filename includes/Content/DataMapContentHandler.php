@@ -10,6 +10,7 @@ use MediaWiki\Extension\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\DataMaps\Rendering\EmbedRenderOptions;
 use MediaWiki\MediaWikiServices;
 use ParserOutput;
+use stdClass;
 use Title;
 
 class DataMapContentHandler extends JsonContentHandler {
@@ -25,6 +26,12 @@ class DataMapContentHandler extends JsonContentHandler {
         return [
             'editmap' => EditMapAction::class,
         ];
+    }
+
+    public function makeEmptyContent() {
+        $raw = new stdClass();
+        $raw->{'$schema'} = DataMapContent::getPublicSchemaUrl( DataMapContent::PREFERRED_SCHEMA_VERSION );
+        return new DataMapContent( DataMapContent::toJSON( $raw ) );
     }
 
     /**
