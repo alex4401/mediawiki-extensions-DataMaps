@@ -9,7 +9,7 @@
     "datamap-standard-title-prefix": "",
     "datamap-doc-page-suffix": "/doc",
     "datamap-doc-page-does-not-exist": "''Documentation for this data page may be created at [[$1]]''",
-    "datamap-doc-page-show": "{{$1}}\n<hr />",
+    "datamap-doc-page-show": "{{$1}}",
     "datamap-doc-page-header": "'''This is the documentation page for [[$1]]'''",
     "datamap-category-pages-including-maps": "Pages including data maps",
     "datamap-category-pages-including-broken-maps": "Pages including data maps failing validation",
