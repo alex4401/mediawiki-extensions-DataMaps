@@ -251,6 +251,14 @@ class EmbedRenderer {
             'infusable' => true
         ] );
 
+        $legend->appendContent( new HtmlSnippet( Html::rawElement(
+            'div',
+            [
+                'class' => 'ext-datamaps-bouncing-dots'
+            ],
+            Html::element( 'div' )
+        ) ) );
+
         return $legend;
     }
 
@@ -265,10 +273,14 @@ class EmbedRenderer {
                 [
                     'class' => 'datamap-status datamap-overlay-status'
                 ],
-                wfMessage( 'datamap-loading-data' )
-                . ( new \OOUI\ProgressBarWidget( [
-                    'progress' => false
-                ] ) )->toString()
+                ( new \OOUI\ProgressBarWidget( [
+                    'progress' => false,
+                    'infusable' => true
+                ] ) )->toString() . Html::rawElement(
+                    'div',
+                    [],
+                    wfMessage( 'datamap-loading-data' )
+                )
             )
         );
     }
