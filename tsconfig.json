@@ -18,8 +18,9 @@
         ],
 		"baseUrl": "modules",
 		"paths": {
-			"ext.datamaps.core": [ "core/*" ],
-			"ext.datamaps.leaflet": [ "leafletPkg/*" ]
+			"ext.datamaps.core": [ "core/index.js" ],
+			"ext.datamaps.leaflet": [ "leafletPkg/index.js" ],
+			"ext.datamaps.fuzzysort": [ "vendor/fuzzysort/fuzzysort.min.js" ]
 		},
 		"allowJs": true,
 		"checkJs": true,

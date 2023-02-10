@@ -2,9 +2,10 @@ const Util = require( './util.js' ),
     {
         EventEmitter,
         MarkerGroupFlags,
-        Util: CoreUtil,
+        Util: CoreUtil
     } = require( 'ext.datamaps.core' ),
-    Fuzzysort = require( 'ext.datamaps.fuzzysort' );
+    Fuzzysort = require( 'ext.datamaps.fuzzysort' ),
+    getNonNull = CoreUtil.getNonNull;
 
 
 /**
@@ -110,12 +111,10 @@ MarkerSearchIndex.ChildIndex = class ChildIndex extends MarkerSearchIndex {
     _enqueue( info ) {
         this._queue.push( info );
         // Propagate the entry to the master index: copy it, push tabber title to its keywords, enqueue.
-        // eslint-disable-next-line compat/compat
         const copy = Object.assign( {}, info );
-        // eslint-disable-next-line compat/compat
         copy.keywords = Array.from( info.keywords );
-        copy.keywords.push( [ CoreUtil.TabberNeue.getOwningPanel( info.map.$root ).attr( 'title' ), 0.2 ] );
-        // eslint-disable-next-line no-underscore-dangle
+        copy.keywords.push( [ getNonNull( CoreUtil.TabberNeue.getOwningPanel( info.map.rootElement ) ).getAttribute( 'title' ),
+            0.2 ] );
         this.parent._enqueue( copy );
     }
 

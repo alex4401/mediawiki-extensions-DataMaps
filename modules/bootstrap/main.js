@@ -1,8 +1,10 @@
 const
-    /** @type {import( '../core' )} */ CoreModule = require( 'ext.datamaps.core' ),
-    DataMap = CoreModule.DataMap,
-    /** @type {typeof import( '../core/events.js' )} */ EventEmitter = CoreModule.EventEmitter,
-    /** @type {import( '../core/map.js' )[]} */ initialisedMaps = [],
+    {
+        DataMap,
+        EventEmitter,
+        Util
+    } = require( 'ext.datamaps.core' ),
+    /** @type {InstanceType<DataMap>[]} */ initialisedMaps = [],
     /** @type {number[]} */ ids = [],
     /** @type {import( '../core/events.js' ).EventHandlerRef[]} */ toNotify = [];
 
@@ -28,7 +30,7 @@ mw.dataMaps = {
      * @param {number} id
      * @param {HTMLElement} rootElement
      * @param {DataMaps.Configuration.Map} config
-     * @return {import( '../core/map.js' )}
+     * @return {InstanceType<DataMap>}
      */
     initialiseMapWithConfig( id, rootElement, config ) {
         // Set the map up
@@ -67,7 +69,7 @@ mw.dataMaps = {
 
 
     /**
-     * @param {( map: DataMap[] ) => void} callback
+     * @param {( map: InstanceType<DataMap> ) => void} callback
      * @param {any} [context]
      */
     onMapInitialised( callback, context ) {
@@ -84,7 +86,7 @@ mw.dataMaps = {
 
 
     /**
-     * @param {( map: DataMap[] ) => void} callback
+     * @param {( map: InstanceType<DataMap> ) => void} callback
      * @param {any} [context]
      */
     registerMapAddedHandler( callback, context ) {
@@ -97,7 +99,7 @@ mw.dataMaps = {
 mw.hook( 'wikipage.content' ).add( $content => {
     // Run initialisation for every map, followed by events for gadgets to listen to
     for ( const rootElement of /** @type {HTMLElement[]} */ ( $content.find( '.datamap-container[data-datamap-id]' ) ) ) {
-        const id = parseInt( CoreModule.Util.getNonNull( rootElement.dataset.datamapId ) ),
+        const id = parseInt( Util.getNonNull( rootElement.dataset.datamapId ) ),
             config = getConfig( rootElement );
         if ( config ) {
             ids.push( id );

@@ -4,16 +4,16 @@ const
         DataMap,
         Util,
         Controls
-    } = /** @type {import( '../core' )} */ ( require( 'ext.datamaps.core' ) );
-const
+    } = require( 'ext.datamaps.core' ),
     MarkerSearchIndex = require( './indexing.js' ),
     MenuWidget = require( './menu.js' ),
-    MenuOptionWidget = require( './option.js' );
+    MenuOptionWidget = require( './option.js' ),
+    getNonNull = Util.getNonNull;
 
 
 class MarkerSearch extends Controls.MapControl {
     /**
-     * @param {DataMap} map Owning map.
+     * @param {InstanceType<DataMap>} map Owning map.
      * @param {MarkerSearchIndex} index
      * @param {boolean} isLinked
      */
@@ -111,8 +111,9 @@ class MarkerSearch extends Controls.MapControl {
             label: new OO.ui.HtmlSnippet( item.label ),
             badge: this._getItemBadge( item ),
             badgeCurrent: item.map === this.map,
-            $tab: this.isLinked && item.map !== this.map ? Util.TabberNeue.getOwningTabber( item.map.rootElement )
-                .querySelector( '#' + Util.TabberNeue.getOwningPanel( item.map.rootElement ).getAttribute( 'aria-labelledby' ) )
+            $tab: this.isLinked && item.map !== this.map ? getNonNull( Util.TabberNeue.getOwningTabber( item.map.rootElement ) )
+                .querySelector( '#' + getNonNull( Util.TabberNeue.getOwningPanel( item.map.rootElement ) ).getAttribute(
+                    'aria-labelledby' ) )
                 : null
         };
     }
@@ -120,7 +121,7 @@ class MarkerSearch extends Controls.MapControl {
 
     _getItemBadge( item ) {
         if ( this.isLinked ) {
-            return Util.TabberNeue.getOwningPanel( item.map.rootElement ).attr( 'data-title' );
+            return getNonNull( Util.TabberNeue.getOwningPanel( item.map.rootElement ) ).getAttribute( 'data-title' );
         }
 
         const properties = item.leafletMarker.assignedProperties;
@@ -191,22 +192,31 @@ class MarkerSearch extends Controls.MapControl {
 }
 
 
+/**
+ * @type {Record<string, MarkerSearchIndex>}
+ */
 const sharedTabberIndexMap = {};
 mw.dataMaps.registerMapAddedHandler( map => {
     if ( map.isFeatureBitSet( MapFlags.Search ) ) {
         map.on( 'leafletLoaded', () => {
-            const isLinked = map.isFeatureBitSet( MapFlags.LinkedSearch ),
-                $tabber = Util.TabberNeue.getOwningTabber( map.$root );
+            let isLinked = map.isFeatureBitSet( MapFlags.LinkedSearch ),
+                tabberId = null;
+
+            if ( isLinked ) {
+                tabberId = Util.TabberNeue.getOwningId( map.rootElement );
+                isLinked = tabberId !== null;
+            }
+
             let index;
-            if ( isLinked && $tabber ) {
-                const masterIndex = sharedTabberIndexMap[ $tabber ] || new MarkerSearchIndex();
-                sharedTabberIndexMap[ $tabber ] = masterIndex;
+            if ( isLinked && tabberId !== null ) {
+                const masterIndex = sharedTabberIndexMap[ tabberId ] = sharedTabberIndexMap[ tabberId ]
+                    || new MarkerSearchIndex();
                 index = new MarkerSearchIndex.ChildIndex( masterIndex );
             } else {
                 index = new MarkerSearchIndex();
             }
 
-            map.search = map.addControl( DataMap.anchors.topLeftInline, new MarkerSearch( map, index, isLinked && $tabber ) );
+            map.search = map.addControl( DataMap.anchors.topLeftInline, new MarkerSearch( map, index, isLinked ) );
         } );
     }
 } );
