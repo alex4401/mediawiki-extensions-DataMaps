@@ -1,0 +1,13 @@
+.leaflet-interactionWarning-pane {
+    opacity: 0;
+    transition: opacity .1s;
+    pointer-events: none;
+    backdrop-filter: none;
+    z-index: 990;
+    background: #383939d4;
+    color: #fff;
+
+    &.datamap-is-interaction-rejected {
+        opacity: 0.9;
+    }
+}

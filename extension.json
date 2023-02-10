@@ -93,6 +93,12 @@
 			]
 		},
 
+		"ext.datamaps.core.styles": {
+			"styles": [
+				"core/css/early.less"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
 		"ext.datamaps.core": {
 			"es6": true,
 			"dependencies": [
@@ -123,10 +129,7 @@
 				}
 			],
 			"styles": [
-				"core/css/main.less",
-				"core/css/legend.less",
-				"core/css/controls.less",
-				"core/css/popups.less"
+				"core/css/interactive.less"
 			],
 			"messages": [
 				"datamap-error-dataload",

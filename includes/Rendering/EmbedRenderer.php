@@ -11,6 +11,8 @@ use MediaWiki\Extension\DataMaps\Data\MarkerSpec;
 use MediaWiki\Extension\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapFileUtils;
 use MediaWiki\MediaWikiServices;
+use OOUI\HtmlSnippet;
+use OOUI\PanelLayout;
 use Parser;
 use ParserOptions;
 use ParserOutput;
@@ -67,9 +69,12 @@ class EmbedRenderer {
     }
 
     public function addModules(): void {
+        $this->parserOutput->addModuleStyles( [
+            'ext.datamaps.core.styles'
+        ] );
         $this->parserOutput->addModules( [
-            // ext.datamaps.leaflet is loaded on demand (when a DataMap is initialised) in a separate request
-            // to not delay the site module
+            // ext.datamaps.leaflet is loaded on demand (when a DataMap is initialised) in a separate request to not delay the
+            // site module
             'ext.datamaps.core',
             // Initialiser module to boot the maps
             'ext.datamaps.bootstrap',
@@ -159,25 +164,25 @@ class EmbedRenderer {
 
     public function getHtml( ?EmbedRenderOptions $options = null ): string {
         // Primary slots
-        $containerMain = new \OOUI\PanelLayout( [
+        $containerMain = new PanelLayout( [
             'classes' => [ 'datamap-container' ],
             'framed' => true,
             'expanded' => false,
             'padded' => false
         ] );
-        $containerTop = new \OOUI\PanelLayout( [
+        $containerTop = new PanelLayout( [
             'classes' => [ 'datamap-container-top' ],
             'framed' => false,
             'expanded' => false,
             'padded' => false
         ] );
-        $containerContent = new \OOUI\PanelLayout( [
+        $containerContent = new PanelLayout( [
             'classes' => [ 'datamap-container-content' ],
             'framed' => false,
             'expanded' => false,
             'padded' => false
         ] );
-        $containerBottom = new \OOUI\PanelLayout( [
+        $containerBottom = new PanelLayout( [
             'classes' => [ 'datamap-container-bottom' ],
             'framed' => false,
             'expanded' => false,
@@ -207,12 +212,7 @@ class EmbedRenderer {
         }
 
         // Leaflet area
-        $containerMap = new \OOUI\PanelLayout( [
-            'framed' => true,
-            'expanded' => false,
-        ] );
-        $containerMap->appendContent( new \OOUI\HtmlSnippet( $this->getLeafletContainerHtml() ) );
-        $containerContent->appendContent( $containerMap );
+        $containerContent->appendContent( new HtmlSnippet( $this->getLeafletContainerHtml() ) );
 
         // Deliver map configuration via a <script> tag. Prior to v0.13.0 this was delivered via mw.config, but that has the
         // downside of slowing down the page load (config is delivered via head, but not actually used until the script is
@@ -225,7 +225,7 @@ class EmbedRenderer {
             've' => $this->forVisualEditor,
             'layers' => $options && $options->displayGroups || null
         ] );
-        $containerMain->appendContent( new \OOUI\HtmlSnippet( $config->makeElement() ) );
+        $containerMain->appendContent( new HtmlSnippet( $config->makeElement() ) );
 
         return $containerMain;
     }
@@ -243,7 +243,7 @@ class EmbedRenderer {
         return Html::rawElement(
             'div',
             [
-                'class' => 'datamap-holder'
+                'class' => 'datamap-holder oo-ui-layout oo-ui-panelLayout oo-ui-panelLayout-framed'
             ],
             Html::element(
                 'noscript',
