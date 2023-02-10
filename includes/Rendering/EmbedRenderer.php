@@ -236,11 +236,6 @@ class EmbedRenderer {
             'infusable' => true
         ] );
 
-        $legend->appendContent( new \OOUI\LabelWidget( [
-            'label' => wfMessage( 'datamap-legend-label' ),
-            'classes' => [ 'datamap-legend-label', 'oo-ui-tabSelectWidget-framed' ]
-        ] ) );
-
         return $legend;
     }
 
