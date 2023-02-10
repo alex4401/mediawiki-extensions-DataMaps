@@ -992,7 +992,8 @@ class DataMap extends EventEmitter {
      * @fires DataMap#legendManager
      */
     _onOOUILoaded() {
-        this.legend = new LegendTabber( this );
+        this.legend = new LegendTabber( this, /** @type {HTMLElement} */ ( Util.getNonNull( this.rootElement.querySelector(
+            '.datamap-container-legend' ) ) ) );
         this.fireMemorised( 'legendManager' );
     }
 

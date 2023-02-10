@@ -194,9 +194,11 @@ class EmbedRenderer {
         $containerMain->appendContent( $containerContent );
         $containerMain->appendContent( $containerBottom );
 
-        // Expose FF_HIDE_LEGEND flag
+        // Add legend to the output if it's enabled
         if ( $this->data->getSettings()->isLegendDisabled() ) {
             $containerMain->addClasses( [ 'datamap-legend-is-hidden' ] );
+        } else {
+            $containerContent->appendContent( $this->getLegendContainerWidget() );
         }
 
         // Set data attribute with filters if they are specified
@@ -226,6 +228,20 @@ class EmbedRenderer {
         $containerMain->appendContent( new \OOUI\HtmlSnippet( $config->makeElement() ) );
 
         return $containerMain;
+    }
+
+    protected function getLegendContainerWidget(): \OOUI\Widget {
+        $legend = new \OOUI\Widget( [
+            'classes' => [ 'datamap-container-legend' ],
+            'infusable' => true
+        ] );
+
+        $legend->appendContent( new \OOUI\LabelWidget( [
+            'label' => wfMessage( 'datamap-legend-label' ),
+            'classes' => [ 'datamap-legend-label', 'oo-ui-tabSelectWidget-framed' ]
+        ] ) );
+
+        return $legend;
     }
 
     public function getLeafletContainerHtml(): string {

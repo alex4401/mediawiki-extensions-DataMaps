@@ -9,8 +9,9 @@ const { MapFlags } = require( '../enums.js' ),
 class LegendTabber {
     /**
      * @param {DataMap} map Owning map.
+     * @param {HTMLElement} holderElement Element to host the legend in.
      */
-    constructor( map ) {
+    constructor( map, holderElement ) {
         /**
          * Owning map.
          *
@@ -18,19 +19,17 @@ class LegendTabber {
          */
         this.map = map;
         /**
+         * Legend container element.
+         *
+         * @type {HTMLElement}
+         */
+        this.rootElement = holderElement;
+        /**
          * Legend container widget.
          *
          * @type {OO.ui.Widget}
          */
-        this.rootWidget = new OO.ui.Widget( {
-            classes: [ 'datamap-container-legend' ],
-            content: [
-                new OO.ui.LabelWidget( {
-                    label: mw.msg( 'datamap-legend-label' ),
-                    classes: [ 'datamap-legend-label', 'oo-ui-tabSelectWidget-framed' ]
-                } )
-            ]
-        } );
+        this.rootWidget = /** @type {OO.ui.Widget} */ ( OO.ui.Widget.static.infuse( holderElement ) );
         /**
          * Root DOM element of the legend container.
          *
