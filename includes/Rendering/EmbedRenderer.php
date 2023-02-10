@@ -227,7 +227,22 @@ class EmbedRenderer {
         ] );
         $containerMain->appendContent( new HtmlSnippet( $config->makeElement() ) );
 
-        return $containerMain;
+        return Html::rawElement(
+            'noscript',
+            [
+                'class' => 'datamap-overlay-status'
+            ],
+            ( new \OOUI\MessageWidget( [
+                'type' => 'error',
+                'label' => wfMessage( 'datamap-javascript-required' )
+            ] ) )->toString() . Html::rawElement(
+                'style',
+                [
+                    'type' => 'text/css'
+                ],
+                '.datamap-container{display:none}'
+            )
+        ) . $containerMain;
     }
 
     protected function getLegendContainerWidget(): \OOUI\Widget {
@@ -245,14 +260,7 @@ class EmbedRenderer {
             [
                 'class' => 'datamap-holder oo-ui-layout oo-ui-panelLayout oo-ui-panelLayout-framed'
             ],
-            Html::element(
-                'noscript',
-                [
-                    'class' => 'datamap-overlay-status'
-                ],
-                wfMessage( 'datamap-javascript-required' )
-            )
-            . Html::rawElement(
+            Html::rawElement(
                 'div',
                 [
                     'class' => 'datamap-status datamap-overlay-status'
