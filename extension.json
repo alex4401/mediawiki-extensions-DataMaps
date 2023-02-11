@@ -172,7 +172,14 @@
 		},
 
 		"ext.datamaps.site": {
-			"class": "MediaWiki\\Extension\\DataMaps\\Rendering\\ResourceLoaderDataMapsSiteModule"
+			"class": "MediaWiki\\ResourceLoader\\WikiModule",
+			"scripts": [
+				"MediaWiki:DataMaps.js"
+			],
+			"styles": [
+				"MediaWiki:DataMaps.css"
+			],
+			"targets": [ "desktop", "mobile" ]
 		},
 
 		"ext.datamaps.inlineloader": {
