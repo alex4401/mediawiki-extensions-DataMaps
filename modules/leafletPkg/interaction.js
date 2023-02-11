@@ -49,8 +49,7 @@ module.exports = Leaflet.Handler.extend( {
         // * datamap-interact-scroll-mac
         // * datamap-interact-touch
         this._pane.innerText = mw.msg( `datamap-interact-${reason}${Leaflet.Browser.mac && reason === 'scroll' ? '-mac' : ''}` );
-        // eslint-disable-next-line mediawiki/class-doc
-        this._pane.classList.add( 'datamap-is-interaction-rejected' );
+        this._pane.dataset.active = true;
 
         if ( this._isRejectingInteraction ) {
             clearTimeout( this._isRejectingInteraction );
@@ -70,8 +69,7 @@ module.exports = Leaflet.Handler.extend( {
 
     removeWarning( reason ) {
         if ( this._isRejectingInteraction ) {
-            // eslint-disable-next-line mediawiki/class-doc
-            this._pane.classList.remove( 'datamap-is-interaction-rejected' );
+            this._pane.dataset.active = false;
             clearTimeout( this._isRejectingInteraction );
             this._isRejectingInteraction = null;
 
