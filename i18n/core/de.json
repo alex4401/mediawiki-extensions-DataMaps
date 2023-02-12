@@ -28,7 +28,7 @@
     "datamap-error-pf-page-invalid-content-model": "Inhaltsmodell der Seite \"[[$1]]\" ist nicht <code>datamap</code>.",
     "datamap-legend-label": "Legende",
     "datamap-javascript-required": "Interaktive Daten-Karte benötigt aktiviertes JavaScript.",
-    "datamap-loading-data": "Bitte warten, Daten werden geladen",
+    "datamap-loading-js": "Bitte warten, Daten werden geladen",
     "datamap-error-dataload": "<b>Konnte Daten nicht laden</b><br/>bitte neuladen oder später noch einmal probieren",
     "datamap-lazy-click-to-load": "Klicke um Daten-Karte zu laden.",
     "datamap-legend-tab-locations": "Marker",

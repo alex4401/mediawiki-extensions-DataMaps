@@ -277,7 +277,7 @@ class EmbedRenderer {
                 ] ) )->toString() . Html::rawElement(
                     'div',
                     [],
-                    wfMessage( 'datamap-loading-data' )
+                    wfMessage( 'datamap-loading-js' )
                 )
             )
         );

@@ -5,7 +5,7 @@
     inset: 0 0 0 0;
 
     &,
-    > div {
+    > :not( .oo-ui-widget ) {
         display: flex;
         height: 100%;
         flex-direction: column;
@@ -13,15 +13,16 @@
         justify-content: center;
     }
 
-    > div {
+    > :not( .oo-ui-widget ) {
         width: 100%;
+        flex-direction: column;
         backdrop-filter: blur( 5px );
         background: #e1e4ead4;
         color: #000;
         text-align: center;
     }
 
-    &.error > div {
+    &[ data-severity='error' ] > :not( .oo-ui-widget ) {
         background: #ddcfcfd4;
     }
 

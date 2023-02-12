@@ -254,12 +254,16 @@ class DataMap extends EventEmitter {
     /**
      * @param {null|'info'|'error'} severity
      * @param {string} [html]
+     * @param {boolean} [showProgressBar]
      */
-    setStatusOverlay( severity, html ) {
-        this.statusElement.classList[ severity === 'error' ? 'add' : 'remove' ]( 'error' );
+    setStatusOverlay( severity, html, showProgressBar ) {
+        this.statusElement.dataset.severity = severity || 'info';
         this.statusElement.style.display = severity ? 'block' : 'none';
         if ( html ) {
-            this.statusElement.innerHTML = html;
+            this.statusElement.children[ 1 ].innerHTML = html;
+        }
+        if ( showProgressBar !== undefined ) {
+            /** @type {HTMLElement} */ ( this.statusElement.children[ 0 ] ).style.display = showProgressBar ? 'block' : 'none';
         }
     }
 

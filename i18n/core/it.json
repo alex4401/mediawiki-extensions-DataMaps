@@ -32,7 +32,7 @@
     "datamap-error-cannot-preview-validation-errors": "<b>Anteprima di modifica non mostrata a causa di errori nel codice sorgente della mappa:</b><br/>$1",
     "datamap-legend-label": "Leggenda",
     "datamap-javascript-required": "Le mappe interattive dei dati richiedono l'abilitazione di JavaScript.",
-    "datamap-loading-data": "Attendere, caricamento dati",
+    "datamap-loading-js": "Attendere, caricamento dati",
     "datamap-lazy-click-to-load": "Fare clic per caricare la mappa dati",
     "datamap-legend-tab-locations": "Marcatori",
     "datamap-toggle-show-all": "Mostra tutto",

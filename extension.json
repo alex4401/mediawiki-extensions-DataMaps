@@ -132,6 +132,7 @@
 				"core/css/interactive.less"
 			],
 			"messages": [
+				"datamap-loading-data",
 				"datamap-error-dataload",
 				"datamap-legend-label",
 				"datamap-legend-tab-locations",

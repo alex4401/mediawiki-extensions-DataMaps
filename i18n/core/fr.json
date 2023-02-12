@@ -31,7 +31,7 @@
     "datamap-error-cannot-preview-validation-errors": "<b>Édition non prévisualisée en raison d'erreur(s) dans le code source de la page:</b><br/>$1",
     "datamap-legend-label": "Contenus",
     "datamap-javascript-required": "Les cartes de données interactives nécessitent que JavaScript soit activé.",
-    "datamap-loading-data": "Veuillez attendre, chargement des données",
+    "datamap-loading-js": "Veuillez attendre, chargement des données",
     "datamap-error-dataload": "<b>Impossible de charger les données</b><br/>veuillez rafraîchir ou réessayer plus tard",
     "datamap-lazy-click-to-load": "Cliquez pour charger la carte de données",
     "datamap-legend-tab-locations": "Marqueurs",

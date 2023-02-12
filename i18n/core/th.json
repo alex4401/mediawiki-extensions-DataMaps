@@ -13,7 +13,7 @@
     "datamap-category-pages-including-maps": "บทความที่มีแผนที่เชิงโต้ตอบ",
     "datamap-legend-label": "เนื้อหา",
     "datamap-javascript-required": "ต้องเปิดใช้งาน JavaScript สำหรับแผนที่ข้อมูลแบบโต้ตอบ",
-    "datamap-loading-data": "รอสักครู่ กำลังโหลดข้อมูล",
+    "datamap-loading-js": "รอสักครู่ กำลังโหลดข้อมูล",
     "datamap-error-dataload": "<b>ไม่สามารถโหลดข้อมูลได้</b><br/>โปรดรีเฟรชหน้านี้แล้วลองใหม่ภายหลัง",
     "datamap-lazy-click-to-load": "คลิกเพื่อโหลดแผนที่",
     "datamap-legend-tab-locations": "เครื่องหมาย",
