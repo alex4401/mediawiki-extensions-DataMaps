@@ -3,20 +3,20 @@
         position: absolute;
         top: 0;
         right: 24px;
-        border: none;
-        text-align: center;
-        font: 16px/24px Tahoma, Verdana, sans-serif;
+        border: 0;
         background: transparent;
+        font: 16px/24px 'Tahoma', 'Verdana', sans-serif;
+        text-align: center;
 
         a {
             display: block;
             width: 24px;
             height: 24px;
-            background-size: 16px;
             background-position: center 6px;
             background-repeat: no-repeat;
-            text-decoration: none;
+            background-size: 16px;
             opacity: 0.7;
+            text-decoration: none;
 
             &:hover {
                 opacity: 0.85;
@@ -30,18 +30,6 @@
         font-size: 96%;
     }
 
-    .ext-datamaps-popup-location {
-        margin-bottom: 0.5em;
-        color: #454545;
-    }
-
-    .ext-datamaps-popup-description ul {
-        margin: 0.3em 0 0 1em;
-        & + .ext-datamaps-popup-image {
-            margin-top: 0.5em;
-        }
-    }
-
     .ext-datamaps-popup-image {
         display: block;
         width: 250px;
@@ -53,23 +41,36 @@
     }
 
     .ext-datamaps-popup-tools {
-        list-style: none;
-        margin: 6px -8px -6px;
         display: flex;
         flex-wrap: wrap;
+        margin: 6px -8px -6px;
         gap: 0.5em;
+        list-style: none;
 
         li {
-            margin-bottom: 0;
             padding: 0.2em 0.5em;
             border: 1px solid #7776;
             border-radius: 4px;
-            transition: background .1s;
+            margin-bottom: 0;
+            transition: background @transition-duration-base;
 
             &:hover {
-                background: #a0a7aa54;
                 border-radius: 2px;
+                background: #a0a7aa54;
             }
+        }
+    }
+
+    .ext-datamaps-popup-location {
+        margin-bottom: 0.5em;
+        color: #454545;
+    }
+
+    .ext-datamaps-popup-description ul {
+        margin: 0.3em 0 0 1em;
+
+        & + .ext-datamaps-popup-image {
+            margin-top: 0.5em;
         }
     }
 }

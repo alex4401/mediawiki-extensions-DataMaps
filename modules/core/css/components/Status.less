@@ -47,26 +47,26 @@
     white-space: nowrap;
 
     div,
-    &::before,
-    &::after {
-        content: '';
+    &:before,
+    &:after {
+        display: inline-block;
         width: 2em;
         height: 2em;
-        display: inline-block;
-        background-color: #36c;
         border-radius: 100%;
         animation: bounce-delay 1600ms infinite ease-in-out both;
         animation-delay: -160ms;
+        background-color: #36c;
+        content: '';
     }
 
-    &::before {
-        margin-inline-end: 0.25em;
+    &:before {
         animation-delay: -330ms;
+        margin-inline-end: 0.25em;
     }
 
-    &::after {
-        margin-inline-start: 0.25em;
+    &:after {
         animation-delay: 0;
+        margin-inline-start: 0.25em;
     }
 }
 
