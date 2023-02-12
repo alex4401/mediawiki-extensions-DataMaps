@@ -97,26 +97,30 @@
 
 /* control positioning */
 
-.leaflet-control-container {
-	display: grid;
-	grid-template-rows: auto auto;
-	justify-content: stretch;
-	align-content: space-between;
-	height: 100%;
-	}
-.leaflet-control-container > .leaflet-top,
-.leaflet-control-container > .leaflet-bottom {
-	display: flex;
-	justify-content: space-between;
-	column-gap: 10px;
-}
-.leaflet-left {
-	flex-grow: 1;
-}
 .leaflet-control {
 	position: relative;
 	z-index: 800;
 	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
 	float: left;
 	clear: both;
 	}

@@ -1045,13 +1045,13 @@ class DataMap extends EventEmitter {
  * @constant
  */
 DataMap.anchors = Object.freeze( {
-    topRight: '.leaflet-top > .leaflet-right',
-    topLeft: '.leaflet-top > .leaflet-left',
-    bottomLeft: '.leaflet-bottom > .leaflet-left',
-    bottomRight: '.leaflet-bottom > .leaflet-right',
+    topRight: '.leaflet-top.leaflet-right',
+    topLeft: '.leaflet-top.leaflet-left',
+    bottomLeft: '.leaflet-bottom.leaflet-left',
+    bottomRight: '.leaflet-bottom.leaflet-right',
 
-    topRightInline: '.leaflet-top > .leaflet-right > .ext-datamaps-control-group',
-    topLeftInline: '.leaflet-top > .leaflet-left > .ext-datamaps-control-group'
+    topRightInline: '.leaflet-top.leaflet-right > .ext-datamaps-control-group',
+    topLeftInline: '.leaflet-top.leaflet-left > .ext-datamaps-control-group'
 } );
 /**
  * Content bounds padding.
