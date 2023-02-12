@@ -93,7 +93,7 @@ CreationDialog.prototype.initialize = function () {
         framed: false,
         expanded: false,
         padded: true,
-        classes: [ 'datamap-vec' ],
+        classes: [ 'ext-datamaps-vec' ],
         content: [
             $( '<p>' ).text( mw.msg( 'datamap-vec-intro' ) ),
             new OO.ui.FormLayout( {

@@ -36,7 +36,7 @@ class LegendTabber {
          * @type {jQuery}
          */
         this.$root = this.rootWidget.$element.prependTo( Util.getNonNull( this.map.rootElement.querySelector(
-            ':scope > .datamap-container-content' ) ) );
+            ':scope > .ext-datamaps-container-content' ) ) );
         /**
          * Tabber layout of the legend.
          *

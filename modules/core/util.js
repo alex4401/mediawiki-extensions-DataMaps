@@ -150,7 +150,7 @@ module.exports = Object.freeze( {
          * @return {jQuery}
          */
         createIconElement( group ) {
-            return $( '<img width=24 height=24 class="datamap-legend-group-icon" />' ).attr( 'src',
+            return $( '<img width=24 height=24 class="ext-datamaps-legend-group-icon" />' ).attr( 'src',
                 module.exports.getNonNull( group.legendIcon ) );
         },
 
@@ -163,7 +163,7 @@ module.exports = Object.freeze( {
          */
         createPinIconElement( group ) {
             return $( module.exports.createPinIconElement( group.pinColor ) ).attr( {
-                class: 'datamap-legend-group-icon',
+                class: 'ext-datamaps-legend-group-icon',
                 width: 24,
                 height: 24
             } );
@@ -178,7 +178,7 @@ module.exports = Object.freeze( {
          */
         createCircleElement( group ) {
             const size = Math.min( module.exports.MAX_GROUP_CIRCLE_SIZE, group.size + 4 );
-            return $( '<div class="datamap-legend-circle">' ).css( {
+            return $( '<div class="ext-datamaps-legend-circle">' ).css( {
                 minWidth: size,
                 width: size,
                 height: size,

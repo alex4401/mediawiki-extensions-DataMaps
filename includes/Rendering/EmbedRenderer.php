@@ -165,25 +165,25 @@ class EmbedRenderer {
     public function getHtml( ?EmbedRenderOptions $options = null ): string {
         // Primary slots
         $containerMain = new PanelLayout( [
-            'classes' => [ 'datamap-container' ],
+            'classes' => [ 'ext-datamaps-container' ],
             'framed' => true,
             'expanded' => false,
             'padded' => false
         ] );
         $containerTop = new PanelLayout( [
-            'classes' => [ 'datamap-container-top' ],
+            'classes' => [ 'ext-datamaps-container-top' ],
             'framed' => false,
             'expanded' => false,
             'padded' => false
         ] );
         $containerContent = new PanelLayout( [
-            'classes' => [ 'datamap-container-content' ],
+            'classes' => [ 'ext-datamaps-container-content' ],
             'framed' => false,
             'expanded' => false,
             'padded' => false
         ] );
         $containerBottom = new PanelLayout( [
-            'classes' => [ 'datamap-container-bottom' ],
+            'classes' => [ 'ext-datamaps-container-bottom' ],
             'framed' => false,
             'expanded' => false,
             'padded' => false
@@ -201,7 +201,7 @@ class EmbedRenderer {
 
         // Add legend to the output if it's enabled
         if ( $this->data->getSettings()->isLegendDisabled() ) {
-            $containerMain->addClasses( [ 'datamap-legend-is-hidden' ] );
+            $containerMain->addClasses( [ 'ext-datamaps-legend-is-hidden' ] );
         } else {
             $containerContent->appendContent( $this->getLegendContainerWidget() );
         }
@@ -229,9 +229,7 @@ class EmbedRenderer {
 
         return Html::rawElement(
             'noscript',
-            [
-                'class' => 'datamap-overlay-status'
-            ],
+            [],
             ( new \OOUI\MessageWidget( [
                 'type' => 'error',
                 'label' => wfMessage( 'datamap-javascript-required' )
@@ -240,14 +238,14 @@ class EmbedRenderer {
                 [
                     'type' => 'text/css'
                 ],
-                '.datamap-container{display:none}'
+                '.ext-datamaps-container{display:none}'
             )
         ) . $containerMain;
     }
 
     protected function getLegendContainerWidget(): \OOUI\Widget {
         $legend = new \OOUI\Widget( [
-            'classes' => [ 'datamap-container-legend' ],
+            'classes' => [ 'ext-datamaps-container-legend' ],
             'infusable' => true
         ] );
 
@@ -266,12 +264,12 @@ class EmbedRenderer {
         return Html::rawElement(
             'div',
             [
-                'class' => 'datamap-holder oo-ui-layout oo-ui-panelLayout oo-ui-panelLayout-framed'
+                'class' => 'ext-datamaps-container-leaflet oo-ui-layout oo-ui-panelLayout oo-ui-panelLayout-framed'
             ],
             Html::rawElement(
                 'div',
                 [
-                    'class' => 'datamap-status datamap-overlay-status'
+                    'class' => 'ext-datamaps-container-status'
                 ],
                 ( new \OOUI\ProgressBarWidget( [
                     'progress' => false,

@@ -4,7 +4,7 @@ const Leaflet = /** @type {LeafletModule} */ ( /** @type {unknown} */ ( require(
 /** @class */
 module.exports = Leaflet.Popup.extend( /** @lends LeafletModule.Popup.prototype */ {
     options: {
-        className: 'datamap-popup'
+        className: 'ext-datamaps-popup'
     },
 
     /**
@@ -30,7 +30,7 @@ module.exports = Leaflet.Popup.extend( /** @lends LeafletModule.Popup.prototype 
             // Inject node references
             this._content.contentElement = this._contentNode;
             this._content.buttonsElement = this._buttonArea;
-            this._content.actionsElement = Leaflet.DomUtil.create( 'ul', 'datamap-popup-tools' );
+            this._content.actionsElement = Leaflet.DomUtil.create( 'ul', 'ext-datamaps-popup-tools' );
             // Build the contents
             this._content.buildButtons();
             this._content.build();
@@ -52,7 +52,7 @@ module.exports = Leaflet.Popup.extend( /** @lends LeafletModule.Popup.prototype 
      */
     _initLayout() {
         Leaflet.Popup.prototype._initLayout.call( this );
-        this._buttonArea = Leaflet.DomUtil.create( 'div', 'datamap-popup-buttons', this._container );
+        this._buttonArea = Leaflet.DomUtil.create( 'div', 'ext-datamaps-popup-buttons', this._container );
     },
 
     /**

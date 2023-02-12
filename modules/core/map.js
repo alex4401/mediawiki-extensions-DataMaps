@@ -94,7 +94,8 @@ class DataMap extends EventEmitter {
          *
          * @type {HTMLElement}
          */
-        this.statusElement = /** @type {HTMLElement} */ ( Util.getNonNull( rootElement.querySelector( '.datamap-status' ) ) );
+        this.statusElement = /** @type {HTMLElement} */ ( Util.getNonNull( rootElement.querySelector(
+            '.ext-datamaps-container-status' ) ) );
         /**
          * Instance of the tab manager in the legend. Only initialised when legend is done loading, if it's enabled.
          *
@@ -225,7 +226,7 @@ class DataMap extends EventEmitter {
                 Leaflet = Util.getLeaflet();
             }
             this._initialiseLeaflet( /** @type {HTMLElement} */ ( Util.getNonNull( this.rootElement.querySelector(
-                '.datamap-holder' ) ) ) );
+                '.ext-datamaps-container-leaflet' ) ) ) );
         } );
 
         // Load search add-on
@@ -936,7 +937,7 @@ class DataMap extends EventEmitter {
     addControl( anchor, control, prepend ) {
         const controlElement = /** @type {HTMLElement} */ ( control instanceof Controls.MapControl ? control.element : control ),
             anchorElement = this.resolveControlAnchor( anchor ),
-            beforeInlineGroup = prepend && anchorElement.querySelector( ':scope > .datamap-control-group' );
+            beforeInlineGroup = prepend && anchorElement.querySelector( ':scope > .ext-datamaps-control-group' );
         if ( beforeInlineGroup ) {
             anchorElement.insertBefore( controlElement, beforeInlineGroup );
         } else {
@@ -957,7 +958,7 @@ class DataMap extends EventEmitter {
         // Create inline control containers (DataMap.anchors.topLeftInline and DataMap.anchors.topRightInline)
         for ( const anchor of [ DataMap.anchors.topLeft, DataMap.anchors.topRight ] ) {
             createDomElement( 'div', {
-                classes: [ 'datamap-control-group' ],
+                classes: [ 'ext-datamaps-control-group' ],
                 prependTo: this.resolveControlAnchor( anchor )
             } );
         }
@@ -993,7 +994,7 @@ class DataMap extends EventEmitter {
      */
     _onOOUILoaded() {
         this.legend = new LegendTabber( this, /** @type {HTMLElement} */ ( Util.getNonNull( this.rootElement.querySelector(
-            '.datamap-container-legend' ) ) ) );
+            '.ext-datamaps-container-legend' ) ) ) );
         this.fireMemorised( 'legendManager' );
     }
 
@@ -1045,8 +1046,8 @@ DataMap.anchors = Object.freeze( {
     bottomLeft: '.leaflet-bottom.leaflet-left',
     bottomRight: '.leaflet-bottom.leaflet-right',
 
-    topRightInline: '.leaflet-top.leaflet-right > .datamap-control-group',
-    topLeftInline: '.leaflet-top.leaflet-left > .datamap-control-group'
+    topRightInline: '.leaflet-top.leaflet-right > .ext-datamaps-control-group',
+    topLeftInline: '.leaflet-top.leaflet-left > .ext-datamaps-control-group'
 } );
 /**
  * Content bounds padding.

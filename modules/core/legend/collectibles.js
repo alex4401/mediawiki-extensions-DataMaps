@@ -9,7 +9,7 @@ class CollectiblesPanel extends LegendTabber.Tab {
      * @param {LegendTabber} tabber
      */
     constructor( tabber ) {
-        super( tabber, mw.msg( 'datamap-legend-tab-checklist' ), [ 'datamap-container-collectibles' ] );
+        super( tabber, mw.msg( 'datamap-legend-tab-checklist' ), [ 'ext-datamaps-container-collectibles' ] );
 
         /**
          * @type {Record<string, CollectiblesPanel.Section>}
@@ -173,7 +173,7 @@ CollectiblesPanel.Section = class Section {
          * @type {HTMLElement}
          */
         this.containerElement = Util.createDomElement( 'div', {
-            classes: [ 'datamap-collectible-group-markers' ]
+            classes: [ 'ext-datamaps-collectible-group-markers' ]
         } );
         /**
          * @type {HTMLElement}
@@ -185,7 +185,7 @@ CollectiblesPanel.Section = class Section {
                 new OO.ui.PanelLayout( {
                     padded: true,
                     expanded: false,
-                    classes: [ 'datamap-collectible-group-header' ],
+                    classes: [ 'ext-datamaps-collectible-group-header' ],
                     content: [
                         this.checkbox,
                         this.$icon || '',
@@ -372,7 +372,7 @@ CollectiblesPanel.Row = class Row {
     setIndex( index ) {
         if ( this.indexElement === null ) {
             this.indexElement = Util.createDomElement( 'span', {
-                classes: [ 'datamap-collapsible-index' ],
+                classes: [ 'ext-datamaps-collapsible-index' ],
                 appendTo: this.labelTextElement
             } );
         }

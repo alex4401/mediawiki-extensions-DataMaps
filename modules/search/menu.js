@@ -34,9 +34,9 @@ MenuWidget.prototype.updateItemVisibility = function () {
             item.$element.appendTo( this.$group );
 
             if ( IsDebug ) {
-                let $scoreInfo = item.$label.find( 'span.datamap-search-debug' );
+                let $scoreInfo = item.$label.find( 'span.ext-datamaps-search-debug' );
                 if ( $scoreInfo.length === 0 ) {
-                    $scoreInfo = $( '<span class="datamap-search-debug" style="opacity: 0.6; font-size: 95%">' )
+                    $scoreInfo = $( '<span class="ext-datamaps-search-debug" style="opacity: 0.6; font-size: 95%">' )
                         .appendTo( item.$label );
                 }
                 $scoreInfo.text( ` / ${result.score}` );

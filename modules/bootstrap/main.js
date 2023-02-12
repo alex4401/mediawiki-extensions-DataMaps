@@ -98,7 +98,7 @@ mw.dataMaps = {
 // Begin initialisation once the document is loaded
 mw.hook( 'wikipage.content' ).add( $content => {
     // Run initialisation for every map, followed by events for gadgets to listen to
-    for ( const rootElement of /** @type {HTMLElement[]} */ ( $content.find( '.datamap-container[data-datamap-id]' ) ) ) {
+    for ( const rootElement of /** @type {HTMLElement[]} */ ( $content.find( '.ext-datamaps-container[data-datamap-id]' ) ) ) {
         const id = parseInt( Util.getNonNull( rootElement.dataset.datamapId ) ),
             config = getConfig( rootElement );
         if ( config ) {

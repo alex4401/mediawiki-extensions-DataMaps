@@ -10,7 +10,7 @@ function MenuOptionWidget( config ) {
     this.$tab = config.$tab;
 
     if ( config.badge ) {
-        this.$badge = $( '<span class="datamap-search-badge">' )
+        this.$badge = $( '<span class="ext-datamaps-search-badge">' )
             .text( config.badge )
             .prependTo( this.$label );
         if ( config.badgeCurrent ) {

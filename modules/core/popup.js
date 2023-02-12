@@ -108,7 +108,7 @@ module.exports = class MarkerPopup {
      */
     buildButtons() {
         const getLink = createDomElement( 'a', {
-            classes: [ 'datamap-marker-link-button', 'oo-ui-icon-link' ],
+            classes: [ 'ext-datamaps-popup-link', 'oo-ui-icon-link' ],
             attributes: {
                 role: 'button',
                 title: mw.msg( 'datamap-popup-marker-link-get' ),
@@ -135,18 +135,18 @@ module.exports = class MarkerPopup {
         // Build the title
         if ( this.slots.label && this.markerGroup.name !== this.slots.label ) {
             this.$subTitle = $( createDomElement( 'b', {
-                classes: [ 'datamap-popup-subtitle' ],
+                classes: [ 'ext-datamaps-popup-subtitle' ],
                 text: this.markerGroup.name,
                 appendTo: this.contentElement
             } ) );
             this.$title = $( createDomElement( 'b', {
-                classes: [ 'datamap-popup-title' ],
+                classes: [ 'ext-datamaps-popup-title' ],
                 html: this.slots.label,
                 appendTo: this.contentElement
             } ) );
         } else {
             this.$title = $( createDomElement( 'b', {
-                classes: [ 'datamap-popup-title' ],
+                classes: [ 'ext-datamaps-popup-title' ],
                 text: this.markerGroup.name,
                 appendTo: this.contentElement
             } ) );
@@ -171,7 +171,7 @@ module.exports = class MarkerPopup {
         }
         // Push onto the contents
         this.$location = $( createDomElement( 'div', {
-            classes: [ 'datamap-popup-location' ],
+            classes: [ 'ext-datamaps-popup-location' ],
             text: detailText,
             appendTo: this.contentElement
         } ) );
@@ -182,7 +182,7 @@ module.exports = class MarkerPopup {
                 this.slots.desc = `<p>${this.slots.desc}</p>`;
             }
             this.$description = $( createDomElement( 'div', {
-                classes: [ 'datamap-popup-description' ],
+                classes: [ 'ext-datamaps-popup-description' ],
                 html: this.slots.desc,
                 appendTo: this.contentElement
             } ) );
@@ -191,7 +191,7 @@ module.exports = class MarkerPopup {
         // Image
         if ( this.slots.image ) {
             this.$image = $( createDomElement( 'img', {
-                classes: [ 'datamap-popup-image' ],
+                classes: [ 'ext-datamaps-popup-image' ],
                 attributes: {
                     src: this.slots.image[ 0 ],
                     width: 250,

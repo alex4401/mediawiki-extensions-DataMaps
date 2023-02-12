@@ -1,7 +1,7 @@
 @legend-popup-breakpoint-width: 1200px;
 
 .dmLegendAsPopup() {
-    .datamap-container .datamap-control.datamap-control-legend-toggle {
+    .ext-datamaps-container .ext-datamaps-control.ext-datamaps-control-legend-toggle {
         display: block;
 
         > a {
@@ -15,7 +15,7 @@
         }
     }
 
-    .datamap-container-legend {
+    .ext-datamaps-container-legend {
         position: absolute;
         inset: 50px 0 0 0;
         width: unset;
@@ -27,28 +27,24 @@
         z-index: 4000;
         transform: translate(-45%, -53%) scale(0);
         transition: transform .12s ease-in-out;
-
-        .datamap-legend-label {
-            display: none;
-        }
     }
 
-    .datamap-container-legend.oo-ui-widget-disabled + .oo-ui-layout .datamap-control.datamap-control-legend-toggle {
+    .ext-datamaps-container-legend.oo-ui-widget-disabled + .oo-ui-layout .ext-datamaps-control.ext-datamaps-control-legend-toggle {
         display: none;
     }
 
-    .datamap-is-legend-toggled-on {
-        .datamap-control.datamap-control-legend-toggle a {
+    .ext-datamaps-is-legend-toggled-on {
+        .ext-datamaps-control.ext-datamaps-control-legend-toggle a {
             color: #36c;
         }
 
-        .datamap-container-legend {
+        .ext-datamaps-container-legend {
             transform: none;
         }
     }
 }
 
-.datamap-container-legend {
+.ext-datamaps-container-legend {
     &.oo-ui-widget-disabled {
         display: none;
     }
@@ -110,7 +106,7 @@
 }
 
 @media screen and (min-width: 900px) and (max-width: 1200px) {
-    .datamap-container-legend {
+    .ext-datamaps-container-legend {
         width: 25em;
     }
 }

@@ -1,42 +1,37 @@
 .leaflet-control-container {
-    .datamap-control > a > span {
-        width: 30px;
-        height: 30px;
-        display: block;
-        background-position: center;
-        background-size: 20px;
-        background-repeat: no-repeat;
-    }
-
-    .datamap-control-group {
+    .ext-datamaps-control-group {
         display: flex;
     }
 
-    .datamap-control-legend-toggle {
+    .ext-datamaps-control > a > span {
+        display: block;
+        width: 30px;
+        height: 30px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 20px;
+    }
+
+    select.ext-datamaps-control {
+        padding: 3px 0.5em;
+        border: 0;
+        background: #fff;
+        opacity: 0.9;
+    }
+
+    .ext-datamaps-control-legend-toggle {
         display: none;
     }
 
     /* Extra specificity is needed to silence Leaflet's built-in margins provided by anchors */
-    .leaflet-control.datamap-control-coords {
-        background: #fffc;
-        margin: 0;
+    .ext-datamaps-control-coords.leaflet-control {
         padding: 0 5px;
-        color: #333;
-        line-height: 1.4;
-        font-size: 1.6em;
-        margin-left: 0;
+        margin: 0;
         margin-bottom: 0;
-    }
-
-    .datamap-control-backgrounds {
-        opacity: 0.9;
-        padding: 3px 0.5em;
-        background: #fff;
-        margin-right: 1px;
-        border: none;
-    }
-
-    .datamap-control-viewcontrols {
-        margin-top: 5px;
+        margin-left: 0;
+        background: #fffc;
+        color: #333;
+        font-size: 1.6em;
+        line-height: 1.4;
     }
 }

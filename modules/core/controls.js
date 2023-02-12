@@ -36,7 +36,7 @@ class MapControl {
         // The following classes are used here:
         // * datamap-control
         // * datamap-control-${id}
-        this.element.classList.add( 'leaflet-control', 'datamap-control', `datamap-control-${id}` );
+        this.element.classList.add( 'leaflet-control', 'ext-datamaps-control', `ext-datamaps-control-${id}` );
         if ( this.isButtonGroup() ) {
             this.element.classList.add( 'leaflet-bar' );
         }
@@ -193,14 +193,12 @@ class ExtraViewControls extends MapControl {
             addToSelf: true,
             icon: 'imageLayoutFrame',
             tooltip: mw.msg( 'datamap-control-reset-view' ),
-            classes: [ 'datamap-control-viewreset' ],
             clickHandler: () => this.map.restoreDefaultView()
         } );
         this._makeButton( {
             addToSelf: true,
             icon: 'alignCenter',
             tooltip: mw.msg( 'datamap-control-centre-view' ),
-            classes: [ 'datamap-control-viewcentre' ],
             clickHandler: () => this.map.centreView()
         } );
     }
@@ -223,7 +221,7 @@ class LegendPopup extends MapControl {
             label: mw.msg( 'datamap-legend-label' ),
             labelBeforeIcon: true,
             clickHandler: () => {
-                this.map.rootElement.classList.toggle( 'datamap-is-legend-toggled-on' );
+                this.map.rootElement.classList.toggle( 'ext-datamaps-is-legend-toggled-on' );
                 getNonNull( this.element.querySelector( 'span' ) ).classList.toggle( 'oo-ui-image-progressive' );
             }
         } );

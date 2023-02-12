@@ -7,6 +7,6 @@
 	"rules": {
 		"font-weight-notation": "numeric",
 		"indentation": 4,
-		"selector-class-pattern": "^(ext|oo-ui|leaflet)-"
+		"selector-class-pattern": "^(ext-datamaps|oo-ui|leaflet)-"
 	}
 }

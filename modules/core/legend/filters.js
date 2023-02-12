@@ -24,7 +24,7 @@ class MarkerFilteringPanel extends LegendTabber.Tab {
          * @type {HTMLElement}
          */
         this.groupContainer = Util.createDomElement( 'div', {
-            classes: [ 'datamap-container-groups' ],
+            classes: [ 'ext-datamaps-container-groups' ],
             appendTo: this.contentElement
         } );
         /**
@@ -238,7 +238,7 @@ MarkerFilteringPanel.MarkerGroupRow = class MarkerGroupRow {
     setBadge( text ) {
         if ( text && text.length > 0 ) {
             if ( this.$badge === null ) {
-                this.$badge = $( '<span class="datamap-legend-badge">' ).appendTo( this.field.$header );
+                this.$badge = $( '<span class="ext-datamaps-legend-badge">' ).appendTo( this.field.$header );
             }
             this.$badge.text( text );
         } else if ( this.$badge ) {
