@@ -1,37 +1,44 @@
+@import 'mediawiki.skin.variables.less';
+
 .ext-datamaps-container {
     box-shadow: 0 0 8px #0003;
+}
 
-    .ext-datamaps-container-content {
-        display: flex;
-        flex-wrap: wrap;
+.ext-datamaps-container-content {
+    display: flex;
+    flex-wrap: wrap;
 
-        @media screen and ( max-width: 1200px ) {
-            display: block;
-        }
-
-        .oo-ui-panelLayout {
-            flex: 1 1;
-        }
-
-        .ext-datamaps-container-leaflet {
-            height: 750px;
-            border-top: 0;
-            border-right: 0;
-            border-bottom: 0;
-            background: #ddd;
-
-            @media screen and ( max-width: 720px ) and ( max-height: 900px ) {
-                height: 75vh;
-                min-height: 300px;
-            }
-        }
+    @media screen and ( max-width: @width-breakpoint-desktop-wide ) {
+        display: block;
     }
 
-    .ext-datamaps-container-legend {
-        width: 23.7em;
-        max-height: 750px;
-        box-sizing: border-box;
-        overflow-y: auto;
+    .oo-ui-panelLayout {
+        flex: 1 1;
+    }
+
+    .ext-datamaps-container-leaflet {
+        height: 750px;
+        border-top: 0;
+        border-right: 0;
+        border-bottom: 0;
+        background: #ddd;
+
+        @media screen and ( max-height: 900px ) {
+            height: 75vh;
+            min-height: 300px;
+        }
+    }
+}
+
+.ext-datamaps-container-legend {
+    width: 23.7em;
+    max-height: 750px;
+    box-sizing: border-box;
+    overflow-y: auto;
+
+    // Hide the legend on screens under the wide desktop breakpoint. Interactive styles will overrule this in favour of a popup.
+    @media screen and ( max-width: @width-breakpoint-desktop-wide ) {
+        display: none;
     }
 }
 

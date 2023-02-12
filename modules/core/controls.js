@@ -221,7 +221,8 @@ class LegendPopup extends MapControl {
             label: mw.msg( 'datamap-legend-label' ),
             labelBeforeIcon: true,
             clickHandler: () => {
-                this.map.rootElement.classList.toggle( 'ext-datamaps-is-legend-toggled-on' );
+                this.map.rootElement.dataset.isLegendVisible = this.map.rootElement.dataset.isLegendVisible === 'true' ? 'false'
+                    : 'true';
                 getNonNull( this.element.querySelector( 'span' ) ).classList.toggle( 'oo-ui-image-progressive' );
             }
         } );

@@ -2,7 +2,7 @@
     .ext-datamaps-container-groups {
         margin-top: 12px;
 
-        @media screen and ( min-width: 1200px ) {
+        @media screen and ( min-width: @width-breakpoint-desktop-wide ) {
             .oo-ui-fieldLayout.oo-ui-fieldLayout-align-inline {
                 margin-top: 8px;
             }
@@ -10,21 +10,21 @@
     }
 
     .ext-datamaps-legend-circle {
+        display: inline-block;
         border-style: solid;
         border-radius: 50%;
-        display: inline-block;
-        vertical-align: middle;
         margin-right: 6px;
         box-shadow: 0 0 1px 1px #0002;
+        vertical-align: middle;
     }
 
     .ext-datamaps-legend-badge {
-        margin: 0 0.5em;
         padding: 0 4px;
         border-radius: 4px;
-        vertical-align: middle;
+        margin: 0 0.5em;
         background: #6665;
         font-size: 0.88em;
+        vertical-align: middle;
     }
 
     .ext-datamaps-legend-group-icon {

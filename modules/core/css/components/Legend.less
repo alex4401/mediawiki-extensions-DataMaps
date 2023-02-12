@@ -1,50 +1,27 @@
-@legend-popup-breakpoint-width: 1200px;
-
-.dmLegendAsPopup() {
-    .ext-datamaps-container .ext-datamaps-control.ext-datamaps-control-legend-toggle {
-        display: block;
-
-        > a {
-            width: auto;
-            padding-left: 0.5em;
-        }
-
-        span {
-            display: inline-block;
-            vertical-align: middle;
-        }
-    }
-
-    .ext-datamaps-container-legend {
+.ext-datamaps-container-legend {
+    @media screen and ( max-width: @width-breakpoint-desktop-wide ) {
         position: absolute;
-        inset: 50px 0 0 0;
+        z-index: 4000;
+        display: block;
         width: unset;
-        margin: 0 6px 6px;
-        background: #fff;
         border: 1px solid #ccc;
         border-radius: 4px;
+        margin: 0 6px 6px;
+        background: #fff;
         box-shadow: 0 0 6px #0005;
-        z-index: 4000;
-        transform: translate(-45%, -53%) scale(0);
-        transition: transform .12s ease-in-out;
-    }
+        inset: 50px 0 0 0;
+        transform: translate( -45%, -53% ) scale( 0 );
+        transition: transform 120ms ease-in-out;
 
-    .ext-datamaps-container-legend.oo-ui-widget-disabled + .oo-ui-layout .ext-datamaps-control.ext-datamaps-control-legend-toggle {
-        display: none;
-    }
-
-    .ext-datamaps-is-legend-toggled-on {
-        .ext-datamaps-control.ext-datamaps-control-legend-toggle a {
-            color: #36c;
-        }
-
-        .ext-datamaps-container-legend {
-            transform: none;
+        &.oo-ui-widget-disabled + .ext-datamaps-container-leaflet .ext-datamaps-control-legend-toggle {
+            display: none;
         }
     }
-}
 
-.ext-datamaps-container-legend {
+    @media screen and ( min-width: @width-breakpoint-tablet ) {
+        width: 25em;
+    }
+
     &.oo-ui-widget-disabled {
         display: none;
     }
@@ -67,8 +44,8 @@
     }
 
     .oo-ui-tabOptionWidget.oo-ui-optionWidget {
-        border-radius: 6px;
         border-width: 1px;
+        border-radius: 6px;
         margin-top: 3px;
 
         .oo-ui-labelElement-label {
@@ -85,11 +62,10 @@
     }
 
     .oo-ui-buttonGroupWidget {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        /* Needed for the popup button to not go under group toggles */
         z-index: 2;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     .oo-ui-checkboxInputWidget {
@@ -101,12 +77,10 @@
     }
 }
 
-@media screen and (max-width: 1200px) {
-    .dmLegendAsPopup();
-}
-
-@media screen and (min-width: 900px) and (max-width: 1200px) {
-    .ext-datamaps-container-legend {
-        width: 25em;
+@media screen and ( max-width: @width-breakpoint-desktop-wide ) {
+    .ext-datamaps-container[ data-is-legend-visible='true' ] {
+        .ext-datamaps-container-legend {
+            transform: none;
+        }
     }
 }
