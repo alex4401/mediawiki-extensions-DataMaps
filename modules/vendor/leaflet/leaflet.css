@@ -99,33 +99,26 @@
 
 .leaflet-control-container {
 	display: grid;
-	grid-template-areas:
-		"tl tr" 
-		"bl br";
-	justify-content: space-between;
+	grid-template-rows: auto auto;
+	justify-content: stretch;
 	align-content: space-between;
 	height: 100%;
+	}
+.leaflet-control-container > .leaflet-top,
+.leaflet-control-container > .leaflet-bottom {
+	display: flex;
+	justify-content: space-between;
+	column-gap: 10px;
+}
+.leaflet-left {
+	flex-grow: 1;
 }
 .leaflet-control {
 	position: relative;
 	z-index: 800;
 	pointer-events: auto;
-	}
-.leaflet-control {
 	float: left;
 	clear: both;
-	}
-.leaflet-top.leaflet-left {
-	grid-area: tl;
-	}
-.leaflet-top.leaflet-right {
-	grid-area: tr;
-	}
-.leaflet-bottom.leaflet-left {
-	grid-area: bl;
-	}
-.leaflet-bottom.leaflet-right {
-	grid-area: br;
 	}
 .leaflet-right .leaflet-control {
 	float: right;
