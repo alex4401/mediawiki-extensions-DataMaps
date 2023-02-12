@@ -1,12 +1,14 @@
 <?php
 namespace MediaWiki\Extension\DataMaps\Content;
 
+use BadTitleError;
 use FormlessAction;
 use MediaWiki\Extension\DataMaps\HookHandler;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
+use OOUI\ProgressBarWidget;
 use ParserOptions;
 use ParserOutput;
 use User;
@@ -26,12 +28,8 @@ class EditMapAction extends FormlessAction {
         return null;
     }
 
-    protected function checkCanExecute( User $user ) {
-        parent::checkCanExecute( $user );
-
-        if ( !HookHandler::canUseVE( $user, $this->getArticle()->getTitle() ) ) {
-            // TODO: throw an exception, wrong page or map ineligible for VE edits
-        }
+    public function doesWrites() {
+        return true;
     }
 
     public function show() {
@@ -41,45 +39,50 @@ class EditMapAction extends FormlessAction {
         $article = $this->getArticle();
         $user = $this->getAuthority()->getUser();
         $out = $this->getOutput();
-        $out->setRobotPolicy( 'noindex,nofollow' );
 
-        // The editor should always see the latest content when starting their edit.
-        // Also to ensure cookie blocks can be set (T152462).
+        // The editor should always see the latest content when starting their edit
+        $out->setRobotPolicy( 'noindex,nofollow' );
         $out->disableClientCache();
+
+        // Set up page title and revision ID
+        $out->setPageTitle( wfMessage( 'editing', $article->getTitle()->getPrefixedText() ) );
+        $out->setRevisionId( $req->getInt( 'oldid', $article->getRevIdFetched() ) );
+
+        // Check if VE can be used on this page
+        if ( !HookHandler::canUseVE( null, $this->getArticle()->getTitle() ) ) {
+            $out->addWikiMsg( 'datamap-ve-cannot-edit-mixins' );
+            $out->addWikiMsg( 'datamap-ve-needs-fallback-to-source'/*, $sourceUrl*/ );
+            return;
+        }
 
         // Check if the user can edit this page, and resort back to source editor (which should display the errors and
         // a source view) if they can't.
         $permErrors = MediaWikiServices::getInstance()->getPermissionManager()
             ->getPermissionErrors( 'edit', $user, $article->getTitle(), PermissionManager::RIGOR_FULL );
         if ( $permErrors ) {
-            return true;
+            return;
         }
-
-        // Set up page title and revision ID
-        $out->setPageTitle( wfMessage( 'editing', $article->getTitle()->getPrefixedText() ) );
-        $out->setRevisionId( $req->getInt( 'oldid', $article->getRevIdFetched() ) );
 
         // Fetch the content object
         /** @var DataMapContent */
         $content = $article->fetchRevisionRecord()->getContent( SlotRecord::MAIN, RevisionRecord::FOR_THIS_USER,
             $this->getAuthority() );
 
-        // Ensure this is not a mix-in
-        if ( $content->isMixin() ) {
-            $out->addWikiMsg( 'datamap-ve-cannot-edit-mixins' );
-            $out->addWikiMsg( 'datamap-ve-needs-fallback-to-source'/*, $sourceUrl*/ );
-            return false;
-        }
-
         // Run validation as the visual editor cannot handle source-level errors
         $status = $content->getValidationStatus();
         if ( !$status->isOk() ) {
             $out->addWikiMsg( 'datamap-ve-cannot-edit-validation-errors', $status->getMessage( false, false ) );
-            return false;
+            $out->addWikiMsg( 'datamap-ve-needs-fallback-to-source'/*, $sourceUrl*/ );
+            return;
         }
+
+        $out->enableOOUI();
+        \OOUI\Theme::setSingleton( new \OOUI\WikimediaUITheme() );
+        \OOUI\Element::setDefaultDir( 'ltr' );
 
         // Render a placeholder message for the editor
         $out->addWikiMsg( 'datamap-ve-to-load' );
+        $out->addHTML( ( new ProgressBarWidget( [ 'progress' => false ] ) )->toString() );
 
         // Render an empty embed with no markers
         $parserOptions = ParserOptions::newFromAnon();
@@ -102,9 +105,5 @@ class EditMapAction extends FormlessAction {
         $out->addModules( [
             'ext.datamaps.ve'
         ] );
-    }
-
-    public function doesWrites() {
-        return true;
     }
 }

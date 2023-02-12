@@ -104,7 +104,7 @@ class HookHandler implements
     /**
      * @internal
      */
-    public static function canUseVE( User $user, Title $title ): bool {
+    public static function canUseVE( ?User $user, Title $title ): bool {
         $prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
         $pageProps = MediaWikiServices::getInstance()->getPageProps();
 
@@ -112,7 +112,7 @@ class HookHandler implements
             && $title->getNamespace() === ExtensionConfig::getNamespaceId()
             && $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP )
             && $title->exists()
-            && $prefsLookup->getBoolOption( $user, Constants::PREFERENCE_ENABLE_VE )
+            && ( $user === null || $prefsLookup->getBoolOption( $user, Constants::PREFERENCE_ENABLE_VE ) )
             && count( $pageProps->getProperties( $title, Constants::PAGEPROP_DISABLE_VE ) ) <= 0;
     }
 
@@ -139,17 +139,13 @@ class HookHandler implements
                 'ext.datamaps.createMapLazy'
             ] );
         } elseif ( self::canUseVE( $skinTemplate->getAuthority()->getUser(), $title ) ) {
-            $links['views']['edit']['href'] = $title->getLocalURL( $skinTemplate->editUrlOptions() + [
-                'action' => 'editmap'
-            ] );
-            $injection = [
+            $links['views']['edit']['href'] = $title->getLocalURL( [ 'action' => 'editmap' ] + $skinTemplate->editUrlOptions() );
+            $links['views'] = array_slice( $links['views'], 0, 2, true ) + [
                 'editsource' => [
                     'text' => wfMessage( 'datamap-ve-edit-source-action' )->text(),
                     'href' => $title->getLocalURL( $skinTemplate->editUrlOptions() )
                 ]
-            ];
-            $links['views'] = array_slice( $links['views'], 0, 2, true ) + $injection +
-                array_slice( $links['views'], 2, null, true );
+            ] + array_slice( $links['views'], 2, null, true );
         }
     }
 

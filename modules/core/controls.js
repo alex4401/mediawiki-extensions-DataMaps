@@ -171,8 +171,8 @@ class EditButton extends MapControl {
             icon: 'edit',
             tooltip: mw.msg( 'datamap-control-edit' ),
             // @ts-ignore: wrong type signature for wikiScript in the package, argument is optional
-            href: `${mw.util.wikiScript()}?curid=${this.map.id}&action=edit` + (
-                mw.user.options.get( 'datamaps-enable-visual-editor' ) ? '&visual=1' : ''
+            href: `${mw.util.wikiScript()}?curid=${this.map.id}&action=` + (
+                mw.user.options.get( 'datamaps-enable-visual-editor' ) ? 'editmap' : 'edit'
             )
         } );
     }

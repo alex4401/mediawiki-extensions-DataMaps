@@ -5,13 +5,16 @@
         ]
     },
 
+    "datamap-ve-to-load": "Please wait while the visual editor is being loaded...",
+    "datamap-ve-error-cannot-open-validation-errors": "<b>Visual editor is unavailable due to errors in map's source code:</b><br/>$1",
+    "datamap-ve-needs-fallback-to-source": "Please use the [$1 source editor] instead.",
+
     "datamap-userpref-enable-ve": "Enable the visual editor for data maps when it's out of beta",
     "datamap-userpref-enable-ve-beta": "Opt me into the map visual editor beta",
     "datamap-ve-edit-source-action": "Edit source",
     "datamap-ve-beta-notice": "",
     "datamap-vec-beta-notice": "The visual map creation process is still in an early development stage",
     "datamap-ve-limited-preview-notice": "[PH] Certain features are disabled when previewing the map in the visual editor",
-    "datamap-error-cannot-open-ve-validation-errors": "<b>Visual editor is unavailable due to errors in map's source code:</b><br/>$1<br/>Resolve the issues in the source editor first.",
     "tag-datamaps-visualeditor": "Visual map edit",
     "tag-datamaps-visualeditor-description": "Edit made using the DataMaps visual editor",
 
