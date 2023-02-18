@@ -25,8 +25,9 @@ class MapControl {
      * @param {string} id
      * @param {string} [tagName]
      * @param {string[]} [classes]
+     * @param {boolean} [delegatedBuild] If true, {@link _build} call will be left to the subclass's constructor.
      */
-    constructor( map, id, tagName, classes ) {
+    constructor( map, id, tagName, classes, delegatedBuild ) {
         /** @type {DataMap} */
         this.map = map;
 
@@ -45,7 +46,9 @@ class MapControl {
             this.element.classList.add( ...classes );
         }
 
-        this._build();
+        if ( !delegatedBuild ) {
+            this._build();
+        }
     }
 
 
