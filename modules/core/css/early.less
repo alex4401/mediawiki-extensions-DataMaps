@@ -36,6 +36,10 @@
     box-sizing: border-box;
     overflow-y: auto;
 
+    @media screen and ( min-width: @width-breakpoint-tablet ) {
+        width: 25em;
+    }
+
     // Hide the legend on screens under the wide desktop breakpoint. Interactive styles will overrule this in favour of a popup.
     @media screen and ( max-width: @width-breakpoint-desktop-wide ) {
         display: none;
