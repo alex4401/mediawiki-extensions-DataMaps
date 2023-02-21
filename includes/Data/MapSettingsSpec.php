@@ -10,7 +10,11 @@ class MapSettingsSpec extends DataModel {
     public const SM_SELF = 1;
     public const SM_TABBER = 2;
 
+    /**
+     * @deprecated since v0.16, will be removed in v1.0. Use SC_GROUP_DECLARATION_ORDER instead.
+     */
     public const SC_LOCATION = 0;
+    public const SC_GROUP_DECLARATION_ORDER = 0;
     public const SC_AMOUNT = 1;
 
     public function isZoomDisabled(): bool {
@@ -40,11 +44,11 @@ class MapSettingsSpec extends DataModel {
     }
 
     public function getChecklistSortMode(): int {
-        switch ( $this->raw->sortChecklistsBy ?? 'location' ) {
+        switch ( $this->raw->sortChecklistsBy ?? 'groupDeclaration' ) {
             case 'amount':
                 return self::SC_AMOUNT;
             default:
-                return self::SC_LOCATION;
+                return self::SC_GROUP_DECLARATION_ORDER;
         }
     }
 
@@ -64,7 +68,13 @@ class MapSettingsSpec extends DataModel {
         $this->checkField( $status, [
             'name' => 'sortChecklistsBy',
             'type' => DataModel::TYPE_STRING,
-            'values' => [ 'location', 'amount' ]
+            'values' => [
+                'groupDeclaration',
+                'amount',
+                // HACK: v0.15 had this wrongly named, but we have no schema version access here. Temporarily allowing globally
+                //       until v1.0.
+                'location'
+            ]
         ] );
         $this->checkField( $status, 'showCoordinates', DataModel::TYPE_BOOL );
         $this->checkField( $status, [

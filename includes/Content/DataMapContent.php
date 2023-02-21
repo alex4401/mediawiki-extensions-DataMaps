@@ -20,9 +20,10 @@ use Title;
 class DataMapContent extends JsonContent {
     public const SUPPORTED_SCHEMA_VERSIONS = [
         'v0.15',
+        'v0.16',
         'latest'
     ];
-    public const PREFERRED_SCHEMA_VERSION = 'v0.15';
+    public const PREFERRED_SCHEMA_VERSION = 'v0.16';
     public const DEPRECATED_SCHEMA_VERSIONS = [
         // schema version => extension version to be removed in
     ];

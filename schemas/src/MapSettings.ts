@@ -21,7 +21,7 @@ export class MapSettings {
 
     /**
      */
-    sortChecklistsBy: 'location'|'amount' = 'location';
+    sortChecklistsBy: 'groupDeclaration'|'amount' = 'groupDeclaration';
 
     leaflet?: {
         minZoom?: number;
