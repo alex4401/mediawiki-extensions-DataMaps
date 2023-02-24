@@ -3,13 +3,19 @@
         display: flex;
     }
 
-    .ext-datamaps-control > a > span {
-        display: block;
-        width: 30px;
-        height: 30px;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: 20px;
+    .ext-datamaps-control > a {
+        &[ data-style='labelled' ] {
+            width: auto;
+        }
+
+        > span {
+            display: block;
+            width: 30px;
+            height: 30px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 20px;
+        }
     }
 
     select.ext-datamaps-control {
@@ -26,8 +32,7 @@
             display: block;
         }
 
-        > a[ role='button' ] {
-            width: auto;
+        > a {
             padding-left: 0.5em;
         }
 

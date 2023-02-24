@@ -89,6 +89,10 @@ class MapControl {
             }
         } );
 
+        if ( options.label ) {
+            result.dataset.style = 'labelled';
+        }
+
         if ( options.icon ) {
             // eslint-disable-next-line mediawiki/class-doc
             result[ options.labelBeforeIcon ? 'appendChild' : 'prepend' ]( createDomElement( 'span', {
