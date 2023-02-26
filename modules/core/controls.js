@@ -7,6 +7,7 @@ const { CRSOrigin } = require( './enums.js' ),
  * @typedef {Object} ControlOptions
  * @property {string} [tagName]
  * @property {string[]} [classes]
+ * @property {boolean} [primary]
  * @property {boolean} [delegatedBuild] If true, {@link _build} call will be left to the subclass's constructor.
  */
 /**
@@ -48,6 +49,9 @@ class MapControl {
         if ( options.classes ) {
             // eslint-disable-next-line mediawiki/class-doc
             this.element.classList.add( ...options.classes );
+        }
+        if ( options.primary ) {
+            this.element.classList.add( 'ext-datamaps-control-primary' );
         }
 
         if ( !options.delegatedBuild ) {
