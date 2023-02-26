@@ -4,6 +4,12 @@ const { CRSOrigin } = require( './enums.js' ),
 
 
 /**
+ * @typedef {Object} ControlOptions
+ * @property {string} [tagName]
+ * @property {string[]} [classes]
+ * @property {boolean} [delegatedBuild] If true, {@link _build} call will be left to the subclass's constructor.
+ */
+/**
  * @typedef {Object} ControlButtonOptions
  * @property {boolean} [addToSelf]
  * @property {string} [icon]
@@ -23,16 +29,14 @@ class MapControl {
     /**
      * @param {DataMap} map Owning map.
      * @param {string} id
-     * @param {string} [tagName]
-     * @param {string[]} [classes]
-     * @param {boolean} [delegatedBuild] If true, {@link _build} call will be left to the subclass's constructor.
+     * @param {ControlOptions} [options]
      */
-    constructor( map, id, tagName, classes, delegatedBuild ) {
+    constructor( map, id, options ) {
+        options = options || {};
         /** @type {DataMap} */
         this.map = map;
-
         /** @type {HTMLElement} */
-        this.element = document.createElement( tagName || 'div' );
+        this.element = document.createElement( options.tagName || 'div' );
 
         // The following classes are used here:
         // * datamap-control
@@ -41,12 +45,12 @@ class MapControl {
         if ( this.isButtonGroup() ) {
             this.element.classList.add( 'leaflet-bar' );
         }
-        if ( classes ) {
+        if ( options.classes ) {
             // eslint-disable-next-line mediawiki/class-doc
-            this.element.classList.add( ...classes );
+            this.element.classList.add( ...options.classes );
         }
 
-        if ( !delegatedBuild ) {
+        if ( !options.delegatedBuild ) {
             this._build();
         }
     }
@@ -114,7 +118,9 @@ class BackgroundSwitcher extends MapControl {
      * @param {DataMap} map Owning map.
      */
     constructor( map ) {
-        super( map, 'backgrounds', 'select' );
+        super( map, 'backgrounds', {
+            tagName: 'select'
+        } );
     }
 
 
