@@ -211,6 +211,11 @@ class MapStorage {
             return;
         }
 
+        // Check if current schema and abort
+        if ( schemaVersion === MapStorage.LATEST_VERSION ) {
+            return;
+        }
+
         // Check if version's older than current and if any saved properties exist; otherwise abort
         /* eslint-disable operator-linebreak */
         if ( schemaVersion < MapStorage.LATEST_VERSION && !( schemaVersion >= 20221114
@@ -276,6 +281,7 @@ class MapStorage {
         /* eslint-enable no-fallthrough */
 
         this._initialiseVersioning();
+        this._setJSON( '*', data );
     }
 
 
