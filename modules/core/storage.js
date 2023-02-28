@@ -233,6 +233,28 @@ class MapStorage {
 
 
     /**
+     * @private
+     * @param {string} id
+     * @return {{ attached: string, lat: number, lon: number }?}
+     */
+    _parseGeneratedMarkerId( id ) {
+        // Basic integrity check
+        if ( id.indexOf( '@' ) > 0 && id.indexOf( ':' ) > 0 ) {
+            const a = id.slice( 2 ).split( '@' );
+            const b = a[ 1 ].split( ':' );
+            const lat = parseFloat( b[ 0 ] );
+            const lon = parseFloat( b[ 1 ] );
+            return ( isNaN( lat ) || isNaN( lon ) ) ? null : {
+                attached: a[ 0 ],
+                lat,
+                lon
+            };
+        }
+        return null;
+    }
+
+
+    /**
      * Performs data migration from a given version to the {@link MapStorage.LATEST_VERSION current one}.
      *
      * This should not be called directly, as it may result in an invalid state or leave leftover data. Instead use
@@ -268,15 +290,17 @@ class MapStorage {
             case 20220713:
                 // Parse dismissed marker IDs and use fixed precision on coordinates
                 data.dismissed = data.dismissed.map( x => {
-                    const a = x.split( '@' );
-                    const b = a[ 1 ].split( ':' );
-                    const lat = parseFloat( b[ 0 ] );
-                    const lon = parseFloat( b[ 1 ] );
-                    return ( isNaN( lat ) || isNaN( lon ) ) ? x : ( a[ 0 ] + '@' + lat.toFixed( 3 ) + ':' + lon.toFixed( 3 ) );
+                    const info = this._parseGeneratedMarkerId( x );
+                    return info === null ? x : ( info.attached + '@' + info.lat.toFixed( 3 ) + ':' + info.lon.toFixed( 3 ) );
                 } );
             case 20220803:
                 // Add marker namespace to every dismissed ID
                 data.dismissed = data.dismissed.map( x => 'M:' + x );
+            case 20221115:
+                // Rid of extra M(arker) prefix in generated markers
+                data.dismissed = data.dismissed.map( x =>
+                    ( x.slice( 0, 3 ) === 'M:M' && this._parseGeneratedMarkerId( x.slice( 3 ) ) !== null ) ? `M:${x.slice( 3 )}`
+                        : x );
         }
         /* eslint-enable no-fallthrough */
 
@@ -332,11 +356,12 @@ class MapStorage {
  * - 20220929   : Dismissal entries require a namespace G(roup) or M(arker), to support global dismissals without conflicts.
  * - 20221114   : New model (single object).
  * - 20221115   : Namespace changed from ext.ark.datamaps to ext.datamaps.
+ * - 20230228   : Generated marker IDs no longer include the M(arker) prefix. Storage has been namespaced for a while anyway.
  *
  * @constant
  * @type {number}
  */
-MapStorage.LATEST_VERSION = 20221115;
+MapStorage.LATEST_VERSION = 20230228;
 /**
  * Oldest version we can load.
  *

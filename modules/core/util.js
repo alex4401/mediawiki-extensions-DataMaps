@@ -224,7 +224,7 @@ module.exports = Object.freeze( {
      */
     getGeneratedMarkerId( leafletMarker ) {
         const type = leafletMarker.attachedLayers.join( ' ' );
-        return `M${type}@${leafletMarker.apiInstance[ 0 ].toFixed( 3 )}:${leafletMarker.apiInstance[ 1 ].toFixed( 3 )}`;
+        return `${type}@${leafletMarker.apiInstance[ 0 ].toFixed( 3 )}:${leafletMarker.apiInstance[ 1 ].toFixed( 3 )}`;
     },
 
 
