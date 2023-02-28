@@ -866,8 +866,9 @@ class DataMap extends EventEmitter {
             // Zoom-based marker scaling
             shouldScaleMarkers: true,
             markerZoomScaleFactor: 1.8,
-            // Zoom control text injection
+            // Zoom control
             zoomControlOptions: {
+                position: 'topright',
                 zoomInTitle: mw.msg( 'datamap-control-zoom-in' ),
                 zoomOutTitle: mw.msg( 'datamap-control-zoom-out' )
             },
@@ -1010,7 +1011,7 @@ class DataMap extends EventEmitter {
         }
 
         // Extend zoom control to add buttons to reset or centre the view
-        this.viewControls = this.addControl( DataMap.anchors.topLeft, new Controls.ExtraViewControls( this ) );
+        this.viewControls = this.addControl( DataMap.anchors.topRight, new Controls.ExtraViewControls( this ) );
 
         // Display an edit button to logged in users
         if ( !this.isFeatureBitSet( MapFlags.IsPreview ) && mw.config.get( 'wgUserName' ) !== null ) {
