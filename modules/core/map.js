@@ -938,7 +938,7 @@ class DataMap extends EventEmitter {
             anchorElement = this.resolveControlAnchor( anchor ),
             beforeInlineGroup = prepend && anchorElement.querySelector( ':scope > .datamap-control-group' );
         if ( beforeInlineGroup ) {
-            anchorElement.insertBefore( controlElement, beforeInlineGroup );
+            anchorElement.insertBefore( controlElement, beforeInlineGroup.nextSibling );
         } else {
             anchorElement[ prepend ? 'prepend' : 'appendChild' ]( controlElement );
         }
