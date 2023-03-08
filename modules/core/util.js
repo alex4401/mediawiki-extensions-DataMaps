@@ -68,7 +68,7 @@ module.exports = Object.freeze( {
      * @typedef {Object} DomElementFactoryOptions
      * @property {string[]?} [classes]
      * @property {string} [text]
-     * @property {string} [html]
+     * @property {string|HTMLElement} [html]
      * @property {Record<string, string|undefined|boolean|number>} [attributes]
      * @property {Record<string, EventListenerOrEventListenerObject|undefined>} [events]
      * @property {HTMLElement} [appendTo]
@@ -86,7 +86,11 @@ module.exports = Object.freeze( {
             result.innerText = options.text;
         }
         if ( options.html ) {
-            result.innerHTML = options.html;
+            if ( typeof options.html === 'string' ) {
+                result.innerHTML = options.html;
+            } else {
+                result.appendChild( options.html );
+            }
         }
         if ( options.classes ) {
             // eslint-disable-next-line mediawiki/class-doc
