@@ -155,7 +155,6 @@ class MarkerSearch extends Controls.MapControl {
 
     onMenuItemChosen( item ) {
         this.close();
-        this.inputBox.setValue( '', true );
         setTimeout( () => {
             item.data.map.openMarkerPopup( item.data.leafletMarker );
             if ( item.$tab ) {
