@@ -19,7 +19,13 @@ MenuWidget.prototype.updateItemVisibility = function () {
         return;
     }
 
-    const results = MarkerSearchIndex.prototype.query.call( this, this.$input.val() );
+    // For whatever reason, OOUI triggers filters on any key press...
+    if ( this._filteredFor === this.$input.val() ) {
+        return;
+    }
+    this._filteredFor = this.$input.val();
+
+    const results = MarkerSearchIndex.query( this.items, this.$input.val() );
 
     for ( const item of this.items ) {
         if ( item instanceof OO.ui.OptionWidget ) {
@@ -27,9 +33,11 @@ MenuWidget.prototype.updateItemVisibility = function () {
         }
     }
 
+    let index = 0;
     for ( const result of results ) {
         const item = result.obj;
         if ( item instanceof OO.ui.OptionWidget ) {
+            item._order = index++;
             item.toggle( true );
             item.$element.appendTo( this.$group );
 
@@ -43,8 +51,11 @@ MenuWidget.prototype.updateItemVisibility = function () {
             }
         }
     }
-
     this.$element.toggleClass( 'oo-ui-menuSelectWidget-invisible', results.length === 0 );
+    // Keep this in sync with display order for highlighting
+    this.items.sort( ( a, b ) => {
+        return b.visible - a.visible !== 0 ? ( b.visible - a.visible ) : ( a._order - b._order );
+    } );
 
     // Reevaluate clipping
     this.clip();
