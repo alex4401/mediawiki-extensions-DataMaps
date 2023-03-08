@@ -27,6 +27,19 @@ class MarkerSearchIndex extends EventEmitter {
         this._queue = [];
     }
 
+    static normalisePhrase( text ) {
+        // Replace trailing whitespace, normalize multiple spaces and make case insensitive
+        return text.trim().replace( /\s+/, ' ' ).toLowerCase().normalize( 'NFD' ).replace( /[\u0300-\u036f]/g, '' );
+    }
+
+
+    static query( items, phrase ) {
+        return Fuzzysort.go( MarkerSearchIndex.normalisePhrase( phrase ), items, {
+            threshold: MarkerSearchIndex.SCORE_THRESHOLD,
+            weighedKey: 'keywords'
+        } );
+    }
+
 
     _transform( map, leafletMarker ) {
         const state = leafletMarker.apiInstance[ 2 ];
@@ -84,18 +97,16 @@ class MarkerSearchIndex extends EventEmitter {
 
 
     query( phrase ) {
-        return Fuzzysort.go( MarkerSearchIndex.normalisePhrase( phrase ), this.items, {
-            threshold: -75000,
-            weighedKey: 'keywords'
-        } );
+        return MarkerSearchIndex.query( this.items, phrase );
     }
 }
 
 
-MarkerSearchIndex.normalisePhrase = function ( text ) {
-    // Replace trailing whitespace, normalize multiple spaces and make case insensitive
-    return text.trim().replace( /\s+/, ' ' ).toLowerCase().normalize( 'NFD' ).replace( /[\u0300-\u036f]/g, '' );
-};
+/**
+ * @constant
+ * @type {number}
+ */
+MarkerSearchIndex.SCORE_THRESHOLD = -75000;
 
 
 /**
