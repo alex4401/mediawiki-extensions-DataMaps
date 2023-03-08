@@ -342,7 +342,7 @@ class DataMap extends EventEmitter {
      * @param {number?} [lon] Longitude if no instance specified.
      * @return {string}
      */
-    getCoordLabel( latOrInstance, lon ) {
+    getCoordinateLabel( latOrInstance, lon ) {
         if ( Array.isArray( latOrInstance ) ) {
             lon = latOrInstance[ 1 ];
             latOrInstance = latOrInstance[ 0 ];
@@ -350,6 +350,19 @@ class DataMap extends EventEmitter {
 
         const message = this.config.cOrder === 1 ? 'datamap-coordinate-control-text-xy' : 'datamap-coordinate-control-text';
         return mw.msg( message, latOrInstance.toFixed( 2 ), /** @type {number} */ ( lon ).toFixed( 2 ) );
+    }
+
+
+    /**
+     * Returns a formatted datamap-coordinate-control-text message.
+     *
+     * @deprecated since v0.16.0, will be removed in v1.0.0. Use {@link getCoordinateLabel}.
+     * @param {DataMaps.PointTupleRepr|number} latOrInstance Latitude or API marker instance
+     * @param {number?} [lon] Longitude if no instance specified.
+     * @return {string}
+     */
+    getCoordLabel( latOrInstance, lon ) {
+        return this.getCoordinateLabel( latOrInstance, lon );
     }
 
 
