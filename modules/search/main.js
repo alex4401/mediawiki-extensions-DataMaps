@@ -149,7 +149,7 @@ class MarkerSearch extends Controls.MapControl {
 
 
     onTextChange( value ) {
-        this.menu.toggle( value.length > 0 );
+        this.menu.toggle( true );
     }
 
 
