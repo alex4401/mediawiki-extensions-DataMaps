@@ -783,8 +783,8 @@ class DataMap extends EventEmitter {
         const bounds = this.getCurrentContentBounds( invalidate );
         const nw = bounds.getNorthWest(),
             se = bounds.getSouthEast();
-        bounds.extend( [ [ se.lat - DataMap.BOUNDS_PADDING[ 0 ], se.lng + DataMap.BOUNDS_PADDING[ 1 ] ],
-            [ nw.lat + DataMap.BOUNDS_PADDING[ 0 ], nw.lng - DataMap.BOUNDS_PADDING[ 1 ] ] ] );
+        bounds.extend( [ [ se.lat - DataMap.BOUNDS_PADDING[ 0 ][ 0 ], se.lng + DataMap.BOUNDS_PADDING[ 0 ][ 1 ] ],
+            [ nw.lat + DataMap.BOUNDS_PADDING[ 1 ][ 0 ], nw.lng - DataMap.BOUNDS_PADDING[ 1 ][ 1 ] ] ] );
         return bounds;
     }
 
@@ -1067,9 +1067,9 @@ DataMap.anchors = Object.freeze( {
  * Content bounds padding.
  *
  * @constant
- * @type {LeafletModule.LatLngTuple}
+ * @type {LeafletModule.LatLngBoundsTuple}
  */
-DataMap.BOUNDS_PADDING = [ 150, 200 ];
+DataMap.BOUNDS_PADDING = [ [ 150, 200 ], [ 150, 250 ] ];
 /**
  * Max zoom-caused scale value for vector markers.
  *
