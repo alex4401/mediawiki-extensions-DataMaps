@@ -290,6 +290,21 @@ module.exports = Object.freeze( {
     },
 
 
+    /**
+     * Stops propagation of several touch and mouse interaction events.
+     *
+     * @param {HTMLElement} element
+     */
+    preventMapInterference( element ) {
+        // Stop mouse event propagation onto Leaflet map
+        for ( const eventName of [
+            'click', 'dblclick', 'scroll', 'mousewheel', 'wheel', 'touchstart', 'touchmove', 'touchup', 'mouseup', 'touchcancel'
+        ] ) {
+            element.addEventListener( eventName, event => event.stopPropagation() );
+        }
+    },
+
+
     TabberNeue: {
         /**
          * @param {HTMLElement} element

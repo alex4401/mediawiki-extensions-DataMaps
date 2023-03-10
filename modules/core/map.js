@@ -947,10 +947,7 @@ class DataMap extends EventEmitter {
         } else {
             anchorElement[ prepend ? 'prepend' : 'appendChild' ]( controlElement );
         }
-        // Stop mouse event propagation onto Leaflet map
-        for ( const eventName of [ 'click', 'dblclick', 'scroll', 'mousewheel', 'wheel' ] ) {
-            controlElement.addEventListener( eventName, event => event.stopPropagation() );
-        }
+        Util.preventMapInterference( controlElement );
         return control;
     }
 
