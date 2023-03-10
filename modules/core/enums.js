@@ -20,7 +20,9 @@ module.exports = {
         LinkedSearch: 1 << 5,
         VisualEditor: 1 << 6,
         IsPreview: 1 << 7,
-        RenderMarkersOntoCanvas: 1 << 8
+        /** @deprecated since v0.16.0 to be removed in v1.0.0. Use {@link IconRenderer_Canvas}. */
+        RenderMarkersOntoCanvas: 1 << 8,
+        IconRenderer_Canvas: 1 << 8,
     },
 
     /**

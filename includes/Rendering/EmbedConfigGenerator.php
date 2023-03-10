@@ -113,9 +113,21 @@ class EmbedConfigGenerator {
         $this->data->iterateRawMarkerMap( static function ( string $_, array $rawCollection ) use ( &$markerCount ) {
             $markerCount += count( $rawCollection );
         } );
-        $out |= $markerCount >= self::NUMBER_OF_MARKERS_FOR_CANVAS ? 1 << 8 : 0;
+
+        if ( self::isCanvasPreferred( $settings->getIconRendererType(), $markerCount ) ) {
+            $out |= 1 << 8;
+        }
 
         return $out;
+    }
+
+    private static function isCanvasPreferred( int $irt, int $markerCount ): bool {
+        if ( $irt === MapSettingsSpec::IRT_AUTO ) {
+            return $markerCount >= self::NUMBER_OF_MARKERS_FOR_CANVAS;
+        } elseif ( $irt === MapSettingsSpec::IRT_CANVAS ) {
+            return true;
+        }
+        return false;
     }
 
     private function getBackgroundConfig( MapBackgroundSpec $spec, int $coordOrder ): array {

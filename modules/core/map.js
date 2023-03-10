@@ -184,9 +184,9 @@ class DataMap extends EventEmitter {
          */
         this.crsScaleX = this.crsScaleY = 100 / Math.max( this.config.crs[ 0 ][ 0 ], this.config.crs[ 1 ][ 0 ] );
 
-        // Force the RenderMarkersOntoCanvas flag if dmfullcanvas in the URL
+        // Force the IconRenderer_Canvas flag if dmfullcanvas in the URL
         if ( Util.getQueryParameter( 'dmfullcanvas' ) ) {
-            this.config.flags = this.config.flags | MapFlags.RenderMarkersOntoCanvas;
+            this.config.flags = this.config.flags | MapFlags.IconRenderer_Canvas;
         }
 
         // Register groups from the configuration with the layer visibility manager, and set their default state
@@ -524,7 +524,7 @@ class DataMap extends EventEmitter {
      * @return {boolean}
      */
     shouldRenderIconsOnCanvas() {
-        return !!( this.leaflet.options.allowIconsOnCanvas && this.isFeatureBitSet( MapFlags.RenderMarkersOntoCanvas ) );
+        return this.isFeatureBitSet( MapFlags.IconRenderer_Canvas );
     }
 
 

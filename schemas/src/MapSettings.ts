@@ -12,6 +12,11 @@ export class MapSettings {
     hideLegend: boolean = false;
     
     /**
+     * 
+     */
+    iconRenderer: 'auto'|'DOM'|'canvas' = 'auto';
+
+    /**
      */
     requireCustomMarkerIDs: boolean = false;
 
@@ -58,6 +63,5 @@ export class MapSettings {
         shouldScaleMarkers?: boolean;
         markerZoomScaleFactor?: number;
         interactionControl?: boolean;
-        allowIconsOnCanvas?: boolean;
     } = undefined;
 }

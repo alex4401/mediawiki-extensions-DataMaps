@@ -17,6 +17,21 @@ class MapSettingsSpec extends DataModel {
     public const SC_GROUP_DECLARATION_ORDER = 0;
     public const SC_AMOUNT = 1;
 
+    public const IRT_AUTO = 0;
+    public const IRT_DOM = 1;
+    public const IRT_CANVAS = 2;
+
+    public function getIconRendererType(): int {
+        $value = $this->raw->iconRenderer ?? 'auto';
+        switch ( $value ) {
+            case 'DOM':
+                return self::IRT_DOM;
+            case 'canvas':
+                return self::IRT_CANVAS;
+        }
+        return self::IRT_AUTO;
+    }
+
     public function isZoomDisabled(): bool {
         return $this->raw->disableZoom ?? false;
     }
@@ -64,6 +79,15 @@ class MapSettingsSpec extends DataModel {
             'values' => [ true, false, 'tabberWide' ]
         ] );
         $this->checkField( $status, 'hideLegend', DataModel::TYPE_BOOL );
+        $this->checkField( $status, [
+            'name' => 'iconRenderer',
+            'type' => DataModel::TYPE_STRING,
+            'values' => [
+                'auto',
+                'DOM',
+                'canvas'
+            ]
+        ] );
         $this->checkField( $status, 'requireCustomMarkerIDs', DataModel::TYPE_BOOL );
         $this->checkField( $status, [
             'name' => 'sortChecklistsBy',
