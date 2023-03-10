@@ -302,7 +302,8 @@ module.exports = Object.freeze( {
     preventMapInterference( element ) {
         // Stop mouse event propagation onto Leaflet map
         for ( const eventName of [
-            'click', 'dblclick', 'scroll', 'mousewheel', 'wheel', 'touchstart', 'touchmove', 'touchup', 'mouseup', 'touchcancel'
+            'click', 'dblclick', 'scroll', 'mousewheel', 'wheel', 'mousedown', 'mouseup', 'touchstart', 'touchmove', 'touchup',
+            'touchcancel'
         ] ) {
             element.addEventListener( eventName, event => event.stopPropagation() );
         }
