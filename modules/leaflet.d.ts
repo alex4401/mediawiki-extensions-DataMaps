@@ -137,6 +137,7 @@ declare namespace LeafletModule {
         };
         /* Non-standard options */
         rendererSettings: CanvasOptions;
+        uriPopupZoom?: number|false;
         autoMinZoom?: boolean;
         autoMinZoomAbsolute: number;
         shouldScaleMarkers?: boolean;
@@ -153,6 +154,7 @@ declare namespace LeafletModule {
         /* Non-standard options */
         vecMarkerScale?: number;
         iconMarkerScale?: number;
+        uriPopupZoom?: number;
     }
 
 
@@ -280,6 +282,7 @@ declare namespace LeafletModule {
         getZoom(): number;
         setZoom( zoom: number ): this;
         fitBounds( bounds: LatLngBounds ): this;
+        flyTo( point: LatLngLike, zoom?: number ): this;
         setView( center: LatLng, zoom?: number ): this;
         setMinZoom( zoom: number ): this;
         getBoundsZoom( bounds: LatLngBounds, inside?: boolean, padding?: PointTuple ): number;

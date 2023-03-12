@@ -45,6 +45,18 @@ class LeafletSettingsSpec extends DataModel {
         $this->checkField( $status, 'shouldScaleMarkers', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'markerZoomScaleFactor', DataModel::TYPE_NUMBER );
         $this->checkField( $status, 'interactionControl', DataModel::TYPE_BOOL );
+        $this->checkField( $status, [
+            'name' => 'uriPopupZoom',
+            'type' => [ DataModel::TYPE_BOOL, DataModel::TYPE_NUMBER ],
+            'check' => static function ( Status $status, $value ) {
+                if ( is_bool( $value ) && $value !== false ) {
+                    $status->fatal( 'datamap-error-validate-disallowed-value', static::$publicName, 'uriPopupZoom',
+                        wfMessage( 'datamap-error-validate-check-docs' ) );
+                    return false;
+                }
+                return true;
+            }
+        ] );
 
         $this->disallowOtherFields( $status );
     }

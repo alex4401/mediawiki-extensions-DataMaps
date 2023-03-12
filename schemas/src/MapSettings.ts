@@ -60,6 +60,7 @@ export class MapSettings {
         };
         autoMinZoom?: boolean;
         autoMinZoomAbsolute?: number;
+        uriPopupZoom?: number;
         shouldScaleMarkers?: boolean;
         markerZoomScaleFactor?: number;
         interactionControl?: boolean;

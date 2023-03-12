@@ -462,7 +462,7 @@ class DataMap extends EventEmitter {
      */
     openPopupIfUriMarker( leafletMarker ) {
         if ( this.markerIdToAutoOpen !== null && Util.getMarkerId( leafletMarker ) === this.markerIdToAutoOpen ) {
-            this.openMarkerPopup( leafletMarker );
+            this.openMarkerPopup( leafletMarker, true );
             this.off( 'markerReady', this.openPopupIfUriMarker );
         }
     }
@@ -618,8 +618,9 @@ class DataMap extends EventEmitter {
      * Opens a marker's popup, while respecting its background ties.
      *
      * @param {LeafletModule.AnyMarker} leafletMarker
+     * @param {boolean} [centreMapOver]
      */
-    openMarkerPopup( leafletMarker ) {
+    openMarkerPopup( leafletMarker, centreMapOver ) {
         const properties = leafletMarker.assignedProperties;
         if ( properties && properties.bg !== undefined ) {
             const backgroundIndex = this.config.backgrounds.findIndex( x => x.layer === properties.bg );
@@ -629,6 +630,11 @@ class DataMap extends EventEmitter {
         }
 
         leafletMarker.openPopup();
+
+        if ( centreMapOver && this.leaflet.options.uriPopupZoom !== false ) {
+            this.leaflet.flyTo( leafletMarker.getLatLng(), this.leaflet.options.uriPopupZoom
+                || ( this.leaflet.options.maxZoom - this.leaflet.options.minZoom ) / 5 * 4 );
+        }
     }
 
 
@@ -800,16 +806,16 @@ class DataMap extends EventEmitter {
         if ( this.leaflet.options.autoMinZoom ) {
             this.leaflet.options.minZoom = this.leaflet.options.autoMinZoomAbsolute;
             this.leaflet.setMinZoom( this.leaflet.getBoundsZoom( bounds, false, [ 0, 0 ] ) );
+            // TODO: this should recalculate popup zoom?
         }
     }
 
 
     /**
      * @private
-     * @param {HTMLElement} holderElement Container for the Leaflet map.
-     * @fires DataMap#leafletLoaded
+     * @return {LeafletModule.MapOptions}
      */
-    _initialiseLeaflet( holderElement ) {
+    _makeLeafletConfig() {
         // If FF_DISABLE_ZOOM is set, prevent all kind of zooming
         if ( this.isFeatureBitSet( MapFlags.DisableZoom ) ) {
             this.config.leafletSettings = $.extend( {
@@ -826,7 +832,7 @@ class DataMap extends EventEmitter {
 
         // Prepare settings for Leaflet
         /** @type {LeafletModule.MapOptions} */
-        const leafletConfig = $.extend( true, /** @type {LeafletModule.IPublicMapOptions} */ ( {
+        const result = $.extend( true, /** @type {LeafletModule.IPublicMapOptions} */ ( {
             // Boundaries
             center: [ 50, 50 ],
             maxBounds: [ [ -100, -100 ], [ 200, 200 ] ],
@@ -871,10 +877,21 @@ class DataMap extends EventEmitter {
             // Enable bundled interaction rejection control
             interactionControl: true
         } ), this.config.leafletSettings );
+
+        return result;
+    }
+
+
+    /**
+     * @private
+     * @param {HTMLElement} holderElement Container for the Leaflet map.
+     * @fires DataMap#leafletLoaded
+     */
+    _initialiseLeaflet( holderElement ) {
+        const leafletConfig = this._makeLeafletConfig();
         // Specify the coordinate reference system and initialise the renderer
         leafletConfig.crs = Leaflet.CRS.Simple;
         leafletConfig.renderer = new Leaflet.Canvas( leafletConfig.rendererSettings );
-
         // Initialise the Leaflet map
         this.leaflet = new Leaflet.Map( holderElement, leafletConfig );
 
