@@ -52,17 +52,6 @@ module.exports = class MarkerPopup {
          */
         this.mmvThumbIndex = null;
 
-        // These three containers are provided by Leaflet.Ark.Popup
-        /** @type {!HTMLElement} */
-        // @ts-ignore: Initialised by Leaflet.Ark.Popup, ideally we'd use null assertions here
-        this.buttonsElement = null;
-        /** @type {!HTMLElement} */
-        // @ts-ignore: Initialised by Leaflet.Ark.Popup, ideally we'd use null assertions here
-        this.contentElement = null;
-        /** @type {!HTMLElement} */
-        // @ts-ignore: Initialised by Leaflet.Ark.Popup, ideally we'd use null assertions here
-        this.actionsElement = null;
-
         // These elements are created during building
         /** @type {HTMLElement?} */
         this.subTitle = null;
@@ -104,9 +93,33 @@ module.exports = class MarkerPopup {
 
 
     /**
-     * Builds the buttons.
+     * Builds the popup.
+     *
+     * @param {HTMLElement} element
      */
-    buildButtons() {
+    build( element ) {
+        this.buildHeader( createDomElement( 'div', {
+            classes: [ 'ext-datamaps-popup-header' ],
+            appendTo: element
+        } ) );
+        this.buildContent( element );
+        // If tools are not empty, push them onto the content
+        const actionsElement = createDomElement( 'ul', {
+            classes: [ 'ext-datamaps-popup-tools' ]
+        } );
+        this.buildActions( actionsElement );
+        if ( actionsElement.children.length > 0 ) {
+            element.appendChild( actionsElement );
+        }
+    }
+
+
+    /**
+     * Builds the buttons.
+     *
+     * @param {HTMLElement} element
+     */
+    buildButtons( element ) {
         const getLink = createDomElement( 'a', {
             classes: [ 'ext-datamaps-popup-link', 'oo-ui-icon-link' ],
             attributes: {
@@ -123,33 +136,33 @@ module.exports = class MarkerPopup {
                         .then( () => mw.notify( mw.msg( 'datamap-popup-marker-link-copied' ) ) );
                 }
             },
-            appendTo: this.buttonsElement
+            appendTo: element
         } );
     }
 
 
     /**
-     * Builds contents of this popup.
+     * @param {HTMLElement} element
      */
-    build() {
+    buildHeader( element ) {
         // Build the title
         if ( this.slots.label && this.markerGroup.name !== this.slots.label ) {
-            this.$subTitle = $( createDomElement( 'b', {
+            this.subTitle = createDomElement( 'b', {
                 classes: [ 'ext-datamaps-popup-subtitle' ],
                 text: this.markerGroup.name,
-                appendTo: this.contentElement
-            } ) );
-            this.$title = $( createDomElement( 'b', {
+                appendTo: element
+            } );
+            this.title = createDomElement( 'b', {
                 classes: [ 'ext-datamaps-popup-title' ],
                 html: this.slots.label,
-                appendTo: this.contentElement
-            } ) );
+                appendTo: element
+            } );
         } else {
-            this.$title = $( createDomElement( 'b', {
+            this.title = createDomElement( 'b', {
                 classes: [ 'ext-datamaps-popup-title' ],
                 text: this.markerGroup.name,
-                appendTo: this.contentElement
-            } ) );
+                appendTo: element
+            } );
         }
 
         // Collect layer discriminators
@@ -166,31 +179,38 @@ module.exports = class MarkerPopup {
         let detailText = discrims.join( ', ' );
         // Reformat if coordinates are to be shown
         if ( this.map.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
-            const coordText = this.map.getCoordLabel( this.leafletMarker.apiInstance );
+            const coordText = this.map.getCoordinateLabel( this.leafletMarker.apiInstance );
             detailText = detailText ? `${coordText} (${detailText})` : coordText;
         }
         // Push onto the contents
-        this.$location = $( createDomElement( 'div', {
+        this.location = createDomElement( 'div', {
             classes: [ 'ext-datamaps-popup-location' ],
             text: detailText,
-            appendTo: this.contentElement
-        } ) );
+            appendTo: element
+        } );
+    }
 
+    /**
+     * Builds contents of this popup.
+     *
+     * @param {HTMLElement} element
+     */
+    buildContent( element ) {
         // Description
         if ( this.slots.desc ) {
             if ( !this.slots.desc.startsWith( '<p>' ) ) {
                 this.slots.desc = `<p>${this.slots.desc}</p>`;
             }
-            this.$description = $( createDomElement( 'div', {
+            this.description = createDomElement( 'div', {
                 classes: [ 'ext-datamaps-popup-description' ],
                 html: this.slots.desc,
-                appendTo: this.contentElement
-            } ) );
+                appendTo: element
+            } );
         }
 
         // Image
         if ( this.slots.image ) {
-            this.$image = $( createDomElement( 'img', {
+            this.image = createDomElement( 'img', {
                 classes: [ 'ext-datamaps-popup-image' ],
                 attributes: {
                     src: this.slots.image[ 0 ],
@@ -198,36 +218,19 @@ module.exports = class MarkerPopup {
                     'data-file-width': this.slots.image[ 1 ],
                     'data-file-height': this.slots.image[ 2 ]
                 },
-                appendTo: this.contentElement
-            } ) );
+                appendTo: element
+            } );
             this._setupMMVIntegration();
         }
     }
 
 
     /**
-     * Initialises an action node.
-     *
-     * @since 0.14.4
-     * @param {string} cssClass
-     * @param {HTMLElement} child
-     * @return {HTMLElement}
-     */
-    addAction( cssClass, child ) {
-        // eslint-disable-next-line mediawiki/class-doc
-        const result = createDomElement( 'li', {
-            classes: [ cssClass ],
-            appendTo: this.actionsElement
-        } );
-        result.appendChild( $( child )[ 0 ] );
-        return result;
-    }
-
-
-    /**
      * Builds the action list of this popup.
+     *
+     * @param {HTMLElement} element
      */
-    buildActions() {
+    buildActions( element ) {
         // Related article
         let article = this.slots.article || this.markerGroup.article;
         if ( article ) {
@@ -238,12 +241,15 @@ module.exports = class MarkerPopup {
                 article = split[ 0 ];
             }
 
-            this.addAction( 'datamap-popup-seemore', createDomElement( 'a', {
-                text: msg,
-                attributes: {
-                    href: mw.util.getUrl( article )
-                }
-            } ) );
+            createDomElement( 'li', {
+                html: createDomElement( 'a', {
+                    text: msg,
+                    attributes: {
+                        href: mw.util.getUrl( article )
+                    }
+                } ),
+                appendTo: element
+            } );
         }
 
         // Dismissables
@@ -256,7 +262,10 @@ module.exports = class MarkerPopup {
                     }
                 }
             } );
-            this.addAction( 'datamap-popup-dismiss', this.dismiss );
+            createDomElement( 'li', {
+                html: this.dismiss,
+                appendTo: element
+            } );
         }
     }
 
@@ -307,13 +316,13 @@ module.exports = class MarkerPopup {
      * @private
      */
     _setupMMVIntegration() {
-        if ( mw.config.get( 'wgMediaViewer' ) ) {
-            const $image = /** @type {jQuery!} */ ( this.$image );
+        if ( this.image && mw.config.get( 'wgMediaViewer' ) ) {
+            const $image = $( this.image );
             mw.loader.using( 'mmv.bootstrap', () => {
                 const title = mw.Title.newFromImg( $image );
                 let caption = this.markerGroup.name;
                 if ( this.map.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
-                    caption += ` (${this.map.getCoordLabel( this.leafletMarker.apiInstance )})`;
+                    caption += ` (${this.map.getCoordinateLabel( this.leafletMarker.apiInstance )})`;
                 }
 
                 $image.on( 'click', event => {

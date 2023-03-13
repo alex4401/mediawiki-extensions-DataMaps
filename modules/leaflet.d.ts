@@ -63,16 +63,11 @@ declare namespace LeafletModule {
 
         interface IPopupContentRenderer {
             shouldKeepAround(): boolean;
-            buildButtons(): void;
-            build(): void;
-            buildActions(): void;
+            buildButtons( element: HTMLElement ): void;
+            build( element: HTMLElement ): void;
 
             onAdd(): void;
             onRemove(): void;
-
-            buttonsElement: HTMLElement;
-            contentElement: HTMLElement;
-            actionsElement: HTMLElement;
         }
 
         type PopupContentRendererGetterFn = () => Ark.IPopupContentRenderer;

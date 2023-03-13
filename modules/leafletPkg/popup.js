@@ -28,20 +28,8 @@ module.exports = Leaflet.Popup.extend( /** @lends LeafletModule.Popup.prototype 
         // Call the content manager getter and build its content
         if ( !this._content ) {
             this._content = /** @type {LeafletModule.Ark.IPopupContentRenderer} */ ( this.getContentManager() );
-            // Inject node references
-            this._content.contentElement = this._contentNode;
-            this._content.buttonsElement = this._buttonArea;
-            this._content.actionsElement = Leaflet.DomUtil.create( 'ul', 'ext-datamaps-popup-tools' );
-            // Build the contents
-            this._content.buildButtons();
-            this._content.build();
-            this._content.buildActions();
-            // If tools are not empty, push them onto the content. Otherwise destroy the node and remove the reference.
-            if ( this._content.actionsElement.children.length > 0 ) {
-                this._content.contentElement.appendChild( this._content.actionsElement );
-            } else {
-                delete this._content.actionsElement;
-            }
+            this._content.build( this._contentNode );
+            this._content.buildButtons( this._buttonArea );
         }
 
         // Call the update callback on the content manager
