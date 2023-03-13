@@ -1036,7 +1036,7 @@ class DataMap extends EventEmitter {
 
         // Create a background toggle
         if ( this.config.backgrounds.length > 1 ) {
-            this.backgroundSwitch = this.addControl( DataMap.anchors.topRightInline, new Controls.BackgroundSwitcher( this ) );
+            this.backgroundSwitch = this.addControl( DataMap.anchors.legend, new Controls.BackgroundSwitcher( this ) );
         }
 
         // Extend zoom control to add buttons to reset or centre the view
