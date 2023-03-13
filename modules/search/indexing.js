@@ -92,6 +92,7 @@ class MarkerSearchIndex extends EventEmitter {
     commit() {
         this.fire( 'commit', this._queue );
         this.items = this.items.concat( this._queue );
+        this.items.sort( ( a, b ) => a.label.localeCompare( b ) );
         this._queue = [];
     }
 
