@@ -1,3 +1,8 @@
+@popup-width: 290px;
+@popup-padding--vertical: 15px;
+@popup-padding--horizontal: 16px;
+@popup-min-edge-spacing: 1px;
+
 .ext-datamaps-popup {
     .ext-datamaps-popup-buttons {
         position: absolute;
@@ -24,16 +29,29 @@
         }
     }
 
+    .ext-datamaps-popup-title {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.25;
+    }
+
     .ext-datamaps-popup-subtitle {
         display: block;
-        color: #666;
-        font-size: 96%;
+        color: #757575;
+        font-size: 0.96em;
+        font-weight: 500;
+        line-height: 1.15;
+    }
+
+    .ext-datamaps-popup-location {
+        color: #757575;
     }
 
     .ext-datamaps-popup-image {
         display: block;
-        width: 250px;
-        margin: 2px -17px 0 -14px;
+        width: calc( @popup-width - @popup-min-edge-spacing * 2 );
+        @margin: calc( -1 * @popup-padding--horizontal + @popup-min-edge-spacing );
+        margin: 8px @margin 0 @margin;
 
         &:last-child {
             margin-bottom: -10px;
@@ -43,7 +61,7 @@
     .ext-datamaps-popup-tools {
         display: flex;
         flex-wrap: wrap;
-        margin: 6px -8px -6px;
+        margin: 8px -8px -8px;
         gap: 0.5em;
         list-style: none;
 
@@ -59,11 +77,6 @@
                 background: #a0a7aa54;
             }
         }
-    }
-
-    .ext-datamaps-popup-location {
-        margin-bottom: 0.5em;
-        color: #454545;
     }
 
     .ext-datamaps-popup-description ul {

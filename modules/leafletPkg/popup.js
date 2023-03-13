@@ -4,7 +4,8 @@ const Leaflet = /** @type {LeafletModule} */ ( /** @type {unknown} */ ( require(
 /** @class */
 module.exports = Leaflet.Popup.extend( /** @lends LeafletModule.Popup.prototype */ {
     options: {
-        className: 'ext-datamaps-popup'
+        className: 'ext-datamaps-popup',
+        maxWidth: 300
     },
 
     /**
