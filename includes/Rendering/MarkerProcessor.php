@@ -110,7 +110,8 @@ class MarkerProcessor {
             $slots['image'] = [
                 $thumb->getURL(),
                 $thumb->getFile()->getWidth(),
-                $thumb->getFile()->getHeight()
+                $thumb->getFile()->getHeight(),
+                $thumb->getHeight()
             ];
         }
 

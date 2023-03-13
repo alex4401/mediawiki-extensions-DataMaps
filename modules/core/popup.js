@@ -215,6 +215,7 @@ module.exports = class MarkerPopup {
                 attributes: {
                     src: this.slots.image[ 0 ],
                     width: 250,
+                    height: this.slots.image[ 3 ],
                     'data-file-width': this.slots.image[ 1 ],
                     'data-file-height': this.slots.image[ 2 ]
                 },
