@@ -159,6 +159,7 @@ declare namespace LeafletModule {
     interface IconOptions {
         iconUrl: string;
         iconSize: PointTuple;
+        iconAnchor?: PointTuple;
         useWithCanvas?: boolean;
     }
 

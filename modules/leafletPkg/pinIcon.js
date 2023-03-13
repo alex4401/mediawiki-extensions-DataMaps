@@ -2,17 +2,16 @@ const Leaflet = require( '../vendor/leaflet/leaflet.js' );
 
 module.exports = Leaflet.DivIcon.extend( {
     options: {
-        className: 'leaflet-marker-icon datamap-pin-marker-icon',
-        colour: '#fff'
+        colour: '#fff',
+        anchorToBottom: true
     },
 
 
     createIcon( oldIcon ) {
         const root = ( oldIcon && oldIcon.tagName === 'SVG' ) ? oldIcon
             : require( 'ext.datamaps.core' ).Util.createPinIconElement();
+        root.classList.add( 'leaflet-marker-icon', 'ext-datamaps-pin-marker-icon' );
         root.setAttribute( 'fill', this.options.colour );
-        root.style.marginLeft = `${-this.options.iconSize[ 0 ] / 2}px`;
-        root.style.marginTop = `${-this.options.iconSize[ 1 ] / 2}px`;
         root.style.width = `${this.options.iconSize[ 0 ].x}px`;
         root.style.height = `${this.options.iconSize[ 1 ].y}px`;
         return root;
