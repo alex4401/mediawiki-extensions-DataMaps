@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\DataMaps;
 use Config;
 use MediaWiki\Extension\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\DataMaps\Rendering\MarkerProcessor;
+use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
@@ -201,6 +202,14 @@ class HookHandler implements
                 }
             }
         }
+    }
+
+    public static function getJsConfig( \MediaWiki\ResourceLoader\Context $context, Config $config ): array {
+        return [
+            'IsBleedingEdge' => ExtensionConfig::isBleedingEdge(),
+            // TODO: not the brightest way
+            'CanAnonsEdit' => array_key_exists( 'edit', $config->get( MainConfigNames::GroupPermissions )[ '*' ] )
+        ];
     }
 
     public static function getCreateMapConfig( \MediaWiki\ResourceLoader\Context $context, Config $config ): array {

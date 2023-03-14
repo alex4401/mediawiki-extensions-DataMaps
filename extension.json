@@ -123,9 +123,7 @@
 
 				{
 					"name": "core/settings.json",
-					"config": [
-						"DataMapsAllowExperimentalFeatures"
-					]
+					"callback": "MediaWiki\\Extension\\DataMaps\\HookHandler::getJsConfig"
 				}
 			],
 			"styles": [

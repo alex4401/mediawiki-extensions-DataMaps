@@ -1047,7 +1047,7 @@ class DataMap extends EventEmitter {
         }
 
         // Display an edit button to logged in users
-        if ( !this.isFeatureBitSet( MapFlags.IsPreview ) && mw.config.get( 'wgUserName' ) !== null ) {
+        if ( !this.isFeatureBitSet( MapFlags.IsPreview ) && ( mw.config.get( 'wgUserName' ) !== null || Util.canAnonsEdit ) ) {
             this.editControl = this.addControl( DataMap.anchors.topRightInline, new Controls.EditButton( this ) );
         }
     }

@@ -1,5 +1,7 @@
 /** @typedef {import( './map.js' )} DataMap */
-const { MarkerGroupFlags } = require( './enums.js' );
+const { MarkerGroupFlags } = require( './enums.js' ),
+    // @ts-ignore: module resolution error
+    serverSettings = /** @type {DataMaps.IExposedServerSettings} */ ( require( './settings.json' ) );
 
 /** @type {LeafletModule?} */
 let Leaflet = null;
@@ -20,9 +22,15 @@ module.exports = Object.freeze( {
      * @constant
      * @type {boolean}
      */
-    // @ts-ignore: module resolution error
-    isBleedingEdge: /** @type {DataMaps.IExposedServerSettings} */ ( require( './settings.json' ) )
-        .DataMapsAllowExperimentalFeatures,
+    isBleedingEdge: serverSettings.IsBleedingEdge,
+
+    /**
+     * Whether experimental features have been enabled server-side.
+     *
+     * @constant
+     * @type {boolean}
+     */
+    canAnonsEdit: serverSettings.CanAnonsEdit,
 
     /**
      * Throws an exception if the value is null or undefined. Returns it back otherwise. This exists primarily to satisfy

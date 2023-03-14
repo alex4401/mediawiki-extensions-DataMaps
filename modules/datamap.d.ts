@@ -13,7 +13,8 @@ declare namespace DataMaps {
 
 
     interface IExposedServerSettings {
-        DataMapsAllowExperimentalFeatures: boolean;
+        IsBleedingEdge: boolean;
+        CanAnonsEdit: boolean;
     }
 
 
