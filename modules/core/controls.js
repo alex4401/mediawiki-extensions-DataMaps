@@ -38,6 +38,11 @@ class MapControl {
         this.map = map;
         /** @type {HTMLElement} */
         this.element = document.createElement( options.tagName || 'div' );
+        /**
+         * @protected
+         * @type {boolean}
+         */
+        this._isVisible = true;
 
         // The following classes are used here:
         // * datamap-control
@@ -121,7 +126,10 @@ class MapControl {
      * @since 0.16.0
      */
     setVisible( value ) {
-        this.element.style.display = value ? '' : 'none';
+        if ( this._isVisible !== value ) {
+            this.element.style.display = value ? '' : 'none';
+            this._isVisible = value;
+        }
     }
 }
 
@@ -170,7 +178,9 @@ class Coordinates extends MapControl {
 
 
     _build() {
+        this.setVisible( false );
         this.map.leaflet.on( 'mousemove', event => {
+            this.setVisible( true );
             let lat = event.latlng.lat / this.map.crsScaleY;
             const lon = event.latlng.lng / this.map.crsScaleX;
             if ( this.map.crsOrigin === CRSOrigin.TopLeft ) {
@@ -178,6 +188,8 @@ class Coordinates extends MapControl {
             }
             this.element.innerText = this.map.getCoordLabel( lat, lon );
         } );
+        this.map.leaflet.on( 'mouseover', () => this.setVisible( true ) );
+        this.map.rootElement.addEventListener( 'mouseout', () => this.setVisible( false ) );
     }
 }
 
