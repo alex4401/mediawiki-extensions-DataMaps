@@ -18,8 +18,8 @@ const { CRSOrigin } = require( './enums.js' ),
  * @property {boolean} [labelBeforeIcon]
  * @property {string} [tooltip]
  * @property {string[]} [classes]
- * @property {string} [href]
  * @property {EventListenerOrEventListenerObject} [clickHandler]
+ * @property {boolean} [returnToMap=true]
  */
 
 
@@ -87,14 +87,12 @@ class MapControl {
      */
     _makeButton( options ) {
         // eslint-disable-next-line mediawiki/class-doc
-        const result = createDomElement( 'a', {
+        const result = createDomElement( 'button', {
             classes: options.classes,
             html: options.label,
             attributes: {
                 role: 'button',
-                href: options.href,
                 title: options.tooltip,
-                'aria-disabled': 'false',
                 'aria-label': options.tooltip
             },
             events: {
@@ -111,6 +109,10 @@ class MapControl {
             result[ options.labelBeforeIcon ? 'appendChild' : 'prepend' ]( createDomElement( 'span', {
                 classes: [ `oo-ui-icon-${options.icon}` ]
             } ) );
+        }
+
+        if ( options.returnToMap !== false ) {
+            result.addEventListener( 'click', () => this._refocusMap() );
         }
 
         if ( options.addToSelf ) {
@@ -130,6 +132,11 @@ class MapControl {
             this.element.style.display = value ? '' : 'none';
             this._isVisible = value;
         }
+    }
+
+
+    _refocusMap() {
+        this.map.leaflet.getContainer().focus();
     }
 }
 
@@ -208,10 +215,12 @@ class EditButton extends MapControl {
             addToSelf: true,
             icon: 'edit',
             tooltip: mw.msg( 'datamap-control-edit' ),
-            // @ts-ignore: wrong type signature for wikiScript in the package, argument is optional
-            href: `${mw.util.wikiScript()}?curid=${this.map.id}&action=` + (
-                mw.user.options.get( 'datamaps-enable-visual-editor' ) ? 'editmap' : 'edit'
-            )
+            clickHandler: () => {
+                // @ts-ignore: wrong type signature for wikiScript in the package, argument is optional
+                location.href = `${mw.util.wikiScript()}?curid=${this.map.id}&action=` + (
+                    mw.user.options.get( 'datamaps-enable-visual-editor' ) ? 'editmap' : 'edit'
+                );
+            }
         } );
     }
 }

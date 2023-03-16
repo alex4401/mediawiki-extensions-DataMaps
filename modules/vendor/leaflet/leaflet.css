@@ -227,6 +227,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	}
 
 
+/* button reset */
+.leaflet-bar button,
+.leaflet-popup button {
+	border: none;
+	padding: 0;
+	appearance: none;
+	background-color: transparent;
+	font-size: inherit;
+}
+
+
 /* general toolbar styles */
 
 .leaflet-bar {
@@ -235,7 +246,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	box-shadow: 0 1px 5px #0007;
 	border-radius: 4px;
 	}
-.leaflet-bar a[role=button] {
+.leaflet-bar button {
 	border-bottom: 1px solid #ccc;
 	width: 30px;
 	height: 30px;
@@ -245,20 +256,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	text-decoration: none;
 	color: black;
 	}
-.leaflet-bar a[role=button]:hover,
-.leaflet-bar a[role=button]:focus {
+.leaflet-bar button:hover,
+.leaflet-bar button:focus {
 	background-color: #f4f4f4;
 	}
-.leaflet-bar a[role=button]:first-child {
+.leaflet-bar button:first-child {
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
 	}
-.leaflet-bar a[role=button]:last-child {
+.leaflet-bar button:last-child {
 	border-bottom-left-radius: 4px;
 	border-bottom-right-radius: 4px;
 	border-bottom: none;
 	}
-.leaflet-bar a[role=button].leaflet-disabled {
+.leaflet-bar button.leaflet-disabled {
 	cursor: default;
 	background-color: #f4f4f4;
 	color: #bbb;
@@ -267,8 +278,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 /* zoom control */
 
-.leaflet-control-zoom-in,
-.leaflet-control-zoom-out {
+button.leaflet-control-zoom-in,
+button.leaflet-control-zoom-out {
 	font: bold 22px 'Lucida Console', Monaco, monospace;
 	text-indent: 1px;
 	}
@@ -448,7 +459,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	color: #333;
 	box-shadow: 0 3px 14px #0006;
 	}
-.leaflet-container a.leaflet-popup-close-button {
+.leaflet-container button.leaflet-popup-close-button {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -462,8 +473,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	background: transparent;
 	opacity: 0.7;
 	}
-.leaflet-container a.leaflet-popup-close-button:hover,
-.leaflet-container a.leaflet-popup-close-button:focus {
+.leaflet-container button.leaflet-popup-close-button:hover,
+.leaflet-container button.leaflet-popup-close-button:focus {
 	color: #000;
 	opacity: 0.85;
 	}

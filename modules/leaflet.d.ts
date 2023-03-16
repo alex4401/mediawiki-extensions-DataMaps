@@ -270,6 +270,7 @@ declare namespace LeafletModule {
     class Map extends Class {
         constructor(element: HTMLElement, options: MapOptions);
 
+        getContainer(): HTMLElement;
         addLayer(layer: Layer): this;
         removeLayer(layer: Layer): this;
         addHandler(name: string, handlerClass: typeof Handler): this;

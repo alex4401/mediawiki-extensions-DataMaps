@@ -2,7 +2,7 @@
     .ext-datamaps-control-primary {
         background: @color-primary;
 
-        > a {
+        > button {
             color: #fff;
         }
     }
@@ -12,7 +12,7 @@
         background: #fffa;
     }
 
-    .ext-datamaps-control > a {
+    .ext-datamaps-control > button {
         > span {
             display: block;
             width: 30px;
@@ -40,18 +40,6 @@
         opacity: 0.9;
     }
 
-    .ext-datamaps-control-legend-toggle {
-        display: none;
-
-        @media screen and ( max-width: @width-breakpoint-desktop-wide ) {
-            display: block;
-        }
-
-        > a {
-            padding-left: 0.5em;
-        }
-    }
-
     /* Extra specificity is needed to silence Leaflet's built-in margins provided by anchors */
     .ext-datamaps-control-coords.leaflet-control {
         padding: 0 5px;
@@ -63,8 +51,4 @@
         font-size: 1.6em;
         line-height: 1.4;
     }
-}
-
-.ext-datamaps-container[ data-is-legend-visible='true' ] .leaflet-control-container .ext-datamaps-control-legend-toggle a {
-    color: @color-primary;
 }
