@@ -292,6 +292,7 @@ declare namespace LeafletModule {
         _haveLayersMutated: boolean;
         _layers: LayerMap;
         options: MapOptions;
+        interactionControl?: Ark.InteractionControl;
     }
 
     class Handler extends Class {

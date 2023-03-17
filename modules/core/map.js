@@ -306,16 +306,26 @@ class DataMap extends EventEmitter {
      */
     setFullScreen( value ) {
         if ( value && this._fullScreenAnchor === null ) {
+            // Turn fullscreen on
             this._fullScreenAnchor = Util.createDomElement( 'div', {
                 classes: [ 'ext-datamaps-map-anchor' ]
             } );
             Util.getNonNull( this.rootElement.parentNode ).insertBefore( this._fullScreenAnchor, this.rootElement );
             this.rootElement.classList.add( 'ext-datamaps-is-fullscreen' );
             document.body.appendChild( this.rootElement );
+
+            if ( this.leaflet.interactionControl ) {
+                this.leaflet.interactionControl.disable();
+            }
         } else if ( !value && this._fullScreenAnchor ) {
+            // Turn fullscren off
             Util.getNonNull( this._fullScreenAnchor.parentNode ).replaceChild( this.rootElement, this._fullScreenAnchor );
             this.rootElement.classList.remove( 'ext-datamaps-is-fullscreen' );
             this._fullScreenAnchor = null;
+
+            if ( this.leaflet.interactionControl ) {
+                this.leaflet.interactionControl.enable();
+            }
         }
     }
 
