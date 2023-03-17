@@ -31,6 +31,15 @@
     max-height: 30px;
     flex-direction: column;
 
+    &[ data-active='true' ] {
+        background: #fffb;
+
+        /* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+        @supports not ( backdrop-filter: blur( 10px ) ) {
+            background: #fff;
+        }
+    }
+
     > button > .oo-ui-iconElement {
         float: right;
         transform: scale( 70% );
