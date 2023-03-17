@@ -16,6 +16,15 @@ module.exports = Object.freeze( {
      */
     MAX_GROUP_CIRCLE_SIZE: 20,
 
+
+    /**
+     * Max icon size in legend elements.
+     *
+     * @constant
+     * @type {number}
+     */
+    MAX_GROUP_ICON_SIZE: 20,
+
     /**
      * Whether experimental features have been enabled server-side.
      *
@@ -162,7 +171,7 @@ module.exports = Object.freeze( {
          * @return {jQuery}
          */
         createIconElement( group ) {
-            return $( '<img width=24 height=24 class="ext-datamaps-legend-group-icon" />' ).attr( 'src',
+            return $( '<img width=20 height=20 class="ext-datamaps-legend-group-icon" />' ).attr( 'src',
                 module.exports.getNonNull( group.legendIcon ) );
         },
 
@@ -176,8 +185,8 @@ module.exports = Object.freeze( {
         createPinIconElement( group ) {
             return $( module.exports.createPinIconElement( group.pinColor ) ).attr( {
                 class: 'ext-datamaps-legend-group-icon',
-                width: 24,
-                height: 24
+                width: module.exports.MAX_GROUP_ICON_SIZE,
+                height: module.exports.MAX_GROUP_ICON_SIZE
             } );
         },
 
