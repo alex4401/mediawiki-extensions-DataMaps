@@ -276,6 +276,10 @@ class DataMap extends EventEmitter {
         }
 
         this.markerIdToAutoOpen = Util.getQueryParameter( 'marker' );
+        if ( !this.markerIdToAutoOpen ) {
+            return;
+        }
+
         this.on( 'markerReady', this.openPopupIfUriMarker, this );
     }
 
@@ -496,9 +500,13 @@ class DataMap extends EventEmitter {
      * @param {LeafletModule.AnyMarker} leafletMarker
      */
     openPopupIfUriMarker( leafletMarker ) {
-        if ( this.markerIdToAutoOpen !== null && Util.getMarkerId( leafletMarker ) === this.markerIdToAutoOpen ) {
-            this.openMarkerPopup( leafletMarker, true );
-            this.off( 'markerReady', this.openPopupIfUriMarker );
+        if ( this.markerIdToAutoOpen !== null ) {
+            const mId = Util.getMarkerId( leafletMarker );
+            // Check both exact match and match with an `M` prefix for legacy pre-v0.16 link support
+            if ( mId === this.markerIdToAutoOpen || `M${mId}` === this.markerIdToAutoOpen ) {
+                this.openMarkerPopup( leafletMarker, true );
+                this.off( 'markerReady', this.openPopupIfUriMarker );
+            }
         }
     }
 
