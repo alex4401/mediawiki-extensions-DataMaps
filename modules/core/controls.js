@@ -179,11 +179,6 @@ class Coordinates extends MapControl {
     }
 
 
-    isButtonGroup() {
-        return false;
-    }
-
-
     _build() {
         this.setVisible( false );
         this.map.leaflet.on( 'mousemove', event => {
