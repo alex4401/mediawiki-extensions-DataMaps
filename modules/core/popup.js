@@ -76,9 +76,7 @@ module.exports = class MarkerPopup {
      * @param {LeafletModule.AnyMarker} leafletMarker
      */
     static bindTo( map, leafletMarker ) {
-        leafletMarker.bindPopup( () => new ( map.getPopupClass() )( map, leafletMarker ), {
-            keepInView: true
-        }, Util.getLeaflet().Ark.Popup );
+        leafletMarker.bindPopup( () => new ( map.getPopupClass() )( map, leafletMarker ), {}, Util.getLeaflet().Ark.Popup );
     }
 
 
