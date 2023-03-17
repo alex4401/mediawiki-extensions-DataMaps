@@ -10,7 +10,10 @@ class MarkerFilteringPanel extends LegendTabber.Tab {
      * @param {boolean} addTotalToggles
      */
     constructor( tabber, addTotalToggles ) {
-        super( tabber, mw.msg( 'datamap-legend-tab-locations' ) );
+        super( tabber, {
+            name: mw.msg( 'datamap-legend-tab-locations' ),
+            icon: 'funnel'
+        } );
 
         /**
          * Top button group for quick manipulation actions.

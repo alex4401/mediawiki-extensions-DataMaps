@@ -1,6 +1,6 @@
 /** @typedef {import( './map.js' )} DataMap */
 const { CRSOrigin } = require( './enums.js' ),
-    { createDomElement, getNonNull } = require( './util.js' );
+    { createDomElement } = require( './util.js' );
 
 
 /**
@@ -13,7 +13,7 @@ const { CRSOrigin } = require( './enums.js' ),
 /**
  * @typedef {Object} ControlButtonOptions
  * @property {boolean} [addToSelf]
- * @property {string} [icon]
+ * @property {OO.ui.Icon} [icon]
  * @property {string} [label]
  * @property {boolean} [labelBeforeIcon]
  * @property {string} [tooltip]
@@ -113,6 +113,15 @@ class MapControl {
         }
 
         return result;
+    }
+
+
+    /**
+     * @param {boolean} value
+     * @since 0.16.0
+     */
+    setVisible( value ) {
+        this.element.style.display = value ? '' : 'none';
     }
 }
 
@@ -222,36 +231,10 @@ class ExtraViewControls extends MapControl {
 }
 
 
-class LegendPopup extends MapControl {
-    /**
-     * @param {DataMap} map Owning map.
-     */
-    constructor( map ) {
-        super( map, 'legend-toggle' );
-    }
-
-
-    _build() {
-        this._makeButton( {
-            addToSelf: true,
-            icon: 'funnel',
-            label: mw.msg( 'datamap-legend-label' ),
-            labelBeforeIcon: true,
-            clickHandler: () => {
-                this.map.rootElement.dataset.isLegendVisible = this.map.rootElement.dataset.isLegendVisible === 'true' ? 'false'
-                    : 'true';
-                getNonNull( this.element.querySelector( 'span' ) ).classList.toggle( 'oo-ui-image-progressive' );
-            }
-        } );
-    }
-}
-
-
 module.exports = {
     MapControl,
     BackgroundSwitcher,
     Coordinates,
     EditButton,
-    ExtraViewControls,
-    LegendPopup
+    ExtraViewControls
 };

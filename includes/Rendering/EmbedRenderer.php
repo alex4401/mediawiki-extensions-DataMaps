@@ -202,8 +202,6 @@ class EmbedRenderer {
         // Add legend to the output if it's enabled
         if ( $this->data->getSettings()->isLegendDisabled() ) {
             $containerMain->addClasses( [ 'ext-datamaps-legend-is-hidden' ] );
-        } else {
-            $containerContent->appendContent( $this->getLegendContainerWidget() );
         }
 
         // Set data attribute with filters if they are specified
@@ -241,23 +239,6 @@ class EmbedRenderer {
                 '.ext-datamaps-container{display:none}'
             )
         ) . $containerMain;
-    }
-
-    protected function getLegendContainerWidget(): \OOUI\Widget {
-        $legend = new \OOUI\Widget( [
-            'classes' => [ 'ext-datamaps-container-legend' ],
-            'infusable' => true
-        ] );
-
-        $legend->appendContent( new HtmlSnippet( Html::rawElement(
-            'div',
-            [
-                'class' => 'ext-datamaps-bouncing-dots'
-            ],
-            Html::element( 'div' )
-        ) ) );
-
-        return $legend;
     }
 
     public function getLeafletContainerHtml(): string {

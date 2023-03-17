@@ -1,6 +1,7 @@
 /** @typedef {import( '../map.js' )} DataMap */
-const { MapFlags } = require( '../enums.js' ),
-    Util = require( '../util.js' );
+/** @typedef {import( '../controls.js' ).ControlButtonOptions} ControlButtonOptions */
+const Util = require( '../util.js' ),
+    { MapControl } = require( '../controls.js' );
 
 
 /**
@@ -9,9 +10,9 @@ const { MapFlags } = require( '../enums.js' ),
 class LegendTabber {
     /**
      * @param {DataMap} map Owning map.
-     * @param {HTMLElement} holderElement Element to host the legend in.
+     * @param {HTMLElement} rootElement Element to host the legend in.
      */
-    constructor( map, holderElement ) {
+    constructor( map, rootElement ) {
         /**
          * Owning map.
          *
@@ -23,31 +24,43 @@ class LegendTabber {
          *
          * @type {HTMLElement}
          */
-        this.rootElement = holderElement;
+        this.rootElement = rootElement;
         /**
-         * Legend container widget.
-         *
-         * @type {OO.ui.Widget}
-         */
-        this.rootWidget = /** @type {OO.ui.Widget} */ ( OO.ui.Widget.static.infuse( holderElement ) );
-        /**
-         * Root DOM element of the legend container.
-         *
-         * @type {jQuery}
-         */
-        this.$root = this.rootWidget.$element.prependTo( Util.getNonNull( this.map.rootElement.querySelector(
-            ':scope > .ext-datamaps-container-content' ) ) );
-        /**
-         * Tabber layout of the legend.
-         *
+         * @package
          * @type {OO.ui.IndexLayout}
          */
-        this.layout = new OO.ui.IndexLayout( {
+        this._tabs = new OO.ui.IndexLayout( {
+            framed: false,
             expanded: false
         } );
+        /**
+         * @private
+         * @type {LegendTabber.ExpandableControl}
+         */
+        this._control = new LegendTabber.ExpandableControl( this.map, {
+            label: mw.msg( 'datamap-legend-label' ),
+            icon: 'funnel'
+        }, this._tabs.$element[ 0 ] );
+        Util.preventMapInterference( this._control.element );
+        this.rootElement.appendChild( this._control.element );
+    }
 
-        // Append the IndexLayout to the root
-        this.layout.$element.appendTo( this.$root );
+
+    /**
+     * @package
+     */
+    _updateOnTabChange() {
+        this._tabs.$menu.toggle( Object.values( this._tabs.tabPanels ).length > 1 );
+    }
+
+
+    /**
+     * @param {boolean} value
+     * @return {this}
+     */
+    setExpanded( value ) {
+        this._control.setExpanded( value );
+        return this;
     }
 
 
@@ -62,16 +75,55 @@ class LegendTabber {
     createTab( name, cssClasses, visible ) {
         return new LegendTabber.Tab( this, name, cssClasses ).setVisible( !!visible );
     }
+}
+
+
+LegendTabber.ExpandableControl = class ExpandableControl extends MapControl {
+    /**
+     * @package
+     * @param {DataMap} map Owning map.
+     * @param {ControlButtonOptions} buttonOptions
+     * @param {HTMLElement} contentElement
+     */
+    constructor( map, buttonOptions, contentElement ) {
+        super( map, 'expandable' );
+
+        /**
+         * @private
+         * @type {OO.ui.IconWidget}
+         */
+        this._expandIcon = new OO.ui.IconWidget( {
+            icon: 'expand'
+        } );
+
+        const button = this._makeButton( Object.assign( /** @type {ControlButtonOptions} */ ( {
+            addToSelf: true,
+            clickHandler: () => this.toggle()
+        } ), buttonOptions ) );
+        button.appendChild( this._expandIcon.$element[ 0 ] );
+
+        /** @type {HTMLElement} */
+        this.innerElement = Util.createDomElement( 'div', {
+            classes: [ 'ext-datamaps-control-expandable-content' ],
+            appendTo: this.element
+        } );
+        this.innerElement.appendChild( contentElement );
+    }
 
 
     /**
-     * Hides the legend if there's no visible tabs.
+     * @param {boolean} value
      */
-    updateVisibility() {
-        this.rootWidget.setDisabled( !( this.map.isFeatureBitSet( MapFlags.VisualEditor )
-            || this.layout.getTabs().getItemCount() > 0 ) );
+    setExpanded( value ) {
+        this.element.dataset.active = value ? 'true' : 'false';
+        this._expandIcon.setIcon( value ? 'collapse' : 'expand' );
     }
-}
+
+
+    toggle() {
+        this.setExpanded( this.element.dataset.active !== 'true' );
+    }
+};
 
 
 /**
@@ -82,11 +134,18 @@ class LegendTabber {
  */
 LegendTabber.Tab = class Tab {
     /**
+     * @typedef {Object} TabOptions
+     * @property {string} name
+     * @property {OO.ui.Icon} [icon] Currently unused.
+     */
+
+
+    /**
      * @param {LegendTabber} tabber
-     * @param {string} name
+     * @param {string|TabOptions} nameOrOptions
      * @param {string[]} [cssClasses]
      */
-    constructor( tabber, name, cssClasses ) {
+    constructor( tabber, nameOrOptions, cssClasses ) {
         /**
          * @type {LegendTabber}
          */
@@ -96,22 +155,39 @@ LegendTabber.Tab = class Tab {
          */
         this.map = tabber.map;
         /**
-         * @protected
-         * @type {OO.ui.TabPanelLayout}
-         */
-        // eslint-disable-next-line mediawiki/class-doc
-        this.tab = new OO.ui.TabPanelLayout( name, {
-            label: name,
-            expanded: false,
-            classes: cssClasses || []
-        } );
-        /**
          * Content node.
          *
-         * @public
          * @type {HTMLElement}
          */
-        this.contentElement = this.tab.$element[ 0 ];
+        // eslint-disable-next-line mediawiki/class-doc
+        this.contentElement = Util.createDomElement( 'div', {
+            classes: cssClasses
+        } );
+        /**
+         * @private
+         * @type {OO.ui.TabPanelLayout}
+         */
+        this._tab = new OO.ui.TabPanelLayout( this.constructor.name, {
+            $content: $( this.contentElement ),
+            label: LegendTabber.Tab._constructLabel( nameOrOptions ),
+            scrollable: false,
+            expanded: false,
+            padded: false
+        } );
+    }
+
+
+    /**
+     * @private
+     * @param {string|TabOptions} nameOrOptions
+     * @return {string}
+     */
+    static _constructLabel( nameOrOptions ) {
+        if ( typeof ( nameOrOptions ) === 'string' ) {
+            return nameOrOptions;
+        }
+
+        return nameOrOptions.name;
     }
 
 
@@ -120,9 +196,8 @@ LegendTabber.Tab = class Tab {
      * @return {this}
      */
     setVisible( value ) {
-        // @ts-ignore: second parameter "index" not needed
-        this.tabber.layout[ value ? 'addTabPanels' : 'removeTabPanels' ]( [ this.tab ] );
-        this.tabber.updateVisibility();
+        this.tabber._tabs[ value ? 'addTabPanels' : 'removeTabPanels' ]( [ this._tab ] );
+        this.tabber._updateOnTabChange();
         return this;
     }
 };

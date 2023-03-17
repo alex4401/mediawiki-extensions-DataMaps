@@ -129,12 +129,6 @@ class DataMap extends EventEmitter {
          */
         this.coordTracker = null;
         /**
-         * DOM element of the legend popup button shown on mobile-grade displays.
-         *
-         * @type {Controls.LegendPopup?}
-         */
-        this.legendPopupButton = null;
-        /**
          * DOM element of the edit button shown to registered users.
          *
          * @type {Controls.EditButton?}
@@ -217,7 +211,7 @@ class DataMap extends EventEmitter {
             mw.loader.using( [
                 'oojs-ui-core',
                 'oojs-ui-widgets'
-            ], () => this._onOOUILoaded() );
+            ], () => this.on( 'leafletLoaded', this._onOOUILoaded, this ) );
         }
 
         // Prepare the Leaflet map view
@@ -900,6 +894,11 @@ class DataMap extends EventEmitter {
         this.config.backgrounds.forEach( ( background, index ) => this._initialiseBackground( background, index ) );
         // Switch to the last chosen one or first defined
         this.setCurrentBackground( this.storage.data.background || 0 );
+        // Create the legend anchor, even if the legend is disabled (some controls may use it)
+        createDomElement( 'div', {
+            classes: [ 'ext-datamaps-container-legend' ],
+            prependTo: this.resolveControlAnchor( DataMap.anchors._realTopLeft )
+        } );
         // Bring to a valid state and call further initialisation methods
         this.refreshMaxBounds();
         this.restoreDefaultView();
@@ -987,17 +986,16 @@ class DataMap extends EventEmitter {
      * @private
      */
     _buildControls() {
+        // Create control container in top left corner
+        createDomElement( 'div', {
+            prependTo: this.resolveControlAnchor( DataMap.anchors._realTopLeft )
+        } );
         // Create inline control containers (DataMap.anchors.topLeftInline and DataMap.anchors.topRightInline)
         for ( const anchor of [ DataMap.anchors.topLeft, DataMap.anchors.topRight ] ) {
             createDomElement( 'div', {
                 classes: [ 'ext-datamaps-control-group' ],
                 prependTo: this.resolveControlAnchor( anchor )
             } );
-        }
-
-        // Create a button to toggle the legend on small screens
-        if ( !( !this.isFeatureBitSet( MapFlags.VisualEditor ) && this.isFeatureBitSet( MapFlags.HideLegend ) ) ) {
-            this.legendPopupButton = this.addControl( DataMap.anchors.topLeftInline, new Controls.LegendPopup( this ), true );
         }
 
         // Create a coordinate-under-cursor display
@@ -1025,8 +1023,9 @@ class DataMap extends EventEmitter {
      * @fires DataMap#legendManager
      */
     _onOOUILoaded() {
-        this.legend = new LegendTabber( this, /** @type {HTMLElement} */ ( Util.getNonNull( this.rootElement.querySelector(
-            '.ext-datamaps-container-legend' ) ) ) );
+        const container = Util.getNonNull( this.resolveControlAnchor( DataMap.anchors._realTopLeft ).querySelector(
+            ':scope > .ext-datamaps-container-legend' ) );
+        this.legend = new LegendTabber( this, /** @type {HTMLElement} */ ( container ) ).setExpanded( true );
         this.fireMemorised( 'legendManager' );
     }
 
@@ -1073,13 +1072,17 @@ class DataMap extends EventEmitter {
  * @constant
  */
 DataMap.anchors = Object.freeze( {
+    /** @package */
+    _realTopLeft: '.leaflet-top.leaflet-left',
+
+    legend: '.leaflet-top.leaflet-left > .ext-datamaps-container-legend',
+    topLeft: '.leaflet-top.leaflet-left > :last-child',
     topRight: '.leaflet-top.leaflet-right',
-    topLeft: '.leaflet-top.leaflet-left',
     bottomLeft: '.leaflet-bottom.leaflet-left',
     bottomRight: '.leaflet-bottom.leaflet-right',
 
     topRightInline: '.leaflet-top.leaflet-right > .ext-datamaps-control-group',
-    topLeftInline: '.leaflet-top.leaflet-left > .ext-datamaps-control-group'
+    topLeftInline: '.leaflet-top.leaflet-left > :last-child > .ext-datamaps-control-group'
 } );
 /**
  * Content bounds padding.

@@ -215,7 +215,7 @@ mw.dataMaps.registerMapAddedHandler( map => {
                 index = new MarkerSearchIndex();
             }
 
-            map.search = map.addControl( DataMap.anchors.topLeftInline, new MarkerSearch( map, index, isLinked ) );
+            map.search = map.addControl( DataMap.anchors.legend, new MarkerSearch( map, index, isLinked ), true );
         } );
     }
 } );

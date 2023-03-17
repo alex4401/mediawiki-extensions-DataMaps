@@ -1,46 +1,13 @@
 .ext-datamaps-container-legend {
-    @media screen and ( max-width: @width-breakpoint-desktop-wide ) {
-        position: absolute;
-        z-index: 4000;
-        display: block;
-        width: unset;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin: 0 6px 6px;
-        background: #fff;
-        box-shadow: 0 0 6px #0005;
-        inset: 50px 0 0 0;
-        transform: translate( -45%, -53% ) scale( 0 );
-        transition: transform 120ms ease-in-out;
+    display: grid;
+    width: 27em;
+    height: 100%;
+    align-content: start;
+    grid-template-columns: 100%;
+    grid-template-rows: minmax( 0, min-content );
 
-        &.oo-ui-widget-disabled + .ext-datamaps-container-leaflet .ext-datamaps-control-legend-toggle {
-            display: none;
-        }
-    }
-
-    &.oo-ui-widget-disabled {
-        display: none;
-    }
-
-    &,
-    > .oo-ui-layout,
-    > .oo-ui-layout > .oo-ui-menuLayout-content,
-    > .oo-ui-layout > .oo-ui-menuLayout-content > .oo-ui-stackLayout {
-        display: flex;
-        flex-direction: column;
-    }
-
-    > .oo-ui-layout,
-    > .oo-ui-layout > .oo-ui-menuLayout-content {
-        flex-grow: 1;
-    }
-
-    .oo-ui-tabSelectWidget {
-        padding: 4px 0;
-    }
-
-    .oo-ui-panelLayout-scrollable {
-        overflow-x: hidden;
+    @media screen and ( max-width: @width-breakpoint-mobile ) {
+        width: 100%;
     }
 
     .oo-ui-buttonGroupWidget {
@@ -57,26 +24,53 @@
     .oo-ui-labelElement-label {
         vertical-align: middle;
     }
+}
 
-    .oo-ui-tabOptionWidget.oo-ui-optionWidget {
-        border-width: 1px;
-        border-radius: 6px;
-        margin-top: 3px;
+.ext-datamaps-control-expandable {
+    display: flex;
+    max-height: 30px;
+    flex-direction: column;
 
-        .oo-ui-labelElement-label {
-            padding: 5px 5px 4px;
+    > button > .oo-ui-iconElement {
+        float: right;
+        transform: scale( 70% );
+    }
+
+    .ext-datamaps-control-expandable-content {
+        display: none;
+        min-height: 0;
+
+        > .oo-ui-menuLayout {
+            > .oo-ui-menuLayout-content {
+                flex-grow: 1;
+                padding: 8px;
+                overflow-y: auto;
+
+                > .oo-ui-stackLayout > .oo-ui-panelLayout {
+                    padding: 0;
+                }
+            }
+
+            &,
+            > .oo-ui-menuLayout-content,
+            > .oo-ui-menuLayout-content > .oo-ui-stackLayout {
+                display: flex;
+                height: 100%;
+                flex-direction: column;
+            }
+
+            .oo-ui-tabOptionWidget {
+                margin-top: 0;
+            }
         }
     }
 
-    .oo-ui-indexLayout-stackLayout > .oo-ui-tabPanelLayout {
-        padding: 9px 16px 16px;
-    }
-}
+    &[ data-active='true' ] {
+        min-height: 0;
+        max-height: unset;
 
-@media screen and ( max-width: @width-breakpoint-desktop-wide ) {
-    .ext-datamaps-container[ data-is-legend-visible='true' ] {
-        .ext-datamaps-container-legend {
-            transform: none;
+        .ext-datamaps-control-expandable-content {
+            display: block;
         }
     }
 }
