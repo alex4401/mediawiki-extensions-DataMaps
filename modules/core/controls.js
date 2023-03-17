@@ -231,10 +231,35 @@ class ExtraViewControls extends MapControl {
 }
 
 
+class ToggleFullscreen extends MapControl {
+    /**
+     * @param {DataMap} map Owning map.
+     */
+    constructor( map ) {
+        super( map, 'toggle-fullscreen' );
+
+        this._button = this._makeButton( {
+            addToSelf: true,
+            icon: 'fullScreen',
+            tooltip: mw.msg( 'datamap-control-reset-view' ),
+            clickHandler: () => {
+                this.map.setFullScreen( !this.map.isFullScreen() );
+            }
+        } );
+    }
+
+
+    _refreshIcon() {
+
+    }
+}
+
+
 module.exports = {
     MapControl,
     BackgroundSwitcher,
     Coordinates,
     EditButton,
-    ExtraViewControls
+    ExtraViewControls,
+    ToggleFullscreen
 };

@@ -152,6 +152,10 @@ class DataMap extends EventEmitter {
          * @type {LeafletModule.LatLngBounds?}
          */
         this._contentBounds = null;
+        /**
+         * @type {HTMLElement?}
+         */
+        this._fullScreenAnchor = null;
 
         const $tabberPanel = Util.TabberNeue.getOwningPanel( this.rootElement );
         if ( $tabberPanel === null || mw.loader.getState( 'ext.tabberNeue' ) === 'ready' ) {
@@ -294,6 +298,33 @@ class DataMap extends EventEmitter {
      */
     isLayerFilteredOut( name ) {
         return this.dataSetFilters && this.dataSetFilters.indexOf( name ) < 0 || false;
+    }
+
+
+    /**
+     * @param {boolean} value 
+     */
+    setFullScreen( value ) {
+        if ( value && this._fullScreenAnchor === null ) {
+            this._fullScreenAnchor = Util.createDomElement( 'div', {
+                classes: [ 'ext-datamaps-map-anchor' ]
+            } );
+            Util.getNonNull( this.rootElement.parentNode ).insertBefore( this._fullScreenAnchor, this.rootElement );
+            this.rootElement.classList.add( 'ext-datamaps-is-fullscreen' );
+            document.body.appendChild( this.rootElement );
+        } else if ( !value && this._fullScreenAnchor ) {
+            Util.getNonNull( this._fullScreenAnchor.parentNode ).replaceChild( this.rootElement, this._fullScreenAnchor );
+            this.rootElement.classList.remove( 'ext-datamaps-is-fullscreen' );
+            this._fullScreenAnchor = null;
+        }
+    }
+
+
+    /**
+     * @return {boolean}
+     */
+    isFullScreen() {
+        return this._fullScreenAnchor !== null;
     }
 
 
@@ -1010,6 +1041,10 @@ class DataMap extends EventEmitter {
 
         // Extend zoom control to add buttons to reset or centre the view
         this.viewControls = this.addControl( DataMap.anchors.topRight, new Controls.ExtraViewControls( this ) );
+
+        if ( this.isFeatureBitSet( MapFlags.AllowFullscreen ) ) {
+            this.fullscreenToggle = this.addControl( DataMap.anchors.topRightInline, new Controls.ToggleFullscreen( this ) );
+        }
 
         // Display an edit button to logged in users
         if ( !this.isFeatureBitSet( MapFlags.IsPreview ) && mw.config.get( 'wgUserName' ) !== null ) {

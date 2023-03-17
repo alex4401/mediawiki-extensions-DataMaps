@@ -108,12 +108,12 @@ class EmbedConfigGenerator {
         $out |= $settings->getSearchMode() === MapSettingsSpec::SM_TABBER ? 1 << 5 : 0;
         $out |= $this->forVisualEditor ? 1 << 6 : 0;
         $out |= ( $this->useInlineData || $this->forVisualEditor ) ? 1 << 7 : 0;
+        $out |= $settings->allowsFullscreen() ? 1 << 9 : 0;
 
         $markerCount = 0;
         $this->data->iterateRawMarkerMap( static function ( string $_, array $rawCollection ) use ( &$markerCount ) {
             $markerCount += count( $rawCollection );
         } );
-
         if ( self::isCanvasPreferred( $settings->getIconRendererType(), $markerCount ) ) {
             $out |= 1 << 8;
         }

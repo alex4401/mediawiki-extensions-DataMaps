@@ -21,6 +21,10 @@ class MapSettingsSpec extends DataModel {
     public const IRT_DOM = 1;
     public const IRT_CANVAS = 2;
 
+    public function allowsFullscreen(): bool {
+        return $this->raw->allowFullscreen ?? true;
+    }
+
     public function getIconRendererType(): int {
         $value = $this->raw->iconRenderer ?? 'auto';
         switch ( $value ) {
@@ -72,6 +76,7 @@ class MapSettingsSpec extends DataModel {
     }
 
     public function validate( Status $status ) {
+        $this->checkField( $status, 'allowFullscreen', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'disableZoom', DataModel::TYPE_BOOL );
         $this->checkField( $status, [
             'name' => 'enableSearch',
