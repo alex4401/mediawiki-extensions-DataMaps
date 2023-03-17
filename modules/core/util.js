@@ -87,6 +87,7 @@ module.exports = Object.freeze( {
      * @property {string} [text]
      * @property {string|HTMLElement} [html]
      * @property {Record<string, string|undefined|boolean|number>} [attributes]
+     * @property {Partial<CSSStyleDeclaration>} [style]
      * @property {Record<string, EventListenerOrEventListenerObject|undefined>} [events]
      * @property {HTMLElement} [appendTo]
      * @property {HTMLElement} [prependTo]
@@ -118,6 +119,14 @@ module.exports = Object.freeze( {
                 const value = options.attributes[ key ];
                 if ( value !== undefined && value !== null ) {
                     result.setAttribute( key, `${value}` );
+                }
+            }
+        }
+        if ( options.style ) {
+            for ( const key in options.style ) {
+                const value = options.style[ key ];
+                if ( value !== undefined && value !== null ) {
+                    result.style[ key ] = value;
                 }
             }
         }
@@ -168,11 +177,17 @@ module.exports = Object.freeze( {
          * Creates an image DOM element showing a marker group's icon.
          *
          * @param {DataMaps.Configuration.MarkerGroup} group
-         * @return {jQuery}
+         * @return {HTMLElement}
          */
         createIconElement( group ) {
-            return $( '<img width=20 height=20 class="ext-datamaps-legend-group-icon" />' ).attr( 'src',
-                module.exports.getNonNull( group.legendIcon ) );
+            return module.exports.createDomElement( 'img', {
+                classes: [ 'ext-datamaps-legend-group-icon' ],
+                attributes: {
+                    width: module.exports.MAX_GROUP_ICON_SIZE,
+                    height: module.exports.MAX_GROUP_ICON_SIZE,
+                    src: module.exports.getNonNull( group.legendIcon )
+                }
+            } );
         },
 
 
@@ -180,14 +195,14 @@ module.exports = Object.freeze( {
          * Creates an SVG element showing a marker group's pin icon.
          *
          * @param {DataMaps.Configuration.PinMarkerGroup} group
-         * @return {jQuerySVG}
+         * @return {SVGElement}
          */
         createPinIconElement( group ) {
-            return $( module.exports.createPinIconElement( group.pinColor ) ).attr( {
-                class: 'ext-datamaps-legend-group-icon',
-                width: module.exports.MAX_GROUP_ICON_SIZE,
-                height: module.exports.MAX_GROUP_ICON_SIZE
-            } );
+            const result = module.exports.createPinIconElement( group.pinColor );
+            result.classList.add( 'ext-datamaps-legend-group-icon' );
+            result.setAttribute( 'width', `${module.exports.MAX_GROUP_ICON_SIZE}` );
+            result.setAttribute( 'height', `${module.exports.MAX_GROUP_ICON_SIZE}` );
+            return result;
         },
 
 
@@ -195,17 +210,20 @@ module.exports = Object.freeze( {
          * Creates a DOM element showing a marker group's coloured circle representation.
          *
          * @param {DataMaps.Configuration.CircleMarkerGroup} group
-         * @return {jQuery}
+         * @return {HTMLElement}
          */
         createCircleElement( group ) {
-            const size = Math.min( module.exports.MAX_GROUP_CIRCLE_SIZE, group.size + 4 );
-            return $( '<div class="ext-datamaps-legend-circle">' ).css( {
-                minWidth: size,
-                width: size,
-                height: size,
-                backgroundColor: group.fillColor,
-                borderColor: group.strokeColor || group.fillColor,
-                borderWidth: group.strokeWidth || 1
+            const size = Math.min( module.exports.MAX_GROUP_CIRCLE_SIZE, group.size + 4 ) + 'px';
+            return module.exports.createDomElement( 'div', {
+                classes: [ 'ext-datamaps-legend-circle' ],
+                style: {
+                    minWidth: size,
+                    width: size,
+                    height: size,
+                    backgroundColor: group.fillColor,
+                    borderColor: group.strokeColor || group.fillColor,
+                    borderWidth: ( group.strokeWidth || 1 ) + 'px'
+                }
             } );
         }
     },

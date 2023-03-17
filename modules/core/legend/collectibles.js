@@ -161,13 +161,13 @@ CollectiblesPanel.Section = class Section {
             selected: false
         } ).on( 'change', () => this.toggleAll( this.checkbox.isSelected() ) );
         /**
-         * @type {jQuery?}
+         * @type {HTMLElement?}
          */
-        this.$icon = null;
+        this.icon = null;
         if ( 'legendIcon' in group ) {
-            this.$icon = Util.Groups.createIconElement( group );
+            this.icon = Util.Groups.createIconElement( group );
         } else if ( 'fillColor' in group ) {
-            this.$icon = Util.Groups.createCircleElement( group );
+            this.icon = Util.Groups.createCircleElement( group );
         }
         /**
          * @type {HTMLElement}
@@ -188,7 +188,7 @@ CollectiblesPanel.Section = class Section {
                     classes: [ 'ext-datamaps-collectible-group-header' ],
                     content: [
                         this.checkbox,
-                        this.$icon || '',
+                        this.icon || '',
                         new OO.ui.LabelWidget( {
                             label: group.name
                         } )

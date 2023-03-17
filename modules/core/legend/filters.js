@@ -206,31 +206,38 @@ MarkerFilteringPanel.MarkerGroupRow = class MarkerGroupRow {
 
         // Optional elements
         /**
-         * @type {jQuery?}
+         * @type {HTMLElement?}
          */
-        this.$circle = null;
+        this.circle = null;
         /**
-         * @type {jQuery?}
+         * @type {HTMLElement?}
          */
-        this.$badge = null;
+        this.badge = null;
         /**
-         * @type {jQuery?}
+         * @type {HTMLElement?}
          */
-        this.$icon = null;
+        this.icon = null;
+        /**
+         * @type {SVGElement?}
+         */
+        this.pin = null;
 
         // Add a coloured circle if circle marker group
         if ( 'fillColor' in group ) {
-            this.$circle = Util.Groups.createCircleElement( group ).prependTo( this.field.$header );
+            this.circle = Util.Groups.createCircleElement( group );
+            this.field.$header.prepend( this.circle );
         }
 
         // Add a pin icon if pin marker group
         if ( 'pinColor' in group ) {
-            this.$pin = Util.Groups.createPinIconElement( group ).prependTo( this.field.$header );
+            this.pin = Util.Groups.createPinIconElement( group );
+            this.field.$header.prepend( this.pin );
         }
 
         // Add an icon if one is specified in the group
         if ( group.legendIcon ) {
-            this.$icon = Util.Groups.createIconElement( group ).prependTo( this.field.$header );
+            this.icon = Util.Groups.createIconElement( group );
+            this.field.$header.prepend( this.icon );
         }
     }
 
@@ -240,13 +247,16 @@ MarkerFilteringPanel.MarkerGroupRow = class MarkerGroupRow {
      */
     setBadge( text ) {
         if ( text && text.length > 0 ) {
-            if ( this.$badge === null ) {
-                this.$badge = $( '<span class="ext-datamaps-legend-badge">' ).appendTo( this.field.$header );
+            if ( this.badge === null ) {
+                this.badge = Util.createDomElement( 'span', {
+                    classes: [ 'ext-datamaps-legend-badge' ],
+                    appendTo: this.field.$header[ 0 ]
+                } );
             }
-            this.$badge.text( text );
-        } else if ( this.$badge ) {
-            this.$badge.remove();
-            this.$badge = null;
+            this.badge.innerText = text;
+        } else if ( this.badge ) {
+            this.field.$header.remove( this.badge );
+            this.badge = null;
         }
     }
 };
