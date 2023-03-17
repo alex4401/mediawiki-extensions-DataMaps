@@ -5,7 +5,6 @@ const Leaflet = require( '../vendor/leaflet/leaflet.js' ),
 module.exports = Leaflet.Handler.extend( {
     addHooks() {
         this._pane = this._map.createPane( 'interactionWarningPane', this._map._container );
-        this._pane.classList.add( 'datamap-overlay-status' );
 
         this._disableHandlers();
 
