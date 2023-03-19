@@ -33,7 +33,7 @@ class EmbedConfigGenerator {
         $this->forVisualEditor = $options['ve'] ?? false;
 
         $this->requireLayers = null;
-        if ( is_array( $options['layers'] ) && count ( $options['layers'] ) > 0 ) {
+        if ( is_array( $options['layers'] ) && count( $options['layers'] ) > 0 ) {
             $this->requireLayers = $options['layers'];
         }
     }

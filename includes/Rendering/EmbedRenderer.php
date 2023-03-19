@@ -223,7 +223,7 @@ class EmbedRenderer {
         $config = new EmbedConfigGenerator( $this->title, $this->data, [
             'inlineData' => $this->useInlineData,
             've' => $this->forVisualEditor,
-            'layers' => $options && $options->displayGroups || null
+            'layers' => $options ? $options->displayGroups : null
         ] );
         $containerMain->appendContent( new HtmlSnippet( $config->makeElement() ) );
 
