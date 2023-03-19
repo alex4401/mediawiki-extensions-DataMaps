@@ -1037,7 +1037,7 @@ class DataMap extends EventEmitter {
     _buildControls() {
         // Create control container in top left corner
         createDomElement( 'div', {
-            prependTo: this.resolveControlAnchor( DataMap.anchors._realTopLeft )
+            appendTo: this.resolveControlAnchor( DataMap.anchors._realTopLeft )
         } );
         // Create inline control containers (DataMap.anchors.topLeftInline and DataMap.anchors.topRightInline)
         for ( const anchor of [ DataMap.anchors.topLeft, DataMap.anchors.topRight ] ) {
