@@ -257,9 +257,10 @@ class ToggleFullscreen extends MapControl {
         this._button = this._makeButton( {
             addToSelf: true,
             icon: 'fullScreen',
-            tooltip: mw.msg( 'datamap-control-reset-view' ),
+            tooltip: mw.msg( 'datamap-control-fullscreen' ),
             clickHandler: () => {
                 this.map.setFullScreen( !this.map.isFullScreen() );
+                this._refreshIcon();
             }
         } );
     }

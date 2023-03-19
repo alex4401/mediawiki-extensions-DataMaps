@@ -154,6 +154,7 @@
 				"datamap-control-reset-view",
 				"datamap-control-centre-view",
 				"datamap-control-edit",
+				"datamap-control-fullscreen",
 				"datamap-checklist-prelude"
 			],
 			"targets": [ "desktop", "mobile" ]
