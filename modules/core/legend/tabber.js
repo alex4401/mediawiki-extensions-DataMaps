@@ -115,13 +115,13 @@ LegendTabber.ExpandableControl = class ExpandableControl extends MapControl {
      * @param {boolean} value
      */
     setExpanded( value ) {
-        this.element.dataset.active = value ? 'true' : 'false';
+        this.element.setAttribute( 'aria-expanded', value ? 'true' : 'false' );
         this._expandIcon.setIcon( value ? 'collapse' : 'expand' );
     }
 
 
     toggle() {
-        this.setExpanded( this.element.dataset.active !== 'true' );
+        this.setExpanded( this.element.getAttribute( 'aria-expanded' ) !== 'true' );
     }
 };
 
