@@ -192,7 +192,7 @@ class MarkerSearch extends Controls.MapControl {
 
                 const icon = item.leafletMarker instanceof Leaflet.Marker
                         ? item.map.getIconFromLayers( item.leafletMarker.attachedLayers ) : null,
-                    badgeText = this._getItemBadge( item );
+                    badgeInfo = this._getItemBadge( item );
                 if ( icon ) {
                     let iconElement;
                     if ( icon instanceof Leaflet.Ark.PinIcon ) {
@@ -211,13 +211,13 @@ class MarkerSearch extends Controls.MapControl {
                     item.element.prepend( iconElement );
                 }
 
-                if ( badgeText ) {
+                if ( badgeInfo ) {
                     Util.createDomElement( 'span', {
                         classes: [ 'ext-datamaps-search-badge' ],
                         attributes: {
-                            'data-current': item.map === this.map
+                            'data-current': badgeInfo[ 1 ]
                         },
-                        text: badgeText,
+                        text: badgeInfo[ 0 ],
                         appendTo: item.element
                     } );
                 }
@@ -233,18 +233,19 @@ class MarkerSearch extends Controls.MapControl {
     /**
      * @private
      * @param {Item} item
-     * @return {string?}
+     * @return {[ name: string, current: boolean ]?}
      */
     _getItemBadge( item ) {
-        if ( this.isLinked ) {
-            return getNonNull( Util.TabberNeue.getOwningPanel( item.map.rootElement ) ).getAttribute( 'data-title' );
+        if ( this.isLinked && item.map !== this.map ) {
+            const title = getNonNull( Util.TabberNeue.getOwningPanel( item.map.rootElement ) ).getAttribute( 'data-title' );
+            return title ? [ title, false ] : null;
         }
 
         const properties = item.leafletMarker.assignedProperties;
         if ( properties && properties.bg !== undefined ) {
             const background = item.map.config.backgrounds.find( x => x.layer === properties.bg );
             if ( background && background.name ) {
-                return background.name;
+                return [ background.name, item.map.background === background ];
             }
         }
 
