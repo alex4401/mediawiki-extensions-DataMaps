@@ -4,13 +4,29 @@ const Util = require( './util.js' ),
         MarkerGroupFlags,
         Util: CoreUtil
     } = require( 'ext.datamaps.core' ),
-    Fuzzysort = require( 'ext.datamaps.fuzzysort' ),
-    getNonNull = CoreUtil.getNonNull;
+    Fuzzysort = require( 'ext.datamaps.fuzzysort' );
 
 
 /**
+ * @typedef {Object} Item
+ * @property {LeafletModule.AnyMarker} leafletMarker
+ * // TODO: missing Fuzzysort prepared type
+ * @property {[ {
+ *     target: any;
+ *     i: any;
+ *     u: any[];
+ *     h: null;
+ *     p: number;
+ *     score: null;
+ *     S: number[];
+ *     obj: null;
+ * }, number ][]} keywords
+ * @property {string} label
+ * @property {DataMap} map
+ */
+/**
  * @typedef {Object} ListenerSignatures
- * @property {() => void} commit
+ * @property {( items: Item[] ) => void} commit
  */
 
 
@@ -27,12 +43,24 @@ class MarkerSearchIndex extends EventEmitter {
         this._queue = [];
     }
 
-    static normalisePhrase( text ) {
+
+    /**
+     * @param {string} value String to normalise.
+     * @return {string}
+     */
+    static normalisePhrase( value ) {
         // Replace trailing whitespace, normalize multiple spaces and make case insensitive
-        return text.trim().replace( /\s+/, ' ' ).toLowerCase().normalize( 'NFD' ).replace( /[\u0300-\u036f]/g, '' );
+        return value.trim().replace( /\s+/, ' ' ).toLowerCase().normalize( 'NFD' ).replace( /[\u0300-\u036f]/g, '' );
     }
 
 
+    /**
+     * TODO: fuzzysort output is untyped
+     *
+     * @param {Item[]} items
+     * @param {string} phrase
+     * @return {any[]}
+     */
     static query( items, phrase ) {
         return Fuzzysort.go( MarkerSearchIndex.normalisePhrase( phrase ), items, {
             threshold: MarkerSearchIndex.SCORE_THRESHOLD,
@@ -47,7 +75,6 @@ class MarkerSearchIndex extends EventEmitter {
         const label = state.label || group.name;
 
         let keywords = state.search;
-
         // If no keywords were provided by the API, generate them from label and description
         if ( !keywords ) {
             keywords = [ [ Util.decodePartial( Util.extractText( label ) ), 1.5 ] ];
@@ -73,11 +100,19 @@ class MarkerSearchIndex extends EventEmitter {
     }
 
 
+    /**
+     * @package
+     * @param {Item} info
+     */
     _enqueue( info ) {
         this._queue.push( info );
     }
 
 
+    /**
+     * @param {DataMap} map
+     * @param {LeafletModule.AnyMarker} leafletMarker
+     */
     add( map, leafletMarker ) {
         if ( leafletMarker.apiInstance[ 2 ].search === 0
             || CoreUtil.isBitSet( map.config.groups[ leafletMarker.attachedLayers[ 0 ] ].flags,
@@ -97,6 +132,12 @@ class MarkerSearchIndex extends EventEmitter {
     }
 
 
+    /**
+     * TODO: fuzzysort output is untyped
+     *
+     * @param {string} phrase
+     * @return {any[]}
+     */
     query( phrase ) {
         return MarkerSearchIndex.query( this.items, phrase );
     }
@@ -112,21 +153,32 @@ MarkerSearchIndex.SCORE_THRESHOLD = -75000;
 
 /**
  * A search index entry collection that replicates information into a shared index.
+ *
+ * @extends {MarkerSearchIndex}
  */
-MarkerSearchIndex.ChildIndex = class ChildIndex extends MarkerSearchIndex {
+class ChildIndex extends MarkerSearchIndex {
+    /**
+     * @param {MarkerSearchIndex} parent
+     */
     constructor( parent ) {
         super();
         this.parent = parent;
     }
 
 
+    /**
+     * @package
+     * @param {Item} info
+     */
     _enqueue( info ) {
         this._queue.push( info );
+
+        const tabber = CoreUtil.getNonNull( CoreUtil.TabberNeue.getOwningPanel( info.map.rootElement ) ),
+            tabberTitle = CoreUtil.getNonNull( tabber.getAttribute( 'title' ) );
         // Propagate the entry to the master index: copy it, push tabber title to its keywords, enqueue.
         const copy = Object.assign( {}, info );
         copy.keywords = Array.from( info.keywords );
-        copy.keywords.push( [ getNonNull( CoreUtil.TabberNeue.getOwningPanel( info.map.rootElement ) ).getAttribute( 'title' ),
-            0.2 ] );
+        copy.keywords.push( [ Fuzzysort.prepare( tabberTitle ), 0.2 ] );
         this.parent._enqueue( copy );
     }
 
@@ -136,7 +188,8 @@ MarkerSearchIndex.ChildIndex = class ChildIndex extends MarkerSearchIndex {
         // Propagate the commit operation to the master index
         this.parent.commit();
     }
-};
+}
 
 
+MarkerSearchIndex.ChildIndex = ChildIndex;
 module.exports = MarkerSearchIndex;
