@@ -88,7 +88,9 @@ module.exports = Object.freeze( {
      * @property {string|HTMLElement} [html]
      * @property {Record<string, string|undefined|boolean|number>} [attributes]
      * @property {Partial<CSSStyleDeclaration>} [style]
-     * @property {Record<string, EventListenerOrEventListenerObject|undefined>} [events]
+     * @property {Partial<{
+     *     [ P in keyof HTMLElementEventMap ]: ( ( event: HTMLElementEventMap[ P ] ) => void ) | ( () => void )
+     * }>} [events]
      * @property {HTMLElement} [appendTo]
      * @property {HTMLElement} [prependTo]
      */
@@ -132,8 +134,9 @@ module.exports = Object.freeze( {
         }
         if ( options.events ) {
             for ( const name in options.events ) {
-                const listener = options.events[ name ];
+                const listener = options.events[ /** @type {keyof HTMLElementEventMap} */ ( name ) ];
                 if ( listener ) {
+                    // @ts-ignore: type checker does not infer listener's type
                     result.addEventListener( name, listener );
                 }
             }
