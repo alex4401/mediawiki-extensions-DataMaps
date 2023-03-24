@@ -8,7 +8,13 @@
     }
 
     .leaflet-control {
-        .ext-datamaps-acrylic();
+        backdrop-filter: blur( 10px ) brightness( 1.3 ) saturate( 1.2 );
+        background: #fffa;
+
+        /* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+        @supports not ( backdrop-filter: blur( 10px ) ) {
+            background: #fffd;
+        }
     }
 
     .ext-datamaps-control > button {

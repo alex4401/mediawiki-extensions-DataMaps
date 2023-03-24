@@ -30,10 +30,14 @@
     display: flex;
     max-height: 30px;
     flex-direction: column;
-    .ext-datamaps-acrylic();
 
     &[ aria-expanded='true' ] {
         background: #fffb;
+
+        /* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+        @supports not ( backdrop-filter: blur( 10px ) ) {
+            background: #fff;
+        }
     }
 
     > button > .oo-ui-iconElement {
