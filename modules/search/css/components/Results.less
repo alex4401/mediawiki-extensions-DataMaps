@@ -18,7 +18,8 @@ ul.ext-datamaps-control-search-results {
         padding: 0.25em 0.6em;
         line-height: 1.43em;
 
-        &:hover {
+        &:focus,
+        &[ data-highlighted='true' ] {
             background: #eaecf0;
             color: @color-primary;
         }

@@ -39,6 +39,16 @@ class MarkerSearch extends Controls.MapControl {
          * @type {Item[]?}
          */
         this._cachedItems = null;
+        /**
+         * @private
+         * @type {HTMLElement?}
+         */
+        this._highlighted = null;
+        /**
+         * @private
+         * @type {number?}
+         */
+        this._ignoreTimeout = null;
 
         // UI construction
 
@@ -78,10 +88,30 @@ class MarkerSearch extends Controls.MapControl {
         // Set up event handlers
         Util.preventMapInterference( this.element );
         this._inputBox.$input.on( 'mousedown', () => this.toggle( true ) );
+        this._inputBox.$input[ 0 ].addEventListener( 'keydown', event => this._handleInputKeyDownEvent( event ) );
         this._inputBox.on( 'change', () => this.refreshItems() );
+        this._innerElement.addEventListener( 'click', () => this._inputBox.$input[ 0 ].focus() );
         this.map.leaflet.on( 'click', () => this.toggle( false ), this );
         this.map.on( 'markerReady', this.addMarker, this );
         this.map.on( 'chunkStreamingDone', this._onChunkStreamed, this );
+    }
+
+
+    /**
+     * @private
+     * @param {KeyboardEvent} event
+     */
+    _handleInputKeyDownEvent( event ) {
+        if ( event.key === 'ArrowUp' ) {
+            this._setHighlightedItem( 'previous' );
+            event.stopPropagation();
+        } else if ( event.key === 'ArrowDown' ) {
+            this._setHighlightedItem( 'next' );
+            event.stopPropagation();
+        } else if ( ( event.key === 'Enter' || event.key === 'Tab' ) && this._highlighted ) {
+            this._highlighted.click();
+            event.stopPropagation();
+        }
     }
 
 
@@ -136,16 +166,14 @@ class MarkerSearch extends Controls.MapControl {
     _handleItemChoice( item ) {
         this._inputBox.setValue( '', true );
         this.toggle( false );
-        setTimeout( () => {
-            item.map.openMarkerPopup( item.leafletMarker, true );
-            const tabber = /** @type {HTMLElement?} */ ( this.isLinked && item.map !== this.map
-                ? getNonNull( Util.TabberNeue.getOwningTabber( item.map.rootElement ) ).querySelector( '#' + getNonNull(
-                    Util.TabberNeue.getOwningPanel( item.map.rootElement ) ).getAttribute( 'aria-labelledby' ) )
-                : null );
-            if ( tabber ) {
-                tabber.click();
-            }
-        } );
+        item.map.openMarkerPopup( item.leafletMarker, true );
+        const tabber = /** @type {HTMLElement?} */ ( this.isLinked && item.map !== this.map
+            ? getNonNull( Util.TabberNeue.getOwningTabber( item.map.rootElement ) ).querySelector( '#' + getNonNull(
+                Util.TabberNeue.getOwningPanel( item.map.rootElement ) ).getAttribute( 'aria-labelledby' ) )
+            : null );
+        if ( tabber ) {
+            tabber.click();
+        }
     }
 
 
@@ -158,6 +186,60 @@ class MarkerSearch extends Controls.MapControl {
             text: mw.msg( 'datamap-control-search-no-results' ),
             appendTo: this._innerElement
         } );
+    }
+
+
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _handleItemMouseOverEvent( event ) {
+        if ( this._ignoreTimeout !== null ) {
+            return;
+        }
+        this._setHighlightedItem( /** @type {HTMLElement} */ ( event.currentTarget ), true );
+        event.stopPropagation();
+    }
+
+
+    /**
+     * @private
+     * @param {'previous'|'next'|HTMLElement?} item
+     * @param {boolean} [isMouseOver=false]
+     */
+    _setHighlightedItem( item, isMouseOver ) {
+        if ( this._highlighted ) {
+            this._highlighted.dataset.highlighted = 'false';
+        }
+
+        if ( item === 'next' ) {
+            this._highlighted = /** @type {HTMLElement?} */ ( this._highlighted && this._highlighted.nextSibling
+                || this._innerElement.firstChild );
+        } else if ( item === 'previous' ) {
+            this._highlighted = /** @type {HTMLElement?} */ ( this._highlighted && this._highlighted.previousSibling
+                || this._innerElement.lastChild );
+        } else if ( typeof item !== 'string' ) {
+            this._highlighted = item;
+        }
+
+        if ( this._highlighted ) {
+            this._highlighted.dataset.highlighted = 'true';
+            if ( !isMouseOver ) {
+                // Ignore mouseover events caused by the scroll
+                if ( this._ignoreTimeout ) {
+                    clearTimeout( this._ignoreTimeout );
+                }
+                this._ignoreTimeout = setTimeout( () => {
+                    this._ignoreTimeout = null;
+                }, 200 );
+
+                this._highlighted.scrollIntoView( {
+                    // @ts-ignore: typings apparently don't include this value
+                    behavior: 'instant',
+                    block: 'nearest'
+                } );
+            }
+        }
     }
 
 
@@ -183,10 +265,12 @@ class MarkerSearch extends Controls.MapControl {
                 item.element = Util.createDomElement( 'li', {
                     html: item.label,
                     attributes: {
-                        role: 'option'
+                        role: 'option',
+                        tabindex: -1
                     },
                     events: {
-                        click: () => this._handleItemChoice( item )
+                        click: () => this._handleItemChoice( item ),
+                        mouseover: event => this._handleItemMouseOverEvent( event )
                     }
                 } );
 
@@ -226,6 +310,13 @@ class MarkerSearch extends Controls.MapControl {
 
         for ( const item of Util.getNonNull( this._cachedItems ) ) {
             this._innerElement.appendChild( Util.getNonNull( item.element ) );
+        }
+
+        if ( this._highlighted && this._highlighted.parentNode !== null ) {
+            this._setHighlightedItem( this._highlighted );
+        } else {
+            this._setHighlightedItem( null );
+            this._setHighlightedItem( 'next' );
         }
     }
 
