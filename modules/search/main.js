@@ -102,14 +102,22 @@ class MarkerSearch extends Controls.MapControl {
      * @param {KeyboardEvent} event
      */
     _handleInputKeyDownEvent( event ) {
-        if ( event.key === 'ArrowUp' ) {
+        let handled = false;
+        if ( event.key === 'Escape' && this.isOpen() ) {
+            this.toggle( false );
+            handled = true;
+        } else if ( event.key === 'ArrowUp' ) {
             this._setHighlightedItem( 'previous' );
-            event.stopPropagation();
+            handled = true;
         } else if ( event.key === 'ArrowDown' ) {
             this._setHighlightedItem( 'next' );
-            event.stopPropagation();
+            handled = true;
         } else if ( ( event.key === 'Enter' || event.key === 'Tab' ) && this._highlighted ) {
             this._highlighted.click();
+            handled = true;
+        }
+
+        if ( handled ) {
             event.stopPropagation();
         }
     }
