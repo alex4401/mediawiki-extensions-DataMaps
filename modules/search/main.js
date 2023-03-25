@@ -89,7 +89,7 @@ class MarkerSearch extends Controls.MapControl {
         Util.preventMapInterference( this.element );
         this._inputBox.$input.on( 'mousedown', () => this.toggle( true ) );
         this._inputBox.$input[ 0 ].addEventListener( 'keydown', event => this._handleInputKeyDownEvent( event ) );
-        this._inputBox.on( 'change', () => this.refreshItems() );
+        this._inputBox.on( 'change', () => this._handleInputChange() );
         this._innerElement.addEventListener( 'click', () => this._inputBox.$input[ 0 ].focus() );
         this.map.leaflet.on( 'click', () => this.toggle( false ), this );
         this.map.on( 'markerReady', this.addMarker, this );
@@ -112,6 +112,17 @@ class MarkerSearch extends Controls.MapControl {
             this._highlighted.click();
             event.stopPropagation();
         }
+    }
+
+
+    /**
+     * @private
+     */
+    _handleInputChange() {
+        if ( !this.isOpen() ) {
+            this.toggle( true );
+        }
+        this.refreshItems();
     }
 
 
@@ -248,10 +259,11 @@ class MarkerSearch extends Controls.MapControl {
      */
     _renderItems() {
         // Cancel if the list is not expanded
-        if ( this.element.getAttribute( 'aria-expanded' ) !== 'true' ) {
+        if ( !this.isOpen() ) {
             return;
         }
 
+        // Clear and scroll to top
         this._innerElement.textContent = '';
         this._innerElement.scrollTop = 0;
 
@@ -352,6 +364,11 @@ class MarkerSearch extends Controls.MapControl {
             this._cachedItems = null;
         }
         this._renderItems();
+    }
+
+
+    isOpen() {
+        return this.element.getAttribute( 'aria-expanded' ) === 'true';
     }
 
 
