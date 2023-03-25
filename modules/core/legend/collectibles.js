@@ -122,7 +122,7 @@ class CollectiblesPanel extends LegendTabber.Tab {
                 const count = markers.filter( x => x.options.dismissed ).length,
                     mode = Util.Groups.getCollectibleType( this.map.config.groups[ groupId ] );
                 filterEntry.setBadge( ( mode === MarkerGroupFlags.Collectible_Individual ? `${count} / ${markers.length}` : '' )
-                    + ( count > 0 && count === markers.length ? '✓' : '' ) );
+                    + ( count > 0 && count === markers.length ? ' ✓' : '' ) );
             }
         }
     }
