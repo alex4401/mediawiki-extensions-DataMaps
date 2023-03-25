@@ -230,7 +230,7 @@ class EmbedRenderer {
             [],
             ( new \OOUI\MessageWidget( [
                 'type' => 'error',
-                'label' => wfMessage( 'datamap-javascript-required' )
+                'label' => wfMessage( 'datamap-javascript-required' )->inContentLanguage()
             ] ) )->toString() . Html::rawElement(
                 'style',
                 [
@@ -258,7 +258,7 @@ class EmbedRenderer {
                 ] ) )->toString() . Html::rawElement(
                     'div',
                     [],
-                    wfMessage( 'datamap-loading-js' )
+                    wfMessage( 'datamap-loading-js' )->inContentLanguage()
                 )
             )
         );
