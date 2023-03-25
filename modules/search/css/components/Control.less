@@ -1,0 +1,39 @@
+.ext-datamaps-control-search {
+    position: relative;
+    z-index: 810;
+    display: flex;
+    padding: 1px;
+    // Needed for the backdrop filter to work on results
+    filter: blur( 0 );
+
+    &[ aria-expanded='true' ] .ext-datamaps-control-search-results {
+        display: block;
+    }
+
+    .oo-ui-textInputWidget {
+        width: 27.5em;
+
+        .oo-ui-inputWidget-input {
+            height: 100%;
+            padding-left: 2.7em;
+            border-radius: 4px;
+
+            &[ aria-expanded='true' ] {
+                border-radius: 4px 4px 0 0;
+            }
+        }
+    }
+
+    .oo-ui-toggleWidget {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        margin-right: 0;
+        font-size: 10px;
+
+        > a {
+            min-height: 0px;
+            padding: 4px;
+        }
+    }
+}

@@ -1,3 +1,4 @@
+/** @typedef {import( '../core/map.js' )} DataMap */
 const Util = require( './util.js' ),
     {
         EventEmitter,
@@ -26,7 +27,15 @@ const Util = require( './util.js' ),
  */
 /**
  * @typedef {Object} ListenerSignatures
- * @property {( items: Item[] ) => void} commit
+ * @property {( items: Item[] ) => void} precommit
+ * @property {() => void} commit
+ */
+/**
+ * @typedef {Object} Item
+ * @property {LeafletModule.AnyMarker} leafletMarker
+ * @property {DataMaps.SearchKeywordWeighing[]} keywords
+ * @property {string} label
+ * @property {DataMap} map
  */
 
 
@@ -39,7 +48,14 @@ class MarkerSearchIndex extends EventEmitter {
     constructor() {
         super();
 
+        /**
+         * @type {Item[]}
+         */
         this.items = [];
+        /**
+         * @protected
+         * @type {Item[]}
+         */
         this._queue = [];
     }
 
@@ -69,6 +85,11 @@ class MarkerSearchIndex extends EventEmitter {
     }
 
 
+    /**
+     * @param {DataMap} map
+     * @param {LeafletModule.AnyMarker} leafletMarker
+     * @return {Item}
+     */
     _transform( map, leafletMarker ) {
         const state = leafletMarker.apiInstance[ 2 ];
         const group = map.config.groups[ leafletMarker.attachedLayers[ 0 ] ];
@@ -125,10 +146,11 @@ class MarkerSearchIndex extends EventEmitter {
 
 
     commit() {
-        this.fire( 'commit', this._queue );
+        this.fire( 'precommit', this._queue );
         this.items = this.items.concat( this._queue );
         this.items.sort( ( a, b ) => a.label.localeCompare( b.label ) );
         this._queue = [];
+        this.fire( 'commit' );
     }
 
 

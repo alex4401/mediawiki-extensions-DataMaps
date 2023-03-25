@@ -214,8 +214,6 @@
 			"packageFiles": [
 				"search/main.js",
 				"search/indexing.js",
-				"search/menu.js",
-				"search/option.js",
 				"search/util.js"
 			],
 			"styles": [

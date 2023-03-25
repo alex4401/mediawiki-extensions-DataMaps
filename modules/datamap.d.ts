@@ -94,7 +94,7 @@ declare namespace DataMaps {
     }
 
     type RuntimeMarkerProperties = Record<string, string>;
-    type SearchKeywordWeighing = [ number, string ];
+    type SearchKeywordWeighing = [ string, number ];
     interface IApiMarkerSlots {
         uid?: string;
         label?: string;
