@@ -296,7 +296,10 @@ class ToggleFullscreen extends MapControl {
 
 
     _refreshIcon() {
-
+        const state = this.map.isFullScreen(),
+            element = getNonNull( this._button.firstElementChild );
+        element.classList[ state ? 'add' : 'remove' ]( 'oo-ui-icon-exitFullscreen' );
+        element.classList[ state ? 'add' : 'remove' ]( 'oo-ui-icon-fullScreen' );
     }
 }
 
