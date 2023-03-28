@@ -1,29 +1,31 @@
 /** @typedef {import( './map.js' )} DataMap */
 const { CRSOrigin } = require( './enums.js' ),
-    { createDomElement } = require( './util.js' );
+    { createDomElement, getNonNull } = require( './util.js' );
 
 
 /**
  * @typedef {Object} ControlOptions
- * @property {string} [tagName]
- * @property {string[]} [classes]
- * @property {boolean} [primary]
+ * @property {string} [tagName='div'] HTML element tag name.
+ * @property {string[]} [classes] List of CSS classes to add to the element.
+ * @property {boolean} [primary] Whether to use action-indicative styling.
  * @property {boolean} [delegatedBuild] If true, {@link _build} call will be left to the subclass's constructor.
  */
 /**
  * @typedef {Object} ControlButtonOptions
- * @property {boolean} [addToSelf]
- * @property {OO.ui.Icon} [icon]
- * @property {string} [label]
- * @property {boolean} [labelBeforeIcon]
- * @property {string} [tooltip]
- * @property {string[]} [classes]
- * @property {EventListenerOrEventListenerObject} [clickHandler]
+ * @property {boolean} [addToSelf] Whether to add the button to the end of the control automatically.
+ * @property {OO.ui.Icon} [icon] OOUI icon name, if any.
+ * @property {string} [label] Label text, if any.
+ * @property {boolean} [labelBeforeIcon] Whether to put the label before icon.
+ * @property {string} [tooltip] Tooltip, if any.
+ * @property {string[]} [classes] CSS classes to add to the button element, if any.
+ * @property {EventListenerOrEventListenerObject} [clickHandler] Click event handler, if any.
  * @property {boolean} [returnToMap=true]
  */
 
 
 /**
+ * Base class for all custom map controls.
+ *
  * @abstract
  */
 class MapControl {
@@ -66,6 +68,8 @@ class MapControl {
 
 
     /**
+     * Whether this control contains buttons and wants to be styled as one (equivalent of Leaflet's "bar" class).
+     *
      * @return {boolean}
      */
     isButtonGroup() {
@@ -74,13 +78,18 @@ class MapControl {
 
 
     /**
+     * Builds the control's elements. This is invoked by the constructor if {@link ControlOptions.delegatedBuild} is not truey.
+     *
+     * There may be cases where you may want to handle element creation within the constructor.
+     *
      * @protected
-     * @abstract
      */
     _build() {}
 
 
     /**
+     * Creates a button from options. See {@link ControlButtonOptions}.
+     *
      * @protected
      * @param {ControlButtonOptions} options
      * @return {HTMLElement}
@@ -135,12 +144,20 @@ class MapControl {
     }
 
 
+    /**
+     * Returns focus back to the map.
+     *
+     * @protected
+     */
     _refocusMap() {
         this.map.leaflet.getContainer().focus();
     }
 }
 
 
+/**
+ * Control to let the user switch map backgrounds.
+ */
 class BackgroundSwitcher extends MapControl {
     /**
      * @param {DataMap} map Owning map.
@@ -170,6 +187,9 @@ class BackgroundSwitcher extends MapControl {
 }
 
 
+/**
+ * Coordinates-under-cursor control.
+ */
 class Coordinates extends MapControl {
     /**
      * @param {DataMap} map Owning map.
@@ -196,6 +216,9 @@ class Coordinates extends MapControl {
 }
 
 
+/**
+ * Control displaying a button leading to user's editor of choice.
+ */
 class EditButton extends MapControl {
     /**
      * @param {DataMap} map Owning map.
@@ -221,6 +244,9 @@ class EditButton extends MapControl {
 }
 
 
+/**
+ * View reset and centre buttons.
+*/
 class ExtraViewControls extends MapControl {
     /**
      * @param {DataMap} map Owning map.
@@ -247,6 +273,9 @@ class ExtraViewControls extends MapControl {
 }
 
 
+/**
+ * Button to toggle fullscreen mode of the map.
+ */
 class ToggleFullscreen extends MapControl {
     /**
      * @param {DataMap} map Owning map.

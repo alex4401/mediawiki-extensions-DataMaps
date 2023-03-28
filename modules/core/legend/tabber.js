@@ -47,6 +47,9 @@ class LegendTabber {
 
 
     /**
+     * Called internally by {@see LegendTabber.Tab} to inform us about a tab change. This hides the menu if there is only one (or
+     * less) tab.
+     *
      * @package
      */
     _updateOnTabChange() {
@@ -55,6 +58,8 @@ class LegendTabber {
 
 
     /**
+     * Expands or collapses depending on the parameter value.
+     *
      * @param {boolean} value
      * @return {this}
      */
@@ -112,6 +117,8 @@ LegendTabber.ExpandableControl = class ExpandableControl extends MapControl {
 
 
     /**
+     * Expands or collapses depending on the parameter value.
+     *
      * @param {boolean} value
      */
     setExpanded( value ) {
@@ -120,6 +127,9 @@ LegendTabber.ExpandableControl = class ExpandableControl extends MapControl {
     }
 
 
+    /**
+     * Toggles expansion state.
+     */
     toggle() {
         this.setExpanded( this.element.getAttribute( 'aria-expanded' ) !== 'true' );
     }
@@ -192,6 +202,8 @@ LegendTabber.Tab = class Tab {
 
 
     /**
+     * Adds or removes this tab from the tabber depending on the parameter.
+     *
      * @param {boolean} value
      * @return {this}
      */
