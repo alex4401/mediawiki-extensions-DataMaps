@@ -1,12 +1,14 @@
+/** @typedef {import( '../core/events.js' ).EventHandlerRef & { flag: number }} MapNotificationReceiver */
 const
     {
         DataMap,
+        MapFlags,
         EventEmitter,
         Util
     } = require( 'ext.datamaps.core' ),
     /** @type {InstanceType<DataMap>[]} */ initialisedMaps = [],
     /** @type {number[]} */ ids = [],
-    /** @type {import( '../core/events.js' ).EventHandlerRef[]} */ toNotify = [];
+    /** @type {MapNotificationReceiver[]} */ toNotify = [];
 
 
 /**
@@ -25,7 +27,33 @@ function getConfig( rootElement ) {
 }
 
 
+/**
+ * @param {MapNotificationReceiver} handler
+ * @param {InstanceType<DataMap>} map
+ */
+function invokeHandler( handler, map ) {
+    const isVe = map.isFeatureBitSet( MapFlags.VisualEditor );
+    if ( ( isVe && handler.flag & mw.dataMaps.IS_COMPATIBLE_WITH_VISUAL_EDITOR )
+        || ( !isVe && handler.flag & mw.dataMaps.IS_COMPATIBLE_WITH_NORMAL ) ) {
+        EventEmitter.invokeHandler( handler, [ map ] );
+    }
+}
+
+
+/**
+ * @global
+ */
 mw.dataMaps = {
+    /**
+     * @constant
+     */
+    IS_COMPATIBLE_WITH_NORMAL: 1,
+    /**
+     * @constant
+     */
+    IS_COMPATIBLE_WITH_VISUAL_EDITOR: 2,
+
+
     /**
      * @param {number} id
      * @param {HTMLElement} rootElement
@@ -51,7 +79,7 @@ mw.dataMaps = {
 
         // Notify external scripts waiting on maps
         for ( const handler of toNotify ) {
-            EventEmitter.invokeHandler( handler, [ map ] );
+            invokeHandler( handler, map );
         }
 
         // Request markers from the API
@@ -72,16 +100,18 @@ mw.dataMaps = {
     /**
      * @param {( map: InstanceType<DataMap> ) => void} callback
      * @param {any} [context]
+     * @param {number} [filterFlags=mw.dataMaps.IS_COMPATIBLE_WITH_NORMAL]
      */
-    onMapInitialised( callback, context ) {
+    onMapInitialised( callback, context, filterFlags ) {
         const handler = {
             method: callback,
-            context
+            context,
+            flag: filterFlags || this.IS_COMPATIBLE_WITH_NORMAL
         };
         toNotify.push( handler );
 
         for ( const map of initialisedMaps ) {
-            EventEmitter.invokeHandler( handler, [ map ] );
+            invokeHandler( handler, map );
         }
     },
 
