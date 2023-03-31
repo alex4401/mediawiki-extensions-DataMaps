@@ -192,13 +192,14 @@ class MapStorage {
      * @private
      */
     _migrate() {
-        // Move data from legacy namespace to the new one if saved prior to 20221115 - all keys that we use or used.
+        // Move data from legacy namespaces to the new one if saved prior to 20221115 or 20230331 - all keys that we use or used.
         // Schema version is not bumped right away, so migrations can still be done with no interruption (running on old
         // structures).
-        if ( this._has( 'schemaVersion', MapStorage.LEGACY_NAMESPACE ) ) {
-            this._rename( 'schemaVersion', null, MapStorage.LEGACY_NAMESPACE );
-            this._rename( 'dismissed', null, MapStorage.LEGACY_NAMESPACE );
-            this._rename( 'background', null, MapStorage.LEGACY_NAMESPACE );
+        const isLegacyNs = this._has( 'schemaVersion', MapStorage.LEGACY_NAMESPACE );
+        if ( isLegacyNs || this._has( 'schemaVersion', MapStorage.GENERIC_NAMESPACE ) ) {
+            for ( const prop of [ 'schemaVersion', '*', 'dismissed', 'background' ] ) {
+                this._rename( prop, null, isLegacyNs ? MapStorage.LEGACY_NAMESPACE : MapStorage.GENERIC_NAMESPACE );
+            }
         }
 
         const schemaVersion = parseInt( this._get( 'schemaVersion' ) || MapStorage.LATEST_VERSION );
@@ -357,11 +358,12 @@ class MapStorage {
  * - 20221114   : New model (single object).
  * - 20221115   : Namespace changed from ext.ark.datamaps to ext.datamaps.
  * - 20230228   : Generated marker IDs no longer include the M(arker) prefix. Storage has been namespaced for a while anyway.
+ * - 20230331   : Namespace changed from ext.datamaps to ext.datamaps:[wiki id]
  *
  * @constant
  * @type {number}
  */
-MapStorage.LATEST_VERSION = 20230228;
+MapStorage.LATEST_VERSION = 20230331;
 /**
  * Oldest version we can load.
  *
@@ -370,12 +372,19 @@ MapStorage.LATEST_VERSION = 20230228;
  */
 MapStorage.MIN_SUPPORTED_VERSION = 20220713;
 /**
- * Key prefix.
+ * Generic key prefix - without wiki ID.
  *
  * @constant
  * @type {string}
  */
-MapStorage.NAMESPACE = 'ext.datamaps';
+MapStorage.GENERIC_NAMESPACE = 'ext.datamaps';
+/**
+ * Key prefix specific to this wiki.
+ *
+ * @constant
+ * @type {string}
+ */
+MapStorage.NAMESPACE = `${MapStorage.GENERIC_NAMESPACE}:${mw.config.get( 'wgWikiId' )}`;
 /**
  * Key prefix from before 20221115.
  *
