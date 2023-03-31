@@ -74,5 +74,8 @@
     "datamap-category-maps-failing-validation": "Mapas con fallos en la validación de datos",
     "datamap-category-pages-including-broken-maps": "Páginas que incluyen mapas de datos con fallos de validación",
     "datamap-error-map-validation-fail-full": "El mapa de datos no supera la validación de datos. Por favor, corrige primero los errores asociados:<br/>$1",
-    "datamap-error-validate-limit": "Se han encontrado demasiados errores durante la validación de la estructura: $1."
+    "datamap-error-validate-limit": "Se han encontrado demasiados errores durante la validación de la estructura: $1.",
+    "datamap-error-deprecated-schema-version": "El esquema usado en este mapa ya no es compatible, y por tanto se eliminará en $1. Comprueba la [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps documentación de la extensión] y actualiza los datos con una versión de esquema compatible ($2).",
+    "datamap-error-bad-schema-origin": "Campo <code>$schema</code> faltante o no válido. Este campo debe indicar la ruta a una definición de esquema compatible (por ejemplo, <code>$1</code>).",
+    "datamap-error-bad-schema-version": "El campo <code>$schema</code> indica la ruta a una definición de esquema desconocida o no compatible. Los identificadores compatibles son los siguientes: $1."
 }
