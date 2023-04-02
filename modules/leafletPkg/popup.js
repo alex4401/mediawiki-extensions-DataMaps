@@ -59,14 +59,12 @@ module.exports = Leaflet.Popup.extend( /** @lends LeafletModule.Popup.prototype 
     onRemove( map ) {
         this._content.onRemove();
         Leaflet.Popup.prototype.onRemove.call( this, map );
-
         // Wipe the pre-built content nodes if the provider does not want them to be kept around
         if ( !this._content.shouldKeepAround() ) {
             delete this._buttonArea;
             delete this._content;
             delete this._contentNode;
-            // DivOverlay will clean this one up
-            // delete this._container;
+            setTimeout( () => delete this._container, map._fadeAnimated ? 300 : 0 );
         }
     }
 } );

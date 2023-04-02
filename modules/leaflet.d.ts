@@ -298,6 +298,7 @@ declare namespace LeafletModule {
         off( type: string, fn: Function, context?: object ): void;
 
         _haveLayersMutated: boolean;
+        _fadeAnimated: boolean;
         _layers: LayerMap;
         options: MapOptions;
         interactionControl?: Ark.InteractionControl;
