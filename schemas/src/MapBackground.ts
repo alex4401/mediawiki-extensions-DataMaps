@@ -1,54 +1,126 @@
 import { Box, Colour3, Colour4, Point, Title } from "./CoreTypes";
 
 
-namespace MapBackground {
-    export class OverlayBase {
-        name?: string;
-    }
-
-
-    export class ImageOverlay extends OverlayBase {
+type Overlay = {
+    /**
+     * Name to show on a tooltip. If unspecified, the tooltip will not be shown.
+     */
+    name?: string;
+};
+namespace Overlay {
+    export type ImageProps = {
+        /**
+         * Image file to use.
+         */
         image: Title;
+
+        /**
+         * Bounds to fit the image in. This is not relative to the owning background.
+         */
         at: Box;
-        reduceGaps: boolean = false;
-    }
+
+        /**
+         * Attempts to minimise gaps between multiple closely placed image overlays, but may distort them or cause minor jumping
+         * during zoom changes.
+         *
+         * This is recommended for tile sets.
+         *
+         * @default false
+         */
+        reduceGaps?: boolean;
+    };
 
 
-    export class PolylineOverlay extends OverlayBase {
+    export type PolylineProps = {
+        /**
+         * List of points to connect sequentially, defining the line.
+         */
         path: Point[];
+
+        /**
+         * Line colour.
+         */
         color?: Colour4;
-        borderColor?: Colour3;
-    }
+    };
 
 
-    export class BoxOverlay extends OverlayBase {
+    export type BoxProps = {
+        /**
+         * Bounds of this box.
+         */
         at: Box;
+
+        /**
+         * Fill colour.
+         */
         color?: Colour4;
+
+        /**
+         * Border colour.
+         */
+        borderColor?: Colour3;
+
+        /**
+         * Border thickness.
+         */
         thickness?: number;
-    }
-
-    class Base {
-        overlays: ( ImageOverlay|PolylineOverlay|BoxOverlay )[];
-        associatedLayer?: string;
-    }
-
-
-    export class Image extends Base {
-        image: Title;
-        at?: Box;
-        associatedLayer?: string;
-    }
-
-
-    export class Tiled extends Base {
-        at: Point = [ 0, 0 ];
-        tileSize: Box;
-        tiles: {
-            position: Point|number;
-            image: Title;
-        }[];
-    }
+    };
 }
 
 
-export type MapBackground = ( MapBackground.Image|MapBackground.Tiled );
+type ImageProps = {
+    /**
+     * Image file to use.
+     */
+    image: Title;
+
+    /**
+     * Bounds to fit the image in.
+     */
+    at?: Box;
+};
+
+
+type TiledProps = {
+    /**
+     * Starting position of the tile set.
+     *
+     * @default [ 0, 0 ]
+     */
+    at?: Point;
+
+    /**
+     * Size of an individual tile.
+     */
+    tileSize: Box;
+
+    /**
+     * List of tiles.
+     */
+    tiles: {
+        /**
+         * Position of the tile. 1 unit is one tile as big as the size specified.
+         */
+        position: Point|number;
+
+        /**
+         * Image file to use.
+         */
+        image: Title;
+    }[];
+};
+
+
+export type MapBackground = {
+    /**
+     * Value for the `bg` property marker category that can be used to tie markers to a specific background.
+     */
+    associatedLayer?: string;
+
+    /**
+     * List of overlays tied to this background.
+     *
+     * @default []
+     */
+    overlays?: ( Overlay & ( Overlay.ImageProps | Overlay.PolylineProps | Overlay.BoxProps ) )[];
+} & ( ImageProps | TiledProps );
