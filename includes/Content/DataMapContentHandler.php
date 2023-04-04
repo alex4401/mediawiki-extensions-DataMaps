@@ -70,7 +70,7 @@ class DataMapContentHandler extends JsonContentHandler {
 
         // If validation fails, do not render the map embed
         $validationStatus = $content->getValidationStatus();
-        if ( !$validationStatus->isGood() ) {
+        if ( !$validationStatus->isOK() ) {
             if ( $shouldGenerateHtml && $isEditPreview ) {
                 // Edit preview, display a message box. This is something MediaWiki should be handling out of box though.
                 $parserOutput->setText( Html::errorBox(

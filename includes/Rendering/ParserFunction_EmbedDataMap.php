@@ -23,7 +23,7 @@ final class ParserFunction_EmbedDataMap {
             $msg = wfMessage( 'datamap-error-pf-page-invalid-content-model', wfEscapeWikiText( $title->getFullText() ) )
                 ->inContentLanguage()->escaped();
             return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true ];
-        } elseif ( !$content->getValidationStatus()->isGood() ) {
+        } elseif ( !$content->getValidationStatus()->isOK() ) {
             $msg = wfMessage( 'datamap-error-map-validation-fail', wfEscapeWikiText( $title->getFullText() ) )
                 ->inContentLanguage()->parse();
             $parser->addTrackingCategory( 'datamap-category-pages-including-broken-maps' );
