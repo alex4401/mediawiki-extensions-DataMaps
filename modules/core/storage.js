@@ -192,6 +192,13 @@ class MapStorage {
      * @private
      */
     _migrate() {
+        // v0.16.0 had a bugged namespace transition, recover from the `null` sub-namespace
+        if ( this._has( 'schemaVersion', `${MapStorage.GENERIC_NAMESPACE}:null` ) ) {
+            for ( const prop of [ 'schemaVersion', '*' ] ) {
+                this._rename( prop, null, `${MapStorage.GENERIC_NAMESPACE}:null` );
+            }
+        }
+
         // Move data from legacy namespaces to the new one if saved prior to 20221115 or 20230331 - all keys that we use or used.
         // Schema version is not bumped right away, so migrations can still be done with no interruption (running on old
         // structures).
@@ -384,7 +391,7 @@ MapStorage.GENERIC_NAMESPACE = 'ext.datamaps';
  * @constant
  * @type {string}
  */
-MapStorage.NAMESPACE = `${MapStorage.GENERIC_NAMESPACE}:${mw.config.get( 'wgWikiId' )}`;
+MapStorage.NAMESPACE = `${MapStorage.GENERIC_NAMESPACE}:${mw.config.get( 'wgWikiID' )}`;
 /**
  * Key prefix from before 20221115.
  *
