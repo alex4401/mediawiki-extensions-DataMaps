@@ -229,6 +229,10 @@
 		"ext.datamaps.ve.icons": {
 			"class": "ResourceLoaderOOUIIconPackModule",
 			"icons": [
+				"mapPin",
+				"trash",
+				"edit",
+
 				"code",
 				"noWikiText",
 				"wikiText",
@@ -244,45 +248,65 @@
 		"ext.datamaps.ve": {
 			"es6": true,
 			"dependencies": [
-				"oojs-ui-toolbars",
+				"oojs-ui-core",
+				"oojs-ui-widgets",
 				"oojs-ui-windows",
 				"mediawiki.widgets",
+				"mediawiki.widgets.visibleLengthLimit",
 				"ext.datamaps.core",
+				"ext.datamaps.bootstrap",
 				"ext.datamaps.leaflet",
 				"ext.datamaps.ve.icons"
 			],
 			"packageFiles": [
 				"ve/main.js",
 				"ve/editor.js",
+				"ve/dataCapsule.js",
+				"ve/dataEditorUi.js",
+				"ve/toolControl.js",
 				"ve/editablePopup.js",
-				"ve/veControl.js",
-				"ve/widgets/markerGroupEditor.js",
-				"ve/tools/dialogTool.js",
-				"ve/tools/commit.js",
-				"ve/tools/sourceEditor.js",
-				"ve/tools/addMarker.js",
-				"ve/dialogs/commit.js",
-				"ve/dialogs/confirmDelete.js",
-				"ve/dialogs/addMarker.js",
-				"ve/dialogs/editMarker.js",
-				"ve/dialogs/betaWarning.js",
-				"ve/dialogs/switchSource.js"
+
+				"ve/tabs/base.js",
+				"ve/tabs/markerGroups.js",
+				"ve/tabs/mapSettings.js",
+
+				"ve/workflow/base.js",
+				"ve/workflow/createMarker.js",
+				"ve/workflow/saveEdit.js"
 			],
 			"styles": [
-				"ve/css/placeholder.less",
-				"ve/css/bars.less",
-				"ve/css/toolbar.less",
-				"ve/css/groups.less",
-				"ve/css/extension.less",
-				"ve/css/popup.less",
-				"ve/css/control.less",
-				"ve/css/markerPopup.less"
+				"ve/css/main.less"
 			],
 			"messages": [
 				"datamap-ve-beta-notice",
 				"datamap-ve-limited-preview-notice",
 
-				"datamap-ve-legend-tab-marker-groups",
+				"datamap-ve-panel-msettings",
+				"datamap-ve-panel-msettings-field-search",
+				"datamap-ve-panel-msettings-field-search-disabled",
+				"datamap-ve-panel-msettings-field-search-enabled",
+				"datamap-ve-panel-msettings-field-search-tabber",
+				"datamap-ve-panel-msettings-field-legend",
+				"datamap-ve-panel-msettings-field-requireids",
+				"datamap-ve-panel-msettings-field-requireids-desc",
+				"datamap-ve-panel-msettings-field-sortchecklists",
+				"datamap-ve-panel-msettings-field-sortchecklists-default",
+				"datamap-ve-panel-msettings-field-sortchecklists-amount",
+				"datamap-ve-panel-msettings-field-coordinates",
+			
+				"datamap-ve-panel-mgroups",
+
+				"datamap-ve-panel-marker-delete",
+				"datamap-ve-panel-marker-field-name",
+				"datamap-ve-panel-marker-field-desc",
+				"datamap-ve-panel-marker-advanced",
+				"datamap-ve-panel-marker-field-id",
+
+				"datamap-ve-workflow-save",
+				"datamap-ve-workflow-save-submit",
+				"datamap-ve-workflow-save-summary",
+				"datamap-ve-workflow-save-summary-desc",
+
 				"datamap-ve-group-id",
 				"datamap-ve-group-id-cannot-modify",
 				"datamap-ve-group-article-link",
@@ -393,6 +417,7 @@
 		"SkinTemplateNavigation::Universal": "MainHandler",
 		"ChangeTagsListActive": "MainHandler",
 		"ListDefinedTags": "MainHandler",
+		"ChangeTagsAllowedAdd": "MainHandler",
 		"RecentChange_save": "MainHandler",
 		"RevisionDataUpdates": "MainHandler",
 		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"

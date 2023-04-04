@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 module.exports = {
+    // TODO: CRSOrigin does not comply with MW's JS conventions
     /**
      * @readonly
      */

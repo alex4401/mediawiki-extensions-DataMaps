@@ -1,79 +1,86 @@
-const EventEmitter = mw.dataMaps.EventEmitter,
+/** @typedef {import( '../core/legend/tabber.js' )} LegendTabber */
+/** @typedef {import( './tabs/base.js' )} VePanel */
+/** @typedef {import( './workflow/base.js' ).VeWorkflow} VeWorkflow */
+const { DataMap, EventEmitter, Util } = require( 'ext.datamaps.core' ),
     EditableMarkerPopup = require( './editablePopup.js' ),
-    MarkerGroupEditor = require( './widgets/markerGroupEditor.js' ),
-    MapVeIntegrationControl = require( './veControl.js' ),
-    BetaWarningDialog = require( './dialogs/betaWarning.js' );
+    DataCapsule = require( './dataCapsule.js' ),
+    ToolBarControl = require( './toolControl.js' );
 
 
-module.exports = class MapVisualEditor extends EventEmitter {
+/**
+ * @extends {EventEmitter<DataMaps.EventHandling.VeListenerSignatures>}
+ */
+class MapVisualEditor extends EventEmitter {
+    /**
+     * @param {InstanceType<DataMap>} map Map to edit.
+     */
     constructor( map ) {
         super();
 
+        /**
+         * @type {InstanceType<DataMap>}
+         */
         this.map = map;
+        /**
+         * @type {LegendTabber?}
+         */
+        this.legendTabber = Util.getNonNull( map.legend );
+        /**
+         * @type {number}
+         */
         this.revisionId = mw.config.get( 'wgCurRevisionId' );
-
-        // Override marker popup class
-        this.map.getPopupClass = this.getPopupClass;
-
-        // Make local map storage read-only and remove all dismissals
-        this.map.storage.isWritable = false;
-        this.map.storage.dismissed = [];
-
-        $( '<div class="datamap-ve-info-bar warning">' )
-            .text( mw.msg( 'datamap-ve-limited-preview-notice' ) )
-            .prependTo( this.map.$root.find( '.datamap-holder' ).parent() );
-
-        this.windowManager = new OO.ui.WindowManager();
-        $( document.body ).append( this.windowManager.$element );
-
-        const betaWindow = new BetaWarningDialog();
-        this.windowManager.addWindows( [ betaWindow ] );
-        this.windowManager.openWindow( betaWindow );
-
-        this.toolFactory = new OO.ui.ToolFactory();
-        this.groupFactory = new OO.ui.ToolGroupFactory();
-        this.toolbar = new OO.ui.Toolbar( this.toolFactory, this.groupFactory, {
-            actions: true
+        /**
+         * @type {DataCapsule}
+         */
+        this.dataCapsule = new DataCapsule();
+        /**
+         * @type {OO.Factory}
+         */
+        this.windowFactory = new OO.Factory();
+        /**
+         * @type {OO.ui.WindowManager}
+         */
+        this.windowManager = new OO.ui.WindowManager( {
+            factory: this.windowFactory
         } );
+        this.windowManager.$element.appendTo( document.body );
+        /**
+         * @type {Record<string, any>}
+         */
+        this._svcs = {};
 
-        // Push a CSS class onto the map container
-        this.map.$root.addClass( 'datamap-is-ve-active' );
-
-        this.map.$status.show().text( mw.msg( 'datamap-ve-loading' ) );
-
-        // Register tools
-        this.toolFactory.register( require( './tools/commit.js' ) );
-        this.toolFactory.register( require( './tools/sourceEditor.js' ) );
-        this.toolFactory.register( require( './tools/addMarker.js' ) );
-
-        // Set up the toolbar
-        this.toolbar.setup( [
-            {
-                type: 'bar',
-                include: [ 'addMarker' ]
-            },
-            {
-                type: 'bar',
-                include: [ 'sourceEditor', 'commit' ]
-            }
-        ] );
-        this.toolbar.$element.prependTo( this.map.$root.find( '.leaflet-control-container' ) );
-        this.toolbar.initialize();
-        this.toolbar.emit( 'updateState', {
-            ve: this
+        this.on( 'ready', () => {
+            Util.getNonNull( Util.getNonNull( map.rootElement.previousElementSibling ).previousElementSibling ).remove();
         } );
+        this.on( 'sourceData', this._instantiateMarkers, this );
+        this.on( 'sourceData', () => this.fireMemorised( 'ready' ) );
 
-        // Set up the mouse controls
-        this.control = new MapVeIntegrationControl( this );
-
-        this.map.on( 'legendLoaded', this._enhanceGroups, this );
-
+        this._setup();
         this._requestRevisionData();
     }
 
 
-    getPopupClass() {
+    /**
+     * Returns the class to be used for marker popup contents.
+     *
+     * @private
+     * @return {typeof EditableMarkerPopup}
+     */
+    static _getPopupClass() {
         return EditableMarkerPopup;
+    }
+
+
+    getPageName() {
+        return mw.config.get( 'wgPageName' );
+    }
+
+
+    /**
+     * @return {boolean}
+     */
+    doesRequireMarkerIds() {
+        return DataCapsule.getField( this.dataCapsule.get(), 'settings', {} ).requireCustomMarkerIDs === true;
     }
 
 
@@ -88,77 +95,121 @@ module.exports = class MapVisualEditor extends EventEmitter {
             rvslots: 'main'
         } )
             .then( data => {
-                this.sourceData = JSON.parse( data.query.pages[ this.map.id ].revisions[ 0 ].slots.main[ '*' ] );
-
-                if ( !this.sourceData.markers ) {
-                    this.sourceData.markers = {};
-                }
-
-                const markerStore = {};
-                for ( const layers in this.sourceData.markers ) {
-                    markerStore[ layers ] = [];
-                    for ( const raw of this.sourceData.markers[ layers ] ) {
-                        const apiInstance = [ raw.y || raw.lat, raw.x || raw.lon, {
-                            raw,
-                            ve: this,
-                            _veInvalidate: [ '_ve_parsed_desc', '_ve_parsed_label' ],
-                            article: raw.article
-                        } ];
-                        markerStore[ layers ].push( apiInstance );
-                    }
-                }
-
-                this.map.on( 'leafletLoaded', () => {
-                    this.map.streaming.instantiateMarkers( markerStore );
-                    this.map.fire( 'chunkStreamingDone' );
-                } );
+                this.dataCapsule.set( JSON.parse( data.query.pages[ this.map.id ].revisions[ 0 ].slots.main[ '*' ] ) );
+                this.fireMemorised( 'sourceData' );
             } )
             .catch( ex => {
-                this.map.$status.show().html( mw.msg( 'datamap-error-dataload' ) ).addClass( 'error' );
+                this.map.setStatusOverlay( 'error', mw.msg( 'datamap-error-dataload' ) );
                 throw ex;
             } );
-
-
-        const streamingCallback = () => {
-            this.map.off( 'chunkStreamingDone', streamingCallback );
-
-            this.map.$status.hide();
-        };
-        this.map.on( 'chunkStreamingDone', streamingCallback );
     }
 
 
-    _enhanceGroups() {
-        // Hide the mass-visibility toggle button group
-        this.map.markerLegend.buttonGroup.toggle( false );
-        // Rename the tab
-        this.map.markerLegend.tab.tabItem.setLabel( mw.msg( 'datamap-ve-legend-tab-marker-groups' ) );
+    _setup() {
+        // Turn off the built-in filters panel
+        Util.getNonNull( this.map.filtersPanel ).setVisible( false );
 
-        // Rebuild every marker group toggle into editor widgets
-        // eslint-disable-next-line compat/compat
-        for ( const groupToggle of Object.values( this.map.markerLegend.groupToggles ) ) {
-            groupToggle.veWidget = new MarkerGroupEditor( this, groupToggle );
+        // Override marker popup class
+        this.map.getPopupClass = MapVisualEditor._getPopupClass.bind( this.map );
+
+        // Make local map storage read-only and remove all dismissals
+        this.map.storage.isWritable = false;
+        this.map.storage.data.dismissed = [];
+
+        // Insert a notice that the visual editor is in beta
+        ( new OO.ui.MessageWidget( {
+            type: 'notice',
+            label: new OO.ui.HtmlSnippet( mw.msg( 'datamap-ve-beta-notice' ) )
+        } ) ).$element.prependTo( Util.getNonNull( this.map.rootElement ) );
+
+        // Insert a notice that some features (like collectibles) are not available in the visual editor
+        ( new OO.ui.MessageWidget( {
+            type: 'warning',
+            label: mw.msg( 'datamap-ve-limited-preview-notice' ),
+            showClose: true
+        } ) ).$element.prependTo( Util.getNonNull( this.map.rootElement.querySelector( '.ext-datamaps-container-top' ) ) );
+
+        // Push a CSS class onto the map container
+        this.map.rootElement.classList.add( 'ext-datamaps-with-ve' );
+
+        // Instantiate the free-flowing toolbar control
+        this.addService( this.map.addControl( DataMap.anchors._none, new ToolBarControl( this ) ) );
+
+        // Instantiate all panels and workflows
+        for ( const Cls of MapVisualEditor.PANELS ) {
+            this.addService( new Cls( this ) ).setVisible( true );
+        }
+        for ( const Cls of MapVisualEditor.WORKFLOWS ) {
+            this.addService( new Cls( this ) );
         }
     }
 
 
-    markStale( obj ) {
-        obj._veStale = true;
-
-        if ( obj._veInvalidate ) {
-            for ( const field of obj._veInvalidate ) {
-                delete obj[ field ];
+    _instantiateMarkers() {
+        const data = DataCapsule.getField( this.dataCapsule.get(), 'markers', {} ),
+            /** @type {Record< string, DataMaps.ApiMarkerInstance[] >} */ store = {};
+        for ( const ownership in data ) {
+            store[ ownership ] = [];
+            for ( const raw of data[ ownership ] ) {
+                store[ ownership ].push( [ raw.y || raw.lat, raw.x || raw.lon, {
+                    editor: this,
+                    raw,
+                    article: raw.article
+                } ] );
             }
         }
+
+        this.map.on( 'leafletLoaded', () => {
+            this.map.streaming.instantiateMarkers( store );
+            this.map.fire( 'chunkStreamingDone' );
+        } );
+        this.fireMemorised( 'markers' );
     }
 
 
-    destroyMarkerGroup( groupId ) {
-        this.map.markerLegend.groupToggles[ groupId ].field.$element.remove();
-        delete this.map.markerLegend.groupToggles[ groupId ];
-        delete this.map.config.groups[ groupId ];
-        delete this.sourceData.groups[ groupId ];
-        this.map.layerManager.nuke( groupId );
-        this.map.layerManager.deregister( groupId );
+    /**
+     * @template {Object} T
+     * @param {T} obj
+     * @return {T}
+     */
+    addService( obj ) {
+        if ( !( 'constructor' in obj ) ) {
+            throw new Error( 'Only class instances may be added as a MVE service when a key is not specified.' );
+        }
+        if ( obj.constructor.name in this._svcs ) {
+            throw new Error( `Attempted to add service '${obj.constructor.name}', but the name has already been registered.` );
+        }
+        this._svcs[ obj.constructor.name ] = obj;
+        return obj;
     }
-};
+
+
+    /**
+     * @template T
+     * @param {new( ...args: any[] ) => T} cls
+     * @return {T}
+     */
+    getService( cls ) {
+        return Util.getNonNull( /** @type {T?} */ ( this._svcs[ cls.name ] ) );
+    }
+}
+
+
+/**
+ * @constant
+ * @type {( new( editor: MapVisualEditor ) => VePanel )[]}
+ */
+MapVisualEditor.PANELS = [
+    require( './tabs/mapSettings.js' )
+];
+/**
+ * @constant
+ * @type {( new( editor: MapVisualEditor ) => VeWorkflow )[]}
+ */
+MapVisualEditor.WORKFLOWS = [
+    require( './workflow/createMarker.js' ),
+    require( './workflow/saveEdit.js' )
+];
+
+
+module.exports = MapVisualEditor;

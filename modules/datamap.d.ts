@@ -143,7 +143,7 @@ declare namespace DataMaps {
                 type: string;
                 map?: import( './core/map.js' );
             }
-    
+
             interface IGroupDismissChangeEvent extends IGenericEvent {
                 type: 'groupDismissChange';
                 groupId: string;
@@ -152,5 +152,17 @@ declare namespace DataMaps {
 
             type Event = IGenericEvent | IGroupDismissChangeEvent;
         }
+
+        type VeListenerSignatures = {
+            'sourceData': EventListenerFn,
+            'ready': EventListenerFn,
+            'save': EventListenerFn,
+            'markers': EventListenerFn
+        }
     }
+}
+
+
+declare namespace Internal {
+    export type Core = typeof DataMaps;
 }

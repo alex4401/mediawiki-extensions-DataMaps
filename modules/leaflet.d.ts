@@ -15,6 +15,12 @@ declare namespace LeafletModule {
     }
 
 
+    class Point {
+        x: number;
+        y: number;
+    }
+
+
     type PointTuple = [ number, number ];
     type LatLngTuple = [ number, number ];
     type LatLngLike = LatLng | LatLngTuple;
@@ -82,6 +88,7 @@ declare namespace LeafletModule {
 
     namespace DomUtil {
         export function create( tagName: string, className: string, container?: HTMLElement ): HTMLElement;
+        export function setPosition( element: HTMLElement, point: Point ): void;
     }
 
 
@@ -283,6 +290,7 @@ declare namespace LeafletModule {
         setMinZoom( zoom: number ): this;
         getBoundsZoom( bounds: LatLngBounds, inside?: boolean, padding?: PointTuple ): number;
         setMaxBounds( bounds: LatLngBounds ): this;
+        latLngToContainerPoint( latlng: LatLng ): Point;
 
         on( type: 'click' | 'dblclick' | 'mousedown' | 'mouseup' | 'mouseover' | 'mouseout' | 'mousemove' | 'contextmenu'
             | 'preclick', fn: EventHandling.MouseEventHandlerFn, context?: any ): this;

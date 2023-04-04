@@ -3,6 +3,7 @@ namespace MediaWiki\Extension\DataMaps\Content;
 
 use BadTitleError;
 use FormlessAction;
+use Html;
 use MediaWiki\Extension\DataMaps\HookHandler;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\PermissionManager;
@@ -81,8 +82,13 @@ class EditMapAction extends FormlessAction {
         \OOUI\Element::setDefaultDir( 'ltr' );
 
         // Render a placeholder message for the editor
-        $out->addWikiMsg( 'datamap-ve-to-load' );
-        $out->addHTML( ( new ProgressBarWidget( [ 'progress' => false ] ) )->toString() );
+        $out->addHTML( Html::rawElement( 'div',
+            [
+                'class' => 'ext-datamaps-ve-load-placeholder'
+            ],
+            Html::element( 'p', [], $this->msg( 'datamap-ve-to-load' ) )
+            . ( new ProgressBarWidget( [ 'progress' => false ] ) )->toString()
+        ) );
 
         // Render an empty embed with no markers
         $parserOptions = ParserOptions::newFromAnon();

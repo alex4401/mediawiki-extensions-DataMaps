@@ -1127,6 +1127,8 @@ class DataMap extends EventEmitter {
 DataMap.anchors = Object.freeze( {
     /** @package */
     _realTopLeft: '.leaflet-top.leaflet-left',
+    /** @package */
+    _none: '',
 
     legend: '.leaflet-top.leaflet-left > .ext-datamaps-container-legend',
     topLeft: '.leaflet-top.leaflet-left > :last-child',
@@ -1135,7 +1137,9 @@ DataMap.anchors = Object.freeze( {
     bottomRight: '.leaflet-bottom.leaflet-right',
 
     topRightInline: '.leaflet-top.leaflet-right > .ext-datamaps-control-group',
-    topLeftInline: '.leaflet-top.leaflet-left > :last-child > .ext-datamaps-control-group'
+    topLeftInline: '.leaflet-top.leaflet-left > :last-child > .ext-datamaps-control-group',
+
+    veToolBar: '.ext-datamaps-control-ve-toolbar > .ext-datamaps-control-ve-toolbar-controls'
 } );
 /**
  * Content bounds padding.

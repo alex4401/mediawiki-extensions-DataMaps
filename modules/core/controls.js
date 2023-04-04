@@ -145,6 +145,15 @@ class MapControl {
 
 
     /**
+     * @return {boolean}
+     * @since 0.16.0
+     */
+    isVisible() {
+        return this.element.style.display !== 'none';
+    }
+
+
+    /**
      * Returns focus back to the map.
      *
      * @protected

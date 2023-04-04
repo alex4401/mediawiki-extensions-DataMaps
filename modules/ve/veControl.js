@@ -1,5 +1,5 @@
 const AddMarkerDialog = require( './dialogs/addMarker.js' ),
-    Enums = mw.dataMaps.Enums;
+    { Controls } = require( 'ext.datamaps.core' );
 
 
 module.exports = class MapVeIntegrationControl {

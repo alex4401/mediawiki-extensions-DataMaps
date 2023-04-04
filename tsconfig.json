@@ -2,6 +2,7 @@
     "include": [
       "modules/**/*.js",
       "modules/**/*.ts",
+	  "schemas/src/**/*.ts",
       "node_modules/types-mediawiki"
     ],
 	"exclude": [

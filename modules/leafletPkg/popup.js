@@ -57,15 +57,16 @@ module.exports = Leaflet.Popup.extend( /** @lends LeafletModule.Popup.prototype 
      * @param {LeafletModule.Map} map
      */
     onRemove( map ) {
-        Leaflet.Popup.prototype.onRemove.call( this, map );
         this._content.onRemove();
+        Leaflet.Popup.prototype.onRemove.call( this, map );
 
         // Wipe the pre-built content nodes if the provider does not want them to be kept around
         if ( !this._content.shouldKeepAround() ) {
-            delete this._container;
             delete this._buttonArea;
             delete this._content;
             delete this._contentNode;
+            // DivOverlay will clean this one up
+            // delete this._container;
         }
     }
 } );

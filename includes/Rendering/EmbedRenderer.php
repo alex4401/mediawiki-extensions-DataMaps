@@ -200,7 +200,7 @@ class EmbedRenderer {
         $containerMain->appendContent( $containerBottom );
 
         // Add legend to the output if it's enabled
-        if ( $this->data->getSettings()->isLegendDisabled() ) {
+        if ( $this->data->getSettings()->isLegendDisabled() && !$this->forVisualEditor ) {
             $containerMain->addClasses( [ 'ext-datamaps-legend-is-hidden' ] );
         }
 

@@ -17,7 +17,7 @@ BetaWarningDialog.static.actions = [
 
 BetaWarningDialog.prototype.initialize = function () {
     OO.ui.ProcessDialog.prototype.initialize.apply( this, arguments );
-    
+
     new OO.ui.PanelLayout( {
         framed: false,
         expanded: false,

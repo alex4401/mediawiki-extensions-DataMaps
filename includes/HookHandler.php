@@ -77,6 +77,10 @@ class HookHandler implements
         $tags[] = 'datamaps-visualeditor';
     }
 
+    public function onChangeTagsAllowedAdd( &$tags ) {
+        $tags[] = 'datamaps-visualeditor';
+    }
+
     /**
      * @param RecentChange $rc The new RC entry.
      */
