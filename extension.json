@@ -221,7 +221,8 @@
 			],
 			"messages": [
 				"datamap-control-search",
-				"datamap-control-search-toggle-sharing"
+				"datamap-control-search-toggle-sharing",
+				"datamap-control-search-no-results"
 			],
 			"targets": [ "desktop", "mobile" ]
 		},

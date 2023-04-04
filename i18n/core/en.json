@@ -82,5 +82,6 @@
     "datamap-control-edit": "Edit map data",
     "datamap-control-search": "Type here to search markers…",
     "datamap-control-search-toggle-sharing": "All maps",
+    "datamap-control-search-no-results": "No results found.",
     "datamap-control-fullscreen": "Toggle fullscreen mode"
 }
