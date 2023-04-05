@@ -135,6 +135,19 @@ class MarkerSearch extends Controls.MapControl {
 
 
     /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _handleItemMouseOverEvent( event ) {
+        if ( this._ignoreTimeout !== null ) {
+            return;
+        }
+        this._setHighlightedItem( /** @type {HTMLElement} */ ( event.currentTarget ), true );
+        event.stopPropagation();
+    }
+
+
+    /**
      * Inserts markers from the map to the index owned by this control.
      */
     addExistingMarkersToOwnIndex() {
@@ -210,19 +223,6 @@ class MarkerSearch extends Controls.MapControl {
 
     /**
      * @private
-     * @param {MouseEvent} event
-     */
-    _handleItemMouseOverEvent( event ) {
-        if ( this._ignoreTimeout !== null ) {
-            return;
-        }
-        this._setHighlightedItem( /** @type {HTMLElement} */ ( event.currentTarget ), true );
-        event.stopPropagation();
-    }
-
-
-    /**
-     * @private
      * @param {'previous'|'next'|HTMLElement?} item
      * @param {boolean} [isMouseOver=false]
      */
@@ -289,7 +289,10 @@ class MarkerSearch extends Controls.MapControl {
                         tabindex: -1
                     },
                     events: {
-                        click: () => this._handleItemChoice( item ),
+                        click: event => {
+                            this._handleItemChoice( item );
+                            event.stopPropagation();
+                        },
                         mouseover: event => this._handleItemMouseOverEvent( event )
                     }
                 } );
