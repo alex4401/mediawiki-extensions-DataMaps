@@ -24,7 +24,10 @@ class HookHandler implements
     \MediaWiki\Storage\Hook\RevisionDataUpdatesHook
 {
     public static function onRegistration(): bool {
+        /** @deprecated v0.16.1, will be removed in v1.0. Use CONTENT_MODEL_DATAMAPS */
         define( 'ARK_CONTENT_MODEL_DATAMAP', 'datamap' );
+        define( 'CONTENT_MODEL_DATAMAPS', 'datamap' );
+        define( 'CONTENT_MODEL_DATAMAPS_FANDOM_COMPAT', 'interactivemap' );
         return true;
     }
 
