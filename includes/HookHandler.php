@@ -42,9 +42,15 @@ class HookHandler implements
 
     public function onParserFirstCallInit( $parser ) {
         $parser->setFunctionHook(
-            'pf-embed-data-map', [ Rendering\ParserFunction_EmbedDataMap::class, 'run' ],
+            'displaydatamap', [ Rendering\ParserFunction_EmbedDataMap::class, 'run' ],
             SFH_NO_HASH
         );
+        if ( ExtensionConfig::isTransclusionAliasEnabled() ) {
+            $parser->setFunctionHook(
+                'displaydatamap_short', [ Rendering\ParserFunction_EmbedDataMap::class, 'run' ],
+                SFH_NO_HASH
+            );
+        }
     }
 
     private static function isDocPage( Title $title ) {

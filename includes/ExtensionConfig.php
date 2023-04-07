@@ -68,6 +68,10 @@ class ExtensionConfig {
         return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsFullLinksUpdateBudget' );
     }
 
+    public static function isTransclusionAliasEnabled(): bool {
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsEnableTransclusionAlias' );
+    }
+
     public static function isVisualEditorEnabled(): bool {
         return self::isBleedingEdge()
             && MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsEnableVisualEditor' );

@@ -25,7 +25,7 @@
 		]
 	},
 	"ExtensionMessagesFiles": {
-		"DataMapsMagic": "DataMaps.magic.php"
+		"DataMapsMagic": "i18n/Magic.php"
 	},
 
 	"TrackingCategories": [
@@ -473,6 +473,9 @@
 			"value": true
 		},
 		"EnableCreateMap": {
+			"value": true
+		},
+		"EnableTransclusionAlias": {
 			"value": true
 		},
 		"AllowExperimentalFeatures": {
