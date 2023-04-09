@@ -1,8 +1,7 @@
 {
     "@metadata": {
         "authors": [
-            "magic",
-            "TiiaAurora"
+            "magic"
         ]
     },
     "datamap-desc": "Erlaubt die Einbettung von interaktiven Karten in Wiki-Seiten.",
