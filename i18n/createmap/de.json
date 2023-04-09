@@ -1,4 +1,9 @@
 {
+    "@metadata": {
+        "authors": [
+            "magic"
+        ]
+    },
     "datamap-vec-select-crs-origin": "(0, 0) Koordinatenecke",
     "datamap-vec-crs-top-left": "Oben links",
     "datamap-vec-crs-bottom-left": "Unten links",
