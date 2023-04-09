@@ -8,7 +8,7 @@
     "datamap-vec-crs-image": "Emparejar coordenadas de imagen",
     "datamap-vec-crs-custom": "Personalizado",
     "datamap-vec-select-background": "Imagen de fondo",
-    "datamap-vec-note-image-size": "Tamaño: $1 x $2",
+    "datamap-vec-note-image-size": "Tamaño: $1 × $2",
     "datamap-vec-error-bad-file-type": "Este tipo de archivo ($1) no es compatible. Elige un archivo JPEG, PNG, GIF o SVG.",
     "datamap-vec-error-poor-file-type": "Este tipo de archivo podría tener un rendimiento bajo en redes limitadas. Usa archivos JPEG siempre que te sea posible.",
     "datamap-vec-extra-options": "Opciones adicionales",

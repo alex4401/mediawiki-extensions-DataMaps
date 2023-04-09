@@ -8,7 +8,7 @@
     "datamap-vec-crs-image": "จับคู่พิกัดภาพ",
     "datamap-vec-crs-custom": "กำหนดเอง",
     "datamap-vec-select-background": "ภาพพื้นหลัง",
-    "datamap-vec-note-image-size": "ขนาด: $1 x $2",
+    "datamap-vec-note-image-size": "ขนาด: $1 × $2",
     "datamap-vec-extra-options": "ตัวเลือกเสริม",
     "datamap-vec-toggle-coord-display": "แสดงพิกัดใต้เคอร์เซอร์",
     "datamap-vec-toggle-zoom": "เปิดใช้งานการซูม",

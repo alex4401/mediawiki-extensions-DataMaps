@@ -14,7 +14,7 @@
     "datamap-vec-crs-image": "Coordonnées de l'image correspondante",
     "datamap-vec-crs-custom": "Personnalisé",
     "datamap-vec-select-background": "Image de fond",
-    "datamap-vec-note-image-size": "Taille : $1 x $2",
+    "datamap-vec-note-image-size": "Taille : $1 × $2",
     "datamap-vec-error-bad-file-type": "Le type de fichier ($1) n'est pas soutenu ; sélectionnez un fichier JPEG, PNG, GIF ou SVG.",
     "datamap-vec-error-poor-file-type": "Ce type de fichier est peu efficace sur un réseau limité. Utilisez le JPEG autant que faire se peut.",
     "datamap-vec-extra-options": "Options supplémentaires",
