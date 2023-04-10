@@ -57,6 +57,11 @@ class LegendTabber {
     }
 
 
+    isExpanded() {
+        return this._control.isExpanded();
+    }
+
+
     /**
      * Expands or collapses depending on the parameter value.
      *
@@ -117,6 +122,14 @@ LegendTabber.ExpandableControl = class ExpandableControl extends MapControl {
 
 
     /**
+     * @return {boolean}
+     */
+    isExpanded() {
+        return this.element.getAttribute( 'aria-expanded' ) === 'true';
+    }
+
+
+    /**
      * Expands or collapses depending on the parameter value.
      *
      * @param {boolean} value
@@ -131,7 +144,7 @@ LegendTabber.ExpandableControl = class ExpandableControl extends MapControl {
      * Toggles expansion state.
      */
     toggle() {
-        this.setExpanded( this.element.getAttribute( 'aria-expanded' ) !== 'true' );
+        this.setExpanded( !this.isExpanded() );
     }
 };
 

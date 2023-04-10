@@ -22,8 +22,13 @@ declare namespace LeafletModule {
 
 
     type PointTuple = [ number, number ];
+    type PointLike = Point|PointTuple;
     type LatLngTuple = [ number, number ];
     type LatLngLike = LatLng | LatLngTuple;
+
+
+    function toPoint( p: PointLike ): Point;
+
 
 
     class LatLngBounds {
@@ -252,7 +257,7 @@ declare namespace LeafletModule {
         getBounds(): LatLngBounds;
     }
 
-    
+
     namespace EventHandling {
         interface EventContext {
             type: string;
@@ -284,13 +289,16 @@ declare namespace LeafletModule {
         closePopup( popup?: Popup ): this;
         getZoom(): number;
         setZoom( zoom: number ): this;
-        fitBounds( bounds: LatLngBounds ): this;
+        fitBounds( bounds: LatLngBounds, options?: Partial<{
+            paddingTopLeft: PointLike
+        }> ): this;
         flyTo( point: LatLngLike, zoom?: number ): this;
-        setView( center: LatLng, zoom?: number ): this;
+        setView( center: LatLngLike, zoom?: number ): this;
         setMinZoom( zoom: number ): this;
         getBoundsZoom( bounds: LatLngBounds, inside?: boolean, padding?: PointTuple ): number;
         setMaxBounds( bounds: LatLngBounds ): this;
-        latLngToContainerPoint( latlng: LatLng ): Point;
+        latLngToContainerPoint( latlng: LatLng ): PointLike;
+        containerPointToLatLng( point: PointLike ): LatLng;
 
         on( type: 'click' | 'dblclick' | 'mousedown' | 'mouseup' | 'mouseover' | 'mouseout' | 'mousemove' | 'contextmenu'
             | 'preclick', fn: EventHandling.MouseEventHandlerFn, context?: any ): this;

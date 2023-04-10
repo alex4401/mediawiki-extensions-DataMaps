@@ -153,6 +153,11 @@ class DataMap extends EventEmitter {
          */
         this._contentBounds = null;
         /**
+         * @private
+         * @type {HTMLElement}
+         */
+        this._legendElement = null;
+        /**
          * @type {HTMLElement?}
          */
         this._fullScreenAnchor = null;
@@ -732,7 +737,9 @@ class DataMap extends EventEmitter {
     restoreDefaultView() {
         const originalSnap = this.leaflet.options.zoomSnap;
         this.leaflet.options.zoomSnap /= 4;
-        this.leaflet.setZoom( this.leaflet.options.minZoom ).fitBounds( this.getCurrentContentBounds() );
+        this.leaflet.setZoom( this.leaflet.options.minZoom ).fitBounds( this.getCurrentContentBounds(), {
+            paddingTopLeft: [ this.getMapOffsetWidth(), 0 ]
+        } );
         this.leaflet.options.zoomSnap = originalSnap;
     }
 
@@ -823,6 +830,21 @@ class DataMap extends EventEmitter {
 
 
     /**
+     * @return {number}
+     */
+    getMapOffsetWidth() {
+        const viewportWidth = document.documentElement.clientWidth;
+        if ( this.isFeatureBitSet( MapFlags.HideLegend )
+            || viewportWidth < DataMap.LEGEND_AFFECTS_BOUNDS_FIT_VIEWPORT_WIDTH[ 0 ]
+            || viewportWidth > DataMap.LEGEND_AFFECTS_BOUNDS_FIT_VIEWPORT_WIDTH[ 1 ]
+            || ( this.legend && !this.legend.isExpanded() ) ) {
+            return 0;
+        }
+        return this._legendElement.offsetWidth;
+    }
+
+
+    /**
      * Calculates content bounds and includes extra padding around the area.
      *
      * @param {boolean} invalidate Whether the bounds should be recalculated.
@@ -832,8 +854,10 @@ class DataMap extends EventEmitter {
         const bounds = this.getCurrentContentBounds( invalidate );
         const nw = bounds.getNorthWest(),
             se = bounds.getSouthEast();
-        bounds.extend( [ [ se.lat - DataMap.BOUNDS_PADDING[ 0 ][ 0 ], se.lng + DataMap.BOUNDS_PADDING[ 0 ][ 1 ] ],
-            [ nw.lat + DataMap.BOUNDS_PADDING[ 1 ][ 0 ], nw.lng - DataMap.BOUNDS_PADDING[ 1 ][ 1 ] ] ] );
+        bounds.extend( [
+            [ se.lat - DataMap.BOUNDS_PADDING[ 0 ][ 0 ], se.lng + DataMap.BOUNDS_PADDING[ 0 ][ 1 ] ],
+            [ nw.lat + DataMap.BOUNDS_PADDING[ 1 ][ 0 ], nw.lng - DataMap.BOUNDS_PADDING[ 1 ][ 1 ] ]
+        ] );
         return bounds;
     }
 
@@ -944,15 +968,15 @@ class DataMap extends EventEmitter {
         // Switch to the last chosen one or first defined
         this.setCurrentBackground( this.storage.data.background || 0 );
         // Create the legend anchor, even if the legend is disabled (some controls may use it)
-        createDomElement( 'div', {
+        this._legendElement = createDomElement( 'div', {
             classes: [ 'ext-datamaps-container-legend' ],
             prependTo: this.resolveControlAnchor( DataMap.anchors._realTopLeft )
         } );
         // Bring to a valid state and call further initialisation methods
+        this._buildControls();
         this.refreshMaxBounds();
         this.restoreDefaultView();
         this.updateMarkerScaling();
-        this._buildControls();
 
         // Recalculate marker sizes when zoom ends
         this.leaflet.on( 'zoom', this.updateMarkerScaling, this );
@@ -1162,6 +1186,13 @@ DataMap.VECTOR_ZOOM_SCALING_MAX = 2.5;
  * @type {number}
  */
 DataMap.ICON_ZOOM_SCALING_MAX = 1;
+/**
+ * Minimum and maximum viewport width for {@link DataMap.restoreDefaultView} to offset new view bounds by legend width.
+ *
+ * @constant
+ * @type {[ min: number, max: number ]}
+ */
+DataMap.LEGEND_AFFECTS_BOUNDS_FIT_VIEWPORT_WIDTH = [ 1200, 2000 ];
 
 
 module.exports = DataMap;
