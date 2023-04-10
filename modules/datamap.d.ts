@@ -14,6 +14,7 @@ declare namespace DataMaps {
 
     interface IExposedServerSettings {
         IsBleedingEdge: boolean;
+        IsVisualEditorEnabled: boolean;
         CanAnonsEdit: boolean;
     }
 

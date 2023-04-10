@@ -33,8 +33,17 @@ module.exports = Object.freeze( {
      */
     isBleedingEdge: serverSettings.IsBleedingEdge,
 
+
     /**
-     * Whether experimental features have been enabled server-side.
+     * Whether visual editor is enabled server-side.
+     *
+     * @constant
+     * @type {boolean}
+     */
+    isVisualEditorEnabled: serverSettings.IsVisualEditorEnabled,
+
+    /**
+     * Whether anonymous users can edit pages.
      *
      * @constant
      * @type {boolean}

@@ -1,6 +1,6 @@
 /** @typedef {import( './map.js' )} DataMap */
 const { CRSOrigin } = require( './enums.js' ),
-    { createDomElement, getNonNull } = require( './util.js' );
+    { isVisualEditorEnabled, createDomElement, getNonNull } = require( './util.js' );
 
 
 /**
@@ -245,7 +245,7 @@ class EditButton extends MapControl {
             clickHandler: () => {
                 // @ts-ignore: wrong type signature for wikiScript in the package, argument is optional
                 location.href = `${mw.util.wikiScript()}?curid=${this.map.id}&action=` + (
-                    mw.user.options.get( 'datamaps-enable-visual-editor' ) ? 'editmap' : 'edit'
+                    isVisualEditorEnabled && mw.user.options.get( 'datamaps-enable-visual-editor' ) ? 'editmap' : 'edit'
                 );
             }
         } );
