@@ -67,6 +67,7 @@ class DataMapContentHandler extends JsonContentHandler {
         $parserOptions = $cpoParams->getParserOptions();
         $shouldGenerateHtml = $cpoParams->getGenerateHtml();
         $isEditPreview = $parserOptions->getIsPreview();
+        $parserOutput = new ParserOutput();
 
         // If validation fails, do not render the map embed
         $validationStatus = $content->getValidationStatus();
@@ -86,12 +87,28 @@ class DataMapContentHandler extends JsonContentHandler {
                     ) );
                 }
             }
-            return;
+        } elseif ( !$content->isMixin() ) {
+            // Render the map if it isn't a mix-in
+            // Initialise the embed renderer
+            $parser = MediaWikiServices::getInstance()->getParser();
+            $embed = $content->getEmbedRenderer( $pageRef, $parser, $parserOutput, [
+                'inlineData' => $isEditPreview
+            ] );
+            // Add metadata
+            $embed->prepareOutput( $parserOutput );
+            // Generate HTML if requested
+            if ( $shouldGenerateHtml ) {
+                $parserOutput->setText( $embed->getHtml( new EmbedRenderOptions() ) );
+            }
+        } else {
+            $parserOutput->setPageProperty( Constants::PAGEPROP_IS_MIXIN, true );
+            $parserOutput->setPageProperty( Constants::PAGEPROP_DISABLE_VE, true );
         }
 
+        // GH#145: Render documentation after map metadata is emitted
         // Get documentation, if any
         $doc = self::getDocPage( $cpoParams->getPage() );
-        if ( $shouldGenerateHtml && $doc ) {
+        if ( $doc ) {
             $msg = wfMessage( $doc->exists() ? 'datamap-doc-page-show' : 'datamap-doc-page-does-not-exist',
                 $doc->getPrefixedText() )->inContentLanguage();
 
@@ -114,31 +131,18 @@ class DataMapContentHandler extends JsonContentHandler {
                     $parserOptions->setTargetLanguage( $doc->getPageLanguage() );
                 }
 
-                $parserOutput = MediaWikiServices::getInstance()->getParser()
+                $docOutput = MediaWikiServices::getInstance()->getParser()
                     ->parse( $docWikitext, $pageRef, $parserOptions, true, true, $cpoParams->getRevId() );
+                $parserOutput->mergeHtmlMetaDataFrom( $docOutput );
+                $parserOutput->mergeInternalMetaDataFrom( $docOutput );
+                $parserOutput->mergeTrackingMetaDataFrom( $docOutput );
+                if ( $shouldGenerateHtml ) {
+                    $parserOutput->setText( $docOutput->getRawText() . $parserOutput->getRawText() );
+                }
             }
 
             // Mark the doc page as a transclusion, so we get purged when it changes
             $parserOutput->addTemplate( $doc, $doc->getArticleID(), $doc->getLatestRevID() );
-        }
-
-        // Render the map if it isn't a mix-in
-        if ( !$content->isMixin() ) {
-            // Initialise the embed renderer
-            $parser = MediaWikiServices::getInstance()->getParser();
-            $embed = $content->getEmbedRenderer( $pageRef, $parser, $parserOutput, [
-                'inlineData' => $isEditPreview
-            ] );
-            // Add metadata
-            $embed->prepareOutput( $parserOutput );
-
-            // Generate HTML if requested
-            if ( $shouldGenerateHtml ) {
-                $parserOutput->setText( $parserOutput->getRawText() . $embed->getHtml( new EmbedRenderOptions() ) );
-            }
-        } else {
-            $parserOutput->setPageProperty( Constants::PAGEPROP_IS_MIXIN, true );
-            $parserOutput->setPageProperty( Constants::PAGEPROP_DISABLE_VE, true );
         }
     }
 }
