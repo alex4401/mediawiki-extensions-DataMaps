@@ -273,7 +273,9 @@
 
 				"ve/workflow/base.js",
 				"ve/workflow/createMarker.js",
-				"ve/workflow/saveEdit.js"
+				"ve/workflow/saveEdit.js",
+
+				"ve/ooui/NamedPageLayout.js"
 			],
 			"styles": [
 				"ve/css/main.less"
