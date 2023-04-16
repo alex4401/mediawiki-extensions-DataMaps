@@ -5,6 +5,7 @@
  * @typedef {Object} AbstractField
  * @property {string} labelMsg
  * @property {string} [descMsg]
+ * @property {RootObjectGetter} [rootOverride]
  * @property {string} property
  * @property {( value: any ) => any} [transform]
  */
@@ -178,8 +179,26 @@ class DataEditorUiBuilder {
     }
 
 
-    _getRoot() {
-        return this._getRootInternal( this._editor.dataCapsule.get() );
+    /**
+     * @private
+     * @param {RootObjectGetter} getterFn
+     * @return {Record<string, any>}
+     */
+    _invokeRootGetter( getterFn ) {
+        return getterFn( this._editor.dataCapsule.get() );
+    }
+
+
+    /**
+     * @private
+     * @param {AbstractField} field
+     * @return {Record<string, any>}
+     */
+    _getFieldRoot( field ) {
+        if ( field.rootOverride ) {
+            return this._invokeRootGetter( field.rootOverride );
+        }
+        return this._invokeRootGetter( this._getRootInternal );
     }
 
 
@@ -192,9 +211,9 @@ class DataEditorUiBuilder {
             value = field.transform( value );
         }
         if ( field.default === value ) {
-            delete this._getRoot()[ field.property ];
+            delete this._getFieldRoot( field )[ field.property ];
         } else {
-            this._getRoot()[ field.property ] = value;
+            this._getFieldRoot( field )[ field.property ] = value;
         }
     }
 
@@ -214,9 +233,8 @@ class DataEditorUiBuilder {
 
     _restoreValues() {
         this._isLocked = true;
-        const root = this._getRoot();
         for ( const field of this._builtFields ) {
-            this._setInputWidgetValue( field.widget, root[ field.property ] );
+            this._setInputWidgetValue( field.widget, this._getFieldRoot( field )[ field.property ] );
         }
     }
 }
