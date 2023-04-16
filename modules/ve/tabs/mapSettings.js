@@ -18,6 +18,18 @@ module.exports = class MapSettingsEditorPanel extends VePanel {
             rootGetter: data => ( data.settings = data.settings || {} ),
             fields: [
                 {
+                    type: 'dropdown',
+                    labelMsg: 'field-coordorder',
+                    rootOverride: data => data,
+                    property: 'coordinateOrder',
+                    options: [
+                        [ 'latlon', 'latlon' ],
+                        [ 'xy', 'xy' ]
+                        // TODO: [ 'yx', 'yx' ]
+                    ],
+                    default: 0
+                },
+                {
                     type: 'checkbox',
                     labelMsg: 'field-coordinates',
                     property: 'showCoordinates',

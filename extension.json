@@ -285,6 +285,9 @@
 				"datamap-ve-limited-preview-notice",
 
 				"datamap-ve-panel-msettings",
+				"datamap-ve-panel-msettings-field-coordorder",
+				"datamap-ve-panel-msettings-field-coordorder-latlon",
+				"datamap-ve-panel-msettings-field-coordorder-xy",
 				"datamap-ve-panel-msettings-field-search",
 				"datamap-ve-panel-msettings-field-search-disabled",
 				"datamap-ve-panel-msettings-field-search-enabled",

@@ -18,6 +18,10 @@
     "tag-datamaps-visualeditor-description": "Edit made using the DataMaps visual editor",
 
     "datamap-ve-panel-msettings": "Settings",
+    "datamap-ve-panel-msettings-field-coordorder": "Coordinate order",
+    "datamap-ve-panel-msettings-field-coordorder-latlon": "Latitude then longitude",
+    "datamap-ve-panel-msettings-field-coordorder-xy": "X then Y",
+    "datamap-ve-panel-msettings-field-coordorder-yx": "Y then X",
     "datamap-ve-panel-msettings-field-search": "Marker search",
     "datamap-ve-panel-msettings-field-search-disabled": "Disabled",
     "datamap-ve-panel-msettings-field-search-enabled": "Enabled (within only this map)",
