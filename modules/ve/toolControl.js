@@ -32,10 +32,9 @@ module.exports = class ToolBarControl extends Controls.MapControl {
             appendTo: this.element
         } );
         /**
-         * @private
          * @type {LeafletModule.LatLng?}
          */
-        this._latlng = null;
+        this.latlng = null;
 
         this.setVisible( false );
         this.editor.map.leaflet.on( 'click', this._onMapClick, this );
@@ -71,13 +70,13 @@ module.exports = class ToolBarControl extends Controls.MapControl {
      * @param {LeafletModule.LatLng} latlng
      */
     openAt( latlng ) {
-        this._latlng = latlng;
+        this.latlng = latlng;
 
         this.setVisible( true );
 
         // TODO: should be extracted for generic use
-        let lat = this._latlng.lat / this.editor.map.crsScaleY;
-        const lon = this._latlng.lng / this.editor.map.crsScaleX;
+        let lat = this.latlng.lat / this.editor.map.crsScaleY;
+        const lon = this.latlng.lng / this.editor.map.crsScaleX;
         if ( this.editor.map.crsOrigin === CRSOrigin.TopLeft ) {
             lat = this.editor.map.config.crs[ 1 ][ 0 ] - lat;
         }
@@ -91,7 +90,7 @@ module.exports = class ToolBarControl extends Controls.MapControl {
      * @private
      */
     _updatePosition() {
-        const pos = this.map.leaflet.latLngToContainerPoint( Util.getNonNull( this._latlng ) );
+        const pos = this.map.leaflet.latLngToContainerPoint( Util.getNonNull( this.latlng ) );
         pos.x -= this.element.offsetWidth / 2;
         pos.y += 10;
         DomUtil.setPosition( this.element, pos );
