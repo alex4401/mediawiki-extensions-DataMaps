@@ -17,6 +17,8 @@
     "tag-datamaps-visualeditor": "Visual map edit",
     "tag-datamaps-visualeditor-description": "Edit made using the DataMaps visual editor",
 
+    "datamap-ve-field-locked-unknown-value": "This property is set to a value currently unsupported by this visual editor. Source editor is required to modify it.",
+
     "datamap-ve-panel-msettings": "Settings",
     "datamap-ve-panel-msettings-field-coordorder": "Coordinate order",
     "datamap-ve-panel-msettings-field-coordorder-latlon": "Latitude then longitude",

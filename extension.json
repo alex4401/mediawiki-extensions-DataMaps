@@ -284,6 +284,8 @@
 				"datamap-ve-beta-notice",
 				"datamap-ve-limited-preview-notice",
 
+				"datamap-ve-field-locked-unknown-value",
+
 				"datamap-ve-panel-msettings",
 				"datamap-ve-panel-msettings-field-coordorder",
 				"datamap-ve-panel-msettings-field-coordorder-latlon",

@@ -1,3 +1,6 @@
+const { Util } = require( 'ext.datamaps.core' );
+
+
 /** @typedef {import( './editor.js' )} MapVisualEditor */
 
 
@@ -34,7 +37,9 @@
  */
 /**
  * @typedef {Object} BuiltFieldProps
- * @property {OO.ui.InputWidget} widget
+ * @property {OO.ui.Widget} _widget
+ * @property {OO.ui.InputWidget} _input
+ * @property {OO.ui.FieldLayout} _field
  */
 /**
  * @typedef {FieldDescription & BuiltFieldProps} BuiltField
@@ -98,7 +103,7 @@ class DataEditorUiBuilder {
      */
     setLock( value ) {
         for ( const field of this._builtFields ) {
-            field.widget.setDisabled( value );
+            field._input.setDisabled( value );
         }
         return this;
     }
@@ -113,7 +118,8 @@ class DataEditorUiBuilder {
         }
 
         for ( const field of fields ) {
-            let /** @type {OO.ui.InputWidget?} */ inputWidget;
+            let /** @type {OO.ui.Widget?} */ mainWidget = null,
+                /** @type {OO.ui.InputWidget?} */ inputWidget;
             const isInline = 'inline' in field && field.inline;
 
             switch ( field.type ) {
@@ -159,21 +165,22 @@ class DataEditorUiBuilder {
                 this._setProperty( field, value );
             } );
 
-            this._fieldset.addItems( [
-                new OO.ui.FieldLayout( inputWidget, {
-                    label: isInline ? undefined : this.msg( field.labelMsg ),
-                    help: field.descMsg ? this.msg( field.descMsg ) : undefined,
-                    helpInline: true,
-                    align: field.type === 'dropdown' ? 'top' : 'inline'
-                } )
-            ] );
+            const fieldWidget = new OO.ui.FieldLayout( inputWidget, {
+                label: isInline ? undefined : this.msg( field.labelMsg ),
+                help: field.descMsg ? this.msg( field.descMsg ) : undefined,
+                helpInline: true,
+                align: field.type === 'dropdown' ? 'top' : 'inline'
+            } );
+            this._fieldset.addItems( [ fieldWidget ] );
 
             if ( isInline || ( 'placeholder' in field && field.placeholder ) ) {
                 inputWidget.$input.attr( 'placeholder', field.placeholder || this.msg( field.labelMsg ) );
             }
 
             this._builtFields.push( Object.assign( {
-                widget: inputWidget
+                _widget: Util.getNonNull( mainWidget || inputWidget ),
+                _input: Util.getNonNull( inputWidget ),
+                _field: fieldWidget
             }, field ) );
         }
     }
@@ -234,7 +241,16 @@ class DataEditorUiBuilder {
     _restoreValues() {
         this._isLocked = true;
         for ( const field of this._builtFields ) {
-            this._setInputWidgetValue( field.widget, this._getFieldRoot( field )[ field.property ] );
+            const root = this._getFieldRoot( field );
+            if ( field.property in root ) {
+                if ( 'options' in field && !field.options.find( x => x[ 1 ] === root[ field.property ] ) ) {
+                    field._field.$field.hide();
+                    field._field.setWarnings( [
+                        mw.msg( 'datamap-ve-field-locked-unknown-value' )
+                    ] );
+                }
+                this._setInputWidgetValue( field._input, root[ field.property ] );
+            }
         }
     }
 }
