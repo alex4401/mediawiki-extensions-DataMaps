@@ -381,13 +381,18 @@ class DataMap extends EventEmitter {
 
     /**
      * @param {LeafletModule.LatLng} latlng
+     * @param {boolean} [round=false]
      * @return {DataMaps.PointTupleRepr}
      */
-    translateLeafletCoordinates( latlng ) {
-        let lat = latlng.lat / this.crsScaleY;
-        const lon = latlng.lng / this.crsScaleX;
+    translateLeafletCoordinates( latlng, round ) {
+        let lat = latlng.lat / this.crsScaleY,
+            lon = latlng.lng / this.crsScaleX;
         if ( this.crsOrigin === CRSOrigin.TopLeft ) {
             lat = this.config.crs[ 1 ][ 0 ] - lat;
+        }
+        if ( round ) {
+            lat = Math.round( lat * 1000 ) / 1000;
+            lon = Math.round( lon * 1000 ) / 1000;
         }
         return [ lat, lon ];
     }
