@@ -1,5 +1,6 @@
 {
 	"root": true,
+
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 6,
@@ -16,9 +17,9 @@
         "wikimedia/jquery"
 	],
     "plugins": [
-        "deprecation"
+        "deprecation",
+        "@typescript-eslint"
     ],
-
 	"globals": {
 		"require": "readonly",
 		"module": "readonly"
