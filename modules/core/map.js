@@ -380,20 +380,38 @@ class DataMap extends EventEmitter {
 
 
     /**
+     * @param {LeafletModule.LatLng} latlng
+     * @return {DataMaps.PointTupleRepr}
+     */
+    translateLeafletCoordinates( latlng ) {
+        let lat = latlng.lat / this.crsScaleY;
+        const lon = latlng.lng / this.crsScaleX;
+        if ( this.crsOrigin === CRSOrigin.TopLeft ) {
+            lat = this.config.crs[ 1 ][ 0 ] - lat;
+        }
+        return [ lat, lon ];
+    }
+
+
+    /**
      * Returns a formatted datamap-coordinate-control-text message.
      *
-     * @param {DataMaps.PointTupleRepr|number} latOrInstance Latitude or API marker instance
+     * @param {DataMaps.PointTupleRepr|number|LeafletModule.LatLng} latOrInstance Latitude or API marker instance
      * @param {number?} [lon] Longitude if no instance specified.
      * @return {string}
      */
     getCoordinateLabel( latOrInstance, lon ) {
+        let /** @type {number} */ lat;
         if ( Array.isArray( latOrInstance ) ) {
-            lon = latOrInstance[ 1 ];
-            latOrInstance = latOrInstance[ 0 ];
+            [ lat, lon ] = latOrInstance;
+        } else if ( latOrInstance instanceof Leaflet.LatLng ) {
+            [ lat, lon ] = this.translateLeafletCoordinates( latOrInstance );
+        } else {
+            lat = latOrInstance;
         }
 
         const message = this.config.cOrder === 1 ? 'datamap-coordinate-control-text-xy' : 'datamap-coordinate-control-text';
-        return mw.msg( message, latOrInstance.toFixed( 2 ), /** @type {number} */ ( lon ).toFixed( 2 ) );
+        return mw.msg( message, lat.toFixed( 2 ), /** @type {number} */ ( lon ).toFixed( 2 ) );
     }
 
 

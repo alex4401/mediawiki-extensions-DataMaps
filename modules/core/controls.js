@@ -212,12 +212,7 @@ class Coordinates extends MapControl {
         this.setVisible( false );
         this.map.leaflet.on( 'mousemove', event => {
             this.setVisible( true );
-            let lat = event.latlng.lat / this.map.crsScaleY;
-            const lon = event.latlng.lng / this.map.crsScaleX;
-            if ( this.map.crsOrigin === CRSOrigin.TopLeft ) {
-                lat = this.map.config.crs[ 1 ][ 0 ] - lat;
-            }
-            this.element.innerText = this.map.getCoordLabel( lat, lon );
+            this.element.innerText = this.map.getCoordinateLabel( event.latlng );
         } );
         this.map.leaflet.on( 'mouseover', () => this.setVisible( true ) );
         this.map.rootElement.addEventListener( 'mouseout', () => this.setVisible( false ) );

@@ -71,17 +71,8 @@ module.exports = class ToolBarControl extends Controls.MapControl {
      */
     openAt( latlng ) {
         this.latlng = latlng;
-
         this.setVisible( true );
-
-        // TODO: should be extracted for generic use
-        let lat = this.latlng.lat / this.editor.map.crsScaleY;
-        const lon = this.latlng.lng / this.editor.map.crsScaleX;
-        if ( this.editor.map.crsOrigin === CRSOrigin.TopLeft ) {
-            lat = this.editor.map.config.crs[ 1 ][ 0 ] - lat;
-        }
-        this._coordinatesElement.innerHTML = this.editor.map.getCoordinateLabel( lat, lon ).replace( ', ', '<br/>' );
-
+        this._coordinatesElement.innerHTML = this.editor.map.getCoordinateLabel( this.latlng ).replace( ', ', '<br/>' );
         this._updatePosition();
     }
 
