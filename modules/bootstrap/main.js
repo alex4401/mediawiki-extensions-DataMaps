@@ -7,8 +7,8 @@ const
         Util
     } = require( 'ext.datamaps.core' ),
     /** @type {InstanceType<DataMap>[]} */ initialisedMaps = [],
-    /** @type {number[]} */ ids = [],
-    /** @type {MapNotificationReceiver[]} */ toNotify = [];
+    /** @type {MapNotificationReceiver[]} */ toNotifyOnInit = [],
+    /** @type {MapNotificationReceiver[]} */ toNotifyOnDestroy = [];
 
 
 /**
@@ -37,6 +37,24 @@ function invokeHandler( handler, map ) {
         || ( !isVe && handler.flag & mw.dataMaps.IS_COMPATIBLE_WITH_NORMAL ) ) {
         EventEmitter.invokeHandler( handler, [ map ] );
     }
+}
+
+
+/**
+ * @param {MapNotificationReceiver[]} list
+ * @param {( map: InstanceType<DataMap> ) => void} callback
+ * @param {any} [context]
+ * @param {number} [filterFlags=mw.dataMaps.IS_COMPATIBLE_WITH_NORMAL]
+ * @return {MapNotificationReceiver}
+ */
+function appendHandler( list, callback, context, filterFlags ) {
+    const handler = {
+        method: callback,
+        context,
+        flag: filterFlags || mw.dataMaps.IS_COMPATIBLE_WITH_NORMAL
+    };
+    list.push( handler );
+    return handler;
 }
 
 
@@ -76,9 +94,15 @@ mw.dataMaps = {
                 }
             }
         } );
+        // Pass the deactivation event to gadgets
+        map.on( 'deactivate', () => {
+            for ( const handler of toNotifyOnDestroy ) {
+                invokeHandler( handler, map );
+            }
+        } );
 
         // Notify external scripts waiting on maps
-        for ( const handler of toNotify ) {
+        for ( const handler of toNotifyOnInit ) {
             invokeHandler( handler, map );
         }
 
@@ -103,16 +127,20 @@ mw.dataMaps = {
      * @param {number} [filterFlags=mw.dataMaps.IS_COMPATIBLE_WITH_NORMAL]
      */
     onMapInitialised( callback, context, filterFlags ) {
-        const handler = {
-            method: callback,
-            context,
-            flag: filterFlags || this.IS_COMPATIBLE_WITH_NORMAL
-        };
-        toNotify.push( handler );
-
+        const handler = appendHandler( toNotifyOnInit, callback, context, filterFlags );
         for ( const map of initialisedMaps ) {
             invokeHandler( handler, map );
         }
+    },
+
+
+    /**
+     * @param {( map: InstanceType<DataMap> ) => void} callback
+     * @param {any} [context]
+     * @param {number} [filterFlags=mw.dataMaps.IS_COMPATIBLE_WITH_NORMAL]
+     */
+    onMapDeactivated( callback, context, filterFlags ) {
+        appendHandler( toNotifyOnDestroy, callback, context, filterFlags );
     },
 
 
@@ -133,7 +161,6 @@ mw.hook( 'wikipage.content' ).add( $content => {
         const id = parseInt( Util.getNonNull( rootElement.dataset.datamapId ) ),
             config = getConfig( rootElement );
         if ( config ) {
-            ids.push( id );
             mw.dataMaps.initialiseMapWithConfig( id, rootElement, config );
         }
     }

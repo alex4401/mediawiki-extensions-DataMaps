@@ -118,6 +118,7 @@ declare namespace DataMaps {
         export type ListenerSignature = Record<string, (...args: any[]) => any>;
 
         type MapListenerSignatures = {
+            'deactivate': EventListenerFn;
             'backgroundChange': MapBackgroundChangeListenerFn;
             'chunkStreamingDone': EventListenerFn;
             'chunkStreamed': ( markers: LeafletModule.AnyMarker[] ) => void;
