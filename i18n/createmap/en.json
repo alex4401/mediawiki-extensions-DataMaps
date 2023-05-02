@@ -5,6 +5,7 @@
         ]
     },
     "datamap-vec-title": "Create a map",
+    "datamap-ve-skip": "Skip",
     "datamap-vec-intro": "Adjust the following information to your needs so we may prepare a basic map, before you move onto editing it",
     "datamap-vec-select-crs-origin": "(0, 0) coordinate corner",
     "datamap-vec-crs-top-left": "Top-left",
