@@ -106,7 +106,7 @@ class DataMapContentHandler extends JsonContentHandler {
                 ] );
                 $embed->prepareOutput( $parserOutput );
                 if ( $shouldGenerateHtml ) {
-                    $parserOutput->setText( $embed->getHtml( new EmbedRenderOptions() ) );
+                    $parserOutput->setText( $parserOutput->getRawText() . $embed->getHtml( new EmbedRenderOptions() ) );
                 }
             }
         }
