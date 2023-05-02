@@ -69,6 +69,12 @@ class DataMapContentHandler extends JsonContentHandler {
         $isEditPreview = $parserOptions->getIsPreview();
         $parserOutput = new ParserOutput();
 
+        // Initialise the text to an empty string if HTML was requested; this'll reduce the amount of accidental getRawText()s
+        // on nulls
+        if ( $shouldGenerateHtml ) {
+            $parserOutput->setText( '' );
+        }
+
         // If validation fails, do not render the map embed
         $validationStatus = $content->getValidationStatus();
         if ( !$validationStatus->isOK() ) {
@@ -87,22 +93,22 @@ class DataMapContentHandler extends JsonContentHandler {
                     ) );
                 }
             }
-        } elseif ( !$content->isMixin() ) {
-            // Render the map if it isn't a mix-in
-            // Initialise the embed renderer
-            $parser = MediaWikiServices::getInstance()->getParser();
-            $embed = $content->getEmbedRenderer( $pageRef, $parser, $parserOutput, [
-                'inlineData' => $isEditPreview
-            ] );
-            // Add metadata
-            $embed->prepareOutput( $parserOutput );
-            // Generate HTML if requested
-            if ( $shouldGenerateHtml ) {
-                $parserOutput->setText( $embed->getHtml( new EmbedRenderOptions() ) );
-            }
         } else {
-            $parserOutput->setPageProperty( Constants::PAGEPROP_IS_MIXIN, true );
-            $parserOutput->setPageProperty( Constants::PAGEPROP_DISABLE_VE, true );
+            if ( $content->isMixin() ) {
+                // It's a mix-in: tag the page in page properties and disable visual editor
+                $parserOutput->setPageProperty( Constants::PAGEPROP_IS_MIXIN, true );
+                $parserOutput->setPageProperty( Constants::PAGEPROP_DISABLE_VE, true );
+            } else {
+                // It's a full map: render it
+                $parser = MediaWikiServices::getInstance()->getParser();
+                $embed = $content->getEmbedRenderer( $pageRef, $parser, $parserOutput, [
+                    'inlineData' => $isEditPreview
+                ] );
+                $embed->prepareOutput( $parserOutput );
+                if ( $shouldGenerateHtml ) {
+                    $parserOutput->setText( $embed->getHtml( new EmbedRenderOptions() ) );
+                }
+            }
         }
 
         // GH#145: Render documentation after map metadata is emitted
