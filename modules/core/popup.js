@@ -77,7 +77,8 @@ module.exports = class MarkerPopup {
      */
     static bindTo( map, leafletMarker ) {
         leafletMarker.bindPopup( () => new ( map.getPopupClass() )( map, leafletMarker ), {
-            tooltip: map.isFeatureBitSet( MapFlags.PopupTooltips )
+            // TODO: Currently VE is not compatible with ephemeral popups
+            tooltip: !map.isFeatureBitSet( MapFlags.VisualEditor ) && map.isFeatureBitSet( MapFlags.PopupTooltips )
         }, Util.getLeaflet().Ark.Popup );
     }
 
