@@ -64,7 +64,8 @@
 				"leafletPkg/index.js",
 				"vendor/leaflet/leaflet.js",
 				"leafletPkg/popup.js",
-				"leafletPkg/interaction.js",
+				"leafletPkg/keybindInteraction.js",
+				"leafletPkg/sleepInteraction.js",
 				"leafletPkg/pinIcon.js"
 			],
 			"styles": [

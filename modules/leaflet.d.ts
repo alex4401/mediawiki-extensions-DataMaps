@@ -1,4 +1,6 @@
-/* eslint-disable no-unused-vars */
+import InternalExtensionTypes = DataMaps;
+
+
 declare namespace LeafletModule {
     class LatLng {
         constructor(latitude: number, longitude: number, altitude?: number);
@@ -8,7 +10,7 @@ declare namespace LeafletModule {
         wrap(): LatLng;
         toBounds(sizeInMeters: number): LatLngBounds;
         clone(): LatLng;
-    
+
         lat: number;
         lng: number;
         alt?: number | undefined;
@@ -60,19 +62,24 @@ declare namespace LeafletModule {
 
 
     namespace Ark {
-        interface PinIconOptions {
+        export interface PinIconOptions {
             colour: string;
             iconSize: PointTuple;
             useWithCanvas?: boolean;
         }
 
-        class Popup extends LeafletModule.Popup {}
-        class InteractionControl extends LeafletModule.Handler {}
-        class PinIcon extends LeafletModule.Icon {
+        export class Popup extends LeafletModule.Popup {}
+        export class KeybindInteractionControl extends LeafletModule.Handler {}
+        /**
+         * @deprecated since v0.16.3, will be removed in v1.0.0. Use {@link KeybindInteractionControl}.
+         */
+        export type InteractionControl = KeybindInteractionControl;
+        export class SleepInteractionControl extends LeafletModule.Handler {}
+        export class PinIcon extends LeafletModule.Icon {
             constructor( options: PinIconOptions );
         }
 
-        interface IPopupContentRenderer {
+        export interface IPopupContentRenderer {
             shouldKeepAround(): boolean;
             buildButtons( element: HTMLElement ): void;
             build( element: HTMLElement ): void;
@@ -81,7 +88,7 @@ declare namespace LeafletModule {
             onRemove(): void;
         }
 
-        type PopupContentRendererGetterFn = () => Ark.IPopupContentRenderer;
+        export type PopupContentRendererGetterFn = () => IPopupContentRenderer;
     }
 
 
@@ -233,7 +240,8 @@ declare namespace LeafletModule {
 
 
     abstract class Class {
-        static extend(props: any): {new(...args: any[]): any} & typeof Class;
+        static extend<TSubclass extends typeof Class, TBody>( this: TSubclass, props: TBody ):
+            { new( ...args: any[] ): InstanceType<TSubclass> & TBody };
     }
 
 
@@ -316,6 +324,8 @@ declare namespace LeafletModule {
         enable(): void;
         disable(): void;
         enabled(): boolean;
+        addHooks(): void;
+        removeHooks(): void;
     }
 
     class DivOverlay extends Layer {}
@@ -343,7 +353,7 @@ declare namespace LeafletModule {
         constructor( options: CanvasOptions );
     }
 
-    class CircleMarker extends Path implements DataMaps.IHasRuntimeMarkerState {
+    class CircleMarker extends Path implements InternalExtensionTypes.IHasRuntimeMarkerState {
         constructor( position: LatLngLike, options: CircleMarkerOptions );
 
         getBounds(): LatLngBounds;
@@ -351,31 +361,31 @@ declare namespace LeafletModule {
 
         options: CircleMarkerOptions;
         /* Fields internally used and set by the extension */
-        apiInstance: DataMaps.ApiMarkerInstance;
+        apiInstance: InternalExtensionTypes.ApiMarkerInstance;
         attachedLayers: string[];
-        assignedProperties: DataMaps.RuntimeMarkerProperties;
+        assignedProperties: InternalExtensionTypes.RuntimeMarkerProperties;
     }
 
-    class Marker extends Layer implements DataMaps.IHasRuntimeMarkerState {
+    class Marker extends Layer implements InternalExtensionTypes.IHasRuntimeMarkerState {
         constructor( position: LatLngLike, options: MarkerOptions );
         setDismissed( value: boolean ): void;
 
         options: MarkerOptions;
         /* Fields internally used and set by the extension */
-        apiInstance: DataMaps.ApiMarkerInstance;
+        apiInstance: InternalExtensionTypes.ApiMarkerInstance;
         attachedLayers: string[];
-        assignedProperties: DataMaps.RuntimeMarkerProperties;
+        assignedProperties: InternalExtensionTypes.RuntimeMarkerProperties;
     }
 
-    class CanvasIconMarker extends Path implements DataMaps.IHasRuntimeMarkerState {
+    class CanvasIconMarker extends Path implements InternalExtensionTypes.IHasRuntimeMarkerState {
         constructor( position: LatLngLike, options: MarkerOptions );
         setDismissed( value: boolean ): void;
 
         options: CanvasIconMarkerOptions;
         /* Fields internally used and set by the extension */
-        apiInstance: DataMaps.ApiMarkerInstance;
+        apiInstance: InternalExtensionTypes.ApiMarkerInstance;
         attachedLayers: string[];
-        assignedProperties: DataMaps.RuntimeMarkerProperties;
+        assignedProperties: InternalExtensionTypes.RuntimeMarkerProperties;
     }
 
     type AnyMarker = Marker|CanvasIconMarker|CircleMarker;

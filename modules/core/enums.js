@@ -24,7 +24,11 @@ module.exports = {
         /** @deprecated since v0.16.0 to be removed in v1.0.0. Use {@link IconRenderer_Canvas}. */
         RenderMarkersOntoCanvas: 1 << 8,
         IconRenderer_Canvas: 1 << 8,
-        AllowFullscreen: 1 << 9
+        AllowFullscreen: 1 << 9,
+        /**
+         * @since 0.16.2
+         */
+        SleepingInteractions: 1 << 10
     },
 
     /**
