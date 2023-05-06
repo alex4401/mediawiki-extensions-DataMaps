@@ -173,7 +173,7 @@ class DialogController {
 
 /** @type {OO.ui.ActionWidget.ConfigOptions} */
 DialogController.CLOSE_ACTION = {
-    label: 'Cancel',
+    label: mw.msg( 'datamap-ve-generic-cancel' ),
     flags: [ 'safe', 'close' ]
 };
 
