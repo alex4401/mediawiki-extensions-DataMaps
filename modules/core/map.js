@@ -1096,7 +1096,7 @@ class DataMap extends EventEmitter {
         }
 
         // Create a coordinate-under-cursor display
-        if ( this.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
+        if ( this.isFeatureBitSet( MapFlags.ShowCoordinates ) || this.isFeatureBitSet( MapFlags.VisualEditor ) ) {
             this.coordTracker = this.addControl( DataMap.anchors.bottomLeft, new Controls.Coordinates( this ) );
         }
 
