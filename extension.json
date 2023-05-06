@@ -267,12 +267,14 @@
 				"ve/main.js",
 				"ve/editor.js",
 				"ve/util.js",
+				"ve/experimentalNotice.js",
+
 				"ve/dataCapsule.js",
 				"ve/data/editor.js",
 				"ve/data/settingsService.js",
 				"ve/data/markerService.js",
+
 				"ve/toolControl.js",
-				"ve/editablePopup.js",
 
 				"ve/tabs/base.js",
 				"ve/tabs/markerGroups.js",
@@ -280,6 +282,7 @@
 
 				"ve/workflow/base.js",
 				"ve/workflow/createMarker.js",
+				"ve/editablePopup.js",
 				"ve/workflow/saveEdit.js",
 
 				"ve/ooui/NamedPageLayout.js"
@@ -288,8 +291,9 @@
 				"ve/css/main.less"
 			],
 			"messages": [
-				"datamap-ve-beta-notice",
-				"datamap-ve-limited-preview-notice",
+				"datamap-ve-experimental",
+				"datamap-ve-experimental-content",
+				"datamap-ve-experimental-close",
 
 				"datamap-ve-field-locked-unknown-value",
 
@@ -338,29 +342,7 @@
 				"datamap-ve-workflow-save",
 				"datamap-ve-workflow-save-submit",
 				"datamap-ve-workflow-save-summary",
-				"datamap-ve-workflow-save-summary-desc",
-
-				"datamap-ve-group-id",
-				"datamap-ve-group-id-cannot-modify",
-				"datamap-ve-group-article-link",
-				"datamap-ve-group-article-link-subtext",
-				"datamap-ve-group-collectible-mode",
-
-				"datamap-ve-legend-tab-marker-layers",
-
-				"datamap-ve-cancel",
-				"datamap-ve-tool-delete",
-				"datamap-ve-tool-source-editor",
-				"datamap-ve-tool-commit",
-				"datamap-ve-tool-commit-continue",
-				"datamap-ve-tool-commit-edit-summary",
-				"datamap-ve-tool-commit-edit-summary-subtext",
-
-				"datamap-ve-dialog-beta-warning",
-				"datamap-ve-dialog-beta-warning-text",
-
-				"datamap-ve-tool-add-marker",
-				"datamap-ve-tool-add-marker-continue"
+				"datamap-ve-workflow-save-summary-desc"
 			],
 			"targets": [ "desktop" ]
 		},

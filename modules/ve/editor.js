@@ -3,6 +3,7 @@
 /** @typedef {import( './workflow/base.js' ).VeWorkflow} VeWorkflow */
 /** @typedef {import( '../../schemas/src/index' ).DataMap} Schema_DataMap */
 const { DataMap, EventEmitter, Util } = require( 'ext.datamaps.core' ),
+    ExperimentalNotice = require( './experimentalNotice.js' ),
     EditableMarkerPopup = require( './editablePopup.js' ),
     DataCapsule = require( './dataCapsule.js' ),
     ToolBarControl = require( './toolControl.js' ),
@@ -165,19 +166,6 @@ class MapVisualEditor extends EventEmitter {
         this.map.storage.isWritable = false;
         this.map.storage.data.dismissed = [];
 
-        // Insert a notice that the visual editor is in beta
-        ( new OO.ui.MessageWidget( {
-            type: 'notice',
-            label: new OO.ui.HtmlSnippet( mw.msg( 'datamap-ve-beta-notice' ) )
-        } ) ).$element.prependTo( Util.getNonNull( this.map.rootElement ) );
-
-        // Insert a notice that some features (like collectibles) are not available in the visual editor
-        ( new OO.ui.MessageWidget( {
-            type: 'warning',
-            label: mw.msg( 'datamap-ve-limited-preview-notice' ),
-            showClose: true
-        } ) ).$element.prependTo( Util.getNonNull( this.map.rootElement.querySelector( '.ext-datamaps-container-top' ) ) );
-
         // Push a CSS class onto the map container
         this.map.rootElement.classList.add( 'ext-datamaps-with-ve' );
 
@@ -194,6 +182,10 @@ class MapVisualEditor extends EventEmitter {
         for ( const Cls of MapVisualEditor.WORKFLOWS ) {
             this.addService( new Cls( this ) );
         }
+
+        // Display a notice dialog that this is an experimental component
+        ExperimentalNotice.registerStandalone( this, 'mve-experimental', 'datamap-ve-experimental' );
+        this.windowManager.openWindow( 'mve-experimental' );
     }
 
 
