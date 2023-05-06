@@ -391,8 +391,8 @@ class DataMap extends EventEmitter {
             lat = this.config.crs[ 1 ][ 0 ] - lat;
         }
         if ( round ) {
-            lat = Math.round( lat * 1000 ) / 1000;
-            lon = Math.round( lon * 1000 ) / 1000;
+            lat = Math.round( lat * 10e3 ) / 10e3;
+            lon = Math.round( lon * 10e3 ) / 10e3;
         }
         return [ lat, lon ];
     }
