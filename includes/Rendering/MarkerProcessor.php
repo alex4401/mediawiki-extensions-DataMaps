@@ -13,7 +13,7 @@ use ParserOptions;
 use Title;
 
 class MarkerProcessor {
-    private const POPUP_IMAGE_WIDTH = 250;
+    private const POPUP_IMAGE_WIDTH = 288;
     private const MAX_LRU_SIZE = 128;
 
     private Parser $parser;

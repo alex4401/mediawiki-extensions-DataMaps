@@ -202,7 +202,7 @@ class EditableMarkerPopup extends MarkerPopup {
                 action: 'query',
                 prop: 'imageinfo',
                 titles: `File:${this.slots.imageName}`,
-                iiurlwidth: 250,
+                iiurlwidth: this.image.clientWidth,
                 iiprop: [ 'url' ]
             } ).then( response => {
                 if ( this.image ) {
