@@ -1,5 +1,6 @@
 /** @typedef {import( './editor.js' )} MapVisualEditor */
-const { DataMap, MarkerPopup, Util } = require( 'ext.datamaps.core' ),
+const { DataMap, MarkerPopup, Util, MapFlags } = require( 'ext.datamaps.core' ),
+    { createDomElement } = Util,
     MarkerDataService = require( './data/markerService.js' ),
     CreateMarkerWorkflow = require( './workflow/createMarker.js' ),
     DataEditorUiBuilder = require( './data/editor.js' ),
@@ -29,6 +30,11 @@ class EditableMarkerPopup extends MarkerPopup {
          * @type {import( '../../schemas/src/index' ).Marker}
          */
         this._source = this._dataService.getLeafletMarkerSource( this.leafletMarker );
+        /**
+         * @private
+         * @type {mw.Api}
+         */
+        this._mwApi = new mw.Api();
     }
 
 
@@ -43,7 +49,7 @@ class EditableMarkerPopup extends MarkerPopup {
      * @param {HTMLElement} element
      */
     buildButtons( element ) {
-        Util.createDomElement( 'a', {
+        createDomElement( 'a', {
             classes: [ 'ext-datamaps-popup-ve-edit', 'oo-ui-icon-edit' ],
             attributes: {
                 role: 'button',
@@ -61,7 +67,7 @@ class EditableMarkerPopup extends MarkerPopup {
             },
             appendTo: element
         } );
-        Util.createDomElement( 'a', {
+        createDomElement( 'a', {
             classes: [ 'ext-datamaps-popup-ve-delete', 'oo-ui-icon-trash' ],
             attributes: {
                 role: 'button',
@@ -80,6 +86,81 @@ class EditableMarkerPopup extends MarkerPopup {
 
 
     /**
+     * @param {HTMLElement} element
+     */
+    buildHeader( element ) {
+        // Build the title
+        if ( this.slots.label && this.markerGroup.name !== this.slots.label ) {
+            this.subTitle = createDomElement( 'b', {
+                classes: [ 'ext-datamaps-popup-subtitle' ],
+                text: this.markerGroup.name,
+                appendTo: element
+            } );
+            this.title = createDomElement( 'b', {
+                classes: [ 'ext-datamaps-popup-title' ],
+                appendTo: element
+            } );
+        } else {
+            this.title = createDomElement( 'b', {
+                classes: [ 'ext-datamaps-popup-title' ],
+                text: this.markerGroup.name,
+                appendTo: element
+            } );
+        }
+
+        // Collect layer discriminators
+        const /** @type {string[]} */ discrims = [];
+        this.leafletMarker.attachedLayers.forEach( ( layerId, index ) => {
+            const layer = this.map.config.layers[ layerId ];
+            if ( index > 0 && layer && layer.discrim ) {
+                discrims.push( layer.discrim );
+            }
+        } );
+
+        // Gather detail text from layers
+        let detailText = discrims.join( ', ' );
+        // Reformat if coordinates are to be shown
+        if ( this.map.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
+            const coordText = this.map.getCoordinateLabel( this.leafletMarker.apiInstance );
+            detailText = detailText ? `${coordText} (${detailText})` : coordText;
+        }
+        // Push onto the contents
+        this.location = createDomElement( 'div', {
+            classes: [ 'ext-datamaps-popup-location' ],
+            text: detailText,
+            appendTo: element
+        } );
+    }
+
+
+    /**
+     * Builds contents of this popup.
+     *
+     * @param {HTMLElement} element
+     */
+    buildContent( element ) {
+        // Description
+        if ( this.slots.desc ) {
+            this.description = createDomElement( 'div', {
+                classes: [ 'ext-datamaps-popup-description' ],
+                appendTo: element
+            } );
+        }
+
+        // Image
+        if ( this.slots.imageName ) {
+            this.image = createDomElement( 'img', {
+                classes: [ 'ext-datamaps-popup-image' ],
+                attributes: {
+                    width: 250
+                },
+                appendTo: element
+            } );
+        }
+    }
+
+
+    /**
      * Builds the action list of this popup.
      *
      * @param {HTMLElement} element
@@ -88,9 +169,81 @@ class EditableMarkerPopup extends MarkerPopup {
     }
 
 
-    onAdd() {}
+    onAdd() {
+        // TODO: handle errors
+        if ( this.title && this.slots.label ) {
+            // eslint-disable-next-line mediawiki/class-doc
+            this.title.classList.add( EditableMarkerPopup.SKELETON_CLASS );
+            this._parseWikitext( this.slots.label ).then( parsed => {
+                if ( this.title ) {
+                    this.title.innerHTML = parsed.slice( 3, -4 );
+                    // eslint-disable-next-line mediawiki/class-doc
+                    this.title.classList.remove( EditableMarkerPopup.SKELETON_CLASS );
+                }
+            } );
+        }
+
+        if ( this.description && this.slots.desc ) {
+            // eslint-disable-next-line mediawiki/class-doc
+            this.description.classList.add( EditableMarkerPopup.SKELETON_CLASS );
+            this._parseWikitext( this.slots.desc ).then( parsed => {
+                if ( this.description ) {
+                    this.description.innerHTML = parsed;
+                    // eslint-disable-next-line mediawiki/class-doc
+                    this.description.classList.remove( EditableMarkerPopup.SKELETON_CLASS );
+                }
+            } );
+        }
+
+        if ( this.image && this.slots.imageName ) {
+            // eslint-disable-next-line mediawiki/class-doc
+            this.image.classList.add( EditableMarkerPopup.SKELETON_CLASS );
+            this._mwApi.get( {
+                action: 'query',
+                prop: 'imageinfo',
+                titles: `File:${this.slots.imageName}`,
+                iiurlwidth: 250,
+                iiprop: [ 'url' ]
+            } ).then( response => {
+                if ( this.image ) {
+                    const info = Object.values( response.query.pages )[ 0 ].imageinfo[ 0 ];
+                    this.image.setAttribute( 'height', info.thumbheight );
+                    this.image.setAttribute( 'data-file-width', info.width );
+                    this.image.setAttribute( 'data-file-height', info.height );
+                    this.image.setAttribute( 'src', info.thumburl );
+                    // eslint-disable-next-line mediawiki/class-doc
+                    this.image.classList.remove( EditableMarkerPopup.SKELETON_CLASS );
+                }
+            } );
+        }
+    }
+
+
+    /**
+     * @private
+     * @param {string} wikitext
+     * @return {JQuery.Promise<string, any, any>}
+     */
+    _parseWikitext( wikitext ) {
+        return this._mwApi.parse( wikitext, {
+            title: this._editor.getPageName(),
+            disablelimitreport: true,
+            disabletoc: true,
+            contentmodel: 'wikitext',
+            wrapoutputclass: ''
+        } );
+    }
+
+
     onRemove() { }
 }
+
+
+/**
+ * @constant
+ * @type {string}
+ */
+EditableMarkerPopup.SKELETON_CLASS = 'ext-datamaps-ve-load-rect';
 
 
 /**
