@@ -1,6 +1,6 @@
 /** @typedef {import( '../editor.js' )} MapVisualEditor */
 const VePanel = require( './base.js' ),
-    DataEditorUiBuilder = require( '../dataEditorUi.js' ),
+    DataEditorUiBuilder = require( '../data/editor.js' ),
     { Util } = require( 'ext.datamaps.core' );
 
 

@@ -21,7 +21,7 @@ class SaveEditWorkflow extends VeWorkflow {
 
 
 /**
- * @extends {DialogController< 'finalise' >}
+ * @extends {DialogController< 'finalise', {} >}
  */
 SaveEditWorkflow.Dialog = class SaveEditDialogController extends DialogController {
     /**
@@ -34,18 +34,16 @@ SaveEditWorkflow.Dialog = class SaveEditDialogController extends DialogControlle
                 action: 'finalise',
                 label: mw.msg( 'datamap-ve-workflow-save-submit' ),
                 flags: [ 'primary', 'progressive' ],
-                modes: [ 'finalise' ]
+                modes: [ 'first' ]
             },
             Object.assign( DialogController.CLOSE_ACTION, /** @type {OO.ui.ActionWidget.ConfigOptions} */ ( {
-                modes: [ 'finalise' ]
+                modes: [ 'first' ]
             } ) )
         ];
     }
 
 
     build() {
-        super.build();
-
         new OO.ui.PanelLayout( {
             expanded: false,
             padded: true,

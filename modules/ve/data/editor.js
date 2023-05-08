@@ -1,7 +1,8 @@
-const { Util } = require( 'ext.datamaps.core' );
+const NS_FILE = mw.config.get( 'wgNamespaceIds' ).file,
+    { Util } = require( 'ext.datamaps.core' );
 
 
-/** @typedef {import( './editor.js' )} MapVisualEditor */
+/** @typedef {import( '../editor.js' )} MapVisualEditor */
 
 
 /**
@@ -25,6 +26,12 @@ const { Util } = require( 'ext.datamaps.core' );
  * @property {number} default
  */
 /**
+ * @typedef {Object} NumberFieldProps
+ * @property {'number'} type
+ * @property {boolean} [required=false]
+ * @property {number|undefined} default
+ */
+/**
  * @typedef {Object} TextFieldProps
  * @property {'longtext'|'text'} type
  * @property {boolean} [inline=false]
@@ -33,7 +40,12 @@ const { Util } = require( 'ext.datamaps.core' );
  * @property {string} default
  */
 /**
- * @typedef {AbstractField & ( BoolFieldProps|ValueFieldProps|TextFieldProps )} FieldDescription
+ * @typedef {Object} ImageFieldProps
+ * @property {'media'} type
+ * @property {string} default
+ */
+/**
+ * @typedef {AbstractField & ( BoolFieldProps|ValueFieldProps|NumberFieldProps|TextFieldProps|ImageFieldProps )} FieldDescription
  */
 /**
  * @typedef {Object} BuiltFieldProps
@@ -47,6 +59,8 @@ const { Util } = require( 'ext.datamaps.core' );
 /** @typedef {( data: import( './dataCapsule' ).Schema_DataMap ) => Record<string, any>} RootObjectGetter */
 /**
  * @typedef {Object} DataEditorUiBuilderOptions
+ * @property {string} [label]
+ * @property {boolean} [horizontal=false]
  * @property {RootObjectGetter} rootGetter
  * @property {FieldDescription[]} fields
  */
@@ -68,7 +82,11 @@ class DataEditorUiBuilder {
          * @private
          * @type {OO.ui.FieldsetLayout}
          */
-        this._fieldset = new OO.ui.FieldsetLayout();
+        // eslint-disable-next-line mediawiki/class-doc
+        this._fieldset = new OO.ui.FieldsetLayout( {
+            label: options.label,
+            classes: options.horizontal ? [ 'ext-datamaps-ve-fieldset-horizontal' ] : undefined
+        } );
         /** @type {HTMLElement} */
         this.element = this._fieldset.$element[ 0 ];
         /** @type {string} */
@@ -123,6 +141,11 @@ class DataEditorUiBuilder {
             const isInline = 'inline' in field && field.inline;
 
             switch ( field.type ) {
+                case 'number':
+                    inputWidget = new OO.ui.NumberInputWidget( {
+                        required: field.required
+                    } );
+                    break;
                 case 'text':
                     inputWidget = new OO.ui.TextInputWidget( {
                         required: field.required,
@@ -148,6 +171,10 @@ class DataEditorUiBuilder {
                     } );
                     field.default = field.options[ field.default ][ 1 ];
                     break;
+                case 'media':
+                    mainWidget = new mw.widgets.MediaSearchWidget( {} );
+                    inputWidget = /** @type {mw.widgets.MediaSearchWidget} */ ( mainWidget ).getQuery();
+                    break;
                 default:
                     throw new Error( 'Attempted to create field UI for an unknown type.' );
             }
@@ -161,11 +188,13 @@ class DataEditorUiBuilder {
                     if ( normalised ) {
                         value = normalised[ 1 ];
                     }
+                } else if ( field.type === 'number' ) {
+                    value = parseFloat( value );
                 }
                 this._setProperty( field, value );
             } );
 
-            const fieldWidget = new OO.ui.FieldLayout( inputWidget, {
+            const fieldWidget = new OO.ui.FieldLayout( mainWidget || inputWidget, {
                 label: isInline ? undefined : this.msg( field.labelMsg ),
                 help: field.descMsg ? this.msg( field.descMsg ) : undefined,
                 helpInline: true,

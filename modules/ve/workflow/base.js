@@ -26,14 +26,16 @@ const { DataMap, Controls } = require( 'ext.datamaps.core' );
 /**
  * @abstract
  * @template {string} TActionTypes
+ * @template {any} TOptionsType
  */
 class DialogController {
     /**
      * @param {MapVisualEditor} editor
      * @param {string} messageKey
      * @param {OO.ui.ProcessDialog} dialog
+     * @param {TOptionsType?} contextData
      */
-    constructor( editor, messageKey, dialog ) {
+    constructor( editor, messageKey, dialog, contextData ) {
         /** @type {MapVisualEditor} */
         this.editor = editor;
         /** @type {string} */
@@ -42,6 +44,34 @@ class DialogController {
         this.dialog = dialog;
         /** @type {HTMLElement} */
         this.contentElement = this.dialog.$body[ 0 ];
+        /**
+         * @protected
+         * @type {TOptionsType?}
+         */
+        this._contextData = contextData;
+
+        this.contentElement.classList.add( 'ext-datamaps-ve-dialog' );
+    }
+
+
+    getInitialMode() {
+        return 'first';
+    }
+
+
+    /**
+     * @return {number?}
+     */
+    getBodyHeight() {
+        return null;
+    }
+
+
+    /**
+     * @return {OO.ui.Window.Size}
+     */
+    static getSize() {
+        return 'medium';
     }
 
 
@@ -75,16 +105,21 @@ class DialogController {
         };
         OO.inheritClass( DialogClass, OO.ui.ProcessDialog );
         DialogClass.static.name = id;
+        DialogClass.static.size = ControllerClass.getSize();
         // eslint-disable-next-line mediawiki/msg-doc
         DialogClass.static.title = mw.msg( messageKey );
         DialogClass.static.actions = actions;
         DialogClass.prototype.initialize = function () {
             OO.ui.ProcessDialog.prototype.initialize.call( this );
-            this._controller = new ControllerClass( editor, messageKey, this );
         };
         DialogClass.prototype.getSetupProcess = function ( data ) {
             return OO.ui.ProcessDialog.prototype.getSetupProcess.call( this, data )
-                .next( () => this.actions.setMode( actions[ 0 ].action ), this );
+                .next( () => {
+                    this.$body.html( '' );
+                    this._controller = new ControllerClass( editor, messageKey, this, data );
+                    this._controller.build();
+                    this.actions.setMode( this._controller.getInitialMode() );
+                }, this );
         };
         DialogClass.prototype.getActionProcess = function ( action ) {
             const result = this._controller.getActionProcess( action );
@@ -92,6 +127,9 @@ class DialogController {
                 return result;
             }
             return OO.ui.ProcessDialog.prototype.getActionProcess.call( this, action );
+        };
+        DialogClass.prototype.getBodyHeight = function () {
+            return this._controller.getBodyHeight() || OO.ui.ProcessDialog.prototype.getBodyHeight.call( this );
         };
 
         editor.windowFactory.register( DialogClass );
@@ -151,7 +189,7 @@ class VeWorkflow {
      */
     /**
      * @protected
-     * @param {typeof DialogController<string>} TController
+     * @param {typeof DialogController<string, {}>} TController
      * @param {MapVisualEditor} editor
      * @param {WorkflowMountConfig} unsafeMountConfig
      */
