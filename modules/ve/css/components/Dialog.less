@@ -7,4 +7,21 @@
     textarea {
         resize: vertical;
     }
+
+    .oo-ui-fieldLayout-field {
+        position: relative;
+    }
+
+    .mw-widget-mediaSearchWidget {
+        display: flex;
+        flex-direction: column-reverse;
+        max-height: 30em;
+        overflow-y: auto;
+        border: 1px solid #c8ccd1;
+
+        .oo-ui-searchWidget-query,
+        .oo-ui-searchWidget-results {
+            position: static;
+        }
+    }
 }
