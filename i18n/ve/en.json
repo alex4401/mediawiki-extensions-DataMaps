@@ -25,7 +25,7 @@
 
     "datamap-ve-generic-cancel": "Cancel",
 
-    "datamap-ve-panel-msettings": "Settings",
+    "datamap-ve-panel-msettings": "View settings",
     "datamap-ve-panel-msettings-field-coordorder": "Coordinate order",
     "datamap-ve-panel-msettings-field-coordorder-latlon": "Latitude then longitude",
     "datamap-ve-panel-msettings-field-coordorder-xy": "X then Y",
@@ -60,10 +60,10 @@
     "datamap-ve-workflow-marker-field-layers": "Categories",
     "datamap-ve-workflow-marker-field-background": "[PH] Visible only on background",
     "datamap-ve-workflow-marker-set-behaviour": "Permanent links",
-    "datamap-ve-workflow-marker-field-id": "Permanent ID (for linking)",
+    "datamap-ve-workflow-marker-field-id": "Unique identifier",
     "datamap-ve-workflow-marker-field-id-desc": "[PH] An identifier will be auto-generated",
-    "datamap-ve-workflow-marker-panel-popup": "[PH] Popup",
-    "datamap-ve-workflow-marker-field-name": "Name",
+    "datamap-ve-workflow-marker-panel-popup": "[PH] Popup information",
+    "datamap-ve-workflow-marker-field-name": "Title",
     "datamap-ve-workflow-marker-field-desc": "Description",
     "datamap-ve-workflow-marker-field-image": "Image thumbnail",
 
