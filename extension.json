@@ -273,6 +273,7 @@
 				"ve/data/editor.js",
 				"ve/data/settingsService.js",
 				"ve/data/markerService.js",
+				"ve/data/backgroundService.js",
 
 				"ve/toolControl.js",
 
@@ -287,7 +288,8 @@
 
 				"ve/ooui/NamedPageLayout.js",
 				"ve/ooui/MediaSearchWidget.js",
-				"ve/ooui/MediaResultWidget.js"
+				"ve/ooui/MediaResultWidget.js",
+				"ve/ooui/FieldLayout.js"
 			],
 			"styles": [
 				"ve/css/main.less"
@@ -299,6 +301,7 @@
 
 				"datamap-ve-generic-cancel",
 				"datamap-ve-field-locked-unknown-value",
+				"datamap-ve-background-default-name",
 
 				"datamap-ve-panel-msettings",
 				"datamap-ve-panel-msettings-field-coordorder",
@@ -331,8 +334,12 @@
 				"datamap-ve-workflow-marker-set-association",
 				"datamap-ve-workflow-marker-field-group",
 				"datamap-ve-workflow-marker-field-group-desc",
-				"datamap-ve-workflow-marker-field-layers",
+				"datamap-ve-workflow-marker-field-categories",
+				"datamap-ve-workflow-marker-field-categories-desc",
+				"datamap-ve-workflow-marker-field-categories-disabled",
 				"datamap-ve-workflow-marker-field-background",
+				"datamap-ve-workflow-marker-field-background-desc",
+				"datamap-ve-workflow-marker-field-background-disabled",
 				"datamap-ve-workflow-marker-set-behaviour",
 				"datamap-ve-workflow-marker-field-id",
 				"datamap-ve-workflow-marker-field-id-desc",

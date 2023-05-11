@@ -215,6 +215,7 @@ class MapVisualEditor extends EventEmitter {
  */
 MapVisualEditor.DATA_SERVICES = [
     require( './data/settingsService.js' ),
+    require( './data/backgroundService.js' ),
     MarkerDataService
 ];
 /**

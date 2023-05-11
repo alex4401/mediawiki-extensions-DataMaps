@@ -4,7 +4,9 @@ const { VeWorkflow, DialogController } = require( './base.js' ),
     { DataMap, Util } = require( 'ext.datamaps.core' ),
     ToolBarControl = require( '../toolControl.js' ),
     NamedPageLayout = require( '../ooui/NamedPageLayout.js' ),
-    MarkerDataService = require( '../data/markerService.js' );
+    MarkerDataService = require( '../data/markerService.js' ),
+    BackgroundDataService = require( '../data/backgroundService.js' ),
+    FieldLayout = require( '../ooui/FieldLayout.js' );
 
 
 class CreateMarkerWorkflow extends VeWorkflow {
@@ -41,6 +43,11 @@ CreateMarkerWorkflow.BaseMarkerDialog = class BaseMarkerDialogController extends
          * @type {MarkerDataService}
          */
         this._dataService = this.editor.getService( MarkerDataService );
+        /**
+         * @protected
+         * @type {BackgroundDataService}
+         */
+        this._bgService = this.editor.getService( BackgroundDataService );
     }
 
 
@@ -186,6 +193,25 @@ CreateMarkerWorkflow.BaseMarkerDialog = class BaseMarkerDialogController extends
             } )
         } );
 
+        const hasMultipleLayers = Object.keys( this.editor.map.config.layers ).length > 0,
+            hasMultipleBackgrounds = this._bgService.count() > 1;
+        this._categoryDropdown = new OO.ui.MenuTagMultiselectWidget( {
+            disabled: !hasMultipleLayers,
+            options: Object.keys( this.editor.map.config.layers ).map( key => ( {
+                data: key,
+                label: key
+            } ) )
+        } );
+        this._backgroundDropdown = new OO.ui.DropdownInputWidget( {
+            disabled: !hasMultipleBackgrounds,
+            options: this._bgService.getNames().map( ( name, index ) => {
+                return {
+                    data: this._bgService.getMarkerLayerFor( index ),
+                    label: name
+                };
+            } )
+        } );
+
         return new NamedPageLayout( this.msg( 'panel-setup' ), {
             icon: 'tag',
             content: [
@@ -193,11 +219,20 @@ CreateMarkerWorkflow.BaseMarkerDialog = class BaseMarkerDialogController extends
                 new OO.ui.FieldsetLayout( {
                     label: this.msg( 'set-association' ),
                     items: [
-                        new OO.ui.FieldLayout( this._groupDropdown, {
+                        new FieldLayout( this._groupDropdown, {
                             label: this.msg( 'field-group' ),
                             help: this.msg( 'field-group-desc' )
+                        } ),
+                        new FieldLayout( this._categoryDropdown, {
+                            label: this.msg( 'field-categories' ),
+                            help: this.msg( hasMultipleLayers ? 'field-categories-desc' : 'field-categories-disabled' ),
+                            helpInline: !hasMultipleLayers
+                        } ),
+                        new FieldLayout( this._backgroundDropdown, {
+                            label: this.msg( 'field-background' ),
+                            help: this.msg( hasMultipleBackgrounds ? 'field-background-desc' : 'field-background-disabled' ),
+                            helpInline: !hasMultipleBackgrounds
                         } )
-                        // TODO: layer association
                     ]
                 } ),
                 this._behaviourUiBuilder.element
@@ -293,8 +328,15 @@ CreateMarkerWorkflow.Dialog = class CreateMarkerDialogController extends CreateM
     getActionProcess( action ) {
         if ( action === 'save' ) {
             return new OO.ui.Process( () => {
+                const layers = [
+                    Util.getNonNull( this._groupDropdown ).getValue(),
+                    .../** @type {string[]} */ ( Util.getNonNull( this._categoryDropdown ).getValue() )
+                ];
+                if ( !Util.getNonNull( this._backgroundDropdown ).isDisabled() ) {
+                    layers.push( Util.getNonNull( this._backgroundDropdown ).getValue() );
+                }
                 this._dataService.create(
-                    [ Util.getNonNull( this._groupDropdown ).getValue() ],
+                    layers,
                     this._target
                 );
                 this.dialog.close();
