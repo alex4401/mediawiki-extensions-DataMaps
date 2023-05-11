@@ -13,15 +13,44 @@
     }
 
     .mw-widget-mediaSearchWidget {
+        position: relative;
         display: flex;
         flex-direction: column-reverse;
-        max-height: 30em;
-        overflow-y: auto;
-        border: 1px solid #c8ccd1;
 
-        .oo-ui-searchWidget-query,
-        .oo-ui-searchWidget-results {
+        .oo-ui-searchWidget-query {
             position: static;
+            border-bottom: 0;
+
+            &,
+            .oo-ui-textInputWidget {
+                margin: 0;
+                padding: 0;
+            }
+        }
+
+        .oo-ui-searchWidget-results {
+            top: 2.28571429em;
+            height: max-content;
+            max-height: 14em;
+            padding: 0.2em;
+            background: #fff;
+
+            &:empty {
+                padding: 0;
+            }
+        }
+
+        .mw-widget-mediaResultWidget {
+            display: flex;
+            align-items: center;
+            padding: 0.4em;
+            gap: 0.8em;
+            text-align: left;
+        }
+
+        .mw-widget-mediaResultWidget-nameLabel {
+            position: static;
+            background-color: transparent;
         }
     }
 }

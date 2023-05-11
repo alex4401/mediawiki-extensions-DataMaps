@@ -1,5 +1,6 @@
 const NS_FILE = mw.config.get( 'wgNamespaceIds' ).file,
-    { Util } = require( 'ext.datamaps.core' );
+    { Util } = require( 'ext.datamaps.core' ),
+    MediaSearchWidget = require( '../ooui/MediaSearchWidget.js' );
 
 
 /** @typedef {import( '../editor.js' )} MapVisualEditor */
@@ -172,8 +173,8 @@ class DataEditorUiBuilder {
                     field.default = field.options[ field.default ][ 1 ];
                     break;
                 case 'media':
-                    mainWidget = new mw.widgets.MediaSearchWidget( {} );
-                    inputWidget = /** @type {mw.widgets.MediaSearchWidget} */ ( mainWidget ).getQuery();
+                    mainWidget = new MediaSearchWidget( { } );
+                    inputWidget = /** @type {MediaSearchWidget} */ ( mainWidget ).getQuery();
                     break;
                 default:
                     throw new Error( 'Attempted to create field UI for an unknown type.' );

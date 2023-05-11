@@ -285,7 +285,9 @@
 				"ve/editablePopup.js",
 				"ve/workflow/saveEdit.js",
 
-				"ve/ooui/NamedPageLayout.js"
+				"ve/ooui/NamedPageLayout.js",
+				"ve/ooui/MediaSearchWidget.js",
+				"ve/ooui/MediaResultWidget.js"
 			],
 			"styles": [
 				"ve/css/main.less"
