@@ -160,30 +160,9 @@ CreateMarkerWorkflow.BaseMarkerDialog = class BaseMarkerDialogController extends
         if ( isYFirst ) {
             locationFields = [ locationFields[ 1 ], locationFields[ 0 ] ];
         }
-        this._locationUiBuilder = new DataEditorUiBuilder( this.editor, this.messageKey, {
-            label: this.msg( 'set-coordinates' ),
-            horizontal: true,
-            rootGetter: () => this.getTargetObject(),
-            fields: locationFields
-        } ).setLock( false );
 
-        this._behaviourUiBuilder = new DataEditorUiBuilder( this.editor, this.messageKey, {
-            label: this.msg( 'set-behaviour' ),
-            rootGetter: () => this.getTargetObject(),
-            fields: [
-                {
-                    type: 'text',
-                    labelMsg: 'field-id',
-                    property: 'id',
-                    required: this.editor.doesRequireMarkerIds(),
-                    // TODO: display the generated ID instead
-                    placeholder: this.editor.doesRequireMarkerIds() ? undefined
-                        : this.msg( 'field-id-desc' ),
-                    default: ''
-                }
-            ]
-        } ).setLock( false );
-
+        const hasMultipleLayers = Object.keys( this.editor.map.config.layers ).length > 0,
+            hasMultipleBackgrounds = this._bgService.count() > 1;
         this._groupDropdown = new OO.ui.DropdownInputWidget( {
             options: Object.entries( this.editor.map.config.groups ).map( pair => {
                 return {
@@ -192,9 +171,6 @@ CreateMarkerWorkflow.BaseMarkerDialog = class BaseMarkerDialogController extends
                 };
             } )
         } );
-
-        const hasMultipleLayers = Object.keys( this.editor.map.config.layers ).length > 0,
-            hasMultipleBackgrounds = this._bgService.count() > 1;
         this._categoryDropdown = new OO.ui.MenuTagMultiselectWidget( {
             disabled: !hasMultipleLayers,
             options: Object.keys( this.editor.map.config.layers ).map( key => ( {
@@ -212,30 +188,45 @@ CreateMarkerWorkflow.BaseMarkerDialog = class BaseMarkerDialogController extends
             } )
         } );
 
+        this._uiBuilder = new DataEditorUiBuilder( this.editor, this.messageKey, () => this.getTargetObject() )
+            .addSection( {
+                label: 'coordinates',
+                horizontal: true
+            }, locationFields )
+            .addCustomSection( 'association', [
+                new FieldLayout( this._groupDropdown, {
+                    label: this.msg( 'field-group' ),
+                    help: this.msg( 'field-group-desc' )
+                } ),
+                new FieldLayout( this._categoryDropdown, {
+                    label: this.msg( 'field-categories' ),
+                    help: this.msg( hasMultipleLayers ? 'field-categories-desc' : 'field-categories-disabled' ),
+                    helpInline: !hasMultipleLayers
+                } ),
+                new FieldLayout( this._backgroundDropdown, {
+                    label: this.msg( 'field-background' ),
+                    help: this.msg( hasMultipleBackgrounds ? 'field-background-desc' : 'field-background-disabled' ),
+                    helpInline: !hasMultipleBackgrounds
+                } )
+            ] )
+            .addSection( 'behaviour', [
+                {
+                    type: 'text',
+                    labelMsg: 'field-id',
+                    property: 'id',
+                    required: this.editor.doesRequireMarkerIds(),
+                    // TODO: display the generated ID instead
+                    placeholder: this.editor.doesRequireMarkerIds() ? undefined
+                        : this.msg( 'field-id-desc' ),
+                    default: ''
+                }
+            ] )
+            .setLock( false );
+
         return new NamedPageLayout( this.msg( 'panel-setup' ), {
             icon: 'tag',
             content: [
-                this._locationUiBuilder.element,
-                new OO.ui.FieldsetLayout( {
-                    label: this.msg( 'set-association' ),
-                    items: [
-                        new FieldLayout( this._groupDropdown, {
-                            label: this.msg( 'field-group' ),
-                            help: this.msg( 'field-group-desc' )
-                        } ),
-                        new FieldLayout( this._categoryDropdown, {
-                            label: this.msg( 'field-categories' ),
-                            help: this.msg( hasMultipleLayers ? 'field-categories-desc' : 'field-categories-disabled' ),
-                            helpInline: !hasMultipleLayers
-                        } ),
-                        new FieldLayout( this._backgroundDropdown, {
-                            label: this.msg( 'field-background' ),
-                            help: this.msg( hasMultipleBackgrounds ? 'field-background-desc' : 'field-background-disabled' ),
-                            helpInline: !hasMultipleBackgrounds
-                        } )
-                    ]
-                } ),
-                this._behaviourUiBuilder.element
+                this._uiBuilder.finish()
             ]
         } );
     }
@@ -246,9 +237,8 @@ CreateMarkerWorkflow.BaseMarkerDialog = class BaseMarkerDialogController extends
      * @return {NamedPageLayout}
      */
     _buildPopupPanel() {
-        this._popupUiBuilder = new DataEditorUiBuilder( this.editor, this.messageKey, {
-            rootGetter: () => this.getTargetObject(),
-            fields: [
+        this._popupUiBuilder = new DataEditorUiBuilder( this.editor, this.messageKey, () => this.getTargetObject() )
+            .addFields( [
                 {
                     type: 'text',
                     labelMsg: 'field-name',
@@ -267,13 +257,13 @@ CreateMarkerWorkflow.BaseMarkerDialog = class BaseMarkerDialogController extends
                     property: 'image',
                     default: ''
                 }
-            ]
-        } ).setLock( false );
+            ] )
+            .setLock( false );
 
         return new NamedPageLayout( this.msg( 'panel-popup' ), {
             icon: 'article',
             content: [
-                this._popupUiBuilder.element
+                this._popupUiBuilder.finish()
             ]
         } );
     }

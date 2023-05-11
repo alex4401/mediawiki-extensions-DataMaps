@@ -14,9 +14,8 @@ module.exports = class MapSettingsEditorPanel extends VePanel {
         /**
          * @type {DataEditorUiBuilder}
          */
-        this.uiBuilder = new DataEditorUiBuilder( editor, this._baseMsg, {
-            rootGetter: data => ( data.settings = data.settings || {} ),
-            fields: [
+        this.uiBuilder = new DataEditorUiBuilder( editor, this._baseMsg, data => ( data.settings = data.settings || {} ) )
+            .addSection( null, [
                 {
                     type: 'dropdown',
                     labelMsg: 'field-coordorder',
@@ -28,7 +27,9 @@ module.exports = class MapSettingsEditorPanel extends VePanel {
                         // TODO: [ 'yx', 'yx' ]
                     ],
                     default: 0
-                },
+                }
+            ] )
+            .addSection( 'view', [
                 {
                     type: 'checkbox',
                     labelMsg: 'field-coordinates',
@@ -61,7 +62,9 @@ module.exports = class MapSettingsEditorPanel extends VePanel {
                         [ 'amount', 'amount' ]
                     ],
                     default: 0
-                },
+                }
+            ] )
+            .addSection( 'edit', [
                 {
                     type: 'checkbox',
                     labelMsg: 'field-requireids',
@@ -69,8 +72,7 @@ module.exports = class MapSettingsEditorPanel extends VePanel {
                     property: 'requireCustomMarkerIDs',
                     default: false
                 }
-            ]
-        } );
+            ] );
         this.contentElement.appendChild( this.uiBuilder.element );
     }
 

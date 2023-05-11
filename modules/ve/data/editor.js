@@ -58,50 +58,76 @@ const NS_FILE = mw.config.get( 'wgNamespaceIds' ).file,
  * @typedef {FieldDescription & BuiltFieldProps} BuiltField
  */
 /** @typedef {( data: import( './dataCapsule' ).Schema_DataMap ) => Record<string, any>} RootObjectGetter */
-/**
- * @typedef {Object} DataEditorUiBuilderOptions
- * @property {string} [label]
- * @property {boolean} [horizontal=false]
- * @property {RootObjectGetter} rootGetter
- * @property {FieldDescription[]} fields
- */
 
 
 class DataEditorUiBuilder {
     /**
      * @param {MapVisualEditor} editor
      * @param {string} messageKey
-     * @param {DataEditorUiBuilderOptions} options
+     * @param {RootObjectGetter} rootGetter
      */
-    constructor( editor, messageKey, options ) {
+    constructor( editor, messageKey, rootGetter ) {
         /**
          * @private
          * @type {MapVisualEditor}
          */
         this._editor = editor;
-        /**
-         * @private
-         * @type {OO.ui.FieldsetLayout}
-         */
-        // eslint-disable-next-line mediawiki/class-doc
-        this._fieldset = new OO.ui.FieldsetLayout( {
-            label: options.label,
-            classes: options.horizontal ? [ 'ext-datamaps-ve-fieldset-horizontal' ] : undefined
-        } );
         /** @type {HTMLElement} */
-        this.element = this._fieldset.$element[ 0 ];
+        this.element = Util.createDomElement( 'div', {
+            classes: [ 'ext-datamaps-ve-dataeditor' ]
+        } );
         /** @type {string} */
         this.messageKey = messageKey;
         /** @type {RootObjectGetter} */
-        this._getRootInternal = options.rootGetter;
+        this._getRootInternal = rootGetter;
         /** @type {BuiltField[]} */
         this._builtFields = [];
         /** @type {boolean} */
         this._isLocked = false;
+    }
 
-        this.addFields( options.fields );
 
-        this._editor.on( 'sourceData', this._restoreValues, this );
+    /**
+     * @param {string|null|{
+     *   label?: string,
+     *   horizontal?: boolean
+     * }} labelOrOptions
+     * @param {FieldDescription[]} fields
+     * @return {DataEditorUiBuilder}
+     */
+    addSection( labelOrOptions, fields ) {
+        return this.addCustomSection( labelOrOptions, this._buildFields( fields ) );
+    }
+
+
+    /**
+     * @param {FieldDescription[]} fields
+     * @return {DataEditorUiBuilder}
+     */
+    addFields( fields ) {
+        return this.addSection( {}, fields );
+    }
+
+
+    /**
+     * @param {string|null|{
+     *   label?: string,
+     *   horizontal?: boolean
+     * }} labelOrOptions
+     * @param {OO.ui.FieldLayout[]} widgets
+     * @return {DataEditorUiBuilder}
+     */
+    addCustomSection( labelOrOptions, widgets ) {
+        const options = typeof labelOrOptions === 'string' ? { label: labelOrOptions } : ( labelOrOptions || {} ),
+            // eslint-disable-next-line mediawiki/class-doc
+            layout = new OO.ui.FieldsetLayout( {
+                // eslint-disable-next-line mediawiki/msg-doc
+                label: options.label ? this.msg( `set-${options.label}` ) : undefined,
+                classes: options.horizontal ? [ 'ext-datamaps-ve-fieldset-horizontal' ] : undefined
+            } );
+        layout.$element.appendTo( this.element );
+        layout.addItems( widgets );
+        return this;
     }
 
 
@@ -129,12 +155,25 @@ class DataEditorUiBuilder {
 
 
     /**
-     * @param {FieldDescription[]} fields
+     * @return {HTMLElement}
      */
-    addFields( fields ) {
+    finish() {
+        this._editor.on( 'sourceData', this._restoreValues, this );
+        return this.element;
+    }
+
+
+    /**
+     * @private
+     * @param {FieldDescription[]} fields
+     * @return {OO.ui.FieldLayout[]}
+     */
+    _buildFields( fields ) {
         if ( this._isLocked ) {
             throw new Error( 'Cannot add new fields after source data has been bound.' );
         }
+
+        const fieldLayouts = [];
 
         for ( const field of fields ) {
             let /** @type {OO.ui.Widget?} */ mainWidget = null,
@@ -201,18 +240,20 @@ class DataEditorUiBuilder {
                 helpInline: true,
                 align: field.type === 'dropdown' ? 'top' : 'inline'
             } );
-            this._fieldset.addItems( [ fieldWidget ] );
 
             if ( isInline || ( 'placeholder' in field && field.placeholder ) ) {
                 inputWidget.$input.attr( 'placeholder', field.placeholder || this.msg( field.labelMsg ) );
             }
 
+            fieldLayouts.push( fieldWidget );
             this._builtFields.push( Object.assign( {
                 _widget: Util.getNonNull( mainWidget || inputWidget ),
                 _input: Util.getNonNull( inputWidget ),
                 _field: fieldWidget
             }, field ) );
         }
+
+        return fieldLayouts;
     }
 
 
