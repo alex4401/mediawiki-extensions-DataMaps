@@ -84,8 +84,9 @@ declare namespace LeafletModule {
             buildButtons( element: HTMLElement ): void;
             build( element: HTMLElement ): void;
 
-            onAdd(): void;
-            onRemove(): void;
+            onAdd( isTooltip: boolean ): void;
+            onPromoted(): void;
+            onRemove( wasTooltip: boolean ): void;
         }
 
         export type PopupContentRendererGetterFn = () => IPopupContentRenderer;
@@ -186,6 +187,7 @@ declare namespace LeafletModule {
 
     interface PopupOptions {
         keepInView?: boolean;
+        tooltip?: boolean;
     }
 
     interface MarkerOptions {

@@ -76,7 +76,9 @@ module.exports = class MarkerPopup {
      * @param {LeafletModule.AnyMarker} leafletMarker
      */
     static bindTo( map, leafletMarker ) {
-        leafletMarker.bindPopup( () => new ( map.getPopupClass() )( map, leafletMarker ), {}, Util.getLeaflet().Ark.Popup );
+        leafletMarker.bindPopup( () => new ( map.getPopupClass() )( map, leafletMarker ), {
+            tooltip: map.isFeatureBitSet( MapFlags.PopupTooltips )
+        }, Util.getLeaflet().Ark.Popup );
     }
 
 
@@ -271,17 +273,30 @@ module.exports = class MarkerPopup {
 
     /**
      * Updates URL with currently opened marker.
+     *
+     * @param {boolean} isTooltip
      */
-    onAdd() {
+    onAdd( isTooltip ) {
+        if ( !isTooltip ) {
+            Util.updateLocation( this.map, { marker: this.uid } );
+        }
+    }
+
+
+    onPromoted() {
         Util.updateLocation( this.map, { marker: this.uid } );
     }
 
 
     /**
      * Updates URL to remove the marker parameter.
+     *
+     * @param {boolean} wasTooltip
      */
-    onRemove() {
-        Util.updateLocation( this.map, { marker: null } );
+    onRemove( wasTooltip ) {
+        if ( !wasTooltip ) {
+            Util.updateLocation( this.map, { marker: null } );
+        }
     }
 
 

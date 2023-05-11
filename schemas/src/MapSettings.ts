@@ -15,6 +15,17 @@ export type MapSettings = Partial< {
     disableZoom: boolean;
 
     /**
+     * Whether simply moving mouse cursor over a marker should cause its popup to become visible.
+     *
+     * Such popup will be partially translucent. The user still has to click on the marker for the address bar to update with a
+     * permanent link.
+     *
+     * @since 0.16.3
+     * @default false
+     */
+    enableTooltipPopups: boolean;
+
+    /**
      * Whether marker search will be enabled for this map.
      *
      * @default false

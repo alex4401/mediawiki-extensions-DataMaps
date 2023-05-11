@@ -50,14 +50,18 @@ module.exports = Leaflet.Popup.extend( /** @lends LeafletModule.Popup.prototype 
     onAdd( map ) {
         this._updateContent();
         Leaflet.Popup.prototype.onAdd.call( this, map );
-        this._content.onAdd();
+        this._content.onAdd( this._isEphemeral );
+    },
+
+    onPromoted() {
+        this._content.onPromoted();
     },
 
     /**
      * @param {LeafletModule.Map} map
      */
     onRemove( map ) {
-        this._content.onRemove();
+        this._content.onRemove( this._isEphemeral );
         Leaflet.Popup.prototype.onRemove.call( this, map );
         // Wipe the pre-built content nodes if the provider does not want them to be kept around
         if ( !this._content.shouldKeepAround() ) {

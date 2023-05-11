@@ -25,6 +25,10 @@ class MapSettingsSpec extends DataModel {
         return $this->raw->allowFullscreen ?? true;
     }
 
+    public function areTooltipPopupsEnabled(): bool {
+        return $this->raw->enableTooltipPopups ?? false;
+    }
+
     public function getIconRendererType(): int {
         $value = $this->raw->iconRenderer ?? 'auto';
         switch ( $value ) {
@@ -83,6 +87,7 @@ class MapSettingsSpec extends DataModel {
             'type' => [ DataModel::TYPE_BOOL, DataModel::TYPE_STRING ],
             'values' => [ true, false, 'tabberWide' ]
         ] );
+        $this->checkField( $status, 'enableTooltipPopups', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'hideLegend', DataModel::TYPE_BOOL );
         $this->checkField( $status, [
             'name' => 'iconRenderer',
