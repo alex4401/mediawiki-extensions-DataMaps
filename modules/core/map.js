@@ -608,6 +608,7 @@ class DataMap extends EventEmitter {
      * @param {string[]} layers
      * @param {DataMaps.UncheckedApiMarkerInstance} uncheckedInstance
      * @param {DataMaps.RuntimeMarkerProperties?} [properties]
+     * @fires DataMap#modifyMarkerOptions
      * @fires DataMap#markerReady
      * @return {LeafletModule.AnyMarker} A Leaflet marker instance.
      */
@@ -620,35 +621,38 @@ class DataMap extends EventEmitter {
         const instance = /** @type {DataMaps.ApiMarkerInstance} */ ( uncheckedInstance ),
             group = this.config.groups[ layers[ 0 ] ],
             position = this.translatePoint( instance );
-        let leafletMarker;
 
         // Construct the marker
+        let /** @type {LeafletModule.AnyMarker|undefined} */ leafletMarker;
         if ( 'markerIcon' in group || 'pinColor' in group ) {
             // Fancy icon marker
-            const shouldUseCanvas = !( 'pinColor' in group ) && this.shouldRenderIconsOnCanvas();
-            leafletMarker = new ( shouldUseCanvas ? Leaflet.CanvasIconMarker : Leaflet.Marker )( position, {
-                icon: this.getIconFromLayers( layers )
-            } );
+            const shouldUseCanvas = !( 'pinColor' in group ) && this.shouldRenderIconsOnCanvas(),
+                Cls = shouldUseCanvas ? Leaflet.CanvasIconMarker : Leaflet.Marker,
+                markerOptions = {
+                    icon: this.getIconFromLayers( layers )
+                };
+            this.fire( 'modifyMarkerOptions', Cls, instance, markerOptions );
+            leafletMarker = new Cls( position, markerOptions );
         } else {
             // Circular marker
-            leafletMarker = new Leaflet.CircleMarker( position, {
-                radius: group.size / 2,
-                zoomScaleFactor: group.zoomScaleFactor,
-                fillColor: group.fillColor,
-                fillOpacity: 0.7,
-                color: group.strokeColor || group.fillColor,
-                weight: group.strokeWidth || 1
-            } );
+            const Cls = Leaflet.CircleMarker,
+                markerOptions = {
+                    radius: group.size / 2,
+                    zoomScaleFactor: group.zoomScaleFactor,
+                    fillColor: group.fillColor,
+                    fillOpacity: 0.7,
+                    color: group.strokeColor || group.fillColor,
+                    weight: group.strokeWidth || 1
+                };
+            this.fire( 'modifyMarkerOptions', Cls, instance, markerOptions );
+            leafletMarker = new Cls( position, markerOptions );
         }
-
         // Persist original coordinates and state
         leafletMarker.apiInstance = instance;
-
         // Extract properties from the ownership string for quicker access
         if ( properties ) {
             leafletMarker.assignedProperties = properties;
         }
-
         // Add marker to the layer
         this.layerManager.addMember( layers, leafletMarker );
 

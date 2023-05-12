@@ -127,6 +127,16 @@ declare namespace DataMaps {
             'markerVisibilityUpdate': EventListenerFn;
             'legendManager': EventListenerFn;
             'markerReady': ( marker: LeafletModule.AnyMarker ) => void;
+            'modifyMarkerOptions':
+                ( (
+                    cls: typeof LeafletModule.Marker | typeof LeafletModule.CanvasIconMarker,
+                    instance: ApiMarkerInstance,
+                    markerOptions: LeafletModule.MarkerOptions
+                ) => void ) | ( (
+                    cls: typeof LeafletModule.CircleMarker,
+                    instance: ApiMarkerInstance,
+                    markerOptions: LeafletModule.CircleMarkerOptions
+                ) => void );
             'leafletLoaded': EventListenerFn;
             'legendLoaded': EventListenerFn;
             'collectiblesPanel': EventListenerFn;
