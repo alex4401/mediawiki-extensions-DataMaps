@@ -61,6 +61,14 @@ class MarkerSpec extends DataModel {
         return isset( $this->raw->article ) ? $this->raw->article : null;
     }
 
+    public function getRelatedArticleTarget(): ?string {
+        $value = $this->getRelatedArticle();
+        if ( str_contains( $value, '|' ) ) {
+            return explode( $value, '|', 2 )[ 0 ];
+        }
+        return $value;
+    }
+
     /**
      * If set, returns the unique identifier requested in this marker's data. This identifier will be used in persistent
      * links and functions requiring browser's storage.
