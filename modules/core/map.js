@@ -973,6 +973,11 @@ class DataMap extends EventEmitter {
             interactionControl: true
         } ), this.config.leafletSettings );
 
+        // Disable automated minimum zoom calculation if the value has been specified in the data
+        if ( 'minZoom' in result ) {
+            result.autoMinZoom = false;
+        }
+
         return result;
     }
 
