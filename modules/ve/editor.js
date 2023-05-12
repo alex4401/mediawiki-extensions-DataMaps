@@ -59,6 +59,8 @@ class MapVisualEditor extends EventEmitter {
          */
         this._svcs = {};
 
+        this.map.on( 'modifyMarkerOptions', this._modifyMarkerOptions, this );
+
         this.on( 'ready', () => {
             Util.getNonNull( Util.getNonNull( map.rootElement.previousElementSibling ).previousElementSibling ).remove();
         } );
@@ -129,6 +131,18 @@ class MapVisualEditor extends EventEmitter {
      */
     doesRequireMarkerIds() {
         return DataCapsule.getField( this.dataCapsule.get(), 'settings', {} ).requireCustomMarkerIDs === true;
+    }
+
+
+    /**
+     * @private
+     * @type {DataMaps.EventHandling.MapListenerSignatures[ 'modifyMarkerOptions' ]}
+     * @param {LeafletModule.AnyMarkerType} cls
+     * @param {DataMaps.ApiMarkerInstance} instance
+     * @param {LeafletModule.CanvasIconMarkerOptions|LeafletModule.MarkerOptions} options
+     */
+    _modifyMarkerOptions( cls, instance, options ) {
+        options.draggable = true;
     }
 
 

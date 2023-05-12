@@ -391,6 +391,7 @@ declare namespace LeafletModule {
     }
 
     type AnyMarker = Marker|CanvasIconMarker|CircleMarker;
+    type AnyMarkerType = typeof Marker|typeof CanvasIconMarker|typeof CircleMarker;
 
     class ImageOverlay extends Layer {
         constructor( url: string, bounds: LatLngBoundsLike, options: ImageOverlayOptions );
