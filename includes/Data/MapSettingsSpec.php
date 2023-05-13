@@ -54,6 +54,10 @@ class MapSettingsSpec extends DataModel {
         return self::SM_NONE;
     }
 
+    public function isSleepBasedInteractionModel(): int {
+        return ( $this->raw->interactionModel ?? 'keybinds' ) === 'sleep';
+    }
+
     public function isLegendDisabled(): bool {
         return $this->raw->hideLegend ?? false;
     }
@@ -96,6 +100,14 @@ class MapSettingsSpec extends DataModel {
                 'auto',
                 'DOM',
                 'canvas'
+            ]
+        ] );
+        $this->checkField( $status, [
+            'name' => 'interactionModel',
+            'type' => DataModel::TYPE_STRING,
+            'values' => [
+                'keybinds',
+                'sleep'
             ]
         ] );
         $this->checkField( $status, 'requireCustomMarkerIDs', DataModel::TYPE_BOOL );

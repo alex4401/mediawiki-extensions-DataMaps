@@ -109,6 +109,7 @@ class EmbedConfigGenerator {
         $out |= $this->forVisualEditor ? 1 << 6 : 0;
         $out |= ( $this->useInlineData || $this->forVisualEditor ) ? 1 << 7 : 0;
         $out |= $settings->allowsFullscreen() ? 1 << 9 : 0;
+        $out |= $settings->isSleepBasedInteractionModel() ? 1 << 10 : 0;
         $out |= $settings->areTooltipPopupsEnabled() ? 1 << 11 : 0;
 
         $markerCount = 0;

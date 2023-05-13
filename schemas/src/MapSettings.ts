@@ -40,6 +40,15 @@ export type MapSettings = Partial< {
     hideLegend: boolean;
 
     /**
+     * Changes interaction delay model. Keybinds require extra keys to be held to zoom in (CTRL/Super), sleep is primarily
+     * time-based.
+     *
+     * @since 0.16.3
+     * @default 'sleep'
+     */
+    interactionModel: 'keybinds'|'sleep';
+
+    /**
      * Renderer preference for graphical icons using images from this wiki (not circular icons or pins).
      *
      * - DOM renderer provides best reactivity for a small data set (roughly 500 icons), but performance degrades with
