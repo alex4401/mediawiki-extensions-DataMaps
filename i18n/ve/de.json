@@ -1,1 +1,38 @@
-{}
+{
+    "@metadata": {
+        "authors": [
+            "magic"
+        ]
+    },
+    "datamap-ve-edit-source-action": "Quelltext bearbeiten",
+    "datamap-userpref-enable-ve-beta": "Wähle mich für den Test des visuellen Karteneditors aus",
+    "datamap-ve-panel-msettings-field-search-tabber": "Aktiviert (im gesamten Tabber)",
+    "datamap-ve-panel-msettings-field-legend": "Kartenlegende und Sichtbarkeitseinstellungen ausblenden",
+    "datamap-ve-panel-msettings-field-coordorder-xy": "X dann Y",
+    "datamap-ve-field-locked-unknown-value": "Diese Eigenschaft ist auf einen Wert eingestellt, der derzeit von diesem visuellen Editor nicht unterstützt wird. Zum Ändern ist ein Quelltext Editor erforderlich.",
+    "datamap-ve-panel-msettings-field-requireids": "Manuelle Angabe der Markierungskennung erforderlich",
+    "datamap-ve-panel-msettings-field-requireids-desc": "Markierungs-IDs werden für direkte, dauerhafte Links und die Sammelfunktion verwendet. Standardmäßig werden die IDs automatisch aus den zugewiesenen Ebenen und dem Standort generiert.",
+    "datamap-ve-panel-msettings-field-coordorder-latlon": "Breitengrad, dann Längengrad",
+    "datamap-ve-panel-msettings-field-coordorder": "Koordinaten Reihenfolge",
+    "datamap-ve-panel-marker-field-desc": "Beschreibung",
+    "datamap-ve-workflow-save-summary": "Zusammenfassung",
+    "datamap-ve-workflow-save-summary-desc": "Beschreibe deine Änderung",
+    "datamap-ve-panel-msettings-field-sortchecklists": "Sortierung der Sammler-Checkliste",
+    "datamap-ve-panel-msettings-field-sortchecklists-default": "Befolge die Reihenfolge der Gruppendefinition",
+    "datamap-ve-workflow-save": "Deine Änderungen speichern",
+    "datamap-ve-workflow-save-submit": "Änderungen veröffentlichen",
+    "datamap-ve-needs-fallback-to-source": "Bitte verwende stattdessen den [$1 Quelltext Editor].",
+    "datamap-userpref-enable-ve": "Aktiviere den visuellen Editor für Datenkarten, wenn dieser stabil ist",
+    "datamap-ve-to-load": "Warte bitte, während der visuelle Editor geladen wird...",
+    "datamap-ve-error-cannot-open-validation-errors": "<b>Der visuelle Editor ist aufgrund von Fehlern im Quellcode der Karte nicht verfügbar:</b><br/>$1",
+    "datamap-ve-panel-msettings-field-search": "Markierungssuche",
+    "datamap-ve-panel-msettings-field-search-enabled": "Aktiviert (nur in dieser Karte)",
+    "tag-datamaps-visualeditor-description": "Bearbeitungen, die mit dem DataMaps visuellen Editor ausgeführt wurden",
+    "datamap-ve-panel-msettings": "Einstellungen",
+    "datamap-ve-panel-msettings-field-search-disabled": "Deaktiviert",
+    "datamap-ve-beta-notice": "Dieser visuelle Editor befindet sich in einem frühen Entwicklungsstadium. Bitte melde Fehler auf <a href=\"https://github.com/alex4401/mediawiki-extensions-DataMaps/issues/new\" class=\"external\">GitHub</a>.",
+    "tag-datamaps-visualeditor": "Visueller Karteneditor",
+    "datamap-ve-panel-msettings-field-sortchecklists-amount": "Nach Anzahl der aufgeführten Markierungen",
+    "datamap-ve-panel-msettings-field-coordinates": "Koordinaten in der unteren linken Ecke anzeigen",
+    "datamap-ve-panel-mgroups": "Markierungsgruppen"
+}
