@@ -64,7 +64,7 @@ class MarkerSpec extends DataModel {
     public function getRelatedArticleTarget(): ?string {
         $value = $this->getRelatedArticle();
         if ( str_contains( $value, '|' ) ) {
-            return explode( $value, '|', 2 )[ 0 ];
+            return explode( '|', $value, 2 )[ 0 ];
         }
         return $value;
     }

@@ -121,7 +121,7 @@ class MarkerGroupSpec extends DataModel {
     public function getSharedRelatedArticleTarget(): ?string {
         $value = $this->getSharedRelatedArticle();
         if ( str_contains( $value, '|' ) ) {
-            return explode( $value, '|', 2 )[ 0 ];
+            return explode( '|', $value, 2 )[ 0 ];
         }
         return $value;
     }
