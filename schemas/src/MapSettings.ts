@@ -44,7 +44,7 @@ export type MapSettings = Partial< {
      * time-based.
      *
      * @since 0.16.3
-     * @default 'sleep'
+     * @default 'keybinds'
      */
     interactionModel: 'keybinds'|'sleep';
 

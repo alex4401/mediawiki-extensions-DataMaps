@@ -788,6 +788,11 @@
           "default": false,
           "description": "Whether marker search will be enabled for this map."
         },
+        "enableTooltipPopups": {
+          "default": false,
+          "description": "Whether simply moving mouse cursor over a marker should cause its popup to become visible.\n\nSuch popup will be partially translucent. The user still has to click on the marker for the address bar to update with a permanent link.",
+          "type": "boolean"
+        },
         "hideLegend": {
           "default": false,
           "description": "Forces the legend (collectible checklists and marker filters) to not be loaded on this map.",
@@ -800,6 +805,15 @@
             "auto",
             "DOM",
             "canvas"
+          ],
+          "type": "string"
+        },
+        "interactionModel": {
+          "default": "keybinds",
+          "description": "Changes interaction delay model. Keybinds require extra keys to be held to zoom in (CTRL/Super), sleep is primarily time-based.",
+          "enum": [
+            "keybinds",
+            "sleep"
           ],
           "type": "string"
         },
