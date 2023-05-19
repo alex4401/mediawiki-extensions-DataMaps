@@ -770,6 +770,11 @@
           "description": "Whether full-screen toggle will be shown to the user on this map.",
           "type": "boolean"
         },
+        "backdropColor": {
+          "$ref": "#/definitions/Colour3",
+          "default": "undefined",
+          "description": "The backdrop colour, i.e. the one filling areas with no background image over them."
+        },
         "disableZoom": {
           "default": false,
           "description": "Whether zoom control will be disabled on this map. Individual Leaflet options can override this.",
@@ -983,6 +988,10 @@
               ],
               "description": "Description of this marker to be shown in its popup. Wikitext is permitted. If an array is given, all elements are joined with new lines.\n\nHowever, this property does not always go through the wikitext parser for performance reasons. See `isWikitext` property for more information."
             },
+            "icon": {
+              "$ref": "#/definitions/Title",
+              "description": "Optional icon override. Only allowed if the group this marker is in is configured to show image icons."
+            },
             "id": {
               "description": "Identifier to use for permanent links and collectibles.\n\nIf unspecified, one is generated automatically based on the group and layers this marker is attached to and its location.",
               "type": [
@@ -1076,6 +1085,10 @@
                 }
               ],
               "description": "Description of this marker to be shown in its popup. Wikitext is permitted. If an array is given, all elements are joined with new lines.\n\nHowever, this property does not always go through the wikitext parser for performance reasons. See `isWikitext` property for more information."
+            },
+            "icon": {
+              "$ref": "#/definitions/Title",
+              "description": "Optional icon override. Only allowed if the group this marker is in is configured to show image icons."
             },
             "id": {
               "description": "Identifier to use for permanent links and collectibles.\n\nIf unspecified, one is generated automatically based on the group and layers this marker is attached to and its location.",
