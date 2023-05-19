@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\DataMaps\Rendering;
 use MapCacheLRU;
 use MediaWiki\Extension\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\DataMaps\Data\MapSettingsSpec;
+use MediaWiki\Extension\DataMaps\Data\MarkerGroupSpec;
 use MediaWiki\Extension\DataMaps\Data\MarkerSpec;
 use MediaWiki\Extension\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapFileUtils;
@@ -102,6 +103,13 @@ class MarkerProcessor {
         // Popup description
         if ( $marker->getDescription() != null ) {
             $slots['desc'] = $this->parseMultilineText( $marker, $marker->getDescription() );
+        }
+
+        // Icon override
+        if ( $marker->getCustomIcon() !== null ) {
+            // TODO: needs to be group aware so size can be chosen properly
+            $slots['icon'] = DataMapFileUtils::getMarkerIconUrl( $marker->getCustomIcon(),
+                MarkerGroupSpec::DEFAULT_ICON_SIZE[ 0 ] );
         }
 
         // Popup image thumbnail link

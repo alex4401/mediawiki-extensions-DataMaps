@@ -39,6 +39,13 @@ export type Marker = (
     isWikitext?: boolean;
 
     /**
+     * Optional icon override. Only allowed if the group this marker is in is configured to show image icons.
+     *
+     * @since 0.16.4
+     */
+    icon: Title;
+
+    /**
      * Optional image file that will be displayed in this marker's popup.
      */
     image: Title;

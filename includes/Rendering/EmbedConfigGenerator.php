@@ -264,13 +264,7 @@ class EmbedConfigGenerator {
                 }
                 break;
             case MarkerGroupSpec::DM_ICON:
-                // Upsize by 50% to mitigate quality loss at max zoom
-                $size = floor( $out['size'][0] * 1.5 );
-                // Ensure it's a multiple of 2
-                if ( $size % 2 !== 0 ) {
-                    $size++;
-                }
-                $out['markerIcon'] = DataMapFileUtils::getFileUrl( $spec->getIcon(), $size );
+                $out['markerIcon'] = DataMapFileUtils::getMarkerIconUrl( $spec->getIcon(), $out['size'][0] );
                 break;
             case MarkerGroupSpec::DM_PIN:
                 $out['pinColor'] = DataMapColourUtils::asHex( $spec->getPinColour() );
@@ -303,13 +297,8 @@ class EmbedConfigGenerator {
         }
 
         if ( $spec->getIconOverride() !== null ) {
-            // Upsize by 50% to mitigate quality loss at max zoom
-            $size = floor( MarkerGroupSpec::DEFAULT_ICON_SIZE[0] * 1.5 );
-            // Ensure it's a multiple of 2
-            if ( $size % 2 !== 0 ) {
-                $size++;
-            }
-            $out['markerIcon'] = DataMapFileUtils::getFileUrl( $spec->getIconOverride(), $size );
+            $out['markerIcon'] = DataMapFileUtils::getMarkerIconUrl( $spec->getIconOverride(),
+                MarkerGroupSpec::DEFAULT_ICON_SIZE[0] );
         }
 
         return $out;

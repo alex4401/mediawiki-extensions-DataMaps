@@ -154,6 +154,10 @@ class EmbedRenderer {
                 if ( $marker->getPopupImage() !== null ) {
                     DataMapFileUtils::registerImageDependency( $this->parserOutput, $marker->getPopupImage() );
                 }
+                // Icon overrides
+                if ( $marker->getCustomIcon() !== null ) {
+                    DataMapFileUtils::registerImageDependency( $this->parserOutput, $marker->getCustomIcon() );
+                }
                 // Article link
                 if ( $marker->getRelatedArticle() !== null ) {
                     $this->parserOutput->addLink( Title::newFromText( $marker->getRelatedArticleTarget() ) );

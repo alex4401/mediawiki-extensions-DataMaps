@@ -40,6 +40,16 @@ class DataMapFileUtils {
         return self::getRequiredFile( $title, $width )->getURL();
     }
 
+    public static function getMarkerIconUrl( string $title, int $width ): string {
+        // Upsize by 50% to mitigate quality loss at max zoom
+        $size = floor( $width * 1.5 );
+        // Ensure it's a multiple of 2
+        if ( $size % 2 !== 0 ) {
+            $size++;
+        }
+        return self::getFileUrl( $title, $size );
+    }
+
     public static function registerImageDependency( ParserOutput $parserOutput, string $name ): void {
         $file = self::getRequiredFile( $name );
         $parserOutput->addImage( $file->getTitle()->getDBkey(), $file->getTimestamp(), $file->getSha1() );

@@ -628,9 +628,16 @@ class DataMap extends EventEmitter {
             // Fancy icon marker
             const shouldUseCanvas = !( 'pinColor' in group ) && this.shouldRenderIconsOnCanvas(),
                 Cls = shouldUseCanvas ? Leaflet.CanvasIconMarker : Leaflet.Marker,
-                markerOptions = {
-                    icon: this.getIconFromLayers( layers )
-                };
+                icon = (
+                    'markerIcon' in group && instance[ 2 ].icon
+                        ? new Leaflet.Icon( {
+                            iconUrl: instance[ 2 ].icon,
+                            iconSize: group.size,
+                            useWithCanvas: this.shouldRenderIconsOnCanvas()
+                        } )
+                        : this.getIconFromLayers( layers )
+                ),
+                markerOptions = { icon };
             this.fire( 'modifyMarkerOptions', Cls, instance, markerOptions );
             leafletMarker = new Cls( position, markerOptions );
         } else {

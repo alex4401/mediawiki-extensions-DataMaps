@@ -38,6 +38,10 @@ class MarkerSpec extends DataModel {
         return isset( $this->raw->description ) ? $this->raw->description : null;
     }
 
+    public function getCustomIcon(): ?string {
+        return isset( $this->raw->icon ) ? $this->raw->icon : null;
+    }
+
     /**
      * Returns whether the label and description should be treated as wikitext as indicated by the data.
      *
@@ -112,6 +116,11 @@ class MarkerSpec extends DataModel {
             'name' => 'description',
             'type' => [ DataModel::TYPE_ARRAY, DataModel::TYPE_STRING ],
             'itemType' => DataModel::TYPE_STRING
+        ] );
+        $this->checkField( $status, [
+            'name' => 'icon',
+            'type' => DataModel::TYPE_FILE,
+            'fileMustExist' => true
         ] );
         $this->checkField( $status, 'isWikitext', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'article', DataModel::TYPE_STRING );

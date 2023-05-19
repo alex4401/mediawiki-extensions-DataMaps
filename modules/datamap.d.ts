@@ -101,6 +101,7 @@ declare namespace DataMaps {
         label?: string;
         desc?: string;
         article?: string;
+        icon?: string;
         image?: [ string, number, number, number ];
         search?: 0 | SearchKeywordWeighing[];
     }
