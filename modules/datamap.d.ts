@@ -86,6 +86,7 @@ declare namespace DataMaps {
             cOrder: CoordinateOrder;
             crs: LeafletModule.LatLngBoundsTuple;
             flags: number;
+            backdrop?: string;
             leafletSettings: LeafletModule.IPublicMapOptions;
             backgrounds: Background[];
             layerIds: string[];

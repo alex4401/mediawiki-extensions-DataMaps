@@ -1,6 +1,7 @@
 <?php
 namespace MediaWiki\Extension\DataMaps\Data;
 
+use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapColourUtils;
 use Status;
 
 class MapSettingsSpec extends DataModel {
@@ -27,6 +28,14 @@ class MapSettingsSpec extends DataModel {
 
     public function areTooltipPopupsEnabled(): bool {
         return $this->raw->enableTooltipPopups ?? false;
+    }
+
+    public function getRawBackdropColour() /*: ?array|string*/ {
+        return isset( $this->raw->backdropColor ) ? $this->raw->backdropColor : null;
+    }
+
+    public function getBackdropColour(): ?array {
+        return DataMapColourUtils::decode( $this->getRawBackdropColour() );
     }
 
     public function getIconRendererType(): int {
@@ -85,6 +94,7 @@ class MapSettingsSpec extends DataModel {
 
     public function validate( Status $status ) {
         $this->checkField( $status, 'allowFullscreen', DataModel::TYPE_BOOL );
+        $this->checkField( $status, 'backdropColor', DataModel::TYPE_COLOUR3 );
         $this->checkField( $status, 'disableZoom', DataModel::TYPE_BOOL );
         $this->checkField( $status, [
             'name' => 'enableSearch',

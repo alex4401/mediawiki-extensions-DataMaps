@@ -1,3 +1,5 @@
+import { Colour3 } from "./CoreTypes";
+
 export type MapSettings = Partial< {
     /**
      * Whether full-screen toggle will be shown to the user on this map.
@@ -6,6 +8,14 @@ export type MapSettings = Partial< {
      * @default true
      */
     allowFullscreen: boolean;
+
+    /**
+     * The backdrop colour, i.e. the one filling areas with no background image over them.
+     *
+     * @since 0.16.4
+     * @default undefined
+     */
+    backdropColor?: Colour3;
 
     /**
      * Whether zoom control will be disabled on this map. Individual Leaflet options can override this.

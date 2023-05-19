@@ -67,6 +67,10 @@ class EmbedConfigGenerator {
         if ( $bitmask != 0 ) {
             $out['flags'] = $bitmask;
         }
+        // Backdrop colour
+        if ( $this->data->getSettings()->getBackdropColour() !== null ) {
+            $out['backdrop'] = DataMapColourUtils::asHex( $this->data->getSettings()->getBackdropColour() );
+        }
         // Backgrounds
         $out['backgrounds'] = array_map( function ( MapBackgroundSpec $spec ) use ( $coordOrder ) {
             return $this->getBackgroundConfig( $spec, $coordOrder );

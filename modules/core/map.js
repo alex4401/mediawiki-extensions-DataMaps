@@ -1002,6 +1002,11 @@ class DataMap extends EventEmitter {
         // Initialise the Leaflet map
         this.leaflet = new Leaflet.Map( holderElement, leafletConfig );
 
+        // Set a custom backdrop colour if one is present in the configuration
+        if ( this.config.backdrop ) {
+            holderElement.style.backgroundColor = this.config.backdrop;
+        }
+
         // Prepare all backgrounds
         this.config.backgrounds.forEach( ( background, index ) => this._initialiseBackground( background, index ) );
         // Switch to the last chosen one or first defined
