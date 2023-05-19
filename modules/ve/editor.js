@@ -59,7 +59,8 @@ class MapVisualEditor extends EventEmitter {
          */
         this._svcs = {};
 
-        this.map.on( 'modifyMarkerOptions', this._modifyMarkerOptions, this );
+        this.map.on( 'modifyMarkerOptions', this._enableMarkerDrag, this );
+        this.map.on( 'markerReady', this._setMarkerDragEvents, this );
 
         this.on( 'ready', () => {
             Util.getNonNull( Util.getNonNull( map.rootElement.previousElementSibling ).previousElementSibling ).remove();
@@ -141,8 +142,24 @@ class MapVisualEditor extends EventEmitter {
      * @param {DataMaps.ApiMarkerInstance} instance
      * @param {LeafletModule.CanvasIconMarkerOptions|LeafletModule.MarkerOptions} options
      */
-    _modifyMarkerOptions( cls, instance, options ) {
+    _enableMarkerDrag( cls, instance, options ) {
         options.draggable = true;
+    }
+
+
+    /**
+     * @private
+     * @param {LeafletModule.AnyMarker} instance
+     */
+    _setMarkerDragEvents( instance ) {
+        instance.on( 'dragend', () => {
+            const svc = this.getService( MarkerDataService ),
+                source = svc.getLeafletMarkerSource( instance ),
+                translated = this.map.translateLeafletCoordinates( instance.getLatLng(), true );
+            svc.setSourceCoordinates( source, translated[ 0 ], translated[ 1 ] );
+            svc.syncRuntime( instance );
+            instance.getLatLng();
+        } );
     }
 
 
