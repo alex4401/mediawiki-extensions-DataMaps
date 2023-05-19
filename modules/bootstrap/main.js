@@ -110,7 +110,10 @@ mw.dataMaps = {
         if ( map.config.version ) {
             map.setStatusOverlay( 'info', mw.msg( 'datamap-loading-data' ), true );
             map.streaming.loadSequential()
-                .then( () => map.setStatusOverlay( null ) )
+                .then( () => {
+                    // Wait for Leaflet to be done loading before taking the overlay off
+                    map.on( 'leafletLoaded', () => map.setStatusOverlay( null ) );
+                } )
                 .catch( () => map.setStatusOverlay( 'error', mw.msg( 'datamap-error-dataload' ), false ) );
         } else {
             // No page to request markers from, hide the status message
