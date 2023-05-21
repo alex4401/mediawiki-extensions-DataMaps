@@ -146,14 +146,12 @@ CreateMarkerWorkflow.BaseMarkerDialog = class BaseMarkerDialogController extends
                     type: 'number',
                     labelMsg: isXy ? 'field-x' : 'field-lon',
                     property: isXy ? 'x' : 'lon',
-                    required: true,
                     default: undefined
                 },
                 {
                     type: 'number',
                     labelMsg: isXy ? 'field-y' : 'field-lat',
                     property: isXy ? 'y' : 'lat',
-                    required: true,
                     default: undefined
                 }
             ];
