@@ -158,7 +158,6 @@ class MapVisualEditor extends EventEmitter {
                 translated = this.map.translateLeafletCoordinates( instance.getLatLng(), true );
             svc.setSourceCoordinates( source, translated[ 0 ], translated[ 1 ] );
             svc.syncRuntime( instance );
-            instance.getLatLng();
         } );
     }
 

@@ -89,16 +89,13 @@ module.exports = class MarkerDataService {
      * @return {DataMaps.PointTupleRepr}
      */
     getSourceCoordinates( source ) {
-        let lat = 0,
-            lon = 0;
         if ( 'lat' in source && 'lon' in source ) {
-            [ lat, lon ] = [ source.lat, source.lon ];
+            return [ source.lat, source.lon ];
         } else if ( 'x' in source && 'y' in source ) {
-            [ lat, lon ] = [ source.y, source.x ];
-        } else {
-            throw new Error( 'Invalid marker data: neither lat/lon nor x/y is present' );
+            return [ source.y, source.x ];
         }
-        return [ lat, lon ];
+
+        throw new Error( 'Invalid marker data: neither lat/lon nor x/y is present' );
     }
 
 
