@@ -309,10 +309,11 @@ EditableMarkerPopup.Dialog = class EditMarkerDialogController extends CreateMark
                 // Merge state and update
                 Object.assign( this._finalTarget, this._workingTarget );
                 this._dataService.syncRuntime( this._leafletMarker );
-                // Move between groups if needed
-                const targetGroup = Util.getNonNull( this._groupDropdown ).getValue();
-                if ( this._leafletMarker.attachedLayers[ 0 ] !== targetGroup ) {
-                    leafletMarker = this._dataService.moveToGroup( this._leafletMarker, targetGroup );
+                // Move between layers if needed
+                const newLayers = this._retrieveLayerStack();
+                if ( leafletMarker.attachedLayers.length !== newLayers.length
+                    || leafletMarker.attachedLayers.every( ( el, index ) => el === newLayers[ index ] ) ) {
+                    leafletMarker = this._dataService.changeLayers( leafletMarker, newLayers );
                 }
                 // Open popup again and close this dialog
                 leafletMarker.openPopup();

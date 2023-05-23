@@ -198,11 +198,21 @@ module.exports = class MarkerDataService {
      * @return {LeafletModule.AnyMarker}
      */
     moveToGroup( leafletMarker, newGroup ) {
+        const newLayers = leafletMarker.attachedLayers.slice( 1 );
+        newLayers.unshift( newGroup );
+        return this.changeLayers( leafletMarker, newLayers );
+    }
+
+
+    /**
+     * @param {LeafletModule.AnyMarker} leafletMarker
+     * @param {string[]} newLayers
+     * @return {LeafletModule.AnyMarker}
+     */
+    changeLayers( leafletMarker, newLayers ) {
         // Move the marker between data stores
         const oldOwnership = leafletMarker.attachedLayers,
-            source = this.getLeafletMarkerSource( leafletMarker ),
-            newLayers = leafletMarker.attachedLayers.slice( 1 );
-        newLayers.unshift( newGroup );
+            source = this.getLeafletMarkerSource( leafletMarker );
         this.removeFromStore( oldOwnership, source );
         this.pushToStore( newLayers, source );
 

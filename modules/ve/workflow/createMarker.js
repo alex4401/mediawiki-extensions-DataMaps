@@ -265,6 +265,31 @@ CreateMarkerWorkflow.BaseMarkerDialog = class BaseMarkerDialogController extends
             ]
         } );
     }
+
+
+    /**
+     * @protected
+     * @return {string[]}
+     */
+    _retrieveLayerStack() {
+        const
+            groupDropdown = Util.getNonNull( this._groupDropdown ),
+            categoryDropdown = Util.getNonNull( this._categoryDropdown ),
+            backgroundDropdown = Util.getNonNull( this._backgroundDropdown ),
+            /** @type {string[]} */ result = [
+                groupDropdown.getValue()
+            ];
+
+        for ( const layerId of /** @type {string[]} */ ( categoryDropdown.getValue() ) ) {
+            result.push( layerId );
+        }
+
+        if ( Util.getNonNull( backgroundDropdown.getValue() ) ) {
+            result.push( `bg:${backgroundDropdown.getValue()}` );
+        }
+
+        return result;
+    }
 };
 
 
@@ -316,17 +341,7 @@ CreateMarkerWorkflow.Dialog = class CreateMarkerDialogController extends CreateM
     getActionProcess( action ) {
         if ( action === 'save' ) {
             return new OO.ui.Process( () => {
-                const layers = [
-                    Util.getNonNull( this._groupDropdown ).getValue(),
-                    .../** @type {string[]} */ ( Util.getNonNull( this._categoryDropdown ).getValue() )
-                ];
-                if ( !Util.getNonNull( this._backgroundDropdown ).isDisabled() ) {
-                    layers.push( Util.getNonNull( this._backgroundDropdown ).getValue() );
-                }
-                this._dataService.create(
-                    layers,
-                    this._target
-                );
+                this._dataService.create( this._retrieveLayerStack(), this._target );
                 this.dialog.close();
             } );
         }
