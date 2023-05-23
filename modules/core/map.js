@@ -1026,8 +1026,10 @@ class DataMap extends EventEmitter {
         this.leaflet.on( 'zoom', this.updateMarkerScaling, this );
 
         // Install the interaction rejection controller
-        this.leaflet.addHandler( 'interactionControl', this.isFeatureBitSet( MapFlags.SleepingInteractions )
-            ? Leaflet.Ark.SleepInteractionControl : Leaflet.Ark.KeybindInteractionControl );
+        const useSleepInteractions = this.isFeatureBitSet( MapFlags.SleepingInteractions )
+            || this.isFeatureBitSet( MapFlags.VisualEditor );
+        this.leaflet.addHandler( 'interactionControl', Leaflet.Ark[ useSleepInteractions ? 'SleepInteractionControl'
+            : 'KeybindInteractionControl' ] );
 
         // Notify other components that the Leaflet component has been loaded, and remove all subscribers. All future
         // subscribers will be invoked right away.
