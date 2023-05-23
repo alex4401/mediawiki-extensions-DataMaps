@@ -49,7 +49,9 @@
     "datamap-ve-panel-msettings-field-requireids": "Require explicit marker IDs",
     "datamap-ve-panel-msettings-field-requireids-desc": "Marker IDs are used for permanent marker links and the collectibles feature. By default, IDs are generated automatically from assigned layers and location.",
 
-    "datamap-ve-panel-mgroups": "Marker groups",
+    "datamap-ve-panel-mgroups": "Groups",
+
+    "datamap-ve-panel-mcats": "Categories",
 
     "datamap-ve-workflow-marker": "Marker",
     "datamap-ve-workflow-marker-create": "Create",
