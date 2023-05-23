@@ -62,6 +62,18 @@ module.exports = class MapSettingsEditorPanel extends VePanel {
                         [ 'amount', 'amount' ]
                     ],
                     default: 0
+                },
+                {
+                    type: 'checkbox',
+                    labelMsg: 'field-allowfullscreen',
+                    property: 'allowFullscreen',
+                    default: true
+                },
+                {
+                    type: 'checkbox',
+                    labelMsg: 'field-hybridpopups',
+                    property: 'enableTooltipPopups',
+                    default: false
                 }
             ] )
             .addSection( 'edit', [

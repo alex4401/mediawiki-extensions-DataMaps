@@ -317,6 +317,8 @@
 				"datamap-ve-panel-msettings-field-sortchecklists-default",
 				"datamap-ve-panel-msettings-field-sortchecklists-amount",
 				"datamap-ve-panel-msettings-field-coordinates",
+				"datamap-ve-panel-msettings-field-allowfullscreen",
+				"datamap-ve-panel-msettings-field-hybridpopups",
 				"datamap-ve-panel-msettings-set-edit",
 				"datamap-ve-panel-msettings-field-requireids",
 				"datamap-ve-panel-msettings-field-requireids-desc",
