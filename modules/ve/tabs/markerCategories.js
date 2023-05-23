@@ -4,13 +4,16 @@ const VePanel = require( './base.js' ),
     { Util } = require( 'ext.datamaps.core' );
 
 
-module.exports = class MarkerGroupsEditorPanel extends VePanel {
+module.exports = class MarkerCategoriesEditorPanel extends VePanel {
     /**
      * @param {MapVisualEditor} editor
      */
     constructor( editor ) {
-        super( editor, 'datamap-ve-panel-mgroups' );
+        super( editor, 'datamap-ve-panel-mcats' );
 
+        this.contentElement.innerHTML = `
+            <p style="text-align: center">This panel will be implemented in a future release.</p>
+        `;
     }
 
 

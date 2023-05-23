@@ -279,6 +279,7 @@
 
 				"ve/tabs/base.js",
 				"ve/tabs/markerGroups.js",
+				"ve/tabs/markerCategories.js",
 				"ve/tabs/mapSettings.js",
 
 				"ve/workflow/base.js",
@@ -324,6 +325,8 @@
 				"datamap-ve-panel-msettings-field-requireids-desc",
 			
 				"datamap-ve-panel-mgroups",
+
+				"datamap-ve-panel-mcats",
 
 				"datamap-ve-workflow-marker",
 				"datamap-ve-workflow-marker-create",

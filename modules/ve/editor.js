@@ -253,7 +253,9 @@ MapVisualEditor.DATA_SERVICES = [
  * @type {( new( editor: MapVisualEditor ) => VePanel )[]}
  */
 MapVisualEditor.PANELS = [
-    require( './tabs/mapSettings.js' )
+    require( './tabs/mapSettings.js' ),
+    require( './tabs/markerGroups.js' ),
+    require( './tabs/markerCategories.js' )
 ];
 /**
  * @constant
