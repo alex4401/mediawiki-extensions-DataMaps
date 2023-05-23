@@ -42,7 +42,7 @@
     "datamap-ve-panel-msettings-field-sortchecklists-amount": "By amount of markers listed",
     "datamap-ve-panel-msettings-field-coordinates": "Display coordinates in bottom-left corner",
     "datamap-ve-panel-msettings-field-hybridpopups": "Display popups like tooltips (when mouse cursor over)",
-    "datamap-ve-panel-msettings-set-editor": "Editor",
+    "datamap-ve-panel-msettings-set-edit": "Editor",
     "datamap-ve-panel-msettings-field-requireids": "Require explicit marker IDs",
     "datamap-ve-panel-msettings-field-requireids-desc": "Marker IDs are used for permanent marker links and the collectibles feature. By default, IDs are generated automatically from assigned layers and location.",
 
