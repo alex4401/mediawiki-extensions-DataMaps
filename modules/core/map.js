@@ -1294,7 +1294,7 @@ DataMap.BOUNDS_PADDING = [ [ 150, 200 ], [ 150, 250 ] ];
  * @constant
  * @type {number}
  */
-DataMap.VECTOR_ZOOM_SCALING_MAX = 2.5;
+DataMap.VECTOR_ZOOM_SCALING_MAX = 1;
 /**
  * Max zoom-caused scale value for icon markers.
  *
