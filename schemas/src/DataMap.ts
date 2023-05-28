@@ -54,6 +54,13 @@ export type DataMap = {
     layers?: Record<string, MarkerLayer>;
 
     /**
+     * Optional text to be shown at the bottom of the filters panel.
+     *
+     * @since 0.16.5
+     */
+    disclaimer?: string;
+
+    /**
      * A map of layer association strings to lists of markers.
      */
     markers?: Record<string, Marker[]>;

@@ -143,6 +143,10 @@ class DataMapSpec extends DataModel {
         ) : null;
     }
 
+    public function getDisclaimerText(): ?string {
+        return $this->raw->disclaimer ?? null;
+    }
+
     public function iterateGroups( callable $callback ) {
         foreach ( $this->getGroupNames() as &$name ) {
             $data = $this->getGroup( $name );
@@ -309,6 +313,10 @@ class DataMapSpec extends DataModel {
                 }
                 return $out;
             }
+        ] );
+        $this->checkField( $status, [
+            'name' => 'disclaimer',
+            'type' => DataModel::TYPE_STRING
         ] );
         $this->checkField( $status, 'custom', DataModel::TYPE_OBJECT );
         $this->checkField( $status, [

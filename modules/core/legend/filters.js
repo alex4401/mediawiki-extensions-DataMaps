@@ -42,6 +42,16 @@ class MarkerFilteringPanel extends LegendTabber.Tab {
          * @type {jQuery?}
          */
         this.$layersPopup = null;
+        /**
+         * @private
+         * @type {HTMLElement?}
+         * @since 0.16.5
+         */
+        this._afterTextElement = this.map.config.disclaimer ? Util.createDomElement( 'p', {
+            classes: [ 'ext-datamaps-filters-after-text' ],
+            text: this.map.config.disclaimer,
+            appendTo: this.contentElement
+        } ) : null;
 
         // Prepend the button group to the root element
         this.buttonGroup.$element.prependTo( this.contentElement );

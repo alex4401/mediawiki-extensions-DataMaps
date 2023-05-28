@@ -92,6 +92,7 @@ declare namespace DataMaps {
             layerIds: string[];
             groups: Record<string, MarkerGroup>;
             layers: Record<string, MarkerLayer>;
+            disclaimer?: string;
             custom?: any;
         }
     }

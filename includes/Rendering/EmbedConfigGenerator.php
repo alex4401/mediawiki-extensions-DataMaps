@@ -90,6 +90,11 @@ class EmbedConfigGenerator {
         $this->data->iterateDefinedLayers( function ( MarkerLayerSpec $spec ) use ( &$out ) {
             $out['layers'][$spec->getId()] = $this->getMarkerLayerConfig( $spec );
         } );
+        // Disclaimer in the filters panel
+        if ( $this->data->getDisclaimerText() !== null ) {
+            // TODO: No parser support yet; after GH#165
+            $out['disclaimer'] = $this->data->getDisclaimerText();
+        }
         // Settings and extensions
         if ( $this->data->getSettings()->getCustomLeafletConfig() != null ) {
             $out['leafletSettings'] = $this->data->getSettings()->getCustomLeafletConfig();
