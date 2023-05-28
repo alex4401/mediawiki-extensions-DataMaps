@@ -237,6 +237,27 @@ module.exports = Object.freeze( {
                     borderWidth: ( group.strokeWidth || 1 ) + 'px'
                 }
             } );
+        },
+
+
+        /**
+         * Creates an image DOM element showing a marker group's icon.
+         *
+         * @param {DataMaps.Configuration.MarkerGroup} group
+         * @return {Element?}
+         */
+        createIcon( group ) {
+            let /** @type {Element?} */ result = null;
+
+            if ( 'fillColor' in group ) {
+                result = module.exports.Groups.createCircleElement( group );
+            } else if ( 'pinColor' in group ) {
+                result = module.exports.Groups.createPinIconElement( group );
+            } else if ( group.legendIcon ) {
+                result = module.exports.Groups.createIconElement( group );
+            }
+
+            return result;
         }
     },
 
