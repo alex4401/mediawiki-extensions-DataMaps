@@ -256,6 +256,11 @@ class EmbedConfigGenerator {
             $out['flags'] = $flags;
         }
 
+        if ( $spec->getDescription() !== null ) {
+            // TODO: No parser support yet; after GH#165
+            $out['description'] = $spec->getDescription();
+        }
+
         switch ( $spec->getDisplayMode() ) {
             case MarkerGroupSpec::DM_CIRCLE:
                 $out['fillColor'] = DataMapColourUtils::asHex( $spec->getFillColour() );

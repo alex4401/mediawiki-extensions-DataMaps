@@ -40,6 +40,10 @@ class MarkerGroupSpec extends DataModel {
         return $this->raw->name;
     }
 
+    public function getDescription(): ?string {
+        return $this->raw->description ?? null;
+    }
+
     private function getSizePropertyInternal() {
         return isset( $this->raw->size ) ? $this->raw->size : null;
     }
@@ -162,6 +166,7 @@ class MarkerGroupSpec extends DataModel {
             'type' => DataModel::TYPE_STRING,
             'required' => true
         ] );
+        $this->checkField( $status, 'description', DataModel::TYPE_STRING );
 
         switch ( $this->getDisplayMode() ) {
             case self::DM_CIRCLE:

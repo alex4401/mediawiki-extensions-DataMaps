@@ -27,7 +27,7 @@ class MarkerFilteringPanel extends LegendTabber.Tab {
          * @type {HTMLElement}
          */
         this.groupContainer = Util.createDomElement( 'div', {
-            classes: [ 'ext-datamaps-container-groups' ],
+            classes: [ 'ext-datamaps-container-groups', 'ext-datamaps-filters-mgroup-list' ],
             appendTo: this.contentElement
         } );
         /**
@@ -47,11 +47,17 @@ class MarkerFilteringPanel extends LegendTabber.Tab {
          * @type {HTMLElement?}
          * @since 0.16.5
          */
-        this._afterTextElement = this.map.config.disclaimer ? Util.createDomElement( 'p', {
-            classes: [ 'ext-datamaps-filters-after-text' ],
-            text: this.map.config.disclaimer,
-            appendTo: this.contentElement
-        } ) : null;
+        this._afterTextElement = null;
+        if ( this.map.config.disclaimer ) {
+            this._afterTextElement = Util.createDomElement( 'p', {
+                classes: [ 'ext-datamaps-filters-after-text' ],
+                text: this.map.config.disclaimer,
+                appendTo: this.contentElement
+            } );
+            this._afterTextElement.prepend( new OO.ui.IconWidget( {
+                icon: 'info'
+            } ).$element[ 0 ] );
+        }
 
         // Prepend the button group to the root element
         this.buttonGroup.$element.prependTo( this.contentElement );
@@ -214,6 +220,8 @@ MarkerFilteringPanel.MarkerGroupRow = class MarkerGroupRow {
          */
         this.checkbox = pair[ 1 ];
 
+        this.field.$element[ 0 ].classList.add( 'ext-datamaps-filters-mgroup-row' );
+
         // Optional elements
         /**
          * @type {HTMLElement?}
@@ -231,6 +239,17 @@ MarkerFilteringPanel.MarkerGroupRow = class MarkerGroupRow {
          * @type {SVGElement?}
          */
         this.pin = null;
+        /**
+         * @private
+         * @type {HTMLElement?}
+         */
+        this._descriptionElement = group.description
+            ? Util.createDomElement( 'p', {
+                classes: [ 'ext-datamaps-filters-mgroup-description' ],
+                text: group.description,
+                appendTo: this.field.$element[ 0 ]
+            } )
+            : null;
 
         // Add a coloured circle if circle marker group
         if ( 'fillColor' in group ) {

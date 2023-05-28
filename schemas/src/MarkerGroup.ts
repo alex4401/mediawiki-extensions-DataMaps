@@ -43,6 +43,13 @@ export type MarkerGroup = {
     name: string;
 
     /**
+     * Description text to show in the filters panel.
+     *
+     * @since 0.16.5
+     */
+    description?: string;
+
+    /**
      * Optional article title all markers in this group should link to.
      */
     article?: string;

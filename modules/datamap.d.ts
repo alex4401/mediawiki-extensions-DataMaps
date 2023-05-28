@@ -28,6 +28,7 @@ declare namespace DataMaps {
     namespace Configuration {
         interface BaseMarkerGroup {
             name: string;
+            description?: string;
             flags?: number;
             legendIcon?: string;
             article?: string;
