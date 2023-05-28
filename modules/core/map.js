@@ -241,6 +241,11 @@ class DataMap extends EventEmitter {
                 'ext.datamaps.search'
             ] );
         }
+
+        // TODO: in GH#165, fire this after API returns the config
+        if ( this.config.custom ) {
+            this.fireMemorised( 'customData', this.config.custom );
+        }
     }
 
 

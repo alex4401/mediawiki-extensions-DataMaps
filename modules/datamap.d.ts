@@ -92,6 +92,7 @@ declare namespace DataMaps {
             layerIds: string[];
             groups: Record<string, MarkerGroup>;
             layers: Record<string, MarkerLayer>;
+            custom?: any;
         }
     }
 
@@ -120,6 +121,9 @@ declare namespace DataMaps {
         export type ListenerSignature = Record<string, (...args: any[]) => any>;
 
         type MapListenerSignatures = {
+            'leafletLoaded': EventListenerFn;
+            'legendLoaded': EventListenerFn;
+            'customData': (data: any) => void;
             'deactivate': EventListenerFn;
             'backgroundChange': MapBackgroundChangeListenerFn;
             'chunkStreamingDone': EventListenerFn;
@@ -139,8 +143,6 @@ declare namespace DataMaps {
                     instance: ApiMarkerInstance,
                     markerOptions: LeafletModule.CircleMarkerOptions
                 ) => void );
-            'leafletLoaded': EventListenerFn;
-            'legendLoaded': EventListenerFn;
             'collectiblesPanel': EventListenerFn;
             'markerFilteringPanel': EventListenerFn;
             'markerDismissChange': ( marker: LeafletModule.AnyMarker ) => void;
