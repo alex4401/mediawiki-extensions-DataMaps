@@ -70,10 +70,14 @@ module.exports = class MapSettingsEditorPanel extends VePanel {
                     default: true
                 },
                 {
-                    type: 'checkbox',
-                    labelMsg: 'field-hybridpopups',
+                    type: 'dropdown',
+                    labelMsg: 'field-popupbehaviour',
                     property: 'enableTooltipPopups',
-                    default: false
+                    options: [
+                        [ 'click', false ],
+                        [ 'tooltip', true ]
+                    ],
+                    default: 0
                 }
             ] )
             .addSection( 'edit', [
