@@ -298,6 +298,25 @@ EditableMarkerPopup.Dialog = class EditMarkerDialogController extends CreateMark
     }
 
 
+    build() {
+        super.build();
+
+        // Restore group selection
+        Util.getNonNull( this._groupDropdown ).setValue( this._leafletMarker.attachedLayers[ 0 ] );
+        // Restore background selection and gather categories
+        const cats = [];
+        for ( const layer of this._leafletMarker.attachedLayers.slice( 1 ) ) {
+            if ( layer.startsWith( 'bg:' ) ) {
+                Util.getNonNull( this._backgroundDropdown ).setValue( layer.slice( 3 ) );
+            } else {
+                cats.push( layer );
+            }
+        }
+        // Restore category selection
+        Util.getNonNull( this._categoryDropdown ).setValue( cats );
+    }
+
+
     /**
      * @param {'save'} action
      * @return {OO.ui.Process?}

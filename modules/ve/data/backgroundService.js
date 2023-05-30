@@ -65,6 +65,6 @@ module.exports = class BackgroundDataService {
         if ( this.usesImageProperty() ) {
             return null;
         }
-        return `bg:${this.getData()[ index ].layer || index}`;
+        return `bg:${this.getData()[ index ].markerLayerId || index}`;
     }
 };

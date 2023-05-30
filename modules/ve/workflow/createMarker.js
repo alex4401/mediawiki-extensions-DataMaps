@@ -178,12 +178,14 @@ CreateMarkerWorkflow.BaseMarkerDialog = class BaseMarkerDialogController extends
         } );
         this._backgroundDropdown = new OO.ui.DropdownInputWidget( {
             disabled: !hasMultipleBackgrounds,
-            options: this._bgService.getNames().map( ( name, index ) => {
+            options: /** @type {OO.ui.DropdownInputWidget.Option[]} */ ( [
+                { data: '', label: this.msg( 'field-background-anywhere' ) }
+            ] ).concat( this._bgService.getNames().map( ( name, index ) => {
                 return {
                     data: this._bgService.getMarkerLayerFor( index ),
                     label: name
                 };
-            } )
+            } ) )
         } );
 
         this._uiBuilder = new DataEditorUiBuilder( this.editor, this.messageKey, () => this.getTargetObject() )
@@ -284,8 +286,9 @@ CreateMarkerWorkflow.BaseMarkerDialog = class BaseMarkerDialogController extends
             result.push( layerId );
         }
 
-        if ( Util.getNonNull( backgroundDropdown.getValue() ) ) {
-            result.push( `bg:${backgroundDropdown.getValue()}` );
+        const bgValue = Util.getNonNull( backgroundDropdown.getValue() );
+        if ( bgValue && bgValue !== '' ) {
+            result.push( `bg:${bgValue}` );
         }
 
         return result;
