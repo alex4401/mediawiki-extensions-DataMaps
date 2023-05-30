@@ -11,6 +11,16 @@ module.exports = {
 
     /**
      * @readonly
+     * @since 0.17.0
+     */
+    CoordinateDisplayStyle: {
+        LatLon: 0,
+        Xy: 1,
+        Yx: 2
+    },
+
+    /**
+     * @readonly
      */
     MapFlags: {
         ShowCoordinates: 1 << 0,

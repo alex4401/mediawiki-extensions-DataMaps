@@ -1,5 +1,5 @@
 const MapStorage = require( './storage.js' ),
-    { MapFlags, MarkerGroupFlags, CRSOrigin } = require( './enums.js' ),
+    { MapFlags, MarkerGroupFlags, CRSOrigin, CoordinateDisplayStyle } = require( './enums.js' ),
     MarkerLayerManager = require( './layerManager.js' ),
     MarkerPopup = require( './popup.js' ),
     MarkerStreamingManager = require( './stream.js' ),
@@ -424,7 +424,15 @@ class DataMap extends EventEmitter {
             lat = latOrInstance;
         }
 
-        const message = this.config.cOrder === 1 ? 'datamap-coordinate-control-text-xy' : 'datamap-coordinate-control-text';
+        // Messages used here:
+        // - datamap-coordinate-control-text-xy
+        // - datamap-coordinate-control-text-yx
+        // - datamap-coordinate-control-text
+        const message = 'datamap-coordinate-control-text' + (
+            this.config.cOrder === CoordinateDisplayStyle.Xy ? '-xy' :
+            this.config.cOrder === CoordinateDisplayStyle.Yx ? '-yx' :
+            ''
+        );
         return mw.msg( message, lat.toFixed( 2 ), /** @type {number} */ ( lon ).toFixed( 2 ) );
     }
 

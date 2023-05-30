@@ -76,6 +76,7 @@
     "datamap-popup-marker-link-copied": "Link copied to your clipboard.",
     "datamap-coordinate-control-text": "lat $1, lon $2",
     "datamap-coordinate-control-text-xy": "x: $2, y: $1",
+    "datamap-coordinate-control-text-yx": "y: $1, x: $2",
     "datamap-control-zoom-in": "Zoom in",
     "datamap-control-zoom-out": "Zoom out",
     "datamap-control-toggle-legend": "Tap to expand the legend to toggle markers",
