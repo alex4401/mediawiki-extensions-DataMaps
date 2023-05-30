@@ -306,7 +306,7 @@ class DataMapSpec extends DataModel {
         $this->checkField( $status, [
             'name' => 'coordinateOrder',
             'type' => DataModel::TYPE_STRING,
-            'values' => [ 'yx', 'xy', 'latlon', 'lonlat' ],
+            'values' => [ 'yx', 'xy', 'latlon' ],
             '@replaced' => [ '0.16.11', '0.17.0', 'crs.order' ]
         ] );
 

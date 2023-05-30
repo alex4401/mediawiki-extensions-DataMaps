@@ -28,7 +28,7 @@ class CoordinateSystem extends DataModel {
         }
         return $value;
     }
-    
+
     public function getOrder(): int {
         $value = $this->raw->order ?? self::DEFAULT_ORDER;
         switch ( $value ) {
@@ -36,7 +36,6 @@ class CoordinateSystem extends DataModel {
             case 'latlon':
                 return self::ORDER_YX;
             case 'xy':
-            case 'lonlat':
                 return self::ORDER_XY;
         }
     }
@@ -64,7 +63,7 @@ class CoordinateSystem extends DataModel {
         $this->checkField( $status, [
             'name' => 'order',
             'type' => DataModel::TYPE_STRING,
-            'values' => [ 'yx', 'xy', 'latlon', 'lonlat' ]
+            'values' => [ 'yx', 'xy', 'latlon' ]
         ] );
         $this->checkField( $status, [
             'name' => 'topLeft',
