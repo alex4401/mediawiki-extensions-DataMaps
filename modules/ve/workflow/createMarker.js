@@ -171,6 +171,7 @@ CreateMarkerWorkflow.BaseMarkerDialog = class BaseMarkerDialogController extends
         } );
         this._categoryDropdown = new OO.ui.MenuTagMultiselectWidget( {
             disabled: !hasMultipleLayers,
+            allowArbitrary: true,
             options: Object.keys( this.editor.map.config.layers ).map( key => ( {
                 data: key,
                 label: key
