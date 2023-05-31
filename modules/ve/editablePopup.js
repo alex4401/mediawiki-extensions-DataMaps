@@ -196,12 +196,17 @@ class EditableMarkerPopup extends MarkerPopup {
         }
 
         if ( this.image && this.slots.imageName ) {
+            const imageName = this.slots.imageName;
+            if ( imageName.startsWith( 'File:' ) ) {
+                imageName = imageName.slice( 5 );
+            }
+
             // eslint-disable-next-line mediawiki/class-doc
             this.image.classList.add( EditableMarkerPopup.SKELETON_CLASS );
             this._mwApi.get( {
                 action: 'query',
                 prop: 'imageinfo',
-                titles: `File:${this.slots.imageName}`,
+                titles: `File:${imageName}`,
                 iiurlwidth: this.image.clientWidth,
                 iiprop: [ 'url' ]
             } ).then( response => {
