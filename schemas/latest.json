@@ -92,6 +92,10 @@
               "description": "Custom data for gadgets, bots or other scripts.",
               "type": "object"
             },
+            "disclaimer": {
+              "description": "Optional text to be shown at the bottom of the filters panel.",
+              "type": "string"
+            },
             "groups": {
               "additionalProperties": {
                 "$ref": "#/definitions/MarkerGroup"
@@ -718,6 +722,10 @@
               "description": "Custom data for gadgets, bots or other scripts.",
               "type": "object"
             },
+            "disclaimer": {
+              "description": "Optional text to be shown at the bottom of the filters panel.",
+              "type": "string"
+            },
             "groups": {
               "additionalProperties": {
                 "$ref": "#/definitions/MarkerGroup"
@@ -1185,6 +1193,10 @@
               "description": "Whether this group is included in marker search.",
               "type": "boolean"
             },
+            "description": {
+              "description": "Description text to show in the filters panel.",
+              "type": "string"
+            },
             "extraMinZoomSize": {
               "type": "number"
             },
@@ -1256,6 +1268,10 @@
               "default": true,
               "description": "Whether this group is included in marker search.",
               "type": "boolean"
+            },
+            "description": {
+              "description": "Description text to show in the filters panel.",
+              "type": "string"
             },
             "icon": {
               "$ref": "#/definitions/Title"
@@ -1332,6 +1348,10 @@
               "default": true,
               "description": "Whether this group is included in marker search.",
               "type": "boolean"
+            },
+            "description": {
+              "description": "Description text to show in the filters panel.",
+              "type": "string"
             },
             "isCollectible": {
               "anyOf": [
