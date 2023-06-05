@@ -260,6 +260,7 @@
 				"mediawiki.widgets",
 				"mediawiki.widgets.visibleLengthLimit",
 				"mediawiki.widgets.MediaSearch",
+				"mediawiki.confirmCloseWindow",
 				"ext.datamaps.core",
 				"ext.datamaps.bootstrap",
 				"ext.datamaps.leaflet",
