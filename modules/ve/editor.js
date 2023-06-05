@@ -199,6 +199,9 @@ class MapVisualEditor extends EventEmitter {
         // Push a CSS class onto the map container
         this.map.rootElement.classList.add( 'ext-datamaps-with-ve' );
 
+        // Set up leave confirmation
+        this._confirmLeave = mw.confirmCloseWindow();
+
         // Instantiate the free-flowing toolbar control
         this.addService( this.map.addControl( DataMap.anchors._none, new ToolBarControl( this ) ) );
 
