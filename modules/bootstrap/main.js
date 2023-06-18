@@ -96,6 +96,7 @@ mw.dataMaps = {
         } );
         // Pass the deactivation event to gadgets
         map.on( 'deactivate', () => {
+            delete initialisedMaps[ initialisedMaps.indexOf( map ) ];
             for ( const handler of toNotifyOnDestroy ) {
                 invokeHandler( handler, map );
             }
