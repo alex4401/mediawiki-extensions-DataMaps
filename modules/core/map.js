@@ -237,6 +237,16 @@ class DataMap extends EventEmitter {
 
 
     /**
+     * Calls deactivation events and removes this map from the DOM. After this is called, this map should no longer be interacted
+     * with by scripts.
+     */
+    destroy() {
+        this.fire( 'deactivate' );
+        this.rootElement.remove();
+    }
+
+
+    /**
      * Checks if all bits of a mask are set on the configured flags constant.
      *
      * @param {number} mask Feature's bit mask.
