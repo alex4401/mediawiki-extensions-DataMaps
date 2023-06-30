@@ -14,9 +14,9 @@ module.exports = Leaflet.Handler.extend( {
         }
 
         DomEvent.on( this._map._container, 'wheel', this._onScroll, this );
-
         DomEvent.on( this._map._container, 'mouseenter', this._onMouseOver, this );
         DomEvent.on( this._map._container, 'mouseleave', this._onMouseOut, this );
+
         for ( const eventName of [ 'movestart', 'move', 'moveend' ] ) {
             DomEvent.on( this._map, eventName, this._onDrag, this );
         }
@@ -144,13 +144,18 @@ module.exports = Leaflet.Handler.extend( {
 
 
     _onScroll( e ) {
-        if ( this._map.scrollWheelZoom && this._map.scrollWheelZoom.enabled() ) {
-            if ( e.metaKey || e.ctrlKey ) {
-                e.preventDefault();
+        if ( !this._map.scrollWheelZoom ) {
+            return;
+        }
+
+        if ( ( e.metaKey || e.ctrlKey ) ) {
+            if ( !this._map.scrollWheelZoom.enabled() ) {
                 this.removeWarning( 'scroll' );
-            } else {
-                this.showWarning( 'scroll' );
+                // Invoke the scroll wheel handler manually
+                this._map.scrollWheelZoom._onWheelScroll( e );
             }
+        } else {
+            this.showWarning( 'scroll' );
         }
     }
 } );
