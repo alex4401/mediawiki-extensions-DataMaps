@@ -154,7 +154,7 @@ class MarkerProcessor {
         if ( $mIsWikitext === false ) {
             return false;
         }
-        return $mIsWikitext || preg_match( "/\{\{|\[\[|\'\'|<\w+|&[\d\w]+/", $text ) === 1;
+        return $mIsWikitext || preg_match( "/\{\{|\[\[|\[h|\'\'|<\w+|&[\d\w]+/", $text ) === 1;
     }
 
     private function parseWikitext( string $text ): string {
