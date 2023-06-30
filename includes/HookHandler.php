@@ -41,6 +41,17 @@ class HookHandler implements
             $namespaces[NS_MAP] = 'Map';
             $namespaces[NS_MAP_TALK] = 'Map_talk';
         }
+
+        // If our default namespace ID is used (because some earlier wiki.gg DataMaps deployments had to define their own
+        // namespace as we didn't manage any back then) set the robot policy to disallow indexing if it hasn't been specified by
+        // local sysadmins.
+        //
+        // Articles should embed the maps as needed, as that is the most likely target for map usage anyway. Source pages should
+        // not compete.
+        global $wgNamespaceRobotPolicies;
+        if ( ExtensionConfig::getNamespaceId() === 2900 && !isset( $wgNamespaceRobotPolicies[2900] ) ) {
+            $wgNamespaceRobotPolicies[2900] = 'noindex,follow';
+        }
     }
 
     public function onParserFirstCallInit( $parser ) {
