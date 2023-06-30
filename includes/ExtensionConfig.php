@@ -81,6 +81,10 @@ class ExtensionConfig {
         return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsEnableCreateMap' );
     }
 
+    public static function areFandomPortingToolsEnabled(): bool {
+        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsEnableFandomPortingTools' );
+    }
+
     public static function isBleedingEdge(): bool {
         return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsAllowExperimentalFeatures' );
     }

@@ -3,6 +3,7 @@ namespace MediaWiki\Extension\DataMaps;
 
 use Config;
 use MediaWiki\Extension\DataMaps\Content\DataMapContent;
+use MediaWiki\Extension\DataMaps\Migration\Fandom\FandomMapContentHandler;
 use MediaWiki\Extension\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
@@ -28,6 +29,12 @@ class HookHandler implements
         define( 'ARK_CONTENT_MODEL_DATAMAP', 'datamap' );
         define( 'CONTENT_MODEL_DATAMAPS', 'datamap' );
         define( 'CONTENT_MODEL_DATAMAPS_FANDOM_COMPAT', 'interactivemap' );
+
+        global $wgContentHandlers;
+        if ( ExtensionConfig::areFandomPortingToolsEnabled() && ExtensionConfig::getNamespaceId() === 2900 ) {
+            $wgContentHandlers[CONTENT_MODEL_DATAMAPS_FANDOM_COMPAT] = FandomMapContentHandler::class;
+        }
+
         return true;
     }
 
