@@ -256,8 +256,8 @@ class ConvertMaps extends Maintenance {
                 $dmGroupData->icon = $fmCategoryData->icon;
                 $dmGroupData->size = 30;
             } else {
-                $dmGroupData->fillColor = $fmCategoryData->color;
-                $dmGroupData->size = 6;
+                $dmGroupData->pinColor = $fmCategoryData->color;
+                $dmGroupData->size = 30;
             }
         }
 
