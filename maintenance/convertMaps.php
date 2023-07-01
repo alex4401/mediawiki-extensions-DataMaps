@@ -337,7 +337,7 @@ class ConvertMaps extends Maintenance {
         if ( !str_contains( $name, '.' ) ) {
             $this->output( "    ... missing file extension, guessing: $name\n" );
             foreach ( self::EXTENSIONS_TO_GUESS as $ext ) {
-                $file = DataMapFileUtils::getFile( $name . $ext );
+                $file = DataMapFileUtils::getFile( str_replace( '/', '_', $name ) . $ext );
                 if ( $file && $file->exists() ) {
                     $name = $name . $ext;
                     break;
