@@ -197,6 +197,9 @@ CollectiblesPanel.Section = class Section {
                 this.containerElement
             ]
         } ).$element[ 0 ];
+
+        // Hide this section by default. We'll make it visible only when the first row is added.
+        this.contentElement.style.display = 'none';
     }
 
 
@@ -218,6 +221,11 @@ CollectiblesPanel.Section = class Section {
     push( leafletMarker ) {
         this.rows.push( new CollectiblesPanel.Row( this, leafletMarker ) );
         this.updateCheckboxState();
+
+        // Make this section visible if this is the first row added
+        if ( this.rows.length === 1 ) {
+            this.contentElement.style.display = '';
+        }
     }
 
 
