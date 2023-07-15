@@ -44,19 +44,12 @@ class DataMapContent extends JsonContent {
     private const JOIN_LINE_FIELDS = [
         'left|right|top|bottom',
         // Backgrounds
-        'name|image',
         // Marker groups
         'fillColor|size',
-        'fillColor|borderColor',
-        'fillColor|borderColor|size',
-        'fillColor|borderColor|borderWidth',
-        'fillColor|borderColor|borderWidth|size',
+        'pinColor|size',
         'icon|size',
-        'name|icon',
-        'name|icon|size',
-        'name|fillColor|size',
-        'name|fillColor|size|icon',
-        // Layers
+        'borderColor|borderWidth',
+        // Categories
         'name|subtleText',
         // Markers
         'id|lat|lon',
@@ -65,15 +58,6 @@ class DataMapContent extends JsonContent {
         'lat|lon',
         'x|y',
         'y|x',
-        'lat|lon|article',
-        'x|y|article',
-        'y|x|article',
-        'lat|lon|image',
-        'x|y|image',
-        'y|x|image',
-        'lat|lon|popupImage',
-        'article|popupImage',
-        'article|image'
     ];
 
     private ?DataMapSpec $modelCached = null;
