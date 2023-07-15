@@ -58,7 +58,9 @@ class EditMapAction extends FormlessAction {
                 $out->addWikiMsg( 'datamap-ve-cannot-edit-mixins' );
             }
 
-            $out->addWikiMsg( 'datamap-ve-needs-fallback-to-source'/*, $sourceUrl*/ );
+            $out->addWikiMsg( 'datamap-ve-needs-fallback-to-source', $this->getArticle()->getTitle()->getFullURL( [
+                'action' => 'edit'
+            ] ) );
             return;
         }
 
@@ -79,7 +81,9 @@ class EditMapAction extends FormlessAction {
         $status = $content->getValidationStatus();
         if ( !$status->isOk() ) {
             $out->addWikiMsg( 'datamap-ve-cannot-edit-validation-errors', $status->getMessage( false, false ) );
-            $out->addWikiMsg( 'datamap-ve-needs-fallback-to-source'/*, $sourceUrl*/ );
+            $out->addWikiMsg( 'datamap-ve-needs-fallback-to-source', $this->getArticle()->getTitle()->getFullURL( [
+                'action' => 'edit'
+            ] ) );
             return;
         }
 
