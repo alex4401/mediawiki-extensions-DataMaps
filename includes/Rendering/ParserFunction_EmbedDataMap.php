@@ -14,23 +14,33 @@ final class ParserFunction_EmbedDataMap {
         array_shift( $params );
 
         $title = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $params[0] );
-        $content = DataMapContent::loadPage( $title );
-        if ( $content === DataMapContent::LERR_NOT_FOUND ) {
-            $msg = wfMessage( 'datamap-error-pf-page-does-not-exist', wfEscapeWikiText( $title->getFullText() ) )
-                ->inContentLanguage()->escaped();
-            return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true ];
-        } elseif ( $content === DataMapContent::LERR_NOT_DATAMAP ) {
-            $msg = wfMessage( 'datamap-error-pf-page-invalid-content-model', wfEscapeWikiText( $title->getFullText() ) )
-                ->inContentLanguage()->escaped();
-            return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true ];
-        } elseif ( !$content->getValidationStatus()->isOK() ) {
-            $msg = wfMessage( 'datamap-error-map-validation-fail', wfEscapeWikiText( $title->getFullText() ) )
-                ->inContentLanguage()->parse();
-            $parser->addTrackingCategory( 'datamap-category-pages-including-broken-maps' );
-            return [ '<strong class="error">' . $msg . '</strong>', 'noparse' => true, 'isHTML' => true ];
+
+        // Retrieve and validate options
+        $options = self::getRenderOptions( $params );
+        if ( is_string( $options ) ) {
+            return self::wrapError( $options );
         }
 
-        $options = self::getRenderOptions( $content->asModel(), $params );
+        // Verify the page exists and is a data map
+        // TODO: separate message if the page is of foreign format and can be ported
+        $content = DataMapContent::loadPage( $title );
+        if ( $content === DataMapContent::LERR_NOT_FOUND ) {
+            return self::wrapError(
+                wfMessage( 'datamap-error-pf-page-does-not-exist', wfEscapeWikiText( $title->getFullText() ) )
+                    ->inContentLanguage()->escaped()
+            );
+        } elseif ( $content === DataMapContent::LERR_NOT_DATAMAP ) {
+            return self::wrapError(
+                wfMessage( 'datamap-error-pf-page-invalid-content-model', wfEscapeWikiText( $title->getFullText() ) )
+                    ->inContentLanguage()->escaped()
+            );
+        } elseif ( !$content->getValidationStatus()->isOK() ) {
+            $parser->addTrackingCategory( 'datamap-category-pages-including-broken-maps' );
+            return self::wrapError(
+                wfMessage( 'datamap-error-map-validation-fail', wfEscapeWikiText( $title->getFullText() ) )
+                    ->inContentLanguage()->parse()
+            );
+        }
 
         $embed = $content->getEmbedRenderer( $title, $parser, $parser->getOutput() );
         $embed->prepareOutput();
@@ -44,10 +54,22 @@ final class ParserFunction_EmbedDataMap {
         return [ $embed->getHtml( $options ), 'noparse' => true, 'isHTML' => true ];
     }
 
-    public static function getRenderOptions( DataMapSpec $data, array $params ): EmbedRenderOptions {
+    private static function wrapError( string $text ): array {
+        return [ '<strong class="error">' . $text . '</strong>', 'noparse' => true, 'isHTML' => true ];
+    }
+
+    /**
+     * Extracts and validates options given to this parser function into an EmbedRenderOptions object.
+     *
+     * @param array $params
+     * @return EmbedRenderOptions|string
+     */
+    private function getRenderOptions( array $params ) {
         $result = new EmbedRenderOptions();
 
         foreach ( $params as $param ) {
+            // TODO: should throw on unrecognised parameters
+
             $parts = explode( '=', $param, 2 );
 
             if ( count( $parts ) != 2 ) {
@@ -56,9 +78,16 @@ final class ParserFunction_EmbedDataMap {
             $key = trim( $parts[0] );
             $value = trim( $parts[1] );
 
-            if ( $key == 'filter' ) {
-                $result->displayGroups = explode( ',', $value );
-                // TODO: verify the markers are present on map
+            switch ( $key ) {
+                case 'filter':
+                    $result->displayGroups = explode( ',', $value );
+                    break;
+                case 'max-width':
+                    $result->maxWidthPx = intval( $value );
+                    if ( $result->maxWidthPx <= 0 ) {
+                        return wfMessage( 'datamap-error-pf-max-width-invalid' )->inContentLanguage()->escaped();
+                    }
+                    break;
             }
         }
 

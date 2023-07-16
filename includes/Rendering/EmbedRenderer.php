@@ -198,6 +198,13 @@ class EmbedRenderer {
             'data-datamap-id' => $this->getId()
         ] );
 
+        // Set width CSS
+        if ( $options->maxWidthPx !== null ) {
+            $containerMain->setAttributes( [
+                'style' => 'max-width: ' . $options->maxWidthPx . 'px'
+            ] );
+        }
+
         // Stack the containers
         $containerMain->appendContent( $containerTop );
         $containerMain->appendContent( $containerContent );
