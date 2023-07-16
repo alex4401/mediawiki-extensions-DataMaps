@@ -50,14 +50,18 @@
 }
 
 .ext-datamaps-popup {
-    .ext-datamaps-popup-image {
-        display: block;
-        width: calc( @popup-width - @popup-min-edge-spacing * 2 );
+    .ext-datamaps-popup-image-container {
         @margin: calc( -1 * @popup-padding--horizontal + @popup-min-edge-spacing );
         margin: 8px @margin 0 @margin;
 
         &:last-child {
             margin-bottom: -12px;
+        }
+
+        img {
+            display: block;
+            max-width: calc( @popup-width - @popup-min-edge-spacing * 2 );
+            margin: 0 auto;
         }
     }
 
@@ -69,7 +73,7 @@
         ul {
             margin: 0.3em 0 0 1em;
 
-            & + .ext-datamaps-popup-image {
+            & + .ext-datamaps-popup-image-container {
                 margin-top: 0.5em;
             }
         }

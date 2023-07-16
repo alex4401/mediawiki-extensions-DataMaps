@@ -62,6 +62,8 @@ module.exports = class MarkerPopup {
         /** @type {HTMLElement?} */
         this.description = null;
         /** @type {HTMLElement?} */
+        this.imageContainer = null;
+        /** @type {HTMLElement?} */
         this.image = null;
         /** @type {HTMLElement?} */
         this.dismiss = null;
@@ -211,15 +213,20 @@ module.exports = class MarkerPopup {
 
         // Image
         if ( this.slots.image ) {
-            this.image = createDomElement( 'img', {
-                classes: [ 'ext-datamaps-popup-image' ],
-                attributes: {
-                    src: this.slots.image[ 0 ],
-                    width: 250,
-                    height: this.slots.image[ 3 ],
-                    'data-file-width': this.slots.image[ 1 ],
-                    'data-file-height': this.slots.image[ 2 ]
-                },
+            this.imageContainer = createDomElement( 'div', {
+                classes: [ 'ext-datamaps-popup-image-container' ],
+                html: (
+                    this.image = createDomElement( 'img', {
+                        classes: [ 'ext-datamaps-popup-image' ],
+                        attributes: {
+                            src: this.slots.image[ 0 ],
+                            width: Math.min( this.slots.image[ 1 ], 288 ),
+                            height: this.slots.image[ 3 ],
+                            'data-file-width': this.slots.image[ 1 ],
+                            'data-file-height': this.slots.image[ 2 ]
+                        }
+                    } )
+                ),
                 appendTo: element
             } );
             this._setupMMVIntegration();
