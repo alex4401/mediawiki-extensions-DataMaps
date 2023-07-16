@@ -11,6 +11,7 @@ use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapFileUtils;
 use MediaWiki\MediaWikiServices;
 use Parser;
 use ParserOptions;
+use ThumbnailImage;
 use Title;
 
 class MarkerProcessor {
@@ -115,10 +116,11 @@ class MarkerProcessor {
         // Popup image thumbnail link
         if ( $marker->getPopupImage() != null ) {
             $thumb = DataMapFileUtils::getRequiredFile( $marker->getPopupImage(), self::POPUP_IMAGE_WIDTH );
+            $isActualThumb = $thumb instanceof ThumbnailImage;
             $slots['image'] = [
                 $thumb->getURL(),
-                $thumb->getFile()->getWidth(),
-                $thumb->getFile()->getHeight(),
+                ( $isActualThumb ? $thumb->getFile() : $thumb )->getWidth(),
+                ( $isActualThumb ? $thumb->getFile() : $thumb )->getHeight(),
                 $thumb->getHeight()
             ];
         }
