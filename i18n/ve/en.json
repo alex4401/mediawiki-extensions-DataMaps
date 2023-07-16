@@ -6,8 +6,9 @@
     },
 
     "datamap-ve-to-load": "Please wait while the visual editor is being loaded...",
+    "datamap-ve-cannot-edit-mixins": "Mix-ins are currently not supported by the visual editor.",
     "datamap-ve-error-cannot-open-validation-errors": "<b>Visual editor is unavailable due to errors in map's source code:</b><br/>$1",
-    "datamap-ve-needs-fallback-to-source": "Please use the [$1 source editor] instead.",
+    "datamap-ve-needs-fallback-to-source": "This map page cannot be edited with the visual editor. Please use the [$1 source editor] instead.",
 
     "datamap-ve-experimental": "Map visual editor is still experimental",
     "datamap-ve-experimental-content": "<p>You may opt out at any moment via your MediaWiki user preferences in the <i>Editing</i> section.</p>\n<p>Be aware some functionality may be unavailable, and bugs may occur - for a list or to make a report, visit <a class=\"external\" href=\"https://github.com/alex4401/mediawiki-extensions-DataMaps/issues/149\">issue #149 on DataMaps GitHub repository</a>.</p>",

@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\DataMaps\Content;
 use BadTitleError;
 use FormlessAction;
 use Html;
+use MediaWiki\Extension\DataMaps\Constants;
 use MediaWiki\Extension\DataMaps\HookHandler;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\PermissionManager;
@@ -51,7 +52,12 @@ class EditMapAction extends FormlessAction {
 
         // Check if VE can be used on this page
         if ( !HookHandler::canUseVE( null, $this->getArticle()->getTitle() ) ) {
-            $out->addWikiMsg( 'datamap-ve-cannot-edit-mixins' );
+            // Add an extra message if the page is a mix-in - these cannot be edited in the visual editor at the moment
+            $pageProps = MediaWikiServices::getInstance()->getPageProps();
+            if ( count( $pageProps->getProperties( $article->getTitle(), Constants::PAGEPROP_IS_MIXIN ) ) > 0 ) {
+                $out->addWikiMsg( 'datamap-ve-cannot-edit-mixins' );
+            }
+
             $out->addWikiMsg( 'datamap-ve-needs-fallback-to-source'/*, $sourceUrl*/ );
             return;
         }
