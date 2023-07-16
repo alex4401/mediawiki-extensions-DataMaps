@@ -16,6 +16,7 @@ use OOUI\PanelLayout;
 use Parser;
 use ParserOptions;
 use ParserOutput;
+use Sanitizer;
 use Title;
 
 class EmbedRenderer {
@@ -167,9 +168,14 @@ class EmbedRenderer {
     }
 
     public function getHtml( ?EmbedRenderOptions $options = null ): string {
+        $titleFormatter = MediaWikiServices::getInstance()->getTitleFormatter();
+
         // Primary slots
         $containerMain = new PanelLayout( [
-            'classes' => [ 'ext-datamaps-container' ],
+            'classes' => [
+                'ext-datamaps-container',
+                Sanitizer::escapeClass( 'map-' . $titleFormatter->getText( $this->title ) ),
+            ],
             'framed' => true,
             'expanded' => false,
             'padded' => false
