@@ -19,15 +19,19 @@ class DataMapFileUtils {
         return MediaWikiServices::getInstance()->getRepoGroup()->findFile( self::cleanName( $title ) );
     }
 
-    public static function getRequiredFile( string $title, int $width = -1 ) {
+    public static function getRequiredFile( string $title, int $width = -1, bool $allowUpsizing = false ) {
         $title = self::cleanName( $title );
         $file = self::getFile( $title );
         if ( !$file || !$file->exists() ) {
             throw new InvalidArgumentException( "[[File:$title]] does not exist." );
         }
 
-        if ( $width > 0 && $file->getWidth() > self::SCALING_WIDTH_THRESHOLD
-            && !str_ends_with( strtolower( $title ), '.svg' ) ) {
+        if ( $width <= 0 || str_ends_with( strtolower( $title ), '.svg' ) ) {
+            return $file;
+        }
+
+        $fileWidth = $file->getWidth();
+        if ( ( $allowUpsizing || $width < $fileWidth ) && $fileWidth > self::SCALING_WIDTH_THRESHOLD ) {
             $file = $file->transform( [
                 'width' => $width
             ] );
