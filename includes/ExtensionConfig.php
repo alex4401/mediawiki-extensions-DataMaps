@@ -5,22 +5,22 @@ use MediaWiki\MediaWikiServices;
 
 class ExtensionConfig {
     public static function getParserExpansionLimit(): int {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsMarkerParserExpansionLimit' );
+        return MediaWikiServices::getInstance()->getMainConfig()->get( ConfigNames::ParserExpansionLimit );
     }
 
     public static function isNamespaceManaged(): bool {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsNamespaceId' ) == 'managed';
+        return MediaWikiServices::getInstance()->getMainConfig()->get( ConfigNames::NamespaceId ) == 'managed';
     }
 
     public static function getNamespaceId(): int {
         if ( self::isNamespaceManaged() ) {
             return NS_MAP;
         }
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsNamespaceId' );
+        return MediaWikiServices::getInstance()->getMainConfig()->get( ConfigNames::NamespaceId );
     }
 
     public static function getApiCacheSettings() {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsApiCaching' );
+        return MediaWikiServices::getInstance()->getMainConfig()->get( ConfigNames::ApiCacheSettings );
     }
 
     public static function getApiCacheType() {
@@ -45,19 +45,19 @@ class ExtensionConfig {
     }
 
     public static function shouldApiReturnProcessingTime(): bool {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsReportTimingInfo' );
+        return MediaWikiServices::getInstance()->getMainConfig()->get( ConfigNames::ReportTimingInfo );
     }
 
     public static function getApiDefaultMarkerLimit(): int {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsDefaultApiMarkerBatch' );
+        return MediaWikiServices::getInstance()->getMainConfig()->get( ConfigNames::DefaultApiMarkerBatchSize );
     }
 
     public static function getApiMaxMarkerLimit(): int {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsMaxApiMarkerBatch' );
+        return MediaWikiServices::getInstance()->getMainConfig()->get( ConfigNames::MaxApiMarkerBatchSize );
     }
 
     public static function shouldCacheWikitextInProcess(): bool {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsUseInProcessParserCache' );
+        return MediaWikiServices::getInstance()->getMainConfig()->get( ConfigNames::UseInProcessParserCache );
     }
 
     public static function shouldLinksUpdatesUseMarkers() {
@@ -65,27 +65,27 @@ class ExtensionConfig {
     }
 
     public static function getLinksUpdateBudget() {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsFullLinksUpdateBudget' );
+        return MediaWikiServices::getInstance()->getMainConfig()->get( ConfigNames::LinksUpdateBudget );
     }
 
     public static function isTransclusionAliasEnabled(): bool {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsEnableTransclusionAlias' );
+        return MediaWikiServices::getInstance()->getMainConfig()->get( ConfigNames::EnableTransclusionAlias );
     }
 
     public static function isVisualEditorEnabled(): bool {
         return self::isBleedingEdge()
-            && MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsEnableVisualEditor' );
+            && MediaWikiServices::getInstance()->getMainConfig()->get( ConfigNames::EnableVisualEditor );
     }
 
     public static function isCreateMapEnabled(): bool {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsEnableCreateMap' );
+        return MediaWikiServices::getInstance()->getMainConfig()->get( ConfigNames::EnableCreateMap );
     }
 
     public static function areFandomPortingToolsEnabled(): bool {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsEnableFandomPortingTools' );
+        return MediaWikiServices::getInstance()->getMainConfig()->get( ConfigNames::EnablePortingTools );
     }
 
     public static function isBleedingEdge(): bool {
-        return MediaWikiServices::getInstance()->getMainConfig()->get( 'DataMapsAllowExperimentalFeatures' );
+        return MediaWikiServices::getInstance()->getMainConfig()->get( ConfigNames::EnableExperimentalFeatures );
     }
 }
