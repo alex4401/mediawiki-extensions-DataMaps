@@ -30,8 +30,8 @@ class HookHandler implements
         define( 'CONTENT_MODEL_DATAMAPS', 'datamap' );
         define( 'CONTENT_MODEL_DATAMAPS_FANDOM_COMPAT', 'interactivemap' );
 
-        global $wgContentHandlers;
-        if ( ExtensionConfig::areFandomPortingToolsEnabled() && ExtensionConfig::getNamespaceId() === 2900 ) {
+        global $wgContentHandlers, $wgDataMapsNamespaceId, $wgDataMapsEnableFandomPortingTools;
+        if ( $wgDataMapsEnableFandomPortingTools && $wgDataMapsNamespaceId === 2900 ) {
             $wgContentHandlers[CONTENT_MODEL_DATAMAPS_FANDOM_COMPAT] = FandomMapContentHandler::class;
         }
 
