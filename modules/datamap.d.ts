@@ -124,6 +124,7 @@ declare namespace DataMaps {
 
         type MapListenerSignatures = {
             'leafletLoaded': EventListenerFn;
+            'leafletLoadedLate': EventListenerFn;
             'legendLoaded': EventListenerFn;
             'customData': (data: any) => void;
             'deactivate': EventListenerFn;

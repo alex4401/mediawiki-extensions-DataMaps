@@ -112,7 +112,7 @@ mw.dataMaps = {
             map.streaming.loadSequential()
                 .then( () => {
                     // Wait for Leaflet to be done loading before taking the overlay off
-                    map.on( 'leafletLoaded', () => map.setStatusOverlay( null ) );
+                    map.on( 'leafletLoadedLate', () => map.setStatusOverlay( null ) );
                 } )
                 .catch( () => map.setStatusOverlay( 'error', mw.msg( 'datamap-error-dataload' ), false ) );
         } else {

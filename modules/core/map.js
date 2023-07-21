@@ -994,6 +994,7 @@ class DataMap extends EventEmitter {
      * @private
      * @param {HTMLElement} holderElement Container for the Leaflet map.
      * @fires DataMap#leafletLoaded
+     * @fires DataMap#leafletLoadedLate
      */
     _initialiseLeaflet( holderElement ) {
         const leafletConfig = this._makeLeafletConfig();
@@ -1035,6 +1036,7 @@ class DataMap extends EventEmitter {
         // Notify other components that the Leaflet component has been loaded, and remove all subscribers. All future
         // subscribers will be invoked right away.
         this.fireMemorised( 'leafletLoaded' );
+        this.fireMemorised( 'leafletLoadedLate' );
     }
 
 
