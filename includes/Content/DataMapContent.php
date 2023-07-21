@@ -162,8 +162,9 @@ class DataMapContent extends JsonContent {
 
     public static function getPublicSchemaUrl( string $id ) {
         $config = MediaWikiServices::getInstance()->getMainConfig();
-        return $config->get( MainConfigNames::CanonicalServer ) . '/' . $config->get( MainConfigNames::ExtensionAssetsPath ) .
-            "/DataMaps/schemas/$id.json";
+        $urlUtils = MediaWikiServices::getInstance()->getUrlUtils();
+        return $urlUtils->expand( $config->get( MainConfigNames::ExtensionAssetsPath ) . "/DataMaps/schemas/$id.json",
+            PROTO_CANONICAL );
     }
 
     public static function getSchemaVersion( string $url ): ?string {
