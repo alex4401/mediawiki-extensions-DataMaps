@@ -262,7 +262,7 @@ class EmbedRenderer {
         return Html::rawElement(
             'div',
             [
-                'class' => 'ext-datamaps-container-leaflet oo-ui-layout oo-ui-panelLayout oo-ui-panelLayout-framed'
+                'class' => 'ext-datamaps-container-leaflet'
             ],
             Html::rawElement(
                 'div',
