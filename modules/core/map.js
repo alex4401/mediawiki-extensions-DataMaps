@@ -142,12 +142,6 @@ class DataMap extends EventEmitter {
          */
         this.backgroundSwitch = null;
         /**
-         * `marker` parameter from the query string if one is present.
-         *
-         * @type {string?}
-         */
-        this.markerIdToAutoOpen = null;
-        /**
          * Content bounds cache.
          *
          * @type {LeafletModule.LatLngBounds?}
@@ -163,14 +157,7 @@ class DataMap extends EventEmitter {
          */
         this._fullScreenAnchor = null;
 
-        const $tabberPanel = Util.TabberNeue.getOwningPanel( this.rootElement );
-        if ( $tabberPanel === null || mw.loader.getState( 'ext.tabberNeue' ) === 'ready' ) {
-            this._setUpUriMarkerHandler();
-        } else if ( $tabberPanel !== null ) {
-            mw.loader.using( 'ext.tabberNeue', () => {
-                this._setUpUriMarkerHandler();
-            } );
-        }
+        this._setUpUriMarkerHandler();
 
         /**
          * Coordinate origin.
@@ -281,17 +268,33 @@ class DataMap extends EventEmitter {
      * @private
      */
     _setUpUriMarkerHandler() {
+        const idToOpen = Util.getQueryParameter( 'marker' );
+        if ( !idToOpen ) {
+            return;
+        }
+
+        // If in a tabber and TabberNeue is not loaded yet, wait for it. We can't efficiently make any guarantees about
+        // the ID until then.
         const tabberId = Util.TabberNeue.getOwningId( this.rootElement );
+        if ( tabberId !== null && mw.loader.getState( 'ext.tabberNeue' ) !== 'ready' ) {
+            mw.loader.using( 'ext.tabberNeue', () => this._setUpUriMarkerHandler() );
+        }
+
+        // If in a tabber, check if the hash location matches
         if ( tabberId && tabberId !== window.location.hash.slice( 1 ) ) {
             return;
         }
 
-        this.markerIdToAutoOpen = Util.getQueryParameter( 'marker' );
-        if ( !this.markerIdToAutoOpen ) {
-            return;
-        }
-
-        this.on( 'markerReady', this.openPopupIfUriMarker, this );
+        // Listen to incoming markers and wait for a matching one
+        const handler = /** @type {DataMaps.EventHandling.MapListenerSignatures['markerReady']} */ ( leafletMarker => {
+            const mId = Util.getMarkerId( leafletMarker );
+            // Check both exact match and match with an `M` prefix for legacy pre-v0.16 link support
+            if ( mId === idToOpen || `M${mId}` === idToOpen ) {
+                this.openMarkerPopup( leafletMarker, true );
+                this.off( 'markerReady', handler, this );
+            }
+        } );
+        this.on( 'markerReady', handler, this );
     }
 
 
@@ -531,18 +534,10 @@ class DataMap extends EventEmitter {
     /**
      * Opens a marker's popup if the UID matches the `marker` query parameter
      *
+     * @deprecated since 0.16.7, will be removed in 0.17.0; this function does nothing, behaviour inlined.
      * @param {LeafletModule.AnyMarker} leafletMarker
      */
-    openPopupIfUriMarker( leafletMarker ) {
-        if ( this.markerIdToAutoOpen !== null ) {
-            const mId = Util.getMarkerId( leafletMarker );
-            // Check both exact match and match with an `M` prefix for legacy pre-v0.16 link support
-            if ( mId === this.markerIdToAutoOpen || `M${mId}` === this.markerIdToAutoOpen ) {
-                this.openMarkerPopup( leafletMarker, true );
-                this.off( 'markerReady', this.openPopupIfUriMarker );
-            }
-        }
-    }
+    openPopupIfUriMarker( leafletMarker ) {}
 
 
     /**
