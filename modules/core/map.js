@@ -770,12 +770,9 @@ class DataMap extends EventEmitter {
      * Snaps the viewport to the content. Zooms out entirely on a double click.
      */
     restoreDefaultView() {
-        const originalSnap = this.leaflet.options.zoomSnap;
-        this.leaflet.options.zoomSnap /= 4;
         this.leaflet.setZoom( this.leaflet.options.minZoom ).fitBounds( this.getCurrentContentBounds(), {
             paddingTopLeft: [ this.getMapOffsetWidth(), 0 ]
         } );
-        this.leaflet.options.zoomSnap = originalSnap;
     }
 
 
@@ -940,7 +937,7 @@ class DataMap extends EventEmitter {
             maxBounds: [ [ -100, -100 ], [ 200, 200 ] ],
             maxBoundsViscosity: 0.7,
             // Zoom settings
-            zoomSnap: 0.25,
+            zoomSnap: 0,
             zoomDelta: 0.25,
             maxZoom: 6,
             wheelPxPerZoomLevel: 90,
