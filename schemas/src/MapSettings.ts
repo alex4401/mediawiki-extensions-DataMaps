@@ -20,6 +20,7 @@ export type MapSettings = Partial< {
     /**
      * Whether zoom control will be disabled on this map. Individual Leaflet options can override this.
      *
+     * @deprecated since v0.16.7, will be removed in v0.17.0; replaced with `zoom: false`.
      * @default false
      */
     disableZoom: boolean;
@@ -110,7 +111,13 @@ export type MapSettings = Partial< {
      * @default null
      */
     leaflet: Partial< {
+        /**
+         * @deprecated since v0.16.7, will be removed in v0.17.0; replaced with MapSettings::zoom.min.
+         */
         minZoom: number;
+        /**
+         * @deprecated since v0.16.7, will be removed in v0.17.0; replaced with MapSettings::zoom.max.
+         */
         maxZoom: number;
         zoomSnap: number;
         zoomDelta: number;

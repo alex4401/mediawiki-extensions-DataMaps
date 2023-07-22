@@ -11,8 +11,16 @@ class LeafletSettingsSpec extends DataModel {
 
     public function validate( Status $status ) {
         // Leaflet built-ins
-        $this->checkField( $status, 'minZoom', DataModel::TYPE_NUMBER );
-        $this->checkField( $status, 'maxZoom', DataModel::TYPE_NUMBER );
+        $this->checkField( $status, [
+            'name' => 'minZoom',
+            'type' => DataModel::TYPE_NUMBER,
+            '@replaced' => [ '0.16.7', '0.17.0', 'zoom: { min }' ]
+        ] );
+        $this->checkField( $status, [
+            'name' => 'maxZoom',
+            'type' => DataModel::TYPE_NUMBER,
+            '@replaced' => [ '0.16.7', '0.17.0', 'zoom: { max }' ]
+        ] );
         $this->checkField( $status, 'zoomAnimation', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'zoomAnimationThreshold', DataModel::TYPE_NUMBER );
         $this->checkField( $status, 'markerZoomAnimation', DataModel::TYPE_BOOL );
@@ -40,8 +48,16 @@ class LeafletSettingsSpec extends DataModel {
         // Custom properties
         // TODO: rendererSettings not strict
         $this->checkField( $status, 'rendererSettings', DataModel::TYPE_OBJECT );
-        $this->checkField( $status, 'autoMinZoom', DataModel::TYPE_BOOL );
-        $this->checkField( $status, 'autoMinZoomAbsolute', DataModel::TYPE_NUMBER );
+        $this->checkField( $status, [
+            'name' => 'autoMinZoom',
+            'type' => DataModel::TYPE_BOOL,
+            '@replaced' => [ '0.16.7', '0.17.0', 'zoom: { auto }' ]
+        ] );
+        $this->checkField( $status, [
+            'name' => 'autoMinZoomAbsolute',
+            'type' => DataModel::TYPE_NUMBER,
+            '@replaced' => [ '0.16.7', '0.17.0', 'zoom: { min }' ]
+        ] );
         $this->checkField( $status, 'shouldScaleMarkers', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'markerZoomScaleFactor', DataModel::TYPE_NUMBER );
         $this->checkField( $status, 'interactionControl', DataModel::TYPE_BOOL );

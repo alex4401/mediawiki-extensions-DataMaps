@@ -13,6 +13,7 @@ use MediaWiki\Extension\DataMaps\Data\MarkerGroupSpec;
 use MediaWiki\Extension\DataMaps\Data\MarkerLayerSpec;
 use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapColourUtils;
 use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapFileUtils;
+use stdClass;
 use Title;
 
 class EmbedConfigGenerator {
@@ -71,6 +72,14 @@ class EmbedConfigGenerator {
         if ( $this->data->getSettings()->getBackdropColour() !== null ) {
             $out['backdrop'] = DataMapColourUtils::asHex( $this->data->getSettings()->getBackdropColour() );
         }
+        // Zoom settings
+        $zoom = $this->data->getSettings()->getZoomSettings();
+        $out['zoom'] = [
+            'lock' => $zoom->isLocked(),
+            'auto' => $zoom->isMinimumAutomatic(),
+            'min' => $zoom->getMinimum(),
+            'max' => $zoom->getMaximum(),
+        ];
         // Backgrounds
         $out['backgrounds'] = array_map( function ( MapBackgroundSpec $spec ) use ( $coordOrder ) {
             return $this->getBackgroundConfig( $spec, $coordOrder );
@@ -95,10 +104,11 @@ class EmbedConfigGenerator {
             // TODO: No parser support yet; after GH#165
             $out['disclaimer'] = $this->data->getDisclaimerText();
         }
-        // Settings and extensions
+        // Custom Leaflet settings
         if ( $this->data->getSettings()->getCustomLeafletConfig() != null ) {
             $out['leafletSettings'] = $this->data->getSettings()->getCustomLeafletConfig();
         }
+        // Custom embeddable data
         if ( $this->data->getCustomData() != null ) {
             $out['custom'] = $this->data->getCustomData();
         }
@@ -111,6 +121,7 @@ class EmbedConfigGenerator {
         $out = 0;
         $out |= $settings->shouldShowCoordinates() ? 1 << 0 : 0;
         $out |= $settings->isLegendDisabled() ? 1 << 1 : 0;
+        // TODO: legacy option, drop in v0.17
         $out |= $settings->isZoomDisabled() ? 1 << 2 : 0;
         $out |= $settings->getSearchMode() ? 1 << 3 : 0;
         $out |= $settings->getChecklistSortMode() ? 1 << 4 : 0;

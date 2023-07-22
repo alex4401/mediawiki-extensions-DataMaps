@@ -915,17 +915,30 @@ class DataMap extends EventEmitter {
      * @return {LeafletModule.MapOptions}
      */
     _makeLeafletConfig() {
-        // If FF_DISABLE_ZOOM is set, prevent all kind of zooming
-        if ( this.isFeatureBitSet( MapFlags.DisableZoom ) ) {
+        // Ensure the `zoom` section of the config is initialised
+        if ( !this.config.zoom ) {
+            this.config.zoom = {
+                min: 0.05,
+                lock: this.isFeatureBitSet( MapFlags.DisableZoom ),
+                max: 6,
+                auto: true
+            };
+        }
+
+        // Disable automated minimum zoom calculation if the value has been specified in custom Leaflet settings
+        // TODO: legacy behaviour, drop in v0.17
+        if ( 'minZoom' in ( this.config.leafletSettings || {} ) ) {
+            this.config.zoom.auto = false;
+        }
+
+        // If zoom is locked, disable all zoom controls
+        if ( this.config.zoom.lock ) {
             this.config.leafletSettings = $.extend( {
                 zoomControl: false,
                 boxZoom: false,
                 doubleClickZoom: false,
                 scrollWheelZoom: false,
-                touchZoom: false,
-                maxZoom: 2.75,
-                minZoom: 2.75,
-                zoom: 2.75
+                touchZoom: false
             }, this.config.leafletSettings || {} );
         }
 
@@ -939,9 +952,9 @@ class DataMap extends EventEmitter {
             // Zoom settings
             zoomSnap: 0,
             zoomDelta: 0.25,
-            maxZoom: 6,
             wheelPxPerZoomLevel: 90,
-            minZoom: Leaflet.Browser.mobile ? ( Leaflet.Browser.retina ? 1 : 1.75 ) : 2,
+            maxZoom: this.config.zoom.max,
+            minZoom: this.config.zoom.min,
             // Zoom animations cause some awkward locking as Leaflet waits for the animation to finish before processing more
             // zoom requests.
             // However, before v0.15.0 they had to be enabled to mitigate vector drift, which has been since fixed by Leaflet's
@@ -960,8 +973,9 @@ class DataMap extends EventEmitter {
 
             // Non-standard extended options
             // Automatic minimum zoom calculations
-            autoMinZoom: true,
-            autoMinZoomAbsolute: 0.05,
+            autoMinZoom: this.config.zoom.auto,
+            // TODO: merge into minZoom
+            autoMinZoomAbsolute: this.config.zoom.min,
             // Zoom-based marker scaling
             shouldScaleMarkers: true,
             markerZoomScaleFactor: 1.8,
@@ -977,11 +991,6 @@ class DataMap extends EventEmitter {
             // Enable bundled interaction rejection control
             interactionControl: true
         } ), this.config.leafletSettings );
-
-        // Disable automated minimum zoom calculation if the value has been specified in the data
-        if ( 'minZoom' in result ) {
-            result.autoMinZoom = false;
-        }
 
         return result;
     }

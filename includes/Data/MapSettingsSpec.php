@@ -3,6 +3,7 @@ namespace MediaWiki\Extension\DataMaps\Data;
 
 use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapColourUtils;
 use Status;
+use stdClass;
 
 class MapSettingsSpec extends DataModel {
     protected static string $publicName = 'MapSettingsSpec';
@@ -50,7 +51,17 @@ class MapSettingsSpec extends DataModel {
     }
 
     public function isZoomDisabled(): bool {
-        return $this->raw->disableZoom ?? false;
+        return $this->getZoomSettings()->isLocked();
+    }
+
+    public function getZoomSettings(): ?ZoomSettingsSpec {
+        $property = $this->raw->zoom ?? new stdClass();
+
+        if ( $this->raw->disableZoom ?? false ) {
+            $property->lock = true;
+        }
+
+        return new ZoomSettingsSpec( $property );
     }
 
     public function getSearchMode(): int {
@@ -95,7 +106,11 @@ class MapSettingsSpec extends DataModel {
     public function validate( Status $status ) {
         $this->checkField( $status, 'allowFullscreen', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'backdropColor', DataModel::TYPE_COLOUR3 );
-        $this->checkField( $status, 'disableZoom', DataModel::TYPE_BOOL );
+        $this->checkField( $status, [
+            'name' => 'disableZoom',
+            'type' => DataModel::TYPE_BOOL,
+            '@replaced' => [ '0.16.7', '0.17.0', 'zoom: { lock: true }' ]
+        ] );
         $this->checkField( $status, [
             'name' => 'enableSearch',
             'type' => [ DataModel::TYPE_BOOL, DataModel::TYPE_STRING ],
@@ -133,6 +148,13 @@ class MapSettingsSpec extends DataModel {
             ]
         ] );
         $this->checkField( $status, 'showCoordinates', DataModel::TYPE_BOOL );
+        $this->checkField( $status, [
+            'name' => 'zoom',
+            'type' => DataModel::TYPE_OBJECT,
+            'check' => static function ( $status, $raw ) {
+                return ( new ZoomSettingsSpec( $raw ) )->validate( $status );
+            }
+        ] );
         $this->checkField( $status, [
             'name' => 'leaflet',
             'type' => DataModel::TYPE_OBJECT,

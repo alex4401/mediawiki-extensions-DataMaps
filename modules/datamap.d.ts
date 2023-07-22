@@ -88,6 +88,12 @@ declare namespace DataMaps {
             crs: LeafletModule.LatLngBoundsTuple;
             flags: number;
             backdrop?: string;
+            zoom?: {
+                lock: boolean;
+                auto: boolean;
+                min: number;
+                max: number;
+            };
             leafletSettings: LeafletModule.IPublicMapOptions;
             backgrounds: Background[];
             layerIds: string[];
