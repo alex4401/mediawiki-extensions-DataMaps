@@ -3,6 +3,9 @@ const Leaflet = require( '../vendor/leaflet/leaflet.js' ),
 
 
 module.exports = Leaflet.Handler.extend( {
+    BYPASS_ATTRIBUTE_NAME: 'data-bypass-interaction-control',
+
+
     addHooks() {
         this._pane = this._map.createPane( 'interactionWarningPane', this._map._container );
 
@@ -20,6 +23,9 @@ module.exports = Leaflet.Handler.extend( {
         for ( const eventName of [ 'movestart', 'move', 'moveend' ] ) {
             DomEvent.on( this._map, eventName, this._onDrag, this );
         }
+
+        this.bypassOnElement( this._map.zoomControl._zoomInButton );
+        this.bypassOnElement( this._map.zoomControl._zoomOutButton );
 
         this._enableHandlers( [ 'scrollWheelZoom', 'dragging' ] );
     },
@@ -39,6 +45,11 @@ module.exports = Leaflet.Handler.extend( {
         for ( const eventName of [ 'movestart', 'move', 'moveend' ] ) {
             DomEvent.off( this._map, eventName, this._onDrag, this );
         }
+    },
+
+
+    bypassOnElement( el ) {
+        el.setAttribute( this.BYPASS_ATTRIBUTE_NAME, 'true' );
     },
 
 
@@ -145,6 +156,10 @@ module.exports = Leaflet.Handler.extend( {
 
     _onScroll( e ) {
         if ( !this._map.scrollWheelZoom ) {
+            return;
+        }
+
+        if ( e.target.closest( `[ ${this.BYPASS_ATTRIBUTE_NAME}="true" ]` ) ) {
             return;
         }
 
