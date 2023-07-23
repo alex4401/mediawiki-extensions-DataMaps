@@ -24,8 +24,10 @@ module.exports = Leaflet.Handler.extend( {
             DomEvent.on( this._map, eventName, this._onDrag, this );
         }
 
-        this.bypassOnElement( this._map.zoomControl._zoomInButton );
-        this.bypassOnElement( this._map.zoomControl._zoomOutButton );
+        if ( this._map.zoomControl ) {
+            this.bypassOnElement( this._map.zoomControl._zoomInButton );
+            this.bypassOnElement( this._map.zoomControl._zoomOutButton );
+        }
 
         this._enableHandlers( [ 'scrollWheelZoom', 'dragging' ] );
     },
