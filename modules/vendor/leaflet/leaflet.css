@@ -108,6 +108,9 @@
 	z-index: 1000;
 	pointer-events: none;
 	}
+.leaflet-top.leaflet-left {
+	z-index: 1001;
+}
 .leaflet-top {
 	top: 0;
 	}
