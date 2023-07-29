@@ -31,7 +31,8 @@ class LegendTabber {
          */
         this._tabs = new OO.ui.IndexLayout( {
             framed: false,
-            expanded: false
+            expanded: false,
+            autoFocus: false
         } );
         /**
          * @private
