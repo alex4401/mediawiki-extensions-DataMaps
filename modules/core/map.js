@@ -866,10 +866,16 @@ class DataMap extends EventEmitter {
      */
     getMapOffsetWidth() {
         const viewportWidth = document.documentElement.clientWidth;
-        if ( this.isFeatureBitSet( MapFlags.HideLegend )
+        if (
+            this.isFeatureBitSet( MapFlags.HideLegend )
+            // Check if viewport width is within our frame
             || viewportWidth < DataMap.LEGEND_AFFECTS_BOUNDS_FIT_VIEWPORT_WIDTH[ 0 ]
             || viewportWidth > DataMap.LEGEND_AFFECTS_BOUNDS_FIT_VIEWPORT_WIDTH[ 1 ]
-            || ( this.legend && !this.legend.isExpanded() ) ) {
+            // Check the groups threshold. Ideally we'd check legend's height here, but it may not have been loaded yet.
+            || Object.keys( this.config.groups ).length < DataMap.LEGEND_MINIMUM_GROUPS_TO_OFFSET_VIEWPORT
+            // Do not offset if legend is collapsed
+            || ( this.legend && !this.legend.isExpanded() )
+        ) {
             return 0;
         }
         return this._legendElement.offsetWidth;
@@ -1249,6 +1255,11 @@ DataMap.ICON_ZOOM_SCALING_MAX = 1;
  * @type {[ min: number, max: number ]}
  */
 DataMap.LEGEND_AFFECTS_BOUNDS_FIT_VIEWPORT_WIDTH = [ 1200, 2000 ];
+/**
+ * @constant
+ * @type {number}
+ */
+DataMap.LEGEND_MINIMUM_GROUPS_TO_OFFSET_VIEWPORT = 5;
 
 
 module.exports = DataMap;
