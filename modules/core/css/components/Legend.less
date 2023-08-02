@@ -24,6 +24,11 @@
     .oo-ui-labelElement-label {
         vertical-align: middle;
     }
+
+    /* GH#195: Buttons in a group can overlap popups invoked by buttons */
+    .oo-ui-buttonGroupWidget .oo-ui-buttonElement {
+        z-index: unset;
+    }
 }
 
 .ext-datamaps-control-expandable {
