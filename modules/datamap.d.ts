@@ -112,7 +112,7 @@ declare namespace DataMaps {
         desc?: string;
         article?: string;
         icon?: string;
-        image?: [ string, number, number, number ];
+        image?: [ string, number, number, number, number? ];
         search?: 0 | SearchKeywordWeighing[];
     }
     type ApiMarkerInstance = [ number, number, IApiMarkerSlots ];

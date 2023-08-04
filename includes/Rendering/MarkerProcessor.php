@@ -16,6 +16,7 @@ use Title;
 
 class MarkerProcessor {
     private const POPUP_IMAGE_WIDTH = 288;
+    private const POPUP_IMAGE_HEIGHT_MAX = 300;
     private const MAX_LRU_SIZE = 128;
 
     private Parser $parser;
@@ -115,13 +116,19 @@ class MarkerProcessor {
 
         // Popup image thumbnail link
         if ( $marker->getPopupImage() != null ) {
-            $thumb = DataMapFileUtils::getRequiredFile( $marker->getPopupImage(), self::POPUP_IMAGE_WIDTH );
+            $thumb = DataMapFileUtils::transformScaledImage( $marker->getPopupImage(), [
+                'width' => self::POPUP_IMAGE_WIDTH,
+                'height' => self::POPUP_IMAGE_HEIGHT_MAX,
+            ] );
             $isActualThumb = $thumb instanceof ThumbnailImage;
+            // TODO: these sizes are not valid for SVGs and are dependent on media handler support. perhaps UI should
+            //       handle thumbnail sizing calcs on its own.
             $slots['image'] = [
                 $thumb->getURL(),
                 ( $isActualThumb ? $thumb->getFile() : $thumb )->getWidth(),
                 ( $isActualThumb ? $thumb->getFile() : $thumb )->getHeight(),
-                $thumb->getHeight()
+                $thumb->getHeight(),
+                $thumb->getWidth(),
             ];
         }
 
