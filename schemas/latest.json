@@ -785,6 +785,7 @@
         },
         "disableZoom": {
           "default": false,
+          "deprecated": "since v0.16.7, will be removed in v0.17.0; replaced with `zoom: false`.",
           "description": "Whether zoom control will be disabled on this map. Individual Leaflet options can override this.",
           "type": "boolean"
         },
@@ -887,9 +888,11 @@
               "type": "number"
             },
             "maxZoom": {
+              "deprecated": "since v0.16.7, will be removed in v0.17.0; replaced with MapSettings::zoom.max.",
               "type": "number"
             },
             "minZoom": {
+              "deprecated": "since v0.16.7, will be removed in v0.17.0; replaced with MapSettings::zoom.min.",
               "type": "number"
             },
             "rendererSettings": {
@@ -1204,7 +1207,8 @@
               "$ref": "#/definitions/Colour3"
             },
             "icon": {
-              "$ref": "#/definitions/Title"
+              "$ref": "#/definitions/Title",
+              "description": "Icon to display in the legend next to this group's name."
             },
             "isCollectible": {
               "anyOf": [
@@ -1274,7 +1278,8 @@
               "type": "string"
             },
             "icon": {
-              "$ref": "#/definitions/Title"
+              "$ref": "#/definitions/Title",
+              "description": "Icon to display in the legend next to this group's name."
             },
             "isCollectible": {
               "anyOf": [
@@ -1352,6 +1357,10 @@
             "description": {
               "description": "Description text to show in the filters panel.",
               "type": "string"
+            },
+            "icon": {
+              "$ref": "#/definitions/Title",
+              "description": "Icon to display in the legend next to this group's name."
             },
             "isCollectible": {
               "anyOf": [
