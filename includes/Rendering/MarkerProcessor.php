@@ -99,7 +99,7 @@ class MarkerProcessor {
 
         // Popup title
         if ( $marker->getLabel() != null ) {
-            $slots['label'] = $this->stripParagraphTag( $this->parseText( $marker, $marker->getLabel() ) );
+            $slots['label'] = $this->stripParagraphTags( $this->parseText( $marker, $marker->getLabel() ) );
         }
 
         // Popup description
@@ -163,7 +163,7 @@ class MarkerProcessor {
         if ( $mIsWikitext === false ) {
             return false;
         }
-        return $mIsWikitext || preg_match( "/\{\{|\[\[|\[h|\'\'|<\w+|&[\d\w]+/", $text ) === 1;
+        return $mIsWikitext || preg_match( "/\{\{|\[\[|\[h|\'\'|\{\||<\w+|&[\d\w]+/", $text ) === 1;
     }
 
     private function parseWikitext( string $text ): string {
@@ -203,7 +203,10 @@ class MarkerProcessor {
         if ( self::shouldParseString( $marker, $text ) ) {
             return $this->parseWikitext( $text );
         }
-        return wfEscapeWikiText( $text );
+
+        $result = wfEscapeWikiText( trim( $text ) );
+        $result = '<p>' . preg_replace( '/(\n&#10;)+/', '</p><p>', $result ) . '</p>';
+        return $result;
     }
 
     private function parseMultilineText( MarkerSpec $marker, /*array|string*/ $text ): string {
@@ -221,6 +224,10 @@ class MarkerProcessor {
             $text = substr( $text, 0, strlen( $text ) - 4 );
         }
         return $text;
+    }
+
+    private function stripParagraphTags( string $text ): string {
+        return trim( preg_replace( '/<\/?p>/', ' ', $text ) );
     }
 
     private function canImplodeSearchKeywords( $keywords ): bool {
