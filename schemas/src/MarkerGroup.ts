@@ -12,7 +12,6 @@ type CircleProps = {
     size: number;
 
     extraMinZoomSize?: number;
-    icon?: Title;
 };
 
 
@@ -48,6 +47,13 @@ export type MarkerGroup = {
      * @since 0.16.5
      */
     description?: string;
+
+    /**
+     * Icon to display in the legend next to this group's name.
+     *
+     * @since 0.16.9 valid for pin markers.
+     */
+    icon?: Title;
 
     /**
      * Optional article title all markers in this group should link to.

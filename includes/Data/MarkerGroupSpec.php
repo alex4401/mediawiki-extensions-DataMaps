@@ -196,6 +196,11 @@ class MarkerGroupSpec extends DataModel {
                     'type' => DataModel::TYPE_COLOUR3,
                     'required' => true
                 ] );
+                $this->checkField( $status, [
+                    'name' => 'icon',
+                    'type' => DataModel::TYPE_FILE,
+                    'fileMustExist' => true
+                ] );
                 $this->checkField( $status, 'size', DataModel::TYPE_NUMBER );
                 break;
             case self::DM_UNKNOWN:
