@@ -227,7 +227,7 @@ class MarkerProcessor {
     }
 
     private function stripParagraphTags( string $text ): string {
-        return trim( preg_replace( '/<\/?p>/', ' ', $text ) );
+        return trim( preg_replace( '/<\/?p>/', ' ', $text ) ?? $text );
     }
 
     private function canImplodeSearchKeywords( $keywords ): bool {
