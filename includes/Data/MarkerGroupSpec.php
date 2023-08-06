@@ -10,7 +10,9 @@ class MarkerGroupSpec extends DataModel {
     protected static string $publicName = 'MarkerGroupSpec';
 
     public const DEFAULT_CIRCLE_SIZE = 5;
-    public const DEFAULT_CIRCLE_STROKE_WIDTH = 1;
+    public const DEFAULT_VECTOR_STROKE_WIDTH = 1;
+    /** @deprecated since 0.16.10, to be removed in 0.17.0; use DEFAULT_VECTOR_STROKE_WIDTH. */
+    public const DEFAULT_CIRCLE_STROKE_WIDTH = self::DEFAULT_VECTOR_STROKE_WIDTH;
     public const DEFAULT_ICON_SIZE = [ 32, 32 ];
 
     // Display modes
@@ -80,7 +82,7 @@ class MarkerGroupSpec extends DataModel {
     }
 
     public function getRawStrokeColour() /*: ?array|string*/ {
-        return isset( $this->raw->borderColor ) ? $this->raw->borderColor : null;
+        return $this->raw->strokeColor ?? $this->raw->borderColor ?? null;
     }
 
     public function getFillColour(): array {
@@ -100,7 +102,7 @@ class MarkerGroupSpec extends DataModel {
     }
 
     public function getStrokeWidth() /*: ?int|float */ {
-        return isset( $this->raw->borderWidth ) ? $this->raw->borderWidth : self::DEFAULT_CIRCLE_STROKE_WIDTH;
+        return $this->raw->strokeWidth ?? $this->raw->borderWidth ?? self::DEFAULT_VECTOR_STROKE_WIDTH;
     }
 
     public function getIcon(): ?string {
@@ -168,17 +170,39 @@ class MarkerGroupSpec extends DataModel {
         ] );
         $this->checkField( $status, 'description', DataModel::TYPE_STRING );
 
+        if ( in_array( $this->getDisplayMode(), [ self::DM_CIRCLE ] ) ) {
+            $this->checkField( $status, 'strokeColor', DataModel::TYPE_COLOUR3 );
+            $this->checkField( $status, 'strokeWidth', DataModel::TYPE_NUMBER );
+        }
+
         switch ( $this->getDisplayMode() ) {
             case self::DM_CIRCLE:
                 $this->checkField( $status, 'fillColor', DataModel::TYPE_COLOUR3 );
-                $this->checkField( $status, 'borderColor', DataModel::TYPE_COLOUR3 );
-                $this->checkField( $status, 'borderWidth', DataModel::TYPE_NUMBER );
                 $this->checkField( $status, 'size', DataModel::TYPE_NUMBER );
                 $this->checkField( $status, 'extraMinZoomSize', DataModel::TYPE_NUMBER );
                 $this->checkField( $status, [
                     'name' => 'icon',
                     'type' => DataModel::TYPE_FILE,
                     'fileMustExist' => true
+                ] );
+
+                $this->conflict( $status, [
+                    'borderColor',
+                    'strokeColor'
+                ] );
+                $this->checkField( $status, [
+                    'name' => 'borderColor',
+                    'type' => DataModel::TYPE_COLOUR3,
+                    '@replaced' => [ '0.16.10', '0.17.0', 'strokeColor' ]
+                ] );
+                $this->conflict( $status, [
+                    'borderWidth',
+                    'strokeWidth'
+                ] );
+                $this->checkField( $status, [
+                    'name' => 'borderWidth',
+                    'type' => DataModel::TYPE_NUMBER,
+                    '@replaced' => [ '0.16.10', '0.17.0', 'strokeWidth' ]
                 ] );
                 break;
             case self::DM_ICON:
