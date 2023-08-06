@@ -1071,8 +1071,8 @@ class DataMap extends EventEmitter {
         if ( background.image ) {
             background.layers.push( new Leaflet.ImageOverlay( background.image, this.translateBox( background.at ), {
                 decoding: 'async',
-                // Expand the DOM element's width and height by 0.5 pixels. This helps with gaps between tiles.
-                antiAliasing: 0.5
+                // Expand the DOM element's width and height by 0.51 pixels. This helps with gaps between tiles.
+                antiAliasing: background.aa ? 0.51 : 0
             } ) );
         }
 

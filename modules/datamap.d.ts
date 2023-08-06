@@ -79,6 +79,7 @@ declare namespace DataMaps {
             name?: string;
             image?: string;
             at: LeafletModule.LatLngBoundsTuple;
+            aa?: boolean;
             layer: string;
             overlays?: BackgroundOverlay[];
             // Runtime
