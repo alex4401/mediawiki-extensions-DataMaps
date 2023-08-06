@@ -64,6 +64,8 @@ declare namespace LeafletModule {
     namespace Ark {
         export interface PinIconOptions {
             colour: string;
+            strokeColour: string;
+            strokeWidth: number;
             iconSize: PointTuple;
             useWithCanvas?: boolean;
         }

@@ -558,7 +558,10 @@ class DataMap extends EventEmitter {
             if ( 'pinColor' in group ) {
                 this._iconCache[ markerType ] = new Leaflet.Ark.PinIcon( {
                     colour: group.pinColor,
+                    strokeColour: group.strokeColor || '#fffa',
+                    strokeWidth: group.strokeWidth || 0.5,
                     iconSize: group.size,
+                    // Pin markers are currently not supported by canvas renderer
                     useWithCanvas: false
                 } );
             } else if ( 'markerIcon' in group ) {

@@ -34,21 +34,24 @@ declare namespace DataMaps {
             article?: string;
         }
 
+        interface VectorMarkerGroup extends BaseMarkerGroup {
+            strokeColor?: string;
+            strokeWidth?: number;
+        }
+
         interface IconMarkerGroup extends BaseMarkerGroup {
             size: LeafletModule.PointTuple;
             markerIcon: string;
         }
 
-        interface PinMarkerGroup extends BaseMarkerGroup {
+        interface PinMarkerGroup extends VectorMarkerGroup {
             size: LeafletModule.PointTuple;
             pinColor: string;
         }
 
-        interface CircleMarkerGroup extends BaseMarkerGroup {
+        interface CircleMarkerGroup extends VectorMarkerGroup {
             size: number;
             fillColor: string;
-            strokeColor?: string;
-            strokeWidth?: number;
             zoomScaleFactor?: number;
         }
 

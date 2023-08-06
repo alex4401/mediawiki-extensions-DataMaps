@@ -1,9 +1,18 @@
 import { Colour3, Point, Title } from "./CoreTypes";
 
 
-type CircleProps = {
+type VectorProps = {
+    strokeColor?: Colour3;
+    strokeWidth?: number;
+};
+
+
+type CircleProps = VectorProps & {
     fillColor: Colour3;
+
+    /** @deprecated since 0.16.10, to be removed in 0.17.0; use strokeColor. */
     borderColor?: Colour3;
+    /** @deprecated since 0.16.10, to be removed in 0.17.0; use strokeWidth. */
     borderWidth?: number;
 
     /**
@@ -15,7 +24,7 @@ type CircleProps = {
 };
 
 
-type PinProps = {
+type PinProps = VectorProps & {
     pinColor: Colour3;
 
     /**

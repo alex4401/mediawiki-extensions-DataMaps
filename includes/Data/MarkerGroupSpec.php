@@ -170,7 +170,7 @@ class MarkerGroupSpec extends DataModel {
         ] );
         $this->checkField( $status, 'description', DataModel::TYPE_STRING );
 
-        if ( in_array( $this->getDisplayMode(), [ self::DM_CIRCLE ] ) ) {
+        if ( in_array( $this->getDisplayMode(), [ self::DM_CIRCLE, self::DM_PIN ] ) ) {
             $this->checkField( $status, 'strokeColor', DataModel::TYPE_COLOUR3 );
             $this->checkField( $status, 'strokeWidth', DataModel::TYPE_NUMBER );
         }

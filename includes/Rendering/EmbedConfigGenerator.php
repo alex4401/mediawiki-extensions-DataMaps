@@ -276,14 +276,6 @@ class EmbedConfigGenerator {
             case MarkerGroupSpec::DM_CIRCLE:
                 $out['fillColor'] = DataMapColourUtils::asHex( $spec->getFillColour() );
 
-                if ( $spec->getRawStrokeColour() != null ) {
-                    $out['strokeColor'] = DataMapColourUtils::asHex( $spec->getStrokeColour() );
-                }
-
-                if ( $spec->getStrokeWidth() != MarkerGroupSpec::DEFAULT_CIRCLE_STROKE_WIDTH ) {
-                    $out['strokeWidth'] = $spec->getStrokeWidth();
-                }
-
                 if ( $spec->getExtraMinZoomSize() != null ) {
                     $out['zoomScaleFactor'] = $spec->getExtraMinZoomSize();
                 }
@@ -297,6 +289,16 @@ class EmbedConfigGenerator {
             default:
                 throw new InvalidArgumentException( wfMessage( 'datamap-error-render-unsupported-displaymode',
                     $spec->getDisplayMode() ) );
+        }
+
+        if ( in_array( $spec->getDisplayMode(), [ MarkerGroupSpec::DM_PIN, MarkerGroupSpec::DM_CIRCLE ] ) ) {
+            if ( $spec->getRawStrokeColour() != null ) {
+                $out['strokeColor'] = DataMapColourUtils::asHex( $spec->getStrokeColour() );
+            }
+
+            if ( $spec->getStrokeWidth() != MarkerGroupSpec::DEFAULT_VECTOR_STROKE_WIDTH ) {
+                $out['strokeWidth'] = $spec->getStrokeWidth();
+            }
         }
 
         if ( $spec->getIcon() !== null ) {

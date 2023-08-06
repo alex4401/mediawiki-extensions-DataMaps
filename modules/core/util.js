@@ -210,7 +210,11 @@ module.exports = Object.freeze( {
          * @return {SVGElement}
          */
         createPinIconElement( group ) {
-            const result = module.exports.createPinIconElement( group.pinColor );
+            const result = module.exports.createPinIconElement( {
+                colour: group.pinColor,
+                strokeColour: group.strokeColor,
+                strokeWidth: group.strokeWidth
+            } );
             result.classList.add( 'ext-datamaps-legend-group-icon' );
             result.setAttribute( 'width', `${module.exports.MAX_GROUP_ICON_SIZE}` );
             result.setAttribute( 'height', `${module.exports.MAX_GROUP_ICON_SIZE}` );
@@ -263,17 +267,31 @@ module.exports = Object.freeze( {
 
 
     /**
+     * @typedef {Object} PinIconOptions
+     * @property {string} colour
+     * @property {string} [strokeColour='#0006']
+     * @property {number} [strokeWidth=0.5]
+     */
+    /**
      * Creates an SVG element of a pin-shaped icon.
      *
-     * @param {string} colour
+     * @deprecated since 0.16.10 passing string is deprecated; switch to PinIconOptions.
+     * @param {string|PinIconOptions} options
      * @return {SVGElement}
      */
-    createPinIconElement( colour ) {
+    createPinIconElement( options ) {
+        if ( typeof options === 'string' ) {
+            options = {
+                colour: options
+            };
+        }
+
         const root = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' );
         root.setAttribute( 'viewBox', '0 0 20 20' );
         const path = document.createElementNS( 'http://www.w3.org/2000/svg', 'path' );
         path.setAttribute( 'd', 'M 10,0 C 5.4971441,-0.21118927 1.7888107,3.4971441 2,8 c 0,2.52 2,5 3,6 1,1 5,6 5,6 0,0 4,-5 5,'
             + '-6 1,-1 3,-3.48 3,-6 0.211189,-4.5028559 -3.497144,-8.21118927 -8,-8 z' );
+        module.exports.applyPinIconAttributes( path, options );
         const circle = document.createElementNS( 'http://www.w3.org/2000/svg', 'circle' );
         circle.setAttribute( 'cx', '10' );
         circle.setAttribute( 'cy', '8' );
@@ -281,10 +299,23 @@ module.exports = Object.freeze( {
         circle.setAttribute( 'fill', '#0009' );
         root.appendChild( path );
         root.appendChild( circle );
-        if ( colour ) {
-            root.setAttribute( 'fill', colour );
-        }
         return root;
+    },
+
+
+    /**
+     * @param {SVGElement} pathElement
+     * @param {PinIconOptions} options
+     */
+    applyPinIconAttributes( pathElement, options ) {
+        const fill = options.colour,
+            strokeColour = options.strokeColour || '#fff6',
+            strokeWidth = options.strokeWidth || 0.5;
+        pathElement.setAttribute( 'fill', fill );
+        if ( strokeWidth > 0 ) {
+            pathElement.setAttribute( 'stroke', strokeColour );
+            pathElement.setAttribute( 'stroke-width', `${strokeWidth}` );
+        }
     },
 
 
