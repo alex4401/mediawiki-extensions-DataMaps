@@ -410,6 +410,9 @@ module.exports = Object.freeze( {
 
 
     TabberNeue: {
+        module: serverSettings.TabberNeueModule,
+
+
         /**
          * @param {HTMLElement} element
          * @return {HTMLElement?}

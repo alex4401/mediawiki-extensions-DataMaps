@@ -276,8 +276,8 @@ class DataMap extends EventEmitter {
         // If in a tabber and TabberNeue is not loaded yet, wait for it. We can't efficiently make any guarantees about
         // the ID until then.
         const tabberId = Util.TabberNeue.getOwningId( this.rootElement );
-        if ( tabberId !== null && mw.loader.getState( 'ext.tabberNeue' ) !== 'ready' ) {
-            mw.loader.using( 'ext.tabberNeue', () => this._setUpUriMarkerHandler() );
+        if ( tabberId !== null && mw.loader.getState( Util.TabberNeue.module ) !== 'ready' ) {
+            mw.loader.using( Util.TabberNeue.module, () => this._setUpUriMarkerHandler() );
         }
 
         // If in a tabber, check if the hash location matches

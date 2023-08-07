@@ -2,6 +2,7 @@
 namespace MediaWiki\Extension\DataMaps;
 
 use Config;
+use ExtensionRegistry;
 use MediaWiki\Extension\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\DataMaps\Migration\Fandom\FandomMapContentHandler;
 use MediaWiki\Extension\DataMaps\Rendering\MarkerProcessor;
@@ -239,6 +240,10 @@ class HookHandler implements
         return [
             'IsBleedingEdge' => ExtensionConfig::isBleedingEdge(),
             'IsVisualEditorEnabled' => ExtensionConfig::isVisualEditorEnabled(),
+            'TabberNeueModule' =>
+                ExtensionRegistry::getInstance()->isLoaded( 'TabberNeue', '>= 1.8.0' )
+                    ? ( $config->get( 'TabberNeueUseCodex' ) ? 'ext.tabberNeue.codex' : 'ext.tabberNeue.legacy' )
+                    : 'ext.tabberNeue',
             // TODO: not the brightest way
             'CanAnonsEdit' => array_key_exists( 'edit', $config->get( MainConfigNames::GroupPermissions )[ '*' ] )
         ];
