@@ -42,6 +42,10 @@ class MapBackgroundOverlaySpec extends DataModel {
         return $this->raw->reduceGaps ?? false;
     }
 
+    public function isImagePixelated(): bool {
+        return $this->raw->pixelated ?? false;
+    }
+
     public function supportsDrawProperties(): bool {
         return $this->getType() != self::TYPE_IMAGE;
     }
@@ -93,6 +97,7 @@ class MapBackgroundOverlaySpec extends DataModel {
         }
 
         if ( isset( $this->raw->image ) ) {
+            $this->checkField( $status, 'pixelated', DataModel::TYPE_BOOL );
             $this->checkField( $status, 'reduceGaps', DataModel::TYPE_BOOL );
         }
 

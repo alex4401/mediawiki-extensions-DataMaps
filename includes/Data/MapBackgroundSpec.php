@@ -28,6 +28,10 @@ class MapBackgroundSpec extends DataModel {
         return isset( $this->raw->name ) ? $this->raw->name : null;
     }
 
+    public function isPixelated(): bool {
+        return $this->raw->pixelated ?? false;
+    }
+
     public function getBackgroundLayerName(): ?string {
         return isset( $this->raw->associatedLayer ) ? $this->raw->associatedLayer : null;
     }
@@ -96,6 +100,7 @@ class MapBackgroundSpec extends DataModel {
             }
         }
 
+        $this->checkField( $status, 'pixelated', DataModel::TYPE_BOOL );
         $this->checkField( $status, [
             'name' => 'overlays',
             'type' => DataModel::TYPE_ARRAY,

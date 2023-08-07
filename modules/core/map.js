@@ -799,6 +799,7 @@ class DataMap extends EventEmitter {
         if ( overlay.image ) {
             // Construct an image
             result = new Leaflet.ImageOverlay( overlay.image, this.translateBox( overlay.at ), {
+                className: overlay.pixelated ? 'ext-datamaps-pixelated-image' : undefined,
                 decoding: 'async',
                 // Expand the DOM element's width and height by 0.51 pixels. This helps with gaps between tiles.
                 antiAliasing: overlay.aa ? 0.51 : 0
@@ -1070,6 +1071,7 @@ class DataMap extends EventEmitter {
         background.at = background.at || this.config.crs;
         if ( background.image ) {
             background.layers.push( new Leaflet.ImageOverlay( background.image, this.translateBox( background.at ), {
+                className: background.pixelated ? 'ext-datamaps-pixelated-image' : undefined,
                 decoding: 'async',
                 // Expand the DOM element's width and height by 0.51 pixels. This helps with gaps between tiles.
                 antiAliasing: background.aa ? 0.51 : 0

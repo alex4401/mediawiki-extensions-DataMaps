@@ -166,6 +166,9 @@ class EmbedConfigGenerator {
         if ( $spec->getBackgroundLayerName() !== null ) {
             $out['layer'] = $spec->getBackgroundLayerName();
         }
+        if ( $spec->isPixelated() ) {
+            $out['pixelated'] = true;
+        }
         if ( $spec->hasOverlays() || $spec->hasTiles() ) {
             $out['overlays'] = [];
         }
@@ -175,8 +178,11 @@ class EmbedConfigGenerator {
             // Translate all tiles into overlays
             $tileOffset = DataMapSpec::normalisePointCoordinates( $spec->getTilePlacementOffset() ?? [ 0, 0 ], $coordOrder );
             $tileSize = DataMapSpec::normalisePointCoordinates( $spec->getTileSize(), $coordOrder );
-            $spec->iterateTiles( function ( MapBackgroundTileSpec $tile ) use ( &$out, &$tileOffset, &$tileSize, $coordOrder ) {
-                $out['overlays'][] = $this->convertBackgroundTile( $tile, $tileOffset, $tileSize, $coordOrder );
+            $pixelated = $spec->isPixelated();
+            $spec->iterateTiles( function ( MapBackgroundTileSpec $tile ) use (
+                &$out, &$tileOffset, &$tileSize, $coordOrder, $pixelated
+            ) {
+                $out['overlays'][] = $this->convertBackgroundTile( $tile, $tileOffset, $tileSize, $coordOrder, $pixelated );
             } );
         }
         if ( $spec->hasOverlays() ) {
@@ -200,6 +206,9 @@ class EmbedConfigGenerator {
             if ( $spec->wantsImageGapWorkaround() ) {
                 $result['aa'] = 1;
             }
+            if ( $spec->isImagePixelated() ) {
+                $result['pixelated'] = true;
+            }
         }
         if ( $spec->getPath() != null ) {
             $result['path'] = $spec->getPath();
@@ -222,7 +231,13 @@ class EmbedConfigGenerator {
         return $result;
     }
 
-    private function convertBackgroundTile( MapBackgroundTileSpec $spec, array $tileOffset, array $tileSize, int $coordOrder ) {
+    private function convertBackgroundTile(
+        MapBackgroundTileSpec $spec,
+        array $tileOffset,
+        array $tileSize,
+        int $coordOrder,
+        bool $pixelated
+    ) {
         $result = [];
 
         $at = DataMapSpec::normalisePointCoordinates( $spec->getPlacementLocation(), $coordOrder );
@@ -234,6 +249,9 @@ class EmbedConfigGenerator {
         $result['image'] = DataMapFileUtils::getRequiredFile( $spec->getImageName() )->getURL();
         $result['at'] = $at;
         $result['aa'] = 1;
+        if ( $pixelated ) {
+            $result['pixelated'] = true;
+        }
         return $result;
     }
 

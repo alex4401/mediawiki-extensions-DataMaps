@@ -69,6 +69,7 @@ declare namespace DataMaps {
             at: LeafletModule.LatLngBoundsTuple;
             image?: string;
             aa?: boolean;
+            pixelated?: boolean;
             path?: LeafletModule.PointTuple[];
             thickness?: number;
             colour?: string;
@@ -80,6 +81,7 @@ declare namespace DataMaps {
             image?: string;
             at: LeafletModule.LatLngBoundsTuple;
             aa?: boolean;
+            pixelated?: boolean;
             layer: string;
             overlays?: BackgroundOverlay[];
             // Runtime
