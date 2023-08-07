@@ -71,8 +71,14 @@ class DataMapSpec extends DataModel {
 
     public function getBackgrounds(): array {
         if ( $this->cachedBackgrounds == null ) {
-            if ( !isset( $this->raw->backgrounds ) ) {
-                $this->cachedBackgrounds = [ MapBackgroundSpec::fromImageName( $this->raw->image ) ];
+            if ( isset( $this->raw->image ) ) {
+                $this->cachedBackgrounds = [
+                    MapBackgroundSpec::fromImageName( $this->raw->image )
+                ];
+            } elseif ( isset( $this->raw->background ) ) {
+                $this->cachedBackgrounds = [
+                    new MapBackgroundSpec( $this->raw->background )
+                ];
             } else {
                 $this->cachedBackgrounds = array_map( fn ( $raw ) => new MapBackgroundSpec( $raw ), $this->raw->backgrounds );
             }
@@ -229,12 +235,28 @@ class DataMapSpec extends DataModel {
             'values' => [ 'yx', 'xy', 'latlon', 'lonlat' ]
         ] );
 
-        if ( !$this->conflict( $status, [ 'image', 'backgrounds' ] ) ) {
+        if ( !$this->conflict( $status, [ 'image', 'background', 'backgrounds' ] ) ) {
             if ( isset( $this->raw->image ) ) {
                 $this->checkField( $status, [
+                    '@replaced' => [ '0.16.10', '0.17.0', 'background' ],
                     'name' => 'image',
                     'type' => DataModel::TYPE_FILE,
                     'fileMustExist' => true
+                ] );
+            } elseif ( isset( $this->raw->background ) ) {
+                $this->checkField( $status, [
+                    'name' => 'background',
+                    'type' => [
+                        DataModel::TYPE_FILE,
+                        DataModel::TYPE_OBJECT
+                    ],
+                    'fileMustExist' => true,
+                    'check' => static function ( $status, $value ) {
+                        if ( is_object( $value ) ) {
+                            return ( new MapBackgroundSpec( $value ) )->validate( $status, true );
+                        }
+                        return true;
+                    }
                 ] );
             } elseif ( isset( $this->raw->backgrounds ) ) {
                 $this->checkField( $status, [
