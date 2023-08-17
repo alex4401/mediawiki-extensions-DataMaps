@@ -239,25 +239,24 @@ class DataMapSpec extends DataModel {
         ] );
         $this->checkField( $status, [
             'name' => 'crs',
-            'type' => DataModel::TYPE_VECTOR2X2,
+            'type' => [ DataModel::TYPE_OBJECT, DataModel::TYPE_VECTOR2X2 ],
             'check' => static function ( $status, $crs ) {
-                // Validate the coordinate system - only two supported schemes are [ lower lower higher higher ] (top-left), and
-                // [ higher higher lower lower ] (bottom-left).
-                $first = $crs[0];
-                $second = $crs[1];
-                if ( !( ( $first[0] < $second[0] && $first[1] < $second[1] ) || ( $first[0] > $second[0]
-                    && $first[1] > $second[1] ) ) ) {
-                    $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, 'crs',
-                        wfMessage( 'datamap-error-validate-check-docs' ) );
-                    return false;
+                if ( is_array( $crs ) ) {
+                    // HACK: we shouldn't really be constructing the object here to validate the system
+                    $crsRaw = new stdClass();
+                    $crsRaw->crs = $crs;
+                    $crs = new CoordinateSystem( $crsRaw );
+                } else {
+                    $crs = new CoordinateSystem( $crs );
                 }
-                return true;
+                return $crs->validate( $status );
             }
         ] );
         $this->checkField( $status, [
             'name' => 'coordinateOrder',
             'type' => DataModel::TYPE_STRING,
-            'values' => [ 'yx', 'xy', 'latlon', 'lonlat' ]
+            'values' => [ 'yx', 'xy', 'latlon', 'lonlat' ],
+            '@replaced' => [ '0.16.11', '0.17.0', 'crs.order' ]
         ] );
 
         if ( !$this->conflict( $status, [ 'image', 'background', 'backgrounds' ] ) ) {
