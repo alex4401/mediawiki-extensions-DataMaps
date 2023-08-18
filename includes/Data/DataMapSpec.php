@@ -10,30 +10,30 @@ use Title;
 class DataMapSpec extends DataModel {
     protected static string $publicName = 'DataMapSpec';
 
-    public const DEFAULT_COORDINATE_SPACE = [ [ 0, 0 ], [ 100, 100 ] ];
+    /** @deprecated since 0.16.11, to be removed in 0.17.0; use CoordinateSystem::DEFAULT_SPACE. */
+    public const DEFAULT_COORDINATE_SPACE = CoordinateSystem::DEFAULT_SPACE;
 
     private ?array $cachedMarkerGroups = null;
     private ?array $cachedMarkerLayers = null;
     private ?array $cachedBackgrounds = null;
+    private ?CoordinateSystem $coordinateSystem = null;
     private ?MapSettingsSpec $cachedSettings = null;
 
-    public const CO_YX = 0;
-    public const CO_XY = 1;
+    /** @deprecated since 0.16.11, to be removed in 0.17.0; use CoordinateSystem::ORDER_YX. */
+    public const CO_YX = CoordinateSystem::ORDER_YX;
+    /** @deprecated since 0.16.11, to be removed in 0.17.0; use CoordinateSystem::ORDER_XY. */
+    public const CO_XY = CoordinateSystem::ORDER_XY;
 
     public const MARKER_ERROR_LIMIT = 30;
 
+    /** @deprecated since 0.16.11, to be removed in 0.17.0; use CoordinateSystem::normalisePoint. */
     public static function normalisePointCoordinates( array $value, int $order ): array {
-        if ( $order === self::CO_XY ) {
-            $value = [ $value[1], $value[0] ];
-        }
-        return $value;
+        return CoordinateSystem::normalisePoint( $value, $order );
     }
 
+    /** @deprecated since 0.16.11, to be removed in 0.17.0; use CoordinateSystem::normaliseBox. */
     public static function normaliseBoxCoordinates( array $value, int $order ): array {
-        if ( $order === self::CO_XY ) {
-            $value = [ [ $value[0][1], $value[0][0] ], [ $value[1][1], $value[1][0] ] ];
-        }
-        return $value;
+        return CoordinateSystem::normaliseBox( $value, $order );
     }
 
     public static function staticIsMixin( \stdclass $raw ): bool {
@@ -48,25 +48,46 @@ class DataMapSpec extends DataModel {
         return isset( $this->raw->mixins ) ? $this->raw->mixins : null;
     }
 
+    /**
+     * @deprecated since 0.16.11, to be removed in 0.17.0; use getCoordinateSystem()->getOrder().
+     */
     public function getCoordinateOrder(): int {
-        $value = isset( $this->raw->coordinateOrder ) ? $this->raw->coordinateOrder : 'yx';
-        switch ( $value ) {
-            case 'yx':
-            case 'latlon':
-                return self::CO_YX;
-            case 'xy':
-            case 'lonlat':
-                return self::CO_XY;
+        return $this->getCoordinateSystem()->getOrder();
+    }
+
+    /**
+     * Retrieves the coordinate system setup.
+     *
+     * @since 0.16.11
+     * @return CoordinateSystem
+     */
+    public function getCoordinateSystem(): CoordinateSystem {
+        if ( $this->coordinateSystem === null ) {
+            if ( is_object( $this->raw->crs ?? null ) ) {
+                $this->coordinateSystem = new CoordinateSystem( $this->raw->crs );
+            } else {
+                $options = [ ];
+                if ( isset( $this->raw->crs ) ) {
+                    $options['crs'] = $this->raw->crs;
+                }
+                if ( isset( $this->raw->coordinateOrder ) ) {
+                    $options['order'] = $this->raw->coordinateOrder;
+                }
+                $this->coordinateSystem = new CoordinateSystem( ( object ) $options );
+            }
         }
+        return $this->coordinateSystem;
     }
 
     /**
      * If coordinate space spec is oriented [ lower lower upper upper ], assume top left corner as origin point (latitude will
      * be flipped). If [ upper upper lower lower ], assume bottom left corner (latitude will be unchanged). Any other layout is
      * invalid.
+     *
+     * @deprecated since 0.16.11, to be removed in 0.17.0; use getCoordinateSystem()->getBox().
      */
     public function getCoordinateReferenceSpace(): array {
-        return isset( $this->raw->crs ) ? $this->raw->crs : self::DEFAULT_COORDINATE_SPACE;
+        return $this->getCoordinateSystem()->getBox();
     }
 
     public function getBackgrounds(): array {
