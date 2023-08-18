@@ -1,4 +1,4 @@
-import { Title, CoordinateReferenceSystem } from "./CoreTypes";
+import { Title, CoordinateReferenceSystem, Box, Point } from "./CoreTypes";
 import { MarkerLayer } from "./MarkerLayer";
 import { MarkerGroup } from "./MarkerGroup";
 import { Marker } from "./Marker";
@@ -22,18 +22,38 @@ export type DataMap = {
     mixins?: Title[];
 
     /**
-     * Reference coordinate space, which also determines whether the system origin will be top-left or bottom-left.
-     *
-     * Defaults to `[ [0, 0], [100, 100] ]`, which places the origin point in the top-left corner - swap the points for
-     * bottom-left.
+     * Reference coordinate space, which also determines whether the system origin will be top-left or bottom-left. This
+     * is deduced from the corner coordinates.
      *
      * @default [ [ 0, 0 ], [ 100, 100 ] ]
      */
-    crs?: CoordinateReferenceSystem;
+    crs?: Box | {
+        /**
+         * Coordinate order that the data uses.
+         *
+         * @default 'yx'
+         */
+        order?: 'yx' | 'latlon' | 'xy' | 'lonlat';
+
+        /**
+         * Coordinates of the top-left corner of the map.
+         *
+         * @default [0,0]
+         */
+        topLeft?: Point;
+
+        /**
+         * Coordinates of the bottom-right corner of the map.
+         *
+         * @default [100,100]
+         */
+        bottomRight?: Point;
+    };
 
     /**
      * Coordinate order that will be used in anonymous (arrays and not named keys) box or location specifications.
      *
+     * @deprecated since 0.16.11, to be removed in 0.17.0; use crs.order.
      * @default 'yx'
      */
     coordinateOrder?: 'yx' | 'latlon' | 'xy' | 'lonlat';
