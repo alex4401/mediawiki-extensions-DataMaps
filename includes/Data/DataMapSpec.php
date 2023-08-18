@@ -75,6 +75,10 @@ class DataMapSpec extends DataModel {
                 $this->cachedBackgrounds = [
                     MapBackgroundSpec::fromImageName( $this->raw->image )
                 ];
+            } elseif ( is_string( $this->raw->background ?? null ) ) {
+                $this->cachedBackgrounds = [
+                    MapBackgroundSpec::fromImageName( $this->raw->background )
+                ];
             } elseif ( isset( $this->raw->background ) ) {
                 $this->cachedBackgrounds = [
                     new MapBackgroundSpec( $this->raw->background )
