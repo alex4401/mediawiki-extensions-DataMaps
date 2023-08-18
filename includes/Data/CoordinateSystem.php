@@ -11,6 +11,7 @@ class CoordinateSystem extends DataModel {
     public const DEFAULT_TOP_LEFT = [ 0, 0 ];
     public const DEFAULT_BOTTOM_RIGHT = [ 100, 100 ];
     public const DEFAULT_SPACE = [ self::DEFAULT_TOP_LEFT, self::DEFAULT_BOTTOM_RIGHT ];
+    public const DEFAULT_ORDER = 'yx';
     public const ORDER_YX = 0;
     public const ORDER_XY = 1;
 
@@ -29,7 +30,7 @@ class CoordinateSystem extends DataModel {
     }
     
     public function getOrder(): int {
-        $value = $this->raw->order ?? 'yx';
+        $value = $this->raw->order ?? self::DEFAULT_ORDER;
         switch ( $value ) {
             case 'yx':
             case 'latlon':
@@ -41,20 +42,18 @@ class CoordinateSystem extends DataModel {
     }
 
     public function getTopLeft(): array {
-        return $this->getBox()[0];
+        return $this->raw->topLeft ?? self::DEFAULT_TOP_LEFT;
     }
 
     public function getBottomRight(): array {
-        return $this->getBox()[1];
+        return $this->raw->bottomRight ?? self::DEFAULT_BOTTOM_RIGHT;
     }
 
-    /**
-     * If coordinate space spec is oriented [ lower lower upper upper ], assume top left corner as origin point (latitude will
-     * be flipped). If [ upper upper lower lower ], assume bottom left corner (latitude will be unchanged). Any other layout is
-     * invalid.
-     */
     public function getBox(): array {
-        return $this->raw->crs ?? self::DEFAULT_SPACE;
+        return [
+            $this->getTopLeft(),
+            $this->getBottomRight()
+        ];
     }
 
     public function validate( Status $status ) {
@@ -64,21 +63,12 @@ class CoordinateSystem extends DataModel {
             'values' => [ 'yx', 'xy', 'latlon', 'lonlat' ]
         ] );
         $this->checkField( $status, [
-            'name' => 'crs',
-            'type' => DataModel::TYPE_VECTOR2X2,
-            'check' => static function ( $status, $crs ) {
-                // Validate the coordinate system - only two supported schemes are [ lower lower higher higher ] (top-left), and
-                // [ higher higher lower lower ] (bottom-left).
-                $first = $crs[0];
-                $second = $crs[1];
-                if ( !( ( $first[0] < $second[0] && $first[1] < $second[1] ) || ( $first[0] > $second[0]
-                    && $first[1] > $second[1] ) ) ) {
-                    $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, 'crs',
-                        wfMessage( 'datamap-error-validate-check-docs' ) );
-                    return false;
-                }
-                return true;
-            }
+            'name' => 'topLeft',
+            'type' => DataModel::TYPE_VECTOR2
+        ] );
+        $this->checkField( $status, [
+            'name' => 'bottomRight',
+            'type' => DataModel::TYPE_VECTOR2
         ] );
     }
 }

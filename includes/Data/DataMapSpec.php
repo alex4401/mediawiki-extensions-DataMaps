@@ -68,7 +68,8 @@ class DataMapSpec extends DataModel {
             } else {
                 $options = [ ];
                 if ( isset( $this->raw->crs ) ) {
-                    $options['crs'] = $this->raw->crs;
+                    $options['topLeft'] = $this->raw->crs[0];
+                    $options['bottomRight'] = $this->raw->crs[1];
                 }
                 if ( isset( $this->raw->coordinateOrder ) ) {
                     $options['order'] = $this->raw->coordinateOrder;
@@ -242,10 +243,11 @@ class DataMapSpec extends DataModel {
             'type' => [ DataModel::TYPE_OBJECT, DataModel::TYPE_VECTOR2X2 ],
             'check' => static function ( $status, $crs ) {
                 if ( is_array( $crs ) ) {
-                    // HACK: we shouldn't really be constructing the object here to validate the system
-                    $crsRaw = new stdClass();
-                    $crsRaw->crs = $crs;
-                    $crs = new CoordinateSystem( $crsRaw );
+                    $options = [
+                        'topLeft' => $crs[0],
+                        'bottomRight' => $crs[1],
+                    ];
+                    $crs = new CoordinateSystem( ( object ) $options );
                 } else {
                     $crs = new CoordinateSystem( $crs );
                 }

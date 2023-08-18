@@ -22,8 +22,13 @@ export type DataMap = {
     mixins?: Title[];
 
     /**
-     * Reference coordinate space, which also determines whether the system origin will be top-left or bottom-left. This
-     * is deduced from the corner coordinates.
+     * Reference coordinate space. This also determines the origin point from which the system expands.
+     *
+     * In most situations, this should be set to your preferred coordinate range.
+     *
+     * If the top-left corner is placed "deeper" into the system than the bottom-right corner, the bottom-right corner
+     * will be used as the origin point, i.e. objects will spread from it. For example, this will be achieved by a
+     * top-left corner of [100, 100] and bottom-right of [0, 0].
      *
      * @default [ [ 0, 0 ], [ 100, 100 ] ]
      */
