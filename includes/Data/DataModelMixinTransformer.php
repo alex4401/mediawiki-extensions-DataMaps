@@ -7,7 +7,7 @@ class DataModelMixinTransformer {
     public static function mergeTwoObjects( stdClass $target, stdClass $overlay, $allowObjectArrayMerge = true ): stdClass {
         foreach ( get_object_vars( $overlay ) as $name => $value ) {
             // Do not copy the "is mix-in?" metadata field
-            if ( $name === '$mixin' ) {
+            if ( $name === '$mixin' || $name === '$fragment' ) {
                 continue;
             }
 

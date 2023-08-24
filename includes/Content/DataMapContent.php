@@ -104,17 +104,23 @@ class DataMapContent extends JsonContent {
         return $content;
     }
 
-    public function isMixin(): bool {
-        return DataMapSpec::staticIsMixin( $this->getData()->getValue() );
+    public function isFragment(): bool {
+        return DataMapSpec::staticIsFragment( $this->getData()->getValue() );
     }
 
-    private function mergeMixins( stdClass $main ) {
-        if ( !isset( $main->mixins ) ) {
+    /** @deprecated since 0.16.11, to be removed in 0.17.0; use isFragment. */
+    public function isMixin(): bool {
+        return $this->isFragment();
+    }
+
+    private function mergeFragments( stdClass $main ) {
+        // Copy the mixins list to prevent bad behaviour when merging occurs. Mixins should be always stated explicitly.
+        $mixins = $main->include ?? $main->mixins ?? null;
+
+        if ( !$mixins ) {
             return $main;
         }
 
-        // Copy the mixins list to prevent bad behaviour when merging occurs. Mixins should be always stated explicitly.
-        $mixins = $main->mixins;
 
         $finalMixin = null;
         foreach ( $mixins as &$mixinName ) {
@@ -145,7 +151,10 @@ class DataMapContent extends JsonContent {
             $main = DataModelMixinTransformer::mergeTwoObjects( $finalMixin, $main );
         }
 
-        // Remove $mixin field
+        // Remove fragment identification fields
+        if ( isset( $main->{'$fragment'} ) ) {
+            unset( $main->{'$fragment'} );
+        }
         if ( isset( $main->{'$mixin'} ) ) {
             unset( $main->{'$mixin'} );
         }
@@ -155,7 +164,7 @@ class DataMapContent extends JsonContent {
 
     public function asModel(): DataMapSpec {
         if ( $this->modelCached === null ) {
-            $this->modelCached = new DataMapSpec( $this->mergeMixins( $this->getData()->getValue() ) );
+            $this->modelCached = new DataMapSpec( $this->mergeFragments( $this->getData()->getValue() ) );
         }
         return $this->modelCached;
     }

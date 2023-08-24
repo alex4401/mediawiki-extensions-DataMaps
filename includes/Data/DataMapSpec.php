@@ -36,16 +36,31 @@ class DataMapSpec extends DataModel {
         return CoordinateSystem::normaliseBox( $value, $order );
     }
 
+    public static function staticIsFragment( \stdclass $raw ): bool {
+        return $raw->{'$fragment'} ?? $raw->{'$mixin'} ?? false;
+    }
+
+    public function isFragment(): bool {
+        return self::staticIsFragment( $this->raw );
+    }
+
+    /** @deprecated since 0.16.11, to be removed in 0.17.0; use staticIsFragment. */
     public static function staticIsMixin( \stdclass $raw ): bool {
-        return isset( $raw->{'$mixin'} ) ? $raw->{'$mixin'} : false;
+        return self::staticIsFragment( $raw );
     }
 
+    /** @deprecated since 0.16.11, to be removed in 0.17.0; use isFragment. */
     public function isMixin(): bool {
-        return self::staticIsMixin( $this->raw );
+        return self::staticIsFragment( $this->raw );
     }
 
+    public function getRequiredFragments(): ?array {
+        return $this->raw->include ?? $this->raw->mixins ?? null;
+    }
+
+    /** @deprecated since 0.16.11, to be removed in 0.17.0; use isFragment. */
     public function getMixins(): ?array {
-        return isset( $this->raw->mixins ) ? $this->raw->mixins : null;
+        return $this->getRequiredFragments();
     }
 
     /**
