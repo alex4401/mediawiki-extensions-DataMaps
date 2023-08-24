@@ -16,7 +16,7 @@ final class ParserFunction_EmbedDataMap {
         $title = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $params[0] );
 
         // Retrieve and validate options
-        $options = self::getRenderOptions( $params );
+        $options = $this->getRenderOptions( $params );
         if ( is_string( $options ) ) {
             return self::wrapError( $options );
         }
