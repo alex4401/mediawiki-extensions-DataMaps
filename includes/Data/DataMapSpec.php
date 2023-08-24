@@ -235,10 +235,39 @@ class DataMapSpec extends DataModel {
         $isFull = !$this->isMixin();
 
         $this->checkField( $status, '$schema', DataModel::TYPE_STRING );
-        $this->checkField( $status, '$mixin', DataModel::TYPE_BOOL );
+        $this->checkField( $status, '$fragment', DataModel::TYPE_BOOL );
+        $this->checkField( $status, [
+            'name' => '$mixin',
+            'type' => DataModel::TYPE_BOOL,
+            '@replaced' => [ '0.16.11', '0.17.0', '$fragment' ]
+        ] );
+        $this->checkField( $status, [
+            'name' => 'include',
+            'type' => DataModel::TYPE_ARRAY,
+            'itemType' => DataModel::TYPE_STRING,
+            'itemCheck' => static function ( $status, $mixinName ) {
+                // Make sure all fragments exist and have the right content model
+                $title = Title::newFromText( $mixinName );
+                $mixinPage = DataMapContent::loadPage( $title );
+
+                if ( $title->getNamespace() !== ExtensionConfig::getNamespaceId() ) {
+                    $status->fatal( 'datamap-error-validatespec-map-missing-fragment-ns',
+                        wfEscapeWikiText( $mixinName ) );
+                    return false;
+                }
+
+                if ( is_numeric( $mixinPage ) || $mixinPage->getData()->getValue() == null ) {
+                    $status->fatal( 'datamap-error-validatespec-map-bad-mixin', wfEscapeWikiText( $mixinName ) );
+                    return false;
+                }
+
+                return true;
+            }
+        ] );
         $this->checkField( $status, [
             'name' => 'mixins',
             'type' => DataModel::TYPE_ARRAY,
+            '@replaced' => [ '0.16.11', '0.17.0', 'include' ],
             'itemType' => DataModel::TYPE_STRING,
             'itemCheck' => static function ( $status, $mixinName ) {
                 // Make sure all mixins exist and are data maps
