@@ -242,7 +242,7 @@ class DataMapSpec extends DataModel {
             'itemType' => DataModel::TYPE_STRING,
             'itemCheck' => static function ( $status, $mixinName ) {
                 // Make sure all mixins exist and are data maps
-                $title = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $mixinName );
+                $title = Title::newFromText( $mixinName, ExtensionConfig::getNamespaceId() );
                 $mixinPage = DataMapContent::loadPage( $title );
 
                 if ( is_numeric( $mixinPage ) || $mixinPage->getData()->getValue() == null ) {
