@@ -3,6 +3,9 @@ namespace MediaWiki\Extension\DataMaps\Data;
 
 use stdClass;
 
+/**
+ * @internal
+ */
 class DataModelMixinTransformer {
     public static function mergeTwoObjects( stdClass $target, stdClass $overlay, $allowObjectArrayMerge = true ): stdClass {
         foreach ( get_object_vars( $overlay ) as $name => $value ) {
