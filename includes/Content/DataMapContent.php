@@ -225,7 +225,10 @@ class DataMapContent extends JsonContent {
             $status->fatal( 'datamap-error-validate-invalid-json' );
         } else {
             // Disallow mixins with mixins
-            if ( $this->isMixin() && isset( $this->getData()->getValue()->mixins ) ) {
+            if (
+                $this->isMixin()
+                && ( isset( $this->getData()->getValue()->mixins ) || isset( $this->getData()->getValue()->include ) )
+            ) {
                 $status->fatal( 'datamap-error-validatespec-map-mixin-with-mixins' );
                 return $status;
             }

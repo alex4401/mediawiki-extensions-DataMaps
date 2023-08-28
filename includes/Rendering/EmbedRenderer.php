@@ -104,11 +104,11 @@ class EmbedRenderer {
 
     public function updateLinks(): void {
         // Mix-ins
-        if ( $this->data->getMixins() !== null ) {
-            foreach ( $this->data->getMixins() as &$mixinName ) {
-                $mixin = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $mixinName );
-                $this->parserOutput->addTemplate( $mixin, $mixin->getArticleId(),
-                    $this->parser->fetchCurrentRevisionRecordOfTitle( $mixin )->getId() );
+        $fragments = $this->data->getRequiredFragments();
+        if ( $fragments !== null ) {
+            foreach ( $fragments as &$fragment ) {
+                $this->parserOutput->addTemplate( $fragment, $fragment->getArticleId(),
+                    $this->parser->fetchCurrentRevisionRecordOfTitle( $fragment )->getId() );
             }
         }
 

@@ -55,7 +55,12 @@ class DataMapSpec extends DataModel {
     }
 
     public function getRequiredFragments(): ?array {
-        return $this->raw->include ?? $this->raw->mixins ?? null;
+        $list = $this->raw->include ?? $this->raw->mixins ?? null;
+        if ( $list === null ) {
+            return null;
+        }
+
+        return array_map( fn ( $el ) => Title::newFromText( $el, ExtensionConfig::getNamespaceId() ), $list );
     }
 
     /** @deprecated since 0.16.11, to be removed in 0.17.0; use isFragment. */
