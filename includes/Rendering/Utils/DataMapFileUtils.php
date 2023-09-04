@@ -10,8 +10,6 @@ use ThumbnailImage;
 
 class DataMapFileUtils {
     public const SCALING_THRESHOLD = 64;
-    /** @deprecated since v0.16.9, will be removed in v0.17.0; use SCALING_THRESHOLD. */
-    public const SCALING_WIDTH_THRESHOLD = self::SCALING_THRESHOLD;
 
     protected static function cleanName( string $title ): string {
         if ( str_starts_with( strtolower( $title ), 'file:' ) ) {
@@ -36,7 +34,7 @@ class DataMapFileUtils {
         }
 
         $fileWidth = $file->getWidth();
-        if ( ( $allowUpsizing || $width < $fileWidth ) && $fileWidth > self::SCALING_WIDTH_THRESHOLD ) {
+        if ( ( $allowUpsizing || $width < $fileWidth ) && $fileWidth > self::SCALING_THRESHOLD ) {
             $file = $file->transform( [
                 'width' => $width
             ] );

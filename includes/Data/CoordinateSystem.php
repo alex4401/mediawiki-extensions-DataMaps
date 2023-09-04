@@ -55,6 +55,10 @@ class CoordinateSystem extends DataModel {
         ];
     }
 
+    public function getNormalisedBox(): array {
+        return self::normaliseBox( $this->getBox(), $this->getOrder() );
+    }
+
     public function validate( Status $status ) {
         $this->checkField( $status, [
             'name' => 'order',

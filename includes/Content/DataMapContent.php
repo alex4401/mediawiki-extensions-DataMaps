@@ -62,7 +62,7 @@ class DataMapContent extends JsonContent {
 
     private ?DataMapSpec $modelCached = null;
 
-    public function __construct( $text, $modelId = ARK_CONTENT_MODEL_DATAMAP ) {
+    public function __construct( $text, $modelId = CONTENT_MODEL_DATAMAPS ) {
         parent::__construct( $text, $modelId );
     }
 
@@ -108,14 +108,9 @@ class DataMapContent extends JsonContent {
         return DataMapSpec::staticIsFragment( $this->getData()->getValue() );
     }
 
-    /** @deprecated since 0.16.11, to be removed in 0.17.0; use isFragment. */
-    public function isMixin(): bool {
-        return $this->isFragment();
-    }
-
     private function mergeFragments( stdClass $main ) {
         // Copy the mixins list to prevent bad behaviour when merging occurs. Mixins should be always stated explicitly.
-        $mixins = $main->include ?? $main->mixins ?? null;
+        $mixins = $main->include ?? null;
 
         if ( !$mixins ) {
             return $main;
@@ -153,9 +148,6 @@ class DataMapContent extends JsonContent {
         // Remove fragment identification fields
         if ( isset( $main->{'$fragment'} ) ) {
             unset( $main->{'$fragment'} );
-        }
-        if ( isset( $main->{'$mixin'} ) ) {
-            unset( $main->{'$mixin'} );
         }
 
         return $main;
@@ -226,8 +218,8 @@ class DataMapContent extends JsonContent {
         } else {
             // Disallow mixins with mixins
             if (
-                $this->isMixin()
-                && ( isset( $this->getData()->getValue()->mixins ) || isset( $this->getData()->getValue()->include ) )
+                $this->isFragment()
+                && ( isset( $this->getData()->getValue()->include ) )
             ) {
                 $status->fatal( 'datamap-error-validatespec-map-mixin-with-mixins' );
                 return $status;

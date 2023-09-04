@@ -12,10 +12,6 @@ class MapSettingsSpec extends DataModel {
     public const SM_SELF = 1;
     public const SM_TABBER = 2;
 
-    /**
-     * @deprecated since v0.16, will be removed in v1.0. Use SC_GROUP_DECLARATION_ORDER instead.
-     */
-    public const SC_LOCATION = 0;
     public const SC_GROUP_DECLARATION_ORDER = 0;
     public const SC_AMOUNT = 1;
 
@@ -55,13 +51,7 @@ class MapSettingsSpec extends DataModel {
     }
 
     public function getZoomSettings(): ?ZoomSettingsSpec {
-        $property = $this->raw->zoom ?? new stdClass();
-
-        if ( $this->raw->disableZoom ?? false ) {
-            $property->lock = true;
-        }
-
-        return new ZoomSettingsSpec( $property );
+        return new ZoomSettingsSpec( $this->raw->zoom ?? new stdClass() );
     }
 
     public function getSearchMode(): int {
@@ -106,11 +96,6 @@ class MapSettingsSpec extends DataModel {
     public function validate( Status $status ) {
         $this->checkField( $status, 'allowFullscreen', DataModel::TYPE_BOOL );
         $this->checkField( $status, 'backdropColor', DataModel::TYPE_COLOUR3 );
-        $this->checkField( $status, [
-            'name' => 'disableZoom',
-            'type' => DataModel::TYPE_BOOL,
-            '@replaced' => [ '0.16.7', '0.17.0', 'zoom: { lock: true }' ]
-        ] );
         $this->checkField( $status, [
             'name' => 'enableSearch',
             'type' => [ DataModel::TYPE_BOOL, DataModel::TYPE_STRING ],
