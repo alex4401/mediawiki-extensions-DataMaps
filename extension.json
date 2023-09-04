@@ -435,6 +435,9 @@
 	"AutoloadNamespaces": {
 		"MediaWiki\\Extension\\DataMaps\\": "includes/"
 	},
+	"ServiceWiringFiles": [
+		"includes/ServiceWiring.php"
+	],
 
 	"APIModules": {
 		"queryDataMap": "MediaWiki\\Extension\\DataMaps\\API\\ApiQueryDataMapEndpoint"
