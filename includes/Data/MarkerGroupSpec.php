@@ -11,8 +11,6 @@ class MarkerGroupSpec extends DataModel {
 
     public const DEFAULT_CIRCLE_SIZE = 5;
     public const DEFAULT_VECTOR_STROKE_WIDTH = 1;
-    /** @deprecated since 0.16.10, to be removed in 0.17.0; use DEFAULT_VECTOR_STROKE_WIDTH. */
-    public const DEFAULT_CIRCLE_STROKE_WIDTH = self::DEFAULT_VECTOR_STROKE_WIDTH;
     public const DEFAULT_ICON_SIZE = [ 32, 32 ];
 
     // Display modes
@@ -82,7 +80,7 @@ class MarkerGroupSpec extends DataModel {
     }
 
     public function getRawStrokeColour() /*: ?array|string*/ {
-        return $this->raw->strokeColor ?? $this->raw->borderColor ?? null;
+        return $this->raw->strokeColor ?? null;
     }
 
     public function getFillColour(): array {
@@ -102,7 +100,7 @@ class MarkerGroupSpec extends DataModel {
     }
 
     public function getStrokeWidth() /*: ?int|float */ {
-        return $this->raw->strokeWidth ?? $this->raw->borderWidth ?? self::DEFAULT_VECTOR_STROKE_WIDTH;
+        return $this->raw->strokeWidth ?? self::DEFAULT_VECTOR_STROKE_WIDTH;
     }
 
     public function getIcon(): ?string {
@@ -184,25 +182,6 @@ class MarkerGroupSpec extends DataModel {
                     'name' => 'icon',
                     'type' => DataModel::TYPE_FILE,
                     'fileMustExist' => true
-                ] );
-
-                $this->conflict( $status, [
-                    'borderColor',
-                    'strokeColor'
-                ] );
-                $this->checkField( $status, [
-                    'name' => 'borderColor',
-                    'type' => DataModel::TYPE_COLOUR3,
-                    '@replaced' => [ '0.16.10', '0.17.0', 'strokeColor' ]
-                ] );
-                $this->conflict( $status, [
-                    'borderWidth',
-                    'strokeWidth'
-                ] );
-                $this->checkField( $status, [
-                    'name' => 'borderWidth',
-                    'type' => DataModel::TYPE_NUMBER,
-                    '@replaced' => [ '0.16.10', '0.17.0', 'strokeWidth' ]
                 ] );
                 break;
             case self::DM_ICON:

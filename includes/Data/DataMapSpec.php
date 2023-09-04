@@ -10,69 +10,29 @@ use Title;
 class DataMapSpec extends DataModel {
     protected static string $publicName = 'DataMapSpec';
 
-    /** @deprecated since 0.16.11, to be removed in 0.17.0; use CoordinateSystem::DEFAULT_SPACE. */
-    public const DEFAULT_COORDINATE_SPACE = CoordinateSystem::DEFAULT_SPACE;
-
     private ?array $cachedMarkerGroups = null;
     private ?array $cachedMarkerLayers = null;
     private ?array $cachedBackgrounds = null;
     private ?CoordinateSystem $coordinateSystem = null;
     private ?MapSettingsSpec $cachedSettings = null;
 
-    /** @deprecated since 0.16.11, to be removed in 0.17.0; use CoordinateSystem::ORDER_YX. */
-    public const CO_YX = CoordinateSystem::ORDER_YX;
-    /** @deprecated since 0.16.11, to be removed in 0.17.0; use CoordinateSystem::ORDER_XY. */
-    public const CO_XY = CoordinateSystem::ORDER_XY;
-
     public const MARKER_ERROR_LIMIT = 30;
 
-    /** @deprecated since 0.16.11, to be removed in 0.17.0; use CoordinateSystem::normalisePoint. */
-    public static function normalisePointCoordinates( array $value, int $order ): array {
-        return CoordinateSystem::normalisePoint( $value, $order );
-    }
-
-    /** @deprecated since 0.16.11, to be removed in 0.17.0; use CoordinateSystem::normaliseBox. */
-    public static function normaliseBoxCoordinates( array $value, int $order ): array {
-        return CoordinateSystem::normaliseBox( $value, $order );
-    }
-
     public static function staticIsFragment( \stdclass $raw ): bool {
-        return $raw->{'$fragment'} ?? $raw->{'$mixin'} ?? false;
+        return $raw->{'$fragment'} ?? false;
     }
 
     public function isFragment(): bool {
         return self::staticIsFragment( $this->raw );
     }
 
-    /** @deprecated since 0.16.11, to be removed in 0.17.0; use staticIsFragment. */
-    public static function staticIsMixin( \stdclass $raw ): bool {
-        return self::staticIsFragment( $raw );
-    }
-
-    /** @deprecated since 0.16.11, to be removed in 0.17.0; use isFragment. */
-    public function isMixin(): bool {
-        return self::staticIsFragment( $this->raw );
-    }
-
     public function getRequiredFragments(): ?array {
-        $list = $this->raw->include ?? $this->raw->mixins ?? null;
+        $list = $this->raw->include ?? null;
         if ( $list === null ) {
             return null;
         }
 
         return array_map( fn ( $el ) => Title::newFromText( $el, ExtensionConfig::getNamespaceId() ), $list );
-    }
-
-    /** @deprecated since 0.16.11, to be removed in 0.17.0; use isFragment. */
-    public function getMixins(): ?array {
-        return $this->getRequiredFragments();
-    }
-
-    /**
-     * @deprecated since 0.16.11, to be removed in 0.17.0; use getCoordinateSystem()->getOrder().
-     */
-    public function getCoordinateOrder(): int {
-        return $this->getCoordinateSystem()->getOrder();
     }
 
     /**
@@ -98,17 +58,6 @@ class DataMapSpec extends DataModel {
             }
         }
         return $this->coordinateSystem;
-    }
-
-    /**
-     * If coordinate space spec is oriented [ lower lower upper upper ], assume top left corner as origin point (latitude will
-     * be flipped). If [ upper upper lower lower ], assume bottom left corner (latitude will be unchanged). Any other layout is
-     * invalid.
-     *
-     * @deprecated since 0.16.11, to be removed in 0.17.0; use getCoordinateSystem()->getBox().
-     */
-    public function getCoordinateReferenceSpace(): array {
-        return $this->getCoordinateSystem()->getBox();
     }
 
     public function getBackgrounds(): array {
@@ -237,15 +186,10 @@ class DataMapSpec extends DataModel {
 
     public function validate( Status $status ) {
         // Perform full strict validation if this is a full map, otherwise limit it to certain fields and lenience
-        $isFull = !$this->isMixin();
+        $isFull = !$this->isFragment();
 
         $this->checkField( $status, '$schema', DataModel::TYPE_STRING );
         $this->checkField( $status, '$fragment', DataModel::TYPE_BOOL );
-        $this->checkField( $status, [
-            'name' => '$mixin',
-            'type' => DataModel::TYPE_BOOL,
-            '@replaced' => [ '0.16.11', '0.17.0', '$fragment' ]
-        ] );
         $this->checkField( $status, [
             'name' => 'include',
             'type' => DataModel::TYPE_ARRAY,
@@ -260,24 +204,6 @@ class DataMapSpec extends DataModel {
                         wfEscapeWikiText( $mixinName ) );
                     return false;
                 }
-
-                if ( is_numeric( $mixinPage ) || $mixinPage->getData()->getValue() == null ) {
-                    $status->fatal( 'datamap-error-validatespec-map-bad-mixin', wfEscapeWikiText( $mixinName ) );
-                    return false;
-                }
-
-                return true;
-            }
-        ] );
-        $this->checkField( $status, [
-            'name' => 'mixins',
-            'type' => DataModel::TYPE_ARRAY,
-            '@replaced' => [ '0.16.11', '0.17.0', 'include' ],
-            'itemType' => DataModel::TYPE_STRING,
-            'itemCheck' => static function ( $status, $mixinName ) {
-                // Make sure all mixins exist and are data maps
-                $title = Title::newFromText( $mixinName, ExtensionConfig::getNamespaceId() );
-                $mixinPage = DataMapContent::loadPage( $title );
 
                 if ( is_numeric( $mixinPage ) || $mixinPage->getData()->getValue() == null ) {
                     $status->fatal( 'datamap-error-validatespec-map-bad-mixin', wfEscapeWikiText( $mixinName ) );
@@ -303,22 +229,9 @@ class DataMapSpec extends DataModel {
                 return $crs->validate( $status );
             }
         ] );
-        $this->checkField( $status, [
-            'name' => 'coordinateOrder',
-            'type' => DataModel::TYPE_STRING,
-            'values' => [ 'yx', 'xy', 'latlon' ],
-            '@replaced' => [ '0.16.11', '0.17.0', 'crs.order' ]
-        ] );
 
         if ( !$this->conflict( $status, [ 'image', 'background', 'backgrounds' ] ) ) {
-            if ( isset( $this->raw->image ) ) {
-                $this->checkField( $status, [
-                    '@replaced' => [ '0.16.10', '0.17.0', 'background' ],
-                    'name' => 'image',
-                    'type' => DataModel::TYPE_FILE,
-                    'fileMustExist' => true
-                ] );
-            } elseif ( isset( $this->raw->background ) ) {
+            if ( isset( $this->raw->background ) ) {
                 $this->checkField( $status, [
                     'name' => 'background',
                     'type' => [

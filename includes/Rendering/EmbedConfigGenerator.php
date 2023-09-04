@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\DataMaps\Rendering;
 use FormatJson;
 use Html;
 use InvalidArgumentException;
+use MediaWiki\Extension\DataMaps\Data\CoordinateSystem;
 use MediaWiki\Extension\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\DataMaps\Data\MapBackgroundOverlaySpec;
 use MediaWiki\Extension\DataMaps\Data\MapBackgroundSpec;
@@ -60,10 +61,10 @@ class EmbedConfigGenerator {
         if ( !$this->useInlineData && !$this->forVisualEditor ) {
             $out['version'] = $this->title->getLatestRevID();
         }
-        $out['cOrder'] = $coordOrder = $this->data->getCoordinateOrder();
+        $out['cOrder'] = $coordOrder = $this->data->getCoordinateSystem()->getOrder();
         $out['cRot'] = $this->data->getCoordinateSystem()->getRotation();
         // Coordinate transformation
-        $out['crs'] = DataMapSpec::normaliseBoxCoordinates( $this->data->getCoordinateReferenceSpace(), $coordOrder );
+        $out['crs'] = $this->data->getCoordinateSystem()->getNormalisedBox();
         // Feature management
         $bitmask = $this->getPublicFeatureBitMask();
         if ( $bitmask != 0 ) {
@@ -162,7 +163,7 @@ class EmbedConfigGenerator {
             $out['name'] = $spec->getName();
         }
         if ( $spec->getPlacementLocation() != null ) {
-            $out['at'] = DataMapSpec::normaliseBoxCoordinates( $spec->getPlacementLocation(), $coordOrder );
+            $out['at'] = CoordinateSystem::normaliseBox( $spec->getPlacementLocation(), $coordOrder );
         }
         if ( $spec->getBackgroundLayerName() !== null ) {
             $out['layer'] = $spec->getBackgroundLayerName();
@@ -177,8 +178,8 @@ class EmbedConfigGenerator {
             // Anti-aliasing opt-in used by the frontend
             $out['aa'] = 1;
             // Translate all tiles into overlays
-            $tileOffset = DataMapSpec::normalisePointCoordinates( $spec->getTilePlacementOffset() ?? [ 0, 0 ], $coordOrder );
-            $tileSize = DataMapSpec::normalisePointCoordinates( $spec->getTileSize(), $coordOrder );
+            $tileOffset = CoordinateSystem::normalisePoint( $spec->getTilePlacementOffset() ?? [ 0, 0 ], $coordOrder );
+            $tileSize = CoordinateSystem::normalisePoint( $spec->getTileSize(), $coordOrder );
             $pixelated = $spec->isPixelated();
             $spec->iterateTiles( function ( MapBackgroundTileSpec $tile ) use (
                 &$out, &$tileOffset, &$tileSize, $coordOrder, $pixelated
@@ -214,7 +215,7 @@ class EmbedConfigGenerator {
         if ( $spec->getPath() != null ) {
             $result['path'] = $spec->getPath();
         } else {
-            $result['at'] = DataMapSpec::normaliseBoxCoordinates( $spec->getPlacementLocation(), $coordOrder );
+            $result['at'] = CoordinateSystem::normaliseBox( $spec->getPlacementLocation(), $coordOrder );
         }
 
         if ( $spec->supportsDrawProperties() ) {
@@ -241,7 +242,7 @@ class EmbedConfigGenerator {
     ) {
         $result = [];
 
-        $at = DataMapSpec::normalisePointCoordinates( $spec->getPlacementLocation(), $coordOrder );
+        $at = CoordinateSystem::normalisePoint( $spec->getPlacementLocation(), $coordOrder );
         $at = [
             [ $at[0] * $tileSize[0] + $tileOffset[0], $at[1] * $tileSize[1] + $tileOffset[1] ],
             [ ( $at[0] + 1 ) * $tileSize[0] + $tileOffset[0], ( $at[1] + 1 ) * $tileSize[1] + $tileOffset[1] ]

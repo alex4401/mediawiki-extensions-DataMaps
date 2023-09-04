@@ -26,8 +26,6 @@ class HookHandler implements
     \MediaWiki\Storage\Hook\RevisionDataUpdatesHook
 {
     public static function onRegistration(): bool {
-        /** @deprecated v0.16.1, will be removed in v1.0. Use CONTENT_MODEL_DATAMAPS */
-        define( 'ARK_CONTENT_MODEL_DATAMAP', 'datamap' );
         define( 'CONTENT_MODEL_DATAMAPS', 'datamap' );
         define( 'CONTENT_MODEL_DATAMAPS_FANDOM_COMPAT', 'interactivemap' );
 
@@ -88,14 +86,14 @@ class HookHandler implements
         if ( $title->getNamespace() === ExtensionConfig::getNamespaceId() && !self::isDocPage( $title ) ) {
             $prefix = wfMessage( 'datamap-standard-title-prefix' )->inContentLanguage();
             if ( $prefix !== '-' && str_starts_with( $title->getText(), $prefix->plain() ) ) {
-                $model = ARK_CONTENT_MODEL_DATAMAP;
+                $model = CONTENT_MODEL_DATAMAPS;
             }
         }
         return true;
     }
 
     public static function onCodeEditorGetPageLanguage( Title $title, &$languageCode ) {
-        if ( $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
+        if ( $title->hasContentModel( CONTENT_MODEL_DATAMAPS ) ) {
             $languageCode = 'json';
         }
         return true;
@@ -147,7 +145,7 @@ class HookHandler implements
 
         return ExtensionConfig::isVisualEditorEnabled()
             && $title->getNamespace() === ExtensionConfig::getNamespaceId()
-            && $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP )
+            && $title->hasContentModel( CONTENT_MODEL_DATAMAPS )
             && $title->exists()
             && ( $user === null || $prefsLookup->getBoolOption( $user, Constants::PREFERENCE_ENABLE_VE ) )
             && count( $pageProps->getProperties( $title, Constants::PAGEPROP_DISABLE_VE ) ) <= 0;
@@ -156,7 +154,7 @@ class HookHandler implements
     private function canCreateMapWithGui( Title $title ): bool {
         return ExtensionConfig::isCreateMapEnabled()
             && $title->getNamespace() === ExtensionConfig::getNamespaceId()
-            && $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP )
+            && $title->hasContentModel( CONTENT_MODEL_DATAMAPS )
             && !$title->exists();
     }
 
@@ -189,7 +187,7 @@ class HookHandler implements
     public function onRevisionDataUpdates( $title, $renderedRevision, &$updates ) {
         if ( ExtensionConfig::shouldLinksUpdatesUseMarkers()
             && $title->getNamespace() === ExtensionConfig::getNamespaceId()
-            && $title->hasContentModel( ARK_CONTENT_MODEL_DATAMAP ) ) {
+            && $title->hasContentModel( CONTENT_MODEL_DATAMAPS ) ) {
             foreach ( $updates as &$updater ) {
                 if ( $updater instanceof \MediaWiki\Deferred\LinksUpdate\LinksUpdate ) {
                     $parserOutput = $updater->getParserOutput();

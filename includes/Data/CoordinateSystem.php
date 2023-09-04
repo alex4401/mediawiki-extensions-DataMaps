@@ -55,6 +55,10 @@ class CoordinateSystem extends DataModel {
         ];
     }
 
+    public function getNormalisedBox(): array {
+        return self::normaliseBox( $this->getBox(), $this->getOrder() );
+    }
+
     public function getRotation(): float {
         return deg2rad( $this->raw->rotation ?? 0 );
     }

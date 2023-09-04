@@ -15,8 +15,8 @@ use stdClass;
 use Title;
 
 class DataMapContentHandler extends JsonContentHandler {
-    public function __construct( $modelId = ARK_CONTENT_MODEL_DATAMAP ) {
-        parent::__construct( $modelId, [ ARK_CONTENT_MODEL_DATAMAP ] );
+    public function __construct( $modelId = CONTENT_MODEL_DATAMAPS ) {
+        parent::__construct( $modelId, [ CONTENT_MODEL_DATAMAPS ] );
     }
 
     protected function getContentClass() {
@@ -94,7 +94,7 @@ class DataMapContentHandler extends JsonContentHandler {
                 }
             }
         } else {
-            if ( $content->isMixin() ) {
+            if ( $content->isFragment() ) {
                 // It's a mix-in: tag the page in page properties and disable visual editor
                 $parserOutput->setPageProperty( Constants::PAGEPROP_IS_MIXIN, true );
                 $parserOutput->setPageProperty( Constants::PAGEPROP_DISABLE_VE, true );
