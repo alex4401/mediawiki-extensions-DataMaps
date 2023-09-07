@@ -2,6 +2,7 @@
 namespace MediaWiki\Extension\DataMaps\API;
 
 use ApiBase;
+use ApiMain;
 use LogicException;
 use MediaWiki\Extension\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\DataMaps\ExtensionConfig;
@@ -31,7 +32,18 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
     private ?Title $cachedTitle = null;
 
+	/**
+	 * @stable to call
+	 * @param ApiMain $mainModule
+	 * @param string $moduleName Name of this module
+	 * @param string $modulePrefix Prefix to use for parameter names
+	 */
+	public function __construct( ApiMain $mainModule, $moduleName, $modulePrefix = '' ) {
+		parent::__construct( $mainModule, $moduleName, $modulePrefix );
+	}
+
     public function getAllowedParams() {
+        $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
         return [
             'pageid' => [
                 ParamValidator::PARAM_TYPE => 'integer',
@@ -48,9 +60,9 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             ],
             'limit' => [
                 ParamValidator::PARAM_TYPE => 'limit',
-                ParamValidator::PARAM_DEFAULT => ExtensionConfig::getApiDefaultMarkerLimit(),
+                ParamValidator::PARAM_DEFAULT => $config->getApiDefaultMarkerLimit(),
                 IntegerDef::PARAM_MIN => 1,
-                IntegerDef::PARAM_MAX => ExtensionConfig::getApiMaxMarkerLimit()
+                IntegerDef::PARAM_MAX => $config->getApiMaxMarkerLimit()
             ],
             'continue' => [
                 ParamValidator::PARAM_TYPE => 'integer',

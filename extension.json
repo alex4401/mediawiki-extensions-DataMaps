@@ -463,7 +463,10 @@
 	},
     "HookHandlers": {
         "MainHandler": {
-            "class": "MediaWiki\\Extension\\DataMaps\\HookHandler"
+            "class": "MediaWiki\\Extension\\DataMaps\\HookHandler",
+			"services": [
+				"DataMaps.Config"
+			]
         }
     },
 
