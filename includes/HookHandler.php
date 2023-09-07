@@ -14,7 +14,7 @@ use RequestContext;
 use Title;
 use User;
 
-class HookHandler implements
+final class HookHandler implements
     \MediaWiki\Hook\ParserFirstCallInitHook,
     \MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook,
     \MediaWiki\Hook\CanonicalNamespacesHook,
@@ -25,6 +25,13 @@ class HookHandler implements
     \MediaWiki\Hook\RecentChange_saveHook,
     \MediaWiki\Storage\Hook\RevisionDataUpdatesHook
 {
+    /** @var ExtensionConfig */
+    private ExtensionConfig $config;
+
+    public function __construct( ExtensionConfig $config ) {
+        $this->config = $config;
+    }
+
     public static function onRegistration(): bool {
         define( 'CONTENT_MODEL_DATAMAPS', 'datamap' );
         define( 'CONTENT_MODEL_DATAMAPS_FANDOM_COMPAT', 'interactivemap' );
@@ -43,7 +50,7 @@ class HookHandler implements
     }
 
     public function onCanonicalNamespaces( &$namespaces ) {
-        if ( ExtensionConfig::isNamespaceManaged() ) {
+        if ( $this->config->isNamespaceManaged() ) {
             $namespaces[NS_MAP] = 'Map';
             $namespaces[NS_MAP_TALK] = 'Map_talk';
         }
@@ -55,7 +62,7 @@ class HookHandler implements
         // Articles should embed the maps as needed, as that is the most likely target for map usage anyway. Source pages should
         // not compete.
         global $wgNamespaceRobotPolicies;
-        if ( ExtensionConfig::getNamespaceId() === 2900 && !isset( $wgNamespaceRobotPolicies[2900] ) ) {
+        if ( $this->config->getNamespaceId() === 2900 && !isset( $wgNamespaceRobotPolicies[2900] ) ) {
             $wgNamespaceRobotPolicies[2900] = 'noindex,follow';
         }
     }
@@ -65,7 +72,7 @@ class HookHandler implements
             'displaydatamap', [ Rendering\ParserFunction_EmbedDataMap::class, 'run' ],
             SFH_NO_HASH
         );
-        if ( ExtensionConfig::isTransclusionAliasEnabled() ) {
+        if ( $this->config->isTransclusionAliasEnabled() ) {
             $parser->setFunctionHook(
                 'displaydatamap_short', [ Rendering\ParserFunction_EmbedDataMap::class, 'run' ],
                 SFH_NO_HASH
@@ -83,7 +90,7 @@ class HookHandler implements
     }
 
     public function onContentHandlerDefaultModelFor( $title, &$model ) {
-        if ( $title->getNamespace() === ExtensionConfig::getNamespaceId() && !self::isDocPage( $title ) ) {
+        if ( $title->getNamespace() === $this->config->getNamespaceId() && !self::isDocPage( $title ) ) {
             $prefix = wfMessage( 'datamap-standard-title-prefix' )->inContentLanguage();
             if ( $prefix !== '-' && str_starts_with( $title->getText(), $prefix->plain() ) ) {
                 $model = CONTENT_MODEL_DATAMAPS;
@@ -122,7 +129,7 @@ class HookHandler implements
     }
 
     public function onGetPreferences( $user, &$preferences ) {
-        if ( ExtensionConfig::isVisualEditorEnabled() ) {
+        if ( $this->config->isVisualEditorEnabled() ) {
             $preferences[Constants::PREFERENCE_ENABLE_VE__FUTURE] = [
                 'type' => 'toggle',
                 'label-message' => 'datamap-userpref-enable-ve',
@@ -142,9 +149,10 @@ class HookHandler implements
     public static function canUseVE( ?User $user, Title $title ): bool {
         $prefsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
         $pageProps = MediaWikiServices::getInstance()->getPageProps();
+        $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
 
-        return ExtensionConfig::isVisualEditorEnabled()
-            && $title->getNamespace() === ExtensionConfig::getNamespaceId()
+        return $config->isVisualEditorEnabled()
+            && $title->getNamespace() === $config->getNamespaceId()
             && $title->hasContentModel( CONTENT_MODEL_DATAMAPS )
             && $title->exists()
             && ( $user === null || $prefsLookup->getBoolOption( $user, Constants::PREFERENCE_ENABLE_VE ) )
@@ -152,8 +160,8 @@ class HookHandler implements
     }
 
     private function canCreateMapWithGui( Title $title ): bool {
-        return ExtensionConfig::isCreateMapEnabled()
-            && $title->getNamespace() === ExtensionConfig::getNamespaceId()
+        return $this->config->isCreateMapEnabled()
+            && $title->getNamespace() === $this->config->getNamespaceId()
             && $title->hasContentModel( CONTENT_MODEL_DATAMAPS )
             && !$title->exists();
     }
@@ -185,8 +193,8 @@ class HookHandler implements
     }
 
     public function onRevisionDataUpdates( $title, $renderedRevision, &$updates ) {
-        if ( ExtensionConfig::shouldLinksUpdatesUseMarkers()
-            && $title->getNamespace() === ExtensionConfig::getNamespaceId()
+        if ( $this->config->shouldLinksUpdatesUseMarkers()
+            && $title->getNamespace() === $this->config->getNamespaceId()
             && $title->hasContentModel( CONTENT_MODEL_DATAMAPS ) ) {
             foreach ( $updates as &$updater ) {
                 if ( $updater instanceof \MediaWiki\Deferred\LinksUpdate\LinksUpdate ) {
@@ -204,7 +212,7 @@ class HookHandler implements
                     // creating thousands of small, very short-lived (only one at a time) objects
                     $marker = new Data\MarkerSpec( new \stdclass() );
                     // The budget controls remaining time we may spend on parsing wikitext in the markers
-                    $budget = ExtensionConfig::getLinksUpdateBudget();
+                    $budget = $this->config->getLinksUpdateBudget();
                     $startTime = microtime( true );
 
                     $dataMap->iterateRawMarkerMap( static function ( string $_, array $rawCollection )
@@ -239,9 +247,10 @@ class HookHandler implements
     }
 
     public static function getJsConfig( \MediaWiki\ResourceLoader\Context $context, Config $config ): array {
+        $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
         return [
-            'IsBleedingEdge' => ExtensionConfig::isBleedingEdge(),
-            'IsVisualEditorEnabled' => ExtensionConfig::isVisualEditorEnabled(),
+            'IsBleedingEdge' => $config->isBleedingEdge(),
+            'IsVisualEditorEnabled' => $config->isVisualEditorEnabled(),
             'TabberNeueModule' =>
                 ExtensionRegistry::getInstance()->isLoaded( 'TabberNeue', '>= 1.8.0' )
                     ? ( $config->get( 'TabberNeueUseCodex' ) ? 'ext.tabberNeue.codex' : 'ext.tabberNeue.legacy' )
