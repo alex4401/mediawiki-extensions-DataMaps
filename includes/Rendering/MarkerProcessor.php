@@ -176,11 +176,6 @@ class MarkerProcessor {
             return $this->localParserCache->get( $text );
         }
 
-        $timeStart = 0;
-        if ( $this->collectTimings ) {
-            $timeStart = hrtime( true );
-        }
-
         // Call the parser
         $out = $this->parser->parse( $text, $this->title, $this->parserOptions, false, $this->isParserDirty )
             ->getText( [
@@ -190,10 +185,6 @@ class MarkerProcessor {
             ] );
         // Mark as clean to avoid clearing state again
         $this->isParserDirty = false;
-
-        if ( $this->collectTimings ) {
-            $this->timeInParser += hrtime( true ) - $timeStart;
-        }
 
         // Store in local cache if enabled
         if ( $this->useLocalParserCache ) {

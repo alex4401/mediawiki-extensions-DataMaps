@@ -227,7 +227,6 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         if ( $this->config->shouldApiReturnProcessingTime() ) {
             $response['timing'] = [
                 'processing' => hrtime( true ) - $timeStart,
-                'parserTime' => $processor->timeInParser
             ];
         }
 
