@@ -30,20 +30,29 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     // Key prefix for every cache key produced by this endpoint. Prior to v0.12.0 this was 'ARKDataMapQuery'.
     private const CACHE_NAMESPACE = 'ExtDataMap::Query';
 
+    /** @var Title */
     private ?Title $cachedTitle = null;
 
-	/**
-	 * @stable to call
-	 * @param ApiMain $mainModule
-	 * @param string $moduleName Name of this module
-	 * @param string $modulePrefix Prefix to use for parameter names
-	 */
-	public function __construct( ApiMain $mainModule, $moduleName, $modulePrefix = '' ) {
-		parent::__construct( $mainModule, $moduleName, $modulePrefix );
-	}
+    /** @var ExtensionConfig */
+    private ExtensionConfig $config;
+
+    /**
+     * @stable to call
+     * @param ApiMain $mainModule
+     * @param string $moduleName Name of this module
+     * @param ExtensionConfig $config
+     */
+    public function __construct(
+        ApiMain $mainModule,
+        $moduleName,
+        ExtensionConfig $config
+    ) {
+        parent::__construct( $mainModule, $moduleName );
+
+        $this->config = $config;
+    }
 
     public function getAllowedParams() {
-        $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
         return [
             'pageid' => [
                 ParamValidator::PARAM_TYPE => 'integer',
@@ -60,9 +69,9 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             ],
             'limit' => [
                 ParamValidator::PARAM_TYPE => 'limit',
-                ParamValidator::PARAM_DEFAULT => $config->getApiDefaultMarkerLimit(),
+                ParamValidator::PARAM_DEFAULT => $this->config->getApiDefaultMarkerLimit(),
                 IntegerDef::PARAM_MIN => 1,
-                IntegerDef::PARAM_MAX => $config->getApiMaxMarkerLimit()
+                IntegerDef::PARAM_MAX => $this->config->getApiMaxMarkerLimit()
             ],
             'continue' => [
                 ParamValidator::PARAM_TYPE => 'integer',
@@ -78,7 +87,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
     public function execute() {
         $timeStart = 0;
-        if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
+        if ( $this->config->shouldApiReturnProcessingTime() ) {
             $timeStart = hrtime( true );
         }
 
@@ -89,7 +98,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $this->getMain()->setCacheMaxAge( 24 * 60 * 60 );
 
         $response = null;
-        if ( ExtensionConfig::getApiCacheTTL() <= 0 ) {
+        if ( $this->config->getApiCacheTTL() <= 0 ) {
             // Cache expiry time is zero or lower, bypass caching
             $response = $this->doProcessing( $params );
         } else {
@@ -100,7 +109,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
         $this->getResult()->addValue( null, 'query', $response );
 
-        if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
+        if ( $this->config->shouldApiReturnProcessingTime() ) {
             $this->getResult()->addValue( null, 'responseTime', hrtime( true ) - $timeStart );
         }
     }
@@ -136,15 +145,16 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     }
 
     public static function makeKey( Title $title, int $revid = -1 ) {
-        return ObjectCache::getInstance( ExtensionConfig::getApiCacheType() )
+        $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
+        return ObjectCache::getInstance( $config->getApiCacheType() )
             ->makeKey( self::CACHE_NAMESPACE, self::GENERATION, $title->getId(), $revid );
     }
 
     private function doProcessingCached( $params ): array {
-        $cacheExpiryTime = ExtensionConfig::getApiCacheTTL();
+        $cacheExpiryTime = $this->config->getApiCacheTTL();
 
         // Retrieve the specified cache instance
-        $cache = ObjectCache::getInstance( ExtensionConfig::getApiCacheType() );
+        $cache = ObjectCache::getInstance( $this->config->getApiCacheType() );
 
         // Retrieve the title
         $title = $this->getTitleFromParams( $params );
@@ -160,7 +170,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             $response = $this->doProcessing( $params );
 
             // If TTL extension is allowed, store an internal timestamp
-            if ( ExtensionConfig::shouldExtendApiCacheTTL() ) {
+            if ( $this->config->shouldExtendApiCacheTTL() ) {
                 $response['refreshedAt'] = time();
             }
 
@@ -168,17 +178,17 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             $cache->set( $cacheKey, $response, $cacheExpiryTime );
         } else {
             // Response cached, check if TTL should be extended and do it
-            if ( ExtensionConfig::shouldExtendApiCacheTTL() && isset( $response['refreshedAt'] ) ) {
-                $ttlThreshold = $cacheExpiryTime - ExtensionConfig::getApiCacheTTLExtensionThreshold();
+            if ( $this->config->shouldExtendApiCacheTTL() && isset( $response['refreshedAt'] ) ) {
+                $ttlThreshold = $cacheExpiryTime - $this->config->getApiCacheTTLExtensionThreshold();
                 if ( time() - $response['refreshedAt'] >= $ttlThreshold ) {
                     $response['refreshedAt'] = time();
-                    $cache->set( $cacheKey, $response, ExtensionConfig::getApiCacheTTLExtensionValue() );
+                    $cache->set( $cacheKey, $response, $this->config->getApiCacheTTLExtensionValue() );
                 }
             }
         }
 
         // Remove the internal TTL extension timestamp
-        if ( isset( $response['refreshedAt'] ) && !ExtensionConfig::shouldApiReturnProcessingTime() ) {
+        if ( isset( $response['refreshedAt'] ) && !$this->config->shouldApiReturnProcessingTime() ) {
             unset( $response['refreshedAt'] );
         }
 
@@ -187,7 +197,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
     private function doProcessing( $params ): array {
         $timeStart = 0;
-        if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
+        if ( $this->config->shouldApiReturnProcessingTime() ) {
             $timeStart = hrtime( true );
         }
 
@@ -214,7 +224,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         $processor = new MarkerProcessor( $title, $dataMap, null );
         $response['markers'] = $processor->processAll();
 
-        if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
+        if ( $this->config->shouldApiReturnProcessingTime() ) {
             $response['timing'] = [
                 'processing' => hrtime( true ) - $timeStart,
                 'parserTime' => $processor->timeInParser
@@ -226,7 +236,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
 
     private function doPostProcessing( $params, array &$data ) {
         $timeStart = 0;
-        if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
+        if ( $this->config->shouldApiReturnProcessingTime() ) {
             $timeStart = hrtime( true );
         }
 
@@ -292,7 +302,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
             }
         }
 
-        if ( ExtensionConfig::shouldApiReturnProcessingTime() ) {
+        if ( $this->config->shouldApiReturnProcessingTime() ) {
             $data['timing']['postProcessing'] = hrtime( true ) - $timeStart;
         }
     }

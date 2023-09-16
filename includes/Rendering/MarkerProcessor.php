@@ -21,6 +21,7 @@ class MarkerProcessor {
 
     private Parser $parser;
     private ParserOptions $parserOptions;
+    private ExtensionConfig $config;
     private Title $title;
     private DataMapSpec $dataMap;
     private ?array $filter;
@@ -33,16 +34,19 @@ class MarkerProcessor {
     private bool $collectTimings = false;
     public $timeInParser = 0;
 
+    // TODO: needs a factory
+
     public function __construct( Title $title, DataMapSpec $dataMap, ?array $filter ) {
         $this->parser = MediaWikiServices::getInstance()->getParser();
         $this->parserOptions = ParserOptions::newFromAnon();
+        $this->config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
         $this->title = $title;
         $this->dataMap = $dataMap;
         $this->filter = $filter;
         $this->isSearchEnabled = $this->dataMap->getSettings()->getSearchMode() !== MapSettingsSpec::SM_NONE;
         // Pull configuration options
-        $this->useLocalParserCache = ExtensionConfig::shouldCacheWikitextInProcess();
-        $this->collectTimings = ExtensionConfig::shouldApiReturnProcessingTime();
+        $this->useLocalParserCache = $this->config->shouldCacheWikitextInProcess();
+        $this->collectTimings = $this->config->shouldApiReturnProcessingTime();
         // Initialise the LRU
         if ( $this->useLocalParserCache ) {
             $this->localParserCache = new MapCacheLRU( self::MAX_LRU_SIZE );
@@ -51,7 +55,7 @@ class MarkerProcessor {
         $this->parserOptions->setAllowSpecialInclusion( false );
         $this->parserOptions->setExpensiveParserFunctionLimit( 5 );
         $this->parserOptions->setInterwikiMagic( false );
-        $this->parserOptions->setMaxIncludeSize( ExtensionConfig::getParserExpansionLimit() );
+        $this->parserOptions->setMaxIncludeSize( $this->config->getParserExpansionLimit() );
     }
 
     public function processAll(): array {
