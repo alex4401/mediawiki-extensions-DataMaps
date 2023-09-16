@@ -441,7 +441,13 @@
 	],
 
 	"APIModules": {
-		"queryDataMap": "MediaWiki\\Extension\\DataMaps\\API\\ApiQueryDataMapEndpoint"
+		"queryDataMap": {
+			"class": "MediaWiki\\Extension\\DataMaps\\API\\ApiQueryDataMapEndpoint",
+			"services": [
+				"DataMaps.Config",
+				"DataMaps.MarkerProcessorFactory"
+			]
+		}
 	},
 	"ContentHandlers": {
 		"datamap": "MediaWiki\\Extension\\DataMaps\\Content\\DataMapContentHandler"

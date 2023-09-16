@@ -7,6 +7,7 @@ use LogicException;
 use MediaWiki\Extension\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\DataMaps\Rendering\MarkerProcessor;
+use MediaWiki\Extension\DataMaps\Rendering\MarkerProcessorFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
@@ -36,20 +37,26 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     /** @var ExtensionConfig */
     private ExtensionConfig $config;
 
+    /** @var MarkerProcessorFactory */
+    private MarkerProcessorFactory $markerProcessorFactory;
+
     /**
      * @stable to call
      * @param ApiMain $mainModule
      * @param string $moduleName Name of this module
      * @param ExtensionConfig $config
+     * @param MarkerProcessorFactory $markerProcessorFactory
      */
     public function __construct(
         ApiMain $mainModule,
         $moduleName,
-        ExtensionConfig $config
+        ExtensionConfig $config,
+        MarkerProcessorFactory $markerProcessorFactory
     ) {
         parent::__construct( $mainModule, $moduleName );
 
         $this->config = $config;
+        $this->markerProcessorFactory = $markerProcessorFactory;
     }
 
     public function getAllowedParams() {
@@ -221,7 +228,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
         ];
 
         // Have a MarkerProcessor convert the data and insert it into the response
-        $processor = new MarkerProcessor( $title, $dataMap, null );
+        $processor = $this->markerProcessorFactory->create( $title, $dataMap, null );
         $response['markers'] = $processor->processAll();
 
         if ( $this->config->shouldApiReturnProcessingTime() ) {

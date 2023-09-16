@@ -8,7 +8,6 @@ use MediaWiki\Extension\DataMaps\Data\MarkerGroupSpec;
 use MediaWiki\Extension\DataMaps\Data\MarkerSpec;
 use MediaWiki\Extension\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapFileUtils;
-use MediaWiki\MediaWikiServices;
 use Parser;
 use ParserOptions;
 use ThumbnailImage;
@@ -17,45 +16,52 @@ use Title;
 class MarkerProcessor {
     private const POPUP_IMAGE_WIDTH = 288;
     private const POPUP_IMAGE_HEIGHT_MAX = 300;
-    private const MAX_LRU_SIZE = 128;
 
+    /** @var Parser */
     private Parser $parser;
-    private ParserOptions $parserOptions;
-    private ExtensionConfig $config;
-    private Title $title;
-    private DataMapSpec $dataMap;
-    private ?array $filter;
-    private bool $isSearchEnabled;
 
-    private bool $isParserDirty = true;
-    private bool $useLocalParserCache = true;
+    /** @var ParserOptions */
+    private ParserOptions $parserOptions;
+
+    /** @var ExtensionConfig */
+    private ExtensionConfig $config;
+
+    /** @var ?MapCacheLRU */
     private ?MapCacheLRU $localParserCache = null;
 
-    private bool $collectTimings = false;
-    public $timeInParser = 0;
+    /** @var Title */
+    private Title $title;
 
-    // TODO: needs a factory
+    /** @var DataMapSpec */
+    private DataMapSpec $dataMap;
 
-    public function __construct( Title $title, DataMapSpec $dataMap, ?array $filter ) {
-        $this->parser = MediaWikiServices::getInstance()->getParser();
-        $this->parserOptions = ParserOptions::newFromAnon();
-        $this->config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
+    /** @var ?array */
+    private ?array $filter;
+
+    /** @var bool */
+    private bool $isSearchEnabled;
+
+    /** @var bool */
+    private bool $isParserDirty = true;
+
+    public function __construct(
+        Parser $parser,
+        ParserOptions $parserOptions,
+        ExtensionConfig $config,
+        ?MapCacheLRU $localParserCache,
+        Title $title,
+        DataMapSpec $dataMap,
+        ?array $filter
+    ) {
+        $this->parser = $parser;
+        $this->parserOptions = $parserOptions;
+        $this->config = $config;
+        $this->localParserCache = $localParserCache;
         $this->title = $title;
         $this->dataMap = $dataMap;
         $this->filter = $filter;
+
         $this->isSearchEnabled = $this->dataMap->getSettings()->getSearchMode() !== MapSettingsSpec::SM_NONE;
-        // Pull configuration options
-        $this->useLocalParserCache = $this->config->shouldCacheWikitextInProcess();
-        $this->collectTimings = $this->config->shouldApiReturnProcessingTime();
-        // Initialise the LRU
-        if ( $this->useLocalParserCache ) {
-            $this->localParserCache = new MapCacheLRU( self::MAX_LRU_SIZE );
-        }
-        // Configure the wikitext parser
-        $this->parserOptions->setAllowSpecialInclusion( false );
-        $this->parserOptions->setExpensiveParserFunctionLimit( 5 );
-        $this->parserOptions->setInterwikiMagic( false );
-        $this->parserOptions->setMaxIncludeSize( $this->config->getParserExpansionLimit() );
     }
 
     public function processAll(): array {
@@ -172,7 +178,7 @@ class MarkerProcessor {
 
     private function parseWikitext( string $text ): string {
         // Look up in local cache if enabled
-        if ( $this->useLocalParserCache && $this->localParserCache->has( $text ) ) {
+        if ( $this->localParserCache && $this->localParserCache->has( $text ) ) {
             return $this->localParserCache->get( $text );
         }
 
@@ -187,7 +193,7 @@ class MarkerProcessor {
         $this->isParserDirty = false;
 
         // Store in local cache if enabled
-        if ( $this->useLocalParserCache ) {
+        if ( $this->localParserCache ) {
             $this->localParserCache->set( $text, $out );
         }
 
