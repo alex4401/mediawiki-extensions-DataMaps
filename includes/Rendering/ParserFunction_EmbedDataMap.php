@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\DataMaps\Rendering;
 use MediaWiki\Extension\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\DataMaps\ExtensionConfig;
+use MediaWiki\MediaWikiServices;
 use Parser;
 use Title;
 
@@ -13,7 +14,9 @@ final class ParserFunction_EmbedDataMap {
         // We already know the parser
         array_shift( $params );
 
-        $title = Title::makeTitleSafe( ExtensionConfig::getNamespaceId(), $params[0] );
+        $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
+
+        $title = Title::makeTitleSafe( $config->getNamespaceId(), $params[0] );
 
         // Retrieve and validate options
         $options = self::getRenderOptions( $params );

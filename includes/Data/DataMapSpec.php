@@ -3,6 +3,7 @@ namespace MediaWiki\Extension\DataMaps\Data;
 
 use MediaWiki\Extension\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\DataMaps\ExtensionConfig;
+use MediaWiki\MediaWikiServices;
 use Status;
 use stdClass;
 use Title;
@@ -27,12 +28,14 @@ class DataMapSpec extends DataModel {
     }
 
     public function getRequiredFragments(): ?array {
+        $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
+
         $list = $this->raw->include ?? null;
         if ( $list === null ) {
             return null;
         }
 
-        return array_map( fn ( $el ) => Title::newFromText( $el, ExtensionConfig::getNamespaceId() ), $list );
+        return array_map( fn ( $el ) => Title::newFromText( $el, $config->getNamespaceId() ), $list );
     }
 
     /**
@@ -195,11 +198,13 @@ class DataMapSpec extends DataModel {
             'type' => DataModel::TYPE_ARRAY,
             'itemType' => DataModel::TYPE_STRING,
             'itemCheck' => static function ( $status, $mixinName ) {
+                $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
+
                 // Make sure all fragments exist and have the right content model
                 $title = Title::newFromText( $mixinName );
                 $mixinPage = DataMapContent::loadPage( $title );
 
-                if ( $title->getNamespace() !== ExtensionConfig::getNamespaceId() ) {
+                if ( $title->getNamespace() !== $config->getNamespaceId() ) {
                     $status->fatal( 'datamap-error-validatespec-map-missing-fragment-ns',
                         wfEscapeWikiText( $mixinName ) );
                     return false;

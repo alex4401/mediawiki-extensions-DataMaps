@@ -111,6 +111,8 @@ class DataMapContent extends JsonContent {
     }
 
     private function mergeFragments( stdClass $main ) {
+        $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
+
         // Copy the mixins list to prevent bad behaviour when merging occurs. Mixins should be always stated explicitly.
         $mixins = $main->include ?? null;
 
@@ -120,7 +122,7 @@ class DataMapContent extends JsonContent {
 
         $finalMixin = null;
         foreach ( $mixins as &$mixinName ) {
-            $title = Title::newFromText( $mixinName, ExtensionConfig::getNamespaceId() );
+            $title = Title::newFromText( $mixinName, $config->getNamespaceId() );
             $mixinPage = self::loadPage( $title );
 
             // Mixin failed to load, skip it. There's no way for us to throw an error at this stage without crashing the whole

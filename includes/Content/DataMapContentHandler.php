@@ -39,7 +39,9 @@ class DataMapContentHandler extends JsonContentHandler {
      * Only allow this content handler to be used in the configured data namespace
      */
     public function canBeUsedOn( Title $title ) {
-        if ( $title->getNamespace() !== ExtensionConfig::getNamespaceId() ) {
+        $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
+
+        if ( $title->getNamespace() !== $config->getNamespaceId() ) {
             return false;
         }
 
