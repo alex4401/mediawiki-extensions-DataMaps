@@ -243,10 +243,10 @@ final class HookHandler implements
     }
 
     public static function getJsConfig( \MediaWiki\ResourceLoader\Context $context, Config $config ): array {
-        $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
+        $extConfig = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
         return [
-            'IsBleedingEdge' => $config->hasExperimentalFeatures(),
-            'IsVisualEditorEnabled' => $config->isVisualEditorEnabled(),
+            'IsBleedingEdge' => $extConfig->hasExperimentalFeatures(),
+            'IsVisualEditorEnabled' => $extConfig->isVisualEditorEnabled(),
             'TabberNeueModule' =>
                 ExtensionRegistry::getInstance()->isLoaded( 'TabberNeue', '>= 1.8.0' )
                     ? ( $config->get( 'TabberNeueUseCodex' ) ? 'ext.tabberNeue.codex' : 'ext.tabberNeue.legacy' )
