@@ -245,7 +245,7 @@ final class HookHandler implements
     public static function getJsConfig( \MediaWiki\ResourceLoader\Context $context, Config $config ): array {
         $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
         return [
-            'IsBleedingEdge' => $config->isBleedingEdge(),
+            'IsBleedingEdge' => $config->hasExperimentalFeatures(),
             'IsVisualEditorEnabled' => $config->isVisualEditorEnabled(),
             'TabberNeueModule' =>
                 ExtensionRegistry::getInstance()->isLoaded( 'TabberNeue', '>= 1.8.0' )
