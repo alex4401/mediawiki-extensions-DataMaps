@@ -25,29 +25,30 @@ class EmbedRenderer {
     private Title $title;
     private bool $useInlineData;
     private bool $forVisualEditor;
-    private Parser $parser;
+    private Parser $linkageParser;
     private ParserOutput $parserOutput;
     private ParserOptions $parserOptions;
 
-    public function __construct( Title $title, DataMapSpec $data, Parser $parser, ParserOutput $parserOutput, array $options = [] ) {
+    /** @var MarkerProcessorFactory */
+    private MarkerProcessorFactory $markerProcessorFactory;
+
+    public function __construct(
+        Title $title,
+        DataMapSpec $data,
+        Parser $parser,
+        ParserOutput $parserOutput,
+        array $options = []
+    ) {
         $this->title = $title;
         $this->data = $data;
         $this->useInlineData = $options['inlineData'] ?? false;
         $this->forVisualEditor = $options['ve'] ?? false;
 
-        $this->parser = MediaWikiServices::getInstance()->getParserFactory()->getInstance();
+        $this->linkageParser = $parser;
+
+        $this->markerProcessorFactory = MediaWikiServices::getInstance()->getService(
+            MarkerProcessorFactory::SERVICE_NAME );
         $this->parserOutput = $parserOutput;
-
-        $this->parserOptions = ParserOptions::newFromAnon();
-        $this->parserOptions->setAllowSpecialInclusion( false );
-        $this->parserOptions->setExpensiveParserFunctionLimit( 4 );
-        $this->parserOptions->setInterwikiMagic( false );
-        $this->parserOptions->setMaxIncludeSize( 800 );
-        if ( $parser->getOptions() !== null ) {
-            $this->parserOptions->setCurrentRevisionRecordCallback( $parser->getOptions()->getCurrentRevisionRecordCallback() );
-        }
-
-        $this->parser->setOptions( $this->parserOptions );
     }
 
     public function getId(): int {
@@ -91,7 +92,7 @@ class EmbedRenderer {
     }
 
     public function addMarkerDataInline(): void {
-        $processor = new MarkerProcessor( $this->title, $this->data, null );
+        $processor = $this->markerProcessorFactory->create( $this->title, $this->data, null );
         $this->parserOutput->setText( $this->parserOutput->getRawText() . Html::element(
             'script',
             [
@@ -108,7 +109,7 @@ class EmbedRenderer {
         if ( $fragments !== null ) {
             foreach ( $fragments as &$fragment ) {
                 $this->parserOutput->addTemplate( $fragment, $fragment->getArticleId(),
-                    $this->parser->fetchCurrentRevisionRecordOfTitle( $fragment )->getId() );
+                    $this->linkageParser->fetchCurrentRevisionRecordOfTitle( $fragment )->getId() );
             }
         }
 
