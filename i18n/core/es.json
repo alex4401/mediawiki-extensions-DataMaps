@@ -24,7 +24,6 @@
     "datamap-error-validatespec-map-missing-group": "Se han añadido los marcadores al grupo \"$1\", el cual no se ha definido.",
     "datamap-error-validatespec-map-bad-mixin": "El mixin \"<code>$1</code>\" debe existir, debe usar el modelo de contenido del <code>mapa de datos interactivos</code>, y debe ser válido en cuanto a sintaxis y estructura.",
     "datamap-error-validatespec-bgoverlay-invalid-polyline": "La propiedad <code>path</code> de la sobreimpresión del fondo de polilínea debe ser una lista de puntos.",
-    "datamap-error-internal-unknown-field-type": "No se ha implementado la compatibilidad para el tipo de campo con ID de $1. Esto se debe a un error en el código de extensión.",
     "datamap-error-render-unsupported-displaymode": "El modo de pantalla $1 se ha identificado como un marcador, pero no existe compatibilidad para el mismo. Esto se debe a un error en el código de extensión.",
     "datamap-error-pf-page-does-not-exist": "La página del mapa de datos \"[[$1]]\" no existe.",
     "datamap-error-pf-page-invalid-content-model": "El modelo de contenido de la página \"[[$1]]\" no es <code>datamap</code>.",

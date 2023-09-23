@@ -25,7 +25,6 @@
     "datamap-error-validatespec-map-bad-mixin": "Mix-in \"<code>$1</code>\" doit exister, utiliser le modèle de contenu d'une <code>Carte de données interactive</code> et avoir une syntaxe et une structure valides.",
     "datamap-error-validatespec-bgoverlay-invalid-polyline": "La propriété du <code>path</code> du calque de fond en lignes polygonales doit être une liste de points.",
     "datamap-error-render-unsupported-displaymode": "Le mode d'affichage $1 a été annoncé comme un marqueur, mais il n'est pas soutenu. Ceci est un défaut du code de l'extension.",
-    "datamap-error-internal-unknown-field-type": "Pas de soutien de validation implémenté pour le type de champ avec l'ID de $1. Ceci est un défaut du code de l'extension.",
     "datamap-error-pf-page-does-not-exist": "La page de données de carte \"[[$1]]\" n'existe pas.",
     "datamap-error-pf-page-invalid-content-model": "Le modèle de contenu de la page \"[[$1]]\" n'est pas <code>datamap</code>.",
     "datamap-error-cannot-preview-validation-errors": "<b>Édition non prévisualisée en raison d'erreur(s) dans le code source de la page:</b><br/>$1",

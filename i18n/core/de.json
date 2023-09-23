@@ -23,7 +23,6 @@
     "datamap-error-validatespec-group-no-display": "Markierungsgruppe „$1“ hat keine Anzeigeeinstellungen. Füge die <code>icon</code> und/oder <code>fillColor</code> Eigenschaften hinzu.",
     "datamap-error-validatespec-map-no-group-name": "Eine Markierungsgruppe ohne (oder leerem) Namen wurde definiert. Vergib einen einzigartigen Namen.",
     "datamap-error-validatespec-map-missing-group": "Markierungen wurde der Gruppe „$1“ hinzugefügt, die nicht definiert wurde.",
-    "datamap-error-internal-unknown-field-type": "Für den Feldtyp mit der ID $1 wurde keine Überprüfungsunterstützung implementiert. Dies ist ein Fehler im Code der Erweiterung.",
     "datamap-error-render-unsupported-displaymode": "Anzeige Modus $1 wurde eine Markierung mitgeteilt, aber die Unterstützung fehlt. Dies ist ein Fehler im Code der Erweiterung.",
     "datamap-error-pf-page-does-not-exist": "Die Seite der Datenkarte „[[$1]]“ existiert nicht.",
     "datamap-error-pf-page-invalid-content-model": "Inhaltsmodell der Seite „[[$1]]“ ist nicht <code>Interactive Data Map</code>.",

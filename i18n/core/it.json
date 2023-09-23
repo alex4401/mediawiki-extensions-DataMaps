@@ -26,7 +26,6 @@
     "datamap-error-validatespec-map-missing-group": "Gli indicatori sono stati aggiunti al gruppo \"$1\", che non è definito.",
     "datamap-error-validatespec-map-bad-mixin": "Il mix-in \"<code>$1</code>\" deve esistere, utilizzare il modello di contenuto <code>Interactive Data Map</code> ed essere valido dal punto di vista della sintassi e della struttura.",
     "datamap-error-validatespec-bgoverlay-invalid-polyline": "La proprietà <code>percorso</code> della sovrapposizione di sfondo della polilinea deve essere un elenco di punti.",
-    "datamap-error-internal-unknown-field-type": "Non è stato implementato il supporto della validazione per il tipo di campo con ID $1. Si tratta di un bug nel codice dell'estensione.",
     "datamap-error-render-unsupported-displaymode": "La modalità di visualizzazione $ 1 è stata segnalata per un indicatore, ma manca il supporto per esso. Questo è un bug nel codice dell'estensione.",
     "datamap-checklist-prelude": "Questi sono gli elementi che si possono contrassegnare come raccolti:",
     "datamap-error-cannot-preview-validation-errors": "<b>Anteprima di modifica non mostrata a causa di errori nel codice sorgente della mappa:</b><br/>$1",

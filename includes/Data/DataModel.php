@@ -78,7 +78,7 @@ class DataModel {
                 // S"#rrggbbaa" || S"#rgba" || [ Nr, Ng, Nb, Na ]
                 return DataMapColourUtils::decode4( $var ) !== null;
         }
-        throw new InvalidArgumentException( wfMessage( 'datamap-error-internal-unknown-field-type', $typeId ) );
+        throw new InvalidArgumentException( "Unhandled field validation type: $typeId" );
     }
 
     protected function allowOnly( Status $status, array $fields ) {

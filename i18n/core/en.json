@@ -44,7 +44,6 @@
     "datamap-error-validatespec-map-uid-conflict": "Found a non-unique marker identifier: <code>$1</code>.",
     "datamap-error-validatespec-map-mixin-with-mixins": "A mix-in must not use other mix-ins.",
     "datamap-error-validatespec-bgoverlay-invalid-polyline": "Polyline background overlay's <code>path</code> property must be a list of points.",
-    "datamap-error-internal-unknown-field-type": "No validation support implemented for field type with ID of $1. This is a bug in the extension's code.",
     "datamap-error-render-unsupported-displaymode": "Display mode $1 has been reported for a marker, but support is missing for it. This is a bug in the extension's code.",
     "datamap-error-pf-page-does-not-exist": "Data map page \"[[$1]]\" does not exist.",
     "datamap-error-pf-page-invalid-content-model": "Content model of page \"[[$1]]\" is not <code>Interactive Data Map</code>.",
