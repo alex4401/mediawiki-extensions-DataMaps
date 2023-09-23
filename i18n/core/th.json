@@ -43,7 +43,6 @@
     "datamap-checklist-prelude": "ไอเทมที่คุณทำเครื่องหมายว่า สะสมแล้ว:",
     "datamap-error-pf-page-does-not-exist": "ไม่พบหน้าแผนที่ข้อมูล \"[[$1]]\"",
     "datamap-error-render-unsupported-displaymode": "มีการรายงานโหมดการแสดงผล $1 ที่ไม่ถูกต้อง, เป็นบั๊กของโค้ดในส่วยขยาย",
-    "datamap-error-internal-unknown-field-type": "ไม่รองรับการดำเนินการของประเภทฟิลด์ด้วย ID ของ $1 เป็นบั๊กของส่วนขยาย",
     "datamap-error-validatespec-bgoverlay-invalid-polyline": "คุณสมบัติ <code>path</code> โอเวอร์เลย์ของ Polyline background ต้องเป็นรายการของจุด",
     "datamap-error-validatespec-map-missing-group": "เครื่องหมายถูกเพิ่มเข้ามาในกลุ่ม \"$1\", ซึ่งไม่ได้กำหนดไว้",
     "datamap-error-validatespec-map-no-group-name": "กลุ่มของเครื่องหมายต้อง (หรือว่างเปล่า) ไม่ซ้ำหรือถูกใช้ไปแล้ว โปรดกำหนดชื่อที่ไม่ซ้ำ",
