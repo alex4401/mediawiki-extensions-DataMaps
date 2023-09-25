@@ -6,7 +6,7 @@
     },
     "datamap-desc": "允许在Wiki页面中嵌入一个可交互地图。",
     "datamap-doc-page-does-not-exist": "''此地图的文档可在 [[$1]] 中创建。''",
-    "datamap-error-validate-check-docs": "查阅[https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps 扩展文档]了解规范结构的信息。",
+    "datamap-error-validate-check-docs": "查阅[https://github.com/alex4401/mediawiki-extensions-DataMaps 扩展文档]了解规范结构的信息。",
     "datamap-control-toggle-legend": "点击展开图例以切换标记",
     "content-model-datamap": "交互式数据地图",
     "datamap-doc-page-header": "'''此页面是 [[$1]] 的文档。'''",
