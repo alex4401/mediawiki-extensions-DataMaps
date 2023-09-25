@@ -1,7 +1,7 @@
-/** @typedef {import( './filters.js' )} MarkerFilteringPanel */
-const LegendTabber = require( './tabber.js' ),
+/** @typedef {import( './MarkerFilteringPanel.js' )} MarkerFilteringPanel */
+const LegendTabber = require( './LegendTabber.js' ),
     { CRSOrigin, MarkerGroupFlags, MapFlags } = require( '../enums.js' ),
-    Util = require( '../util.js' );
+    Util = require( '../Util.js' );
 
 
 class CollectiblesPanel extends LegendTabber.Tab {

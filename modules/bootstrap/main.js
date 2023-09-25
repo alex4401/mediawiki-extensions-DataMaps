@@ -1,4 +1,4 @@
-/** @typedef {import( '../core/events.js' ).EventHandlerRef & { flag: number }} MapNotificationReceiver */
+/** @typedef {import( '../core/EventEmitter.js' ).EventHandlerRef & { flag: number }} MapNotificationReceiver */
 const
     {
         DataMap,

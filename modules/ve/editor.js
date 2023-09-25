@@ -1,4 +1,4 @@
-/** @typedef {import( '../core/legend/tabber.js' )} LegendTabber */
+/** @typedef {import( '../core/legend/LegendTabber.js' )} LegendTabber */
 /** @typedef {import( './tabs/base.js' )} VePanel */
 /** @typedef {import( './workflow/base.js' ).VeWorkflow} VeWorkflow */
 /** @typedef {import( '../../schemas/src/index' ).DataMap} Schema_DataMap */

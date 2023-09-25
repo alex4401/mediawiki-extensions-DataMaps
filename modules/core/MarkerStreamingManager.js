@@ -1,5 +1,5 @@
 /* eslint-disable compat/compat */
-/** @typedef {import( './map.js' )} DataMap */
+/** @typedef {import( './DataMap.js' )} DataMap */
 
 
 /**

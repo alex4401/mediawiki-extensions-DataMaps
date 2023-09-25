@@ -1,5 +1,5 @@
-/** @typedef {import( '../core/map.js' )} DataMap */
-const Util = require( './util.js' ),
+/** @typedef {import( '../core/DataMap.js' )} DataMap */
+const Util = require( './Util.js' ),
     {
         EventEmitter,
         MarkerGroupFlags,

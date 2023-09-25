@@ -1,4 +1,4 @@
-/** @typedef {import( './map.js' )} DataMap */
+/** @typedef {import( './DataMap.js' )} DataMap */
 
 
 /**

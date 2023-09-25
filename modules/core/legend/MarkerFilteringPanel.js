@@ -1,7 +1,7 @@
-/** @typedef {import( '../map.js' )} DataMap */
-const LegendTabber = require( './tabber.js' ),
+/** @typedef {import( '../DataMap.js' )} DataMap */
+const LegendTabber = require( './LegendTabber.js' ),
     { MarkerGroupFlags } = require( '../enums.js' ),
-    Util = require( '../util.js' );
+    Util = require( '../Util.js' );
 
 
 class MarkerFilteringPanel extends LegendTabber.Tab {

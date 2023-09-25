@@ -1,5 +1,5 @@
 /** @typedef {import( './editor.js' )} MapVisualEditor */
-/** @typedef {import( '../core/map.js' )} DataMap */
+/** @typedef {import( '../core/DataMap.js' )} DataMap */
 
 
 /**

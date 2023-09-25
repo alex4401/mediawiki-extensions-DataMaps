@@ -1,6 +1,6 @@
-/** @typedef {import( '../map.js' )} DataMap */
+/** @typedef {import( '../DataMap.js' )} DataMap */
 /** @typedef {import( '../controls.js' ).ControlButtonOptions} ControlButtonOptions */
-const Util = require( '../util.js' ),
+const Util = require( '../Util.js' ),
     { MapControl } = require( '../controls.js' );
 
 

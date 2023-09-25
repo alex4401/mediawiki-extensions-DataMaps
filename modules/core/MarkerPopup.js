@@ -1,5 +1,5 @@
-/** @typedef {import( './map.js' )} DataMap */
-const Util = require( './util.js' ),
+/** @typedef {import( './DataMap.js' )} DataMap */
+const Util = require( './Util.js' ),
     { MapFlags } = require( './enums.js' ),
     { createDomElement } = Util;
 

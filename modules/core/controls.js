@@ -1,6 +1,5 @@
-/** @typedef {import( './map.js' )} DataMap */
-const { CRSOrigin } = require( './enums.js' ),
-    { isVisualEditorEnabled, createDomElement, getNonNull } = require( './util.js' );
+/** @typedef {import( './DataMap.js' )} DataMap */
+const { isVisualEditorEnabled, createDomElement, getNonNull } = require( './Util.js' );
 
 
 /**
