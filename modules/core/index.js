@@ -1,12 +1,12 @@
 module.exports = Object.assign( {}, require( './enums.js' ), {
-    EventEmitter: require( './events.js' ),
+    EventEmitter: require( './EventEmitter.js' ),
     Controls: require( './controls.js' ),
-    MapStorage: require( './storage.js' ),
-    MarkerLayerManager: require( './layerManager.js' ),
-    MarkerPopup: require( './popup.js' ),
-    LegendTabber: require( './legend/tabber.js' ),
-    MarkerFilteringPanel: require( './legend/filters.js' ),
-    DataMap: require( './map.js' ),
-    CollectiblesPanel: require( './legend/collectibles.js' ),
-    Util: require( './util.js' )
+    MapStorage: require( './MapStorage.js' ),
+    MarkerLayerManager: require( './MarkerLayerManager.js' ),
+    MarkerPopup: require( './MarkerPopup.js' ),
+    LegendTabber: require( './legend/LegendTabber.js' ),
+    MarkerFilteringPanel: require( './legend/MarkerFilteringPanel.js' ),
+    DataMap: require( './DataMap.js' ),
+    CollectiblesPanel: require( './legend/CollectiblesPanel.js' ),
+    Util: require( './Util.js' )
 } );

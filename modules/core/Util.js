@@ -1,4 +1,4 @@
-/** @typedef {import( './map.js' )} DataMap */
+/** @typedef {import( './DataMap.js' )} DataMap */
 const { MarkerGroupFlags } = require( './enums.js' ),
     // @ts-ignore: module resolution error
     serverSettings = /** @type {DataMaps.IExposedServerSettings} */ ( require( './settings.json' ) );

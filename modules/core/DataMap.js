@@ -1,14 +1,14 @@
-const MapStorage = require( './storage.js' ),
+const MapStorage = require( './MapStorage.js' ),
     { MapFlags, MarkerGroupFlags, CRSOrigin, CoordinateDisplayStyle } = require( './enums.js' ),
-    MarkerLayerManager = require( './layerManager.js' ),
-    MarkerPopup = require( './popup.js' ),
-    MarkerStreamingManager = require( './stream.js' ),
+    MarkerLayerManager = require( './MarkerLayerManager.js' ),
+    MarkerPopup = require( './MarkerPopup.js' ),
+    MarkerStreamingManager = require( './MarkerStreamingManager.js' ),
     Controls = require( './controls.js' ),
-    LegendTabber = require( './legend/tabber.js' ),
-    MarkerFilteringPanel = require( './legend/filters.js' ),
-    EventEmitter = require( './events.js' ),
-    CollectiblesPanel = require( './legend/collectibles.js' ),
-    Util = require( './util.js' ),
+    LegendTabber = require( './legend/LegendTabber.js' ),
+    MarkerFilteringPanel = require( './legend/MarkerFilteringPanel.js' ),
+    EventEmitter = require( './EventEmitter.js' ),
+    CollectiblesPanel = require( './legend/CollectiblesPanel.js' ),
+    Util = require( './Util.js' ),
     { createDomElement } = Util;
 /** @type {!LeafletModule} */
 // @ts-ignore: Lazily initialised, this'd be ideally solved with post-fix assertions but we're in JS land.
