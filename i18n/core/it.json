@@ -11,7 +11,7 @@
     "datamap-error-validate-replaced-field": "Il campo <code>$2</code> nella struttura $1 è stato sostituito con <code>$3</code> nella versione $4 e sarà rimosso nella versione $5.",
     "datamap-desc": "Permette l'inserimento di mappe interattive nelle pagine del wiki.",
     "datamap-category-pages-including-maps": "Pagine che includono mappe di dati",
-    "datamap-error-validate-check-docs": "Per informazioni sulla struttura corretta, consultare [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps extension's documentation].",
+    "datamap-error-validate-check-docs": "Per informazioni sulla struttura corretta, consultare [https://github.com/alex4401/mediawiki-extensions-DataMaps extension's documentation].",
     "datamap-error-validate-field-required-either": "$1 richiede solo uno di questi due campi: <code>$2</code> o <code>$3</code>. Entrambi non possono essere specificati contemporaneamente.",
     "@metadata": {
         "authors": [

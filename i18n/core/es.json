@@ -9,7 +9,7 @@
     "datamap-doc-page-does-not-exist": "''La documentación para esta página de datos puede crearse en [[$1]]''",
     "datamap-doc-page-header": "'''Esta es la página de documentación para [[$1]]'''",
     "datamap-category-pages-including-maps": "Páginas incluyendo los mapas de datos",
-    "datamap-error-validate-check-docs": "Consulta la [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps documentación de la extensión] para más información sobre la estructura adecuada.",
+    "datamap-error-validate-check-docs": "Consulta la [https://github.com/alex4401/mediawiki-extensions-DataMaps documentación de la extensión] para más información sobre la estructura adecuada.",
     "datamap-error-validate-invalid-json": "Este documento no es un archivo JSON válido.",
     "datamap-error-validate-unexpected-fields": "Se ha(n) encontrado campo(s) desconocido(s) en la estructura $1: $2.",
     "datamap-error-validate-field-no-value": "El campo <code>$2</code> de la estructura $1 necesita un valor.",
@@ -74,7 +74,7 @@
     "datamap-category-pages-including-broken-maps": "Páginas que incluyen mapas de datos con fallos de validación",
     "datamap-error-map-validation-fail-full": "El mapa de datos no supera la validación de datos. Por favor, corrige primero los errores asociados:<br/>$1",
     "datamap-error-validate-limit": "Se han encontrado demasiados errores durante la validación de la estructura: $1.",
-    "datamap-error-deprecated-schema-version": "El esquema usado en este mapa ya no es compatible, y por tanto se eliminará en $1. Comprueba la [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps documentación de la extensión] y actualiza los datos con una versión de esquema compatible ($2).",
+    "datamap-error-deprecated-schema-version": "El esquema usado en este mapa ya no es compatible, y por tanto se eliminará en $1. Comprueba la [https://github.com/alex4401/mediawiki-extensions-DataMaps documentación de la extensión] y actualiza los datos con una versión de esquema compatible ($2).",
     "datamap-error-bad-schema-origin": "Campo <code>$schema</code> faltante o no válido. Este campo debe indicar la ruta a una definición de esquema compatible (por ejemplo, <code>$1</code>).",
     "datamap-error-bad-schema-version": "El campo <code>$schema</code> indica la ruta a una definición de esquema desconocida o no compatible. Los identificadores compatibles son los siguientes: $1."
 }

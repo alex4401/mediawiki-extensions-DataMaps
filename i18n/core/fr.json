@@ -9,7 +9,7 @@
     "datamap-doc-page-does-not-exist": "''La documentation pour cette carte peut être créée à [[$1]]''",
     "datamap-doc-page-header": "'''Ceci est la page de documentation pour [[$1]]'''",
     "datamap-category-pages-including-maps": "Pages incluant des cartes de données",
-    "datamap-error-validate-check-docs": "Vérifiez la [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps documentation de l'extention] pour plus d'informations sur la bonne structure.",
+    "datamap-error-validate-check-docs": "Vérifiez la [https://github.com/alex4401/mediawiki-extensions-DataMaps documentation de l'extention] pour plus d'informations sur la bonne structure.",
     "datamap-error-validate-invalid-json": "Ceci n'est pas un document JSON valide.",
     "datamap-error-validate-unexpected-fields": "Champ(s) inconnu(s) trouvés dans la structure $1: $2.",
     "datamap-error-validate-field-no-value": "Le champ <code>$2</code> dans la structure $1 nécessite une valeur.",
@@ -78,7 +78,7 @@
     "datamap-error-validate-limit": "Trop d'erreurs rencontrées pendant la validation de structure : $1.",
     "datamap-error-bad-schema-origin": "Champ <code>$schema</code> manquant ou invalide. Doit désigner une définition de schéma supportée, comme <code>$1</code>.",
     "datamap-error-bad-schema-version": "Le champ <code>$schema</code> désigne une définition de schéma inconnue ou non supportée. Les identifiants suivants sont supportés : $1.",
-    "datamap-error-deprecated-schema-version": "Le schéma utilisé sur cette carte n'est plus supporté et sera supprimé dans la version $1. Consultez la [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps documentation de l'extension] et mettez à jour les données avec une version de schéma supportée ($2).",
+    "datamap-error-deprecated-schema-version": "Le schéma utilisé sur cette carte n'est plus supporté et sera supprimé dans la version $1. Consultez la [https://github.com/alex4401/mediawiki-extensions-DataMaps documentation de l'extension] et mettez à jour les données avec une version de schéma supportée ($2).",
     "datamap-control-fullscreen": "Basculer en mode plein écran",
     "datamap-control-search-no-results": "Aucun résultat trouvé."
 }

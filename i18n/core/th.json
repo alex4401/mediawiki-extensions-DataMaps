@@ -49,7 +49,7 @@
     "datamap-control-search": "เริ่มต้นพิมพ์คำค้นหาที่นี่...",
     "datamap-error-validatespec-group-no-display": "ไม่มีการตั้งค่าแสดงผลของกลุ่มเครื่องหมาย \"$1\" โปรดเพิ่มคุณสมบัติ <code>icon</code> และ/หรือ <code>fillColor</code>",
     "datamap-error-validate-unexpected-fields": "พบฟิลด์ที่ไม่ทราบในโครงสร้าง $1: $2",
-    "datamap-error-validate-check-docs": "สามารถดูรายละเอียดเพิ่มเติมและโครงสร้างของส่วนขยายได้ที่ [https://gitlab.mglolenstine.xyz/alex4401/mediawiki-extension-datamaps เอกสารประกอบส่วนขยาย]",
+    "datamap-error-validate-check-docs": "สามารถดูรายละเอียดเพิ่มเติมและโครงสร้างของส่วนขยายได้ที่ [https://github.com/alex4401/mediawiki-extensions-DataMaps เอกสารประกอบส่วนขยาย]",
     "datamap-error-cannot-preview-validation-errors": "<b>ไม่แสดงตัวอย่างเนื่องจากข้อผิดพลาดในซอร์สโค้ด</b><br/>$1",
     "datamap-legend-tab-checklist": "รายการตรวจสอบ",
     "datamap-error-validate-wrong-item-type": "องค์ประกอบใน <code>$2</code> อาร์เรย์มีค่าที่ผิดพลาดสำหรับโครงสร้าง $1. $3",
