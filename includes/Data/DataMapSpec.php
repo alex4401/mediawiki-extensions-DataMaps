@@ -485,7 +485,7 @@ class DataMapSpec extends DataModel {
         if ( $this->validationAreRequiredFieldsPresent ) {
             // Validate there's no overlap between marker layer names and group names
             if ( isset( $this->raw->groups ) && isset( $this->raw->layers ) ) {
-                foreach ( array_keys( $this->getRawMarkerLayerMap() ) as &$name ) {
+                foreach ( array_keys( get_object_vars( $this->getRawMarkerLayerMap() ) ) as &$name ) {
                     if ( isset( $this->raw->groups->{$name} ) ) {
                         $status->fatal( 'datamap-error-validatespec-map-name-conflict-group-layer', wfEscapeWikiText( $name ) );
                     }
