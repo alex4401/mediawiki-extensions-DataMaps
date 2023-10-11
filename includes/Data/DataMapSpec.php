@@ -110,7 +110,7 @@ class DataMapSpec extends DataModel {
     private function warmUpUsedMarkerTypes() {
         $groups = [];
         $specifiers = [];
-        foreach ( array_keys( get_object_vars( $this->raw->markers ) ) as &$name ) {
+        foreach ( array_keys( get_object_vars( $this->getRawMarkerMap() ) ) as &$name ) {
             $parts = explode( ' ', $name );
             $groups[] = array_shift( $parts );
             $specifiers = array_merge( $parts, $specifiers );
