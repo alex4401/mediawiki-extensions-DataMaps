@@ -1,0 +1,16 @@
+{
+	"@metadata": {
+		"authors": [
+			"Volvox"
+		]
+	},
+	"datamap-ve-skip": "Iwwersprangen",
+	"datamap-vec-crs-top-left": "Uewe lénks",
+	"datamap-vec-crs-bottom-left": "Ënne lénks",
+	"datamap-vec-select-crs": "Koordinatesystem",
+	"datamap-vec-select-background": "Hannergrondbild",
+	"datamap-vec-note-image-size": "Gréisst: $1 × $2",
+	"datamap-vec-toggle-coord-display": "Koordinaten ënner dem Cursor weisen",
+	"datamap-vec-example-group-id": "Beispill",
+	"datamap-vec-example-group-name": "Beispillgrupp"
+}

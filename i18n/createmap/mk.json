@@ -1,0 +1,31 @@
+{
+	"@metadata": {
+		"authors": [
+			"Bjankuloski06"
+		]
+	},
+	"datamap-vec-title": "Создај карта",
+	"datamap-ve-skip": "Прескокни",
+	"datamap-vec-intro": "Прилагодете ги следниве информации на вашите потреби за да можеме да подготвиме основна карта, пред да почнете да ја уредувате",
+	"datamap-vec-select-crs-origin": "Координатн агол (0, 0)",
+	"datamap-vec-crs-top-left": "Горе лево",
+	"datamap-vec-crs-bottom-left": "Долу лево",
+	"datamap-vec-select-crs": "Координатен систем",
+	"datamap-vec-crs-percent": "Постоток (0-100 %)",
+	"datamap-vec-crs-image": "Усклади ги координатите на сликата",
+	"datamap-vec-crs-custom": "Прилагодено",
+	"datamap-vec-select-background": "Позадинска слика",
+	"datamap-vec-note-image-size": "Големина: $1 × $2",
+	"datamap-vec-error-bad-file-type": "$1 не е поддржан податотечен тип. Изберете JPEG, PNG, GIF или SVG.",
+	"datamap-vec-error-poor-file-type": "Овој вид на податотека може да работи слабо на ограничени мрежи. Користете JPEG секогаш кога е можно.",
+	"datamap-vec-extra-options": "Дополнителни можности",
+	"datamap-vec-toggle-coord-display": "Прикажувај координати под стрелката",
+	"datamap-vec-toggle-zoom": "Овозможи приближување",
+	"datamap-vec-toggle-search": "Овозможи пребарување на обележувачи",
+	"datamap-vec-toggle-search-tabber": "Сподели податоци од пребарување во префрлачот",
+	"datamap-vec-toggle-uid-requirement": "Барај единствена назнака на обележувач",
+	"datamap-vec-submit": "Продолжи",
+	"datamap-vec-example-group-id": "пример",
+	"datamap-vec-example-group-name": "Примерна група",
+	"datamap-vec-example-marker": "Примерен облежувач"
+}
