@@ -1,29 +1,30 @@
 {
-    "@metadata": {
-        "authors": [
-            "magic"
-        ]
-    },
-    "datamap-vec-select-crs-origin": "(0, 0) Koordinatenecke",
-    "datamap-vec-crs-top-left": "Oben links",
-    "datamap-vec-crs-bottom-left": "Unten links",
-    "datamap-vec-select-crs": "Koordinatensystem",
-    "datamap-vec-crs-percent": "Prozentsatz (0-100%)",
-    "datamap-vec-crs-image": "Bildkoordinaten abgleichen",
-    "datamap-vec-select-background": "Hintergrundbild",
-    "datamap-vec-extra-options": "Weitere Optionen",
-    "datamap-vec-toggle-coord-display": "Koordinaten unter dem Mauszeiger anzeigen",
-    "datamap-vec-toggle-zoom": "Vergrößern aktivieren",
-    "datamap-vec-toggle-search": "Suchen von Markierungen aktivieren",
-    "datamap-vec-submit": "Fortfahren",
-    "datamap-vec-example-group-id": "Beispiel",
-    "datamap-vec-toggle-uid-requirement": "Eindeutige Markierung-IDs erforderlich",
-    "datamap-vec-example-group-name": "Beispielgruppe",
-    "datamap-vec-example-marker": "Beispielmarkierung",
-    "datamap-vec-title": "Karte erstellen",
-    "datamap-vec-intro": "Passe die folgenden Informationen an eure Bedürfnisse an, damit wir eine Grundkarte erstellen können, bevor Sie mit der Bearbeitung anfangen",
-    "datamap-vec-error-bad-file-type": "Dateityp ($1) wird nicht unterstützt; bitte eine JPEG, PNG, GIF oder SVG Datei auswählen.",
-    "datamap-vec-error-poor-file-type": "Dieser Dateityp kann in begrenzten Netzwerken eine schlechte Leistung erbringen. Verwende nach Möglichkeit JPEG.",
-    "datamap-vec-toggle-search-tabber": "Gemeinsame Nutzung von Suchdaten in Tabber",
-    "datamap-vec-note-image-size": "Größe: $1 × $2"
+	"@metadata": {
+		"authors": [
+			"Brettchenweber",
+			"magic"
+		]
+	},
+	"datamap-vec-title": "Karte erstellen",
+	"datamap-vec-intro": "Passe die folgenden Informationen an deine Bedürfnisse an, damit wir eine Grundkarte erstellen können, bevor du mit der Bearbeitung anfängst",
+	"datamap-vec-select-crs-origin": "(0, 0) Koordinatenecke",
+	"datamap-vec-crs-top-left": "Oben links",
+	"datamap-vec-crs-bottom-left": "Unten links",
+	"datamap-vec-select-crs": "Koordinatensystem",
+	"datamap-vec-crs-percent": "Prozentsatz (0-100%)",
+	"datamap-vec-crs-image": "Bildkoordinaten abgleichen",
+	"datamap-vec-select-background": "Hintergrundbild",
+	"datamap-vec-note-image-size": "Größe: $1 × $2",
+	"datamap-vec-error-bad-file-type": "Dateityp ($1) wird nicht unterstützt; bitte eine JPEG-, PNG-, GIF- oder SVG-Datei auswählen.",
+	"datamap-vec-error-poor-file-type": "Dieser Dateityp kann in begrenzten Netzwerken eine schlechte Leistung erbringen. Verwende nach Möglichkeit JPEG.",
+	"datamap-vec-extra-options": "Weitere Optionen",
+	"datamap-vec-toggle-coord-display": "Koordinaten unter dem Mauszeiger anzeigen",
+	"datamap-vec-toggle-zoom": "Vergrößern aktivieren",
+	"datamap-vec-toggle-search": "Suchen von Markierungen aktivieren",
+	"datamap-vec-toggle-search-tabber": "Gemeinsame Nutzung von Suchdaten in Tabber",
+	"datamap-vec-toggle-uid-requirement": "Eindeutige Markierung-IDs erforderlich",
+	"datamap-vec-submit": "Fortfahren",
+	"datamap-vec-example-group-id": "Beispiel",
+	"datamap-vec-example-group-name": "Beispielgruppe",
+	"datamap-vec-example-marker": "Beispielmarkierung"
 }

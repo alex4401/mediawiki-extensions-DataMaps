@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Amire80"
+		]
+	},
+	"datamap-vec-title": "יצירת מפה",
+	"datamap-ve-skip": "לדלג",
+	"datamap-vec-intro": "נא לכוונן את המידע הבא לצרכים שלך כדי שנוכל להכין מפה בסיסית לפני המעבר לעריכתה",
+	"datamap-vec-select-crs-origin": "(0, 0) פינת נקודות ציון",
+	"datamap-vec-crs-top-left": "למעלה משמאל",
+	"datamap-vec-crs-bottom-left": "למטה משמאל",
+	"datamap-vec-select-crs": "מערכת נקודות ציון",
+	"datamap-vec-crs-percent": "אחוז (0–100%)"
+}

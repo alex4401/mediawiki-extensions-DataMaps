@@ -1,0 +1,31 @@
+{
+	"@metadata": {
+		"authors": [
+			"McDutchie"
+		]
+	},
+	"datamap-vec-title": "Crear un carta",
+	"datamap-ve-skip": "Saltar",
+	"datamap-vec-intro": "Per favor adjusta le information sequente a tu necessitates de maniera que nos pote preparar un carta de base que tu potera modificar",
+	"datamap-vec-select-crs-origin": "(0, 0) angulo de coordinatas",
+	"datamap-vec-crs-top-left": "Alto sinistre",
+	"datamap-vec-crs-bottom-left": "Basso sinistre",
+	"datamap-vec-select-crs": "Systema de coordinatas",
+	"datamap-vec-crs-percent": "Percentage (0-100%)",
+	"datamap-vec-crs-image": "Comparar coordinatas del imagines",
+	"datamap-vec-crs-custom": "Personalisate",
+	"datamap-vec-select-background": "Imagine de fundo",
+	"datamap-vec-note-image-size": "Dimension: $1 × $2",
+	"datamap-vec-error-bad-file-type": "Le typo de file ($1) non es supportate; per favor selige un file JPEG, PNG, GIF o SVG.",
+	"datamap-vec-error-poor-file-type": "Iste typo de file pote esser poco efficace sur un rete limitate. Usa files JPEG si possibile.",
+	"datamap-vec-extra-options": "Optiones additional",
+	"datamap-vec-toggle-coord-display": "Monstrar coordinatas sub le cursor",
+	"datamap-vec-toggle-zoom": "Activar zoom",
+	"datamap-vec-toggle-search": "Activar recerca de marcatores",
+	"datamap-vec-toggle-search-tabber": "Condivider datos de recerca intra le schedario",
+	"datamap-vec-toggle-uid-requirement": "Exiger IDs unic pro marcatores",
+	"datamap-vec-submit": "Proceder",
+	"datamap-vec-example-group-id": "exemplo",
+	"datamap-vec-example-group-name": "Exemplo de gruppo",
+	"datamap-vec-example-marker": "Exemplo de marcator"
+}

@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Abijeet Patro"
+		]
+	},
+	"datamap-vec-title": "नक्शा बनाएँ",
+	"datamap-ve-skip": "छोड़ें",
+	"datamap-vec-crs-custom": "अनुकूलित",
+	"datamap-vec-note-image-size": "आकार: $1 × $2",
+	"datamap-vec-submit": "आगे बढ़ें",
+	"datamap-vec-example-group-id": "उदाहरण",
+	"datamap-vec-example-group-name": "उदाहरण समूह",
+	"datamap-vec-example-marker": "उदाहरण मार्कर"
+}

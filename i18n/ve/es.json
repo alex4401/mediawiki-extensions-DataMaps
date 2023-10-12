@@ -1,1 +1,10 @@
-{}
+{
+	"@metadata": {
+		"authors": [
+			"No se"
+		]
+	},
+	"datamap-ve-to-load": "Espere mientras el editor visual se está cargando...",
+	"datamap-ve-experimental-close": "Cerrar",
+	"datamap-ve-edit-source-action": "Editar código"
+}

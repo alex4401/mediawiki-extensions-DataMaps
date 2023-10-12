@@ -1,22 +1,22 @@
 {
-    "@metadata": {
-        "authors": [
-            "num9852453"
-        ]
-    },
-    "datamap-doc-page-does-not-exist": "''このデータページのドキュメントは、[[$1]]で作成できます''",
-    "datamap-doc-page-header": "'''これは[[$1]]のドキュメントページです'''",
-    "datamap-category-pages-including-maps": "データマップを含むページ",
-    "datamap-legend-label": "凡例",
-    "datamap-javascript-required": "インタラクティブデータマップを表示するには、JavaScriptを有効にする必要があります。",
-    "datamap-legend-tab-locations": "マーク",
-    "datamap-toggle-show-all": "すべて表示",
-    "datamap-toggle-hide-all": "すべて非表示",
-    "datamap-layer-control": "レイヤー",
-    "datamap-layer-surface": "地上",
-    "datamap-popup-related-article": "詳細を見る",
-    "datamap-popup-dismissed": "回収済み",
-    "datamap-popup-mark-as-dismissed": "回収済みとしてマーク",
-    "datamap-coordinate-control-text": "緯度 $1、経度 $2",
-    "datamap-control-reset-view": "デフォルト表示に戻す"
+	"@metadata": {
+		"authors": [
+			"num9852453"
+		]
+	},
+	"datamap-doc-page-does-not-exist": "''このデータページのドキュメントは、[[$1]]で作成できます''",
+	"datamap-doc-page-header": "'''これは[[$1]]のドキュメントページです'''",
+	"datamap-category-pages-including-maps": "データマップを含むページ",
+	"datamap-legend-label": "凡例",
+	"datamap-javascript-required": "インタラクティブデータマップを表示するには、JavaScriptを有効にする必要があります。",
+	"datamap-legend-tab-locations": "マーク",
+	"datamap-toggle-show-all": "すべて表示",
+	"datamap-toggle-hide-all": "すべて非表示",
+	"datamap-layer-control": "レイヤー",
+	"datamap-layer-surface": "地上",
+	"datamap-popup-related-article": "詳細を見る",
+	"datamap-popup-dismissed": "回収済み",
+	"datamap-popup-mark-as-dismissed": "回収済みとしてマーク",
+	"datamap-coordinate-control-text": "緯度 $1、経度 $2",
+	"datamap-control-reset-view": "デフォルト表示に戻す"
 }

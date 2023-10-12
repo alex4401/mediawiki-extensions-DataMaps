@@ -1,8 +1,8 @@
 {
-    "@metadata": {
-        "authors": [
-            "alex4401"
-        ]
-    },
-    "datamap-control-centre-view": "Centre view at current zoom level"
+	"@metadata": {
+		"authors": [
+			"alex4401"
+		]
+	},
+	"datamap-control-centre-view": "Centre view at current zoom level"
 }
