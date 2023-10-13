@@ -78,6 +78,10 @@ final class HookHandler implements
                 SFH_NO_HASH
             );
         }
+        $parser->setFunctionHook(
+            'datamaplink', [ ParserFunctions\MapLinkFunction::class, 'run' ],
+            SFH_OBJECT_ARGS
+        );
     }
 
     private static function isDocPage( Title $title ) {
