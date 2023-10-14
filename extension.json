@@ -63,10 +63,10 @@
 			"packageFiles": [
 				"leafletPkg/index.js",
 				"vendor/leaflet/leaflet.js",
-				"leafletPkg/popup.js",
-				"leafletPkg/keybindInteraction.js",
-				"leafletPkg/sleepInteraction.js",
-				"leafletPkg/pinIcon.js"
+				"leafletPkg/Popup.js",
+				"leafletPkg/KeybindInteraction.js",
+				"leafletPkg/SleepInteraction.js",
+				"leafletPkg/PinIcon.js"
 			],
 			"styles": [
 				"vendor/leaflet/leaflet.css"
@@ -110,18 +110,18 @@
 			"packageFiles": [
 				"core/index.js",
 				"core/enums.js",
-				"core/events.js",
-				"core/storage.js",
-				"core/stream.js",
-				"core/layerManager.js",
-				"core/map.js",
+				"core/EventEmitter.js",
+				"core/MapStorage.js",
+				"core/MarkerStreamingManager.js",
+				"core/MarkerLayerManager.js",
+				"core/DataMap.js",
 				"core/controls.js",
-				"core/popup.js",
-				"core/util.js",
+				"core/MarkerPopup.js",
+				"core/Util.js",
 
-				"core/legend/tabber.js",
-				"core/legend/filters.js",
-				"core/legend/collectibles.js",
+				"core/legend/LegendTabber.js",
+				"core/legend/MarkerFilteringPanel.js",
+				"core/legend/CollectiblesPanel.js",
 
 				{
 					"name": "core/settings.json",
@@ -216,8 +216,9 @@
 			],
 			"packageFiles": [
 				"search/main.js",
-				"search/indexing.js",
-				"search/util.js"
+				"search/MarkerSearch.js",
+				"search/MarkerSearchIndex.js",
+				"search/Util.js"
 			],
 			"styles": [
 				"search/css/styles.less"
