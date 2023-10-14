@@ -351,7 +351,8 @@ module.exports = Object.freeze( {
      */
     getQueryParameter( name ) {
         // eslint-disable-next-line compat/compat
-        return new URLSearchParams( window.location.search ).get( name );
+        const value = new URLSearchParams( window.location.search ).get( name );
+        return value ? decodeURIComponent( value ) : value;
     },
 
 
