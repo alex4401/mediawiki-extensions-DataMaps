@@ -6,13 +6,27 @@ use MediaWiki\Extension\DataMaps\ExtensionConfig;
 use MediaWiki\Extension\DataMaps\Rendering\EmbedRenderOptions;
 use MediaWiki\MediaWikiServices;
 use Parser;
+use PPFrame;
+use PPNode;
 use Title;
 
 final class EmbedMapFunction {
-    public static function run( Parser $parser ): array {
-        $params = func_get_args();
-        // We already know the parser
-        array_shift( $params );
+    /**
+     * Embeds a map.
+     *
+     * {{DataMap:Arbury Interactive Map}}
+     * {{Map:Arbury Interactive Map|filter=activities|max-width=300}}
+     *
+     * @param Parser $parser
+     * @param PPFrame $frame
+     * @param PPNode[] $args
+     * @return string
+     */
+    public static function run( Parser $parser, PPFrame $frame, array $args ): array {
+        $params = CommonUtilities::getArguments( $frame, $args, [
+            'filter' => null,
+            'max-width' => null,
+        ] );
 
         $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
 
@@ -66,27 +80,14 @@ final class EmbedMapFunction {
     private static function getRenderOptions( array $params ) {
         $result = new EmbedRenderOptions();
 
-        foreach ( $params as $param ) {
-            // TODO: should throw on unrecognised parameters
+        if ( $params['filter'] ) {
+            $result->displayGroups = explode( ',', $params['filter'] );
+        }
 
-            $parts = explode( '=', $param, 2 );
-
-            if ( count( $parts ) != 2 ) {
-                continue;
-            }
-            $key = trim( $parts[0] );
-            $value = trim( $parts[1] );
-
-            switch ( $key ) {
-                case 'filter':
-                    $result->displayGroups = explode( ',', $value );
-                    break;
-                case 'max-width':
-                    $result->maxWidthPx = intval( $value );
-                    if ( $result->maxWidthPx <= 0 ) {
-                        return wfMessage( 'datamap-error-pf-max-width-invalid' )->inContentLanguage()->escaped();
-                    }
-                    break;
+        if ( $params['max-width'] ) {
+            $result->maxWidthPx = intval( $params['max-width'] );
+            if ( $result->maxWidthPx <= 0 ) {
+                return wfMessage( 'datamap-error-pf-max-width-invalid' )->inContentLanguage()->escaped();
             }
         }
 

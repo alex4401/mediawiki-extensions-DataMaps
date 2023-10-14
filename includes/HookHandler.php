@@ -10,6 +10,7 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
+use Parser;
 use RequestContext;
 use Title;
 use User;
@@ -87,17 +88,17 @@ final class HookHandler implements
     public function onParserFirstCallInit( $parser ) {
         $parser->setFunctionHook(
             'displaydatamap', [ ParserFunctions\EmbedMapFunction::class, 'run' ],
-            SFH_NO_HASH
+            Parser::SFH_NO_HASH | Parser::SFH_OBJECT_ARGS
         );
         if ( $this->config->isTransclusionAliasEnabled() ) {
             $parser->setFunctionHook(
                 'displaydatamap_short', [ ParserFunctions\EmbedMapFunction::class, 'run' ],
-                SFH_NO_HASH
+                Parser::SFH_NO_HASH | Parser::SFH_OBJECT_ARGS
             );
         }
         $parser->setFunctionHook(
             'datamaplink', [ ParserFunctions\MapLinkFunction::class, 'run' ],
-            SFH_OBJECT_ARGS
+            Parser::SFH_OBJECT_ARGS
         );
     }
 
