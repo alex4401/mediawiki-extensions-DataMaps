@@ -8,14 +8,15 @@ final class CommonUtilities {
     /**
      * Wraps text as a commonly recognised wikitext error pattern.
      *
-     * @param string $text
+     * @param string $message
+     * @param mixed ...$params
      * @return array
      */
-    public static function wrapError( string $text ): array {
+    public static function wrapError( string $message, ...$params ): array {
         return [
-            "<strong class=\"error\">$text</strong>",
-            'noparse' => true,
-            'isHTML' => true
+            '<strong class="error">' . wfMessage( $message )->inContentLanguage()->params( $params ) . '</strong>',
+            'noparse' => false,
+            'isHTML' => false,
         ];
     }
 
