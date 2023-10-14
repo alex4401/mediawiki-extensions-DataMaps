@@ -1,14 +1,14 @@
 <?php
-namespace MediaWiki\Extension\DataMaps\Rendering;
+namespace MediaWiki\Extension\DataMaps\ParserFunctions;
 
 use MediaWiki\Extension\DataMaps\Content\DataMapContent;
-use MediaWiki\Extension\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\DataMaps\ExtensionConfig;
+use MediaWiki\Extension\DataMaps\Rendering\EmbedRenderOptions;
 use MediaWiki\MediaWikiServices;
 use Parser;
 use Title;
 
-final class ParserFunction_EmbedDataMap {
+final class EmbedMapFunction {
     public static function run( Parser $parser ): array {
         $params = func_get_args();
         // We already know the parser
