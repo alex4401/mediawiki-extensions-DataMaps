@@ -14,6 +14,8 @@ use RequestContext;
 use Title;
 use User;
 
+// @phpcs:disable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
+
 final class HookHandler implements
     \MediaWiki\Hook\ParserFirstCallInitHook,
     \MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook,
@@ -28,6 +30,9 @@ final class HookHandler implements
     /** @var ExtensionConfig */
     private ExtensionConfig $config;
 
+    /**
+     * @param ExtensionConfig $config
+     */
     public function __construct( ExtensionConfig $config ) {
         $this->config = $config;
     }
@@ -49,6 +54,12 @@ final class HookHandler implements
         define( 'NS_MAP_TALK', 2901 );
     }
 
+    /**
+     * Registers Map namespace if configured so (default behaviour). Sets the robot policy if namespace ID is 2900.
+     *
+     * @param string[] &$namespaces
+     * @return void
+     */
     public function onCanonicalNamespaces( &$namespaces ) {
         if ( $this->config->isNamespaceManaged() ) {
             $namespaces[NS_MAP] = 'Map';
@@ -67,6 +78,12 @@ final class HookHandler implements
         }
     }
 
+    /**
+     * Registers parser functions when a parser is initialised.
+     *
+     * @param Parser $parser
+     * @return void
+     */
     public function onParserFirstCallInit( $parser ) {
         $parser->setFunctionHook(
             'displaydatamap', [ ParserFunctions\EmbedMapFunction::class, 'run' ],
@@ -89,6 +106,14 @@ final class HookHandler implements
         return !$docPage->isDisabled() && str_ends_with( $title->getPrefixedText(), $docPage->plain() );
     }
 
+    /**
+     * Promotes map content model as default for pages in the Map namespace, optionally checking if the title prefix is
+     * satisfied.
+     *
+     * @param Title $title
+     * @param string &$model
+     * @return void
+     */
     public function onContentHandlerDefaultModelFor( $title, &$model ) {
         if ( $title->getNamespace() === $this->config->getNamespaceId() && !self::isDocPage( $title ) ) {
             $prefix = wfMessage( 'datamap-standard-title-prefix' )->inContentLanguage();
@@ -96,26 +121,50 @@ final class HookHandler implements
                 $model = CONTENT_MODEL_DATAMAPS;
             }
         }
+
         return true;
     }
 
+    /**
+     * Informs Extension:CodeEditor that map pages should use JSON highlighting.
+     *
+     * @param Title $title
+     * @param string &$languageCode
+     * @return void
+     */
     public static function onCodeEditorGetPageLanguage( Title $title, &$languageCode ) {
         if ( $title->hasContentModel( CONTENT_MODEL_DATAMAPS ) ) {
             $languageCode = 'json';
         }
+
         return true;
     }
 
+    /**
+     * Defines our tags.
+     *
+     * @param string[] &$tags
+     * @return void
+     */
     public function onListDefinedTags( &$tags ) {
         $tags[] = 'datamaps-visualeditor';
     }
 
+    /**
+     * Registers our currently used tags.
+     *
+     * @param string[] &$tags
+     * @return void
+     */
     public function onChangeTagsListActive( &$tags ) {
         $tags[] = 'datamaps-visualeditor';
     }
 
     /**
+     * Adds the "edited with visual map editor" tag to edits done over API [likely] by our visual editor.
+     *
      * @param RecentChange $rc The new RC entry.
+     * @return void
      */
     public function onRecentChange_save( $rc ) {
         $request = RequestContext::getMain()->getRequest();
@@ -124,6 +173,13 @@ final class HookHandler implements
         }
     }
 
+    /**
+     * Returns available user preferences related to the visual editor.
+     *
+     * @param User $user
+     * @param array &$preferences
+     * @return void
+     */
     public function onGetPreferences( $user, &$preferences ) {
         if ( $this->config->isVisualEditorEnabled() ) {
             $preferences[Constants::PREFERENCE_ENABLE_VE__FUTURE] = [
@@ -162,6 +218,16 @@ final class HookHandler implements
             && !$title->exists();
     }
 
+    /**
+     * Configures article navigation links for maps:
+     *
+     * - Non-existent maps that can be created: "Create Map" wizard lazy-loader is scheduled;
+     * - Existing maps that can be edited: the "Edit" link is hijacked to use the visual editor.
+     *
+     * @param SkinTemplate $skinTemplate
+     * @param array &$links
+     * @return void
+     */
     public function onSkinTemplateNavigation__Universal( $skinTemplate, &$links ): void {
         if ( !isset( $links['views']['edit'] ) ) {
             return;
@@ -188,6 +254,15 @@ final class HookHandler implements
         }
     }
 
+    /**
+     * On maps, expands ParserOutput's metadata to include markers, as a way of deferring parsing those markers. This
+     * is expensive as many parse calls will be invoked.
+     *
+     * @param Title $title
+     * @param RenderedRevision $renderedRevision
+     * @param DeferrableUpdate[] &$updates
+     * @return void
+     */
     public function onRevisionDataUpdates( $title, $renderedRevision, &$updates ) {
         if ( $this->config->shouldLinksUpdatesUseMarkers()
             && $title->getNamespace() === $this->config->getNamespaceId()
@@ -226,7 +301,7 @@ final class HookHandler implements
                             }
                             $parser->getOutput()->setText( '' );
 
-                            // Subtract the budget and stop iteration 
+                            // Subtract the budget and stop iteration
                             $budget -= microtime( true ) - $startTime;
                             if ( $budget <= 0 ) {
                                 return false;
