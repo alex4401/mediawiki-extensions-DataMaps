@@ -463,7 +463,6 @@
 		"SkinTemplateNavigation::Universal": "MainHandler",
 		"ChangeTagsListActive": "MainHandler",
 		"ListDefinedTags": "MainHandler",
-		"ChangeTagsAllowedAdd": "MainHandler",
 		"RecentChange_save": "MainHandler",
 		"RevisionDataUpdates": "MainHandler",
 		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
