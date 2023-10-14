@@ -69,12 +69,12 @@ final class HookHandler implements
 
     public function onParserFirstCallInit( $parser ) {
         $parser->setFunctionHook(
-            'displaydatamap', [ Rendering\ParserFunction_EmbedDataMap::class, 'run' ],
+            'displaydatamap', [ ParserFunctions\EmbedMapFunction::class, 'run' ],
             SFH_NO_HASH
         );
         if ( $this->config->isTransclusionAliasEnabled() ) {
             $parser->setFunctionHook(
-                'displaydatamap_short', [ Rendering\ParserFunction_EmbedDataMap::class, 'run' ],
+                'displaydatamap_short', [ ParserFunctions\EmbedMapFunction::class, 'run' ],
                 SFH_NO_HASH
             );
         }
