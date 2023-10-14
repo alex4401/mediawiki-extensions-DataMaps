@@ -63,67 +63,58 @@ class DataMapContentHandler extends JsonContentHandler {
     }
 
     protected function fillParserOutput( Content $content, ContentParseParams $cpoParams, ParserOutput &$parserOutput ) {
-        '@phan-var DataMapContent $content';
+        /** @var DataMapContent $content */
 
         $pageRef = $cpoParams->getPage();
         $parserOptions = $cpoParams->getParserOptions();
-        $shouldGenerateHtml = $cpoParams->getGenerateHtml();
-        $isEditPreview = $parserOptions->getIsPreview();
         $parserOutput = new ParserOutput();
 
-        // Initialise the text to an empty string if HTML was requested; this'll reduce the amount of accidental getRawText()s
-        // on nulls
-        if ( $shouldGenerateHtml ) {
-            $parserOutput->setText( '' );
+        // Render the prelude box
+        if ( $cpoParams->getGenerateHtml() ) {
+            $box = Html::noticeBox( wfMessage( 'datamap-mapsrcinfo-internal-page' )->inContentLanguage(), [] );
+            $parserOutput->setText( $box );
         }
 
-        // If validation fails, do not render the map embed
-        $validationStatus = $content->getValidationStatus();
-        if ( !$validationStatus->isOK() ) {
-            if ( $shouldGenerateHtml && $isEditPreview ) {
-                // Edit preview, display a message box. This is something MediaWiki should be handling out of box though.
-                $parserOutput->setText( Html::errorBox(
-                    wfMessage( 'datamap-error-cannot-preview-validation-errors', $validationStatus->getMessage( false, false ) )
-                ) );
-            } else {
-                // Add to a tracking category and display a message if HTML is requested
-                MediaWikiServices::getInstance()->getTrackingCategories()
-                    ->addTrackingCategory( $parserOutput, 'datamap-category-maps-failing-validation', $pageRef );
-                if ( $shouldGenerateHtml ) {
-                    $parserOutput->setText( Html::errorBox(
-                        wfMessage( 'datamap-error-map-validation-fail-full', $validationStatus->getMessage( false, false ) )
-                    ) );
-                }
-            }
-        } else {
-            if ( $content->isFragment() ) {
-                // It's a mix-in: tag the page in page properties and disable visual editor
-                $parserOutput->setPageProperty( Constants::PAGEPROP_IS_MIXIN, true );
-                $parserOutput->setPageProperty( Constants::PAGEPROP_DISABLE_VE, true );
-            } else {
-                // It's a full map: render it
-                $parser = MediaWikiServices::getInstance()->getParser();
-                $embed = $content->getEmbedRenderer( $pageRef, $parser, $parserOutput, [
-                    'inlineData' => $isEditPreview
-                ] );
-                $embed->prepareOutput( $parserOutput );
-                if ( $shouldGenerateHtml ) {
-                    $parserOutput->setText( $parserOutput->getRawText() . $embed->getHtml( new EmbedRenderOptions() ) );
-                }
-            }
+        // Generate the validation info box
+        $info = $this->getSourceValidationInfo( $content );
+        $isGood = $info['method'] !== 'errorBox';
+        if ( $cpoParams->getGenerateHtml() ) {
+            $boxText = implode( '', array_map( fn ( $value ) => "<p>$value</p>", $info['messages'] ) );
+            // Methods used here:
+            // - successBox
+            // - warningBox
+            // - errorBox
+            $box = Html::{$info['method']}( $boxText );
+            $parserOutput->setText( $parserOutput->getRawText() . $box );
         }
 
-        // GH#145: Render documentation after map metadata is emitted
-        // Get documentation, if any
+        if ( !$isGood ) {
+            MediaWikiServices::getInstance()->getTrackingCategories()
+                ->addTrackingCategory( $parserOutput, 'datamap-category-maps-failing-validation', $pageRef );
+        }
+
+        // If this is a fragment, record so in the page properties
+        if ( $content->isFragment() ) {
+            $parserOutput->setPageProperty( Constants::PAGEPROP_IS_MIXIN, true );
+            $parserOutput->setPageProperty( Constants::PAGEPROP_DISABLE_VE, true );
+        }
+
+        // Render documentation. We retain the parser output for later - per GH#145 we'll add the metadata after
+        // rendering the map, so primary background is listed before anything else.
+        $docOutput = null;
         $doc = self::getDocPage( $cpoParams->getPage() );
         if ( $doc ) {
             $msg = wfMessage( $doc->exists() ? 'datamap-doc-page-show' : 'datamap-doc-page-does-not-exist',
                 $doc->getPrefixedText() )->inContentLanguage();
 
             if ( !$msg->isDisabled() ) {
-                // We need the ParserOutput for categories and such, so we can't use $msg->parse()
+                // We cannot use ->parse() on the message as we need the ParserOutput
                 $docViewLang = $doc->getPageViewLanguage();
                 $dir = $docViewLang->getDir();
+
+                if ( $parserOptions->getTargetLanguage() === null ) {
+                    $parserOptions->setTargetLanguage( $doc->getPageLanguage() );
+                }
 
                 $docWikitext = Html::rawElement(
                     'div',
@@ -134,23 +125,79 @@ class DataMapContentHandler extends JsonContentHandler {
                     ],
                     "\n" . $msg->plain() . "\n"
                 );
-
-                if ( $parserOptions->getTargetLanguage() === null ) {
-                    $parserOptions->setTargetLanguage( $doc->getPageLanguage() );
-                }
-
                 $docOutput = MediaWikiServices::getInstance()->getParser()
                     ->parse( $docWikitext, $pageRef, $parserOptions, true, true, $cpoParams->getRevId() );
-                $parserOutput->mergeHtmlMetaDataFrom( $docOutput );
-                $parserOutput->mergeInternalMetaDataFrom( $docOutput );
-                $parserOutput->mergeTrackingMetaDataFrom( $docOutput );
-                if ( $shouldGenerateHtml ) {
-                    $parserOutput->setText( $docOutput->getRawText() . $parserOutput->getRawText() );
-                }
-            }
 
-            // Mark the doc page as a transclusion, so we get purged when it changes
-            $parserOutput->addTemplate( $doc, $doc->getArticleID(), $doc->getLatestRevID() );
+                if ( $cpoParams->getGenerateHtml() ) {
+                    $parserOutput->setText( $parserOutput->getRawText() . $docOutput->getRawText() );
+                }
+
+                // Mark the doc page as a transclusion, so we get purged when it changes
+                $parserOutput->addTemplate( $doc, $doc->getArticleID(), $doc->getLatestRevID() );
+            }
         }
+
+        // Render the map if this is not a fragment
+        if ( $isGood && !$content->isFragment() ) {
+            $parser = MediaWikiServices::getInstance()->getParser();
+            $embed = $content->getEmbedRenderer( $pageRef, $parser, $parserOutput, [
+                'inlineData' => $parserOptions->getIsPreview(),
+            ] );
+            $embed->prepareOutput( $parserOutput );
+            if ( $cpoParams->getGenerateHtml() ) {
+                $parserOutput->setText( $parserOutput->getRawText() . $embed->getHtml( new EmbedRenderOptions() ) );
+            }
+        }
+
+        // Add documentation page metadata (GH#145)
+        if ( $docOutput ) {
+            $parserOutput->mergeHtmlMetaDataFrom( $docOutput );
+            $parserOutput->mergeInternalMetaDataFrom( $docOutput );
+            $parserOutput->mergeTrackingMetaDataFrom( $docOutput );
+        }
+    }
+
+    /**
+     * Packs validation results into a human-readable form.
+     *
+     * @param DataMapContent $content
+     * @return array 'method' (successBox, warningBox, errorBox) and 'messages'
+     */
+    private function getSourceValidationInfo( DataMapContent $content ): array {
+        $validationStatus = $content->getValidationStatus();
+        [ $errors, $warnings ] = $validationStatus->splitByErrorType();
+
+        $msgs = [
+            '',
+        ];
+
+        // Render errors
+        if ( $errors->getErrors() ) {
+            $msgs[] = $errors->getMessage( false, 'datamap-mapsrcinfo-heading-errors' )->parse();
+        }
+
+        // Render warnings
+        if ( $warnings->getErrors() ) {
+            $msgs[] = $warnings->getMessage( false, 'datamap-mapsrcinfo-heading-warnings' )->parse();
+        }
+
+        // Determine box type
+        $method = 'successBox';
+        $leadMessage = 'datamap-mapsrcinfo-status-ok';
+        if ( $errors->getErrors() ) {
+            $method = 'errorBox';
+            $leadMessage = 'datamap-mapsrcinfo-status-errors';
+        } elseif ( $warnings->getErrors() ) {
+            $method = 'warningBox';
+            $leadMessage = 'datamap-mapsrcinfo-status-meh';
+        }
+
+        // Fill in the lead message
+        $msgs[0] = wfMessage( $leadMessage )->inContentLanguage();
+
+        return [
+            'method' => $method,
+            'messages' => $msgs,
+        ];
     }
 }
