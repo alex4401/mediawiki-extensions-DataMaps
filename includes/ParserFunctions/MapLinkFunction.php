@@ -3,12 +3,14 @@ namespace MediaWiki\Extension\DataMaps\ParserFunctions;
 
 use MediaWiki\MediaWikiServices;
 use Parser;
-use PPNode;
 use PPFrame;
+use PPNode;
 use Title;
 
 final class MapLinkFunction {
     /**
+     * Renders a link to a page with a map.
+     *
      * {{#MapLink:Location maps#Arbury-0|marker=100}}
      *
      * @param Parser $parser
@@ -19,18 +21,9 @@ final class MapLinkFunction {
     public static function run( Parser $parser, PPFrame $frame, array $args ): array {
         $linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
 
-        $expandedArgs = [];
-        foreach ( $args as $argNode ) {
-            $arg = $frame->expand( $argNode );
-
-            $pair = explode( '=', $arg, 2 );
-            if ( count( $pair ) === 2 ) {
-                $pair = array_map( 'trim', $pair );
-                $expandedArgs[$pair[0]] = $pair[1];
-            } else {
-                $expandedArgs[] = $arg;
-            }
-        }
+        $expandedArgs = CommonUtilities::getArguments( $frame, $args, [
+            'marker' => null
+        ] );
 
         $target = Title::newFromText( $expandedArgs[0] );
 
@@ -40,7 +33,7 @@ final class MapLinkFunction {
                 $expandedArgs[1] ?? null,
                 [],
                 [
-                    'marker' => $expandedArgs['marker'] ?? null
+                    'marker' => $expandedArgs['marker']
                 ]
             ),
             'noparse' => true,

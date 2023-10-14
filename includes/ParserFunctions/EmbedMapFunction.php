@@ -21,25 +21,25 @@ final class EmbedMapFunction {
         // Retrieve and validate options
         $options = self::getRenderOptions( $params );
         if ( is_string( $options ) ) {
-            return self::wrapError( $options );
+            return CommonUtilities::wrapError( $options );
         }
 
         // Verify the page exists and is a data map
         // TODO: separate message if the page is of foreign format and can be ported
         $content = DataMapContent::loadPage( $title );
         if ( $content === DataMapContent::LERR_NOT_FOUND ) {
-            return self::wrapError(
+            return CommonUtilities::wrapError(
                 wfMessage( 'datamap-error-pf-page-does-not-exist', wfEscapeWikiText( $title->getFullText() ) )
                     ->inContentLanguage()->escaped()
             );
         } elseif ( $content === DataMapContent::LERR_NOT_DATAMAP ) {
-            return self::wrapError(
+            return CommonUtilities::wrapError(
                 wfMessage( 'datamap-error-pf-page-invalid-content-model', wfEscapeWikiText( $title->getFullText() ) )
                     ->inContentLanguage()->escaped()
             );
         } elseif ( !$content->getValidationStatus()->isOK() ) {
             $parser->addTrackingCategory( 'datamap-category-pages-including-broken-maps' );
-            return self::wrapError(
+            return CommonUtilities::wrapError(
                 wfMessage( 'datamap-error-map-validation-fail', wfEscapeWikiText( $title->getFullText() ) )
                     ->inContentLanguage()->parse()
             );
@@ -55,10 +55,6 @@ final class EmbedMapFunction {
             $parser->fetchCurrentRevisionRecordOfTitle( $title )->getId() );
 
         return [ $embed->getHtml( $options ), 'noparse' => true, 'isHTML' => true ];
-    }
-
-    private static function wrapError( string $text ): array {
-        return [ '<strong class="error">' . $text . '</strong>', 'noparse' => true, 'isHTML' => true ];
     }
 
     /**
