@@ -43,19 +43,19 @@ final class EmbedMapFunction {
         $content = DataMapContent::loadPage( $title );
         if ( $content === DataMapContent::LERR_NOT_FOUND ) {
             return CommonUtilities::wrapError(
-                wfMessage( 'datamap-error-pf-page-does-not-exist', wfEscapeWikiText( $title->getFullText() ) )
-                    ->inContentLanguage()->escaped()
+                'datamap-error-pf-page-does-not-exist',
+                wfEscapeWikiText( $title->getFullText() )
             );
         } elseif ( $content === DataMapContent::LERR_NOT_DATAMAP ) {
             return CommonUtilities::wrapError(
-                wfMessage( 'datamap-error-pf-page-invalid-content-model', wfEscapeWikiText( $title->getFullText() ) )
-                    ->inContentLanguage()->escaped()
+                'datamap-error-pf-page-invalid-content-model',
+                wfEscapeWikiText( $title->getFullText() )
             );
         } elseif ( !$content->getValidationStatus()->isOK() ) {
             $parser->addTrackingCategory( 'datamap-category-pages-including-broken-maps' );
             return CommonUtilities::wrapError(
-                wfMessage( 'datamap-error-map-validation-fail', wfEscapeWikiText( $title->getFullText() ) )
-                    ->inContentLanguage()->parse()
+                'datamap-error-map-validation-fail',
+                wfEscapeWikiText( $title->getFullText() )
             );
         }
 
@@ -87,7 +87,7 @@ final class EmbedMapFunction {
         if ( $params['max-width'] ) {
             $result->maxWidthPx = intval( $params['max-width'] );
             if ( $result->maxWidthPx <= 0 ) {
-                return wfMessage( 'datamap-error-pf-max-width-invalid' )->inContentLanguage()->escaped();
+                return 'datamap-error-pf-max-width-invalid';
             }
         }
 
