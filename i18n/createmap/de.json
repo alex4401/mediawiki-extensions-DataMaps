@@ -2,10 +2,12 @@
 	"@metadata": {
 		"authors": [
 			"Brettchenweber",
+			"Magiczocker",
 			"magic"
 		]
 	},
 	"datamap-vec-title": "Karte erstellen",
+	"datamap-ve-skip": "Überspringen",
 	"datamap-vec-intro": "Passe die folgenden Informationen an deine Bedürfnisse an, damit wir eine Grundkarte erstellen können, bevor du mit der Bearbeitung anfängst",
 	"datamap-vec-select-crs-origin": "(0, 0) Koordinatenecke",
 	"datamap-vec-crs-top-left": "Oben links",
@@ -13,6 +15,7 @@
 	"datamap-vec-select-crs": "Koordinatensystem",
 	"datamap-vec-crs-percent": "Prozentsatz (0-100%)",
 	"datamap-vec-crs-image": "Bildkoordinaten abgleichen",
+	"datamap-vec-crs-custom": "Benutzerdefiniert",
 	"datamap-vec-select-background": "Hintergrundbild",
 	"datamap-vec-note-image-size": "Größe: $1 × $2",
 	"datamap-vec-error-bad-file-type": "Dateityp ($1) wird nicht unterstützt; bitte eine JPEG-, PNG-, GIF- oder SVG-Datei auswählen.",

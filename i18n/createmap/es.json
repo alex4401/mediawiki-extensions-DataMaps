@@ -1,10 +1,12 @@
 {
 	"@metadata": {
 		"authors": [
-			"Mirageionova"
+			"Mirageionova",
+			"No se"
 		]
 	},
 	"datamap-vec-title": "Crear un mapa",
+	"datamap-ve-skip": "Saltar",
 	"datamap-vec-intro": "Ajusta la siguiente información a tus necesidades para que podamos preparar un mapa básico sobre el cual puedas hacer tus propias ediciones",
 	"datamap-vec-select-crs-origin": "Esquina de coordenadas (0, 0)",
 	"datamap-vec-crs-top-left": "Superior (izquierda)",
@@ -23,5 +25,6 @@
 	"datamap-vec-toggle-search": "Activar búsqueda de marcador",
 	"datamap-vec-toggle-search-tabber": "Compartir datos de búsqueda dentro del tabber",
 	"datamap-vec-toggle-uid-requirement": "Necesita IDs únicas para marcadores",
-	"datamap-vec-submit": "Continuar"
+	"datamap-vec-submit": "Continuar",
+	"datamap-vec-example-group-id": "ejemplo"
 }

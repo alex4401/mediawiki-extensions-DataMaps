@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Mirage",
 			"Mirageionova",
 			"No se"
 		]
@@ -25,10 +26,10 @@
 	"datamap-error-validate-wrong-item-type": "El elemento en la matriz <code>$2</code> tiene un valor incorrecto para la estructura $1. $3",
 	"datamap-error-validate-disallowed-value": "El campo <code>$2</code> tiene un valor desconocido para la estructura $1. $3",
 	"datamap-error-validate-field-required-either": "$1 necesita uno de estos dos campos: <code>$2</code> o <code>$3</code> (solo puede especificarse uno de los dos campos).",
-	"datamap-error-validate-exclusive-fields": "$1 solo necesita uno de estos dos campos: <code>$2</code> o <code>$3</code>. No pueden emplearse ambos simultáneamente.",
+	"datamap-error-validate-exclusive-fields": "$1 acepta exclusivamente uno de estos campos: $2.",
 	"datamap-error-validate-replaced-field": "El campo <code>$2</code> de la estructura $1 se ha sustituido por <code>$3</code> en la versión $4, y se eliminará en la versión $5.",
 	"datamap-error-validate-deprecated-field": "El campo <code>$2</code> en la estructura $1 ha quedado obsoleto en la versión $3, y se eliminará en la versión $4.",
-	"datamap-error-validate-no-file": "El archivo [[File:$1]] se ha enlazado, pero aún no se ha subido a la wiki.",
+	"datamap-error-validate-no-file": "Se ha vinculado el archivo [[:File:$1|$1]], pero aún no se ha subido a la wiki.",
 	"datamap-error-validate-limit": "Se han encontrado demasiados errores durante la validación de la estructura: $1.",
 	"datamap-error-validatespec-group-no-display": "El grupo de marcadores \"$1\" no tiene ajustes de interfaz. Añade las propiedades <code>icon</code> y/o <code>fillColor</code> .",
 	"datamap-error-validatespec-map-no-group-name": "Se ha definido un grupo de marcadores sin nombre (o con un nombre en blanco). Asígnale un nombre único.",
@@ -47,11 +48,10 @@
 	"datamap-error-pf-page-invalid-content-model": "El modelo de contenido de la página \"[[$1]]\" no es <code>datamap</code>.",
 	"datamap-error-pf-max-width-invalid": "El ancho máximo de la inserción del mapa debe ser un número entero mayor que cero.",
 	"datamap-error-map-validation-fail": "El [[$1|código fuente del mapa de datos]] ya no supera la validación de datos. Por favor, corrige los errores asociados.",
-	"datamap-error-map-validation-fail-full": "El mapa de datos no supera la validación de datos. Por favor, corrige primero los errores asociados:<br/>$1",
-	"datamap-error-cannot-preview-validation-errors": "<b>No se puede mostrar la vista previa de la edición debido a uno o varios errores en el código fuente del mapa:</b><br/>$1",
 	"datamap-legend-label": "Leyenda",
 	"datamap-javascript-required": "Los mapas de datos interactivos requieren de la activación de JavaScript.",
 	"datamap-loading-js": "Espera. Cargando datos",
+	"datamap-loading-data": "Cargando datos a mostrar",
 	"datamap-error-dataload": "<b>No se ha podido cargar los datos</b><br/>Actualiza la página o prueba de nuevo más tarde",
 	"datamap-lazy-click-to-load": "Haz clic para cargar el mapa de datos",
 	"datamap-legend-tab-locations": "Marcadores",
@@ -79,5 +79,7 @@
 	"datamap-control-centre-view": "Centrar vista en el nivel de zoom actual",
 	"datamap-control-edit": "Editar datos del mapa",
 	"datamap-control-search": "Escribe aquí para buscar marcadores...",
-	"datamap-control-search-toggle-sharing": "Todos los mapas"
+	"datamap-control-search-toggle-sharing": "Todos los mapas",
+	"datamap-control-search-no-results": "No se han encontrado resultados.",
+	"datamap-control-fullscreen": "Activar/desactivar modo de pantalla completa"
 }

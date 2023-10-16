@@ -41,8 +41,6 @@
 	"datamap-error-pf-page-does-not-exist": "ไม่พบหน้าแผนที่ข้อมูล \"[[$1]]\"",
 	"datamap-error-pf-page-invalid-content-model": "ตัวแบบเนื้อหาของหน้า \"[[$1]]\" ไม่ใช่ <code>แผนที่ข้อมูลแบบโต้ตอบ</code>",
 	"datamap-error-map-validation-fail": "[[$1|ซอร์สโค้ดของแผนที่ข้อมูล]]ยังไม่ผ่านการตรวจสอบ โปรดแก้ไขข้อผิดพลาด",
-	"datamap-error-map-validation-fail-full": "แผนที่ข้อมูลนี้ไม่ผ่านการตรวจสอบ โปรดแก้ไขข้อผิดพลาด: <br/>$1",
-	"datamap-error-cannot-preview-validation-errors": "<b>ไม่แสดงตัวอย่างเนื่องจากข้อผิดพลาดในซอร์สโค้ด</b><br/>$1",
 	"datamap-legend-label": "เนื้อหา",
 	"datamap-javascript-required": "ต้องเปิดใช้งาน JavaScript สำหรับแผนที่ข้อมูลแบบโต้ตอบ",
 	"datamap-loading-js": "รอสักครู่ กำลังโหลดข้อมูล",
