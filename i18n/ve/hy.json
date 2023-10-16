@@ -1,0 +1,29 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kareyac"
+		]
+	},
+	"datamap-ve-experimental-close": "Փակել",
+	"tag-datamaps-visualeditor": "Տեսողական քարտեզի խմբագրում",
+	"datamap-ve-generic-cancel": "Չեղարկել",
+	"datamap-ve-panel-msettings": "Կարգավորումներ",
+	"datamap-ve-panel-msettings-field-coordorder": "Կոորդինատների համակարգ",
+	"datamap-ve-panel-msettings-set-view": "Դիտում",
+	"datamap-ve-panel-msettings-field-search-disabled": "Անջատված է",
+	"datamap-ve-panel-msettings-set-edit": "Խմբագիր",
+	"datamap-ve-panel-mgroups": "Խմբեր",
+	"datamap-ve-panel-mcats": "Կատեգորիաներ",
+	"datamap-ve-workflow-marker-create": "Ստեղծել",
+	"datamap-ve-workflow-marker-edit": "Հիշել",
+	"datamap-ve-workflow-marker-panel-setup": "Քարտեզի վրա",
+	"datamap-ve-workflow-marker-set-coordinates": "Տեղադրում",
+	"datamap-ve-workflow-marker-field-lon": "Երկայնություն",
+	"datamap-ve-workflow-marker-field-lat": "Լայնություն",
+	"datamap-ve-workflow-marker-field-group": "Խումբ",
+	"datamap-ve-workflow-marker-field-categories": "Կատեգորիաներ",
+	"datamap-ve-workflow-marker-field-desc": "Նկարագրություն",
+	"datamap-ve-workflow-marker-field-image": "Պատկերի մանրապատկեր",
+	"datamap-ve-workflow-marker-field-article-label": "Հղման պիտակ",
+	"datamap-ve-group-id": "[PH] Եզակի նույնացուցիչ"
+}

@@ -9,7 +9,6 @@
 	"datamap-error-validate-no-file": "[[:File:$1|$1]] файл йитсьӧм ыстісьӧмӧн, но эз на вӧв кӧрталӧм викиӧ.",
 	"datamap-error-pf-max-width-invalid": "Лӧсьӧтӧм карталӧн медыджыт пасьтаыслӧ колӧ лоныдзонь числоӧн, нолись ыджытжыкӧн.",
 	"datamap-error-map-validation-fail": "[[$1 вӧдитчисьӧс мыччалан карталӧн пыртӧм код] ] оз лэдз сійӧ проверитны. Корам бырӧтны сорсьӧм.",
-	"datamap-error-map-validation-fail-full": "Вӧдитчисьӧс  мыччалан карта оз лэдз сійӧ проверитны. Корам бырӧтны сорсьӧмсӧ:<br/>$1",
 	"datamap-legend-label": "Пытшкӧс",
 	"datamap-javascript-required": "Медбы уджаліс карта,колӧ пыртны JavaScript.Тійӧ кӧ одӧ адззӧ сійӧ уліас, вермас лоны, тіян JavaScript пӧдналӧм.",
 	"datamap-loading-js": "Веськӧтлӧммез кӧрталӧм",

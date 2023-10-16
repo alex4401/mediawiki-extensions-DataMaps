@@ -6,5 +6,9 @@
 	},
 	"datamap-ve-to-load": "Espere mientras el editor visual se está cargando...",
 	"datamap-ve-experimental-close": "Cerrar",
-	"datamap-ve-edit-source-action": "Editar código"
+	"datamap-ve-edit-source-action": "Editar código",
+	"datamap-ve-panel-msettings-field-coordinates": "Mostrar coordenadas en la esquina inferior izquierda",
+	"datamap-ve-workflow-marker-field-name": "Título",
+	"datamap-ve-workflow-save-summary-desc": "Describe lo que has cambiado",
+	"datamap-ve-group-article-link-subtext": "[PH] Esto se puede anular en marcadores individuales."
 }

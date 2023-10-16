@@ -11,5 +11,21 @@
 	"datamap-vec-crs-top-left": "למעלה משמאל",
 	"datamap-vec-crs-bottom-left": "למטה משמאל",
 	"datamap-vec-select-crs": "מערכת נקודות ציון",
-	"datamap-vec-crs-percent": "אחוז (0–100%)"
+	"datamap-vec-crs-percent": "אחוז (0–100%)",
+	"datamap-vec-crs-image": "התאמת נקודות הציון בתמונה",
+	"datamap-vec-crs-custom": "מותאמות אישית",
+	"datamap-vec-select-background": "תמונת רקע",
+	"datamap-vec-note-image-size": "גודל: $1 × $2",
+	"datamap-vec-error-bad-file-type": "סוג הקובץ ($1) אינו נתמך; נא לבחור קובץ JPEG‏, PNG‏, GIF או SVG.",
+	"datamap-vec-error-poor-file-type": "סוג הקובץ הזה עשוי לעבוד לאט ברשתות מוגבלות. יש להשתמש בקובצי JPEG במידת האפשר.",
+	"datamap-vec-extra-options": "אפשרויות נוספות",
+	"datamap-vec-toggle-coord-display": "הצגת נקודות הציון מתחת לסמן",
+	"datamap-vec-toggle-zoom": "הפעלת תקריב",
+	"datamap-vec-toggle-search": "הפעלת חיפוש סמנים",
+	"datamap-vec-toggle-search-tabber": "שיתוף נתוני חיפוש במנהל הלשוניות",
+	"datamap-vec-toggle-uid-requirement": "לחייב מזהי סמנים ייחודיים",
+	"datamap-vec-submit": "המשך",
+	"datamap-vec-example-group-id": "דוגמה",
+	"datamap-vec-example-group-name": "קבוצה לדוגמה",
+	"datamap-vec-example-marker": "סמן לדוגמה"
 }

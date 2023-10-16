@@ -1,0 +1,32 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ukhant Erdemt",
+			"Алия"
+		]
+	},
+	"datamap-vec-title": "Һазрин зург үүскх",
+	"datamap-ve-skip": "Алһсх",
+	"datamap-vec-intro": "Дарани медәллиг эврә кергцәнд тохрулн ясврлхин өмн бидн үндсн һазрин зургиг белдх болмҗта",
+	"datamap-vec-select-crs-origin": "(0, 0) координатын булң",
+	"datamap-vec-crs-top-left": "Зүн деед",
+	"datamap-vec-crs-bottom-left": "Зүн дор",
+	"datamap-vec-select-crs": "Координатын систем",
+	"datamap-vec-crs-percent": "Хүв (0-100%)",
+	"datamap-vec-crs-image": "Зургин координатыг таарулх",
+	"datamap-vec-crs-custom": "Закалһ",
+	"datamap-vec-select-background": "Ардк зург",
+	"datamap-vec-note-image-size": "Кемҗә: $1 × $2",
+	"datamap-vec-error-bad-file-type": "Файлын төрл ($1) демҗгдәд уга; JPEG, PNG, GIF эс гиҗ SVG файлыг суңһтн.",
+	"datamap-vec-error-poor-file-type": "Эн файлын төрл кизәртә сүлҗәнд му аҗллҗ маһд уга. Болмҗта болхла, JPEG ашглтн.",
+	"datamap-vec-extra-options": "Немлт суңһврмуд",
+	"datamap-vec-toggle-coord-display": "Курсорын дор координатыг үзүлх",
+	"datamap-vec-toggle-zoom": "Икдүлхиг орулх",
+	"datamap-vec-toggle-search": "Темдглһәг хәәхиг орулх",
+	"datamap-vec-toggle-search-tabber": "Хәәлтин өггдләр табберт хувалцтн",
+	"datamap-vec-toggle-uid-requirement": "Өврмц темдглһәнә ID шаардх",
+	"datamap-vec-submit": "Үрглҗлүлх",
+	"datamap-vec-example-group-id": "Үлгүр",
+	"datamap-vec-example-group-name": "Үлгүрин бөлг",
+	"datamap-vec-example-marker": "Үлгүр маркер"
+}

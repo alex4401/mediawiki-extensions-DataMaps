@@ -1,0 +1,24 @@
+{
+	"@metadata": {
+		"authors": [
+			"Eleassar"
+		]
+	},
+	"datamap-vec-title": "Ustvari zemljevid",
+	"datamap-ve-skip": "Preskoči",
+	"datamap-vec-intro": "Naslednje podatke prilagodite svojim potrebam, da bomo lahko pripravili osnovni zemljevid, preden ga začnete urejati.",
+	"datamap-vec-crs-top-left": "Zgoraj levo",
+	"datamap-vec-crs-bottom-left": "Spodaj levo",
+	"datamap-vec-select-crs": "Koordinatni sistem",
+	"datamap-vec-crs-percent": "Odstotek (0–100 %)",
+	"datamap-vec-crs-custom": "Po meri",
+	"datamap-vec-select-background": "Slika ozadja",
+	"datamap-vec-note-image-size": "Velikost: $1 × $2",
+	"datamap-vec-extra-options": "Dodatne možnosti",
+	"datamap-vec-toggle-coord-display": "Prikaz koordinat pod kazalcem",
+	"datamap-vec-toggle-zoom": "Omogoči povečavo",
+	"datamap-vec-toggle-search": "Omogoči iskanje označevalcev",
+	"datamap-vec-submit": "Nadaljuj",
+	"datamap-vec-example-group-id": "zgled",
+	"datamap-vec-example-group-name": "Zgled skupine"
+}
