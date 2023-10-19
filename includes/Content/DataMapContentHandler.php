@@ -195,6 +195,15 @@ class DataMapContentHandler extends JsonContentHandler {
         // Fill in the lead message
         $msgs[0] = wfMessage( $leadMessage )->inContentLanguage();
 
+        // Add a message inviting to check out the documentation if there were issues
+        if ( $method !== 'successBox' ) {
+            $msgs[] = wfMessage(
+                'datamap-mapsrcinfo-docslink',
+                Constants::DOCUMENTATION_LINK,
+                Constants::ISSUE_TRACKER_LINK
+            )->inContentLanguage();
+        }
+
         return [
             'method' => $method,
             'messages' => $msgs,

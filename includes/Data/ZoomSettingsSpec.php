@@ -47,8 +47,7 @@ class ZoomSettingsSpec extends DataModel {
                     return true;
                 }
 
-                $status->fatal( 'datamap-error-validate-disallowed-value', static::$publicName, 'min',
-                    wfMessage( 'datamap-error-validate-check-docs' ) );
+                $status->fatal( 'datamap-error-validate-disallowed-value', static::$publicName, 'min' );
                 return false;
             }
         ] );

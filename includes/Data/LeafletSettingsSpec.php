@@ -46,8 +46,7 @@ class LeafletSettingsSpec extends DataModel {
             'type' => [ DataModel::TYPE_BOOL, DataModel::TYPE_NUMBER ],
             'check' => static function ( Status $status, $value ) {
                 if ( is_bool( $value ) && $value !== false ) {
-                    $status->fatal( 'datamap-error-validate-disallowed-value', static::$publicName, 'uriPopupZoom',
-                        wfMessage( 'datamap-error-validate-check-docs' ) );
+                    $status->fatal( 'datamap-error-validate-disallowed-value', static::$publicName, 'uriPopupZoom' );
                     return false;
                 }
                 return true;

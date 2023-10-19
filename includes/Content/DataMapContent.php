@@ -3,6 +3,7 @@ namespace MediaWiki\Extension\DataMaps\Content;
 
 use FormatJson;
 use JsonContent;
+use MediaWiki\Extension\DataMaps\Constants;
 use MediaWiki\Extension\DataMaps\Data\DataMapSpec;
 use MediaWiki\Extension\DataMaps\Data\DataModelMixinTransformer;
 use MediaWiki\Extension\DataMaps\ExtensionConfig;
@@ -10,7 +11,6 @@ use MediaWiki\Extension\DataMaps\Rendering\EmbedRenderer;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
-use MediaWiki\Utils\UrlUtils;
 use Parser;
 use ParserOutput;
 use Status;
@@ -215,7 +215,20 @@ class DataMapContent extends JsonContent {
 
     public function getValidationStatus() {
         $status = new Status();
+        $this->validateInternal( $status );
 
+        if ( $status->isGood() ) {
+            $status->warning(
+                'datamap-mapsrcinfo-docslink',
+                Constants::DOCUMENTATION_LINK,
+                Constants::ISSUE_TRACKER_LINK
+            );
+        }
+
+        return $status;
+    }
+
+    private function validateInternal( Status $status ) {
         if ( !$this->isValid() ) {
             // Check if valid JSON
             $status->fatal( 'datamap-error-validate-invalid-json' );
@@ -226,7 +239,7 @@ class DataMapContent extends JsonContent {
                 && ( isset( $this->getData()->getValue()->include ) )
             ) {
                 $status->fatal( 'datamap-error-validatespec-map-mixin-with-mixins' );
-                return $status;
+                return;
             }
 
             $modelled = $this->asModel();
@@ -240,21 +253,19 @@ class DataMapContent extends JsonContent {
                     $services->getMainConfig()->get( MainConfigNames::ExtensionAssetsPath ) . '/DataMaps/schemas/' .
                     self::PREFERRED_SCHEMA_VERSION . '.json' );
                 $status->fatal( 'datamap-error-bad-schema-origin', $exampleUrl );
-                return $status;
+                return;
             }
             if ( !in_array( $schemaVersion, self::SUPPORTED_SCHEMA_VERSIONS ) ) {
                 $status->fatal( 'datamap-error-bad-schema-version', implode( ', ', self::SUPPORTED_SCHEMA_VERSIONS ) );
-                return $status;
+                return;
             }
             if ( array_key_exists( $schemaVersion, self::DEPRECATED_SCHEMA_VERSIONS ) ) {
                 $status->warning( 'datamap-error-deprecated-schema-version', self::DEPRECATED_SCHEMA_VERSIONS[$schemaVersion],
                     implode( ', ', self::SUPPORTED_SCHEMA_VERSIONS ) );
-                return $status;
+                return;
             }
 
             $modelled->validate( $status );
         }
-
-        return $status;
     }
 }

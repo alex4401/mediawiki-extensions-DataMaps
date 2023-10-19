@@ -139,8 +139,7 @@ class MarkerSpec extends DataModel {
                     && $this->verifyType( $item[0], DataModel::TYPE_STRING )
                     && $this->verifyType( $item[1], DataModel::TYPE_NUMBER ) );
                 if ( !$isValidWeighedPair && !$this->verifyType( $item, DataModel::TYPE_STRING ) ) {
-                    $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, 'searchKeywords',
-                        wfMessage( 'datamap-error-validate-check-docs' ) );
+                    $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, 'searchKeywords' );
                     return false;
                 }
                 return true;

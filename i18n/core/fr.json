@@ -12,7 +12,7 @@
 	"datamap-category-pages-including-maps": "Pages incluant des cartes de données",
 	"datamap-category-pages-including-broken-maps": "Les pages comprenant des cartes de données en échec de validation",
 	"datamap-category-maps-failing-validation": "Cartes dont les données ne sont plus validées",
-	"datamap-error-validate-check-docs": "Vérifiez la [https://github.com/alex4401/mediawiki-extensions-DataMaps extension's documentation] pour plus d'informations sur la bonne structure.",
+	"datamap-mapsrcinfo-docslink": "Vérifiez la [https://github.com/alex4401/mediawiki-extensions-DataMaps extension's documentation] pour plus d'informations sur la bonne structure.",
 	"datamap-error-validate-invalid-json": "Ceci n'est pas un document JSON valide.",
 	"datamap-error-bad-schema-origin": "Champ <code>$schema</code> manquant ou invalide. Cela doit pointer vers une définition de schéma prise en charge, comme <code>$1</code>.",
 	"datamap-error-bad-schema-version": "Le champ <code>$schema</code> désigne une définition de schéma inconnue ou non supportée. Les identifiants suivants sont supportés : $1.",
