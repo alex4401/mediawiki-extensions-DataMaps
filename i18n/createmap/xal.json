@@ -21,7 +21,7 @@
 	"datamap-vec-error-poor-file-type": "Эн файлын төрл кизәртә сүлҗәнд му аҗллҗ маһд уга. Болмҗта болхла, JPEG ашглтн.",
 	"datamap-vec-extra-options": "Немлт суңһврмуд",
 	"datamap-vec-toggle-coord-display": "Курсорын дор координатыг үзүлх",
-	"datamap-vec-toggle-zoom": "Икдүлхиг орулх",
+	"datamap-vec-toggle-zoom": "Икдүлхиг асах",
 	"datamap-vec-toggle-search": "Темдглһәг хәәхиг орулх",
 	"datamap-vec-toggle-search-tabber": "Хәәлтин өггдләр табберт хувалцтн",
 	"datamap-vec-toggle-uid-requirement": "Өврмц темдглһәнә ID шаардх",

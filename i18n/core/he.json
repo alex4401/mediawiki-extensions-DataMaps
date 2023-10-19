@@ -1,0 +1,32 @@
+{
+	"@metadata": {
+		"authors": [
+			"Amire80",
+			"YaronSh"
+		]
+	},
+	"datamap-desc": "אפשרות להטביע מפות הידודיות בדפי ויקי.",
+	"content-model-datamap": "מפת נתונים הידודית",
+	"datamap-doc-page-does-not-exist": "''ניתן ליצור תיעוד על המפה הזאת בדף [[$1]]''",
+	"datamap-doc-page-header": "'''זהו דף התיעוד עבור [[$1]]'''",
+	"datamap-category-pages-including-maps": "דפים שמכילים מפות נתונים",
+	"datamap-category-pages-including-broken-maps": "דפים הכוללים מפות נתונים שנכשלו בבדיקת תקינות",
+	"datamap-category-maps-failing-validation": "מפות שנכשלו בבדיקת תקינות",
+	"datamap-mapsrcinfo-internal-page": "הדף הזה מכיל קוד מקור של מפה. הוא לא מיועד לביקור ישיר, ולא יופיע במנועי חיפוש באינטרנט. במקום זאת, יש להטביע אותו בערך.",
+	"datamap-mapsrcinfo-status-ok": "לא נמצאו בעיות בקוד המקור של המפה הזאת.",
+	"datamap-mapsrcinfo-status-meh": "נמצאו בעיות קלות בקוד המקור של המפה הזאת.",
+	"datamap-mapsrcinfo-status-errors": "המפה הזאת אינה עוברת בדיקת תקינות של קוד המקור.",
+	"datamap-mapsrcinfo-heading-errors": "'''שגיאות:''' $1",
+	"datamap-mapsrcinfo-heading-warnings": "'''אזהרות:''' $1",
+	"datamap-error-validate-check-docs": "יש לעיין בתיעוד של [https://github.com/alex4401/mediawiki-extensions-DataMaps תיעוד של ההרחבה] לקבלת מידע על המבנה הנכון.",
+	"datamap-error-validate-invalid-json": "זה אינו מסמך JSON תקין.",
+	"datamap-error-bad-schema-origin": "שדה <code dir=\"ltr\">$schema</code> חסר או בלתי־תקין. זה חייב להצביע על הגדרת סכֵמה נתמכת, למשל <code>$1</code> .",
+	"datamap-error-bad-schema-version": "השדה <code>$schema</code> מצביע על הגדרת סכֵמה לא ידועה או לא נתמכת. הגרסאות הבאות נתמכות: $1.",
+	"datamap-error-deprecated-schema-version": "גרסת הסכֵמה שהמפה הזאת משתמשת בה הוחלפה ולא תיתמך עוד בגרסה $1. יש לעיין ב[https://github.com/alex4401/mediawiki-extensions-DataMaps תיעוד ההרחבה] ולעדכן את הנתונים לגרסה חדשה יותר של סכֵמה ($2).",
+	"datamap-error-validate-unexpected-fields": "נמצאו שדות לא ידועים במבנה $1: $2.",
+	"datamap-error-validate-field-no-value": "בשדה <code>$2</code> במבנה $1 חייב להיות ערך.",
+	"datamap-error-validate-field-required": "השדה <code>$2</code> נדרש במבנה $1. $3",
+	"datamap-error-validate-field-required-alt": "השדה <code>$2</code> או חלופה כלשהי נדרשת במבנה $1. $3",
+	"datamap-loading-data": "הנתונים להצגה נטענים",
+	"datamap-interact-touch": "יש להשתמש בשתי אצבעות כדי להזיז את המפה"
+}
