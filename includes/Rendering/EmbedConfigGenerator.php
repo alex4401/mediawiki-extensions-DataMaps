@@ -61,6 +61,7 @@ class EmbedConfigGenerator {
             $out['version'] = $this->title->getLatestRevID();
         }
         $out['cOrder'] = $coordOrder = $this->data->getCoordinateOrder();
+        $out['cRot'] = $this->data->getCoordinateSystem()->getRotation();
         // Coordinate transformation
         $out['crs'] = DataMapSpec::normaliseBoxCoordinates( $this->data->getCoordinateReferenceSpace(), $coordOrder );
         // Feature management

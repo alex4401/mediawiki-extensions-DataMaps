@@ -53,6 +53,11 @@ export type DataMap = {
          * @default [100,100]
          */
         bottomRight?: Point;
+
+        /**
+         * Rotation angle.
+         */
+        rotation?: number;
     };
 
     /**
