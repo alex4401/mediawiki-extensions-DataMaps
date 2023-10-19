@@ -166,6 +166,14 @@ class DataMap extends EventEmitter {
          */
         this.crsOrigin = ( this.config.crs[ 0 ][ 0 ] < this.config.crs[ 1 ][ 0 ]
             && this.config.crs[ 0 ][ 1 ] < this.config.crs[ 1 ][ 1 ] ) ? CRSOrigin.TopLeft : CRSOrigin.BottomLeft;
+        /**
+         * Coordinate system rotation.
+         *
+         * @type {number}
+         */
+        this._crsAngle = this.config.cRot || 0;
+        this._crsRotS = Math.sin( this._crsAngle );
+        this._crsRotC = Math.cos( this._crsAngle );
         // Y axis is authoritative, this is really just a cosmetic choice influenced by ARK (latitude first). X doesn't need to
         // be mapped on a separate scale from Y, unless we want them to always be squares.
         /**
@@ -375,9 +383,12 @@ class DataMap extends EventEmitter {
      * @return {LeafletModule.PointTuple} New point in the universal space.
      */
     translatePoint( point ) {
-        return this.crsOrigin === CRSOrigin.TopLeft
-            ? [ ( this.config.crs[ 1 ][ 0 ] - point[ 0 ] ) * this.crsScaleY, point[ 1 ] * this.crsScaleX ]
-            : [ point[ 0 ] * this.crsScaleY, point[ 1 ] * this.crsScaleX ];
+        const
+            y = (
+                this.crsOrigin === CRSOrigin.TopLeft ? ( this.config.crs[ 1 ][ 0 ] - point[ 0 ] ) : point[ 0 ]
+            ) * this.crsScaleY,
+            x = point[ 1 ] * this.crsScaleX;
+        return [ x * this._crsRotS + y * this._crsRotC, x * this._crsRotC - y * this._crsRotS ];
     }
 
 

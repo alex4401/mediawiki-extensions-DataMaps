@@ -59,6 +59,10 @@ class CoordinateSystem extends DataModel {
         return self::normaliseBox( $this->getBox(), $this->getOrder() );
     }
 
+    public function getRotation(): float {
+        return deg2rad( $this->raw->rotation ?? 0 );
+    }
+
     public function validate( Status $status ) {
         $this->checkField( $status, [
             'name' => 'order',
@@ -72,6 +76,10 @@ class CoordinateSystem extends DataModel {
         $this->checkField( $status, [
             'name' => 'bottomRight',
             'type' => DataModel::TYPE_VECTOR2
+        ] );
+        $this->checkField( $status, [
+            'name' => 'rotation',
+            'type' => DataModel::TYPE_NUMBER
         ] );
     }
 }
