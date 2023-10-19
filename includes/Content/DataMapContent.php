@@ -18,19 +18,6 @@ use stdClass;
 use Title;
 
 class DataMapContent extends JsonContent {
-    public const SUPPORTED_SCHEMA_VERSIONS = [
-        'v0.15',
-        'v0.16',
-        'v16',
-        'latest'
-    ];
-    public const PREFERRED_SCHEMA_VERSION = 'v16';
-    public const DEPRECATED_SCHEMA_VERSIONS = [
-        // schema version => extension version to be removed in
-        'v0.15' => 'v0.17',
-        'v0.16' => 'v0.17',
-    ];
-
     public const LERR_NOT_FOUND = 1;
     public const LERR_NOT_DATAMAP = 2;
 
@@ -164,42 +151,6 @@ class DataMapContent extends JsonContent {
         return $this->modelCached;
     }
 
-    public static function getPublicSchemaUrl( string $id ) {
-        $config = MediaWikiServices::getInstance()->getMainConfig();
-        $urlUtils = MediaWikiServices::getInstance()->getUrlUtils();
-        return $urlUtils->expand( $config->get( MainConfigNames::ExtensionAssetsPath ) . "/DataMaps/schemas/$id.json",
-            PROTO_CANONICAL );
-    }
-
-    public static function getSchemaVersion( string $url ): ?string {
-        // TODO: there is surely a better way to do this
-        $services = MediaWikiServices::getInstance();
-        $config = $services->getMainConfig();
-        $urlUtils = $services->getUrlUtils();
-        $prefixTable = [
-            'raw.githubusercontent.com' => '/alex4401/mediawiki-extensions-DataMaps/main/schemas/',
-            $config->get( MainConfigNames::ServerName ) => $config->get( MainConfigNames::ExtensionAssetsPath ) .
-                '/DataMaps/schemas/'
-        ];
-
-        if ( !str_ends_with( $url, '.json' ) ) {
-            return null;
-        }
-
-        $url = $urlUtils->expand( $url, PROTO_CANONICAL );
-        $parsed = $urlUtils->parse( $url );
-        if ( $parsed === null || !isset( $parsed['host'] ) || !isset( $parsed['path'] )
-            || !array_key_exists( $parsed['host'], $prefixTable ) ) {
-            return null;
-        }
-
-        $prefix = $prefixTable[$parsed['host']];
-        if ( !str_starts_with( $parsed['path'], $prefix ) ) {
-            return null;
-        }
-        return substr( $parsed['path'], strlen( $prefix ), -5 );
-    }
-
     public function getEmbedRenderer(
         Title $title,
         Parser $parser,
@@ -244,24 +195,37 @@ class DataMapContent extends JsonContent {
 
             $modelled = $this->asModel();
 
+            /** @var SchemaProvider $schemaProvider */
+            $schemaProvider = MediaWikiServices::getInstance()->getService( SchemaProvider::SERVICE_NAME );
+
             // Check if the schema is specified, and if the origin is right and version is supported
             $schemaValue = $modelled->unwrap()->{'$schema'} ?? null;
-            $schemaVersion = $schemaValue !== null ? self::getSchemaVersion( $schemaValue ) : null;
+            $schemaVersion = $schemaValue !== null ? $schemaProvider->getRevisionFromUrl( $schemaValue ) : null;
             if ( $schemaVersion === null ) {
-                $services = MediaWikiServices::getInstance();
-                $exampleUrl = $services->getUrlUtils()->expand(
-                    $services->getMainConfig()->get( MainConfigNames::ExtensionAssetsPath ) . '/DataMaps/schemas/' .
-                    self::PREFERRED_SCHEMA_VERSION . '.json' );
+                $exampleUrl = $schemaProvider->makePublicRecommendedUrl( true );
                 $status->fatal( 'datamap-error-bad-schema-origin', $exampleUrl );
                 return;
             }
-            if ( !in_array( $schemaVersion, self::SUPPORTED_SCHEMA_VERSIONS ) ) {
-                $status->fatal( 'datamap-error-bad-schema-version', implode( ', ', self::SUPPORTED_SCHEMA_VERSIONS ) );
+
+            if ( !$schemaProvider->isRevisionSupported( $schemaVersion ) ) {
+                $status->fatal(
+                    'datamap-error-bad-schema-version',
+                    implode( ', ', SchemaProvider::SUPPORTED_REVISIONS )
+                );
                 return;
             }
-            if ( array_key_exists( $schemaVersion, self::DEPRECATED_SCHEMA_VERSIONS ) ) {
-                $status->warning( 'datamap-error-deprecated-schema-version', self::DEPRECATED_SCHEMA_VERSIONS[$schemaVersion],
-                    implode( ', ', self::SUPPORTED_SCHEMA_VERSIONS ) );
+
+            $depTarget = $schemaProvider->getRevisionDeprecationTarget( $schemaVersion );
+            if ( $depTarget ) {
+                $notDeprecated = array_filter(
+                    SchemaProvider::SUPPORTED_REVISIONS,
+                    fn ( $x ) => $schemaProvider->getRevisionDeprecationTarget( $x ) === null
+                );
+                $status->warning(
+                    'datamap-error-deprecated-schema-version',
+                    $depTarget,
+                    implode( ', ', $notDeprecated )
+                );
                 return;
             }
 
