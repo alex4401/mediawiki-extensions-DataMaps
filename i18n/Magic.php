@@ -4,6 +4,7 @@ $magicWords = [];
 
 $magicWords['en'] = [
     'displaydatamap'        => [ 1, 'DataMap' ],
-    'displaydatamap_short'  => [ 1, 'Map' ],
     'datamaplink' => [ 1, 'MapLink' ],
+    // GH#223: This function should not be translated, it will eventually mimic bundled namespace's name
+    'displaydatamap_short'  => [ 1, 'Map' ],
 ];
