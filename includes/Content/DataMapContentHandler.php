@@ -30,8 +30,11 @@ class DataMapContentHandler extends JsonContentHandler {
     }
 
     public function makeEmptyContent() {
+        /** @var SchemaProvider $schemaProvider */
+        $schemaProvider = MediaWikiServices::getInstance()->getService( SchemaProvider::SERVICE_NAME );
+
         $raw = new stdClass();
-        $raw->{'$schema'} = DataMapContent::getPublicSchemaUrl( DataMapContent::PREFERRED_SCHEMA_VERSION );
+        $raw->{'$schema'} = $schemaProvider->makePublicRecommendedUrl( true );
         return new DataMapContent( DataMapContent::toJSON( $raw ) );
     }
 
