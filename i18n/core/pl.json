@@ -18,7 +18,7 @@
 	"datamap-mapsrcinfo-status-errors": "Ta mapa nie przechodzi weryfikacji kodu źródłowego.",
 	"datamap-mapsrcinfo-heading-errors": "'''Błędy:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''Ostrzeżenia:''' $1",
-	"datamap-error-validate-check-docs": "Sprawdź [https://github.com/alex4401/mediawiki-extensions-DataMaps dokumentację rozszerzenia], aby dowiedzieć się o prawidłowej strukturze.",
+	"datamap-mapsrcinfo-docslink": "Sprawdź [https://github.com/alex4401/mediawiki-extensions-DataMaps dokumentację rozszerzenia], aby dowiedzieć się o prawidłowej strukturze.",
 	"datamap-error-validate-invalid-json": "To nie jest prawidłowy dokument JSON.",
 	"datamap-error-bad-schema-origin": "Brakujące lub nieprawidłowe pole <code>$schema</code>. Musi ono wskazywać na obsługiwaną definicję schematu, jak na przykład <code>$1</code>.",
 	"datamap-error-bad-schema-version": "Pole <code>$schema</code> wskazuje na nieznany lub niewspierany schemat definicji. Obsługiwane są następujące rewizje: $1.",

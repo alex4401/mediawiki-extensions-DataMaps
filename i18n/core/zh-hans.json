@@ -8,7 +8,7 @@
 	"content-model-datamap": "交互式数据地图",
 	"datamap-doc-page-does-not-exist": "''此地图的文档可在 [[$1]] 中创建。''",
 	"datamap-doc-page-header": "'''此页面是 [[$1]] 的文档。'''",
-	"datamap-error-validate-check-docs": "查阅[https://github.com/alex4401/mediawiki-extensions-DataMaps 扩展文档]了解规范结构的信息。",
+	"datamap-mapsrcinfo-docslink": "查阅[https://github.com/alex4401/mediawiki-extensions-DataMaps 扩展文档]了解规范结构的信息。",
 	"datamap-error-validate-invalid-json": "不是合法的 JSON 格式。",
 	"datamap-error-bad-schema-origin": "缺少或无效的 <code>$schema</code>字段。值必须指向一个支持的schema定义，如<code>$1</code>。",
 	"datamap-legend-label": "内容",

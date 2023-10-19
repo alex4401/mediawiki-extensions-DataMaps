@@ -150,14 +150,12 @@ class DataModel {
             if ( isset( $spec['names'] ) ) {
                 if ( count( $spec['names'] ) === 2 ) {
                     $status->fatal( 'datamap-error-validate-field-required-either', static::$publicName, $spec['names'][0],
-                        $spec['names'][1], wfMessage( 'datamap-error-validate-check-docs' ) );
+                        $spec['names'][1] );
                 } else {
-                    $status->fatal( 'datamap-error-validate-field-required-alt', static::$publicName, $spec['names'][0],
-                        wfMessage( 'datamap-error-validate-check-docs' ) );
+                    $status->fatal( 'datamap-error-validate-field-required-alt', static::$publicName, $spec['names'][0] );
                 }
             } else {
-                $status->fatal( 'datamap-error-validate-field-required', static::$publicName, $spec['name'],
-                    wfMessage( 'datamap-error-validate-check-docs' ) );
+                $status->fatal( 'datamap-error-validate-field-required', static::$publicName, $spec['name'] );
             }
             $this->validationAreRequiredFieldsPresent = false;
             $this->isValidationSuccessful = false;
@@ -194,8 +192,7 @@ class DataModel {
         }
 
         if ( $type === null ) {
-            $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, $name,
-                wfMessage( 'datamap-error-validate-check-docs' ) );
+            $status->fatal( 'datamap-error-validate-wrong-field-type', static::$publicName, $name );
             $this->isValidationSuccessful = false;
             return false;
         }
@@ -226,8 +223,7 @@ class DataModel {
             if ( isset( $spec['values'] ) ) {
                 foreach ( $value as &$item ) {
                     if ( !in_array( $item, $spec['values'] ) ) {
-                        $status->fatal( 'datamap-error-validate-disallowed-value', static::$publicName, $name,
-                            wfMessage( 'datamap-error-validate-check-docs' ) );
+                        $status->fatal( 'datamap-error-validate-disallowed-value', static::$publicName, $name );
                         $this->isValidationSuccessful = false;
                         return false;
                     }
@@ -238,8 +234,7 @@ class DataModel {
                 $index = 0;
                 foreach ( $value as &$item ) {
                     if ( !$this->verifyType( $item, $spec['itemType'] ) ) {
-                        $status->fatal( 'datamap-error-validate-wrong-item-type', static::$publicName, $name, $index,
-                            wfMessage( 'datamap-error-validate-check-docs' ) );
+                        $status->fatal( 'datamap-error-validate-wrong-item-type', static::$publicName, $name, $index );
                         $this->isValidationSuccessful = false;
                         return false;
                     }
@@ -257,8 +252,7 @@ class DataModel {
             }
         } else {
             if ( isset( $spec['values'] ) && !in_array( $value, $spec['values'] ) ) {
-                $status->fatal( 'datamap-error-validate-disallowed-value', static::$publicName, $name,
-                    wfMessage( 'datamap-error-validate-check-docs' ) );
+                $status->fatal( 'datamap-error-validate-disallowed-value', static::$publicName, $name );
                 $this->isValidationSuccessful = false;
                 return false;
             }

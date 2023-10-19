@@ -11,7 +11,7 @@
 	"datamap-category-pages-including-maps": "บทความที่มีแผนที่เชิงโต้ตอบ",
 	"datamap-category-pages-including-broken-maps": "บทความที่มีแผนที่ข้อมูลที่ยังไม่ได้รับการตรวจสอบ",
 	"datamap-category-maps-failing-validation": "แผนที่นี้ไม่ผ่านการตรวจสอบข้อมูล",
-	"datamap-error-validate-check-docs": "สามารถดูรายละเอียดเพิ่มเติมและโครงสร้างของส่วนขยายได้ที่ [https://github.com/alex4401/mediawiki-extensions-DataMaps เอกสารประกอบส่วนขยาย]",
+	"datamap-mapsrcinfo-docslink": "สามารถดูรายละเอียดเพิ่มเติมและโครงสร้างของส่วนขยายได้ที่ [https://github.com/alex4401/mediawiki-extensions-DataMaps เอกสารประกอบส่วนขยาย]",
 	"datamap-error-validate-invalid-json": "รูปแบบเอกสาร JSON ไม่ถูกต้อง",
 	"datamap-error-validate-unexpected-fields": "พบฟิลด์ที่ไม่ทราบในโครงสร้าง $1: $2",
 	"datamap-error-validate-field-no-value": "ต้องมีค่าของฟิลด์ <code>$2</code> ในโครงสร้าง $1",

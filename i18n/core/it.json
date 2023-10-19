@@ -13,7 +13,7 @@
 	"datamap-category-pages-including-maps": "Pagine che includono mappe di dati",
 	"datamap-mapsrcinfo-heading-errors": "'''Errori:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''Avvertimenti:''' $1",
-	"datamap-error-validate-check-docs": "Per informazioni sulla struttura corretta, consultare [https://github.com/alex4401/mediawiki-extensions-DataMaps extension's documentation].",
+	"datamap-mapsrcinfo-docslink": "Per informazioni sulla struttura corretta, consultare [https://github.com/alex4401/mediawiki-extensions-DataMaps extension's documentation].",
 	"datamap-error-validate-invalid-json": "Questo non è un documento JSON valido.",
 	"datamap-error-validate-unexpected-fields": "Trovato campo/i sconosciuto/i nella struttura $1: $2.",
 	"datamap-error-validate-field-no-value": "Il campo <code>$1</code> nella struttura $2 richiede un valore.",

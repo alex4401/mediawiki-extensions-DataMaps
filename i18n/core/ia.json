@@ -17,7 +17,7 @@
 	"datamap-mapsrcinfo-status-errors": "Iste carta non passa le validation del codice fonte.",
 	"datamap-mapsrcinfo-heading-errors": "'''Errores:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''Avisos:''' $1",
-	"datamap-error-validate-check-docs": "Lege le [https://github.com/alex4401/mediawiki-extensions-DataMaps documentation del extension] pro information sur le structura correcte.",
+	"datamap-mapsrcinfo-docslink": "Lege le [https://github.com/alex4401/mediawiki-extensions-DataMaps documentation del extension] pro information sur le structura correcte.",
 	"datamap-error-validate-invalid-json": "Isto non es un documento JSON valide.",
 	"datamap-error-bad-schema-origin": "Campo <code>$schema</code> mancante o invalide. Iste debe punctar verso un definition de schema supportate, per exemplo <code>$1</code>.",
 	"datamap-error-bad-schema-version": "Le campo <code>$schema</code> puncta a un definition de schema incognite o non supportate. Le sequente versiones es supportate: $1.",

@@ -18,7 +18,7 @@
 	"datamap-mapsrcinfo-status-errors": "המפה הזאת אינה עוברת בדיקת תקינות של קוד המקור.",
 	"datamap-mapsrcinfo-heading-errors": "'''שגיאות:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''אזהרות:''' $1",
-	"datamap-error-validate-check-docs": "יש לעיין בתיעוד של [https://github.com/alex4401/mediawiki-extensions-DataMaps תיעוד של ההרחבה] לקבלת מידע על המבנה הנכון.",
+	"datamap-mapsrcinfo-docslink": "יש לעיין בתיעוד של [https://github.com/alex4401/mediawiki-extensions-DataMaps תיעוד של ההרחבה] לקבלת מידע על המבנה הנכון.",
 	"datamap-error-validate-invalid-json": "זה אינו מסמך JSON תקין.",
 	"datamap-error-bad-schema-origin": "שדה <code dir=\"ltr\">$schema</code> חסר או בלתי־תקין. זה חייב להצביע על הגדרת סכֵמה נתמכת, למשל <code>$1</code> .",
 	"datamap-error-bad-schema-version": "השדה <code>$schema</code> מצביע על הגדרת סכֵמה לא ידועה או לא נתמכת. הגרסאות הבאות נתמכות: $1.",

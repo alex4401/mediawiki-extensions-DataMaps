@@ -17,7 +17,7 @@
 	"datamap-mapsrcinfo-status-errors": "Оваа карта не ја помина проверката на изворниот код.",
 	"datamap-mapsrcinfo-heading-errors": "'''Грешки:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''Предупредувања:''' $1",
-	"datamap-error-validate-check-docs": "За правилната структура ќе ја прочитате во [https://github.com/alex4401/mediawiki-extensions-DataMaps документацијада на додатокот].",
+	"datamap-mapsrcinfo-docslink": "За правилната структура ќе ја прочитате во [https://github.com/alex4401/mediawiki-extensions-DataMaps документацијада на додатокот].",
 	"datamap-error-validate-invalid-json": "Ова не е важечки JSON-документ.",
 	"datamap-error-bad-schema-origin": "Отсутно или неважечко поле <code>$schema</code>. Ова мора да води кон поддржана определба на шема, како на пр. <code>$1</code>.",
 	"datamap-error-bad-schema-version": "Полето <code>$schema</code> води до непозната или неподдржана определба на шема. Поддржани се следниве преработки: $1.",
