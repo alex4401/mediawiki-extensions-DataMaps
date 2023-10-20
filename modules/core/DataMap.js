@@ -378,6 +378,7 @@ class DataMap extends EventEmitter {
 
     /**
      * Maps a point from map's coordinate reference system specified by the server, to the universal space [ 0 0 100 100 ].
+     * This respects CRS rotation.
      *
      * This is non-destructive, and clones the input.
      *
@@ -396,6 +397,7 @@ class DataMap extends EventEmitter {
 
     /**
      * Maps a box from map's coordinate reference system specified by the server, to the universal space [ 0 0 100 100 ].
+     * This does not respect CRS rotation. Consumers must handle it on their own.
      *
      * This is non-destructive, and clones the input.
      *
@@ -403,11 +405,19 @@ class DataMap extends EventEmitter {
      * @return {LeafletModule.LatLngBoundsTuple} New box in the universal space.
      */
     translateBox( box ) {
-        return this.crsOrigin === CRSOrigin.TopLeft
-            ? [ [ ( this.config.crs[ 1 ][ 0 ] - box[ 0 ][ 0 ] ) * this.crsScaleY, box[ 0 ][ 1 ] * this.crsScaleX ],
-                [ ( this.config.crs[ 1 ][ 0 ] - box[ 1 ][ 0 ] ) * this.crsScaleY, box[ 1 ][ 1 ] * this.crsScaleX ] ]
-            : [ [ box[ 0 ][ 0 ] * this.crsScaleY, box[ 0 ][ 1 ] * this.crsScaleX ],
-                [ box[ 1 ][ 0 ] * this.crsScaleY, box[ 1 ][ 0 ] * this.crsScaleX ] ];
+        const
+            sY = (
+                this.crsOrigin === CRSOrigin.TopLeft ? ( this.config.crs[ 1 ][ 0 ] - box[ 0 ][ 0 ] ) : box[ 0 ][ 0 ]
+            ) * this.crsScaleY,
+            sX = box[ 0 ][ 1 ] * this.crsScaleX,
+            eY = (
+                this.crsOrigin === CRSOrigin.TopLeft ? ( this.config.crs[ 1 ][ 0 ] - box[ 1 ][ 0 ] ) : box[ 1 ][ 0 ]
+            ) * this.crsScaleY,
+            eX = box[ 1 ][ 1 ] * this.crsScaleX;
+        return [
+            [ sY, sX ],
+            [ eY, eX ]
+        ];
     }
 
 
