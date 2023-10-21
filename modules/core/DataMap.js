@@ -174,6 +174,8 @@ class DataMap extends EventEmitter {
         this._crsAngle = this.config.cRot || 0;
         this._crsRotS = Math.sin( -this._crsAngle );
         this._crsRotC = Math.cos( -this._crsAngle );
+        this._crsRotSInv = Math.sin( this._crsAngle );
+        this._crsRotCInv = Math.cos( this._crsAngle );
         // Y axis is authoritative, this is really just a cosmetic choice influenced by ARK (latitude first). X doesn't need to
         // be mapped on a separate scale from Y, unless we want them to always be squares.
         /**
@@ -430,10 +432,19 @@ class DataMap extends EventEmitter {
         if ( this.crsOrigin === CRSOrigin.TopLeft ) {
             lat = this.config.crs[ 1 ][ 0 ] - lat;
         }
+
+        if ( this._crsAngle ) {
+            [ lat, lon ] = [
+                lon * this._crsRotSInv + lat * this._crsRotCInv,
+                lon * this._crsRotCInv - lat * this._crsRotSInv
+            ];
+        }
+
         if ( round ) {
             lat = Math.round( lat * 10e3 ) / 10e3;
             lon = Math.round( lon * 10e3 ) / 10e3;
         }
+
         return [ lat, lon ];
     }
 
