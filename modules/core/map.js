@@ -172,8 +172,8 @@ class DataMap extends EventEmitter {
          * @type {number}
          */
         this._crsAngle = this.config.cRot || 0;
-        this._crsRotS = Math.sin( this._crsAngle );
-        this._crsRotC = Math.cos( this._crsAngle );
+        this._crsRotS = Math.sin( -this._crsAngle );
+        this._crsRotC = Math.cos( -this._crsAngle );
         // Y axis is authoritative, this is really just a cosmetic choice influenced by ARK (latitude first). X doesn't need to
         // be mapped on a separate scale from Y, unless we want them to always be squares.
         /**
@@ -1081,12 +1081,18 @@ class DataMap extends EventEmitter {
         // Image overlay
         background.at = background.at || this.config.crs;
         if ( background.image ) {
-            background.layers.push( new Leaflet.ImageOverlay( background.image, this.translateBox( background.at ), {
-                className: background.pixelated ? 'ext-datamaps-pixelated-image' : undefined,
-                decoding: 'async',
-                // Expand the DOM element's width and height by 0.51 pixels. This helps with gaps between tiles.
-                antiAliasing: background.aa ? 0.51 : 0
-            } ) );
+            const imgLayer = new Leaflet.ImageOverlay(
+                background.image,
+                this.translateBox( background.at ),
+                {
+                    className: background.pixelated ? 'ext-datamaps-pixelated-image' : undefined,
+                    decoding: 'async',
+                    angle: this._crsAngle * 180 / Math.PI,
+                    // Expand the DOM element's width and height by 0.51 pixels. This helps with gaps between tiles.
+                    antiAliasing: background.aa ? 0.51 : 0
+                }
+            );
+            background.layers.push( imgLayer );
         }
 
         // Prepare overlay layers
