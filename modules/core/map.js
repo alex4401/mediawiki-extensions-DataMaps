@@ -875,10 +875,23 @@ class DataMap extends EventEmitter {
             // Extend with each layer's bounds
             for ( const id in this.leaflet._layers ) {
                 const layer = this.leaflet._layers[ id ];
-                const hasBoundsGetter = 'getBounds' in layer;
-                if ( hasBoundsGetter || layer.getLatLng ) {
-                    this._contentBounds.extend( hasBoundsGetter
-                        ? /** @type {LeafletModule.IHasBoundsGetter} */ ( layer ).getBounds() : layer.getLatLng() );
+
+                if ( 'getBounds' in layer ) {
+                    let layerBounds = /** @type {LeafletModule.IHasBoundsGetter} */ ( layer ).getBounds();
+                    if ( this._crsAngle ) {
+                        for ( const [ a, b ] of [
+                            [ layerBounds._southWest, layerBounds._northEast ],
+                            [ layerBounds.getSouthEast(), layerBounds.getNorthWest() ]
+                        ] ) {
+                            layerBounds = new Leaflet.LatLngBounds(
+                                [ a.lng * this._crsRotS + a.lat * this._crsRotC, a.lng * this._crsRotC - a.lat * this._crsRotS ],
+                                [ b.lng * this._crsRotS + b.lat * this._crsRotC, b.lng * this._crsRotC - b.lat * this._crsRotS ]
+                            );
+                        }
+                    }
+                    this._contentBounds.extend( layerBounds );
+                } else if ( layer.getLatLng ) {
+                    this._contentBounds.extend( layer.getLatLng() );
                 }
             }
         }
