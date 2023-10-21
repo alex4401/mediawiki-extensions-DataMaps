@@ -83,7 +83,7 @@ class SchemaProvider {
      */
     public function makePublicUrl( string $id, bool $pathOnly = false ): string {
         return $this->urlUtils->expand(
-            $this->getBaseExternalPath() . "/$id.json",
+            $this->getBaseExternalPath() . "$id.json",
             $pathOnly ? PROTO_INTERNAL : PROTO_CANONICAL
         );
     }
