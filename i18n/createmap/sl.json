@@ -20,5 +20,6 @@
 	"datamap-vec-toggle-search": "Omogoči iskanje označevalcev",
 	"datamap-vec-submit": "Nadaljuj",
 	"datamap-vec-example-group-id": "zgled",
-	"datamap-vec-example-group-name": "Zgled skupine"
+	"datamap-vec-example-group-name": "Zgled skupine",
+	"datamap-vec-example-marker": "Zgled označevalca"
 }

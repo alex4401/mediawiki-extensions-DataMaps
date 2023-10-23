@@ -1,0 +1,43 @@
+{
+	"@metadata": {
+		"authors": [
+			"Eleassar"
+		]
+	},
+	"datamap-desc": "Omogoča vdelavo interaktivnih zemljevidov v viki strani.",
+	"datamap-mapsrcinfo-heading-errors": "'''Napake:''' $1",
+	"datamap-mapsrcinfo-heading-warnings": "'''Opozorila:''' $1",
+	"datamap-mapsrcinfo-docslink": "Če je potrebno, si lahko ogledate [dokumentacijo razširitve $1] ali [ $2 ustvarite kartico], če menite, da bi stvari morda potrebovale nekaj sprememb.",
+	"datamap-error-validate-field-no-value": "Polje <code>$2</code> v strukturi $1 potrebuje vrednost.",
+	"datamap-error-validate-field-required": "V strukturi $1 je potrebno polje <code>$2</code>.",
+	"datamap-error-validate-field-required-alt": "V strukturi $1 je potrebno polje <code>$2</code> ali alternativa.",
+	"datamap-error-validate-wrong-field-type": "Polje <code>$2</code> ima nepravilno vrednost za strukturo $1",
+	"datamap-error-validate-wrong-item-type": "Element v matriki <code>$2</code> ima nepravilno vrednost za strukturo $1.",
+	"datamap-error-validate-disallowed-value": "Polje <code>$2</code> ima neznano vrednost za strukturo $1",
+	"datamap-error-validate-replaced-field": "Polje <code>$2</code> v strukturi $1 je bilo v različici $4 zamenjano z <code>$3</code> in bo v različici $5 odstranjeno.",
+	"datamap-error-validatespec-map-no-group-name": "Definirana je bila skupina označevalcev brez (ali s praznim) ID-jem. Dodelite ji edinstven ID.",
+	"datamap-error-validatespec-map-illegal-group-name": "V ID-jih skupin označevalcev niso dovoljeni prazni znaki (kot so presledki): <code>$1</code>.",
+	"datamap-error-validatespec-map-illegal-layer-name": "V ID-jih kategorij označevalcev niso dovoljeni prazni znaki (kot so presledki): <code>$1</code>.",
+	"datamap-error-validatespec-map-name-conflict-group-layer": "Najdena je bila kategorija označevalcev »$1«, vendar obstaja skupina označevalcev z enakim ID-jem.",
+	"datamap-error-map-validation-fail": "[[$1|Izvorna koda podatkovne karte]] ne prestane več preverjanja podatkov. Odpravite napake.",
+	"datamap-legend-label": "Celine",
+	"datamap-javascript-required": "Za delovanje te karte mora biti omogočen JavaScript. Če je spodaj ne vidite, to verjetno pomeni, da imate onemogočen JavaScript.",
+	"datamap-loading-js": "Nalaganje skriptov",
+	"datamap-error-dataload": "<b>Podatkov ni bilo mogoče naložiti</b><br/> Prosimo, osvežite stran ali poskusite znova pozneje",
+	"datamap-lazy-click-to-load": "Kliknite za naložitev podatkovne karte",
+	"datamap-legend-tab-locations": "Označevalci",
+	"datamap-toggle-show-all": "Prikaži vse",
+	"datamap-toggle-hide-all": "Skrij vse",
+	"datamap-layer-control": "Preklopi",
+	"datamap-legend-tab-checklist": "Kontrolni seznami",
+	"datamap-interact-scroll-mac": "Uporabite ⌘ + Scroll za povečavo karte",
+	"datamap-layer-surface": "Površina",
+	"datamap-layer-cave": "Jame",
+	"datamap-popup-related-article": "Več o tem",
+	"datamap-popup-marker-link-copied": "Povezava kopirana v vaše odložišče.",
+	"datamap-control-zoom-out": "Oddalji",
+	"datamap-control-reset-view": "Ponastavi na privzeto",
+	"datamap-control-edit": "Uredi podatkovno karto",
+	"datamap-control-search-toggle-sharing": "Vsi zemljevidi",
+	"datamap-control-search-no-results": "Ni najdenih zadetkov."
+}

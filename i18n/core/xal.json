@@ -18,7 +18,7 @@
 	"datamap-mapsrcinfo-status-errors": "Эн һазрин зург экн кодын батллтыг давҗахш.",
 	"datamap-mapsrcinfo-heading-errors": "'''Алдс:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''Анхаруллһн:''' $1",
-	"datamap-mapsrcinfo-docslink": "Зокх бүтцин туск медәллиг [https://github.com/alex4401/mediawiki-extensions-DataMaps өргтклин бәрмтәс] шалһтн.",
+	"datamap-mapsrcinfo-docslink": "Кергтә болхла, та [$1 өргтклин бәрмт]-әс лавлҗ чаднат эс гиҗ зәрм зүүлиг ясх кергтәһинь үзхлә, [$2 өргдл үүскх] болмҗта.",
 	"datamap-error-validate-invalid-json": "Эннь күчтә JSON документ биш.",
 	"datamap-error-bad-schema-origin": "<code>$schema</code> талвр дуту эс гиҗ күчн уга. Эннь демҗгдсн схемин тодрхаллтыг зааҗ өгх йоста, үлгүрнь <code>$1</code>.",
 	"datamap-error-bad-schema-version": "<code>$schema</code> талврнь эс медгдх эс гиҗ демҗгдәд уга схемин тодрхаллтыг заадг. Дарук хүвлвриг демҗнә: $1.",

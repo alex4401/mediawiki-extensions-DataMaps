@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Chatmaigre888",
-			"Valmontin"
+			"Valmontin",
+			"Wladek92"
 		]
 	},
 	"datamap-desc": "Permet l'intégration de cartes interactives dans les pages du wiki.",
@@ -14,9 +15,9 @@
 	"datamap-category-maps-failing-validation": "Cartes dont les données ne sont plus validées",
 	"datamap-mapsrcinfo-docslink": "Vérifiez la [https://github.com/alex4401/mediawiki-extensions-DataMaps extension's documentation] pour plus d'informations sur la bonne structure.",
 	"datamap-error-validate-invalid-json": "Ceci n'est pas un document JSON valide.",
-	"datamap-error-bad-schema-origin": "Champ <code>$schema</code> manquant ou invalide. Cela doit pointer vers une définition de schéma prise en charge, comme <code>$1</code>.",
-	"datamap-error-bad-schema-version": "Le champ <code>$schema</code> désigne une définition de schéma inconnue ou non supportée. Les identifiants suivants sont supportés : $1.",
-	"datamap-error-deprecated-schema-version": "Le schéma utilisé sur cette carte n'est plus supporté et sera supprimé dans la version $1. Consultez la [https://github.com/alex4401/mediawiki-extensions-DataMaps documentation de l'extension] et mettez à jour les données avec une version de schéma supportée ($2).",
+	"datamap-error-bad-schema-origin": "Champ <code>$schema</code> manquant ou invalide. Il doit pointer vers une définition de schéma pris en charge, par exemple <code>$1</code>.",
+	"datamap-error-bad-schema-version": "Le champ <code>$schema</code> pointe vers une définition de schéma inconnue ou non supportée. Les révisions suivantes sont supportées : $1.",
+	"datamap-error-deprecated-schema-version": "La révision du schéma utilisée sur cette carte a été remplacée et ne sera plus supportée en $1. Consultez la [https://github.com/alex4401/mediawiki-extensions-DataMaps documentation de l'extension] et mettez à jour les données avec une version de schéma plus récente ($2).",
 	"datamap-error-validate-unexpected-fields": "Champ(s) inconnu(s) trouvés dans la structure $1: $2.",
 	"datamap-error-validate-field-no-value": "Le champ <code>$2</code> dans la structure $1 nécessite une valeur.",
 	"datamap-error-validate-field-required": "Le champ <code>$2</code> est requis dans la structure $1. $3",
@@ -28,7 +29,7 @@
 	"datamap-error-validate-exclusive-fields": "$1 accepte un et un seul un de ces champs : $2.",
 	"datamap-error-validate-replaced-field": "Le champ <code>$2</code> dans la structure $1 a été remplacé par <code>$3</code> dans la version $4, et sera supprimé dans la version $5.",
 	"datamap-error-validate-deprecated-field": "Le champ <code>$2</code> dans la structure $1 a été signalé obsolète à partir de la version $3 et sera supprimé dans la version $4.",
-	"datamap-error-validate-no-file": "Le fichier [[:File:$1|$1]] est lié, mais il n'a pas encore été téléchargé sur le wiki.",
+	"datamap-error-validate-no-file": "Le fichier [[:File:$1|$1]] est lié, mais il n'a pas encore été téléversé sur le wiki.",
 	"datamap-error-validate-limit": "Trop d'erreurs rencontrées pendant la validation de structure : $1.",
 	"datamap-error-validatespec-group-no-display": "Les paramètres du groupe de marqueurs \"$1\" sont manquants. Ajoutez les propriétés \"<code>icon</code>\" et/ou \"<code>fillColor</code>\".",
 	"datamap-error-validatespec-map-no-group-name": "Un groupe de marqueurs sans nom (ou vide) a été défini. Attribuez-lui un nom unique.",

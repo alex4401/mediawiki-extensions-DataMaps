@@ -48,7 +48,7 @@
 	"datamap-error-pf-max-width-invalid": "El ancho máximo de la inserción del mapa debe ser un número entero mayor que cero.",
 	"datamap-error-map-validation-fail": "El [[$1|código fuente del mapa de datos]] ya no supera la validación de datos. Por favor, corrige los errores asociados.",
 	"datamap-legend-label": "Leyenda",
-	"datamap-javascript-required": "Los mapas de datos interactivos requieren de la activación de JavaScript.",
+	"datamap-javascript-required": "JavaScript debe estar habilitado para que este mapa funcione. Si no lo ve a continuación, probablemente significa que tienes el JavaScript deshabilitado.",
 	"datamap-loading-js": "Espera. Cargando datos",
 	"datamap-loading-data": "Cargando datos a mostrar",
 	"datamap-error-dataload": "<b>No se ha podido cargar los datos</b><br/>Actualiza la página o prueba de nuevo más tarde",
