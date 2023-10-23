@@ -18,14 +18,6 @@ export type MapSettings = Partial< {
     backdropColor?: Colour3;
 
     /**
-     * Whether zoom control will be disabled on this map. Individual Leaflet options can override this.
-     *
-     * @deprecated since v0.16.7, will be removed in v0.17.0; replaced with `zoom: false`.
-     * @default false
-     */
-    disableZoom: boolean;
-
-    /**
      * Whether simply moving mouse cursor over a marker should cause its popup to become visible.
      *
      * Such popup will be partially translucent. The user still has to click on the marker for the address bar to update with a
@@ -111,14 +103,6 @@ export type MapSettings = Partial< {
      * @default null
      */
     leaflet: Partial< {
-        /**
-         * @deprecated since v0.16.7, will be removed in v0.17.0; replaced with MapSettings::zoom.min.
-         */
-        minZoom: number;
-        /**
-         * @deprecated since v0.16.7, will be removed in v0.17.0; replaced with MapSettings::zoom.max.
-         */
-        maxZoom: number;
         zoomSnap: number;
         zoomDelta: number;
         zoomAnimation: boolean;

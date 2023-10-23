@@ -12,14 +12,14 @@ export type DataMap = {
      *
      * @default false
      */
-    '$mixin'?: boolean;
+    '$fragment'?: boolean;
 
     /**
      * List of mix-ins that must be imported by the parser.
      *
      * @default []
      */
-    mixins?: Title[];
+    include?: Title[];
 
     /**
      * Reference coordinate space. This also determines the origin point from which the system expands.
@@ -104,7 +104,7 @@ export type DataMap = {
         /**
          * Title (with or without the File namespace) of the image to be used as the background.
          */
-        image: Title;
+        background: Title | MapBackground;
     } | {
         /**
          * List of background configurations.
