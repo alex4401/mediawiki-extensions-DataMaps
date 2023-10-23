@@ -1,0 +1,17 @@
+{
+	"@metadata": {
+		"authors": [
+			"Alex4401"
+		]
+	},
+	"datamap-vec-title": "Title of the dialog.",
+	"datamap-ve-skip": "Label of the skip button in bottom-right corner of the dialog, used to skip the process and go straight to the source editor.\n{{Identical|Skip}}",
+	"datamap-vec-intro": "Text shown before the creation form, in the dialog.",
+	"datamap-vec-select-crs-origin": "Label of the row with coordinate system's origin point selection.\n\nIts options are:\n* {{mw-msg|datamap-vec-crs-top-left}}\n* {{mw-msg|datamap-vec-crs-bottom-left}}",
+	"datamap-vec-crs-top-left": "Coordinate system origin point option. The dropdown's label is {{mw-msg|datamap-vec-select-crs-origin}}.",
+	"datamap-vec-crs-bottom-left": "Coordinate system origin point option. The dropdown's label is {{mw-msg|datamap-vec-select-crs-origin}}.",
+	"datamap-vec-submit": "Label of the button to proceed to the source editor, with a preset generated from user's data.\n{{Identical|Proceed}}",
+	"datamap-vec-example-group-id": "ID of the default, example marker group. Do not use spaces. This will appear in the generated source code.\n{{Identical|Example}}",
+	"datamap-vec-example-group-name": "Name of the default, example marker group. This will appear in the generated source code.",
+	"datamap-vec-example-marker": "Name of the default, example marker. This will appear in the generated source code."
+}

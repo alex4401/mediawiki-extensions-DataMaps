@@ -26,5 +26,6 @@
 	"datamap-vec-toggle-search-tabber": "Compartir datos de búsqueda dentro del tabber",
 	"datamap-vec-toggle-uid-requirement": "Necesita IDs únicas para marcadores",
 	"datamap-vec-submit": "Continuar",
-	"datamap-vec-example-group-id": "ejemplo"
+	"datamap-vec-example-group-id": "ejemplo",
+	"datamap-vec-example-marker": "Ejemplo de marcador"
 }
