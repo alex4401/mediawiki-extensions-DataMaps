@@ -10,11 +10,6 @@ type VectorProps = {
 type CircleProps = VectorProps & {
     fillColor: Colour3;
 
-    /** @deprecated since 0.16.10, to be removed in 0.17.0; use strokeColor. */
-    borderColor?: Colour3;
-    /** @deprecated since 0.16.10, to be removed in 0.17.0; use strokeWidth. */
-    borderWidth?: number;
-
     /**
      * @default 5
      */

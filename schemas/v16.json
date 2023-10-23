@@ -1,0 +1,1780 @@
+{
+  "$ref": "#/definitions/DataMap",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Box": {
+      "items": {
+        "$ref": "#/definitions/Point"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "Colour3": {
+      "anyOf": [
+        {
+          "pattern": "#([a-z]{3}|[a-z]{6})",
+          "type": "string"
+        },
+        {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array"
+        }
+      ]
+    },
+    "Colour4": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Colour3"
+        },
+        {
+          "pattern": "#([a-z]{4}|[a-z]{8})",
+          "type": "string"
+        },
+        {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "type": "array"
+        }
+      ]
+    },
+    "DataMap": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "$fragment": {
+              "default": false,
+              "description": "Indicates whether this is a fragment meant to be included in actual maps.",
+              "type": "boolean"
+            },
+            "background": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Title"
+                },
+                {
+                  "$ref": "#/definitions/MapBackground"
+                }
+              ],
+              "description": "Title (with or without the File namespace) of the image to be used as the background."
+            },
+            "coordinateOrder": {
+              "default": "yx",
+              "deprecated": "since 0.16.11, to be removed in 0.17.0; use crs.order.",
+              "description": "Coordinate order that will be used in anonymous (arrays and not named keys) box or location specifications.",
+              "enum": [
+                "yx",
+                "latlon",
+                "xy",
+                "lonlat"
+              ],
+              "type": "string"
+            },
+            "crs": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Box"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "bottomRight": {
+                      "$ref": "#/definitions/Point",
+                      "default": [
+                        100,
+                        100
+                      ],
+                      "description": "Coordinates of the bottom-right corner of the map."
+                    },
+                    "order": {
+                      "default": "yx",
+                      "description": "Coordinate order that the data uses.",
+                      "enum": [
+                        "yx",
+                        "latlon",
+                        "xy",
+                        "lonlat"
+                      ],
+                      "type": "string"
+                    },
+                    "rotation": {
+                      "description": "Rotation angle.",
+                      "type": "number"
+                    },
+                    "topLeft": {
+                      "$ref": "#/definitions/Point",
+                      "default": [
+                        0,
+                        0
+                      ],
+                      "description": "Coordinates of the top-left corner of the map."
+                    }
+                  },
+                  "type": "object"
+                }
+              ],
+              "default": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100,
+                  100
+                ]
+              ],
+              "description": "Reference coordinate space. This also determines the origin point from which the system expands.\n\nIn most situations, this should be set to your preferred coordinate range.\n\nIf the top-left corner is placed \"deeper\" into the system than the bottom-right corner, the bottom-right corner will be used as the origin point, i.e. objects will spread from it. For example, this will be achieved by a top-left corner of [100, 100] and bottom-right of [0, 0]."
+            },
+            "custom": {
+              "description": "Custom data for gadgets, bots or other scripts.",
+              "type": "object"
+            },
+            "disclaimer": {
+              "description": "Optional text to be shown at the bottom of the filters panel.",
+              "type": "string"
+            },
+            "groups": {
+              "additionalProperties": {
+                "$ref": "#/definitions/MarkerGroup"
+              },
+              "description": "Marker group definitions.",
+              "type": "object"
+            },
+            "include": {
+              "default": [],
+              "description": "List of mix-ins that must be imported by the parser.",
+              "items": {
+                "$ref": "#/definitions/Title"
+              },
+              "type": "array"
+            },
+            "layers": {
+              "additionalProperties": {
+                "$ref": "#/definitions/MarkerLayer"
+              },
+              "description": "Marker category definitions.",
+              "type": "object"
+            },
+            "markers": {
+              "additionalProperties": {
+                "items": {
+                  "$ref": "#/definitions/Marker"
+                },
+                "type": "array"
+              },
+              "description": "A map of layer association strings to lists of markers.",
+              "type": "object"
+            },
+            "settings": {
+              "$ref": "#/definitions/MapSettings",
+              "description": "Behaviour settings."
+            }
+          },
+          "required": [
+            "background"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "$fragment": {
+              "default": false,
+              "description": "Indicates whether this is a fragment meant to be included in actual maps.",
+              "type": "boolean"
+            },
+            "backgrounds": {
+              "anyOf": [
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "associatedLayer": {
+                            "description": "Value for the `bg` property marker category that can be used to tie markers to a specific background.",
+                            "type": "string"
+                          },
+                          "at": {
+                            "$ref": "#/definitions/Box",
+                            "description": "Bounds to fit the image in."
+                          },
+                          "image": {
+                            "$ref": "#/definitions/Title",
+                            "description": "Image file to use."
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "overlays": {
+                            "default": [],
+                            "description": "List of overlays tied to this background.",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "at": {
+                                      "$ref": "#/definitions/Box",
+                                      "description": "Bounds to fit the image in. This is not relative to the owning background."
+                                    },
+                                    "image": {
+                                      "$ref": "#/definitions/Title",
+                                      "description": "Image file to use."
+                                    },
+                                    "name": {
+                                      "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                                      "type": "string"
+                                    },
+                                    "reduceGaps": {
+                                      "default": false,
+                                      "description": "Attempts to minimise gaps between multiple closely placed image overlays, but may distort them or cause minor jumping during zoom changes.\n\nThis is recommended for tile sets.",
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "at",
+                                    "image"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "color": {
+                                      "$ref": "#/definitions/Colour4",
+                                      "description": "Line colour."
+                                    },
+                                    "name": {
+                                      "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                                      "type": "string"
+                                    },
+                                    "path": {
+                                      "description": "List of points to connect sequentially, defining the line.",
+                                      "items": {
+                                        "$ref": "#/definitions/Point"
+                                      },
+                                      "type": "array"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "at": {
+                                      "$ref": "#/definitions/Box",
+                                      "description": "Bounds of this box."
+                                    },
+                                    "borderColor": {
+                                      "$ref": "#/definitions/Colour3",
+                                      "description": "Border colour."
+                                    },
+                                    "color": {
+                                      "$ref": "#/definitions/Colour4",
+                                      "description": "Fill colour."
+                                    },
+                                    "name": {
+                                      "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                                      "type": "string"
+                                    },
+                                    "thickness": {
+                                      "description": "Border thickness.",
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "at"
+                                  ],
+                                  "type": "object"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "image",
+                          "name"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "associatedLayer": {
+                            "description": "Value for the `bg` property marker category that can be used to tie markers to a specific background.",
+                            "type": "string"
+                          },
+                          "at": {
+                            "$ref": "#/definitions/Point",
+                            "default": [
+                              0,
+                              0
+                            ],
+                            "description": "Starting position of the tile set."
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "overlays": {
+                            "default": [],
+                            "description": "List of overlays tied to this background.",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "at": {
+                                      "$ref": "#/definitions/Box",
+                                      "description": "Bounds to fit the image in. This is not relative to the owning background."
+                                    },
+                                    "image": {
+                                      "$ref": "#/definitions/Title",
+                                      "description": "Image file to use."
+                                    },
+                                    "name": {
+                                      "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                                      "type": "string"
+                                    },
+                                    "reduceGaps": {
+                                      "default": false,
+                                      "description": "Attempts to minimise gaps between multiple closely placed image overlays, but may distort them or cause minor jumping during zoom changes.\n\nThis is recommended for tile sets.",
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "at",
+                                    "image"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "color": {
+                                      "$ref": "#/definitions/Colour4",
+                                      "description": "Line colour."
+                                    },
+                                    "name": {
+                                      "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                                      "type": "string"
+                                    },
+                                    "path": {
+                                      "description": "List of points to connect sequentially, defining the line.",
+                                      "items": {
+                                        "$ref": "#/definitions/Point"
+                                      },
+                                      "type": "array"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "at": {
+                                      "$ref": "#/definitions/Box",
+                                      "description": "Bounds of this box."
+                                    },
+                                    "borderColor": {
+                                      "$ref": "#/definitions/Colour3",
+                                      "description": "Border colour."
+                                    },
+                                    "color": {
+                                      "$ref": "#/definitions/Colour4",
+                                      "description": "Fill colour."
+                                    },
+                                    "name": {
+                                      "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                                      "type": "string"
+                                    },
+                                    "thickness": {
+                                      "description": "Border thickness.",
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "at"
+                                  ],
+                                  "type": "object"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          },
+                          "tileSize": {
+                            "$ref": "#/definitions/Box",
+                            "description": "Size of an individual tile."
+                          },
+                          "tiles": {
+                            "description": "List of tiles.",
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "image": {
+                                  "$ref": "#/definitions/Title",
+                                  "description": "Image file to use."
+                                },
+                                "position": {
+                                  "anyOf": [
+                                    {
+                                      "$ref": "#/definitions/Point"
+                                    },
+                                    {
+                                      "type": "number"
+                                    }
+                                  ],
+                                  "description": "Position of the tile. 1 unit is one tile as big as the size specified."
+                                }
+                              },
+                              "required": [
+                                "position",
+                                "image"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "tileSize",
+                          "tiles"
+                        ],
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                },
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "associatedLayer": {
+                            "description": "Value for the `bg` property marker category that can be used to tie markers to a specific background.",
+                            "type": "string"
+                          },
+                          "at": {
+                            "$ref": "#/definitions/Box",
+                            "description": "Bounds to fit the image in."
+                          },
+                          "image": {
+                            "$ref": "#/definitions/Title",
+                            "description": "Image file to use."
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "overlays": {
+                            "default": [],
+                            "description": "List of overlays tied to this background.",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "at": {
+                                      "$ref": "#/definitions/Box",
+                                      "description": "Bounds to fit the image in. This is not relative to the owning background."
+                                    },
+                                    "image": {
+                                      "$ref": "#/definitions/Title",
+                                      "description": "Image file to use."
+                                    },
+                                    "name": {
+                                      "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                                      "type": "string"
+                                    },
+                                    "reduceGaps": {
+                                      "default": false,
+                                      "description": "Attempts to minimise gaps between multiple closely placed image overlays, but may distort them or cause minor jumping during zoom changes.\n\nThis is recommended for tile sets.",
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "at",
+                                    "image"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "color": {
+                                      "$ref": "#/definitions/Colour4",
+                                      "description": "Line colour."
+                                    },
+                                    "name": {
+                                      "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                                      "type": "string"
+                                    },
+                                    "path": {
+                                      "description": "List of points to connect sequentially, defining the line.",
+                                      "items": {
+                                        "$ref": "#/definitions/Point"
+                                      },
+                                      "type": "array"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "at": {
+                                      "$ref": "#/definitions/Box",
+                                      "description": "Bounds of this box."
+                                    },
+                                    "borderColor": {
+                                      "$ref": "#/definitions/Colour3",
+                                      "description": "Border colour."
+                                    },
+                                    "color": {
+                                      "$ref": "#/definitions/Colour4",
+                                      "description": "Fill colour."
+                                    },
+                                    "name": {
+                                      "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                                      "type": "string"
+                                    },
+                                    "thickness": {
+                                      "description": "Border thickness.",
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "at"
+                                  ],
+                                  "type": "object"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "image"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "associatedLayer": {
+                            "description": "Value for the `bg` property marker category that can be used to tie markers to a specific background.",
+                            "type": "string"
+                          },
+                          "at": {
+                            "$ref": "#/definitions/Point",
+                            "default": [
+                              0,
+                              0
+                            ],
+                            "description": "Starting position of the tile set."
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "overlays": {
+                            "default": [],
+                            "description": "List of overlays tied to this background.",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "at": {
+                                      "$ref": "#/definitions/Box",
+                                      "description": "Bounds to fit the image in. This is not relative to the owning background."
+                                    },
+                                    "image": {
+                                      "$ref": "#/definitions/Title",
+                                      "description": "Image file to use."
+                                    },
+                                    "name": {
+                                      "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                                      "type": "string"
+                                    },
+                                    "reduceGaps": {
+                                      "default": false,
+                                      "description": "Attempts to minimise gaps between multiple closely placed image overlays, but may distort them or cause minor jumping during zoom changes.\n\nThis is recommended for tile sets.",
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "at",
+                                    "image"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "color": {
+                                      "$ref": "#/definitions/Colour4",
+                                      "description": "Line colour."
+                                    },
+                                    "name": {
+                                      "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                                      "type": "string"
+                                    },
+                                    "path": {
+                                      "description": "List of points to connect sequentially, defining the line.",
+                                      "items": {
+                                        "$ref": "#/definitions/Point"
+                                      },
+                                      "type": "array"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "at": {
+                                      "$ref": "#/definitions/Box",
+                                      "description": "Bounds of this box."
+                                    },
+                                    "borderColor": {
+                                      "$ref": "#/definitions/Colour3",
+                                      "description": "Border colour."
+                                    },
+                                    "color": {
+                                      "$ref": "#/definitions/Colour4",
+                                      "description": "Fill colour."
+                                    },
+                                    "name": {
+                                      "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                                      "type": "string"
+                                    },
+                                    "thickness": {
+                                      "description": "Border thickness.",
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "at"
+                                  ],
+                                  "type": "object"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          },
+                          "tileSize": {
+                            "$ref": "#/definitions/Box",
+                            "description": "Size of an individual tile."
+                          },
+                          "tiles": {
+                            "description": "List of tiles.",
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "image": {
+                                  "$ref": "#/definitions/Title",
+                                  "description": "Image file to use."
+                                },
+                                "position": {
+                                  "anyOf": [
+                                    {
+                                      "$ref": "#/definitions/Point"
+                                    },
+                                    {
+                                      "type": "number"
+                                    }
+                                  ],
+                                  "description": "Position of the tile. 1 unit is one tile as big as the size specified."
+                                }
+                              },
+                              "required": [
+                                "position",
+                                "image"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "tileSize",
+                          "tiles"
+                        ],
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "maxItems": 1,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ],
+              "description": "List of background configurations."
+            },
+            "coordinateOrder": {
+              "default": "yx",
+              "deprecated": "since 0.16.11, to be removed in 0.17.0; use crs.order.",
+              "description": "Coordinate order that will be used in anonymous (arrays and not named keys) box or location specifications.",
+              "enum": [
+                "yx",
+                "latlon",
+                "xy",
+                "lonlat"
+              ],
+              "type": "string"
+            },
+            "crs": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Box"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "bottomRight": {
+                      "$ref": "#/definitions/Point",
+                      "default": [
+                        100,
+                        100
+                      ],
+                      "description": "Coordinates of the bottom-right corner of the map."
+                    },
+                    "order": {
+                      "default": "yx",
+                      "description": "Coordinate order that the data uses.",
+                      "enum": [
+                        "yx",
+                        "latlon",
+                        "xy",
+                        "lonlat"
+                      ],
+                      "type": "string"
+                    },
+                    "rotation": {
+                      "description": "Rotation angle.",
+                      "type": "number"
+                    },
+                    "topLeft": {
+                      "$ref": "#/definitions/Point",
+                      "default": [
+                        0,
+                        0
+                      ],
+                      "description": "Coordinates of the top-left corner of the map."
+                    }
+                  },
+                  "type": "object"
+                }
+              ],
+              "default": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100,
+                  100
+                ]
+              ],
+              "description": "Reference coordinate space. This also determines the origin point from which the system expands.\n\nIn most situations, this should be set to your preferred coordinate range.\n\nIf the top-left corner is placed \"deeper\" into the system than the bottom-right corner, the bottom-right corner will be used as the origin point, i.e. objects will spread from it. For example, this will be achieved by a top-left corner of [100, 100] and bottom-right of [0, 0]."
+            },
+            "custom": {
+              "description": "Custom data for gadgets, bots or other scripts.",
+              "type": "object"
+            },
+            "disclaimer": {
+              "description": "Optional text to be shown at the bottom of the filters panel.",
+              "type": "string"
+            },
+            "groups": {
+              "additionalProperties": {
+                "$ref": "#/definitions/MarkerGroup"
+              },
+              "description": "Marker group definitions.",
+              "type": "object"
+            },
+            "include": {
+              "default": [],
+              "description": "List of mix-ins that must be imported by the parser.",
+              "items": {
+                "$ref": "#/definitions/Title"
+              },
+              "type": "array"
+            },
+            "layers": {
+              "additionalProperties": {
+                "$ref": "#/definitions/MarkerLayer"
+              },
+              "description": "Marker category definitions.",
+              "type": "object"
+            },
+            "markers": {
+              "additionalProperties": {
+                "items": {
+                  "$ref": "#/definitions/Marker"
+                },
+                "type": "array"
+              },
+              "description": "A map of layer association strings to lists of markers.",
+              "type": "object"
+            },
+            "settings": {
+              "$ref": "#/definitions/MapSettings",
+              "description": "Behaviour settings."
+            }
+          },
+          "required": [
+            "backgrounds"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "MapBackground": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "associatedLayer": {
+              "description": "Value for the `bg` property marker category that can be used to tie markers to a specific background.",
+              "type": "string"
+            },
+            "at": {
+              "$ref": "#/definitions/Box",
+              "description": "Bounds to fit the image in."
+            },
+            "image": {
+              "$ref": "#/definitions/Title",
+              "description": "Image file to use."
+            },
+            "overlays": {
+              "default": [],
+              "description": "List of overlays tied to this background.",
+              "items": {
+                "anyOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "at": {
+                        "$ref": "#/definitions/Box",
+                        "description": "Bounds to fit the image in. This is not relative to the owning background."
+                      },
+                      "image": {
+                        "$ref": "#/definitions/Title",
+                        "description": "Image file to use."
+                      },
+                      "name": {
+                        "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                        "type": "string"
+                      },
+                      "reduceGaps": {
+                        "default": false,
+                        "description": "Attempts to minimise gaps between multiple closely placed image overlays, but may distort them or cause minor jumping during zoom changes.\n\nThis is recommended for tile sets.",
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "at",
+                      "image"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "$ref": "#/definitions/Colour4",
+                        "description": "Line colour."
+                      },
+                      "name": {
+                        "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                        "type": "string"
+                      },
+                      "path": {
+                        "description": "List of points to connect sequentially, defining the line.",
+                        "items": {
+                          "$ref": "#/definitions/Point"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "path"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "at": {
+                        "$ref": "#/definitions/Box",
+                        "description": "Bounds of this box."
+                      },
+                      "borderColor": {
+                        "$ref": "#/definitions/Colour3",
+                        "description": "Border colour."
+                      },
+                      "color": {
+                        "$ref": "#/definitions/Colour4",
+                        "description": "Fill colour."
+                      },
+                      "name": {
+                        "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                        "type": "string"
+                      },
+                      "thickness": {
+                        "description": "Border thickness.",
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "at"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "image"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "associatedLayer": {
+              "description": "Value for the `bg` property marker category that can be used to tie markers to a specific background.",
+              "type": "string"
+            },
+            "at": {
+              "$ref": "#/definitions/Point",
+              "default": [
+                0,
+                0
+              ],
+              "description": "Starting position of the tile set."
+            },
+            "overlays": {
+              "default": [],
+              "description": "List of overlays tied to this background.",
+              "items": {
+                "anyOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "at": {
+                        "$ref": "#/definitions/Box",
+                        "description": "Bounds to fit the image in. This is not relative to the owning background."
+                      },
+                      "image": {
+                        "$ref": "#/definitions/Title",
+                        "description": "Image file to use."
+                      },
+                      "name": {
+                        "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                        "type": "string"
+                      },
+                      "reduceGaps": {
+                        "default": false,
+                        "description": "Attempts to minimise gaps between multiple closely placed image overlays, but may distort them or cause minor jumping during zoom changes.\n\nThis is recommended for tile sets.",
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "at",
+                      "image"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "$ref": "#/definitions/Colour4",
+                        "description": "Line colour."
+                      },
+                      "name": {
+                        "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                        "type": "string"
+                      },
+                      "path": {
+                        "description": "List of points to connect sequentially, defining the line.",
+                        "items": {
+                          "$ref": "#/definitions/Point"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "path"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "at": {
+                        "$ref": "#/definitions/Box",
+                        "description": "Bounds of this box."
+                      },
+                      "borderColor": {
+                        "$ref": "#/definitions/Colour3",
+                        "description": "Border colour."
+                      },
+                      "color": {
+                        "$ref": "#/definitions/Colour4",
+                        "description": "Fill colour."
+                      },
+                      "name": {
+                        "description": "Name to show on a tooltip. If unspecified, the tooltip will not be shown.",
+                        "type": "string"
+                      },
+                      "thickness": {
+                        "description": "Border thickness.",
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "at"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            "tileSize": {
+              "$ref": "#/definitions/Box",
+              "description": "Size of an individual tile."
+            },
+            "tiles": {
+              "description": "List of tiles.",
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "image": {
+                    "$ref": "#/definitions/Title",
+                    "description": "Image file to use."
+                  },
+                  "position": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/definitions/Point"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "description": "Position of the tile. 1 unit is one tile as big as the size specified."
+                  }
+                },
+                "required": [
+                  "position",
+                  "image"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "tileSize",
+            "tiles"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "MapSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "allowFullscreen": {
+          "default": true,
+          "description": "Whether full-screen toggle will be shown to the user on this map.",
+          "type": "boolean"
+        },
+        "backdropColor": {
+          "$ref": "#/definitions/Colour3",
+          "default": "undefined",
+          "description": "The backdrop colour, i.e. the one filling areas with no background image over them."
+        },
+        "enableSearch": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "const": "tabberWide",
+              "type": "string"
+            }
+          ],
+          "default": false,
+          "description": "Whether marker search will be enabled for this map."
+        },
+        "enableTooltipPopups": {
+          "default": false,
+          "description": "Whether simply moving mouse cursor over a marker should cause its popup to become visible.\n\nSuch popup will be partially translucent. The user still has to click on the marker for the address bar to update with a permanent link.",
+          "type": "boolean"
+        },
+        "hideLegend": {
+          "default": false,
+          "description": "Forces the legend (collectible checklists and marker filters) to not be loaded on this map.",
+          "type": "boolean"
+        },
+        "iconRenderer": {
+          "default": "auto",
+          "description": "Renderer preference for graphical icons using images from this wiki (not circular icons or pins).\n\n- DOM renderer provides best reactivity for a small data set (roughly 500 icons), but performance degrades with   more markers. However, it comes with animation support for GIFs.\n- Canvas renderer provides best performance at a cost of zoom update latency, and supports only static icons. This works   best for bigger data sets (above 500 icons), and is automatically enabled for such sets (if this option is set to   'auto').\n\nPins always use the DOM renderer.",
+          "enum": [
+            "auto",
+            "DOM",
+            "canvas"
+          ],
+          "type": "string"
+        },
+        "interactionModel": {
+          "default": "keybinds",
+          "description": "Changes interaction delay model. Keybinds require extra keys to be held to zoom in (CTRL/Super), sleep is primarily time-based.",
+          "enum": [
+            "keybinds",
+            "sleep"
+          ],
+          "type": "string"
+        },
+        "leaflet": {
+          "additionalProperties": false,
+          "default": null,
+          "description": "Leaflet configuration.\n\nCheck https://leafletjs.com/reference.html#map-option for reference. Some options are not supported, and some are custom.",
+          "properties": {
+            "autoMinZoom": {
+              "type": "boolean"
+            },
+            "autoMinZoomAbsolute": {
+              "type": "number"
+            },
+            "bounceAtZoomLimits": {
+              "type": "boolean"
+            },
+            "boxZoom": {
+              "type": "boolean"
+            },
+            "closePopupOnClick": {
+              "type": "boolean"
+            },
+            "doubleClickZoom": {
+              "type": "boolean"
+            },
+            "dragging": {
+              "type": "boolean"
+            },
+            "easeLinearity": {
+              "type": "number"
+            },
+            "inertia": {
+              "type": "boolean"
+            },
+            "inertiaDeceleration": {
+              "type": "number"
+            },
+            "inertiaMaxSpeed": {
+              "type": "number"
+            },
+            "interactionControl": {
+              "type": "boolean"
+            },
+            "keyboard": {
+              "type": "boolean"
+            },
+            "keyboardPanDelta": {
+              "type": "number"
+            },
+            "markerZoomAnimation": {
+              "type": "boolean"
+            },
+            "markerZoomScaleFactor": {
+              "type": "number"
+            },
+            "maxBoundsViscosity": {
+              "type": "number"
+            },
+            "rendererSettings": {
+              "additionalProperties": false,
+              "properties": {
+                "padding": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "padding"
+              ],
+              "type": "object"
+            },
+            "scrollWheelZoom": {
+              "type": "boolean"
+            },
+            "shouldScaleMarkers": {
+              "type": "boolean"
+            },
+            "tapHold": {
+              "type": "boolean"
+            },
+            "tapTolerance": {
+              "type": "number"
+            },
+            "touchZoom": {
+              "type": "boolean"
+            },
+            "uriPopupZoom": {
+              "type": "number"
+            },
+            "wheelDebounceTime": {
+              "type": "number"
+            },
+            "wheelPxPerZoomLevel": {
+              "type": "number"
+            },
+            "zoomAnimation": {
+              "type": "boolean"
+            },
+            "zoomAnimationThreshold": {
+              "type": "number"
+            },
+            "zoomControl": {
+              "type": "boolean"
+            },
+            "zoomDelta": {
+              "type": "number"
+            },
+            "zoomSnap": {
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "requireCustomMarkerIDs": {
+          "default": false,
+          "description": "Makes data validation disallow automatically generated marker IDs - the `id` property will need to be specified for each marker manually.\n\nThese identifiers are used for persistent links and collectible progress tracking. By default, group and layers the marker is attached to along with its location on map are used to generate the identifier.",
+          "type": "boolean"
+        },
+        "showCoordinates": {
+          "default": true,
+          "description": "Whether coordinates from under the mouse cursor will be shown on this map in the bottom-left corner.",
+          "type": "boolean"
+        },
+        "sortChecklistsBy": {
+          "default": "groupDeclaration",
+          "description": "Specifies marker group checklist sort order.\n\n'groupDeclaration': Follows the order in which marker groups are declared in source data. 'amount':           Follows the number of markers inside each group.",
+          "enum": [
+            "groupDeclaration",
+            "amount"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Marker": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "article": {
+              "description": "Optional article title this marker will link to in its popup.",
+              "type": "string"
+            },
+            "canSearchFor": {
+              "default": true,
+              "description": "Whether this marker will be included in marker search.",
+              "type": "boolean"
+            },
+            "description": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "description": "Description of this marker to be shown in its popup. Wikitext is permitted. If an array is given, all elements are joined with new lines.\n\nHowever, this property does not always go through the wikitext parser for performance reasons. See `isWikitext` property for more information."
+            },
+            "icon": {
+              "$ref": "#/definitions/Title",
+              "description": "Optional icon override. Only allowed if the group this marker is in is configured to show image icons."
+            },
+            "id": {
+              "description": "Identifier to use for permanent links and collectibles.\n\nIf unspecified, one is generated automatically based on the group and layers this marker is attached to and its location.",
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "image": {
+              "$ref": "#/definitions/Title",
+              "description": "Optional image file that will be displayed in this marker's popup."
+            },
+            "isWikitext": {
+              "description": "If true, forces wikitext parsing of the label and description. If false, prevents them from being parsed.\n\nIf unspecified (default), the choice is left to the software, which will determine if the two properties likely contain wikitext.\n\nThis should not be adjusted manually unless detection fails.",
+              "type": "boolean"
+            },
+            "lat": {
+              "type": "number"
+            },
+            "lon": {
+              "type": "number"
+            },
+            "name": {
+              "description": "Name of this marker to show in its popup. Wikitext is permitted. If not given, defaults to marker group name.\n\nHowever, this property does not always go through the wikitext parser for performance reasons. See `isWikitext` property for more information.",
+              "type": "string"
+            },
+            "searchKeywords": {
+              "anyOf": [
+                {
+                  "items": {
+                    "items": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "maxItems": 2,
+                    "minItems": 2,
+                    "type": "array"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "description": "Keywords that represent this marker in marker search. This should be a list of keywords and their relevancy weights.\n\nUnless overridden, this composes of the label and description weighed at 1.5 and 0.75 respectively.",
+              "examples": [
+                [
+                  [
+                    "Test",
+                    2
+                  ],
+                  [
+                    "marker",
+                    1
+                  ]
+                ]
+              ]
+            }
+          },
+          "required": [
+            "lat",
+            "lon"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "article": {
+              "description": "Optional article title this marker will link to in its popup.",
+              "type": "string"
+            },
+            "canSearchFor": {
+              "default": true,
+              "description": "Whether this marker will be included in marker search.",
+              "type": "boolean"
+            },
+            "description": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "description": "Description of this marker to be shown in its popup. Wikitext is permitted. If an array is given, all elements are joined with new lines.\n\nHowever, this property does not always go through the wikitext parser for performance reasons. See `isWikitext` property for more information."
+            },
+            "icon": {
+              "$ref": "#/definitions/Title",
+              "description": "Optional icon override. Only allowed if the group this marker is in is configured to show image icons."
+            },
+            "id": {
+              "description": "Identifier to use for permanent links and collectibles.\n\nIf unspecified, one is generated automatically based on the group and layers this marker is attached to and its location.",
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "image": {
+              "$ref": "#/definitions/Title",
+              "description": "Optional image file that will be displayed in this marker's popup."
+            },
+            "isWikitext": {
+              "description": "If true, forces wikitext parsing of the label and description. If false, prevents them from being parsed.\n\nIf unspecified (default), the choice is left to the software, which will determine if the two properties likely contain wikitext.\n\nThis should not be adjusted manually unless detection fails.",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "Name of this marker to show in its popup. Wikitext is permitted. If not given, defaults to marker group name.\n\nHowever, this property does not always go through the wikitext parser for performance reasons. See `isWikitext` property for more information.",
+              "type": "string"
+            },
+            "searchKeywords": {
+              "anyOf": [
+                {
+                  "items": {
+                    "items": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "maxItems": 2,
+                    "minItems": 2,
+                    "type": "array"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "description": "Keywords that represent this marker in marker search. This should be a list of keywords and their relevancy weights.\n\nUnless overridden, this composes of the label and description weighed at 1.5 and 0.75 respectively.",
+              "examples": [
+                [
+                  [
+                    "Test",
+                    2
+                  ],
+                  [
+                    "marker",
+                    1
+                  ]
+                ]
+              ]
+            },
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "x",
+            "y"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "MarkerGroup": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "article": {
+              "description": "Optional article title all markers in this group should link to.",
+              "type": "string"
+            },
+            "autoNumberInChecklist": {
+              "default": false,
+              "description": "Displays ordering numbers next to each marker in the checklist, if collectibles are enabled.",
+              "type": "boolean"
+            },
+            "canSearchFor": {
+              "default": true,
+              "description": "Whether this group is included in marker search.",
+              "type": "boolean"
+            },
+            "description": {
+              "description": "Description text to show in the filters panel.",
+              "type": "string"
+            },
+            "extraMinZoomSize": {
+              "type": "number"
+            },
+            "fillColor": {
+              "$ref": "#/definitions/Colour3"
+            },
+            "icon": {
+              "$ref": "#/definitions/Title",
+              "description": "Icon to display in the legend next to this group's name."
+            },
+            "isCollectible": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "const": "individual",
+                  "type": "string"
+                },
+                {
+                  "const": "group",
+                  "type": "string"
+                },
+                {
+                  "const": "globalGroup",
+                  "type": "string"
+                }
+              ],
+              "default": false,
+              "description": "Configures the collectibles feature, which allows users to mark markers in this group as collected/visited:\n\n- false: Disabled.\n- true or 'individual': Collected status is tracked per each individual marker only on this map.\n- 'group': Collected status is tracked for the entire group only on this map (one tick checks the whole group off).\n- 'globalGroup': Collected status is tracked for every group that has the same ID as this one globally (on all maps on   this wiki)."
+            },
+            "isDefault": {
+              "default": true,
+              "description": "Whether this group is visible by default (ticked in the legend) when the map is loaded.",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "User-friendly name.",
+              "type": "string"
+            },
+            "size": {
+              "default": 5,
+              "type": "number"
+            },
+            "strokeColor": {
+              "$ref": "#/definitions/Colour3"
+            },
+            "strokeWidth": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "autoNumberInChecklist",
+            "canSearchFor",
+            "fillColor",
+            "isCollectible",
+            "isDefault",
+            "name",
+            "size"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "article": {
+              "description": "Optional article title all markers in this group should link to.",
+              "type": "string"
+            },
+            "autoNumberInChecklist": {
+              "default": false,
+              "description": "Displays ordering numbers next to each marker in the checklist, if collectibles are enabled.",
+              "type": "boolean"
+            },
+            "canSearchFor": {
+              "default": true,
+              "description": "Whether this group is included in marker search.",
+              "type": "boolean"
+            },
+            "description": {
+              "description": "Description text to show in the filters panel.",
+              "type": "string"
+            },
+            "icon": {
+              "$ref": "#/definitions/Title",
+              "description": "Icon to display in the legend next to this group's name."
+            },
+            "isCollectible": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "const": "individual",
+                  "type": "string"
+                },
+                {
+                  "const": "group",
+                  "type": "string"
+                },
+                {
+                  "const": "globalGroup",
+                  "type": "string"
+                }
+              ],
+              "default": false,
+              "description": "Configures the collectibles feature, which allows users to mark markers in this group as collected/visited:\n\n- false: Disabled.\n- true or 'individual': Collected status is tracked per each individual marker only on this map.\n- 'group': Collected status is tracked for the entire group only on this map (one tick checks the whole group off).\n- 'globalGroup': Collected status is tracked for every group that has the same ID as this one globally (on all maps on   this wiki)."
+            },
+            "isDefault": {
+              "default": true,
+              "description": "Whether this group is visible by default (ticked in the legend) when the map is loaded.",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "User-friendly name.",
+              "type": "string"
+            },
+            "size": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "$ref": "#/definitions/Point"
+                }
+              ],
+              "default": [
+                32,
+                32
+              ]
+            }
+          },
+          "required": [
+            "autoNumberInChecklist",
+            "canSearchFor",
+            "icon",
+            "isCollectible",
+            "isDefault",
+            "name",
+            "size"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "article": {
+              "description": "Optional article title all markers in this group should link to.",
+              "type": "string"
+            },
+            "autoNumberInChecklist": {
+              "default": false,
+              "description": "Displays ordering numbers next to each marker in the checklist, if collectibles are enabled.",
+              "type": "boolean"
+            },
+            "canSearchFor": {
+              "default": true,
+              "description": "Whether this group is included in marker search.",
+              "type": "boolean"
+            },
+            "description": {
+              "description": "Description text to show in the filters panel.",
+              "type": "string"
+            },
+            "icon": {
+              "$ref": "#/definitions/Title",
+              "description": "Icon to display in the legend next to this group's name."
+            },
+            "isCollectible": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "const": "individual",
+                  "type": "string"
+                },
+                {
+                  "const": "group",
+                  "type": "string"
+                },
+                {
+                  "const": "globalGroup",
+                  "type": "string"
+                }
+              ],
+              "default": false,
+              "description": "Configures the collectibles feature, which allows users to mark markers in this group as collected/visited:\n\n- false: Disabled.\n- true or 'individual': Collected status is tracked per each individual marker only on this map.\n- 'group': Collected status is tracked for the entire group only on this map (one tick checks the whole group off).\n- 'globalGroup': Collected status is tracked for every group that has the same ID as this one globally (on all maps on   this wiki)."
+            },
+            "isDefault": {
+              "default": true,
+              "description": "Whether this group is visible by default (ticked in the legend) when the map is loaded.",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "User-friendly name.",
+              "type": "string"
+            },
+            "pinColor": {
+              "$ref": "#/definitions/Colour3"
+            },
+            "size": {
+              "default": 32,
+              "type": "number"
+            },
+            "strokeColor": {
+              "$ref": "#/definitions/Colour3"
+            },
+            "strokeWidth": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "autoNumberInChecklist",
+            "canSearchFor",
+            "isCollectible",
+            "isDefault",
+            "name",
+            "pinColor",
+            "size"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "MarkerLayer": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "description": "User-friendly name. Currently unused.",
+          "type": "string"
+        },
+        "overrideIcon": {
+          "$ref": "#/definitions/Title",
+          "description": "Icon file to override makrer icons with. Does not affect pins or circles."
+        },
+        "subtleText": {
+          "description": "Text to display in the location row of markers' popups.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Point": {
+      "items": {
+        "type": "number"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "Title": {
+      "pattern": "[A-Za-z0-9_-]+",
+      "type": "string"
+    }
+  }
+}
