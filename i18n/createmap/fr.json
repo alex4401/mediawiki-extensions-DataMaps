@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"BlueCamille",
 			"Chatmaigre888"
 		]
 	},
@@ -23,5 +24,6 @@
 	"datamap-vec-toggle-search": "Activer la recherche de marqueurs",
 	"datamap-vec-toggle-search-tabber": "Partager les données de recherche dans un tableau",
 	"datamap-vec-toggle-uid-requirement": "Nécessite une ID de marqueur unique",
-	"datamap-vec-submit": "Poursuivre"
+	"datamap-vec-submit": "Poursuivre",
+	"datamap-vec-example-group-id": "exemple"
 }

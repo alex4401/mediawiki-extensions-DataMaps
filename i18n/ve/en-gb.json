@@ -1,0 +1,8 @@
+{
+	"@metadata": {
+		"authors": [
+			"Alex4401"
+		]
+	},
+	"datamap-ve-to-load": "Message shown over the map while visual editor's scripts are not loaded yet."
+}
