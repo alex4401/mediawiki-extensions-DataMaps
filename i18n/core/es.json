@@ -70,7 +70,6 @@
 	"datamap-popup-marker-link-get": "Obtener un enlace compartible",
 	"datamap-popup-marker-link-copied": "Enlace copiado a tu portapapeles.",
 	"datamap-coordinate-control-text": "lat $1, lon $2",
-	"datamap-coordinate-control-text-xy": "x: $2, y: $1",
 	"datamap-control-zoom-in": "Acercar zoom",
 	"datamap-control-zoom-out": "Alejar zoom",
 	"datamap-control-toggle-legend": "Pulsa para expandir la leyenda y activar/desactivar marcadores",

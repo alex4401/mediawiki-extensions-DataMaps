@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Amire80"
+		]
+	},
+	"datamap-ve-to-load": "Message shown over the map while visual editor's scripts are not loaded yet.",
+	"datamap-ve-workflow-marker-field-x": "{{optional}}",
+	"datamap-ve-workflow-marker-field-y": "{{optional}}"
+}

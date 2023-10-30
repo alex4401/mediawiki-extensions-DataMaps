@@ -63,7 +63,6 @@
 	"datamap-popup-marker-link-get": "รับลิงก์สำหรับแชร์",
 	"datamap-popup-marker-link-copied": "คัดลอกลิงก์ไปยังคลิปบอร์ดแล้ว",
 	"datamap-coordinate-control-text": "ละติจูด $1, ลองจิจูด $2",
-	"datamap-coordinate-control-text-xy": "x: $2, y: $1",
 	"datamap-control-zoom-in": "ซูมเข้า",
 	"datamap-control-zoom-out": "ซูมออก",
 	"datamap-control-toggle-legend": "แตะเพื่อขยายคำอธิบายในการสลับเครื่องหมาย",

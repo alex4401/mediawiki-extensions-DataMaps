@@ -1,0 +1,29 @@
+{
+	"@metadata": {
+		"authors": [
+			"Rulebased"
+		]
+	},
+	"datamap-ve-to-load": "لطفاً تا بارگذاری ویرایشگر بصری منتظر بمانید...",
+	"datamap-ve-experimental": "نسخه ویرایش‌گر بصری نقشه همچنان آزمایشی است",
+	"datamap-ve-experimental-close": "بستن",
+	"datamap-ve-edit-source-action": "ویرایش منبع",
+	"tag-datamaps-visualeditor": "ویرایش بصری نقشه",
+	"datamap-ve-background-default-name": "بدون عنوان",
+	"datamap-ve-generic-cancel": "لغو",
+	"datamap-ve-panel-msettings-field-coordorder": "دستگاه مختصات",
+	"datamap-ve-panel-msettings-field-coordorder-latlon": "ابتدا عرض جغرافیایی و سپس طول جغرافیایی",
+	"datamap-ve-panel-msettings-field-search-disabled": "غیرفعال",
+	"datamap-ve-panel-msettings-field-search-enabled": "فعال‌شده(تنها برای این نقشه)",
+	"datamap-ve-panel-msettings-field-backdrop-colour": "رنگ پس‌زمینه",
+	"datamap-ve-workflow-marker-create": "ایجاد",
+	"datamap-ve-workflow-marker-edit": "ذخیره",
+	"datamap-ve-workflow-marker-panel-setup": "روی نقشه",
+	"datamap-ve-workflow-marker-field-lon": "طول جغرافیایی",
+	"datamap-ve-workflow-marker-field-group": "گروه",
+	"datamap-ve-workflow-marker-field-name": "عنوان",
+	"datamap-ve-workflow-marker-field-image": "تصویر کوچک",
+	"datamap-ve-workflow-save": "تغییرات خود را ذخیره کنید",
+	"datamap-ve-workflow-save-submit": "انتشار تغییرات",
+	"datamap-ve-workflow-save-summary": "خلاصه ویرایش"
+}

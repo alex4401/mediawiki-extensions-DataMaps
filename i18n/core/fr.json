@@ -74,7 +74,6 @@
 	"datamap-popup-marker-link-get": "Obtenir un lien partageable",
 	"datamap-popup-marker-link-copied": "Lien copié dans votre presse-papiers.",
 	"datamap-coordinate-control-text": "lat $1, lon $2",
-	"datamap-coordinate-control-text-xy": "x: $2, y: $1",
 	"datamap-control-zoom-in": "Agrandir la vue",
 	"datamap-control-zoom-out": "Rétrécir la vue",
 	"datamap-control-toggle-legend": "Cliquer pour développer la légende et régler les marqueurs",
