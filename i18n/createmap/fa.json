@@ -1,0 +1,19 @@
+{
+	"@metadata": {
+		"authors": [
+			"Rulebased"
+		]
+	},
+	"datamap-vec-title": "ایجاد یک نقشه",
+	"datamap-ve-skip": "پرش از این مرحله",
+	"datamap-vec-crs-top-left": "بالا-چپ",
+	"datamap-vec-crs-bottom-left": "پایین-چپ",
+	"datamap-vec-select-crs": "دستگاه مختصات",
+	"datamap-vec-crs-percent": "درصد (0-100%)",
+	"datamap-vec-select-background": "تصویر زمینه",
+	"datamap-vec-note-image-size": "اندازه : $ 1× $2",
+	"datamap-vec-error-poor-file-type": "این نوع فایل ممکن است عملکرد ضعیفی در شبکه‌های محدود داشته باشد. حتی‌الامکان از فایل‌های JPEG استفاده کنید.",
+	"datamap-vec-submit": "ادامه",
+	"datamap-vec-example-group-id": "نمونه",
+	"datamap-vec-example-group-name": "گروه نمونه"
+}
