@@ -1,0 +1,30 @@
+{
+	"@metadata": {
+		"authors": [
+			"Jeeputer",
+			"Rulebased"
+		]
+	},
+	"datamap-desc": "امکان جاسازی نقشه‌های تعاملی را در صفحات ویکی مهیا می‌کند.",
+	"content-model-datamap": "نقشه تعاملی داده‌ها",
+	"datamap-doc-page-header": "'''این صفحه مستندات [[$1]] است'''",
+	"datamap-mapsrcinfo-heading-errors": "'''خطاها:''' $1",
+	"datamap-mapsrcinfo-heading-warnings": "'''هشدارها:''' $1",
+	"datamap-error-validate-invalid-json": "این یک سند JSON معتبر نیست.",
+	"datamap-error-pf-max-width-invalid": "بیشینه عرض جاسازی نقشه باید یک عدد صحیح بالاتر از صفر باشد.",
+	"datamap-javascript-required": "جاوا اسکریپت برای دیدن این نقشه باید فعال باشد. اگر نقشه را در پایین مشاهده نمی‌کنید احتمالاً جاوا اسکریپت مرورگرتان غیر فعال است.",
+	"datamap-loading-js": "در حال بارگذاری اسکریپت‌ها",
+	"datamap-toggle-hide-all": "پنهان‌سازی همه",
+	"datamap-layer-control": "تغییر وضعیت",
+	"datamap-interact-touch": "از دو انگشت برای حرکت نقشه استفاده کنید",
+	"datamap-interact-scroll": "از کلید کنترل و اسکرول ماوس برای بزرگ‌نمایی نقشه استفاده کنید.",
+	"datamap-interact-scroll-mac": "از کلید ⌘ + اسکرول ماوس برای بزرگ‌نمایی نقشه استفاده کنید",
+	"datamap-layer-cave": "غارها",
+	"datamap-popup-related-article": "بارگیری بیشتر",
+	"datamap-popup-marker-link-copied": "لینک در کلیپ‌برد کپی شد.",
+	"datamap-control-zoom-in": "بزرگ‌نمایی",
+	"datamap-control-zoom-out": "کوچک‌نمایی",
+	"datamap-control-reset-view": "بازگردانی نمایش پیش‌فرض",
+	"datamap-control-edit": "ویرایش داده‌های نقشه",
+	"datamap-control-fullscreen": "فعال/غیرفعال‌سازی نمایش تمام‌صفحه"
+}
