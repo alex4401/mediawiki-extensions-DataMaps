@@ -117,6 +117,11 @@ class MarkerProcessor {
             $slots['desc'] = $this->parseMultilineText( $marker, $marker->getDescription() );
         }
 
+        // Scale
+        if ( $marker->getScale() !== 1.0 ) {
+            $slots['scale'] = $marker->getScale();
+        }
+
         // Icon override
         if ( $marker->getCustomIcon() !== null ) {
             // TODO: needs to be group aware so size can be chosen properly

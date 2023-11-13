@@ -674,19 +674,24 @@ class DataMap extends EventEmitter {
 
         const instance = /** @type {DataMaps.ApiMarkerInstance} */ ( uncheckedInstance ),
             group = this.config.groups[ layers[ 0 ] ],
-            position = this.translatePoint( instance );
+            position = this.translatePoint( instance ),
+            sizeScale = instance[ 2 ].scale;
 
         // Construct the marker
         let /** @type {LeafletModule.AnyMarker|undefined} */ leafletMarker;
         if ( 'markerIcon' in group || 'pinColor' in group ) {
             // Fancy icon marker
+            const scaledSize = sizeScale
+                ? /** @type {LeafletModule.PointTuple} */ ( [ group.size[ 0 ] * sizeScale, group.size[ 1 ] * sizeScale ] )
+                : group.size;
+
             const shouldUseCanvas = !( 'pinColor' in group ) && this.shouldRenderIconsOnCanvas(),
                 Cls = shouldUseCanvas ? Leaflet.CanvasIconMarker : Leaflet.Marker,
                 icon = (
                     'markerIcon' in group && instance[ 2 ].icon
                         ? new Leaflet.Icon( {
                             iconUrl: instance[ 2 ].icon,
-                            iconSize: group.size,
+                            iconSize: scaledSize,
                             useWithCanvas: this.shouldRenderIconsOnCanvas()
                         } )
                         : this.getIconFromLayers( layers )
@@ -698,7 +703,7 @@ class DataMap extends EventEmitter {
             // Circular marker
             const Cls = Leaflet.CircleMarker,
                 markerOptions = {
-                    radius: group.size / 2,
+                    radius: ( sizeScale ? group.size * sizeScale : group.size ) / 2,
                     zoomScaleFactor: group.zoomScaleFactor,
                     fillColor: group.fillColor,
                     fillOpacity: 0.7,
