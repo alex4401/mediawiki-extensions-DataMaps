@@ -43,6 +43,16 @@ class MarkerSpec extends DataModel {
     }
 
     /**
+     * Returns marker's size scale.
+     *
+     * @since 0.16.14
+     * @return float
+     */
+    public function getScale(): float {
+        return $this->raw->scale ?? 1;
+    }
+
+    /**
      * Returns whether the label and description should be treated as wikitext as indicated by the data.
      *
      * If null, leaves the decision to MarkerProcessor.
@@ -116,6 +126,10 @@ class MarkerSpec extends DataModel {
             'name' => 'description',
             'type' => [ DataModel::TYPE_ARRAY, DataModel::TYPE_STRING ],
             'itemType' => DataModel::TYPE_STRING
+        ] );
+        $this->checkField( $status, [
+            'name' => 'scale',
+            'type' => DataModel::TYPE_NUMBER
         ] );
         $this->checkField( $status, [
             'name' => 'icon',

@@ -20,6 +20,21 @@ export type Marker = (
     name: string;
 
     /**
+     * Optional icon override. Only allowed if the group this marker is in is configured to show image icons.
+     *
+     * @since 0.16.4
+     */
+    icon: Title;
+
+    /**
+     * Optional icon scale.
+     *
+     * @default 1.0
+     * @since 0.16.14
+     */
+    scale?: number;
+
+    /**
      * Description of this marker to be shown in its popup. Wikitext is permitted. If an array is given, all elements are joined
      * with new lines.
      *
@@ -37,13 +52,6 @@ export type Marker = (
      * This should not be adjusted manually unless detection fails.
      */
     isWikitext?: boolean;
-
-    /**
-     * Optional icon override. Only allowed if the group this marker is in is configured to show image icons.
-     *
-     * @since 0.16.4
-     */
-    icon: Title;
 
     /**
      * Optional image file that will be displayed in this marker's popup.
