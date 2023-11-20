@@ -25,7 +25,7 @@
 	"datamap-error-deprecated-schema-version": "Эн һазрин зург деерк схемин ясвр сольгдсн болад цааран $1-д демҗгдшго. [https://github.com/alex4401/mediawiki-extensions-DataMaps өргдклин бәрмт бичгиг] шалһҗ, өггдлиг шин схемин хүвлвр болһн шинрүлтн ($2).",
 	"datamap-error-validate-unexpected-fields": "$2: $1 бүтцәс эс медгдх талвр(муд) олдв.",
 	"datamap-error-validate-field-no-value": "$1 бүтцин <code>$2</code> талварт утх шаардлһта.",
-	"datamap-error-validate-field-required": "$1 бүтцд <code>$2</code> талвр шаардлһта. $3",
+	"datamap-error-validate-field-required": "$1 бүтцд <code>$2</code> талвр шаардлһта. $2",
 	"datamap-error-validate-field-required-alt": "$1 бүтцд <code>$2</code> талвр эс гиҗ талдан хүвлвр шаардлһта. $3",
 	"datamap-error-validate-wrong-field-type": "<code>$2</code> талврнь $1 бүтцин хүвд буру утхта бәәнә. $3",
 	"datamap-error-validate-wrong-item-type": "<code>$2</code> массивын элементнь $1 бүтцин хүвд буру утхта бәәнә. $3",
