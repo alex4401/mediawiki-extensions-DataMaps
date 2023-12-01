@@ -1,8 +1,9 @@
 const MapStorage = require( './MapStorage.js' ),
-    { MapFlags, MarkerGroupFlags, CRSOrigin, CoordinateDisplayStyle } = require( './enums.js' ),
+    { MapFlags, MarkerGroupFlags, CoordinateDisplayStyle } = require( './enums.js' ),
     MarkerLayerManager = require( './MarkerLayerManager.js' ),
     MarkerPopup = require( './MarkerPopup.js' ),
     MarkerStreamingManager = require( './MarkerStreamingManager.js' ),
+    CoordinateSystem = require( './CoordinateSystem.js' ),
     Controls = require( './controls.js' ),
     LegendTabber = require( './legend/LegendTabber.js' ),
     MarkerFilteringPanel = require( './legend/MarkerFilteringPanel.js' ),
@@ -160,30 +161,9 @@ class DataMap extends EventEmitter {
         this._setUpUriMarkerHandler();
 
         /**
-         * Coordinate origin.
-         *
-         * @type {DataMaps.CoordinateOrigin}
+         * Coordinate system specification.
          */
-        this.crsOrigin = ( this.config.crs[ 0 ][ 0 ] < this.config.crs[ 1 ][ 0 ]
-            && this.config.crs[ 0 ][ 1 ] < this.config.crs[ 1 ][ 1 ] ) ? CRSOrigin.TopLeft : CRSOrigin.BottomLeft;
-        /**
-         * Coordinate system rotation.
-         *
-         * @type {number}
-         */
-        this._crsAngle = this.config.cRot || 0;
-        this._crsRotS = Math.sin( -this._crsAngle );
-        this._crsRotC = Math.cos( -this._crsAngle );
-        this._crsRotSInv = Math.sin( this._crsAngle );
-        this._crsRotCInv = Math.cos( this._crsAngle );
-        // Y axis is authoritative, this is really just a cosmetic choice influenced by ARK (latitude first). X doesn't need to
-        // be mapped on a separate scale from Y, unless we want them to always be squares.
-        /**
-         * Coordinate scale value. Prefer `translateBox` and `translatePoint` over manual calculations.
-         *
-         * @type {number}
-         */
-        this.crsScaleX = this.crsScaleY = 100 / Math.max( this.config.crs[ 0 ][ 0 ], this.config.crs[ 1 ][ 0 ] );
+        this.crs = new CoordinateSystem( this.config.crs, this.config.cRot );
 
         // Force the IconRenderer_Canvas flag if dmfullcanvas in the URL
         if ( Util.getQueryParameter( 'dmfullcanvas' ) ) {
@@ -377,79 +357,6 @@ class DataMap extends EventEmitter {
 
 
     /**
-     * Maps a point from map's coordinate reference system specified by the server, to the universal space [ 0 0 100 100 ].
-     * This respects CRS rotation.
-     *
-     * This is non-destructive, and clones the input.
-     *
-     * @param {DataMaps.PointTupleRepr} point Array with two number elements: X and Y coordinates.
-     * @return {LeafletModule.PointTuple} New point in the universal space.
-     */
-    translatePoint( point ) {
-        const
-            y = (
-                this.crsOrigin === CRSOrigin.TopLeft ? ( this.config.crs[ 1 ][ 0 ] - point[ 0 ] ) : point[ 0 ]
-            ) * this.crsScaleY,
-            x = point[ 1 ] * this.crsScaleX;
-        return [ x * this._crsRotS + y * this._crsRotC, x * this._crsRotC - y * this._crsRotS ];
-    }
-
-
-    /**
-     * Maps a box from map's coordinate reference system specified by the server, to the universal space [ 0 0 100 100 ].
-     * This does not respect CRS rotation. Consumers must handle it on their own.
-     *
-     * This is non-destructive, and clones the input.
-     *
-     * @param {LeafletModule.LatLngBoundsTuple} box
-     * @return {LeafletModule.LatLngBoundsTuple} New box in the universal space.
-     */
-    translateBox( box ) {
-        const
-            sY = (
-                this.crsOrigin === CRSOrigin.TopLeft ? ( this.config.crs[ 1 ][ 0 ] - box[ 0 ][ 0 ] ) : box[ 0 ][ 0 ]
-            ) * this.crsScaleY,
-            sX = box[ 0 ][ 1 ] * this.crsScaleX,
-            eY = (
-                this.crsOrigin === CRSOrigin.TopLeft ? ( this.config.crs[ 1 ][ 0 ] - box[ 1 ][ 0 ] ) : box[ 1 ][ 0 ]
-            ) * this.crsScaleY,
-            eX = box[ 1 ][ 1 ] * this.crsScaleX;
-        return [
-            [ sY, sX ],
-            [ eY, eX ]
-        ];
-    }
-
-
-    /**
-     * @param {LeafletModule.LatLng} latlng
-     * @param {boolean} [round=false]
-     * @return {DataMaps.PointTupleRepr}
-     */
-    translateLeafletCoordinates( latlng, round ) {
-        let lat = latlng.lat / this.crsScaleY,
-            lon = latlng.lng / this.crsScaleX;
-        if ( this.crsOrigin === CRSOrigin.TopLeft ) {
-            lat = this.config.crs[ 1 ][ 0 ] - lat;
-        }
-
-        if ( this._crsAngle ) {
-            [ lat, lon ] = [
-                lon * this._crsRotSInv + lat * this._crsRotCInv,
-                lon * this._crsRotCInv - lat * this._crsRotSInv
-            ];
-        }
-
-        if ( round ) {
-            lat = Math.round( lat * 10e3 ) / 10e3;
-            lon = Math.round( lon * 10e3 ) / 10e3;
-        }
-
-        return [ lat, lon ];
-    }
-
-
-    /**
      * Returns a formatted datamap-coordinate-control-text message.
      *
      * @param {DataMaps.PointTupleRepr|number|LeafletModule.LatLng} latOrInstance Latitude or API marker instance
@@ -461,7 +368,7 @@ class DataMap extends EventEmitter {
         if ( Array.isArray( latOrInstance ) ) {
             [ lat, lon ] = latOrInstance;
         } else if ( latOrInstance instanceof Leaflet.LatLng ) {
-            [ lat, lon ] = this.translateLeafletCoordinates( latOrInstance );
+            [ lat, lon ] = this.crs.fromLeaflet( latOrInstance );
         } else {
             lat = latOrInstance;
         }
@@ -476,19 +383,6 @@ class DataMap extends EventEmitter {
             ''
         );
         return mw.msg( message, lat.toFixed( 2 ), /** @type {number} */ ( lon ).toFixed( 2 ) );
-    }
-
-
-    /**
-     * Returns a formatted datamap-coordinate-control-text message.
-     *
-     * @deprecated since v0.16.0, will be removed in v1.0.0. Use {@link getCoordinateLabel}.
-     * @param {DataMaps.PointTupleRepr|number} latOrInstance Latitude or API marker instance
-     * @param {number?} [lon] Longitude if no instance specified.
-     * @return {string}
-     */
-    getCoordLabel( latOrInstance, lon ) {
-        return this.getCoordinateLabel( latOrInstance, lon );
     }
 
 
@@ -674,7 +568,7 @@ class DataMap extends EventEmitter {
 
         const instance = /** @type {DataMaps.ApiMarkerInstance} */ ( uncheckedInstance ),
             group = this.config.groups[ layers[ 0 ] ],
-            position = this.translatePoint( instance ),
+            position = this.crs.fromPoint( instance ),
             sizeScale = instance[ 2 ].scale;
 
         // Construct the marker
@@ -853,7 +747,7 @@ class DataMap extends EventEmitter {
         // Construct a layer
         if ( overlay.image ) {
             // Construct an image
-            result = new Leaflet.ImageOverlay( overlay.image, this.translateBox( overlay.at ), {
+            result = new Leaflet.ImageOverlay( overlay.image, this.crs.fromBox( overlay.at ), {
                 className: overlay.pixelated ? 'ext-datamaps-pixelated-image' : undefined,
                 decoding: 'async',
                 // Expand the DOM element's width and height by 0.51 pixels. This helps with gaps between tiles.
@@ -861,13 +755,13 @@ class DataMap extends EventEmitter {
             } );
         } else if ( overlay.path ) {
             // Construct a polyline
-            result = new Leaflet.Polyline( overlay.path.map( p => this.translatePoint( p ) ), {
+            result = new Leaflet.Polyline( overlay.path.map( p => this.crs.fromBox( p ) ), {
                 color: overlay.colour || Leaflet.Path.prototype.options.color,
                 weight: overlay.thickness || Leaflet.Path.prototype.options.weight
             } );
         } else {
             // Construct a rectangle
-            result = new Leaflet.Rectangle( this.translateBox( overlay.at ), {
+            result = new Leaflet.Rectangle( this.crs.fromBox( overlay.at ), {
                 color: overlay.strokeColour || Leaflet.Path.prototype.options.color,
                 fillColor: overlay.colour || Leaflet.Path.prototype.options.fillColor
             } );
@@ -1140,11 +1034,11 @@ class DataMap extends EventEmitter {
         if ( background.image ) {
             const imgLayer = new Leaflet.ImageOverlay(
                 background.image,
-                this.translateBox( background.at ),
+                this.crs.fromBox( background.at ),
                 {
                     className: background.pixelated ? 'ext-datamaps-pixelated-image' : undefined,
                     decoding: 'async',
-                    angle: this._crsAngle * 180 / Math.PI,
+                    angle: this.crs.rotation * 180 / Math.PI,
                     // Expand the DOM element's width and height by 0.51 pixels. This helps with gaps between tiles.
                     antiAliasing: background.aa ? 0.51 : 0
                 }
