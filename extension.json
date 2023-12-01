@@ -112,6 +112,7 @@
 				"core/enums.js",
 				"core/EventEmitter.js",
 				"core/MapStorage.js",
+				"core/CoordinateSystem.js",
 				"core/MarkerStreamingManager.js",
 				"core/MarkerLayerManager.js",
 				"core/DataMap.js",
