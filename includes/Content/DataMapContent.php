@@ -168,18 +168,8 @@ class DataMapContent extends JsonContent {
         return self::toJSON( $this->getData()->getValue() );
     }
 
-    public function getValidationStatus() {
+    public function getValidationStatus(): Status {
         $schemaProvider = MediaWikiServices::getInstance()->getService( SchemaProvider::SERVICE_NAME );
-        $status = $schemaProvider->makeValidator()->validate( $this );
-
-        if ( $status->isGood() ) {
-            $status->warning(
-                'datamap-mapsrcinfo-docslink',
-                Constants::DOCUMENTATION_LINK,
-                Constants::ISSUE_TRACKER_LINK
-            );
-        }
-
-        return $status;
+        return $schemaProvider->makeValidator()->validate( $this );
     }
 }
