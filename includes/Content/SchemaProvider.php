@@ -18,6 +18,8 @@ class SchemaProvider {
         SchemaRevision::REV_16 => 'v0.18'
     ];
 
+    public const MAX_VALIDATION_ERROR_COUNT = 40;
+
     /**
      * @internal Use only in ServiceWiring
      */
@@ -63,6 +65,15 @@ class SchemaProvider {
      */
     public function getRevisionDeprecationTarget( string $id ): ?string {
         return self::DEPRECATED_REVISIONS[ $id ] ?? null;
+    }
+
+    /**
+     * Returns base path to the local directory containing schemas.
+     *
+     * @return string
+     */
+    private function getLocalStorePath(): string {
+        return __DIR__ . '/../../schemas/';
     }
 
     /**
@@ -128,5 +139,19 @@ class SchemaProvider {
         }
 
         return substr( $parsed['path'], strlen( $prefix ), -5 );
+    }
+
+    public function makeValidator(): MapContentValidator {
+        // TODO: convert to "supported sources"
+        return new MapContentValidator(
+            $this,
+            $this->getLocalStorePath(),
+            $this->getBaseExternalPath(),
+            [
+                'https://raw.githubusercontent.com/alex4401/mediawiki-extensions-DataMaps/main/schemas/',
+                $this->urlUtils->expand( $this->getBaseExternalPath(), PROTO_INTERNAL ),
+                $this->urlUtils->expand( $this->getBaseExternalPath(), PROTO_CANONICAL ),
+            ]
+        );
     }
 }
