@@ -58,8 +58,9 @@ class MapContentValidator {
     }
 
     private function createValidator(): Validator {
-        $result = new Validator( new \JsonSchema\Constraints\Factory( $this->schemaStorage ) );
-        return $result;
+        $factory = new \JsonSchema\Constraints\Factory( $this->schemaStorage );
+        $factory->setConstraintClass( 'object', JsonSchemaEx\ObjectConstraintEx::class );
+        return new Validator( $factory );
     }
 
     /**
@@ -107,10 +108,20 @@ class MapContentValidator {
             $errors = $validator->getErrors( Validator::ERROR_DOCUMENT_VALIDATION );
             foreach ( $errors as $error ) {
                 $msg = self::ERROR_MESSAGE_MAP[$error['constraint']] ?? self::UNKNOWN_ERROR_MESSAGE;
-                $result->fatal(
-                    $msg,
-                    $error['property']
-                );
+                $params = [
+                    $error['pointer'],
+                ];
+
+                switch ( $error['constraint'] ) {
+                    case 'additionalProp':
+                        $params[0] .= '/' . $error['apProperty'];
+                        break;
+
+                    default:
+                        break;
+                }
+
+                $result->fatal( $msg, ...$params );
             }
         }
 
