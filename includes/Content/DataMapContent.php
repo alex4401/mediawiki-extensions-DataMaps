@@ -144,6 +144,10 @@ class DataMapContent extends JsonContent {
         return $main;
     }
 
+    public function expandData(): object {
+        return $this->mergeFragments( $this->getData()->getValue() );
+    }
+
     public function asModel(): DataMapSpec {
         if ( $this->modelCached === null ) {
             $this->modelCached = new DataMapSpec( $this->mergeFragments( $this->getData()->getValue() ) );
@@ -165,8 +169,8 @@ class DataMapContent extends JsonContent {
     }
 
     public function getValidationStatus() {
-        $status = new Status();
-        $this->validateInternal( $status );
+        $schemaProvider = MediaWikiServices::getInstance()->getService( SchemaProvider::SERVICE_NAME );
+        $status = $schemaProvider->makeValidator()->validate( $this );
 
         if ( $status->isGood() ) {
             $status->warning(
@@ -177,59 +181,5 @@ class DataMapContent extends JsonContent {
         }
 
         return $status;
-    }
-
-    private function validateInternal( Status $status ) {
-        if ( !$this->isValid() ) {
-            // Check if valid JSON
-            $status->fatal( 'datamap-error-validate-invalid-json' );
-        } else {
-            // Disallow mixins with mixins
-            if (
-                $this->isFragment()
-                && ( isset( $this->getData()->getValue()->include ) )
-            ) {
-                $status->fatal( 'datamap-error-validatespec-map-mixin-with-mixins' );
-                return;
-            }
-
-            $modelled = $this->asModel();
-
-            /** @var SchemaProvider $schemaProvider */
-            $schemaProvider = MediaWikiServices::getInstance()->getService( SchemaProvider::SERVICE_NAME );
-
-            // Check if the schema is specified, and if the origin is right and version is supported
-            $schemaValue = $modelled->unwrap()->{'$schema'} ?? null;
-            $schemaVersion = $schemaValue !== null ? $schemaProvider->getRevisionFromUrl( $schemaValue ) : null;
-            if ( $schemaVersion === null ) {
-                $exampleUrl = $schemaProvider->makePublicRecommendedUrl( true );
-                $status->fatal( 'datamap-error-bad-schema-origin', $exampleUrl );
-                return;
-            }
-
-            if ( !$schemaProvider->isRevisionSupported( $schemaVersion ) ) {
-                $status->fatal(
-                    'datamap-error-bad-schema-version',
-                    implode( ', ', SchemaProvider::SUPPORTED_REVISIONS )
-                );
-                return;
-            }
-
-            $depTarget = $schemaProvider->getRevisionDeprecationTarget( $schemaVersion );
-            if ( $depTarget ) {
-                $notDeprecated = array_filter(
-                    SchemaProvider::SUPPORTED_REVISIONS,
-                    fn ( $x ) => $schemaProvider->getRevisionDeprecationTarget( $x ) === null
-                );
-                $status->warning(
-                    'datamap-error-deprecated-schema-version',
-                    $depTarget,
-                    implode( ', ', $notDeprecated )
-                );
-                return;
-            }
-
-            $modelled->validate( $status );
-        }
     }
 }

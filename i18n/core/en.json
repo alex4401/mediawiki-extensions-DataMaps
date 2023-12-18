@@ -22,6 +22,11 @@
     "datamap-mapsrcinfo-heading-warnings": "'''Warnings:''' $1",
     "datamap-mapsrcinfo-docslink": "You may consult the [$1 extension's documentation] if needed, or [$2 create a ticket] if you think things potentially need some changes.",
     "datamap-error-validate-invalid-json": "This is not a valid JSON document.",
+    "datamap-validate-bad-schema": "This map's <code>$schema</code> property does not point at a supported format definition.<br/>Below, supported schema versions (and acceptible locations) are listed:$1",
+    "datamap-validate-required-field": "A required property is missing: <code>$1</code>.",
+    "datamap-validate-unknown-field": "An unexpected property was given: <code>$1</code>.",
+    "datamap-validate-unknown-error": "An unknown error occured while validating property: <code>$1</code>. Please [$2 report this issue] to the developers.",
+
     "datamap-error-bad-schema-origin": "Missing or invalid <code>$schema</code> field. This must point at a supported schema definition, for example <code>$1</code>.",
     "datamap-error-bad-schema-version": "The <code>$schema</code> field points at an unknown or unsupported schema definition. The following revisions are supported: $1.",
     "datamap-error-deprecated-schema-version": "The schema revision this map follows has been replaced and will no longer be supported in $1. Check the [https://github.com/alex4401/mediawiki-extensions-DataMaps extension's documentation] and update the data to a newer schema revision ($2).",
