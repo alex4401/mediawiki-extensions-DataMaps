@@ -1,0 +1,31 @@
+{
+	"@metadata": {
+		"authors": [
+			"McDutchie"
+		]
+	},
+	"datamap-vec-title": "Een kaart maken",
+	"datamap-ve-skip": "Overslaan",
+	"datamap-vec-intro": "Pas de volgende informatie aan uw behoeften aan, zodat we een basiskaart kunnen voorbereiden voordat u deze gaat bewerken",
+	"datamap-vec-select-crs-origin": "(0, 0) coördinatenhoek",
+	"datamap-vec-crs-top-left": "Linksboven",
+	"datamap-vec-crs-bottom-left": "Linksonder",
+	"datamap-vec-select-crs": "Coördinatensysteem",
+	"datamap-vec-crs-percent": "Percentage (0-100%)",
+	"datamap-vec-crs-image": "Afbeeldingscoördinaten vergelijken",
+	"datamap-vec-crs-custom": "Aangepast",
+	"datamap-vec-select-background": "Achtergrondafbeelding",
+	"datamap-vec-note-image-size": "Grootte: $1 × $2",
+	"datamap-vec-error-bad-file-type": "Het bestandstype “$1” wordt niet ondersteund. Selecteer een JPEG-, PNG-, GIF- of SVG-bestand.",
+	"datamap-vec-error-poor-file-type": "Dit bestandstype presteert mogelijk slecht op beperkte netwerken. Gebruik waar mogelijk JPEG’s.",
+	"datamap-vec-extra-options": "Extra opties",
+	"datamap-vec-toggle-coord-display": "Coördinaten onder cursor weergeven",
+	"datamap-vec-toggle-zoom": "Zoomen inschakelen",
+	"datamap-vec-toggle-search": "Het zoeken naar markeringen inschakelen",
+	"datamap-vec-toggle-search-tabber": "Zoekgegevens delen binnen tabber",
+	"datamap-vec-toggle-uid-requirement": "Unieke markerings-ID’s vereisen",
+	"datamap-vec-submit": "Doorgaan",
+	"datamap-vec-example-group-id": "voorbeeld",
+	"datamap-vec-example-group-name": "Voorbeeldgroep",
+	"datamap-vec-example-marker": "Voorbeeldmarkering"
+}
