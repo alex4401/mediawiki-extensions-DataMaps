@@ -24,6 +24,8 @@ class MapContentValidator {
     private SchemaProvider $schemaProvider;
     /** @var SchemaStorage */
     private SchemaStorage $schemaStorage;
+    /** @var array */
+    private array $schemaVersionMap;
 
     /**
      * @param SchemaProvider $schemaProvider
@@ -45,10 +47,13 @@ class MapContentValidator {
         // TODO: shouldn't load them all upfront, we need a custom retriever
 
         $schemas = [];
+        $this->schemaVersionMap = [];
         foreach ( SchemaProvider::SUPPORTED_REVISIONS as $revision ) {
             $loaded = file_get_contents( "$localStorePath/$revision.json" );
+            $this->schemaVersionMap["$remoteRelativeStorePath$revision.json"] = $revision;
             foreach ( $allowedSchemaHosts as $host ) {
                 $schemas["$host$revision.json"] = $loaded;
+                $this->schemaVersionMap["$host$revision.json"] = $revision;
             }
         }
 
@@ -73,7 +78,6 @@ class MapContentValidator {
      */
     public function validate( DataMapContent $content ): Status {
         $result = new Status();
-
         $contentStatus = $content->getData();
 
         // Short-circuit if the JSON is bad
@@ -89,6 +93,19 @@ class MapContentValidator {
             return $result;
         }
 
+        $schemaVersion = null;
+        if ( !$this->validateAgainstSchema( $result, $data, $schemaVersion ) || $schemaVersion === null ) {
+            return $result;
+        }
+
+        if ( !$this->validateAgainstConstraints( $result, $data, $schemaVersion ) ) {
+            return $result;
+        }
+
+        return $result;
+    }
+
+    private function validateAgainstSchema( Status $result, \stdClass $data, string &$schemaVersion ): bool {
         $validator = $this->createValidator();
         $schemaWasBad = false;
 
@@ -105,6 +122,8 @@ class MapContentValidator {
         if ( $schemaWasBad ) {
             $result->fatal( 'datamap-validate-bad-schema' );
         } elseif ( !$validator->isValid() ) {
+            $schemaVersion = $this->schemaVersionMap[$data->{'$schema'}];
+            
             $errors = $validator->getErrors( Validator::ERROR_DOCUMENT_VALIDATION );
             foreach ( $errors as $error ) {
                 $msg = self::ERROR_MESSAGE_MAP[$error['constraint']] ?? self::UNKNOWN_ERROR_MESSAGE;
@@ -125,6 +144,11 @@ class MapContentValidator {
             }
         }
 
-        return $result;
+        return true;
+    }
+
+    private function validateAgainstConstraints( Status $result, \stdClass $data, string $schemaVersion ): bool {
+        $checker = new MapDataConstraintChecker( $schemaVersion, $data, $result );
+        return $checker->run();
     }
 }
