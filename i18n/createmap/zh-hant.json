@@ -1,0 +1,31 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kly"
+		]
+	},
+	"datamap-vec-title": "建立地圖",
+	"datamap-ve-skip": "略過",
+	"datamap-vec-intro": "請依您的需求調整以下資訊，來讓我們可以在您開始編輯之前準備一張基本地圖",
+	"datamap-vec-select-crs-origin": "（0, 0）座標角點",
+	"datamap-vec-crs-top-left": "左上方",
+	"datamap-vec-crs-bottom-left": "左下方",
+	"datamap-vec-select-crs": "座標系",
+	"datamap-vec-crs-percent": "百分比（0-100%）",
+	"datamap-vec-crs-image": "符合圖片座標",
+	"datamap-vec-crs-custom": "自訂",
+	"datamap-vec-select-background": "背景圖片",
+	"datamap-vec-note-image-size": "尺寸：$1 × $2",
+	"datamap-vec-error-bad-file-type": "不支援檔案類型：$1，請選擇 JPEG、PNG、GIF 或 SVG 檔案。",
+	"datamap-vec-error-poor-file-type": "此檔案類型在速率受限的網路上可能表現不佳，請盡可能使用 JPEG。",
+	"datamap-vec-extra-options": "額外選項",
+	"datamap-vec-toggle-coord-display": "顯示游標下方的座標",
+	"datamap-vec-toggle-zoom": "啟用縮放",
+	"datamap-vec-toggle-search": "啟用標記搜尋",
+	"datamap-vec-toggle-search-tabber": "在 tabber 中分享搜尋資料",
+	"datamap-vec-toggle-uid-requirement": "需要唯一的標記 ID",
+	"datamap-vec-submit": "繼續",
+	"datamap-vec-example-group-id": "範例",
+	"datamap-vec-example-group-name": "範例群組",
+	"datamap-vec-example-marker": "範例標記"
+}
