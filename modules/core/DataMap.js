@@ -5,13 +5,13 @@ const MapStorage = require( './MapStorage.js' ),
     MarkerStreamingManager = require( './MarkerStreamingManager.js' ),
     CoordinateSystem = require( './CoordinateSystem.js' ),
     Viewport = require( './Viewport.js' ),
+    Background = require( './Background.js' ),
     Controls = require( './controls.js' ),
     LegendTabber = require( './legend/LegendTabber.js' ),
     MarkerFilteringPanel = require( './legend/MarkerFilteringPanel.js' ),
     EventEmitter = require( './EventEmitter.js' ),
     CollectiblesPanel = require( './legend/CollectiblesPanel.js' ),
-    Util = require( './Util.js' ),
-    { createDomElement } = Util;
+    Util = require( './Util.js' );
 /** @type {!LeafletModule} */
 // @ts-ignore: Lazily initialised, this'd be ideally solved with post-fix assertions but we're in JS land.
 let Leaflet = null;
@@ -75,17 +75,17 @@ class DataMap extends EventEmitter {
          */
         this.streaming = new MarkerStreamingManager( this );
         /**
-         * Current background information.
+         * Backgrounds.
          *
-         * @type {DataMaps.Configuration.Background?}
+         * @type {Background[]}
          */
-        this.background = null;
+        this.backgrounds = config.backgrounds.map( ( el, index ) => new Background( this, el, index ) );
         /**
          * Current background index.
          *
          * @type {number}
          */
-        this.backgroundIndex = 0;
+        this._currentBackgroundIndex = 0;
         /**
          * Data set filters.
          *
@@ -145,6 +145,9 @@ class DataMap extends EventEmitter {
         if ( Util.getQueryParameter( 'dmfullcanvas' ) ) {
             this.config.flags = this.config.flags | MapFlags.IconRenderer_Canvas;
         }
+
+        // Restore background selection to sync up state
+        this.setBackground( this.storage.data.background || 0 );
 
         // Register groups from the configuration with the layer visibility manager, and set their default state
         for ( const groupName in this.config.groups ) {
@@ -643,72 +646,31 @@ class DataMap extends EventEmitter {
      * @param {number} index
      * @fires DataMap#backgroundChange
      */
-    setCurrentBackground( index ) {
-        // Remove existing layers off the map
-        if ( this.background ) {
-            this.background.layers.forEach( x => x.remove() );
-            this.background = null;
-        }
-
+    setBackground( index ) {
         // Check if index is valid, and fall back to first otherwise
-        if ( index < 0 || index >= this.config.backgrounds.length ) {
+        if ( index < 0 || index >= this.backgrounds.length ) {
             index = 0;
         }
 
-        // Update state
-        this.background = this.config.backgrounds[ index ];
-        this.backgroundIndex = index;
-
-        // Push layers back onto the map
-        for ( const layer of this.background.layers ) {
-            layer.addTo( this.leaflet );
-            layer.bringToBack();
-        }
+        const target = this.backgrounds[ index ];
+        this._currentBackgroundIndex = index;
 
         // Hide any unmatching "bg" sub-layer
-        this.layerManager.setOptionalPropertyRequirement( 'bg', this.background.layer );
+        this.layerManager.setOptionalPropertyRequirement( 'bg', target.categoryId );
 
-        this.fire( 'backgroundChange', index, this.background );
+        this.fire( 'backgroundChange', index, target );
     }
 
 
     /**
-     * @private
-     * @param {DataMaps.Configuration.BackgroundOverlay} overlay
-     * @return {LeafletModule.Rectangle|LeafletModule.Polyline|LeafletModule.ImageOverlay}
+     * Changes currently shown background without affecting the user preference.
+     *
+     * @deprecated use setBackground, remove before 0.17.0 is finalised
+     * @param {number} index
+     * @fires DataMap#backgroundChange
      */
-    _buildBackgroundOverlayObject( overlay ) {
-        let result;
-
-        // Construct a layer
-        if ( overlay.image ) {
-            // Construct an image
-            result = new Leaflet.ImageOverlay( overlay.image, this.crs.fromBox( overlay.at ), {
-                className: overlay.pixelated ? 'ext-datamaps-pixelated-image' : undefined,
-                decoding: 'async',
-                // Expand the DOM element's width and height by 0.51 pixels. This helps with gaps between tiles.
-                antiAliasing: overlay.aa ? 0.51 : 0
-            } );
-        } else if ( overlay.path ) {
-            // Construct a polyline
-            result = new Leaflet.Polyline( overlay.path.map( p => this.crs.fromBox( p ) ), {
-                color: overlay.colour || Leaflet.Path.prototype.options.color,
-                weight: overlay.thickness || Leaflet.Path.prototype.options.weight
-            } );
-        } else {
-            // Construct a rectangle
-            result = new Leaflet.Rectangle( this.crs.fromBox( overlay.at ), {
-                color: overlay.strokeColour || Leaflet.Path.prototype.options.color,
-                fillColor: overlay.colour || Leaflet.Path.prototype.options.fillColor
-            } );
-        }
-
-        // Bind name as tooltip
-        if ( overlay.name ) {
-            result.bindTooltip( overlay.name );
-        }
-
-        return result;
+    setCurrentBackground( index ) {
+        this.setBackground( index );
     }
 
 
@@ -718,7 +680,7 @@ class DataMap extends EventEmitter {
      * @param {number} index
      */
     setBackgroundPreference( index ) {
-        this.setCurrentBackground( index );
+        this.setBackground( index );
         // Remember the choice
         this.storage.data.background = index;
         this.storage.commit();
@@ -810,54 +772,12 @@ class DataMap extends EventEmitter {
     _setupViewport() {
         this.viewport = new Viewport( this );
         this._legendElement = this.viewport.legendAnchor;
-        // Prepare all backgrounds
-        this.config.backgrounds.forEach( ( background, index ) => this._initialiseBackground( background, index ) );
-        // Switch to the last chosen one or first defined
-        this.setCurrentBackground( this.storage.data.background || 0 );
 
         // Notify other components that the Leaflet component has been loaded, and remove all subscribers. All future
         // subscribers will be invoked right away.
         this.fireMemorised( 'leafletLoaded' );
         this.fireMemorised( 'leafletLoadedLate' );
     }
-
-
-    /**
-     * @private
-     * @param {DataMaps.Configuration.Background} background
-     * @param {number} index
-     */
-    _initialiseBackground( background, index ) {
-        background.layers = [];
-
-        // Set the associated layer name
-        background.layer = background.layer || `${index}`;
-
-        // Image overlay
-        background.at = background.at || this.config.crs;
-        if ( background.image ) {
-            const imgLayer = new Leaflet.ImageOverlay(
-                background.image,
-                this.crs.fromBox( background.at ),
-                {
-                    className: background.pixelated ? 'ext-datamaps-pixelated-image' : undefined,
-                    decoding: 'async',
-                    angle: this.crs.rotation * 180 / Math.PI,
-                    // Expand the DOM element's width and height by 0.51 pixels. This helps with gaps between tiles.
-                    antiAliasing: background.aa ? 0.51 : 0
-                }
-            );
-            background.layers.push( imgLayer );
-        }
-
-        // Prepare overlay layers
-        if ( background.overlays ) {
-            for ( const overlay of background.overlays ) {
-                background.layers.push( this._buildBackgroundOverlayObject( overlay ) );
-            }
-        }
-    }
-
 
     /**
      * Adds a custom control to Leaflet's container.
