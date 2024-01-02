@@ -648,9 +648,9 @@ class DataMap extends EventEmitter {
 
         leafletMarker.openPopup();
 
-        if ( centreMapOver && this.leaflet.options.uriPopupZoom !== false ) {
-            this.leaflet.flyTo( leafletMarker.getLatLng(), this.leaflet.options.uriPopupZoom
-                || ( this.leaflet.options.maxZoom - this.leaflet.options.minZoom ) / 5 * 4 );
+        const viewport = Util.getNonNull( this.viewport );
+        if ( centreMapOver && viewport.leaflet.options.uriPopupZoom !== false ) {
+            viewport.flyToMarker( leafletMarker );
         }
     }
 
