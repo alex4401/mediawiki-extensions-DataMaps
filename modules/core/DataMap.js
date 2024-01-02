@@ -804,8 +804,8 @@ class DataMap extends EventEmitter {
         const nw = bounds.getNorthWest(),
             se = bounds.getSouthEast();
         bounds.extend( [
-            [ se.lat - DataMap.BOUNDS_PADDING[ 0 ][ 0 ], se.lng + DataMap.BOUNDS_PADDING[ 0 ][ 1 ] ],
-            [ nw.lat + DataMap.BOUNDS_PADDING[ 1 ][ 0 ], nw.lng - DataMap.BOUNDS_PADDING[ 1 ][ 1 ] ]
+            [ se.lat - se.lat * DataMap.BOUNDS_PADDING[ 0 ][ 0 ], se.lng + se.lng * DataMap.BOUNDS_PADDING[ 0 ][ 1 ] ],
+            [ nw.lat + nw.lat * DataMap.BOUNDS_PADDING[ 1 ][ 0 ], nw.lng - nw.lng * DataMap.BOUNDS_PADDING[ 1 ][ 1 ] ]
         ] );
         return bounds;
     }
@@ -940,12 +940,12 @@ class DataMap extends EventEmitter {
  */
 DataMap.anchors = Viewport.anchors;
 /**
- * Content bounds padding.
+ * Content bounds padding, relative to run-time computed bounds.
  *
  * @constant
  * @type {LeafletModule.LatLngBoundsTuple}
  */
-DataMap.BOUNDS_PADDING = [ [ 150, 200 ], [ 150, 250 ] ];
+DataMap.BOUNDS_PADDING = [ [ 1.5, 2 ], [ 1.5, 2 ] ];
 /**
  * Minimum and maximum viewport width for {@link DataMap.restoreDefaultView} to offset new view bounds by legend width.
  *
