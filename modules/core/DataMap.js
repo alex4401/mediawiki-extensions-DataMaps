@@ -449,15 +449,6 @@ class DataMap extends EventEmitter {
 
 
     /**
-     * Opens a marker's popup if the UID matches the `marker` query parameter
-     *
-     * @deprecated since 0.16.7, will be removed in 0.17.0; this function does nothing, behaviour inlined.
-     * @param {LeafletModule.AnyMarker} leafletMarker
-     */
-    openPopupIfUriMarker( leafletMarker ) {}
-
-
-    /**
      * Returns a Leaflet icon object for marker layers. All access is cached.
      *
      * Group icon is used if there is no layer overriding it. However, if there is one, first such layer is used and rest are
