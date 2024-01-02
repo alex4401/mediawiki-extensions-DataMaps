@@ -6,6 +6,7 @@ module.exports = Object.assign( {}, require( './enums.js' ), {
     MarkerPopup: require( './MarkerPopup.js' ),
     LegendTabber: require( './legend/LegendTabber.js' ),
     MarkerFilteringPanel: require( './legend/MarkerFilteringPanel.js' ),
+    Viewport: require( './Viewport.js' ),
     DataMap: require( './DataMap.js' ),
     CollectiblesPanel: require( './legend/CollectiblesPanel.js' ),
     Util: require( './Util.js' )
