@@ -1,0 +1,374 @@
+/** @typedef {import( './DataMap.js' )} DataMap */
+const
+    { MapFlags } = require( './enums.js' ),
+    Controls = require( './controls.js' ),
+    EventEmitter = require( './EventEmitter.js' ),
+    Util = require( './Util.js' ),
+    { createDomElement } = Util;
+/** @type {!LeafletModule} */
+// @ts-ignore: Lazily initialised, this'd be ideally solved with post-fix assertions but we're in JS land.
+let Leaflet = null;
+
+
+/**
+ * @extends EventEmitter<DataMaps.EventHandling.MapListenerSignatures>
+ */
+class Viewport extends EventEmitter {
+    /**
+     * @param {DataMap} map
+     */
+    constructor( map ) {
+        super();
+        // Make sure Leaflet is available in the module. Viewports should only be constructed after it is loaded.
+        if ( Leaflet === null ) {
+            Leaflet = Util.getLeaflet();
+        }
+
+        /**
+         * Owning map.
+         *
+         * @type {DataMap}
+         */
+        this.map = map;
+
+        // Specify the coordinate reference system and initialise the renderer
+        const leafletConfig = this._makeLeafletConfig();
+        leafletConfig.crs = Leaflet.CRS.Simple;
+        leafletConfig.renderer = new Leaflet.Canvas( leafletConfig.rendererSettings );
+
+        /**
+         * @private
+         * @type {HTMLElement}
+         */
+        this._containerElement = /** @type {HTMLElement} */ ( Util.getNonNull( this.map.rootElement.querySelector(
+            '.ext-datamaps-container-leaflet' ) ) );
+
+        // Set a custom backdrop colour if one is present in the configuration
+        if ( this.map.config.backdrop ) {
+            this._containerElement.style.backgroundColor = this.map.config.backdrop;
+        }
+
+        /**
+         * Leaflet instance.
+         *
+         * @private
+         * @type {LeafletModule.Map}
+         */
+        this._leaflet = new Leaflet.Map( this._containerElement, leafletConfig );
+
+        /**
+         * Public Leaflet instance access.
+         *
+         * @public
+         * @deprecated Private access must be forbidden prior to v0.17.0's finalisation.
+         * @type {LeafletModule.Map}
+         */
+        this.leaflet = this._leaflet;
+
+        /**
+         * Anchor element for the map's legend. This is always available as some controls or gadgets may depend on it.
+         */
+        this.legendAnchor = createDomElement( 'div', {
+            classes: [ 'ext-datamaps-container-legend' ],
+            prependTo: this.resolveControlAnchor( Viewport.anchors._realTopLeft )
+        } );
+
+        // Create control container in top left corner
+        createDomElement( 'div', {
+            appendTo: this.resolveControlAnchor( Viewport.anchors._realTopLeft )
+        } );
+        // Create inline control containers (Viewport.anchors.topLeftInline and Viewport.anchors.topRightInline)
+        for ( const anchor of [ Viewport.anchors.topLeft, Viewport.anchors.topRight ] ) {
+            createDomElement( 'div', {
+                classes: [ 'ext-datamaps-control-group' ],
+                prependTo: this.resolveControlAnchor( anchor )
+            } );
+        }
+
+        // Install the interaction rejection controller
+        const useSleepInteractions = this.map.isFeatureBitSet( MapFlags.SleepingInteractions )
+            || this.map.isFeatureBitSet( MapFlags.VisualEditor );
+        this._leaflet.addHandler( 'interactionControl', Leaflet.Ark[ useSleepInteractions ? 'SleepInteractionControl'
+            : 'KeybindInteractionControl' ] );
+
+        /**
+         * Coordinates display control.
+         *
+         * @type {Controls.Coordinates?}
+         */
+        this.coordinatesControl = null;
+        if ( this.map.isFeatureBitSet( MapFlags.ShowCoordinates ) || this.map.isFeatureBitSet( MapFlags.VisualEditor ) ) {
+            this.coordinatesControl = this.addControl( Viewport.anchors.bottomLeft, new Controls.Coordinates(
+                this.map ) );
+        }
+        /**
+         * Backgrounds dropdown.
+         *
+         * @type {Controls.BackgroundSwitcher?}
+         */
+        this.backgroundsControl = null;
+        if ( this.map.config.backgrounds.length > 1 ) {
+            this.backgroundsControl = this.addControl( Viewport.anchors.legend, new Controls.BackgroundSwitcher(
+                this.map ) );
+        }
+        /**
+         * Reset and centre view controls.
+         *
+         * @type {Controls.ExtraViewControls?}
+         */
+        this.viewControls = this.addControl( Viewport.anchors.topRight, new Controls.ExtraViewControls( this.map ) );
+        /**
+         * Fullscreen mode switcher control.
+         *
+         * @type {Controls.ToggleFullscreen?}
+         */
+        this.fullscreenToggle = null;
+        if ( this.map.isFeatureBitSet( MapFlags.AllowFullscreen ) ) {
+            this.fullscreenToggle = this.addControl( Viewport.anchors.topRightInline, new Controls.ToggleFullscreen(
+                this.map ) );
+        }
+        /**
+         * Edit button shown only to registered users.
+         *
+         * @type {Controls.EditButton?}
+         */
+        this.editControl = null;
+        if (
+            !this.map.isFeatureBitSet( MapFlags.IsPreview ) && ( mw.config.get( 'wgUserName' ) !== null
+                || Util.canAnonsEdit )
+        ) {
+            this.editControl = this.addControl( Viewport.anchors.topRightInline, new Controls.EditButton(
+                this.map ) );
+        }
+
+        this.refreshViewProperties();
+        this.resetView();
+        this.updateScaling();
+
+        // Update bounds whenever background is changed or marker set is updated
+        this.on( 'chunkStreamingDone', this.refreshViewProperties, this );
+        this.on( 'backgroundChange', this.refreshViewProperties, this );
+        this.on( 'markerVisibilityUpdate', this.refreshViewProperties, this );
+        // Recalculate marker sizes when zoom ends
+        this._leaflet.on( 'zoom', this.updateScaling, this );
+    }
+
+
+    /**
+     * @private
+     * @return {LeafletModule.MapOptions}
+     */
+    _makeLeafletConfig() {
+        // Ensure the `zoom` section of the config is initialised
+        if ( !this.map.config.zoom ) {
+            this.map.config.zoom = {
+                min: 0.05,
+                lock: this.map.isFeatureBitSet( MapFlags.DisableZoom ),
+                max: 6,
+                auto: true
+            };
+        }
+
+        // Disable automated minimum zoom calculation if the value has been specified in custom Leaflet settings
+        // TODO: legacy behaviour, drop in v0.17
+        if ( 'minZoom' in ( this.map.config.leafletSettings || {} ) ) {
+            this.map.config.zoom.auto = false;
+        }
+
+        // If zoom is locked, disable all zoom controls
+        if ( this.map.config.zoom.lock ) {
+            this.map.config.leafletSettings = $.extend( {
+                zoomControl: false,
+                boxZoom: false,
+                doubleClickZoom: false,
+                scrollWheelZoom: false,
+                touchZoom: false
+            }, this.map.config.leafletSettings || {} );
+        }
+
+        // Prepare settings for Leaflet
+        /** @type {LeafletModule.MapOptions} */
+        const result = $.extend( true, /** @type {LeafletModule.IPublicMapOptions} */ ( {
+            // Boundaries
+            center: [ 50, 50 ],
+            maxBounds: [ [ -100, -100 ], [ 200, 200 ] ],
+            maxBoundsViscosity: 0.7,
+            // Zoom settings
+            zoomSnap: 0,
+            zoomDelta: 0.25,
+            wheelPxPerZoomLevel: 90,
+            maxZoom: this.map.config.zoom.max,
+            minZoom: this.map.config.zoom.min,
+            // Zoom animations cause some awkward locking as Leaflet waits for the animation to finish before processing more
+            // zoom requests.
+            // However, before v0.15.0 they had to be enabled to mitigate vector drift, which has been since fixed by Leaflet's
+            // PR#8794. Before that merge request we had explicitly called zoom in desktop handlers with animations turned off.
+            zoomAnimation: false,
+            markerZoomAnimation: true,
+            // Do not allow pinch-zooming to surpass max zoom even temporarily. This seems to cause a mispositioning.
+            bounceAtZoomLimits: false,
+            // Pan settings
+            inertia: false,
+            // Canvas renderer settings - using canvas for performance with padding of 1/3rd (to draw some more markers outside
+            // of view for panning UX)
+            rendererSettings: {
+                padding: 1 / 3
+            },
+
+            // Non-standard extended options
+            // Automatic minimum zoom calculations
+            autoMinZoom: this.map.config.zoom.auto,
+            // TODO: merge into minZoom
+            autoMinZoomAbsolute: this.map.config.zoom.min,
+            // Zoom-based marker scaling
+            shouldScaleMarkers: true,
+            markerZoomScaleFactor: 1.8,
+            // Zoom control
+            zoomControlOptions: {
+                position: 'topright',
+                zoomInTitle: mw.msg( 'datamap-control-zoom-in' ),
+                zoomOutTitle: mw.msg( 'datamap-control-zoom-out' )
+            },
+            // Allow rendering icon markers on a canvas
+            allowIconsOnCanvas: true,
+
+            // Enable bundled interaction rejection control
+            interactionControl: true
+        } ), this.map.config.leafletSettings );
+
+        return result;
+    }
+
+
+    /**
+     * Updates map options regarding our custom marker scaling behaviour.
+     */
+    updateScaling() {
+        const zoomPercent = Math.round( this._leaflet.getZoom() / this._leaflet.options.maxZoom * 100 ) / 100;
+        this._leaflet.options.vecMarkerScale = zoomPercent * Viewport.VECTOR_ZOOM_SCALING_MAX;
+        this._leaflet.options.iconMarkerScale = zoomPercent * Viewport.ICON_ZOOM_SCALING_MAX;
+    }
+
+
+    /**
+     * Updates Leaflet's max view bounds to padded content bounds in current state. This is usually done after a data chunk is
+     * streamed in, and is fairly expensive.
+     */
+    refreshViewProperties() {
+        const bounds = this.map.getPaddedContentBounds( true );
+        this._leaflet.setMaxBounds( bounds );
+
+        if ( this._leaflet.options.autoMinZoom ) {
+            this._leaflet.options.minZoom = this._leaflet.options.autoMinZoomAbsolute;
+            this._leaflet.setMinZoom( this._leaflet.getBoundsZoom( bounds, false, [ 0, 0 ] ) );
+            // TODO: this should recalculate popup zoom?
+        }
+    }
+
+
+    /**
+     * Flies over to a marker, putting it in the viewport's centre at a reasonable zoom level.
+     *
+     * @param {LeafletModule.AnyMarker} leafletMarker
+     */
+    flyToMarker( leafletMarker ) {
+        this._leaflet.flyTo( leafletMarker.getLatLng(), this._leaflet.options.uriPopupZoom
+            || ( this._leaflet.options.maxZoom - this._leaflet.options.minZoom ) / 5 * 4 );
+    }
+
+
+    /**
+     * Snaps the viewport to the content. Zooms out entirely on a double click.
+     */
+    resetView() {
+        this._leaflet.setZoom( this._leaflet.options.minZoom ).fitBounds( this.map.getCurrentContentBounds(), {
+            paddingTopLeft: [ this.map.getMapOffsetWidth(), 0 ]
+        } );
+    }
+
+
+    /**
+     * Moves the viewport to the centre of the content bounds without affecting zoom.
+     */
+    centreView() {
+        this._leaflet.setView( this.map.getCurrentContentBounds().getCenter() );
+    }
+
+
+    /**
+     * @param {Viewport.anchors[ keyof Viewport.anchors ]} anchor
+     * @return {HTMLElement}
+     */
+    resolveControlAnchor( anchor ) {
+        return /** @type {HTMLElement} */ ( Util.getNonNull( this._containerElement.querySelector(
+            `.leaflet-control-container ${anchor}` ) ) );
+    }
+
+
+    /**
+     * Adds a custom control to Leaflet's container.
+     *
+     * Requires the Leaflet map to be initialised.
+     *
+     * @template {HTMLElement|Controls.MapControl} T
+     * @param {Viewport.anchors[ keyof Viewport.anchors ]} anchor Anchor selector.
+     * @param {T} control Control to add.
+     * @param {boolean} [prepend] Whether to add the control to the beginning of the anchor.
+     * @return {T} {@link control} for chaining.
+     */
+    addControl( anchor, control, prepend ) {
+        const controlElement = /** @type {HTMLElement} */ ( control instanceof Controls.MapControl ? control.element : control ),
+            anchorElement = this.resolveControlAnchor( anchor ),
+            beforeInlineGroup = prepend && anchorElement.querySelector( ':scope > .ext-datamaps-control-group' );
+        if ( beforeInlineGroup ) {
+            anchorElement.insertBefore( controlElement, beforeInlineGroup.nextSibling );
+        } else {
+            anchorElement[ prepend ? 'prepend' : 'appendChild' ]( controlElement );
+        }
+        Util.preventMapInterference( controlElement );
+        return control;
+    }
+}
+
+
+/**
+ * @constant
+ */
+Viewport.anchors = Object.freeze( {
+    /** @package */
+    _realTopLeft: '.leaflet-top.leaflet-left',
+    /** @package */
+    _none: '',
+
+    legend: '.leaflet-top.leaflet-left > .ext-datamaps-container-legend',
+    topLeft: '.leaflet-top.leaflet-left > :last-child',
+    topRight: '.leaflet-top.leaflet-right',
+    bottomLeft: '.leaflet-bottom.leaflet-left',
+    bottomRight: '.leaflet-bottom.leaflet-right',
+
+    topRightInline: '.leaflet-top.leaflet-right > .ext-datamaps-control-group',
+    topLeftInline: '.leaflet-top.leaflet-left > :last-child > .ext-datamaps-control-group',
+
+    veToolBar: '.ext-datamaps-control-ve-toolbar > .ext-datamaps-control-ve-toolbar-controls'
+} );
+
+
+/**
+ * Max zoom-caused scale value for vector markers.
+ *
+ * @constant
+ * @type {number}
+ */
+Viewport.VECTOR_ZOOM_SCALING_MAX = 1;
+
+
+/**
+ * Max zoom-caused scale value for icon markers.
+ *
+ * @constant
+ * @type {number}
+ */
+Viewport.ICON_ZOOM_SCALING_MAX = 1;
+
+
+module.exports = Viewport;
