@@ -1,4 +1,5 @@
 /** @typedef {import( './DataMap.js' )} DataMap */
+/** @typedef {import( './Background.js' )} Background */
 const
     { MapFlags } = require( './enums.js' ),
     Controls = require( './controls.js' ),
@@ -64,6 +65,14 @@ class Viewport extends EventEmitter {
          * @type {LeafletModule.Map}
          */
         this.leaflet = this._leaflet;
+
+        /**
+         * Stash for background layers.
+         *
+         * @private
+         * @type {LeafletModule.Layer[]?}
+         */
+        this._backgroundStash = null;
 
         /**
          * Anchor element for the map's legend. This is always available as some controls or gadgets may depend on it.
@@ -146,9 +155,11 @@ class Viewport extends EventEmitter {
         this.updateScaling();
 
         // Update bounds whenever background is changed or marker set is updated
-        this.on( 'chunkStreamingDone', this.refreshViewProperties, this );
-        this.on( 'backgroundChange', this.refreshViewProperties, this );
-        this.on( 'markerVisibilityUpdate', this.refreshViewProperties, this );
+        this.map.on( 'chunkStreamingDone', this.refreshViewProperties, this );
+        this.map.on( 'backgroundChange', this.refreshViewProperties, this );
+        this.map.on( 'markerVisibilityUpdate', this.refreshViewProperties, this );
+        // Switch background layers whenever current background is changed
+        this.map.on( 'backgroundChange', this._updateBackgroundLayers, this );
         // Recalculate marker sizes when zoom ends
         this._leaflet.on( 'zoom', this.updateScaling, this );
     }
@@ -262,6 +273,26 @@ class Viewport extends EventEmitter {
             this._leaflet.options.minZoom = this._leaflet.options.autoMinZoomAbsolute;
             this._leaflet.setMinZoom( this._leaflet.getBoundsZoom( bounds, false, [ 0, 0 ] ) );
             // TODO: this should recalculate popup zoom?
+        }
+    }
+
+
+    /**
+     * @private
+     * @param {number} _
+     * @param {Background} background
+     */
+    _updateBackgroundLayers( _, background ) {
+        if ( this._backgroundStash !== null ) {
+            for ( const layer of this._backgroundStash ) {
+                layer.remove();
+            }
+        }
+
+        this._backgroundStash = background.constructLayers();
+        for ( const layer of this._backgroundStash ) {
+            this._leaflet.addLayer( layer );
+            layer.bringToBack();
         }
     }
 

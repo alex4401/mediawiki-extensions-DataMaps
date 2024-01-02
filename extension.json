@@ -115,6 +115,7 @@
 				"core/CoordinateSystem.js",
 				"core/MarkerStreamingManager.js",
 				"core/MarkerLayerManager.js",
+				"core/Background.js",
 				"core/Viewport.js",
 				"core/DataMap.js",
 				"core/controls.js",
