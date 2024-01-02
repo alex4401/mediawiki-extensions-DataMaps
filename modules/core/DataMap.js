@@ -126,7 +126,7 @@ class DataMap extends EventEmitter {
         this._contentBounds = null;
         /**
          * @private
-         * @type {HTMLElement}
+         * @type {HTMLElement?}
          */
         this._legendElement = null;
         /**
@@ -169,6 +169,14 @@ class DataMap extends EventEmitter {
             this.on( 'legendManager', this._initialiseCollectiblesPanel, this );
         }
 
+        // Prepare the Leaflet map view
+        mw.loader.using( 'ext.datamaps.leaflet', () => {
+            if ( Leaflet === null ) {
+                Leaflet = Util.getLeaflet();
+            }
+            this._setupViewport();
+        } );
+
         // Request OOUI to be loaded and build the legend
         if ( !( !this.isFeatureBitSet( MapFlags.VisualEditor ) && this.isFeatureBitSet( MapFlags.HideLegend ) ) ) {
             mw.loader.using( [
@@ -176,15 +184,6 @@ class DataMap extends EventEmitter {
                 'oojs-ui-widgets'
             ], () => this.on( 'leafletLoaded', this._onOOUILoaded, this ) );
         }
-
-        // Prepare the Leaflet map view
-        mw.loader.using( 'ext.datamaps.leaflet', () => {
-            if ( Leaflet === null ) {
-                Leaflet = Util.getLeaflet();
-            }
-            this._initialiseLeaflet( /** @type {HTMLElement} */ ( Util.getNonNull( this.rootElement.querySelector(
-                '.ext-datamaps-container-leaflet' ) ) ) );
-        } );
 
         // Load search add-on
         if ( !this.isFeatureBitSet( MapFlags.VisualEditor ) && this.isFeatureBitSet( MapFlags.Search ) ) {
@@ -199,6 +198,22 @@ class DataMap extends EventEmitter {
         if ( this.config.custom ) {
             this.fireMemorised( 'customData', this.config.custom );
         }
+    }
+
+
+    /**
+     * @private
+     * @fires DataMap#leafletLoaded
+     * @fires DataMap#leafletLoadedLate
+     */
+    _setupViewport() {
+        this.viewport = new Viewport( this );
+        this._legendElement = this.viewport.legendAnchor;
+
+        // Notify other components that the Leaflet component has been loaded, and remove all subscribers. All future
+        // subscribers will be invoked right away.
+        this.fireMemorised( 'leafletLoaded' );
+        this.fireMemorised( 'leafletLoadedLate' );
     }
 
 
@@ -763,21 +778,6 @@ class DataMap extends EventEmitter {
         return bounds;
     }
 
-
-    /**
-     * @private
-     * @fires DataMap#leafletLoaded
-     * @fires DataMap#leafletLoadedLate
-     */
-    _setupViewport() {
-        this.viewport = new Viewport( this );
-        this._legendElement = this.viewport.legendAnchor;
-
-        // Notify other components that the Leaflet component has been loaded, and remove all subscribers. All future
-        // subscribers will be invoked right away.
-        this.fireMemorised( 'leafletLoaded' );
-        this.fireMemorised( 'leafletLoadedLate' );
-    }
 
     /**
      * Adds a custom control to Leaflet's container.
