@@ -134,7 +134,7 @@ class DataMap extends EventEmitter {
         /**
          * Coordinate system specification.
          */
-        this.crs = new CoordinateSystem( this.config.crs, this.config.cRot );
+        this.crs = new CoordinateSystem( config.crs, config.cOrder, config.cRot );
 
         // Force the IconRenderer_Canvas flag if dmfullcanvas in the URL
         if ( Util.getQueryParameter( 'dmfullcanvas' ) ) {
@@ -346,30 +346,13 @@ class DataMap extends EventEmitter {
     /**
      * Returns a formatted datamap-coordinate-control-text message.
      *
+     * @deprecated Remove before v0.17.0 is finalised.
      * @param {DataMaps.PointTupleRepr|number|LeafletModule.LatLng} latOrInstance Latitude or API marker instance
      * @param {number?} [lon] Longitude if no instance specified.
      * @return {string}
      */
     getCoordinateLabel( latOrInstance, lon ) {
-        let /** @type {number} */ lat;
-        if ( Array.isArray( latOrInstance ) ) {
-            [ lat, lon ] = latOrInstance;
-        } else if ( latOrInstance instanceof Leaflet.LatLng ) {
-            [ lat, lon ] = this.crs.fromLeaflet( latOrInstance );
-        } else {
-            lat = latOrInstance;
-        }
-
-        // Messages used here:
-        // - datamap-coordinate-control-text-xy
-        // - datamap-coordinate-control-text-yx
-        // - datamap-coordinate-control-text
-        const message = 'datamap-coordinate-control-text' + (
-            this.config.cOrder === CoordinateDisplayStyle.Xy ? '-xy' :
-            this.config.cOrder === CoordinateDisplayStyle.Yx ? '-yx' :
-            ''
-        );
-        return mw.msg( message, lat.toFixed( 2 ), /** @type {number} */ ( lon ).toFixed( 2 ) );
+        return this.crs.makeLabel( latOrInstance, lon );
     }
 
 
