@@ -51,6 +51,13 @@ class DataMap extends EventEmitter {
          */
         this.config = config;
         /**
+         * Feature flag bitmask.
+         *
+         * @private
+         * @type {number}
+         */
+        this._flags = config.flags;
+        /**
          * Local map storage interface.
          *
          * @type {MapStorage}
@@ -138,7 +145,7 @@ class DataMap extends EventEmitter {
 
         // Force the IconRenderer_Canvas flag if dmfullcanvas in the URL
         if ( Util.getQueryParameter( 'dmfullcanvas' ) ) {
-            this.config.flags = this.config.flags | MapFlags.IconRenderer_Canvas;
+            this._flags = this._flags | MapFlags.IconRenderer_Canvas;
         }
 
         // Restore background selection to sync up state
@@ -224,11 +231,23 @@ class DataMap extends EventEmitter {
     /**
      * Checks if all bits of a mask are set on the configured flags constant.
      *
-     * @param {number} mask Feature's bit mask.
+     * @param {number} mask Features bit mask.
+     * @return {boolean}
+     */
+    checkFeatureFlag( mask ) {
+        return Util.isBitSet( this._flags, mask );
+    }
+
+
+    /**
+     * Checks if all bits of a mask are set on the configured flags constant.
+     *
+     * @deprecated use checkFeatureFlag; to be removed before v0.17.0 is finalised.
+     * @param {number} mask Features bit mask.
      * @return {boolean}
      */
     isFeatureBitSet( mask ) {
-        return Util.isBitSet( this.config.flags, mask );
+        return this.checkFeatureFlag( mask );
     }
 
 
