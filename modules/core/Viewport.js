@@ -17,8 +17,9 @@ let Leaflet = null;
 class Viewport extends EventEmitter {
     /**
      * @param {DataMap} map
+     * @param {DataMaps.Configuration.Map} config
      */
-    constructor( map ) {
+    constructor( map, config ) {
         super();
         // Make sure Leaflet is available in the module. Viewports should only be constructed after it is loaded.
         if ( Leaflet === null ) {
@@ -33,7 +34,7 @@ class Viewport extends EventEmitter {
         this.map = map;
 
         // Specify the coordinate reference system and initialise the renderer
-        const leafletConfig = this._makeLeafletConfig();
+        const leafletConfig = this._makeLeafletConfig( config );
         leafletConfig.crs = Leaflet.CRS.Simple;
         leafletConfig.renderer = new Leaflet.Canvas( leafletConfig.rendererSettings );
 
@@ -45,8 +46,8 @@ class Viewport extends EventEmitter {
             '.ext-datamaps-container-leaflet' ) ) );
 
         // Set a custom backdrop colour if one is present in the configuration
-        if ( this.map.config.backdrop ) {
-            this._containerElement.style.backgroundColor = this.map.config.backdrop;
+        if ( config.backdrop ) {
+            this._containerElement.style.backgroundColor = config.backdrop;
         }
 
         /**
@@ -107,7 +108,7 @@ class Viewport extends EventEmitter {
          * @type {Controls.BackgroundSwitcher?}
          */
         this.backgroundsControl = null;
-        if ( this.map.config.backgrounds.length > 1 ) {
+        if ( config.backgrounds.length > 1 ) {
             this.backgroundsControl = this.addControl( Viewport.anchors.legend, new Controls.BackgroundSwitcher(
                 this.map ) );
         }
@@ -158,12 +159,13 @@ class Viewport extends EventEmitter {
 
     /**
      * @private
+     * @param {DataMaps.Configuration.Map} mapConfig
      * @return {LeafletModule.MapOptions}
      */
-    _makeLeafletConfig() {
+    _makeLeafletConfig( mapConfig ) {
         // Ensure the `zoom` section of the config is initialised
-        if ( !this.map.config.zoom ) {
-            this.map.config.zoom = {
+        if ( !mapConfig.zoom ) {
+            mapConfig.zoom = {
                 min: 0.05,
                 lock: this.map.isFeatureBitSet( MapFlags.DisableZoom ),
                 max: 6,
@@ -173,19 +175,19 @@ class Viewport extends EventEmitter {
 
         // Disable automated minimum zoom calculation if the value has been specified in custom Leaflet settings
         // TODO: legacy behaviour, drop in v0.17
-        if ( 'minZoom' in ( this.map.config.leafletSettings || {} ) ) {
-            this.map.config.zoom.auto = false;
+        if ( 'minZoom' in ( mapConfig.leafletSettings || {} ) ) {
+            mapConfig.zoom.auto = false;
         }
 
         // If zoom is locked, disable all zoom controls
-        if ( this.map.config.zoom.lock ) {
-            this.map.config.leafletSettings = $.extend( {
+        if ( mapConfig.zoom.lock ) {
+            mapConfig.leafletSettings = $.extend( {
                 zoomControl: false,
                 boxZoom: false,
                 doubleClickZoom: false,
                 scrollWheelZoom: false,
                 touchZoom: false
-            }, this.map.config.leafletSettings || {} );
+            }, mapConfig.leafletSettings || {} );
         }
 
         // Prepare settings for Leaflet
@@ -199,8 +201,8 @@ class Viewport extends EventEmitter {
             zoomSnap: 0,
             zoomDelta: 0.25,
             wheelPxPerZoomLevel: 90,
-            maxZoom: this.map.config.zoom.max,
-            minZoom: this.map.config.zoom.min,
+            maxZoom: mapConfig.zoom.max,
+            minZoom: mapConfig.zoom.min,
             // Zoom animations cause some awkward locking as Leaflet waits for the animation to finish before processing more
             // zoom requests.
             // However, before v0.15.0 they had to be enabled to mitigate vector drift, which has been since fixed by Leaflet's
@@ -219,9 +221,9 @@ class Viewport extends EventEmitter {
 
             // Non-standard extended options
             // Automatic minimum zoom calculations
-            autoMinZoom: this.map.config.zoom.auto,
+            autoMinZoom: mapConfig.zoom.auto,
             // TODO: merge into minZoom
-            autoMinZoomAbsolute: this.map.config.zoom.min,
+            autoMinZoomAbsolute: mapConfig.zoom.min,
             // Zoom-based marker scaling
             shouldScaleMarkers: true,
             markerZoomScaleFactor: 1.8,
@@ -236,7 +238,7 @@ class Viewport extends EventEmitter {
 
             // Enable bundled interaction rejection control
             interactionControl: true
-        } ), this.map.config.leafletSettings );
+        } ), mapConfig.leafletSettings );
 
         return result;
     }
