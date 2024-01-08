@@ -125,11 +125,6 @@ class DataMap extends EventEmitter {
          */
         this._contentBounds = null;
         /**
-         * @private
-         * @type {HTMLElement?}
-         */
-        this._legendElement = null;
-        /**
          * @type {HTMLElement?}
          */
         this._fullScreenAnchor = null;
@@ -208,7 +203,6 @@ class DataMap extends EventEmitter {
      */
     _setupViewport() {
         this.viewport = new Viewport( this );
-        this._legendElement = this.viewport.legendAnchor;
 
         // Notify other components that the Leaflet component has been loaded, and remove all subscribers. All future
         // subscribers will be invoked right away.
@@ -314,6 +308,8 @@ class DataMap extends EventEmitter {
      * @param {boolean} value 
      */
     setFullScreen( value ) {
+        const leaflet = this.viewport && this.viewport.getLeafletMap();
+
         if ( value && this._fullScreenAnchor === null ) {
             // Turn fullscreen on
             this._fullScreenAnchor = Util.createDomElement( 'div', {
@@ -323,8 +319,8 @@ class DataMap extends EventEmitter {
             this.rootElement.classList.add( 'ext-datamaps-is-fullscreen' );
             document.body.appendChild( this.rootElement );
 
-            if ( this.leaflet.interactionControl ) {
-                this.leaflet.interactionControl.disable();
+            if ( leaflet && leaflet.interactionControl ) {
+                leaflet.interactionControl.disable();
             }
         } else if ( !value && this._fullScreenAnchor ) {
             // Turn fullscren off
@@ -332,8 +328,8 @@ class DataMap extends EventEmitter {
             this.rootElement.classList.remove( 'ext-datamaps-is-fullscreen' );
             this._fullScreenAnchor = null;
 
-            if ( this.leaflet.interactionControl ) {
-                this.leaflet.interactionControl.enable();
+            if ( leaflet && leaflet.interactionControl ) {
+                leaflet.interactionControl.enable();
             }
         }
     }
@@ -642,14 +638,14 @@ class DataMap extends EventEmitter {
         if ( properties && properties.bg !== undefined ) {
             const backgroundIndex = this.config.backgrounds.findIndex( x => x.layer === properties.bg );
             if ( backgroundIndex >= -1 ) {
-                this.setCurrentBackground( backgroundIndex );
+                this.setBackground( backgroundIndex );
             }
         }
 
         leafletMarker.openPopup();
 
         const viewport = Util.getNonNull( this.viewport );
-        if ( centreMapOver && viewport.leaflet.options.uriPopupZoom !== false ) {
+        if ( centreMapOver && viewport.getLeafletMap().options.uriPopupZoom !== false ) {
             viewport.flyToMarker( leafletMarker );
         }
     }
@@ -710,11 +706,17 @@ class DataMap extends EventEmitter {
      * @return {LeafletModule.LatLngBounds}
      */
     getCurrentContentBounds( invalidate ) {
+        if ( this.viewport === null ) {
+            throw new Error( 'Viewport-dependent method called but viewport not ready: getCurrentContentBounds' );
+        }
+
         if ( !invalidate || this._contentBounds === null ) {
+            const leaflet = this.viewport.getLeafletMap();
+
             this._contentBounds = new Leaflet.LatLngBounds();
             // Extend with each layer's bounds
-            for ( const id in this.viewport.leaflet._layers ) {
-                const layer = this.viewport.leaflet._layers[ id ];
+            for ( const id in leaflet._layers ) {
+                const layer = leaflet._layers[ id ];
 
                 if ( 'getBounds' in layer ) {
                     let layerBounds = /** @type {LeafletModule.IHasBoundsGetter} */ ( layer ).getBounds();
@@ -735,6 +737,7 @@ class DataMap extends EventEmitter {
                 }
             }
         }
+
         // Copy the cache into a new object
         return new Leaflet.LatLngBounds().extend( this._contentBounds );
     }
@@ -757,7 +760,7 @@ class DataMap extends EventEmitter {
         ) {
             return 0;
         }
-        return this._legendElement.offsetWidth;
+        return Util.getNonNull( this.viewport ).legendAnchor.offsetWidth;
     }
 
 
@@ -801,8 +804,8 @@ class DataMap extends EventEmitter {
      * @fires DataMap#legendManager
      */
     _onOOUILoaded() {
-        const container = Util.getNonNull( this.viewport ).legendAnchor;
-        this.legend = new LegendTabber( this, /** @type {HTMLElement} */ ( container ) ).setExpanded( true );
+        const container = /** @type {HTMLElement} */ ( Util.getNonNull( this.viewport ).legendAnchor );
+        this.legend = new LegendTabber( this, container ).setExpanded( true );
         this.fireMemorised( 'legendManager' );
     }
 
