@@ -202,7 +202,7 @@ class DataMap extends EventEmitter {
      * @fires DataMap#leafletLoadedLate
      */
     _setupViewport() {
-        this.viewport = new Viewport( this );
+        this.viewport = new Viewport( this, this.config );
 
         // Notify other components that the Leaflet component has been loaded, and remove all subscribers. All future
         // subscribers will be invoked right away.
