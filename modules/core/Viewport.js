@@ -58,15 +58,6 @@ class Viewport extends EventEmitter {
         this._leaflet = new Leaflet.Map( this._containerElement, leafletConfig );
 
         /**
-         * Public Leaflet instance access.
-         *
-         * @public
-         * @deprecated Private access must be forbidden prior to v0.17.0's finalisation.
-         * @type {LeafletModule.Map}
-         */
-        this.leaflet = this._leaflet;
-
-        /**
          * Stash for background layers.
          *
          * @private
@@ -248,6 +239,14 @@ class Viewport extends EventEmitter {
         } ), this.map.config.leafletSettings );
 
         return result;
+    }
+
+
+    /**
+     * @return {LeafletModule.Map}
+     */
+    getLeafletMap() {
+        return this._leaflet;
     }
 
 
