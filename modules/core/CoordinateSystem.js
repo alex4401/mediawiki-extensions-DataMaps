@@ -1,12 +1,14 @@
-const { CRSOrigin } = require( './enums.js' );
+const { CoordinateDisplayStyle, CRSOrigin } = require( './enums.js' ),
+    { getLeaflet } = require( './Util.js' );
 
 
 module.exports = class CoordinateSystem {
-    constructor ( box, angle ) {
+    constructor ( box, order, angle ) {
         this.topLeft = box[ 0 ];
         this.bottomRight = box[ 1 ];
         this.origin = ( this.topLeft[ 0 ] < this.bottomRight[ 0 ]
             && this.topLeft[ 1 ] < this.bottomRight[ 1 ] ) ? CRSOrigin.TopLeft : CRSOrigin.BottomLeft;
+        this.order = order;
         this.rotation = angle;
         this.rSin = Math.sin( -angle );
         this.rCos = Math.cos( -angle );
@@ -16,7 +18,7 @@ module.exports = class CoordinateSystem {
         this.scaleY = this.scaleX;
     }
 
-    
+
     /**
      * Maps a point from map's coordinate reference system specified by the server, to the universal space [ 0 0 100 100 ].
      * This respects CRS rotation.
@@ -87,5 +89,35 @@ module.exports = class CoordinateSystem {
         }
 
         return [ lat, lon ];
+    }
+
+
+    /**
+     * Returns a formatted datamap-coordinate-control-text message.
+     *
+     * @param {DataMaps.PointTupleRepr|number|LeafletModule.LatLng} latOrInstance Latitude or API marker instance
+     * @param {number?} [lon] Longitude if no instance specified.
+     * @return {string}
+     */
+    makeLabel( latOrInstance, lon ) {
+        let /** @type {number} */ lat;
+        if ( Array.isArray( latOrInstance ) ) {
+            [ lat, lon ] = latOrInstance;
+        } else if ( latOrInstance instanceof getLeaflet().LatLng ) {
+            [ lat, lon ] = this.fromLeaflet( latOrInstance );
+        } else {
+            lat = latOrInstance;
+        }
+
+        const message = 'datamap-coordinate-control-text' + (
+            this.order === CoordinateDisplayStyle.Xy ? '-xy'
+                : this.order === CoordinateDisplayStyle.Yx ? '-yx'
+                    : ''
+        );
+        // Messages that can be used here:
+        // - datamap-coordinate-control-text-xy
+        // - datamap-coordinate-control-text-yx
+        // - datamap-coordinate-control-text
+        return mw.msg( message, lat.toFixed( 2 ), /** @type {number} */ ( lon ).toFixed( 2 ) );
     }
 };
