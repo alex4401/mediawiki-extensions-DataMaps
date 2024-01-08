@@ -703,15 +703,17 @@ class DataMap extends EventEmitter {
 
                 if ( 'getBounds' in layer ) {
                     let layerBounds = /** @type {LeafletModule.IHasBoundsGetter} */ ( layer ).getBounds();
+                    // Fairly infrequent code... unless a wiki shows up with lots of vector overlays. No need to inline
+                    // coordinate transformations until then.
                     if ( this.crs.rotation ) {
                         for ( const [ a, b ] of [
                             [ layerBounds._southWest, layerBounds._northEast ],
                             [ layerBounds.getSouthEast(), layerBounds.getNorthWest() ]
                         ] ) {
-                            layerBounds = new Leaflet.LatLngBounds(
-                                [ a.lng * this._crsRotS + a.lat * this._crsRotC, a.lng * this._crsRotC - a.lat * this._crsRotS ],
-                                [ b.lng * this._crsRotS + b.lat * this._crsRotC, b.lng * this._crsRotC - b.lat * this._crsRotS ]
-                            );
+                            layerBounds = new Leaflet.LatLngBounds( this.crs.fromBox( 
+                                [ a.lat, a.lng ],
+                                [ b.lat, b.lng ]
+                            ) );
                         }
                     }
                     this._contentBounds.extend( layerBounds );
