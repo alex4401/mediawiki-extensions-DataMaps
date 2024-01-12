@@ -327,8 +327,6 @@ class DataMap extends EventEmitter {
      * @param {boolean} value 
      */
     setFullScreen( value ) {
-        const leaflet = this.viewport && this.viewport.getLeafletMap();
-
         if ( value && this._fullScreenAnchor === null ) {
             // Turn fullscreen on
             this._fullScreenAnchor = Util.createDomElement( 'div', {
@@ -337,19 +335,13 @@ class DataMap extends EventEmitter {
             Util.getNonNull( this.rootElement.parentNode ).insertBefore( this._fullScreenAnchor, this.rootElement );
             this.rootElement.classList.add( 'ext-datamaps-is-fullscreen' );
             document.body.appendChild( this.rootElement );
-
-            if ( leaflet && leaflet.interactionControl ) {
-                leaflet.interactionControl.disable();
-            }
+            this.fire( 'fullscreenSwitched', true );
         } else if ( !value && this._fullScreenAnchor ) {
-            // Turn fullscren off
+            // Turn fullscreen off
             Util.getNonNull( this._fullScreenAnchor.parentNode ).replaceChild( this.rootElement, this._fullScreenAnchor );
             this.rootElement.classList.remove( 'ext-datamaps-is-fullscreen' );
             this._fullScreenAnchor = null;
-
-            if ( leaflet && leaflet.interactionControl ) {
-                leaflet.interactionControl.enable();
-            }
+            this.fire( 'fullscreenSwitched', false );
         }
     }
 

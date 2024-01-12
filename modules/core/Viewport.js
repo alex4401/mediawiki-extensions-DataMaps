@@ -152,6 +152,8 @@ class Viewport extends EventEmitter {
         this.map.on( 'markerVisibilityUpdate', this.refreshViewProperties, this );
         // Switch background layers whenever current background is changed
         this.map.on( 'backgroundChange', this._updateBackgroundLayers, this );
+        // Toggle interaction control off when entering fullscreen mode
+        this.map.on( 'fullscreenSwitched', this._onFullscreenToggled, this );
         // Recalculate marker sizes when zoom ends
         this._leaflet.on( 'zoom', this.updateScaling, this );
     }
@@ -294,6 +296,17 @@ class Viewport extends EventEmitter {
         for ( const layer of this._backgroundStash ) {
             this._leaflet.addLayer( layer );
             layer.bringToBack();
+        }
+    }
+
+
+    /**
+     * @private
+     * @param {boolean} value
+     */
+    _onFullscreenToggled( value ) {
+        if ( this._leaflet.interactionControl ) {
+            this._leaflet.interactionControl[ value ? 'disable' : 'enable' ]();
         }
     }
 
