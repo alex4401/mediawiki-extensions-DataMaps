@@ -86,13 +86,18 @@ class MapContentValidator {
             return $result;
         }
 
-        $data = $content->expandData();
-
-        if ( $content->isFragment() && isset( $data->include ) ) {
+        if ( $content->isFragment() && isset( $contentStatus->getValue()->include ) ) {
             $result->fatal( 'datamap-error-validatespec-map-mixin-with-mixins' );
             return $result;
         }
 
+        if ( !$this->validateFragmentRefs( $result, $contentStatus->getValue() ) ) {
+            return $result;
+        }
+
+        $data = $content->expandData();
+
+        /** @var ?string */
         $schemaVersion = null;
         if ( !$this->validateAgainstSchema( $result, $data, $schemaVersion ) || $schemaVersion === null ) {
             return $result;
@@ -100,6 +105,29 @@ class MapContentValidator {
 
         if ( !$this->validateAgainstConstraints( $result, $data, $schemaVersion ) ) {
             return $result;
+        }
+
+        return $result;
+    }
+
+    private function validateFragmentRefs( Status $status, \stdClass $data ): bool {
+        $result = true;
+
+        if ( isset( $data->include ) ) {
+            $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
+
+            foreach ( $data->include as $fragmentName ) {
+                $title = Title::newFromText( $fragmentName );
+                $fragmentPage = -1;
+                if ( $title->getNamespace() === $config->getNamespaceId() ) {
+                    $fragmentPage = DataMapContent::loadPage( $title );
+                }
+
+                if ( is_numeric( $fragmentPage ) || $fragmentPage->getData()->getValue() === null ) {
+                    $status->fatal( 'datamap-error-validatespec-map-bad-mixin', wfEscapeWikiText( $fragmentName ) );
+                    $result = false;
+                }
+            }
         }
 
         return $result;
