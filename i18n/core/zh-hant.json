@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Kly",
-			"LowensteinYang"
+			"LowensteinYang",
+			"Winston Sung"
 		]
 	},
 	"datamap-desc": "允許將互動式地圖嵌入wiki頁面。",
@@ -20,6 +21,8 @@
 	"datamap-mapsrcinfo-heading-warnings": "'''警告：''' $1",
 	"datamap-mapsrcinfo-docslink": "如果有需要，您可以查閱[$1 擴充功能的文件]，或者如果您認為可能需要一些更改，請查閱[$2 建立票證]。",
 	"datamap-error-validate-invalid-json": "這不是有效的 JSON 文件。",
+	"datamap-validate-required-field": "缺少必要屬性：<code>$1</code>。",
+	"datamap-validate-unknown-error": "驗證屬性時發生未知錯誤：<code>$1</code>。請向開發人員[$2 回報此問題]。",
 	"datamap-error-bad-schema-origin": "欄位<code>$schema</code>缺失或無效。它必須指向受支援的架構定義，例如<code>$1</code> 。",
 	"datamap-error-bad-schema-version": "欄位<code>$schema</code>指向某個未知或不受支援的架構定義。支援以下修訂： $1 。",
 	"datamap-error-validate-unexpected-fields": "在結構$1中發現以下未知欄位：$2。",
