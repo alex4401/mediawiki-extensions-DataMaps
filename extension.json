@@ -25,7 +25,8 @@
 		]
 	},
 	"ExtensionMessagesFiles": {
-		"DataMapsMagic": "i18n/Magic.php"
+		"DataMapsMagic": "i18n/Magic.php",
+		"DataMapsNamespaces": "i18n/Namespaces.php"
 	},
 
 	"TrackingCategories": [
