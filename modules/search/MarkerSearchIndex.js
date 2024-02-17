@@ -5,7 +5,7 @@ const Util = require( './Util.js' ),
         MarkerGroupFlags,
         Util: CoreUtil
     } = require( 'ext.datamaps.core' ),
-    Fuzzysort = require( 'ext.datamaps.fuzzysort' );
+    Fuzzysort = require( '../vendor/fuzzysort/fuzzysort.min.js' );
 
 
 /**
