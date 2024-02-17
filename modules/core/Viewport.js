@@ -150,7 +150,7 @@ class Viewport extends EventEmitter {
             this.map.backgrounds[ this.map.getCurrentBackgroundIndex() ]
         );
         this.refreshViewProperties();
-        this.resetView();
+        this._doInitialViewReset();
         this.updateScaling();
 
         // Update bounds whenever background is changed or marker set is updated
@@ -341,6 +341,32 @@ class Viewport extends EventEmitter {
         this._leaflet.setZoom( this._leaflet.options.minZoom ).fitBounds( this.map.getCurrentContentBounds(), {
             paddingTopLeft: [ this.map.getMapOffsetWidth(), 0 ]
         } );
+    }
+
+
+    /**
+     * Resets the view as part of initial setup.
+     *
+     * If our container height is 0 (due to a collapsible), this effectively fails and results in a weird state. To
+     * work that around, let's listen for a resize event, invalidate Leaflet's tracked size, and reset the view then.
+     *
+     * @private
+     */
+    _doInitialViewReset() {
+        this.resetView();
+
+        const leafletContainer = this._leaflet.getContainer();
+        if ( leafletContainer.clientHeight === 0 ) {
+            const observer = new ResizeObserver( entries => {
+                if ( entries[ 0 ].contentRect.height > 0 ) {
+                    this._leaflet.invalidateSize();
+                    this.refreshViewProperties();
+                    this.resetView();
+                    observer.disconnect();
+                }
+            } );
+            observer.observe( leafletContainer );
+        }
     }
 
 
