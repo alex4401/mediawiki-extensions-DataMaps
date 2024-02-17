@@ -65,6 +65,7 @@ class MapContentValidator {
     private function createValidator(): Validator {
         $factory = new \JsonSchema\Constraints\Factory( $this->schemaStorage );
         $factory->setConstraintClass( 'object', JsonSchemaEx\ObjectConstraintEx::class );
+        $factory->setConstraintClass( 'number', JsonSchemaEx\NumberConstraintEx::class );
         return new Validator( $factory );
     }
 
@@ -151,7 +152,7 @@ class MapContentValidator {
             $result->fatal( 'datamap-validate-bad-schema' );
         } elseif ( !$validator->isValid() ) {
             $schemaVersion = $this->schemaVersionMap[$data->{'$schema'}];
-            
+
             $errors = $validator->getErrors( Validator::ERROR_DOCUMENT_VALIDATION );
             foreach ( $errors as $error ) {
                 $msg = self::ERROR_MESSAGE_MAP[$error['constraint']] ?? self::UNKNOWN_ERROR_MESSAGE;
