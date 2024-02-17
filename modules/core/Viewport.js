@@ -276,7 +276,7 @@ class Viewport extends EventEmitter {
      * streamed in, and is fairly expensive.
      */
     refreshViewProperties() {
-        const bounds = this.map.getPaddedContentBounds( true );
+        const bounds = this.map.getPaddedContentBounds( true, 0.75 );
         this._leaflet.setMaxBounds( bounds );
 
         if ( this._leaflet.options.autoMinZoom ) {
