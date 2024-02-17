@@ -80,7 +80,7 @@ class MapContentValidator {
         $result = new Status();
         $contentStatus = $content->getData();
 
-        // Short-circuit if the JSON is bad
+        // Short-circuit if the JSON is known bad
         if ( !$contentStatus->isGood() ) {
             $result->fatal( 'datamap-error-validate-invalid-json' );
             return $result;
@@ -133,7 +133,7 @@ class MapContentValidator {
         return $result;
     }
 
-    private function validateAgainstSchema( Status $result, \stdClass $data, string &$schemaVersion ): bool {
+    private function validateAgainstSchema( Status $result, \stdClass $data, ?string &$schemaVersion ): bool {
         $validator = $this->createValidator();
         $schemaWasBad = false;
 
