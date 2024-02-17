@@ -755,12 +755,14 @@ class DataMap extends EventEmitter {
      * @return {LeafletModule.LatLngBounds}
      */
     getPaddedContentBounds( invalidate ) {
-        const bounds = this.getCurrentContentBounds( invalidate );
-        const nw = bounds.getNorthWest(),
-            se = bounds.getSouthEast();
+        const bounds = this.getCurrentContentBounds( invalidate ),
+            ne = bounds.getNorthEast(),
+            sw = bounds.getSouthWest(),
+            heightBuffer = Math.abs( sw.lat - ne.lat ) * DataMap.BOUNDS_PADDING[ 0 ],
+            widthBuffer = Math.abs( sw.lng - ne.lng ) * DataMap.BOUNDS_PADDING[ 1 ];
         bounds.extend( [
-            [ se.lat - se.lat * DataMap.BOUNDS_PADDING[ 0 ][ 0 ], se.lng + se.lng * DataMap.BOUNDS_PADDING[ 0 ][ 1 ] ],
-            [ nw.lat + nw.lat * DataMap.BOUNDS_PADDING[ 1 ][ 0 ], nw.lng - nw.lng * DataMap.BOUNDS_PADDING[ 1 ][ 1 ] ]
+            [ sw.lat - heightBuffer, sw.lng - widthBuffer ],
+            [ ne.lat + heightBuffer, ne.lng + widthBuffer ]
         ] );
         return bounds;
     }
@@ -841,9 +843,9 @@ DataMap.anchors = Viewport.anchors;
  * Content bounds padding, relative to run-time computed bounds.
  *
  * @constant
- * @type {LeafletModule.LatLngBoundsTuple}
+ * @type {LeafletModule.LatLngTuple}
  */
-DataMap.BOUNDS_PADDING = [ [ 1.5, 2 ], [ 1.5, 2 ] ];
+DataMap.BOUNDS_PADDING = [ 1.5, 2 ];
 /**
  * Minimum and maximum viewport width for {@link DataMap.restoreDefaultView} to offset new view bounds by legend width.
  *
