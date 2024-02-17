@@ -158,7 +158,7 @@ class MapControl {
      * @protected
      */
     _refocusMap() {
-        this.map.leaflet.getContainer().focus();
+        getNonNull( this.map.viewport ).focus();
     }
 }
 
