@@ -718,6 +718,9 @@ class DataMap extends EventEmitter {
             const leaflet = this.viewport.getLeafletMap();
 
             this._contentBounds = new Leaflet.LatLngBounds();
+            // Leaflet does not initialise the corners in advance. If there are no layers on the map, this can cause
+            // a null dereference. Force initialisation to prevent that.
+            this._contentBounds.extend( [ 0, 0 ] );
             // Extend with each layer's bounds
             for ( const id in leaflet._layers ) {
                 const layer = leaflet._layers[ id ];
