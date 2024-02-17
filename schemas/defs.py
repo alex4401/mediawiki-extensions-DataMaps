@@ -217,9 +217,27 @@ class Settings(BaseModelEx):
     )
 class _BaseMarkerGroup(BaseModelEx):
     name: str
-    description: Optional[str]
-    icon: Optional[str]
-    article: Optional[str]
+    description: Optional[str] = Field(
+        None,
+        title='Description',
+        description='''
+            Shown in the legend right under.
+        '''
+    )
+    icon: Optional[str] = Field(
+        None,
+        title='Icon',
+        description='''
+            Shown in the legend.
+        '''
+    )
+    article: Optional[str] = Field(
+        None,
+        title='Related article',
+        description='''
+            If set, all markers in this group will link to this article.
+        '''
+    )
     isDefault: bool = True
     isCollectible: Literal[False, True, 'individual', 'group', 'globalGroup'] = False
     autoNumberInChecklist: bool = False
