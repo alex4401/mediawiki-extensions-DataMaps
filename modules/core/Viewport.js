@@ -276,12 +276,12 @@ class Viewport extends EventEmitter {
      * streamed in, and is fairly expensive.
      */
     refreshViewProperties() {
-        const bounds = this.map.getPaddedContentBounds( true, 0.75 );
-        this._leaflet.setMaxBounds( bounds );
+        this._leaflet.setMaxBounds( this.map.getPaddedContentBounds( true ) );
 
         if ( this._leaflet.options.autoMinZoom ) {
             this._leaflet.options.minZoom = this._leaflet.options.autoMinZoomAbsolute;
-            this._leaflet.setMinZoom( this._leaflet.getBoundsZoom( bounds, false, [ 0, 0 ] ) );
+            const computedZoom = this._leaflet.getBoundsZoom( this.map.getPaddedContentBounds( false, 0.75 ), false, [ 0, 0 ] );
+            this._leaflet.setMinZoom( computedZoom );
             // TODO: this should recalculate popup zoom?
         }
     }
