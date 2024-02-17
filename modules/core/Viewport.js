@@ -145,6 +145,10 @@ class Viewport extends EventEmitter {
                 this.map ) );
         }
 
+        this._updateBackgroundLayers(
+            this.map.getCurrentBackgroundIndex(),
+            this.map.backgrounds[ this.map.getCurrentBackgroundIndex() ]
+        );
         this.refreshViewProperties();
         this.resetView();
         this.updateScaling();
