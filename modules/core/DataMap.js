@@ -714,7 +714,7 @@ class DataMap extends EventEmitter {
             throw new Error( 'Viewport-dependent method called but viewport not ready: getCurrentContentBounds' );
         }
 
-        if ( !invalidate || this._contentBounds === null ) {
+        if ( invalidate || this._contentBounds === null ) {
             const leaflet = this.viewport.getLeafletMap();
 
             this._contentBounds = new Leaflet.LatLngBounds();
