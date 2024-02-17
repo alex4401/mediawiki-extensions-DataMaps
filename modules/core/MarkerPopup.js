@@ -182,7 +182,7 @@ module.exports = class MarkerPopup {
         let detailText = discrims.join( ', ' );
         // Reformat if coordinates are to be shown
         if ( this.map.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
-            const coordText = this.map.getCoordinateLabel( this.leafletMarker.apiInstance );
+            const coordText = this.map.crs.makeLabel( this.leafletMarker.apiInstance );
             detailText = detailText ? `${coordText} (${detailText})` : coordText;
         }
         // Push onto the contents
@@ -344,7 +344,7 @@ module.exports = class MarkerPopup {
                 const title = mw.Title.newFromImg( $image );
                 let caption = this.markerGroup.name;
                 if ( this.map.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
-                    caption += ` (${this.map.getCoordinateLabel( this.leafletMarker.apiInstance )})`;
+                    caption += ` (${this.map.crs.makeLabel( this.leafletMarker.apiInstance )})`;
                 }
 
                 $image.on( 'click', event => {
