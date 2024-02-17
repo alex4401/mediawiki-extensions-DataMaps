@@ -340,7 +340,7 @@ CollectiblesPanel.Row = class Row {
 
         if ( this.outerSection.panel.map.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
             Util.createDomElement( 'b', {
-                text: this.outerSection.panel.map.getCoordLabel( this.marker.apiInstance ),
+                text: this.outerSection.panel.map.crs.makeLabel( this.marker.apiInstance ),
                 appendTo: this.labelElement
             } );
         }

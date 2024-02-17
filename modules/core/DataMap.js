@@ -355,19 +355,6 @@ class DataMap extends EventEmitter {
 
 
     /**
-     * Returns a formatted datamap-coordinate-control-text message.
-     *
-     * @deprecated Remove before v0.17.0 is finalised.
-     * @param {DataMaps.PointTupleRepr|number|LeafletModule.LatLng} latOrInstance Latitude or API marker instance
-     * @param {number?} [lon] Longitude if no instance specified.
-     * @return {string}
-     */
-    getCoordinateLabel( latOrInstance, lon ) {
-        return this.crs.makeLabel( latOrInstance, lon );
-    }
-
-
-    /**
      * Returns global storage interface for global collectibles, local otherwise.
      *
      * @param {DataMaps.Configuration.MarkerGroup} group

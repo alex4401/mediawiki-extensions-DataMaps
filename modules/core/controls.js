@@ -215,7 +215,7 @@ class Coordinates extends MapControl {
         const leaflet = getNonNull( this.map.viewport ).getLeafletMap();
         leaflet.on( 'mousemove', event => {
             this.setVisible( true );
-            this.element.innerText = this.map.getCoordinateLabel( event.latlng );
+            this.element.innerText = this.map.crs.makeLabel( event.latlng );
         } );
         leaflet.on( 'mouseover', () => this.setVisible( true ) );
         this.map.rootElement.addEventListener( 'mouseout', () => this.setVisible( false ) );
