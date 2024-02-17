@@ -211,11 +211,13 @@ class Coordinates extends MapControl {
 
     _build() {
         this.setVisible( false );
-        this.map.leaflet.on( 'mousemove', event => {
+
+        const leaflet = getNonNull( this.map.viewport ).getLeafletMap();
+        leaflet.on( 'mousemove', event => {
             this.setVisible( true );
             this.element.innerText = this.map.getCoordinateLabel( event.latlng );
         } );
-        this.map.leaflet.on( 'mouseover', () => this.setVisible( true ) );
+        leaflet.on( 'mouseover', () => this.setVisible( true ) );
         this.map.rootElement.addEventListener( 'mouseout', () => this.setVisible( false ) );
     }
 }
