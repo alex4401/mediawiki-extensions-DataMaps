@@ -139,7 +139,7 @@ class MapContentValidator {
 
         if ( isset( $data->{'$schema'} ) && is_string( $data->{'$schema'} ) ) {
             try {
-                $validator->validate( $data, (object)[ '$ref' => $data->{'$schema'} . '#/definitions/DataMap' ] );
+                $validator->validate( $data, (object)[ '$ref' => $data->{'$schema'} ] );
             } catch ( ResourceNotFoundException $exc ) {
                 $schemaWasBad = true;
             }
