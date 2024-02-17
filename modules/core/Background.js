@@ -24,6 +24,13 @@ class Background extends EventEmitter {
         this.map = map;
 
         /**
+         * Display name.
+         *
+         * @type {string}
+         */
+        this.displayName = config.name;
+
+        /**
          * Associated marker category.
          *
          * @type {string}
