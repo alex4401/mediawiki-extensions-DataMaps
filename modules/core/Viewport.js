@@ -86,6 +86,9 @@ class Viewport extends EventEmitter {
             } );
         }
 
+        // Set map's reference to ourselves here, as controls may need it for initialisation
+        this.map.viewport = this;
+
         // Install the interaction rejection controller
         const useSleepInteractions = this.map.isFeatureBitSet( MapFlags.SleepingInteractions )
             || this.map.isFeatureBitSet( MapFlags.VisualEditor );
