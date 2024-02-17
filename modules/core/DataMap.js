@@ -656,18 +656,6 @@ class DataMap extends EventEmitter {
 
 
     /**
-     * Changes currently shown background without affecting the user preference.
-     *
-     * @deprecated use setBackground, remove before 0.17.0 is finalised
-     * @param {number} index
-     * @fires DataMap#backgroundChange
-     */
-    setCurrentBackground( index ) {
-        this.setBackground( index );
-    }
-
-
-    /**
      * @since 0.17.0
      * @return {number}
      */
