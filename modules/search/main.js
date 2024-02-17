@@ -2,6 +2,7 @@ const
     {
         MapFlags,
         DataMap,
+        Viewport,
         Util
     } = require( 'ext.datamaps.core' ),
     MarkerSearch = require( './MarkerSearch.js' ),
@@ -12,9 +13,9 @@ const
  */
 const sharedTabberIndexMap = {};
 mw.dataMaps.registerMapAddedHandler( map => {
-    if ( map.isFeatureBitSet( MapFlags.Search ) ) {
+    if ( map.checkFeatureFlag( MapFlags.Search ) ) {
         map.on( 'leafletLoaded', () => {
-            let isLinked = map.isFeatureBitSet( MapFlags.LinkedSearch ),
+            let isLinked = map.checkFeatureFlag( MapFlags.LinkedSearch ),
                 tabberId = null;
 
             if ( isLinked ) {
@@ -31,7 +32,11 @@ mw.dataMaps.registerMapAddedHandler( map => {
                 index = new MarkerSearchIndex();
             }
 
-            map.search = map.addControl( DataMap.anchors.legend, new MarkerSearch( map, index, isLinked ), true );
+            map.search = Util.getNonNull( map.viewport ).addControl(
+                Viewport.anchors.legend,
+                new MarkerSearch( map, index, isLinked ),
+                true
+            );
         } );
     }
 } );

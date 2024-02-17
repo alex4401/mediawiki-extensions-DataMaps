@@ -90,7 +90,7 @@ class MarkerSearch extends Controls.MapControl {
         this._inputBox.$input[ 0 ].addEventListener( 'keydown', event => this._handleInputKeyDownEvent( event ) );
         this._inputBox.on( 'change', () => this._handleInputChange() );
         this._innerElement.addEventListener( 'click', () => this._inputBox.$input[ 0 ].focus() );
-        this.map.leaflet.on( 'click', () => this.toggle( false ), this );
+        Util.getNonNull( this.map.viewport ).getLeafletMap().on( 'click', () => this.toggle( false ), this );
         this.map.on( 'markerReady', this.addMarker, this );
         this.map.on( 'chunkStreamingDone', this._onChunkStreamed, this );
     }
