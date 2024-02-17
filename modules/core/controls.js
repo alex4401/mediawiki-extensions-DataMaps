@@ -268,13 +268,13 @@ class ExtraViewControls extends MapControl {
             addToSelf: true,
             icon: 'imageLayoutFrame',
             tooltip: mw.msg( 'datamap-control-reset-view' ),
-            clickHandler: () => this.map.restoreDefaultView()
+            clickHandler: () => getNonNull( this.map.viewport ).resetView()
         } );
         this._makeButton( {
             addToSelf: true,
             icon: 'alignCenter',
             tooltip: mw.msg( 'datamap-control-centre-view' ),
-            clickHandler: () => this.map.centreView()
+            clickHandler: () => getNonNull( this.map.viewport ).centreView()
         } );
     }
 }
