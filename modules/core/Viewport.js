@@ -311,6 +311,11 @@ class Viewport extends EventEmitter {
     }
 
 
+    focus() {
+        this._leaflet.getContainer().focus();
+    }
+
+
     /**
      * Flies over to a marker, putting it in the viewport's centre at a reasonable zoom level.
      *
