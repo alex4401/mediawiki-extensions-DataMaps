@@ -60,6 +60,7 @@
     "datamap-error-pf-page-invalid-content-model": "Content model of page \"[[$1]]\" is not <code>Interactive Data Map</code>.",
     "datamap-error-pf-max-width-invalid": "Maximum width of the map embed must be an integer greater than zero.",
     "datamap-error-map-validation-fail": "The [[$1|data map's source code]] no longer passes data validation. Please fix the errors.",
+    "datamap-background-name-fallback": "Untitled",
     "datamap-legend-label": "Contents",
     "datamap-javascript-required": "JavaScript must be enabled for this map to work. If you do not see it below, it probably means you have JavaScript disabled.",
     "datamap-loading-js": "Loading scripts",
