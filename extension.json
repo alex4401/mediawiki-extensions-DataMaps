@@ -459,22 +459,34 @@
 		"datamap": "MediaWiki\\Extension\\DataMaps\\Content\\DataMapContentHandler"
 	},
 	
-	"callback": "MediaWiki\\Extension\\DataMaps\\HookHandler::onRegistration",
+	"callback": "MediaWiki\\Extension\\DataMaps\\Hooks\\ContentModelHooks::onRegistration",
 	"Hooks": {
 		"ParserFirstCallInit": "MainHandler",
-		"ContentHandlerDefaultModelFor": "MainHandler",
-		"CanonicalNamespaces": "MainHandler",
+		"ContentHandlerDefaultModelFor": "ContentModelHooks",
+		"CanonicalNamespaces": "NamespaceHooks",
 		"GetPreferences": "MainHandler",
 		"SkinTemplateNavigation::Universal": "MainHandler",
 		"ChangeTagsListActive": "MainHandler",
 		"ListDefinedTags": "MainHandler",
 		"RecentChange_save": "MainHandler",
 		"RevisionDataUpdates": "MainHandler",
-		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\DataMaps\\HookHandler::onCodeEditorGetPageLanguage"
+		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\DataMaps\\Hooks\\ContentModelHooks::onCodeEditorGetPageLanguage"
 	},
     "HookHandlers": {
         "MainHandler": {
             "class": "MediaWiki\\Extension\\DataMaps\\HookHandler",
+			"services": [
+				"DataMaps.Config"
+			]
+        },
+        "ContentModelHooks": {
+            "class": "MediaWiki\\Extension\\DataMaps\\Hooks\\ContentModelHooks",
+			"services": [
+				"DataMaps.Config"
+			]
+        },
+        "NamespaceHooks": {
+            "class": "MediaWiki\\Extension\\DataMaps\\Hooks\\NamespaceHooks",
 			"services": [
 				"DataMaps.Config"
 			]

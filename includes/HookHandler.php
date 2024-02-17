@@ -20,8 +20,6 @@ use User;
 
 final class HookHandler implements
     \MediaWiki\Hook\ParserFirstCallInitHook,
-    \MediaWiki\Revision\Hook\ContentHandlerDefaultModelForHook,
-    \MediaWiki\Hook\CanonicalNamespacesHook,
     \MediaWiki\Preferences\Hook\GetPreferencesHook,
     \MediaWiki\Hook\SkinTemplateNavigation__UniversalHook,
     \MediaWiki\ChangeTags\Hook\ChangeTagsListActiveHook,
@@ -37,47 +35,6 @@ final class HookHandler implements
      */
     public function __construct( ExtensionConfig $config ) {
         $this->config = $config;
-    }
-
-    public static function onRegistration(): bool {
-        define( 'CONTENT_MODEL_DATAMAPS', 'datamap' );
-        define( 'CONTENT_MODEL_DATAMAPS_FANDOM_COMPAT', 'interactivemap' );
-
-        global $wgContentHandlers, $wgDataMapsNamespaceId, $wgDataMapsEnableFandomPortingTools;
-        if ( $wgDataMapsEnableFandomPortingTools && $wgDataMapsNamespaceId === 2900 ) {
-            $wgContentHandlers[CONTENT_MODEL_DATAMAPS_FANDOM_COMPAT] = FandomMapContentHandler::class;
-        }
-
-        return true;
-    }
-
-    private static function ideConstantsFromExtensionJson() {
-        define( 'NS_MAP', 2900 );
-        define( 'NS_MAP_TALK', 2901 );
-    }
-
-    /**
-     * Registers Map namespace if configured so (default behaviour). Sets the robot policy if namespace ID is 2900.
-     *
-     * @param string[] &$namespaces
-     * @return void
-     */
-    public function onCanonicalNamespaces( &$namespaces ) {
-        if ( $this->config->isNamespaceManaged() ) {
-            $namespaces[NS_MAP] = 'Map';
-            $namespaces[NS_MAP_TALK] = 'Map_talk';
-        }
-
-        // If our default namespace ID is used (because some earlier wiki.gg DataMaps deployments had to define their own
-        // namespace as we didn't manage any back then) set the robot policy to disallow indexing if it hasn't been specified by
-        // local sysadmins.
-        //
-        // Articles should embed the maps as needed, as that is the most likely target for map usage anyway. Source pages should
-        // not compete.
-        global $wgNamespaceRobotPolicies;
-        if ( $this->config->getNamespaceId() === 2900 && !isset( $wgNamespaceRobotPolicies[2900] ) ) {
-            $wgNamespaceRobotPolicies[2900] = 'noindex,follow';
-        }
     }
 
     /**
@@ -101,45 +58,6 @@ final class HookHandler implements
             'datamaplink', [ ParserFunctions\MapLinkFunction::class, 'run' ],
             Parser::SFH_OBJECT_ARGS
         );
-    }
-
-    private static function isDocPage( Title $title ) {
-        $docPage = wfMessage( 'datamap-doc-page-suffix' )->inContentLanguage();
-        return !$docPage->isDisabled() && str_ends_with( $title->getPrefixedText(), $docPage->plain() );
-    }
-
-    /**
-     * Promotes map content model as default for pages in the Map namespace, optionally checking if the title prefix is
-     * satisfied.
-     *
-     * @param Title $title
-     * @param string &$model
-     * @return void
-     */
-    public function onContentHandlerDefaultModelFor( $title, &$model ) {
-        if ( $title->getNamespace() === $this->config->getNamespaceId() && !self::isDocPage( $title ) ) {
-            $prefix = wfMessage( 'datamap-standard-title-prefix' )->inContentLanguage();
-            if ( $prefix !== '-' && str_starts_with( $title->getText(), $prefix->plain() ) ) {
-                $model = CONTENT_MODEL_DATAMAPS;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Informs Extension:CodeEditor that map pages should use JSON highlighting.
-     *
-     * @param Title $title
-     * @param string &$languageCode
-     * @return void
-     */
-    public static function onCodeEditorGetPageLanguage( Title $title, &$languageCode ) {
-        if ( $title->hasContentModel( CONTENT_MODEL_DATAMAPS ) ) {
-            $languageCode = 'json';
-        }
-
-        return true;
     }
 
     /**
