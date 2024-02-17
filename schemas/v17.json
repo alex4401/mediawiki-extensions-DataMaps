@@ -4,12 +4,14 @@
 			"additionalProperties": false,
 			"properties": {
 				"name": {
+					"minLength": 1,
 					"title": "Name",
 					"type": "string"
 				},
 				"description": {
 					"anyOf": [
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -204,12 +206,14 @@
 			"additionalProperties": false,
 			"properties": {
 				"name": {
+					"minLength": 1,
 					"title": "Name",
 					"type": "string"
 				},
 				"description": {
 					"anyOf": [
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -315,6 +319,7 @@
 				"associatedLayer": {
 					"anyOf": [
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -398,6 +403,7 @@
 				"id": {
 					"anyOf": [
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -430,6 +436,7 @@
 				"name": {
 					"anyOf": [
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -448,6 +455,7 @@
 							"type": "array"
 						},
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -481,6 +489,7 @@
 				"article": {
 					"anyOf": [
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -503,6 +512,7 @@
 								"minItems": 2,
 								"prefixItems": [
 									{
+										"minLength": 1,
 										"type": "string"
 									},
 									{
@@ -514,6 +524,7 @@
 							"type": "array"
 						},
 						{
+							"minLength": 1,
 							"type": "string"
 						}
 					],
@@ -548,6 +559,7 @@
 				"name": {
 					"anyOf": [
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -693,6 +705,7 @@
 				"disclaimer": {
 					"anyOf": [
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -776,12 +789,14 @@
 			"additionalProperties": false,
 			"properties": {
 				"name": {
+					"minLength": 1,
 					"title": "Name",
 					"type": "string"
 				},
 				"description": {
 					"anyOf": [
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -1118,6 +1133,7 @@
 				"disclaimer": {
 					"anyOf": [
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -1237,6 +1253,7 @@
 				"associatedLayer": {
 					"anyOf": [
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -1316,6 +1333,7 @@
 				"id": {
 					"anyOf": [
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -1348,6 +1366,7 @@
 				"name": {
 					"anyOf": [
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -1366,6 +1385,7 @@
 							"type": "array"
 						},
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -1399,6 +1419,7 @@
 				"article": {
 					"anyOf": [
 						{
+							"minLength": 1,
 							"type": "string"
 						},
 						{
@@ -1421,6 +1442,7 @@
 								"minItems": 2,
 								"prefixItems": [
 									{
+										"minLength": 1,
 										"type": "string"
 									},
 									{
@@ -1432,6 +1454,7 @@
 							"type": "array"
 						},
 						{
+							"minLength": 1,
 							"type": "string"
 						}
 					],

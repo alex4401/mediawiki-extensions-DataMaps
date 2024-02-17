@@ -25,9 +25,10 @@ Point1 = float|Point
 Box = tuple[Point, Point]
 Rgb = str|tuple[int, int, int]
 Rgba = str|tuple[int, int, int, int]
-MultilineString = list[str]|str
-LayerId = Annotated[str, Field()]
-LayerAssociationStr = Annotated[str, Field()]
+NonEmptyString = Annotated[str, Field(min_length=1)]
+MultilineString = list[str]|NonEmptyString
+LayerId = Annotated[str, Field(min_length=1)]
+LayerAssociationStr = Annotated[str, Field(min_length=1)]
 
 
 ##% Structs
@@ -216,8 +217,8 @@ class Settings(BaseModelEx):
         '''
     )
 class _BaseMarkerGroup(BaseModelEx):
-    name: str
-    description: Optional[str] = Field(
+    name: NonEmptyString
+    description: Optional[NonEmptyString] = Field(
         None,
         title='Description',
         description='''
@@ -253,20 +254,20 @@ class IconMarkerGroup(_BaseMarkerGroup):
     icon: str
     size: float|Point1 = 32
 class MarkerCategory(BaseModelEx):
-    name: Optional[str] = None
+    name: Optional[NonEmptyString] = None
     subtleText: Optional[str] = None
     overrideIcon: Optional[str] = None
 class _Marker(BaseModelEx):
-    id: Optional[str|int] = None
+    id: Optional[NonEmptyString|int] = None
     icon: Optional[str] = None
     scale: float = 1.0
-    name: Optional[str] = None
+    name: Optional[NonEmptyString] = None
     description: Optional[MultilineString] = None
     isWikitext: Literal[None, False, True] = None
     image: Optional[str] = None
-    article: Optional[str] = None
+    article: Optional[NonEmptyString] = None
     canSearchFor: bool = True
-    searchKeywords: list[tuple[str, float]]|str = []
+    searchKeywords: list[tuple[NonEmptyString, float]]|NonEmptyString = []
 class LatLonMarker(_Marker):
     lat: float
     lon: float
@@ -290,7 +291,7 @@ class _DataMap(BaseModelEx):
     )
     groups: dict[LayerId, CircularMarkerGroup|PinMarkerGroup|IconMarkerGroup] = dict()
     categories: dict[LayerId, MarkerCategory] = dict()
-    disclaimer: Optional[str] = None
+    disclaimer: Optional[NonEmptyString] = None
     markers: dict[LayerAssociationStr, list[LatLonMarker|XyMarker]] = dict()
     custom: Optional[dict[str, Any]] = None
 class SingleBackgroundDataMap(_DataMap):
