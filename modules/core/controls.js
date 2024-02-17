@@ -179,18 +179,20 @@ class BackgroundSwitcher extends MapControl {
 
     _build() {
         const element = /** @type {HTMLSelectElement} */ ( this.element );
-        for ( const [ index, background ] of this.map.config.backgrounds.entries() ) {
+        for ( const [ index, background ] of this.map.backgrounds.entries() ) {
             createDomElement( 'option', {
-                text: background.name,
+                text: background.displayName,
                 attributes: {
                     value: index
                 },
                 appendTo: element
             } );
         }
-        element.value = `${this.map.backgroundIndex}`;
+
+        const syncDropdownCallback = () => ( element.value = `${this.map.getCurrentBackgroundIndex()}` );
         element.addEventListener( 'change', () => this.map.setBackgroundPreference( parseInt( element.value ) ) );
-        this.map.on( 'backgroundChange', () => ( element.value = `${this.map.backgroundIndex}` ) );
+        syncDropdownCallback();
+        this.map.on( 'backgroundChange', syncDropdownCallback );
     }
 }
 

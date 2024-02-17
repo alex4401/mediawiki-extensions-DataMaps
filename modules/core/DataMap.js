@@ -648,6 +648,7 @@ class DataMap extends EventEmitter {
     /**
      * Changes currently shown background without affecting the user preference.
      *
+     * @since 0.17.0
      * @param {number} index
      * @fires DataMap#backgroundChange
      */
@@ -676,6 +677,15 @@ class DataMap extends EventEmitter {
      */
     setCurrentBackground( index ) {
         this.setBackground( index );
+    }
+
+
+    /**
+     * @since 0.17.0
+     * @return {number}
+     */
+    getCurrentBackgroundIndex() {
+        return this._currentBackgroundIndex;
     }
 
 
