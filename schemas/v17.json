@@ -16,6 +16,8 @@
 							"type": "null"
 						}
 					],
+					"default": null,
+					"description": "\n            Shown in the legend right under.\n        ",
 					"title": "Description"
 				},
 				"icon": {
@@ -27,6 +29,8 @@
 							"type": "null"
 						}
 					],
+					"default": null,
+					"description": "\n            Shown in the legend.\n        ",
 					"title": "Icon"
 				},
 				"article": {
@@ -38,7 +42,9 @@
 							"type": "null"
 						}
 					],
-					"title": "Article"
+					"default": null,
+					"description": "\n            If set, all markers in this group will link to this article.\n        ",
+					"title": "Related article"
 				},
 				"isDefault": {
 					"default": true,
@@ -110,9 +116,6 @@
 			},
 			"required": [
 				"name",
-				"description",
-				"icon",
-				"article",
 				"fillColor"
 			],
 			"title": "CircularMarkerGroup",
@@ -213,6 +216,8 @@
 							"type": "null"
 						}
 					],
+					"default": null,
+					"description": "\n            Shown in the legend right under.\n        ",
 					"title": "Description"
 				},
 				"icon": {
@@ -228,7 +233,9 @@
 							"type": "null"
 						}
 					],
-					"title": "Article"
+					"default": null,
+					"description": "\n            If set, all markers in this group will link to this article.\n        ",
+					"title": "Related article"
 				},
 				"isDefault": {
 					"default": true,
@@ -284,9 +291,7 @@
 			},
 			"required": [
 				"name",
-				"description",
-				"icon",
-				"article"
+				"icon"
 			],
 			"title": "IconMarkerGroup",
 			"type": "object"
@@ -783,6 +788,8 @@
 							"type": "null"
 						}
 					],
+					"default": null,
+					"description": "\n            Shown in the legend right under.\n        ",
 					"title": "Description"
 				},
 				"icon": {
@@ -794,6 +801,8 @@
 							"type": "null"
 						}
 					],
+					"default": null,
+					"description": "\n            Shown in the legend.\n        ",
 					"title": "Icon"
 				},
 				"article": {
@@ -805,7 +814,9 @@
 							"type": "null"
 						}
 					],
-					"title": "Article"
+					"default": null,
+					"description": "\n            If set, all markers in this group will link to this article.\n        ",
+					"title": "Related article"
 				},
 				"isDefault": {
 					"default": true,
@@ -865,9 +876,6 @@
 			},
 			"required": [
 				"name",
-				"description",
-				"icon",
-				"article",
 				"pinColor"
 			],
 			"title": "PinMarkerGroup",
