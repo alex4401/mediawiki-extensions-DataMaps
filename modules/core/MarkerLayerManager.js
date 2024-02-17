@@ -1,5 +1,7 @@
 /** @typedef {import( './DataMap.js' )} DataMap */
 
+const { getNonNull } = require( './Util.js' );
+
 
 module.exports = class MarkerLayerManager {
     /**
@@ -65,7 +67,16 @@ module.exports = class MarkerLayerManager {
          */
         this._doNotUpdate = false;
 
-        this.map.on( 'markerVisibilityUpdate', () => ( this.map.leaflet._haveLayersMutated = false ) );
+        this.map.on( 'markerVisibilityUpdate', () => ( this._getLeafletMap()._haveLayersMutated = false ) );
+    }
+
+
+    /**
+     * @private
+     * @return {LeafletModule.Map}
+     */
+    _getLeafletMap() {
+        return getNonNull( this.map.viewport ).getLeafletMap();
     }
 
 
@@ -116,7 +127,7 @@ module.exports = class MarkerLayerManager {
      * @param {LeafletModule.AnyMarker} leafletMarker
      */
     removeMember( leafletMarker ) {
-        this.map.leaflet.removeLayer( leafletMarker );
+        this._getLeafletMap().removeLayer( leafletMarker );
         for ( const layer of leafletMarker.attachedLayers ) {
             delete this.byLayer[ layer ][ this.byLayer[ layer ].indexOf( leafletMarker ) ];
         }
@@ -187,16 +198,17 @@ module.exports = class MarkerLayerManager {
             this._computeCache[ cacheKey ] = shouldBeVisible;
         }
         // Add to Leaflet map if true, remove if false
-        this.map.leaflet._haveLayersMutated = false;
+        const leaflet = this._getLeafletMap();
+        leaflet._haveLayersMutated = false;
         if ( shouldBeVisible ) {
-            this.map.leaflet.addLayer( leafletMarker );
+            leaflet.addLayer( leafletMarker );
         } else {
-            this.map.leaflet.removeLayer( leafletMarker );
+            leaflet.removeLayer( leafletMarker );
         }
 
         // Notify other components of the visibility change if not an internal call, and there has been a recorded
         // ownership change.
-        if ( !isInternalCall && this.map.leaflet._haveLayersMutated ) {
+        if ( !isInternalCall && leaflet._haveLayersMutated ) {
             this.map.fire( 'markerVisibilityUpdate' );
         }
     }
@@ -208,7 +220,7 @@ module.exports = class MarkerLayerManager {
      */
     updateMembers( layerName ) {
         // Exit if Leaflet map is not initialised yet, updates are disabled, or the layer has not been registered
-        if ( !this.map.leaflet || this._doNotUpdate || ( layerName && !this.byLayer[ layerName ] ) ) {
+        if ( !this.map.viewport || this._doNotUpdate || ( layerName && !this.byLayer[ layerName ] ) ) {
             return;
         }
 
@@ -218,7 +230,7 @@ module.exports = class MarkerLayerManager {
         }
 
         // Notify other components of the visibility change if there has been a recorded ownership change
-        if ( this.map.leaflet._haveLayersMutated ) {
+        if ( this._getLeafletMap()._haveLayersMutated ) {
             this.map.fire( 'markerVisibilityUpdate' );
         }
     }
@@ -304,7 +316,7 @@ module.exports = class MarkerLayerManager {
         for ( const leafletMarker of this.byLayer[ layerName ] ) {
             // Remove the marker from map
             if ( leafletMarker._map ) {
-                this.map.leaflet.removeLayer( leafletMarker );
+                this._getLeafletMap().removeLayer( leafletMarker );
             }
             // Remember other layers this marker is in, so we can clean them up as well
             for ( const other of leafletMarker.attachedLayers ) {
