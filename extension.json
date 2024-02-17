@@ -201,13 +201,6 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.datamaps.fuzzysort": {
-			"packageFiles": [
-				"vendor/fuzzysort/fuzzysort.min.js"
-			],
-			"targets": [ "desktop", "mobile" ]
-		},
-
 		"ext.datamaps.search": {
 			"es6": true,
 			"dependencies": [
@@ -215,14 +208,14 @@
 				"oojs-ui-widgets",
 				"ext.datamaps.core",
 				"ext.datamaps.bootstrap",
-				"ext.datamaps.leaflet",
-				"ext.datamaps.fuzzysort"
+				"ext.datamaps.leaflet"
 			],
 			"packageFiles": [
 				"search/main.js",
 				"search/MarkerSearch.js",
 				"search/MarkerSearchIndex.js",
-				"search/Util.js"
+				"search/Util.js",
+				"vendor/fuzzysort/fuzzysort.min.js"
 			],
 			"styles": [
 				"search/css/styles.less"
