@@ -752,14 +752,16 @@ class DataMap extends EventEmitter {
      * Calculates content bounds and includes extra padding around the area.
      *
      * @param {boolean} invalidate Whether the bounds should be recalculated.
+     * @param {number} [bufferMultiplier=1]
      * @return {LeafletModule.LatLngBounds}
      */
-    getPaddedContentBounds( invalidate ) {
+    getPaddedContentBounds( invalidate, bufferMultiplier ) {
+        bufferMultiplier = bufferMultiplier || 1;
         const bounds = this.getCurrentContentBounds( invalidate ),
             ne = bounds.getNorthEast(),
             sw = bounds.getSouthWest(),
-            heightBuffer = Math.abs( sw.lat - ne.lat ) * DataMap.BOUNDS_PADDING[ 0 ],
-            widthBuffer = Math.abs( sw.lng - ne.lng ) * DataMap.BOUNDS_PADDING[ 1 ];
+            heightBuffer = Math.abs( sw.lat - ne.lat ) * DataMap.BOUNDS_PADDING[ 0 ] * bufferMultiplier,
+            widthBuffer = Math.abs( sw.lng - ne.lng ) * DataMap.BOUNDS_PADDING[ 1 ] * bufferMultiplier;
         bounds.extend( [
             [ sw.lat - heightBuffer, sw.lng - widthBuffer ],
             [ ne.lat + heightBuffer, ne.lng + widthBuffer ]
