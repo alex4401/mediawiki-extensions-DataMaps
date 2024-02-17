@@ -1,0 +1,1491 @@
+{
+	"$defs": {
+		"CircularMarkerGroup": {
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"title": "Name",
+					"type": "string"
+				},
+				"description": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"title": "Description"
+				},
+				"icon": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"title": "Icon"
+				},
+				"article": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"title": "Article"
+				},
+				"isDefault": {
+					"default": true,
+					"title": "Isdefault",
+					"type": "boolean"
+				},
+				"isCollectible": {
+					"default": false,
+					"enum": [
+						false,
+						true,
+						"individual",
+						"group",
+						"globalGroup"
+					],
+					"title": "Iscollectible"
+				},
+				"autoNumberInChecklist": {
+					"default": false,
+					"title": "Autonumberinchecklist",
+					"type": "boolean"
+				},
+				"canSearchFor": {
+					"default": true,
+					"title": "Cansearchfor",
+					"type": "boolean"
+				},
+				"fillColor": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"maxItems": 3,
+							"minItems": 3,
+							"prefixItems": [
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								}
+							],
+							"type": "array"
+						}
+					],
+					"title": "Fillcolor"
+				},
+				"size": {
+					"default": 5,
+					"title": "Size",
+					"type": "number"
+				},
+				"extraMinZoomSize": {
+					"anyOf": [
+						{
+							"type": "number"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Extraminzoomsize"
+				}
+			},
+			"required": [
+				"name",
+				"description",
+				"icon",
+				"article",
+				"fillColor"
+			],
+			"title": "CircularMarkerGroup",
+			"type": "object"
+		},
+		"CoordinateSystem": {
+			"additionalProperties": false,
+			"properties": {
+				"order": {
+					"default": "yx",
+					"enum": [
+						"yx",
+						"latlon",
+						"xy"
+					],
+					"title": "Order",
+					"type": "string"
+				},
+				"topLeft": {
+					"anyOf": [
+						{
+							"maxItems": 2,
+							"minItems": 2,
+							"prefixItems": [
+								{
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							],
+							"type": "array"
+						},
+						{
+							"$ref": "#/$defs/NamedPoint"
+						}
+					],
+					"default": [
+						0,
+						0
+					],
+					"title": "Topleft"
+				},
+				"bottomRight": {
+					"anyOf": [
+						{
+							"maxItems": 2,
+							"minItems": 2,
+							"prefixItems": [
+								{
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							],
+							"type": "array"
+						},
+						{
+							"$ref": "#/$defs/NamedPoint"
+						}
+					],
+					"default": [
+						100,
+						100
+					],
+					"title": "Bottomright"
+				},
+				"rotation": {
+					"anyOf": [
+						{
+							"type": "number"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Rotation"
+				}
+			},
+			"title": "CoordinateSystem",
+			"type": "object"
+		},
+		"IconMarkerGroup": {
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"title": "Name",
+					"type": "string"
+				},
+				"description": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"title": "Description"
+				},
+				"icon": {
+					"title": "Icon",
+					"type": "string"
+				},
+				"article": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"title": "Article"
+				},
+				"isDefault": {
+					"default": true,
+					"title": "Isdefault",
+					"type": "boolean"
+				},
+				"isCollectible": {
+					"default": false,
+					"enum": [
+						false,
+						true,
+						"individual",
+						"group",
+						"globalGroup"
+					],
+					"title": "Iscollectible"
+				},
+				"autoNumberInChecklist": {
+					"default": false,
+					"title": "Autonumberinchecklist",
+					"type": "boolean"
+				},
+				"canSearchFor": {
+					"default": true,
+					"title": "Cansearchfor",
+					"type": "boolean"
+				},
+				"size": {
+					"anyOf": [
+						{
+							"type": "number"
+						},
+						{
+							"maxItems": 2,
+							"minItems": 2,
+							"prefixItems": [
+								{
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							],
+							"type": "array"
+						},
+						{
+							"$ref": "#/$defs/NamedPoint"
+						}
+					],
+					"default": 32,
+					"title": "Size"
+				}
+			},
+			"required": [
+				"name",
+				"description",
+				"icon",
+				"article"
+			],
+			"title": "IconMarkerGroup",
+			"type": "object"
+		},
+		"ImageBackground": {
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"description": "\n            This name will be shown to a viewer in the background selection dropdown.\n        ",
+					"title": "Display name"
+				},
+				"associatedLayer": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Associatedlayer"
+				},
+				"image": {
+					"title": "Image to use",
+					"type": "string"
+				},
+				"at": {
+					"anyOf": [
+						{
+							"maxItems": 2,
+							"minItems": 2,
+							"prefixItems": [
+								{
+									"anyOf": [
+										{
+											"maxItems": 2,
+											"minItems": 2,
+											"prefixItems": [
+												{
+													"type": "number"
+												},
+												{
+													"type": "number"
+												}
+											],
+											"type": "array"
+										},
+										{
+											"$ref": "#/$defs/NamedPoint"
+										}
+									]
+								},
+								{
+									"anyOf": [
+										{
+											"maxItems": 2,
+											"minItems": 2,
+											"prefixItems": [
+												{
+													"type": "number"
+												},
+												{
+													"type": "number"
+												}
+											],
+											"type": "array"
+										},
+										{
+											"$ref": "#/$defs/NamedPoint"
+										}
+									]
+								}
+							],
+							"type": "array"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"description": "\n            Bounds to fit the image in.\n        ",
+					"title": "Bounds"
+				}
+			},
+			"required": [
+				"image"
+			],
+			"title": "ImageBackground",
+			"type": "object"
+		},
+		"LatLonMarker": {
+			"additionalProperties": false,
+			"properties": {
+				"id": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "integer"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Id"
+				},
+				"icon": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Icon"
+				},
+				"scale": {
+					"default": 1.0,
+					"title": "Scale",
+					"type": "number"
+				},
+				"name": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Name"
+				},
+				"description": {
+					"anyOf": [
+						{
+							"items": {
+								"type": "string"
+							},
+							"type": "array"
+						},
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Description"
+				},
+				"isWikitext": {
+					"default": null,
+					"enum": [
+						null,
+						false,
+						true
+					],
+					"title": "Iswikitext"
+				},
+				"image": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Image"
+				},
+				"article": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Article"
+				},
+				"canSearchFor": {
+					"default": true,
+					"title": "Cansearchfor",
+					"type": "boolean"
+				},
+				"searchKeywords": {
+					"anyOf": [
+						{
+							"items": {
+								"maxItems": 2,
+								"minItems": 2,
+								"prefixItems": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "number"
+									}
+								],
+								"type": "array"
+							},
+							"type": "array"
+						},
+						{
+							"type": "string"
+						}
+					],
+					"default": [],
+					"title": "Searchkeywords"
+				},
+				"lat": {
+					"title": "Lat",
+					"type": "number"
+				},
+				"lon": {
+					"title": "Lon",
+					"type": "number"
+				}
+			},
+			"required": [
+				"lat",
+				"lon"
+			],
+			"title": "LatLonMarker",
+			"type": "object"
+		},
+		"LeafletSettings": {
+			"additionalProperties": false,
+			"properties": {},
+			"title": "LeafletSettings",
+			"type": "object"
+		},
+		"MarkerCategory": {
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Name"
+				},
+				"subtleText": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Subtletext"
+				},
+				"overrideIcon": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Overrideicon"
+				}
+			},
+			"title": "MarkerCategory",
+			"type": "object"
+		},
+		"MultiBackgroundDataMap": {
+			"additionalProperties": false,
+			"properties": {
+				"crs": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/CoordinateSystem"
+						},
+						{
+							"maxItems": 2,
+							"minItems": 2,
+							"prefixItems": [
+								{
+									"anyOf": [
+										{
+											"maxItems": 2,
+											"minItems": 2,
+											"prefixItems": [
+												{
+													"type": "number"
+												},
+												{
+													"type": "number"
+												}
+											],
+											"type": "array"
+										},
+										{
+											"$ref": "#/$defs/NamedPoint"
+										}
+									]
+								},
+								{
+									"anyOf": [
+										{
+											"maxItems": 2,
+											"minItems": 2,
+											"prefixItems": [
+												{
+													"type": "number"
+												},
+												{
+													"type": "number"
+												}
+											],
+											"type": "array"
+										},
+										{
+											"$ref": "#/$defs/NamedPoint"
+										}
+									]
+								}
+							],
+							"type": "array"
+						}
+					],
+					"default": [
+						[
+							0,
+							0
+						],
+						[
+							100,
+							100
+						]
+					],
+					"title": "Crs"
+				},
+				"settings": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/Settings"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null
+				},
+				"groups": {
+					"additionalProperties": {
+						"anyOf": [
+							{
+								"$ref": "#/$defs/CircularMarkerGroup"
+							},
+							{
+								"$ref": "#/$defs/PinMarkerGroup"
+							},
+							{
+								"$ref": "#/$defs/IconMarkerGroup"
+							}
+						]
+					},
+					"default": {},
+					"title": "Groups",
+					"type": "object"
+				},
+				"categories": {
+					"additionalProperties": {
+						"$ref": "#/$defs/MarkerCategory"
+					},
+					"default": {},
+					"title": "Categories",
+					"type": "object"
+				},
+				"disclaimer": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Disclaimer"
+				},
+				"markers": {
+					"additionalProperties": {
+						"items": {
+							"anyOf": [
+								{
+									"$ref": "#/$defs/LatLonMarker"
+								},
+								{
+									"$ref": "#/$defs/XyMarker"
+								}
+							]
+						},
+						"type": "array"
+					},
+					"default": {},
+					"title": "Markers",
+					"type": "object"
+				},
+				"custom": {
+					"anyOf": [
+						{
+							"type": "object"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Custom"
+				},
+				"backgrounds": {
+					"items": {
+						"anyOf": [
+							{
+								"$ref": "#/$defs/ImageBackground"
+							},
+							{
+								"$ref": "#/$defs/TiledBackground"
+							}
+						]
+					},
+					"title": "Backgrounds",
+					"type": "array"
+				}
+			},
+			"required": [
+				"backgrounds"
+			],
+			"title": "MultiBackgroundDataMap",
+			"type": "object"
+		},
+		"NamedPoint": {
+			"additionalProperties": false,
+			"properties": {
+				"x": {
+					"title": "X",
+					"type": "number"
+				},
+				"y": {
+					"title": "Y",
+					"type": "number"
+				}
+			},
+			"required": [
+				"x",
+				"y"
+			],
+			"title": "NamedPoint",
+			"type": "object"
+		},
+		"PinMarkerGroup": {
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"title": "Name",
+					"type": "string"
+				},
+				"description": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"title": "Description"
+				},
+				"icon": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"title": "Icon"
+				},
+				"article": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"title": "Article"
+				},
+				"isDefault": {
+					"default": true,
+					"title": "Isdefault",
+					"type": "boolean"
+				},
+				"isCollectible": {
+					"default": false,
+					"enum": [
+						false,
+						true,
+						"individual",
+						"group",
+						"globalGroup"
+					],
+					"title": "Iscollectible"
+				},
+				"autoNumberInChecklist": {
+					"default": false,
+					"title": "Autonumberinchecklist",
+					"type": "boolean"
+				},
+				"canSearchFor": {
+					"default": true,
+					"title": "Cansearchfor",
+					"type": "boolean"
+				},
+				"pinColor": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"maxItems": 3,
+							"minItems": 3,
+							"prefixItems": [
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								}
+							],
+							"type": "array"
+						}
+					],
+					"title": "Pincolor"
+				},
+				"size": {
+					"default": 32,
+					"title": "Size",
+					"type": "number"
+				}
+			},
+			"required": [
+				"name",
+				"description",
+				"icon",
+				"article",
+				"pinColor"
+			],
+			"title": "PinMarkerGroup",
+			"type": "object"
+		},
+		"Settings": {
+			"additionalProperties": false,
+			"properties": {
+				"allowFullscreen": {
+					"default": true,
+					"description": "\n            Whether full-screen toggle will be shown to the user on this map.\n\n            TODO: \"whether the option to view the map in fullscreen will be offered\"\n        ",
+					"title": "Allowfullscreen",
+					"type": "boolean"
+				},
+				"backdropColor": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"maxItems": 3,
+							"minItems": 3,
+							"prefixItems": [
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								}
+							],
+							"type": "array"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"description": "\n            The backdrop colour, i.e. the one filling areas with no background image over them.\n\n            TODO: wording\n        ",
+					"title": "Backdropcolor"
+				},
+				"enableTooltipPopups": {
+					"default": false,
+					"description": "\n            Whether simply moving mouse cursor over a marker should cause its popup to become visible.\n\n            Such popup will be partially translucent. The user still has to click on the marker for the address bar to update with a\n            permanent link.\n        ",
+					"title": "Enabletooltippopups",
+					"type": "boolean"
+				},
+				"enableSearch": {
+					"default": true,
+					"description": "\n            Whether marker search will be enabled for this map.\n\n            TODO: document modes\n        ",
+					"enum": [
+						false,
+						true,
+						"tabberWide"
+					],
+					"title": "Enablesearch"
+				},
+				"hideLegend": {
+					"default": false,
+					"description": "\n            Forces the legend (collectible checklists and marker filters) to not be loaded on this map.\n        ",
+					"title": "Hidelegend",
+					"type": "boolean"
+				},
+				"interactionModel": {
+					"default": "keybinds",
+					"description": "\n            Changes interaction delay model. Keybinds require extra keys to be held to zoom in (CTRL/Super), sleep is primarily\n            time-based.\n        ",
+					"enum": [
+						"keybinds",
+						"sleep"
+					],
+					"title": "Interactionmodel",
+					"type": "string"
+				},
+				"iconRenderer": {
+					"default": "auto",
+					"description": "\n            Renderer preference for graphical icons using images from this wiki (not circular icons or pins).\n\n            - DOM renderer provides best reactivity for a small data set (roughly 500 icons), but performance degrades with\n              more markers. However, it comes with animation support for GIFs.\n            - Canvas renderer provides best performance at a cost of zoom update latency, and supports only static icons. This works\n              best for bigger data sets (above 500 icons), and is automatically enabled for such sets (if this option is set to\n              'auto').\n\n            Pins always use the DOM renderer.\n        ",
+					"enum": [
+						"auto",
+						"DOM",
+						"canvas"
+					],
+					"title": "Iconrenderer",
+					"type": "string"
+				},
+				"requireCustomMarkerIDs": {
+					"default": false,
+					"description": "\n            Makes data validation disallow automatically generated marker IDs - the `id` property will need to be specified for each\n            marker manually.\n\n            These identifiers are used for persistent links and collectible progress tracking. By default, group and layers the marker\n            is attached to along with its location on map are used to generate the identifier.\n        ",
+					"title": "Requirecustommarkerids",
+					"type": "boolean"
+				},
+				"showCoordinates": {
+					"default": true,
+					"description": "\n            Whether coordinates from under the mouse cursor will be shown on this map in the bottom-left corner.\n        ",
+					"title": "Show coordinates?",
+					"type": "boolean"
+				},
+				"sortChecklistsBy": {
+					"default": "groupDeclaration",
+					"description": "\n            Specifies marker group checklist sort order.\n\n            - 'groupDeclaration': Follows the order in which marker groups are declared in source data.\n            - 'amount':           Follows the number of markers inside each group.\n        ",
+					"enum": [
+						"groupDeclaration",
+						"amount"
+					],
+					"title": "Checklist sort order",
+					"type": "string"
+				},
+				"zoom": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ZoomSettings"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Zoom configuration"
+				},
+				"leaflet": {
+					"allOf": [
+						{
+							"$ref": "#/$defs/LeafletSettings"
+						}
+					],
+					"default": false,
+					"description": "\n            Check https://leafletjs.com/reference.html#map-option for reference. Some options are not supported.\n        ",
+					"title": "Custom Leaflet parameters"
+				}
+			},
+			"title": "Settings",
+			"type": "object"
+		},
+		"SingleBackgroundDataMap": {
+			"additionalProperties": false,
+			"properties": {
+				"crs": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/CoordinateSystem"
+						},
+						{
+							"maxItems": 2,
+							"minItems": 2,
+							"prefixItems": [
+								{
+									"anyOf": [
+										{
+											"maxItems": 2,
+											"minItems": 2,
+											"prefixItems": [
+												{
+													"type": "number"
+												},
+												{
+													"type": "number"
+												}
+											],
+											"type": "array"
+										},
+										{
+											"$ref": "#/$defs/NamedPoint"
+										}
+									]
+								},
+								{
+									"anyOf": [
+										{
+											"maxItems": 2,
+											"minItems": 2,
+											"prefixItems": [
+												{
+													"type": "number"
+												},
+												{
+													"type": "number"
+												}
+											],
+											"type": "array"
+										},
+										{
+											"$ref": "#/$defs/NamedPoint"
+										}
+									]
+								}
+							],
+							"type": "array"
+						}
+					],
+					"default": [
+						[
+							0,
+							0
+						],
+						[
+							100,
+							100
+						]
+					],
+					"title": "Crs"
+				},
+				"settings": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/Settings"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null
+				},
+				"groups": {
+					"additionalProperties": {
+						"anyOf": [
+							{
+								"$ref": "#/$defs/CircularMarkerGroup"
+							},
+							{
+								"$ref": "#/$defs/PinMarkerGroup"
+							},
+							{
+								"$ref": "#/$defs/IconMarkerGroup"
+							}
+						]
+					},
+					"default": {},
+					"title": "Groups",
+					"type": "object"
+				},
+				"categories": {
+					"additionalProperties": {
+						"$ref": "#/$defs/MarkerCategory"
+					},
+					"default": {},
+					"title": "Categories",
+					"type": "object"
+				},
+				"disclaimer": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Disclaimer"
+				},
+				"markers": {
+					"additionalProperties": {
+						"items": {
+							"anyOf": [
+								{
+									"$ref": "#/$defs/LatLonMarker"
+								},
+								{
+									"$ref": "#/$defs/XyMarker"
+								}
+							]
+						},
+						"type": "array"
+					},
+					"default": {},
+					"title": "Markers",
+					"type": "object"
+				},
+				"custom": {
+					"anyOf": [
+						{
+							"type": "object"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Custom"
+				},
+				"background": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"$ref": "#/$defs/ImageBackground"
+						},
+						{
+							"$ref": "#/$defs/TiledBackground"
+						}
+					],
+					"title": "Background"
+				}
+			},
+			"required": [
+				"background"
+			],
+			"title": "SingleBackgroundDataMap",
+			"type": "object"
+		},
+		"Tile": {
+			"additionalProperties": false,
+			"properties": {
+				"position": {
+					"anyOf": [
+						{
+							"type": "number"
+						},
+						{
+							"maxItems": 2,
+							"minItems": 2,
+							"prefixItems": [
+								{
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							],
+							"type": "array"
+						},
+						{
+							"$ref": "#/$defs/NamedPoint"
+						}
+					],
+					"description": "\n                Position in this tile in the grid.\n\n                1 unit is one tile as big as the size specified.\n            ",
+					"title": "Position"
+				},
+				"image": {
+					"title": "Image to use",
+					"type": "string"
+				}
+			},
+			"required": [
+				"position",
+				"image"
+			],
+			"title": "Tile",
+			"type": "object"
+		},
+		"TiledBackground": {
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"description": "\n            This name will be shown to a viewer in the background selection dropdown.\n        ",
+					"title": "Display name"
+				},
+				"associatedLayer": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Associatedlayer"
+				},
+				"at": {
+					"anyOf": [
+						{
+							"maxItems": 2,
+							"minItems": 2,
+							"prefixItems": [
+								{
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							],
+							"type": "array"
+						},
+						{
+							"$ref": "#/$defs/NamedPoint"
+						}
+					],
+					"default": [
+						0,
+						0
+					],
+					"title": "Starting position of the tile set"
+				},
+				"tileSize": {
+					"anyOf": [
+						{
+							"type": "number"
+						},
+						{
+							"maxItems": 2,
+							"minItems": 2,
+							"prefixItems": [
+								{
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							],
+							"type": "array"
+						},
+						{
+							"$ref": "#/$defs/NamedPoint"
+						}
+					],
+					"title": "Size of an individual tile"
+				},
+				"tiles": {
+					"items": {
+						"$ref": "#/$defs/Tile"
+					},
+					"title": "Tiles",
+					"type": "array"
+				}
+			},
+			"required": [
+				"tileSize",
+				"tiles"
+			],
+			"title": "TiledBackground",
+			"type": "object"
+		},
+		"XyMarker": {
+			"additionalProperties": false,
+			"properties": {
+				"id": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "integer"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Id"
+				},
+				"icon": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Icon"
+				},
+				"scale": {
+					"default": 1.0,
+					"title": "Scale",
+					"type": "number"
+				},
+				"name": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Name"
+				},
+				"description": {
+					"anyOf": [
+						{
+							"items": {
+								"type": "string"
+							},
+							"type": "array"
+						},
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Description"
+				},
+				"isWikitext": {
+					"default": null,
+					"enum": [
+						null,
+						false,
+						true
+					],
+					"title": "Iswikitext"
+				},
+				"image": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Image"
+				},
+				"article": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Article"
+				},
+				"canSearchFor": {
+					"default": true,
+					"title": "Cansearchfor",
+					"type": "boolean"
+				},
+				"searchKeywords": {
+					"anyOf": [
+						{
+							"items": {
+								"maxItems": 2,
+								"minItems": 2,
+								"prefixItems": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "number"
+									}
+								],
+								"type": "array"
+							},
+							"type": "array"
+						},
+						{
+							"type": "string"
+						}
+					],
+					"default": [],
+					"title": "Searchkeywords"
+				},
+				"x": {
+					"title": "X",
+					"type": "number"
+				},
+				"y": {
+					"title": "Y",
+					"type": "number"
+				}
+			},
+			"required": [
+				"x",
+				"y"
+			],
+			"title": "XyMarker",
+			"type": "object"
+		},
+		"ZoomSettings": {
+			"additionalProperties": false,
+			"properties": {
+				"tryFitEverything": {
+					"default": true,
+					"title": "Tryfiteverything",
+					"type": "boolean"
+				},
+				"min": {
+					"default": 0.05,
+					"exclusiveMaximum": 24,
+					"exclusiveMinimum": -15,
+					"title": "Minimum level",
+					"type": "integer"
+				},
+				"max": {
+					"default": 6,
+					"exclusiveMaximum": 24,
+					"exclusiveMinimum": -15,
+					"title": "Maximum level",
+					"type": "integer"
+				},
+				"lock": {
+					"default": false,
+					"description": "\n            If set to `true`, zoom level will be fixed at the specified `min` value. All zoom controls on the viewer's\n            side will be disabled.\n        ",
+					"title": "Locked?",
+					"type": "boolean"
+				}
+			},
+			"title": "ZoomSettings",
+			"type": "object"
+		}
+	},
+	"anyOf": [
+		{
+			"$ref": "#/$defs/SingleBackgroundDataMap"
+		},
+		{
+			"$ref": "#/$defs/MultiBackgroundDataMap"
+		}
+	],
+	"title": "RootModel[Union[SingleBackgroundDataMap, MultiBackgroundDataMap]]"
+}
