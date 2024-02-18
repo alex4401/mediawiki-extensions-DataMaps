@@ -92,6 +92,10 @@ final class EmbedMapFunction {
             }
         }
 
+        if ( $params['class'] ) {
+            $result->classes = explode( ' ', $params['class'] );
+        }
+
         return $result;
     }
 }
