@@ -197,18 +197,6 @@
 			"targets": [ "desktop", "mobile" ]
 		},
 
-		"ext.datamaps.inlineloader": {
-			"es6": true,
-			"dependencies": [
-				"ext.datamaps.core",
-				"ext.datamaps.bootstrap"
-			],
-			"packageFiles": [
-				"inlineLoader/main.js"
-			],
-			"targets": [ "desktop", "mobile" ]
-		},
-
 		"ext.datamaps.search": {
 			"es6": true,
 			"dependencies": [

@@ -48,7 +48,8 @@ class EmbedConfigGenerator {
         return Html::element(
             'script',
             [
-                'type' => 'application/datamap+json'
+                'type' => 'application/datamap+json',
+                'data-purpose' => 'config'
             ],
             FormatJson::encode( $this->makeArray(), false, FormatJson::UTF8_OK )
         );
