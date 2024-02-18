@@ -25,6 +25,12 @@
         vertical-align: middle;
     }
 
+    /* Suppress pseudo-elements on field layouts - they introduce odd spacing in tables */
+    .oo-ui-fieldLayout::before,
+    .oo-ui-fieldLayout::after {
+        display: none;
+    }
+
     /* GH#195: Buttons in a group can overlap popups invoked by buttons */
     .oo-ui-buttonGroupWidget .oo-ui-buttonElement {
         z-index: unset;
@@ -37,6 +43,8 @@
     flex-direction: column;
 
     &[ aria-expanded='true' ] {
+        min-height: 0;
+        max-height: unset;
         background: #fffb;
     }
 
@@ -76,12 +84,7 @@
         }
     }
 
-    &[ aria-expanded='true' ] {
-        min-height: 0;
-        max-height: unset;
-
-        .ext-datamaps-control-expandable-content {
-            display: block;
-        }
+    &[ aria-expanded='true' ] .ext-datamaps-control-expandable-content {
+        display: block;
     }
 }
