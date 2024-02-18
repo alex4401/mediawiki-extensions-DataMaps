@@ -49,15 +49,12 @@ class DataMapSpec extends DataModel {
             if ( is_object( $this->raw->crs ?? null ) ) {
                 $this->coordinateSystem = new CoordinateSystem( $this->raw->crs );
             } else {
-                $options = [ ];
+                $options = [];
                 if ( isset( $this->raw->crs ) ) {
                     $options['topLeft'] = $this->raw->crs[0];
                     $options['bottomRight'] = $this->raw->crs[1];
                 }
-                if ( isset( $this->raw->coordinateOrder ) ) {
-                    $options['order'] = $this->raw->coordinateOrder;
-                }
-                $this->coordinateSystem = new CoordinateSystem( ( object ) $options );
+                $this->coordinateSystem = new CoordinateSystem( (object)$options );
             }
         }
         return $this->coordinateSystem;
@@ -65,11 +62,7 @@ class DataMapSpec extends DataModel {
 
     public function getBackgrounds(): array {
         if ( $this->cachedBackgrounds == null ) {
-            if ( isset( $this->raw->image ) ) {
-                $this->cachedBackgrounds = [
-                    MapBackgroundSpec::fromImageName( $this->raw->image )
-                ];
-            } elseif ( is_string( $this->raw->background ?? null ) ) {
+            if ( is_string( $this->raw->background ?? null ) ) {
                 $this->cachedBackgrounds = [
                     MapBackgroundSpec::fromImageName( $this->raw->background )
                 ];
@@ -104,7 +97,7 @@ class DataMapSpec extends DataModel {
     }
 
     public function getRawMarkerLayerMap(): object {
-        return $this->raw->layers;
+        return $this->raw->categories;
     }
 
     private function warmUpUsedMarkerTypes() {
@@ -138,12 +131,12 @@ class DataMapSpec extends DataModel {
     }
 
     public function hasLayer( string $name ): bool {
-        return isset( $this->raw->layers->$name );
+        return isset( $this->raw->categories->$name );
     }
 
     public function getLayer( string $name ): ?MarkerLayerSpec {
-        return isset( $this->raw->layers ) ? (
-            isset( $this->raw->layers->$name ) ? new MarkerLayerSpec( $name, $this->raw->layers->$name ) : null
+        return isset( $this->raw->categories ) ? (
+            isset( $this->raw->categories->$name ) ? new MarkerLayerSpec( $name, $this->raw->categories->$name ) : null
         ) : null;
     }
 
