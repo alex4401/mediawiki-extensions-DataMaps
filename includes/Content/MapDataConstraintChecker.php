@@ -20,24 +20,24 @@ class MapDataConstraintChecker {
     /** @var stdClass */
     private stdClass $data;
     /** @var string */
-    private string $schema;
+    private MapVersionInfo $version;
 
     /**
      */
     public function __construct(
-        string $schemaVersion,
+        MapVersionInfo $version,
         stdClass $data,
         Status $status
     ) {
         $this->status = $status;
         $this->data = $data;
-        $this->schema = $schemaVersion;
+        $this->version = $version;
     }
 
     public function run(): bool {
         $result = true;
         foreach ( self::CONSTRAINTS as $constraint ) {
-            $result = $result && $constraint::run( $this->status, $this->schema, $this->data );
+            $result = $result && $constraint::run( $this->status, $this->version, $this->data );
         }
         return true;
     }
