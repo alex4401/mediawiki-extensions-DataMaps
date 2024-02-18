@@ -88,7 +88,8 @@ class MapContentValidator {
             return $result;
         }
 
-        if ( $content->isFragment() && isset( $contentStatus->getValue()->include ) ) {
+        $isFragment = $content->isFragment();
+        if ( $isFragment && isset( $contentStatus->getValue()->include ) ) {
             $result->fatal( 'datamap-error-validatespec-map-mixin-with-mixins' );
             return $result;
         }
@@ -99,9 +100,9 @@ class MapContentValidator {
 
         $data = $content->expandData();
 
-        /** @var ?string */
+        /** @var ?MapVersionInfo */
         $schemaVersion = null;
-        if ( !$this->validateAgainstSchema( $result, $data, $schemaVersion ) || $schemaVersion === null ) {
+        if ( !$this->validateAgainstSchema( $result, $data, $isFragment, $schemaVersion ) || $schemaVersion === null ) {
             return $result;
         }
 
@@ -135,7 +136,12 @@ class MapContentValidator {
         return $result;
     }
 
-    private function validateAgainstSchema( Status $result, \stdClass $data, ?string &$schemaVersion ): bool {
+    private function validateAgainstSchema(
+        Status $result,
+        \stdClass $data,
+        bool $isFragment,
+        ?MapVersionInfo &$version
+    ): bool {
         $validator = $this->createValidator();
         $schemaWasBad = false;
 
@@ -152,7 +158,10 @@ class MapContentValidator {
         if ( $schemaWasBad ) {
             $result->fatal( 'datamap-validate-bad-schema' );
         } elseif ( !$validator->isValid() ) {
-            $schemaVersion = $this->schemaVersionMap[$data->{'$schema'}];
+            $version = new MapVersionInfo(
+                $this->schemaVersionMap[$data->{'$schema'}],
+                $isFragment
+            );
 
             $errors = $validator->getErrors( Validator::ERROR_DOCUMENT_VALIDATION );
             foreach ( $errors as $error ) {
@@ -177,8 +186,8 @@ class MapContentValidator {
         return true;
     }
 
-    private function validateAgainstConstraints( Status $result, \stdClass $data, string $schemaVersion ): bool {
-        $checker = new MapDataConstraintChecker( $schemaVersion, $data, $result );
+    private function validateAgainstConstraints( Status $result, \stdClass $data, MapVersionInfo $version ): bool {
+        $checker = new MapDataConstraintChecker( $version, $data, $result );
         return $checker->run();
     }
 }
