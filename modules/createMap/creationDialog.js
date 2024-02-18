@@ -321,18 +321,21 @@ CreationDialog.prototype.updatePrefillValue = function () {
     const out = {
         $schema: new mw.Uri( `${mw.config.get( 'wgExtensionAssetsPath' )}/DataMaps/schemas/${PREFERRED_SCHEMA_VERSION}.json` )
             .toString(),
-        coordinateOrder: 'xy',
-        crs: [ [ 0, 0 ], imageSize ],
-        image: this.imageSelector.getValue(),
+        crs: {
+            topLeft: [ 0, 0 ],
+            bottomRight: imageSize,
+            order: 'xy'
+        },
+        background: this.imageSelector.getValue(),
         settings: {}
     };
 
     if ( this.originSelector.getValue() === `${Enums.CRSOrigin.BottomLeft}` ) {
-        out.crs = [ out.crs[ 1 ], out.crs[ 0 ] ];
+        [ out.crs.topLeft, out.crs.bottomRight ] = [ out.crs.bottomRight, out.crs.topLeft ];
     }
 
     if ( !this.zoomToggle.getValue() ) {
-        out.settings.disableZoom = true;
+        out.settings.zoom = { lock: true };
     }
 
     if ( this.searchToggle.getValue() ) {
