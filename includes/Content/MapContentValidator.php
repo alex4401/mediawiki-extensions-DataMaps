@@ -66,6 +66,7 @@ class MapContentValidator {
         $factory = new \JsonSchema\Constraints\Factory( $this->schemaStorage );
         $factory->setConstraintClass( 'object', JsonSchemaEx\ObjectConstraintEx::class );
         $factory->setConstraintClass( 'number', JsonSchemaEx\NumberConstraintEx::class );
+        $factory->setConstraintClass( 'undefined', JsonSchemaEx\UndefinedConstraintEx::class );
         return new Validator( $factory );
     }
 
