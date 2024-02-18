@@ -114,6 +114,39 @@
 					],
 					"default": null,
 					"title": "Extraminzoomsize"
+				},
+				"strokeColor": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"maxItems": 3,
+							"minItems": 3,
+							"prefixItems": [
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								}
+							],
+							"type": "array"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Strokecolor"
+				},
+				"strokeWidth": {
+					"default": 1,
+					"title": "Strokewidth",
+					"type": "number"
 				}
 			},
 			"required": [
@@ -600,6 +633,22 @@
 		"MultiBackgroundDataMap": {
 			"additionalProperties": false,
 			"properties": {
+				"include": {
+					"anyOf": [
+						{
+							"items": {
+								"type": "string"
+							},
+							"type": "array"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"description": "List of fragments that must be imported.",
+					"title": "Include"
+				},
 				"crs": {
 					"anyOf": [
 						{
@@ -887,6 +936,39 @@
 					"default": 32,
 					"title": "Size",
 					"type": "number"
+				},
+				"strokeColor": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"maxItems": 3,
+							"minItems": 3,
+							"prefixItems": [
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								}
+							],
+							"type": "array"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Strokecolor"
+				},
+				"strokeWidth": {
+					"default": 1,
+					"title": "Strokewidth",
+					"type": "number"
 				}
 			},
 			"required": [
@@ -1028,6 +1110,22 @@
 		"SingleBackgroundDataMap": {
 			"additionalProperties": false,
 			"properties": {
+				"include": {
+					"anyOf": [
+						{
+							"items": {
+								"type": "string"
+							},
+							"type": "array"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"description": "List of fragments that must be imported.",
+					"title": "Include"
+				},
 				"crs": {
 					"anyOf": [
 						{
