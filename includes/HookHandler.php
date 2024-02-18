@@ -5,6 +5,7 @@ use Config;
 use ExtensionRegistry;
 use MediaWiki\Extension\DataMaps\Content\DataMapContent;
 use MediaWiki\Extension\DataMaps\Content\SchemaProvider;
+use MediaWiki\Extension\DataMaps\Content\SchemaRevision;
 use MediaWiki\Extension\DataMaps\Migration\Fandom\FandomMapContentHandler;
 use MediaWiki\Extension\DataMaps\Rendering\MarkerProcessor;
 use MediaWiki\MainConfigNames;
@@ -253,7 +254,7 @@ final class HookHandler implements
 
     public static function getCreateMapConfig( \MediaWiki\ResourceLoader\Context $context, Config $config ): array {
         return [
-            'PREFERRED_SCHEMA_VERSION' => SchemaProvider::RECOMMENDED_REVISION
+            'PREFERRED_SCHEMA_VERSION' => SchemaRevision::RECOMMENDED_REVISION
         ];
     }
 }
