@@ -163,27 +163,47 @@ class MapContentValidator {
                 $isFragment
             );
 
-            $errors = $validator->getErrors( Validator::ERROR_DOCUMENT_VALIDATION );
-            foreach ( $errors as $error ) {
-                $msg = self::ERROR_MESSAGE_MAP[$error['constraint']] ?? self::UNKNOWN_ERROR_MESSAGE;
-                $params = [
-                    $error['pointer'],
-                ];
-
-                switch ( $error['constraint'] ) {
-                    case 'additionalProp':
-                        $params[0] .= '/' . $error['apProperty'];
-                        break;
-
-                    default:
-                        break;
-                }
-
-                $result->fatal( $msg, ...$params );
-            }
+            $this->formatJsonSchemaErrors(
+                $result,
+                $version,
+                $validator->getErrors( Validator::ERROR_DOCUMENT_VALIDATION )
+            );
         }
 
         return true;
+    }
+
+    private function formatJsonSchemaErrors( Status $status, MapVersionInfo $version, array $errors ) {
+        foreach ( $errors as $error ) {
+            $reduceToWarning = false;
+            if ( $version->isFragment ) {
+                if ( $error['constraint'] === 'required' ) {
+                    continue;
+                }
+
+                $reduceToWarning = $error['constraint'] === 'anyOf';
+            }
+
+            $msg = self::ERROR_MESSAGE_MAP[$error['constraint']] ?? self::UNKNOWN_ERROR_MESSAGE;
+            $params = [
+                $error['pointer'],
+            ];
+
+            switch ( $error['constraint'] ) {
+                case 'additionalProp':
+                    $params[0] .= '/' . $error['apProperty'];
+                    break;
+
+                default:
+                    break;
+            }
+
+            if ( $reduceToWarning ) {
+                $status->warning( $msg, ...$params );
+            } else {
+                $status->fatal( $msg, ...$params );
+            }
+        }
     }
 
     private function validateAgainstConstraints( Status $result, \stdClass $data, MapVersionInfo $version ): bool {
