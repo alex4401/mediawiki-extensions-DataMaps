@@ -633,6 +633,11 @@
 		"MultiBackgroundDataMap": {
 			"additionalProperties": false,
 			"properties": {
+				"$fragment": {
+					"default": false,
+					"title": "$Fragment",
+					"type": "boolean"
+				},
 				"include": {
 					"anyOf": [
 						{
@@ -1110,6 +1115,11 @@
 		"SingleBackgroundDataMap": {
 			"additionalProperties": false,
 			"properties": {
+				"$fragment": {
+					"default": false,
+					"title": "$Fragment",
+					"type": "boolean"
+				},
 				"include": {
 					"anyOf": [
 						{
