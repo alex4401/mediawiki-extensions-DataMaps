@@ -198,6 +198,11 @@ class EmbedRenderer {
             $containerMain->addClasses( $options->classes );
         }
 
+        // Set up the 'mini' layout
+        if ( $options->miniStyle ) {
+            $containerMain->addClasses( [ 'ext-datamaps-mini-layout' ] );
+        }
+
         // Stack the containers
         $containerMain->appendContent( $containerTop );
         $containerMain->appendContent( $containerContent );
