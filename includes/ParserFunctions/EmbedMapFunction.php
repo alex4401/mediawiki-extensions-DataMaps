@@ -32,6 +32,10 @@ final class EmbedMapFunction {
 
         $title = Title::makeTitleSafe( $config->getNamespaceId(), $params[0] );
 
+        // Register page's dependency on the data map
+        $parser->getOutput()->addTemplate( $title, $title->getArticleId(),
+            $parser->fetchCurrentRevisionRecordOfTitle( $title )->getId() );
+
         // Add the page to a tracking category
         $parser->addTrackingCategory( 'datamap-category-pages-including-maps' );
 
@@ -64,10 +68,6 @@ final class EmbedMapFunction {
 
         $embed = $content->getEmbedRenderer( $title, $parser, $parser->getOutput() );
         $embed->prepareOutput();
-
-        // Register page's dependency on the data map
-        $parser->getOutput()->addTemplate( $title, $title->getArticleId(),
-            $parser->fetchCurrentRevisionRecordOfTitle( $title )->getId() );
 
         return [ $embed->getHtml( $options ), 'noparse' => true, 'isHTML' => true ];
     }
