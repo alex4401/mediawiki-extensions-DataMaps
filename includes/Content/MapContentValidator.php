@@ -48,7 +48,7 @@ class MapContentValidator {
 
         $schemas = [];
         $this->schemaVersionMap = [];
-        foreach ( SchemaProvider::SUPPORTED_REVISIONS as $revision ) {
+        foreach ( SchemaRevision::SUPPORTED_REVISIONS as $revision ) {
             $loaded = file_get_contents( "$localStorePath/$revision.json" );
             $this->schemaVersionMap["$remoteRelativeStorePath$revision.json"] = $revision;
             foreach ( $allowedSchemaHosts as $host ) {

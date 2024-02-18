@@ -8,16 +8,6 @@ use MediaWiki\Utils\UrlUtils;
 class SchemaProvider {
     public const SERVICE_NAME = 'DataMaps.SchemaProvider';
 
-    public const SUPPORTED_REVISIONS = [
-        SchemaRevision::REV_16,
-        SchemaRevision::REV_17,
-    ];
-    public const RECOMMENDED_REVISION = SchemaRevision::REV_17;
-    public const DEPRECATED_REVISIONS = [
-        // schema revision => extension version to be removed in
-        SchemaRevision::REV_16 => 'v0.18'
-    ];
-
     public const MAX_VALIDATION_ERROR_COUNT = 40;
 
     /**
@@ -54,7 +44,7 @@ class SchemaProvider {
      * @return bool
      */
     public function isRevisionSupported( string $id ): bool {
-        return in_array( $id, self::SUPPORTED_REVISIONS );
+        return in_array( $id, SchemaRevision::SUPPORTED_REVISIONS );
     }
 
     /**
@@ -64,7 +54,7 @@ class SchemaProvider {
      * @return ?string
      */
     public function getRevisionDeprecationTarget( string $id ): ?string {
-        return self::DEPRECATED_REVISIONS[ $id ] ?? null;
+        return SchemaRevision::DEPRECATED_REVISIONS[ $id ] ?? null;
     }
 
     /**
@@ -106,7 +96,7 @@ class SchemaProvider {
      * @return string
      */
     public function makePublicRecommendedUrl( bool $pathOnly = false ): string {
-        return $this->makePublicUrl( self::RECOMMENDED_REVISION, $pathOnly );
+        return $this->makePublicUrl( SchemaRevision::RECOMMENDED_REVISION, $pathOnly );
     }
 
     /**
