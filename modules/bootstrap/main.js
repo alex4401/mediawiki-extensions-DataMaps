@@ -8,7 +8,9 @@ const
     } = require( 'ext.datamaps.core' ),
     /** @type {InstanceType<DataMap>[]} */ initialisedMaps = [],
     /** @type {MapNotificationReceiver[]} */ toNotifyOnInit = [],
-    /** @type {MapNotificationReceiver[]} */ toNotifyOnDestroy = [];
+    /** @type {MapNotificationReceiver[]} */ toNotifyOnDestroy = [],
+    INLINE_MARKERS_SELECTOR = ':scope > script[type="application/datamap+json"][data-purpose="markers"]',
+    INLINE_CONFIG_SELECTOR = ':scope > script[type="application/datamap+json"][data-purpose="config"]';
 
 
 /**
@@ -19,7 +21,7 @@ const
  */
 function getConfig( rootElement ) {
     let config;
-    const dataElement = rootElement.querySelector( ':scope > script[type="application/datamap+json"]' );
+    const dataElement = rootElement.querySelector( INLINE_CONFIG_SELECTOR );
     if ( dataElement !== null ) {
         config = JSON.parse( /** @type {HTMLElement} */ ( dataElement ).innerText );
     }
@@ -119,6 +121,13 @@ mw.dataMaps = {
         } else {
             // No page to request markers from, hide the status message
             map.setStatusOverlay( null );
+
+            // Check if any inline data has been included. This is used for edit previews.
+            const dataNode = /** @type {HTMLElement?} */ ( rootElement.querySelector( INLINE_MARKERS_SELECTOR ) );
+            if ( dataNode ) {
+                const data = JSON.parse( dataNode.innerText );
+                map.streaming.instantiateMarkers( data );
+            }
         }
 
         return map;

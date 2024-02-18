@@ -58,9 +58,6 @@ class EmbedRenderer {
     public function prepareOutput() {
         $this->enableOOUI();
         $this->addModules();
-        if ( $this->useInlineData && !$this->forVisualEditor ) {
-            $this->addMarkerDataInline();
-        }
         $this->updateLinks();
     }
 
@@ -85,24 +82,6 @@ class EmbedRenderer {
             // Wiki-provided JS
             'ext.datamaps.site'
         ] );
-
-        if ( $this->useInlineData && !$this->forVisualEditor ) {
-            $this->parserOutput->addModules( [
-                'ext.datamaps.inlineloader'
-            ] );
-        }
-    }
-
-    public function addMarkerDataInline(): void {
-        $processor = $this->markerProcessorFactory->create( $this->title, $this->data, null );
-        $this->parserOutput->setText( $this->parserOutput->getRawText() . Html::element(
-            'script',
-            [
-                'type' => 'application/datamap+json',
-                'id' => 'datamap-inline-data-' . $this->getId()
-            ],
-            FormatJson::encode( $processor->processAll(), false, FormatJson::UTF8_OK )
-        ) );
     }
 
     public function updateLinks(): void {
@@ -244,6 +223,18 @@ class EmbedRenderer {
             'layers' => $options ? $options->displayGroups : null
         ] );
         $containerMain->appendContent( new HtmlSnippet( $config->makeElement() ) );
+
+        if ( $this->useInlineData ) {
+            $processor = $this->markerProcessorFactory->create( $this->title, $this->data, null );
+            $containerMain->appendContent( new HtmlSnippet( Html::element(
+                'script',
+                [
+                    'type' => 'application/datamap+json',
+                    'data-purpose' => 'markers'
+                ],
+                FormatJson::encode( $processor->processAll(), false, FormatJson::UTF8_OK )
+            ) ) );
+        }
 
         return Html::rawElement(
             'noscript',
