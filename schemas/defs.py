@@ -6,7 +6,7 @@ from typing import Annotated, Any, Literal, Optional
 
 PROPERTIES = dict(el.split('=', 2) for el in sys.argv if '=' in el)
 REV = PROPERTIES['REV']
-FRAGMENT = PROPERTIES['FRAGMENT']
+FRAGMENT = PROPERTIES['FRAGMENT'] != '0'
 OUTPUT = PROPERTIES['OUT']
 
 
