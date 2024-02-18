@@ -280,7 +280,7 @@ class Viewport extends EventEmitter {
 
         if ( this._leaflet.options.autoMinZoom ) {
             this._leaflet.options.minZoom = this._leaflet.options.autoMinZoomAbsolute;
-            const computedZoom = this._leaflet.getBoundsZoom( this.map.getPaddedContentBounds( false, 0.75 ), false, [ 0, 0 ] );
+            const computedZoom = this._leaflet.getBoundsZoom( this.map.getPaddedContentBounds( false, 0.6 ), false, [ 0, 0 ] );
             this._leaflet.setMinZoom( computedZoom );
             // TODO: this should recalculate popup zoom?
         }
