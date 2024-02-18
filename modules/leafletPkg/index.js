@@ -7,10 +7,6 @@ module.exports = Object.assign( {}, require( '../vendor/leaflet/leaflet.js' ), {
          */
         KeybindInteractionControl: require( './KeybindInteraction.js' ),
         /**
-         * @deprecated since v0.16.3, will be removed in v1.0.0. Use {@link KeybindInteractionControl}.
-         */
-        InteractionControl: require( './KeybindInteraction.js' ),
-        /**
          * @since 0.16.3
          */
         SleepInteractionControl: require( './SleepInteraction.js' )

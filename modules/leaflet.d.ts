@@ -72,10 +72,6 @@ declare namespace LeafletModule {
 
         export class Popup extends LeafletModule.Popup {}
         export class KeybindInteractionControl extends LeafletModule.Handler {}
-        /**
-         * @deprecated since v0.16.3, will be removed in v1.0.0. Use {@link KeybindInteractionControl}.
-         */
-        export type InteractionControl = KeybindInteractionControl;
         export class SleepInteractionControl extends LeafletModule.Handler {}
         export class PinIcon extends LeafletModule.Icon {
             constructor( options: PinIconOptions );
