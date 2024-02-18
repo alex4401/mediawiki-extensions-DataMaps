@@ -6,6 +6,7 @@ use FormlessAction;
 use Html;
 use MediaWiki\Extension\DataMaps\Constants;
 use MediaWiki\Extension\DataMaps\HookHandler;
+use MediaWiki\Extension\DataMaps\Rendering\EmbedRenderOptions;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\Revision\RevisionRecord;
@@ -115,7 +116,7 @@ class EditMapAction extends FormlessAction {
         // Render a marker-less embed
         $embedRenderer->prepareOutput();
         $out->addParserOutputMetadata( $parserOutput );
-        $out->addHTML( $embedRenderer->getHtml() );
+        $out->addHTML( $embedRenderer->getHtml( new EmbedRenderOptions() ) );
 
         // Inject the JavaScript module
         $out->addModules( [

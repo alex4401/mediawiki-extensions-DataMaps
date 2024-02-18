@@ -149,7 +149,7 @@ class EmbedRenderer {
         } );
     }
 
-    public function getHtml( ?EmbedRenderOptions $options = null ): string {
+    public function getHtml( EmbedRenderOptions $options ): string {
         $titleFormatter = MediaWikiServices::getInstance()->getTitleFormatter();
 
         // Primary slots
@@ -191,6 +191,11 @@ class EmbedRenderer {
             $containerMain->setAttributes( [
                 'style' => 'max-width: ' . $options->maxWidthPx . 'px'
             ] );
+        }
+
+        // Add custom classes
+        if ( $options->classes !== null ) {
+            $containerMain->addClasses( $options->classes );
         }
 
         // Stack the containers
