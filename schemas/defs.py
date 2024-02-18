@@ -115,8 +115,8 @@ class ZoomSettings(BaseModelEx):
             side will be disabled.
         '''
     )
-class LeafletSettings(BaseModelEx):
-    ...
+# DEPRECATED from v17 pending removal in v18, no replacement
+LeafletSettings = dict[str, Any]
 class Settings(BaseModelEx):
     allowFullscreen: bool = Field(
         True,
