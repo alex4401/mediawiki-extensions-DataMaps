@@ -2,14 +2,14 @@
 namespace MediaWiki\Extension\DataMaps\Content;
 
 use JsonSchema\Exception\ResourceNotFoundException;
-use Status;
-use MediaWiki\Config\ServiceOptions;
-use MediaWiki\MainConfigNames;
-use MediaWiki\Utils\UrlUtils;
 use JsonSchema\SchemaStorage;
-use JsonSchema\Validator;
 use JsonSchema\Uri\Retrievers\PredefinedArray;
 use JsonSchema\Uri\UriRetriever;
+use JsonSchema\Validator;
+use MediaWiki\Extension\DataMaps\ExtensionConfig;
+use MediaWiki\MediaWikiServices;
+use Status;
+use Title;
 
 class MapContentValidator {
     private const MAX_VALIDATION_ERROR_COUNT = 40;
