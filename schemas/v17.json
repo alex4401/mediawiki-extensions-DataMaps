@@ -580,12 +580,6 @@
 			"title": "LatLonMarker",
 			"type": "object"
 		},
-		"LeafletSettings": {
-			"additionalProperties": false,
-			"properties": {},
-			"title": "LeafletSettings",
-			"type": "object"
-		},
 		"MarkerCategory": {
 			"additionalProperties": false,
 			"properties": {
@@ -1099,14 +1093,10 @@
 					"title": "Zoom configuration"
 				},
 				"leaflet": {
-					"allOf": [
-						{
-							"$ref": "#/$defs/LeafletSettings"
-						}
-					],
 					"default": false,
 					"description": "\n            Check https://leafletjs.com/reference.html#map-option for reference. Some options are not supported.\n        ",
-					"title": "Custom Leaflet parameters"
+					"title": "Custom Leaflet parameters",
+					"type": "object"
 				}
 			},
 			"title": "Settings",
