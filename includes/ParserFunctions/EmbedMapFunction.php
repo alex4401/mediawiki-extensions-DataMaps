@@ -96,6 +96,10 @@ final class EmbedMapFunction {
             $result->classes = explode( ' ', $params['class'] );
         }
 
+        if ( $params['layout'] === 'mini' ) {
+            $result->miniStyle = true;
+        }
+
         return $result;
     }
 }
