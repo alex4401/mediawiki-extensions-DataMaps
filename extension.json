@@ -180,9 +180,17 @@
 
 		"ext.datamaps.site": {
 			"class": "MediaWiki\\ResourceLoader\\WikiModule",
+			"dependencies": [
+				"ext.datamaps.core"
+			],
 			"scripts": [
 				"MediaWiki:DataMaps.js"
 			],
+			"targets": [ "desktop", "mobile" ]
+		},
+
+		"ext.datamaps.site.styles": {
+			"class": "MediaWiki\\ResourceLoader\\WikiModule",
 			"styles": [
 				"MediaWiki:DataMaps.css"
 			],
