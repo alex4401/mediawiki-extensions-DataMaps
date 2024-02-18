@@ -72,7 +72,9 @@ class EmbedRenderer {
 
     public function addModules(): void {
         $this->parserOutput->addModuleStyles( [
-            'ext.datamaps.core.styles'
+            'ext.datamaps.core.styles',
+            // Wiki-provided CSS
+            'ext.datamaps.site.styles'
         ] );
         $this->parserOutput->addModules( [
             // ext.datamaps.leaflet is loaded on demand (when a DataMap is initialised) in a separate request to not delay the
@@ -80,7 +82,7 @@ class EmbedRenderer {
             'ext.datamaps.core',
             // Initialiser module to boot the maps
             'ext.datamaps.bootstrap',
-            // Wiki-provided CSS and JS
+            // Wiki-provided JS
             'ext.datamaps.site'
         ] );
 
