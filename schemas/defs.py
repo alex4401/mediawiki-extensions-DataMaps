@@ -282,11 +282,13 @@ class XyMarker(_Marker):
 
 ##% Main
 class _DataMap(BaseModelEx):
-    if not FRAGMENT:
-        include: Optional[list[str]] = Field(
-            None,
-            description='List of fragments that must be imported.'
-        )
+    #if FRAGMENT:
+    isFragment: bool = Field(False, alias='$fragment')
+    #if not FRAGMENT:
+    include: Optional[list[str]] = Field(
+        None,
+        description='List of fragments that must be imported.'
+    )
     crs: CoordinateSystem | Box = Field(
         ((0, 0), (100, 100)),
     )
