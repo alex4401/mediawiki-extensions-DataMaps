@@ -247,9 +247,13 @@ class CircularMarkerGroup(_BaseMarkerGroup):
     fillColor: Rgb
     size: float = 5
     extraMinZoomSize: Optional[float] = None
+    strokeColor: Optional[Rgb] = None
+    strokeWidth: float = 1
 class PinMarkerGroup(_BaseMarkerGroup):
     pinColor: Rgb
     size: float = 32
+    strokeColor: Optional[Rgb] = None
+    strokeWidth: float = 1
 class IconMarkerGroup(_BaseMarkerGroup):
     icon: str
     size: float|Point1 = 32
