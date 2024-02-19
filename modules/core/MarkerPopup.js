@@ -80,7 +80,7 @@ module.exports = class MarkerPopup {
     static bindTo( map, leafletMarker ) {
         leafletMarker.bindPopup( () => new ( map.getPopupClass() )( map, leafletMarker ), {
             // TODO: Currently VE is not compatible with ephemeral popups
-            tooltip: !map.isFeatureBitSet( MapFlags.VisualEditor ) && map.isFeatureBitSet( MapFlags.PopupTooltips )
+            tooltip: !map.checkFeatureFlag( MapFlags.VisualEditor ) && map.checkFeatureFlag( MapFlags.PopupTooltips )
         }, Util.getLeaflet().Ark.Popup );
     }
 
@@ -181,7 +181,7 @@ module.exports = class MarkerPopup {
         // Gather detail text from layers
         let detailText = discrims.join( ', ' );
         // Reformat if coordinates are to be shown
-        if ( this.map.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
+        if ( this.map.checkFeatureFlag( MapFlags.ShowCoordinates ) ) {
             const coordText = this.map.crs.makeLabel( this.leafletMarker.apiInstance );
             detailText = detailText ? `${coordText} (${detailText})` : coordText;
         }
@@ -343,7 +343,7 @@ module.exports = class MarkerPopup {
             mw.loader.using( 'mmv.bootstrap', () => {
                 const title = mw.Title.newFromImg( $image );
                 let caption = this.markerGroup.name;
-                if ( this.map.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
+                if ( this.map.checkFeatureFlag( MapFlags.ShowCoordinates ) ) {
                     caption += ` (${this.map.crs.makeLabel( this.leafletMarker.apiInstance )})`;
                 }
 

@@ -88,7 +88,7 @@ class CollectiblesPanel extends LegendTabber.Tab {
             section.sort();
         }
 
-        if ( this.map.isFeatureBitSet( MapFlags.SortChecklistsByAmount ) ) {
+        if ( this.map.checkFeatureFlag( MapFlags.SortChecklistsByAmount ) ) {
             for ( const section of Object.values( this.sections ).sort( ( a, b ) => b.rows.length - a.rows.length ) ) {
                 this.contentElement.appendChild( section.contentElement );
             }
@@ -338,7 +338,7 @@ CollectiblesPanel.Row = class Row {
             this.field.getField().toggle( false );
         }
 
-        if ( this.outerSection.panel.map.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
+        if ( this.outerSection.panel.map.checkFeatureFlag( MapFlags.ShowCoordinates ) ) {
             Util.createDomElement( 'b', {
                 text: this.outerSection.panel.map.crs.makeLabel( this.marker.apiInstance ),
                 appendTo: this.labelElement

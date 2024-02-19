@@ -34,7 +34,7 @@ function getConfig( rootElement ) {
  * @param {InstanceType<DataMap>} map
  */
 function invokeHandler( handler, map ) {
-    const isVe = map.isFeatureBitSet( MapFlags.VisualEditor );
+    const isVe = map.checkFeatureFlag( MapFlags.VisualEditor );
     if ( ( isVe && handler.flag & mw.dataMaps.IS_COMPATIBLE_WITH_VISUAL_EDITOR )
         || ( !isVe && handler.flag & mw.dataMaps.IS_COMPATIBLE_WITH_NORMAL ) ) {
         EventEmitter.invokeHandler( handler, [ map ] );

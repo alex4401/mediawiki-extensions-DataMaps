@@ -120,7 +120,7 @@ class EditableMarkerPopup extends MarkerPopup {
         // Gather detail text from layers
         let detailText = discrims.join( ', ' );
         // Reformat if coordinates are to be shown
-        if ( this.map.isFeatureBitSet( MapFlags.ShowCoordinates ) ) {
+        if ( this.map.checkFeatureFlag( MapFlags.ShowCoordinates ) ) {
             const coordText = this.map.getCoordinateLabel( this.leafletMarker.apiInstance );
             detailText = detailText ? `${coordText} (${detailText})` : coordText;
         }

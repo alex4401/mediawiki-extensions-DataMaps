@@ -166,7 +166,7 @@ class DataMap extends EventEmitter {
         // Set up internal event handlers
         this.on( 'linkedEvent', this._onLinkedEventReceived, this );
         this.on( 'legendManager', this._initialiseFiltersPanel, this );
-        if ( !this.isFeatureBitSet( MapFlags.VisualEditor ) && Object.values( this.config.groups ).some( x =>
+        if ( !this.checkFeatureFlag( MapFlags.VisualEditor ) && Object.values( this.config.groups ).some( x =>
             Util.Groups.getCollectibleType( x ) ) ) {
             this.on( 'legendManager', this._initialiseCollectiblesPanel, this );
         }
@@ -180,7 +180,7 @@ class DataMap extends EventEmitter {
         } );
 
         // Request OOUI to be loaded and build the legend
-        if ( !( !this.isFeatureBitSet( MapFlags.VisualEditor ) && this.isFeatureBitSet( MapFlags.HideLegend ) ) ) {
+        if ( !( !this.checkFeatureFlag( MapFlags.VisualEditor ) && this.checkFeatureFlag( MapFlags.HideLegend ) ) ) {
             mw.loader.using( [
                 'oojs-ui-core',
                 'oojs-ui-widgets'
@@ -188,7 +188,7 @@ class DataMap extends EventEmitter {
         }
 
         // Load search add-on
-        if ( !this.isFeatureBitSet( MapFlags.VisualEditor ) && this.isFeatureBitSet( MapFlags.Search ) ) {
+        if ( !this.checkFeatureFlag( MapFlags.VisualEditor ) && this.checkFeatureFlag( MapFlags.Search ) ) {
             mw.loader.using( [
                 'oojs-ui-core',
                 'oojs-ui-widgets',
@@ -236,18 +236,6 @@ class DataMap extends EventEmitter {
      */
     checkFeatureFlag( mask ) {
         return Util.isBitSet( this._flags, mask );
-    }
-
-
-    /**
-     * Checks if all bits of a mask are set on the configured flags constant.
-     *
-     * @deprecated use checkFeatureFlag; to be removed before v0.17.0 is finalised.
-     * @param {number} mask Features bit mask.
-     * @return {boolean}
-     */
-    isFeatureBitSet( mask ) {
-        return this.checkFeatureFlag( mask );
     }
 
 
@@ -502,7 +490,7 @@ class DataMap extends EventEmitter {
      * @return {boolean}
      */
     shouldRenderIconsOnCanvas() {
-        return this.isFeatureBitSet( MapFlags.IconRenderer_Canvas );
+        return this.checkFeatureFlag( MapFlags.IconRenderer_Canvas );
     }
 
 
@@ -733,7 +721,7 @@ class DataMap extends EventEmitter {
     getMapOffsetWidth() {
         const viewportWidth = document.documentElement.clientWidth;
         if (
-            this.isFeatureBitSet( MapFlags.HideLegend )
+            this.checkFeatureFlag( MapFlags.HideLegend )
             // Check if viewport width is within our frame
             || viewportWidth < DataMap.LEGEND_AFFECTS_BOUNDS_FIT_VIEWPORT_WIDTH[ 0 ]
             || viewportWidth > DataMap.LEGEND_AFFECTS_BOUNDS_FIT_VIEWPORT_WIDTH[ 1 ]
