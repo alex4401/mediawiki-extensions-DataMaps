@@ -6,5 +6,6 @@ use Status;
 use stdClass;
 
 interface DataConstraint {
-    public static function run( Status $status, MapVersionInfo $version, stdClass $data ): bool;
+    public function getDependencies(): array;
+    public function run( Status $status, MapVersionInfo $version, stdClass $data ): bool;
 }
