@@ -189,6 +189,10 @@ class MapContentValidator {
                 $reduceToWarning = $error['constraint'] === 'anyOf';
             }
 
+            if ( $error['constraint'] === 'anyOf' && $error['pointer'] === '' ) {
+                continue;
+            }
+
             if ( $error['constraint'] === 'minLength' && $error['minLength'] === 1 ) {
                 $error['constraint'] = 'minLengthEmpty';
             }
