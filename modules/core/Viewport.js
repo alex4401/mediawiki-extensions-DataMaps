@@ -90,8 +90,8 @@ class Viewport extends EventEmitter {
         this.map.viewport = this;
 
         // Install the interaction rejection controller
-        const useSleepInteractions = this.map.isFeatureBitSet( MapFlags.SleepingInteractions )
-            || this.map.isFeatureBitSet( MapFlags.VisualEditor );
+        const useSleepInteractions = this.map.checkFeatureFlag( MapFlags.SleepingInteractions )
+            || this.map.checkFeatureFlag( MapFlags.VisualEditor );
         this._leaflet.addHandler( 'interactionControl', Leaflet.Ark[ useSleepInteractions ? 'SleepInteractionControl'
             : 'KeybindInteractionControl' ] );
 
@@ -101,7 +101,7 @@ class Viewport extends EventEmitter {
          * @type {Controls.Coordinates?}
          */
         this.coordinatesControl = null;
-        if ( this.map.isFeatureBitSet( MapFlags.ShowCoordinates ) || this.map.isFeatureBitSet( MapFlags.VisualEditor ) ) {
+        if ( this.map.checkFeatureFlag( MapFlags.ShowCoordinates ) || this.map.checkFeatureFlag( MapFlags.VisualEditor ) ) {
             this.coordinatesControl = this.addControl( Viewport.anchors.bottomLeft, new Controls.Coordinates(
                 this.map ) );
         }
@@ -127,7 +127,7 @@ class Viewport extends EventEmitter {
          * @type {Controls.ToggleFullscreen?}
          */
         this.fullscreenToggle = null;
-        if ( this.map.isFeatureBitSet( MapFlags.AllowFullscreen ) ) {
+        if ( this.map.checkFeatureFlag( MapFlags.AllowFullscreen ) ) {
             this.fullscreenToggle = this.addControl( Viewport.anchors.topRightInline, new Controls.ToggleFullscreen(
                 this.map ) );
         }
@@ -138,7 +138,7 @@ class Viewport extends EventEmitter {
          */
         this.editControl = null;
         if (
-            !this.map.isFeatureBitSet( MapFlags.IsPreview ) && ( mw.config.get( 'wgUserName' ) !== null
+            !this.map.checkFeatureFlag( MapFlags.IsPreview ) && ( mw.config.get( 'wgUserName' ) !== null
                 || Util.canAnonsEdit )
         ) {
             this.editControl = this.addControl( Viewport.anchors.topRightInline, new Controls.EditButton(
@@ -176,7 +176,7 @@ class Viewport extends EventEmitter {
         if ( !mapConfig.zoom ) {
             mapConfig.zoom = {
                 min: 0.05,
-                lock: this.map.isFeatureBitSet( MapFlags.DisableZoom ),
+                lock: this.map.checkFeatureFlag( MapFlags.DisableZoom ),
                 max: 6,
                 auto: true
             };
