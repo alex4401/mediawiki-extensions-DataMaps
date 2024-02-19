@@ -302,7 +302,9 @@ class MarkerSearch extends Controls.MapControl {
                 if ( icon ) {
                     let iconElement;
                     if ( icon instanceof Leaflet.Ark.PinIcon ) {
-                        iconElement = Util.createPinIconElement( icon.options.colour );
+                        iconElement = Util.createPinIconElement( {
+                            colour: icon.options.colour
+                        } );
                         iconElement.setAttribute( 'width', '16' );
                         iconElement.setAttribute( 'height', '16' );
                     } else {

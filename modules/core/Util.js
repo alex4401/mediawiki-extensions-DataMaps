@@ -275,17 +275,10 @@ module.exports = Object.freeze( {
     /**
      * Creates an SVG element of a pin-shaped icon.
      *
-     * @deprecated since 0.16.10 passing string is deprecated; switch to PinIconOptions.
-     * @param {string|PinIconOptions} options
+     * @param {PinIconOptions} options
      * @return {SVGElement}
      */
     createPinIconElement( options ) {
-        if ( typeof options === 'string' ) {
-            options = {
-                colour: options
-            };
-        }
-
         const root = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' );
         root.setAttribute( 'viewBox', '0 0 20 20' );
         const path = document.createElementNS( 'http://www.w3.org/2000/svg', 'path' );
