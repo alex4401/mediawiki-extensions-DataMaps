@@ -9,6 +9,7 @@ const
     /** @type {InstanceType<DataMap>[]} */ initialisedMaps = [],
     /** @type {MapNotificationReceiver[]} */ toNotifyOnInit = [],
     /** @type {MapNotificationReceiver[]} */ toNotifyOnDestroy = [],
+    MAP_CONTAINER_SELECTOR = '.ext-datamaps-container[data-mw-datamaps="map"][data-datamap-id]',
     INLINE_MARKERS_SELECTOR = ':scope > script[type="application/datamap+json"][data-purpose="markers"]',
     INLINE_CONFIG_SELECTOR = ':scope > script[type="application/datamap+json"][data-purpose="config"]';
 
@@ -170,7 +171,7 @@ mw.dataMaps = {
 // Begin initialisation once the document is loaded
 mw.hook( 'wikipage.content' ).add( $content => {
     // Run initialisation for every map, followed by events for gadgets to listen to
-    for ( const rootElement of /** @type {HTMLElement[]} */ ( $content.find( '.ext-datamaps-container[data-datamap-id]' ) ) ) {
+    for ( const rootElement of /** @type {HTMLElement[]} */ ( $content.find( MAP_CONTAINER_SELECTOR ) ) ) {
         const id = parseInt( Util.getNonNull( rootElement.dataset.datamapId ) ),
             config = getConfig( rootElement );
         if ( config ) {
