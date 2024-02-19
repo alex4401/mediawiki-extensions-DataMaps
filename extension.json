@@ -459,6 +459,7 @@
 		"ListDefinedTags": "MainHandler",
 		"RecentChange_save": "MainHandler",
 		"RevisionDataUpdates": "MainHandler",
+		"ArticlePurge": "ArticleMapCacheManagingHooks",
 		"CodeEditorGetPageLanguage": "MediaWiki\\Extension\\DataMaps\\Hooks\\ContentModelHooks::onCodeEditorGetPageLanguage"
 	},
     "HookHandlers": {
@@ -479,7 +480,13 @@
 			"services": [
 				"DataMaps.Config"
 			]
-        }
+        },
+		"ArticleMapCacheManagingHooks": {
+            "class": "MediaWiki\\Extension\\DataMaps\\Hooks\\ArticleMapCacheManagingHooks",
+			"services": [
+				"DataMaps.Config"
+			]
+		}
     },
 
 	"DefaultUserOptions": {
