@@ -251,7 +251,7 @@ CollectiblesPanel.Section = class Section {
 
 
     sort() {
-        this.rows.sort( CollectiblesPanel.Section._compareSort.bind( null, this.panel.map.crsOrigin ) );
+        this.rows.sort( CollectiblesPanel.Section._compareSort.bind( null, this.panel.map.crs.origin ) );
 
         for ( let index = 0; index < this.rows.length; index++ ) {
             const row = this.rows[ index ];
