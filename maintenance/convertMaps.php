@@ -193,7 +193,7 @@ class ConvertMaps extends Maintenance {
         // Create a new object that will contain the output
         $dmData = new stdclass();
         // Set schema
-        $dmData->{'$schema'} = DataMapContent::getPublicSchemaUrl( 'v0.15' );
+        $dmData->{'$schema'} = DataMapContent::getPublicSchemaUrl( 'v17' );
         // Retrieve coordinate system information
         $coordOrder = $fmData->coordinateOrder;
         $coordSpace = $fmData->mapBounds;
@@ -203,10 +203,6 @@ class ConvertMaps extends Maintenance {
         $fmMaxY = $coordSpace[0][1];
         // Determine if coordinates have to be swapped places
         $isSourceXY = $coordOrder == 'xy';
-        // Set `xy` order if needed
-        if ( $isSourceXY ) {
-            $dmData->coordinateOrder = 'xy';
-        }
         // Handle bounds translation by origin
         switch ( $coordOrigin ) {
             case 'bottom-left':
@@ -219,7 +215,12 @@ class ConvertMaps extends Maintenance {
                 $this->output( "    ... unknown origin, coordinates may be misplaced: $coordOrigin\n" );
         }
         // Set up the CRS segment
-        $dmData->crs = $coordSpace;
+        $dmData->crs = new stdClass();
+        if ( $isSourceXY ) {
+            $dmData->crs->order = 'xy';
+        }
+        $dmData->crs->topLeft = $coordSpace[0];
+        $dmData->crs->bottomRight = $coordSpace[1];
         // Migrate the background
         if ( !$this->ensureImageExists( $fmData->mapImage ) ) {
             return null;
