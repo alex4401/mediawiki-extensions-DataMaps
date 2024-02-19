@@ -1,7 +1,7 @@
 /** @typedef {import( './DataMap.js' )} DataMap */
 const Util = require( './Util.js' ),
     { MapFlags } = require( './enums.js' ),
-    { createDomElement } = Util;
+    { createDomElement, getNonNull } = Util;
 
 
 /**
@@ -267,7 +267,7 @@ module.exports = class MarkerPopup {
                 events: {
                     click: () => {
                         this.map.toggleMarkerDismissal( this.leafletMarker );
-                        this.map.leaflet.closePopup();
+                        getNonNull( this.map.viewport ).getLeafletMap().closePopup();
                     }
                 }
             } );
