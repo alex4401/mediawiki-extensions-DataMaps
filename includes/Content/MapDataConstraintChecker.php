@@ -8,6 +8,7 @@ use MediaWiki\Extension\DataMaps\Content\DataConstraints\AssociationStringGroupE
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\DataConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\LayerIdNoOverlapConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\MarkerUidNoOverlapConstraint;
+use MediaWiki\Extension\DataMaps\Content\DataConstraints\RequiredFilesConstraint;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Utils\UrlUtils;
 use stdClass;
@@ -40,6 +41,7 @@ class MapDataConstraintChecker {
             new AssociationStringGroupExistsConstraint(),
             new LayerIdNoOverlapConstraint(),
             new MarkerUidNoOverlapConstraint(),
+            new RequiredFilesConstraint(),
         ];
     }
 
