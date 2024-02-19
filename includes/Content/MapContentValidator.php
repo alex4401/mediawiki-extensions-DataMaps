@@ -15,10 +15,15 @@ class MapContentValidator {
     private const MAX_VALIDATION_ERROR_COUNT = 40;
 
     private const ERROR_MESSAGE_MAP = [
-        'required' => 'datamap-validate-required-field',
-        'additionalProp' => 'datamap-validate-unknown-field',
+        'required' => 'datamap-validate-constraint-required',
+        'additionalProp' => 'datamap-validate-constraint-unexpected',
+        'pattern' => 'datamap-validate-constraint-regex',
+        'minLengthEmpty' => 'datamap-validate-constraint-empty',
+        'minLength' => 'datamap-validate-constraint-minlength',
+        'exclusiveMinimum' => 'datamap-validate-constraint-minimum',
+        'exclusiveMaximum' => 'datamap-validate-constraint-maximum',
     ];
-    private const UNKNOWN_ERROR_MESSAGE = 'datamap-validate-unknown-error';
+    private const UNKNOWN_ERROR_MESSAGE = 'datamap-validate-constraint-fallback';
 
     /** @var SchemaProvider */
     private SchemaProvider $schemaProvider;
@@ -184,6 +189,10 @@ class MapContentValidator {
                 $reduceToWarning = $error['constraint'] === 'anyOf';
             }
 
+            if ( $error['constraint'] === 'minLength' && $error['minLength'] === 1 ) {
+                $error['constraint'] = 'minLengthEmpty';
+            }
+
             $msg = self::ERROR_MESSAGE_MAP[$error['constraint']] ?? self::UNKNOWN_ERROR_MESSAGE;
             $params = [
                 $error['pointer'],
@@ -192,6 +201,15 @@ class MapContentValidator {
             switch ( $error['constraint'] ) {
                 case 'additionalProp':
                     $params[0] .= '/' . $error['apProperty'];
+                    break;
+                case 'minLength':
+                    $params[] = $error['minLength'];
+                    break;
+                case 'exclusiveMinimum':
+                    $params[] = $error['minimum'];
+                    break;
+                case 'exclusiveMaximum':
+                    $params[] = $error['maximum'];
                     break;
 
                 default:
