@@ -182,12 +182,6 @@ class Viewport extends EventEmitter {
             };
         }
 
-        // Disable automated minimum zoom calculation if the value has been specified in custom Leaflet settings
-        // TODO: legacy behaviour, drop in v0.17
-        if ( 'minZoom' in ( mapConfig.leafletSettings || {} ) ) {
-            mapConfig.zoom.auto = false;
-        }
-
         // If zoom is locked, disable all zoom controls
         if ( mapConfig.zoom.lock ) {
             mapConfig.leafletSettings = $.extend( {
