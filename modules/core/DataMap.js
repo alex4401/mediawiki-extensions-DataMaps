@@ -1,12 +1,11 @@
 const MapStorage = require( './MapStorage.js' ),
-    { MapFlags, MarkerGroupFlags, CoordinateDisplayStyle } = require( './enums.js' ),
+    { MapFlags, MarkerGroupFlags } = require( './enums.js' ),
     MarkerLayerManager = require( './MarkerLayerManager.js' ),
     MarkerPopup = require( './MarkerPopup.js' ),
     MarkerStreamingManager = require( './MarkerStreamingManager.js' ),
     CoordinateSystem = require( './CoordinateSystem.js' ),
     Viewport = require( './Viewport.js' ),
     Background = require( './Background.js' ),
-    Controls = require( './controls.js' ),
     LegendTabber = require( './legend/LegendTabber.js' ),
     MarkerFilteringPanel = require( './legend/MarkerFilteringPanel.js' ),
     EventEmitter = require( './EventEmitter.js' ),
@@ -759,23 +758,6 @@ class DataMap extends EventEmitter {
 
 
     /**
-     * Adds a custom control to Leaflet's container.
-     *
-     * Requires the Leaflet map to be initialised.
-     *
-     * @deprecated yet to be evaluated, use viewport.addControl
-     * @template {HTMLElement|Controls.MapControl} T
-     * @param {DataMap.anchors[ keyof DataMap.anchors ]} anchor Anchor selector.
-     * @param {T} control Control to add.
-     * @param {boolean} [prepend] Whether to add the control to the beginning of the anchor.
-     * @return {T} {@link control} for chaining.
-     */
-    addControl( anchor, control, prepend ) {
-        return Util.getNonNull( this.viewport ).addControl( anchor, control, prepend );
-    }
-
-
-    /**
      * @private
      * @fires DataMap#legendManager
      */
@@ -824,11 +806,6 @@ class DataMap extends EventEmitter {
 }
 
 
-/**
- * @constant
- * @deprecated yet to be evaluated, use Viewport.anchors
- */
-DataMap.anchors = Viewport.anchors;
 /**
  * Content bounds padding, relative to run-time computed bounds.
  *
