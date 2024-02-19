@@ -43,6 +43,11 @@ class DataMap extends EventEmitter {
          */
         this.rootElement = rootElement;
         /**
+         * @private
+         * @type {boolean}
+         */
+        this._isMiniLayout = rootElement.classList.contains( 'ext-datamaps-mini-layout' );
+        /**
          * Setup configuration.
          *
          * @deprecated since 0.16.5; will be removed in 0.18.0. Alternatives will be made over the v0.17 cycle.
@@ -252,6 +257,14 @@ class DataMap extends EventEmitter {
         if ( showProgressBar !== undefined ) {
             /** @type {HTMLElement} */ ( this.statusElement.children[ 0 ] ).style.display = showProgressBar ? 'block' : 'none';
         }
+    }
+
+
+    /**
+     * @return {boolean}
+     */
+    canModifyUriAddress() {
+        return !this._isMiniLayout;
     }
 
 
