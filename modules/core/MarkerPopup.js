@@ -123,24 +123,26 @@ module.exports = class MarkerPopup {
      * @param {HTMLElement} element
      */
     buildButtons( element ) {
-        const getLink = createDomElement( 'a', {
-            classes: [ 'ext-datamaps-popup-link', 'oo-ui-icon-link' ],
-            attributes: {
-                role: 'button',
-                title: mw.msg( 'datamap-popup-marker-link-get' ),
-                'aria-label': mw.msg( 'datamap-popup-marker-link-get' ),
-                href: Util.makeUrlWithParams( this.map, { marker: this.uid }, true )
-            },
-            events: {
-                click: event => {
-                    event.preventDefault();
-                    // eslint-disable-next-line compat/compat
-                    navigator.clipboard.writeText( /** @type {string} */ ( getLink.getAttribute( 'href' ) ) )
-                        .then( () => mw.notify( mw.msg( 'datamap-popup-marker-link-copied' ) ) );
-                }
-            },
-            appendTo: element
-        } );
+        if ( this.map.canModifyUriAddress() ) {
+            const getLink = createDomElement( 'a', {
+                classes: [ 'ext-datamaps-popup-link', 'oo-ui-icon-link' ],
+                attributes: {
+                    role: 'button',
+                    title: mw.msg( 'datamap-popup-marker-link-get' ),
+                    'aria-label': mw.msg( 'datamap-popup-marker-link-get' ),
+                    href: Util.makeUrlWithParams( this.map, { marker: this.uid }, true )
+                },
+                events: {
+                    click: event => {
+                        event.preventDefault();
+                        // eslint-disable-next-line compat/compat
+                        navigator.clipboard.writeText( /** @type {string} */ ( getLink.getAttribute( 'href' ) ) )
+                            .then( () => mw.notify( mw.msg( 'datamap-popup-marker-link-copied' ) ) );
+                    }
+                },
+                appendTo: element
+            } );
+        }
     }
 
 
