@@ -26,6 +26,8 @@ final class EmbedMapFunction {
         $params = CommonUtilities::getArguments( $frame, $args, [
             'filter' => null,
             'max-width' => null,
+            'class' => null,
+            'layout' => 'full',
         ] );
 
         $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
