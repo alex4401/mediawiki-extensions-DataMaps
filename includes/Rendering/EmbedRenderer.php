@@ -204,6 +204,13 @@ class EmbedRenderer {
             $containerMain->addClasses( [ 'ext-datamaps-mini-layout' ] );
         }
 
+        // Pass the focused marker ID to the client
+        if ( $options->markerIdToCentreOn ) {
+            $containerMain->setAttributes( [
+                'data-focused-marker' => $options->markerIdToCentreOn,
+            ] );
+        }
+
         // Stack the containers
         $containerMain->appendContent( $containerTop );
         $containerMain->appendContent( $containerContent );

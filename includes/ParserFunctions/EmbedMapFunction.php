@@ -28,6 +28,7 @@ final class EmbedMapFunction {
             'max-width' => null,
             'class' => null,
             'layout' => 'full',
+            'marker' => null,
         ] );
 
         $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
@@ -100,6 +101,10 @@ final class EmbedMapFunction {
 
         if ( $params['layout'] === 'mini' ) {
             $result->miniStyle = true;
+        }
+
+        if ( $params['marker'] ) {
+            $result->markerIdToCentreOn = $params['marker'];
         }
 
         return $result;
