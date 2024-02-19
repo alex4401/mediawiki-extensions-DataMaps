@@ -383,7 +383,9 @@ module.exports = Object.freeze( {
      * @param {Record<string, string|number|null>} paramsToSet
      */
     updateLocation( map, paramsToSet ) {
-        history.replaceState( {}, '', module.exports.makeUrlWithParams( map, paramsToSet, false ) );
+        if ( map.canModifyUriAddress() ) {
+            history.replaceState( {}, '', module.exports.makeUrlWithParams( map, paramsToSet, false ) );
+        }
     },
 
 
