@@ -259,7 +259,7 @@ class DataMap extends EventEmitter {
      * @private
      */
     _setUpUriMarkerHandler() {
-        const idToOpen = Util.getQueryParameter( 'marker' );
+        const idToOpen = this.rootElement.getAttribute( 'data-focused-marker' ) || Util.getQueryParameter( 'marker' );
         if ( !idToOpen ) {
             return;
         }

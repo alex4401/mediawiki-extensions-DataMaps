@@ -6,4 +6,5 @@ class EmbedRenderOptions {
     public ?int $maxWidthPx = null;
     public ?array $classes = null;
     public bool $miniStyle = false;
+    public ?string $markerIdToCentreOn = null;
 }
