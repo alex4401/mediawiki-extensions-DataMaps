@@ -137,18 +137,6 @@
 					],
 					"default": null,
 					"title": "Bordercolor"
-				},
-				"thickness": {
-					"anyOf": [
-						{
-							"type": "number"
-						},
-						{
-							"type": "null"
-						}
-					],
-					"default": null,
-					"title": "Thickness"
 				}
 			},
 			"required": [
@@ -263,7 +251,7 @@
 					"title": "Fillcolor"
 				},
 				"size": {
-					"default": 5,
+					"default": 12.5,
 					"title": "Size",
 					"type": "number"
 				},
@@ -534,6 +522,11 @@
 					"default": null,
 					"title": "Associatedlayer"
 				},
+				"pixelated": {
+					"default": false,
+					"title": "Pixelated",
+					"type": "boolean"
+				},
 				"overlays": {
 					"default": [],
 					"items": {
@@ -686,6 +679,11 @@
 					],
 					"title": "At",
 					"type": "array"
+				},
+				"pixelated": {
+					"default": false,
+					"title": "Pixelated",
+					"type": "boolean"
 				},
 				"reduceGaps": {
 					"default": false,
@@ -1343,6 +1341,18 @@
 					],
 					"default": null,
 					"title": "Color"
+				},
+				"thickness": {
+					"anyOf": [
+						{
+							"type": "number"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Thickness"
 				}
 			},
 			"required": [
@@ -1746,6 +1756,11 @@
 					],
 					"default": null,
 					"title": "Associatedlayer"
+				},
+				"pixelated": {
+					"default": false,
+					"title": "Pixelated",
+					"type": "boolean"
 				},
 				"overlays": {
 					"default": [],
