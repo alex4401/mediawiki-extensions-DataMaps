@@ -36,24 +36,4 @@ class ZoomSettingsSpec extends DataModel {
     public function getMaximum(): float {
         return $this->raw->max ?? self::DEFAULT_MAXIMUM;
     }
-
-    public function validate( Status $status ) {
-        $this->checkField( $status, 'tryFitEverything', DataModel::TYPE_BOOL );
-        $this->checkField( $status, [
-            'name' => 'min',
-            'type' => DataModel::TYPE_NUMBER,
-            'check' => static function ( $status, $raw ) {
-                if ( $raw > 0 && $raw < 24 ) {
-                    return true;
-                }
-
-                $status->fatal( 'datamap-error-validate-disallowed-value', static::$publicName, 'min' );
-                return false;
-            }
-        ] );
-        $this->conflict( $status, [ 'lock', 'max' ] );
-        $this->checkField( $status, 'lock', DataModel::TYPE_BOOL );
-        $this->checkField( $status, 'max', DataModel::TYPE_NUMBER );
-        $this->disallowOtherFields( $status );
-    }
 }
