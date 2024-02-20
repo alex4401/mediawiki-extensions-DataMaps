@@ -7,6 +7,7 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\AssociationStringGroupExistsConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\CollectibleDependentPropertiesConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\DataConstraint;
+use MediaWiki\Extension\DataMaps\Content\DataConstraints\DeprecationConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\LayerIdNoOverlapConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\MarkerUidNoOverlapConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\RequiredFilesConstraint;
@@ -46,6 +47,7 @@ class MapDataConstraintChecker {
             new RequiredFilesConstraint(),
             new CollectibleDependentPropertiesConstraint(),
             new SearchDependentPropertiesConstraint(),
+            new DeprecationConstraint(),
         ];
     }
 
