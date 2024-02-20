@@ -36,6 +36,7 @@
     "datamap-validate-constraint-requiredfile": "Following files are referenced but do not exist: $1",
     "datamap-validate-constraint-muidoverlap": "Marker found with an identifier already used: <code>$1</code> (UID is <code>$2</code>).",
     "datamap-validate-constraint-groupexists": "Group referenced for marker list <code>$1</code> but does not exist: <code>$2</code>.",
+    "datamap-validate-constraint-bglayerexists": "Background layer(s) referenced for marker list <code>$1</code> but not declared: <code>$2</code>.",
     "datamap-validate-constraint-layerdecloverlap": "Groups and categories cannot share names: <code>$1</code>, <code>$2</code>.",
     "datamap-validate-constraint-assocgroupoverlap": "Only one group may be specified for a marker list <code>$1</code>, found: $2.",
     "datamap-validate-constraint-assocnonuniqoverlap": "A group or a category has been specified more than once for marker list <code>$1</code>.",

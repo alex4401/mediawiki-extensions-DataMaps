@@ -5,6 +5,7 @@ use JsonSchema\Exception\ResourceNotFoundException;
 use Status;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\AssociationStringGroupExistsConstraint;
+use MediaWiki\Extension\DataMaps\Content\DataConstraints\BackgroundLayerExistsConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\CollectibleDependentPropertiesConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\DataConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\DeprecationConstraint;
@@ -48,6 +49,7 @@ class MapDataConstraintChecker {
             new CollectibleDependentPropertiesConstraint(),
             new SearchDependentPropertiesConstraint(),
             new DeprecationConstraint(),
+            new BackgroundLayerExistsConstraint(),
         ];
     }
 
