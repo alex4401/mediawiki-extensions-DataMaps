@@ -23,11 +23,20 @@ class NamedPoint(BaseModelEx):
 Point = tuple[float, float] | NamedPoint
 Point1 = float|Point
 Box = tuple[Point, Point]
-Rgb = str|tuple[int, int, int]
-Rgba = str|tuple[int, int, int, int]
+_IntMax255 = Annotated[int, Field(ge=0, le=255)]
+_FloatMax1 = Annotated[float, Field(ge=0, le=1)]
+Rgb = tuple[_IntMax255, _IntMax255, _IntMax255]|Annotated[str, Field(
+    pattern=r'^#([a-z]{3}|[a-z]{6})$'
+)]
+Rgba = tuple[_IntMax255, _IntMax255, _IntMax255, _FloatMax1]|Annotated[str, Field(
+    pattern=r'^#([a-z]{4}|[a-z]{8})$'
+)]
 NonEmptyString = Annotated[str, Field(min_length=1)]
 MultilineString = list[str]|NonEmptyString
-LayerId = Annotated[str, Field(min_length=1)]
+LayerId = Annotated[str, Field(
+    min_length=1,
+    pattern=r'^[\w\d\-\._]+$'
+)]
 LayerAssociationStr = Annotated[str, Field(min_length=1)]
 
 
