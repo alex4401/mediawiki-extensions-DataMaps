@@ -66,26 +66,35 @@
 				"color": {
 					"anyOf": [
 						{
-							"type": "string"
-						},
-						{
 							"maxItems": 4,
 							"minItems": 4,
 							"prefixItems": [
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
-									"type": "integer"
+									"maximum": 1.0,
+									"minimum": 0.0,
+									"type": "number"
 								}
 							],
 							"type": "array"
+						},
+						{
+							"pattern": "^#([a-z]{4}|[a-z]{8})$",
+							"type": "string"
 						},
 						{
 							"type": "null"
@@ -97,23 +106,30 @@
 				"borderColor": {
 					"anyOf": [
 						{
-							"type": "string"
-						},
-						{
 							"maxItems": 3,
 							"minItems": 3,
 							"prefixItems": [
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								}
 							],
 							"type": "array"
+						},
+						{
+							"pattern": "^#([a-z]{3}|[a-z]{6})$",
+							"type": "string"
 						},
 						{
 							"type": "null"
@@ -218,23 +234,30 @@
 				"fillColor": {
 					"anyOf": [
 						{
-							"type": "string"
-						},
-						{
 							"maxItems": 3,
 							"minItems": 3,
 							"prefixItems": [
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								}
 							],
 							"type": "array"
+						},
+						{
+							"pattern": "^#([a-z]{3}|[a-z]{6})$",
+							"type": "string"
 						}
 					],
 					"title": "Fillcolor"
@@ -259,23 +282,30 @@
 				"strokeColor": {
 					"anyOf": [
 						{
-							"type": "string"
-						},
-						{
 							"maxItems": 3,
 							"minItems": 3,
 							"prefixItems": [
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								}
 							],
 							"type": "array"
+						},
+						{
+							"pattern": "^#([a-z]{3}|[a-z]{6})$",
+							"type": "string"
 						},
 						{
 							"type": "null"
@@ -494,6 +524,7 @@
 					"anyOf": [
 						{
 							"minLength": 1,
+							"pattern": "^[\\w\\d\\-\\._]+$",
 							"type": "string"
 						},
 						{
@@ -964,28 +995,32 @@
 					"default": null
 				},
 				"groups": {
-					"additionalProperties": {
-						"anyOf": [
-							{
-								"$ref": "#/$defs/CircularMarkerGroup"
-							},
-							{
-								"$ref": "#/$defs/PinMarkerGroup"
-							},
-							{
-								"$ref": "#/$defs/IconMarkerGroup"
-							}
-						]
-					},
 					"default": {},
+					"patternProperties": {
+						"^[\\w\\d\\-\\._]+$": {
+							"anyOf": [
+								{
+									"$ref": "#/$defs/CircularMarkerGroup"
+								},
+								{
+									"$ref": "#/$defs/PinMarkerGroup"
+								},
+								{
+									"$ref": "#/$defs/IconMarkerGroup"
+								}
+							]
+						}
+					},
 					"title": "Groups",
 					"type": "object"
 				},
 				"categories": {
-					"additionalProperties": {
-						"$ref": "#/$defs/MarkerCategory"
-					},
 					"default": {},
+					"patternProperties": {
+						"^[\\w\\d\\-\\._]+$": {
+							"$ref": "#/$defs/MarkerCategory"
+						}
+					},
 					"title": "Categories",
 					"type": "object"
 				},
@@ -1149,23 +1184,30 @@
 				"pinColor": {
 					"anyOf": [
 						{
-							"type": "string"
-						},
-						{
 							"maxItems": 3,
 							"minItems": 3,
 							"prefixItems": [
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								}
 							],
 							"type": "array"
+						},
+						{
+							"pattern": "^#([a-z]{3}|[a-z]{6})$",
+							"type": "string"
 						}
 					],
 					"title": "Pincolor"
@@ -1178,23 +1220,30 @@
 				"strokeColor": {
 					"anyOf": [
 						{
-							"type": "string"
-						},
-						{
 							"maxItems": 3,
 							"minItems": 3,
 							"prefixItems": [
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								}
 							],
 							"type": "array"
+						},
+						{
+							"pattern": "^#([a-z]{3}|[a-z]{6})$",
+							"type": "string"
 						},
 						{
 							"type": "null"
@@ -1258,26 +1307,35 @@
 				"color": {
 					"anyOf": [
 						{
-							"type": "string"
-						},
-						{
 							"maxItems": 4,
 							"minItems": 4,
 							"prefixItems": [
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
-									"type": "integer"
+									"maximum": 1.0,
+									"minimum": 0.0,
+									"type": "number"
 								}
 							],
 							"type": "array"
+						},
+						{
+							"pattern": "^#([a-z]{4}|[a-z]{8})$",
+							"type": "string"
 						},
 						{
 							"type": "null"
@@ -1305,23 +1363,30 @@
 				"backdropColor": {
 					"anyOf": [
 						{
-							"type": "string"
-						},
-						{
 							"maxItems": 3,
 							"minItems": 3,
 							"prefixItems": [
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								},
 								{
+									"maximum": 255,
+									"minimum": 0,
 									"type": "integer"
 								}
 							],
 							"type": "array"
+						},
+						{
+							"pattern": "^#([a-z]{3}|[a-z]{6})$",
+							"type": "string"
 						},
 						{
 							"type": "null"
@@ -1519,28 +1584,32 @@
 					"default": null
 				},
 				"groups": {
-					"additionalProperties": {
-						"anyOf": [
-							{
-								"$ref": "#/$defs/CircularMarkerGroup"
-							},
-							{
-								"$ref": "#/$defs/PinMarkerGroup"
-							},
-							{
-								"$ref": "#/$defs/IconMarkerGroup"
-							}
-						]
-					},
 					"default": {},
+					"patternProperties": {
+						"^[\\w\\d\\-\\._]+$": {
+							"anyOf": [
+								{
+									"$ref": "#/$defs/CircularMarkerGroup"
+								},
+								{
+									"$ref": "#/$defs/PinMarkerGroup"
+								},
+								{
+									"$ref": "#/$defs/IconMarkerGroup"
+								}
+							]
+						}
+					},
 					"title": "Groups",
 					"type": "object"
 				},
 				"categories": {
-					"additionalProperties": {
-						"$ref": "#/$defs/MarkerCategory"
-					},
 					"default": {},
+					"patternProperties": {
+						"^[\\w\\d\\-\\._]+$": {
+							"$ref": "#/$defs/MarkerCategory"
+						}
+					},
 					"title": "Categories",
 					"type": "object"
 				},
@@ -1668,6 +1737,7 @@
 					"anyOf": [
 						{
 							"minLength": 1,
+							"pattern": "^[\\w\\d\\-\\._]+$",
 							"type": "string"
 						},
 						{
