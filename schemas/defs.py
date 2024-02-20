@@ -59,15 +59,16 @@ class _Overlay(BaseModelEx):
 class ImageOverlay(_Overlay):
     image: str
     at: Box
+    pixelated: bool = False
     reduceGaps: bool = False
 class PolylineOverlay(_Overlay):
     path: list[Point]
     color: Optional[Rgba] = Field(None)
+    thickness: Optional[float] = Field(None)
 class BoxOverlay(_Overlay):
     at: Box
     color: Optional[Rgba] = Field(None)
     borderColor: Optional[Rgb] = Field(None)
-    thickness: Optional[float] = Field(None)
 class _Background(BaseModelEx):
     name: Optional[str] = Field(
         None,
@@ -77,6 +78,7 @@ class _Background(BaseModelEx):
         '''
     )
     associatedLayer: Optional[LayerId] = None
+    pixelated: bool = False
     overlays: list[ImageOverlay|PolylineOverlay|BoxOverlay] = Field([])
 class ImageBackground(_Background):
     image: str = Field(
@@ -269,7 +271,7 @@ class _BaseMarkerGroup(BaseModelEx):
     canSearchFor: bool = True
 class CircularMarkerGroup(_BaseMarkerGroup):
     fillColor: Rgb
-    size: float = 5
+    size: float = 12.5
     extraMinZoomSize: Optional[float] = None
     strokeColor: Optional[Rgb] = None
     strokeWidth: float = 1
