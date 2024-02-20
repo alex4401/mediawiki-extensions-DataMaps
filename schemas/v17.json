@@ -93,7 +93,7 @@
 							"type": "array"
 						},
 						{
-							"pattern": "^#([a-z]{4}|[a-z]{8})$",
+							"pattern": "^#([a-fA-F0-9]{4}|[a-fA-F0-9]{8})$",
 							"type": "string"
 						},
 						{
@@ -128,7 +128,7 @@
 							"type": "array"
 						},
 						{
-							"pattern": "^#([a-z]{3}|[a-z]{6})$",
+							"pattern": "^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$",
 							"type": "string"
 						},
 						{
@@ -244,7 +244,7 @@
 							"type": "array"
 						},
 						{
-							"pattern": "^#([a-z]{3}|[a-z]{6})$",
+							"pattern": "^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$",
 							"type": "string"
 						}
 					],
@@ -292,7 +292,7 @@
 							"type": "array"
 						},
 						{
-							"pattern": "^#([a-z]{3}|[a-z]{6})$",
+							"pattern": "^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$",
 							"type": "string"
 						},
 						{
@@ -1204,7 +1204,7 @@
 							"type": "array"
 						},
 						{
-							"pattern": "^#([a-z]{3}|[a-z]{6})$",
+							"pattern": "^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$",
 							"type": "string"
 						}
 					],
@@ -1240,7 +1240,7 @@
 							"type": "array"
 						},
 						{
-							"pattern": "^#([a-z]{3}|[a-z]{6})$",
+							"pattern": "^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$",
 							"type": "string"
 						},
 						{
@@ -1332,7 +1332,7 @@
 							"type": "array"
 						},
 						{
-							"pattern": "^#([a-z]{4}|[a-z]{8})$",
+							"pattern": "^#([a-fA-F0-9]{4}|[a-fA-F0-9]{8})$",
 							"type": "string"
 						},
 						{
@@ -1395,7 +1395,7 @@
 							"type": "array"
 						},
 						{
-							"pattern": "^#([a-z]{3}|[a-z]{6})$",
+							"pattern": "^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$",
 							"type": "string"
 						},
 						{
