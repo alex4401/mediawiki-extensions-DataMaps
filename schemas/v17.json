@@ -1,5 +1,146 @@
 {
 	"$defs": {
+		"BoxOverlay": {
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Name"
+				},
+				"at": {
+					"maxItems": 2,
+					"minItems": 2,
+					"prefixItems": [
+						{
+							"anyOf": [
+								{
+									"maxItems": 2,
+									"minItems": 2,
+									"prefixItems": [
+										{
+											"type": "number"
+										},
+										{
+											"type": "number"
+										}
+									],
+									"type": "array"
+								},
+								{
+									"$ref": "#/$defs/NamedPoint"
+								}
+							]
+						},
+						{
+							"anyOf": [
+								{
+									"maxItems": 2,
+									"minItems": 2,
+									"prefixItems": [
+										{
+											"type": "number"
+										},
+										{
+											"type": "number"
+										}
+									],
+									"type": "array"
+								},
+								{
+									"$ref": "#/$defs/NamedPoint"
+								}
+							]
+						}
+					],
+					"title": "At",
+					"type": "array"
+				},
+				"color": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"maxItems": 4,
+							"minItems": 4,
+							"prefixItems": [
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								}
+							],
+							"type": "array"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Color"
+				},
+				"borderColor": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"maxItems": 3,
+							"minItems": 3,
+							"prefixItems": [
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								}
+							],
+							"type": "array"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Bordercolor"
+				},
+				"thickness": {
+					"anyOf": [
+						{
+							"type": "number"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Thickness"
+				}
+			},
+			"required": [
+				"at"
+			],
+			"title": "BoxOverlay",
+			"type": "object"
+		},
 		"CircularMarkerGroup": {
 			"additionalProperties": false,
 			"properties": {
@@ -362,6 +503,24 @@
 					"default": null,
 					"title": "Associatedlayer"
 				},
+				"overlays": {
+					"default": [],
+					"items": {
+						"anyOf": [
+							{
+								"$ref": "#/$defs/ImageOverlay"
+							},
+							{
+								"$ref": "#/$defs/PolylineOverlay"
+							},
+							{
+								"$ref": "#/$defs/BoxOverlay"
+							}
+						]
+					},
+					"title": "Overlays",
+					"type": "array"
+				},
 				"image": {
 					"title": "Image to use",
 					"type": "string"
@@ -428,6 +587,86 @@
 				"image"
 			],
 			"title": "ImageBackground",
+			"type": "object"
+		},
+		"ImageOverlay": {
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Name"
+				},
+				"image": {
+					"title": "Image",
+					"type": "string"
+				},
+				"at": {
+					"maxItems": 2,
+					"minItems": 2,
+					"prefixItems": [
+						{
+							"anyOf": [
+								{
+									"maxItems": 2,
+									"minItems": 2,
+									"prefixItems": [
+										{
+											"type": "number"
+										},
+										{
+											"type": "number"
+										}
+									],
+									"type": "array"
+								},
+								{
+									"$ref": "#/$defs/NamedPoint"
+								}
+							]
+						},
+						{
+							"anyOf": [
+								{
+									"maxItems": 2,
+									"minItems": 2,
+									"prefixItems": [
+										{
+											"type": "number"
+										},
+										{
+											"type": "number"
+										}
+									],
+									"type": "array"
+								},
+								{
+									"$ref": "#/$defs/NamedPoint"
+								}
+							]
+						}
+					],
+					"title": "At",
+					"type": "array"
+				},
+				"reduceGaps": {
+					"default": false,
+					"title": "Reducegaps",
+					"type": "boolean"
+				}
+			},
+			"required": [
+				"image",
+				"at"
+			],
+			"title": "ImageOverlay",
 			"type": "object"
 		},
 		"LatLonMarker": {
@@ -977,6 +1216,83 @@
 			"title": "PinMarkerGroup",
 			"type": "object"
 		},
+		"PolylineOverlay": {
+			"additionalProperties": false,
+			"properties": {
+				"name": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Name"
+				},
+				"path": {
+					"items": {
+						"anyOf": [
+							{
+								"maxItems": 2,
+								"minItems": 2,
+								"prefixItems": [
+									{
+										"type": "number"
+									},
+									{
+										"type": "number"
+									}
+								],
+								"type": "array"
+							},
+							{
+								"$ref": "#/$defs/NamedPoint"
+							}
+						]
+					},
+					"title": "Path",
+					"type": "array"
+				},
+				"color": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"maxItems": 4,
+							"minItems": 4,
+							"prefixItems": [
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								},
+								{
+									"type": "integer"
+								}
+							],
+							"type": "array"
+						},
+						{
+							"type": "null"
+						}
+					],
+					"default": null,
+					"title": "Color"
+				}
+			},
+			"required": [
+				"path"
+			],
+			"title": "PolylineOverlay",
+			"type": "object"
+		},
 		"Settings": {
 			"additionalProperties": false,
 			"properties": {
@@ -1360,6 +1676,24 @@
 					],
 					"default": null,
 					"title": "Associatedlayer"
+				},
+				"overlays": {
+					"default": [],
+					"items": {
+						"anyOf": [
+							{
+								"$ref": "#/$defs/ImageOverlay"
+							},
+							{
+								"$ref": "#/$defs/PolylineOverlay"
+							},
+							{
+								"$ref": "#/$defs/BoxOverlay"
+							}
+						]
+					},
+					"title": "Overlays",
+					"type": "array"
 				},
 				"at": {
 					"anyOf": [

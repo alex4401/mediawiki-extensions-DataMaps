@@ -45,6 +45,20 @@ class CoordinateSystem(BaseModelEx):
     rotation: Optional[float] = Field(
         None,
     )
+class _Overlay(BaseModelEx):
+    name: Optional[str] = Field(None)
+class ImageOverlay(_Overlay):
+    image: str
+    at: Box
+    reduceGaps: bool = False
+class PolylineOverlay(_Overlay):
+    path: list[Point]
+    color: Optional[Rgba] = Field(None)
+class BoxOverlay(_Overlay):
+    at: Box
+    color: Optional[Rgba] = Field(None)
+    borderColor: Optional[Rgb] = Field(None)
+    thickness: Optional[float] = Field(None)
 class _Background(BaseModelEx):
     name: Optional[str] = Field(
         None,
@@ -54,6 +68,7 @@ class _Background(BaseModelEx):
         '''
     )
     associatedLayer: Optional[LayerId] = None
+    overlays: list[ImageOverlay|PolylineOverlay|BoxOverlay] = Field([])
 class ImageBackground(_Background):
     image: str = Field(
         ...,
