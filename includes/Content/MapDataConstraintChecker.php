@@ -5,10 +5,12 @@ use JsonSchema\Exception\ResourceNotFoundException;
 use Status;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\AssociationStringGroupExistsConstraint;
+use MediaWiki\Extension\DataMaps\Content\DataConstraints\CollectibleDependentPropertiesConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\DataConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\LayerIdNoOverlapConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\MarkerUidNoOverlapConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\RequiredFilesConstraint;
+use MediaWiki\Extension\DataMaps\Content\DataConstraints\SearchDependentPropertiesConstraint;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Utils\UrlUtils;
 use stdClass;
@@ -42,6 +44,8 @@ class MapDataConstraintChecker {
             new LayerIdNoOverlapConstraint(),
             new MarkerUidNoOverlapConstraint(),
             new RequiredFilesConstraint(),
+            new CollectibleDependentPropertiesConstraint(),
+            new SearchDependentPropertiesConstraint(),
         ];
     }
 
