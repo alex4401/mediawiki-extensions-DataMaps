@@ -24,7 +24,7 @@ class MarkerUidNoOverlapConstraint implements DataConstraint {
             foreach ( $markers as $index => $marker ) {
                 if ( isset( $marker->id ) ) {
                     if ( $set[$marker->id] ) {
-                        $status->error( self::MESSAGE, "/markers/$assocStr/$index/id" );
+                        $status->error( self::MESSAGE, "/markers/$assocStr/$index/id", $marker->id );
                         $result = false;
                     }
                     $set[$marker->id] = true;

@@ -14,22 +14,20 @@ class RequiredFilesConstraint implements DataConstraint {
     }
 
     public function run( Status $status, MapVersionInfo $version, stdClass $data ): bool {
-        $result = true;
+        $results = [];
 
         if ( isset( $data->groups ) ) {
-            foreach ( (array)$data->groups as $groupId => $group ) {
+            foreach ( (array)$data->groups as $_ => $group ) {
                 if ( isset( $group->icon ) && !$this->checkFile( $group->icon ) ) {
-                    $status->error( self::MESSAGE, "/groups/$groupId/icon" );
-                    $result = false;
+                    $results[] = $group->icon;
                 }
             }
         }
 
         if ( isset( $data->categories ) ) {
-            foreach ( (array)$data->categories as $categoryId => $category ) {
+            foreach ( (array)$data->categories as $_ => $category ) {
                 if ( isset( $category->overrideIcon ) && !$this->checkFile( $category->overrideIcon ) ) {
-                    $status->error( self::MESSAGE, "/categories/$categoryId/overrideIcon" );
-                    $result = false;
+                    $results[] = $category->overrideIcon;
                 }
             }
         }
@@ -37,17 +35,16 @@ class RequiredFilesConstraint implements DataConstraint {
         if ( isset( $data->background ) ) {
             if ( is_string( $data->background ) ) {
                 if ( !$this->checkFile( $data->background ) ) {
-                    $status->error( self::MESSAGE, '/background' );
-                    $result = false;
+                    $results[] = $data->background;
                 }
             } else {
-                $result = $result && $this->checkBackground( $status, $version, $data->background, '/background' );
+                $this->checkBackground( $status, $version, $data->background, $results );
             }
         }
 
         if ( isset( $data->backgrounds ) ) {
             foreach ( (array)$data->backgrounds as $index => $background ) {
-                $result = $result && $this->checkBackground( $status, $version, $background, "/backgrounds/$index" );
+                $this->checkBackground( $status, $version, $background, $results );
             }
         }
 
@@ -55,19 +52,23 @@ class RequiredFilesConstraint implements DataConstraint {
             foreach ( (array)$data->markers as $assocStr => $markers ) {
                 foreach ( $markers as $index => $marker ) {
                     if ( isset( $marker->icon ) && !$this->checkFile( $marker->icon ) ) {
-                        $status->error( self::MESSAGE, "/markers/$assocStr/$index/icon" );
-                        $result = false;
+                        $results[] = $marker->icon;
                     }
 
                     if ( isset( $marker->image ) && !$this->checkFile( $marker->image ) ) {
-                        $status->error( self::MESSAGE, "/markers/$assocStr/$index/image" );
-                        $result = false;
+                        $results[] = $marker->image;
                     }
                 }
             }
         }
 
-        return $result;
+        if ( count( $results ) > 0 ) {
+            $formatted = implode( ', ', array_map( fn ( $el ) => "<code>$el</code>", $results ) );
+            $status->error( self::MESSAGE, $formatted );
+            return false;
+        }
+
+        return true;
     }
 
     private function checkFile( $fileName ): bool {
@@ -75,12 +76,11 @@ class RequiredFilesConstraint implements DataConstraint {
         return $file && $file->exists();
     }
 
-    private function checkBackground( Status $status, MapVersionInfo $version, stdClass $data, string $ptr ): bool {
+    private function checkBackground( Status $status, MapVersionInfo $version, stdClass $data, array &$results ): bool {
         $result = true;
 
         if ( isset( $data->image ) && !$this->checkFile( $data->image ) ) {
-            $status->error( self::MESSAGE, "$ptr/image" );
-            $result = false;
+            $results[] = $data->image;
         }
 
         // TODO: tiles
