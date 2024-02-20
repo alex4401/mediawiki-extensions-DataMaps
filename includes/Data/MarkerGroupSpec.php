@@ -9,7 +9,7 @@ use stdclass;
 class MarkerGroupSpec extends DataModel {
     protected static string $publicName = 'MarkerGroupSpec';
 
-    public const DEFAULT_CIRCLE_SIZE = 5;
+    public const DEFAULT_CIRCLE_SIZE = 12.5;
     public const DEFAULT_VECTOR_STROKE_WIDTH = 1;
     public const DEFAULT_ICON_SIZE = [ 32, 32 ];
 
