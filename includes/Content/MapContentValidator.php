@@ -199,7 +199,7 @@ class MapContentValidator {
                     continue;
                 }
 
-                $reduceToWarning = $error['constraint'] === 'anyOf';
+                $reduceToWarning = in_array( $error['constraint'], [ 'anyOf', 'oneOf' ] );
             }
 
             // 'anyOf' contains a sub-array of errors for each match attempt. Find one without any 'required' and
