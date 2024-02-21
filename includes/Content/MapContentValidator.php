@@ -181,6 +181,8 @@ class MapContentValidator {
                 $version,
                 $validator->getErrors( Validator::ERROR_DOCUMENT_VALIDATION )
             );
+
+            return false;
         }
 
         return true;
