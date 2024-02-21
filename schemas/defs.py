@@ -307,7 +307,7 @@ class XyMarker(_Marker):
 
 
 ##% Main
-class _DataMap(BaseModelEx):
+class DataMap(BaseModelEx):
     #if FRAGMENT:
     isFragment: bool = Field(False, alias='$fragment')
     #if not FRAGMENT:
@@ -321,17 +321,24 @@ class _DataMap(BaseModelEx):
     settings: Optional[Settings] = Field(
         None,
     )
+    background: str|ImageBackground|TiledBackground
+    backgrounds: list[ImageBackground|TiledBackground]
     groups: dict[LayerId, CircularMarkerGroup|PinMarkerGroup|IconMarkerGroup] = dict()
     categories: dict[LayerId, MarkerCategory] = dict()
     disclaimer: Optional[NonEmptyString] = None
     markers: dict[LayerAssociationStr, list[LatLonMarker|XyMarker]] = dict()
     custom: Optional[dict[str, Any]] = None
-class SingleBackgroundDataMap(_DataMap):
-    background: str|ImageBackground|TiledBackground
-class MultiBackgroundDataMap(_DataMap):
-    backgrounds: list[ImageBackground|TiledBackground]
+
+    class Config(BaseModelEx.Config):
+        json_schema_extra = {
+            'oneOf': [
+                dict(required=['background']),
+                dict(required=['backgrounds']),
+            ],
+            'required': {}
+        }
 
 ##% Write to file
-schema = RootModel[SingleBackgroundDataMap|MultiBackgroundDataMap].model_json_schema()
+schema = DataMap.model_json_schema()
 with open(OUTPUT, 'wt') as fp:
     json.dump(schema, fp, indent="\t")
