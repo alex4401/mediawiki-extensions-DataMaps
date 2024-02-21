@@ -892,200 +892,6 @@
 			"title": "MarkerCategory",
 			"type": "object"
 		},
-		"MultiBackgroundDataMap": {
-			"additionalProperties": false,
-			"properties": {
-				"$fragment": {
-					"default": false,
-					"title": "$Fragment",
-					"type": "boolean"
-				},
-				"include": {
-					"anyOf": [
-						{
-							"items": {
-								"type": "string"
-							},
-							"type": "array"
-						},
-						{
-							"type": "null"
-						}
-					],
-					"default": null,
-					"description": "List of fragments that must be imported.",
-					"title": "Include"
-				},
-				"crs": {
-					"anyOf": [
-						{
-							"$ref": "#/$defs/CoordinateSystem"
-						},
-						{
-							"maxItems": 2,
-							"minItems": 2,
-							"prefixItems": [
-								{
-									"anyOf": [
-										{
-											"maxItems": 2,
-											"minItems": 2,
-											"prefixItems": [
-												{
-													"type": "number"
-												},
-												{
-													"type": "number"
-												}
-											],
-											"type": "array"
-										},
-										{
-											"$ref": "#/$defs/NamedPoint"
-										}
-									]
-								},
-								{
-									"anyOf": [
-										{
-											"maxItems": 2,
-											"minItems": 2,
-											"prefixItems": [
-												{
-													"type": "number"
-												},
-												{
-													"type": "number"
-												}
-											],
-											"type": "array"
-										},
-										{
-											"$ref": "#/$defs/NamedPoint"
-										}
-									]
-								}
-							],
-							"type": "array"
-						}
-					],
-					"default": [
-						[
-							0,
-							0
-						],
-						[
-							100,
-							100
-						]
-					],
-					"title": "Crs"
-				},
-				"settings": {
-					"anyOf": [
-						{
-							"$ref": "#/$defs/Settings"
-						},
-						{
-							"type": "null"
-						}
-					],
-					"default": null
-				},
-				"groups": {
-					"default": {},
-					"patternProperties": {
-						"^[\\w\\d\\-\\._]+$": {
-							"anyOf": [
-								{
-									"$ref": "#/$defs/CircularMarkerGroup"
-								},
-								{
-									"$ref": "#/$defs/PinMarkerGroup"
-								},
-								{
-									"$ref": "#/$defs/IconMarkerGroup"
-								}
-							]
-						}
-					},
-					"title": "Groups",
-					"type": "object"
-				},
-				"categories": {
-					"default": {},
-					"patternProperties": {
-						"^[\\w\\d\\-\\._]+$": {
-							"$ref": "#/$defs/MarkerCategory"
-						}
-					},
-					"title": "Categories",
-					"type": "object"
-				},
-				"disclaimer": {
-					"anyOf": [
-						{
-							"minLength": 1,
-							"type": "string"
-						},
-						{
-							"type": "null"
-						}
-					],
-					"default": null,
-					"title": "Disclaimer"
-				},
-				"markers": {
-					"additionalProperties": {
-						"items": {
-							"anyOf": [
-								{
-									"$ref": "#/$defs/LatLonMarker"
-								},
-								{
-									"$ref": "#/$defs/XyMarker"
-								}
-							]
-						},
-						"type": "array"
-					},
-					"default": {},
-					"title": "Markers",
-					"type": "object"
-				},
-				"custom": {
-					"anyOf": [
-						{
-							"type": "object"
-						},
-						{
-							"type": "null"
-						}
-					],
-					"default": null,
-					"title": "Custom"
-				},
-				"backgrounds": {
-					"items": {
-						"anyOf": [
-							{
-								"$ref": "#/$defs/ImageBackground"
-							},
-							{
-								"$ref": "#/$defs/TiledBackground"
-							}
-						]
-					},
-					"title": "Backgrounds",
-					"type": "array"
-				}
-			},
-			"required": [
-				"backgrounds"
-			],
-			"title": "MultiBackgroundDataMap",
-			"type": "object"
-		},
 		"NamedPoint": {
 			"additionalProperties": false,
 			"properties": {
@@ -1493,200 +1299,6 @@
 			"title": "Settings",
 			"type": "object"
 		},
-		"SingleBackgroundDataMap": {
-			"additionalProperties": false,
-			"properties": {
-				"$fragment": {
-					"default": false,
-					"title": "$Fragment",
-					"type": "boolean"
-				},
-				"include": {
-					"anyOf": [
-						{
-							"items": {
-								"type": "string"
-							},
-							"type": "array"
-						},
-						{
-							"type": "null"
-						}
-					],
-					"default": null,
-					"description": "List of fragments that must be imported.",
-					"title": "Include"
-				},
-				"crs": {
-					"anyOf": [
-						{
-							"$ref": "#/$defs/CoordinateSystem"
-						},
-						{
-							"maxItems": 2,
-							"minItems": 2,
-							"prefixItems": [
-								{
-									"anyOf": [
-										{
-											"maxItems": 2,
-											"minItems": 2,
-											"prefixItems": [
-												{
-													"type": "number"
-												},
-												{
-													"type": "number"
-												}
-											],
-											"type": "array"
-										},
-										{
-											"$ref": "#/$defs/NamedPoint"
-										}
-									]
-								},
-								{
-									"anyOf": [
-										{
-											"maxItems": 2,
-											"minItems": 2,
-											"prefixItems": [
-												{
-													"type": "number"
-												},
-												{
-													"type": "number"
-												}
-											],
-											"type": "array"
-										},
-										{
-											"$ref": "#/$defs/NamedPoint"
-										}
-									]
-								}
-							],
-							"type": "array"
-						}
-					],
-					"default": [
-						[
-							0,
-							0
-						],
-						[
-							100,
-							100
-						]
-					],
-					"title": "Crs"
-				},
-				"settings": {
-					"anyOf": [
-						{
-							"$ref": "#/$defs/Settings"
-						},
-						{
-							"type": "null"
-						}
-					],
-					"default": null
-				},
-				"groups": {
-					"default": {},
-					"patternProperties": {
-						"^[\\w\\d\\-\\._]+$": {
-							"anyOf": [
-								{
-									"$ref": "#/$defs/CircularMarkerGroup"
-								},
-								{
-									"$ref": "#/$defs/PinMarkerGroup"
-								},
-								{
-									"$ref": "#/$defs/IconMarkerGroup"
-								}
-							]
-						}
-					},
-					"title": "Groups",
-					"type": "object"
-				},
-				"categories": {
-					"default": {},
-					"patternProperties": {
-						"^[\\w\\d\\-\\._]+$": {
-							"$ref": "#/$defs/MarkerCategory"
-						}
-					},
-					"title": "Categories",
-					"type": "object"
-				},
-				"disclaimer": {
-					"anyOf": [
-						{
-							"minLength": 1,
-							"type": "string"
-						},
-						{
-							"type": "null"
-						}
-					],
-					"default": null,
-					"title": "Disclaimer"
-				},
-				"markers": {
-					"additionalProperties": {
-						"items": {
-							"anyOf": [
-								{
-									"$ref": "#/$defs/LatLonMarker"
-								},
-								{
-									"$ref": "#/$defs/XyMarker"
-								}
-							]
-						},
-						"type": "array"
-					},
-					"default": {},
-					"title": "Markers",
-					"type": "object"
-				},
-				"custom": {
-					"anyOf": [
-						{
-							"type": "object"
-						},
-						{
-							"type": "null"
-						}
-					],
-					"default": null,
-					"title": "Custom"
-				},
-				"background": {
-					"anyOf": [
-						{
-							"type": "string"
-						},
-						{
-							"$ref": "#/$defs/ImageBackground"
-						},
-						{
-							"$ref": "#/$defs/TiledBackground"
-						}
-					],
-					"title": "Background"
-				}
-			},
-			"required": [
-				"background"
-			],
-			"title": "SingleBackgroundDataMap",
-			"type": "object"
-		},
 		"Tile": {
 			"additionalProperties": false,
 			"properties": {
@@ -2027,13 +1639,220 @@
 			"type": "object"
 		}
 	},
-	"anyOf": [
+	"additionalProperties": false,
+	"oneOf": [
 		{
-			"$ref": "#/$defs/SingleBackgroundDataMap"
+			"required": [
+				"background"
+			]
 		},
 		{
-			"$ref": "#/$defs/MultiBackgroundDataMap"
+			"required": [
+				"backgrounds"
+			]
 		}
 	],
-	"title": "RootModel[Union[SingleBackgroundDataMap, MultiBackgroundDataMap]]"
+	"properties": {
+		"$fragment": {
+			"default": false,
+			"title": "$Fragment",
+			"type": "boolean"
+		},
+		"include": {
+			"anyOf": [
+				{
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				{
+					"type": "null"
+				}
+			],
+			"default": null,
+			"description": "List of fragments that must be imported.",
+			"title": "Include"
+		},
+		"crs": {
+			"anyOf": [
+				{
+					"$ref": "#/$defs/CoordinateSystem"
+				},
+				{
+					"maxItems": 2,
+					"minItems": 2,
+					"prefixItems": [
+						{
+							"anyOf": [
+								{
+									"maxItems": 2,
+									"minItems": 2,
+									"prefixItems": [
+										{
+											"type": "number"
+										},
+										{
+											"type": "number"
+										}
+									],
+									"type": "array"
+								},
+								{
+									"$ref": "#/$defs/NamedPoint"
+								}
+							]
+						},
+						{
+							"anyOf": [
+								{
+									"maxItems": 2,
+									"minItems": 2,
+									"prefixItems": [
+										{
+											"type": "number"
+										},
+										{
+											"type": "number"
+										}
+									],
+									"type": "array"
+								},
+								{
+									"$ref": "#/$defs/NamedPoint"
+								}
+							]
+						}
+					],
+					"type": "array"
+				}
+			],
+			"default": [
+				[
+					0,
+					0
+				],
+				[
+					100,
+					100
+				]
+			],
+			"title": "Crs"
+		},
+		"settings": {
+			"anyOf": [
+				{
+					"$ref": "#/$defs/Settings"
+				},
+				{
+					"type": "null"
+				}
+			],
+			"default": null
+		},
+		"background": {
+			"anyOf": [
+				{
+					"type": "string"
+				},
+				{
+					"$ref": "#/$defs/ImageBackground"
+				},
+				{
+					"$ref": "#/$defs/TiledBackground"
+				}
+			],
+			"title": "Background"
+		},
+		"backgrounds": {
+			"items": {
+				"anyOf": [
+					{
+						"$ref": "#/$defs/ImageBackground"
+					},
+					{
+						"$ref": "#/$defs/TiledBackground"
+					}
+				]
+			},
+			"title": "Backgrounds",
+			"type": "array"
+		},
+		"groups": {
+			"default": {},
+			"patternProperties": {
+				"^[\\w\\d\\-\\._]+$": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/CircularMarkerGroup"
+						},
+						{
+							"$ref": "#/$defs/PinMarkerGroup"
+						},
+						{
+							"$ref": "#/$defs/IconMarkerGroup"
+						}
+					]
+				}
+			},
+			"title": "Groups",
+			"type": "object"
+		},
+		"categories": {
+			"default": {},
+			"patternProperties": {
+				"^[\\w\\d\\-\\._]+$": {
+					"$ref": "#/$defs/MarkerCategory"
+				}
+			},
+			"title": "Categories",
+			"type": "object"
+		},
+		"disclaimer": {
+			"anyOf": [
+				{
+					"minLength": 1,
+					"type": "string"
+				},
+				{
+					"type": "null"
+				}
+			],
+			"default": null,
+			"title": "Disclaimer"
+		},
+		"markers": {
+			"additionalProperties": {
+				"items": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/LatLonMarker"
+						},
+						{
+							"$ref": "#/$defs/XyMarker"
+						}
+					]
+				},
+				"type": "array"
+			},
+			"default": {},
+			"title": "Markers",
+			"type": "object"
+		},
+		"custom": {
+			"anyOf": [
+				{
+					"type": "object"
+				},
+				{
+					"type": "null"
+				}
+			],
+			"default": null,
+			"title": "Custom"
+		}
+	},
+	"required": {},
+	"title": "DataMap",
+	"type": "object"
 }
