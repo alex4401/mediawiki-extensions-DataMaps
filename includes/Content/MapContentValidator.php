@@ -200,6 +200,10 @@ class MapContentValidator {
                 }
 
                 $reduceToWarning = in_array( $error['constraint'], [ 'anyOf', 'oneOf' ] );
+
+                if ( $error['constraint'] === 'oneOf' && $error['pointer'] === '' ) {
+                    continue;
+                }
             }
 
             // 'anyOf' contains a sub-array of errors for each match attempt. Find one without any 'required' and
