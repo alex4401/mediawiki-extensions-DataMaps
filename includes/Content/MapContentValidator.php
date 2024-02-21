@@ -8,6 +8,7 @@ use JsonSchema\Uri\UriRetriever;
 use JsonSchema\Validator;
 use MediaWiki\Extension\DataMaps\ExtensionConfig;
 use MediaWiki\MediaWikiServices;
+use RawMessage;
 use Status;
 use Title;
 
@@ -161,7 +162,14 @@ class MapContentValidator {
         }
 
         if ( $schemaWasBad ) {
-            $result->fatal( 'datamap-validate-bad-schema' );
+            $formatted = implode(
+                '',
+                array_map(
+                    fn ( $item ) => "\n* <code>" . $this->schemaProvider->makePublicUrl( $item ) . '</code>',
+                    SchemaRevision::SUPPORTED_REVISIONS
+                )
+            );
+            $result->fatal( 'datamap-validate-bad-schema', new RawMessage( $formatted ) );
         } elseif ( !$validator->isValid() ) {
             $version = new MapVersionInfo(
                 $this->schemaVersionMap[$data->{'$schema'}],
