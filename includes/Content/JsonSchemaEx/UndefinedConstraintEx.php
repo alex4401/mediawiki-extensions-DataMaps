@@ -51,7 +51,9 @@ class UndefinedConstraintEx extends UndefinedConstraint {
         if ( isset( $schema->anyOf ) ) {
             $isValid = false;
             $startErrors = $this->getErrors();
-            $discardErrors = true;
+            // PATCH: Contextualise any errors
+            $errorContext = [];
+            // END PATCH
             foreach ( $schema->anyOf as $anyOf ) {
                 $initErrors = $this->getErrors();
                 try {
@@ -60,22 +62,18 @@ class UndefinedConstraintEx extends UndefinedConstraint {
                         break;
                     }
 
-                    // PATCH: Revert newly accumulated errors if there's at least one 'required' constraint failure
-                    if ( $discardErrors ) {
-                        foreach ( $this->getErrors() as $error ) {
-                            if ( $error[ 'constraint' ] === 'required' ) {
-                                $this->errors = $initErrors;
-                                $discardErrors = false;
-                                break;
-                            }
-                        }
-                    }
+                    // PATCH: Contextualise any errors
+                    $errorContext[] = array_slice( $this->errors, count( $initErrors ) );
+                    $this->errors = $initErrors;
+                    // END PATCH
                 } catch ( ValidationException $e ) {
                     $isValid = false;
                 }
             }
             if ( !$isValid ) {
-                $this->addError( $path, 'Failed to match at least one schema', 'anyOf' );
+                // PATCH: Contextualise any errors
+                $this->addError( $path, 'Failed to match at least one schema', 'anyOf', [ 'matchErrors' => $errorContext ] );
+                // END PATCH
             } else {
                 $this->errors = $startErrors;
             }
@@ -92,15 +90,15 @@ class UndefinedConstraintEx extends UndefinedConstraint {
                     if ( count( $this->getErrors() ) == 0 ) {
                         $matchedSchemas++;
                     }
-                    $allErrors = array_merge( $allErrors, array_values( $this->getErrors() ) );
+                    $allErrors[] = $this->getErrors();
+                    $this->errors = [];
                 } catch ( ValidationException $e ) {
                     // deliberately do nothing here - validation failed, but we want to check
                     // other schema options in the OneOf field.
                 }
             }
             if ( $matchedSchemas !== 1 ) {
-                $this->addErrors( array_merge( $allErrors, $startErrors ) );
-                $this->addError( $path, 'Failed to match exactly one schema', 'oneOf' );
+                $this->addError( $path, 'Failed to match exactly one schema', 'oneOf', [ 'matchErrors' => $allErrors ] );
             } else {
                 $this->errors = $startErrors;
             }

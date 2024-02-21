@@ -192,6 +192,7 @@ class MapContentValidator {
 
     private function formatJsonSchemaErrors( Status $status, MapVersionInfo $version, array $errors ) {
         foreach ( $errors as $error ) {
+            // Ignore required property constraints in fragments, and reduce 'anyOf' to warnings
             $reduceToWarning = false;
             if ( $version->isFragment ) {
                 if ( $error['constraint'] === 'required' ) {
@@ -201,19 +202,38 @@ class MapContentValidator {
                 $reduceToWarning = $error['constraint'] === 'anyOf';
             }
 
-            if ( $error['constraint'] === 'anyOf' && $error['pointer'] === '' ) {
-                continue;
+            // 'anyOf' contains a sub-array of errors for each match attempt. Find one without any 'required' and
+            // 'additionalProp' violations. Otherwise, fall back to a generic error.
+            if ( $error['constraint'] === 'anyOf' ) {
+                $moreErrors = array_filter(
+                    array_map(
+                        static function ( $errors ) {
+                            return array_filter(
+                                $errors,
+                                fn ( $el ) => !in_array( $el['constraint'], [ 'required', 'additionalProp' ] )
+                            );
+                        },
+                        $error['matchErrors']
+                    ),
+                    fn ( $el ) => !empty( $el )
+                );
+
+                if ( count( $moreErrors ) === 1 ) {
+                    $this->formatJsonSchemaErrors( $status, $version, $moreErrors[0] );
+                    continue;
+                }
             }
 
+            // If minimum length is 1, narrow this error down to 'non-empty' so we can display a better message
             if ( $error['constraint'] === 'minLength' && $error['minLength'] === 1 ) {
                 $error['constraint'] = 'minLengthEmpty';
             }
 
+            // Pick a message and provide any additional parameters
             $msg = self::ERROR_MESSAGE_MAP[$error['constraint']] ?? self::UNKNOWN_ERROR_MESSAGE;
             $params = [
                 $error['pointer'],
             ];
-
             switch ( $error['constraint'] ) {
                 case 'additionalProp':
                     $params[0] .= '/' . $error['apProperty'];
