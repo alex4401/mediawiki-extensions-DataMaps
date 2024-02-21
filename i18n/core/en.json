@@ -24,6 +24,7 @@
     "datamap-error-validate-invalid-json": "This is not a valid JSON document.",
     "datamap-validate-bad-schema": "This map's <code>$schema</code> property does not point at a supported format definition.\n\nSupported schema revisions:\n$1",
     "datamap-validate-constraint-required": "A required property is missing: <code>$1</code>.",
+    "datamap-validate-constraint-type": "A property is of unexpected format: <code>$1</code>.",
     "datamap-validate-constraint-unexpected": "An unexpected property was given: <code>$1</code>.",
     "datamap-validate-constraint-regex": "Text property does not match the expected format: <code>$1</code>.",
     "datamap-validate-constraint-empty": "Text property must not be empty: <code>$1</code>.",

@@ -17,6 +17,8 @@ class MapContentValidator {
 
     private const ERROR_MESSAGE_MAP = [
         'required' => 'datamap-validate-constraint-required',
+        'oneOf' => 'datamap-validate-constraint-type',
+        'anyOf' => 'datamap-validate-constraint-type',
         'additionalProp' => 'datamap-validate-constraint-unexpected',
         'pattern' => 'datamap-validate-constraint-regex',
         'minLengthEmpty' => 'datamap-validate-constraint-empty',
