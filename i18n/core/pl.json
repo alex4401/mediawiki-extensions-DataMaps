@@ -20,8 +20,6 @@
 	"datamap-mapsrcinfo-heading-warnings": "'''Ostrzeżenia:''' $1",
 	"datamap-mapsrcinfo-docslink": "Sprawdź [https://github.com/alex4401/mediawiki-extensions-DataMaps dokumentację rozszerzenia], aby dowiedzieć się o prawidłowej strukturze.",
 	"datamap-error-validate-invalid-json": "To nie jest prawidłowy dokument JSON.",
-	"datamap-error-bad-schema-origin": "Brakujące lub nieprawidłowe pole <code>$schema</code>. Musi ono wskazywać na obsługiwaną definicję schematu, jak na przykład <code>$1</code>.",
-	"datamap-error-bad-schema-version": "Pole <code>$schema</code> wskazuje na nieznany lub niewspierany schemat definicji. Obsługiwane są następujące rewizje: $1.",
 	"datamap-error-pf-page-does-not-exist": "Strona mapy danych „[[$1]]” nie istnieje.",
 	"datamap-error-pf-page-invalid-content-model": "Model zawartości strony „[[$1]]” to nie <code>Interaktywna mapa danych</code>.",
 	"datamap-legend-label": "Zawartość",
