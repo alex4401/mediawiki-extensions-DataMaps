@@ -11,7 +11,6 @@
 	"datamap-doc-page-header": "'''此页面是 [[$1]] 的文档。'''",
 	"datamap-mapsrcinfo-docslink": "如有需要，您可以查阅[$1 扩展文档]；如果您认为扩展的运作方式可能需要一些更改，请[$2 创建工单]。",
 	"datamap-error-validate-invalid-json": "不是合法的 JSON 格式。",
-	"datamap-error-bad-schema-origin": "<code>$schema</code>字段缺失或无效。必须指向一个支持的schema定义，如<code>$1</code>。",
 	"datamap-legend-label": "内容",
 	"datamap-loading-js": "加载脚本中",
 	"datamap-loading-data": "加载要显示的数据",
