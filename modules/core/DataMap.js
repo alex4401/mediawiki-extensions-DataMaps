@@ -191,15 +191,6 @@ class DataMap extends EventEmitter {
             ], () => this.on( 'leafletLoaded', this._onOOUILoaded, this ) );
         }
 
-        // Load search add-on
-        if ( !this.checkFeatureFlag( MapFlags.VisualEditor ) && this.checkFeatureFlag( MapFlags.Search ) ) {
-            mw.loader.using( [
-                'oojs-ui-core',
-                'oojs-ui-widgets',
-                'ext.datamaps.search'
-            ] );
-        }
-
         // TODO: in GH#165, fire this after API returns the config
         if ( this.config.custom ) {
             this.fireMemorised( 'customData', this.config.custom );
