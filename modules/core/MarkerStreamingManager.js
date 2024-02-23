@@ -153,7 +153,7 @@ module.exports = class MarkerStreamingManager {
             .then( data => {
                 this.map.on( 'leafletLoaded', () => {
                     this.instantiateMarkers( data.query.markers );
-                    this.map.fire( 'chunkStreamingDone' );
+                    this.map.fireMemorised( 'chunkStreamingDone' );
                 } );
             } );
     }
@@ -176,7 +176,7 @@ module.exports = class MarkerStreamingManager {
                     return this.loadSequential( pageId, version, filter, data.query.continue );
                 } else {
                     // Notify other components that all chunks have been streamed in this request
-                    this.map.on( 'leafletLoaded', () => this.map.fire( 'chunkStreamingDone' ) );
+                    this.map.on( 'leafletLoaded', () => this.map.fireMemorised( 'chunkStreamingDone' ) );
                 }
                 return;
             } );
