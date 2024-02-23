@@ -162,6 +162,7 @@
 				"datamap-control-centre-view",
 				"datamap-control-edit",
 				"datamap-control-fullscreen",
+				"datamap-control-search",
 				"datamap-checklist-prelude"
 			],
 			"targets": [ "desktop", "mobile" ]
@@ -207,9 +208,9 @@
 				"ext.datamaps.leaflet"
 			],
 			"packageFiles": [
-				"search/main.js",
-				"search/MarkerSearch.js",
-				"search/MarkerSearchIndex.js",
+				"search/index.js",
+				"search/SearchController.js",
+				"search/SearchIndex.js",
 				"search/Util.js",
 				"vendor/fuzzysort/fuzzysort.min.js"
 			],
@@ -217,7 +218,6 @@
 				"search/css/styles.less"
 			],
 			"messages": [
-				"datamap-control-search",
 				"datamap-control-search-toggle-sharing",
 				"datamap-control-search-no-results"
 			],
