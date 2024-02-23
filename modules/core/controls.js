@@ -364,6 +364,8 @@ class SearchHost extends MapControl {
                     this._inputBox
                 );
                 spinner.remove();
+
+                this.moduleInstance.toggle( true );
             } );
         } );
     }
