@@ -44,7 +44,7 @@ const Util = require( './Util.js' ),
  *
  * @extends EventEmitter<ListenerSignatures>
  */
-class MarkerSearchIndex extends EventEmitter {
+class SearchIndex extends EventEmitter {
     constructor() {
         super();
 
@@ -78,8 +78,8 @@ class MarkerSearchIndex extends EventEmitter {
      * @return {any[]}
      */
     static query( items, phrase ) {
-        return Fuzzysort.go( MarkerSearchIndex.normalisePhrase( phrase ), items, {
-            threshold: MarkerSearchIndex.SCORE_THRESHOLD,
+        return Fuzzysort.go( SearchIndex.normalisePhrase( phrase ), items, {
+            threshold: SearchIndex.SCORE_THRESHOLD,
             weighedKey: 'keywords'
         } );
     }
@@ -110,7 +110,7 @@ class MarkerSearchIndex extends EventEmitter {
         // Ensure search keywords are always an array of (text, weight) pairs
         keywords = keywords.map( x => ( typeof x === 'string' ) ? [ x, 1 ] : x );
         // Run normaliser and Fuzzysort preparator on each keyword
-        keywords = keywords.map( x => [ Fuzzysort.prepare( MarkerSearchIndex.normalisePhrase( x[ 0 ] ) ), x[ 1 ] ] );
+        keywords = keywords.map( x => [ Fuzzysort.prepare( SearchIndex.normalisePhrase( x[ 0 ] ) ), x[ 1 ] ] );
 
         return {
             leafletMarker,
@@ -161,7 +161,7 @@ class MarkerSearchIndex extends EventEmitter {
      * @return {any[]}
      */
     query( phrase ) {
-        return MarkerSearchIndex.query( this.items, phrase );
+        return SearchIndex.query( this.items, phrase );
     }
 }
 
@@ -170,17 +170,17 @@ class MarkerSearchIndex extends EventEmitter {
  * @constant
  * @type {number}
  */
-MarkerSearchIndex.SCORE_THRESHOLD = -75000;
+SearchIndex.SCORE_THRESHOLD = -75000;
 
 
 /**
  * A search index entry collection that replicates information into a shared index.
  *
- * @extends {MarkerSearchIndex}
+ * @extends {SearchIndex}
  */
-class ChildIndex extends MarkerSearchIndex {
+class ChildIndex extends SearchIndex {
     /**
-     * @param {MarkerSearchIndex} parent
+     * @param {SearchIndex} parent
      */
     constructor( parent ) {
         super();
@@ -213,5 +213,5 @@ class ChildIndex extends MarkerSearchIndex {
 }
 
 
-MarkerSearchIndex.ChildIndex = ChildIndex;
-module.exports = MarkerSearchIndex;
+SearchIndex.ChildIndex = ChildIndex;
+module.exports = SearchIndex;
