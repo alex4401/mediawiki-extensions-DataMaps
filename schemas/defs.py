@@ -121,13 +121,13 @@ class ZoomSettings(BaseModelEx):
     tryFitEverything: bool = Field(
         True, # ZoomSettingsSpec::DEFAULT_AUTO
     )
-    min: int = Field(
+    min: float = Field(
         0.05,
         lt=24,
         gt=-15,
         title='Minimum level',
     )
-    max: int = Field(
+    max: float = Field(
         6,
         lt=24,
         gt=-15,
