@@ -1616,17 +1616,17 @@
 				},
 				"min": {
 					"default": 0.05,
-					"exclusiveMaximum": 24,
-					"exclusiveMinimum": -15,
+					"exclusiveMaximum": 24.0,
+					"exclusiveMinimum": -15.0,
 					"title": "Minimum level",
-					"type": "integer"
+					"type": "number"
 				},
 				"max": {
 					"default": 6,
-					"exclusiveMaximum": 24,
-					"exclusiveMinimum": -15,
+					"exclusiveMaximum": 24.0,
+					"exclusiveMinimum": -15.0,
 					"title": "Maximum level",
-					"type": "integer"
+					"type": "number"
 				},
 				"lock": {
 					"default": false,
