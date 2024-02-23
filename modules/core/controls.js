@@ -1,5 +1,10 @@
 /** @typedef {import( './DataMap.js' )} DataMap */
-const { isVisualEditorEnabled, createDomElement, getNonNull } = require( './Util.js' );
+const {
+    isVisualEditorEnabled,
+    createDomElement,
+    getNonNull,
+    preventMapInterference,
+} = require( './Util.js' );
 
 
 /**
@@ -311,11 +316,66 @@ class ToggleFullscreen extends MapControl {
 }
 
 
+/**
+ * Container for the search module. Clicking on it loads the additional scripts.
+ */
+class SearchHost extends MapControl {
+    /**
+     * @param {DataMap} map Owning map.
+     */
+    constructor( map ) {
+        super( map, 'search' );
+
+        preventMapInterference( this.element );
+
+        mw.loader.using(
+            [
+                'oojs-ui-core',
+                'oojs-ui-widgets'
+            ], () => {
+                /**
+                 * @type {OO.ui.TextInputWidget}
+                 */
+                this._inputBox = new OO.ui.TextInputWidget( {
+                    placeholder: mw.msg( 'datamap-control-search' ),
+                    icon: 'search'
+                } );
+                this._inputBox.$element.appendTo( this.element );
+
+                this._inputBox.$element.one( 'click', () => this._loadSearch() );
+            }
+        );
+    }
+
+
+    /**
+     * @private
+     */
+    _loadSearch() {
+        const spinner = createDomElement( 'div', {
+            classes: [ 'ext-datamaps-control-search-spinner' ],
+            appendTo: this._inputBox.$element[ 0 ]
+        } );
+
+        mw.loader.using( 'ext.datamaps.search', () => {
+            this.map.on( 'chunkStreamingDone', () => {
+                this.moduleInstance = require( 'ext.datamaps.search' ).setupInHostControl(
+                    this,
+                    this._inputBox
+                );
+                spinner.remove();
+            } );
+        } );
+    }
+}
+
+
 module.exports = {
     MapControl,
     BackgroundSwitcher,
     Coordinates,
     EditButton,
     ExtraViewControls,
-    ToggleFullscreen
+    ToggleFullscreen,
+    SearchHost
 };

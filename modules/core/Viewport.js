@@ -141,8 +141,16 @@ class Viewport extends EventEmitter {
             !this.map.checkFeatureFlag( MapFlags.IsPreview ) && ( mw.config.get( 'wgUserName' ) !== null
                 || Util.canAnonsEdit )
         ) {
-            this.editControl = this.addControl( Viewport.anchors.topRightInline, new Controls.EditButton(
-                this.map ) );
+            this.editControl = this.addControl( Viewport.anchors.topRightInline, new Controls.EditButton( this.map ) );
+        }
+        /**
+         * Control that'll host marker search, if it is enabled.
+         *
+         * @type {Controls.SearchHost?}
+         */
+        this.searchHost = null;
+        if ( !this.map.checkFeatureFlag( MapFlags.VisualEditor ) && this.map.checkFeatureFlag( MapFlags.Search ) ) {
+            this.searchHost = this.addControl( Viewport.anchors.legend, new Controls.SearchHost( this.map ) );
         }
 
         this._updateBackgroundLayers(
