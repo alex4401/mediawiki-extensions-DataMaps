@@ -5,14 +5,14 @@ use MediaWiki\Extension\DataMaps\Content\MapVersionInfo;
 use Status;
 use stdClass;
 
-class AssociationStringGroupExistsConstraint implements DataConstraint {
+class AssociationStringGroupExistsConstraint extends DataConstraint {
     private const MESSAGE = 'datamap-validate-constraint-groupexists';
 
     public function getDependencies(): array {
         return [];
     }
 
-    public function run( Status $status, MapVersionInfo $version, stdClass $data ): bool {
+    public function run( MapVersionInfo $version, stdClass $data ): bool {
         if ( !isset( $data->markers ) ) {
             return true;
         }
@@ -23,7 +23,7 @@ class AssociationStringGroupExistsConstraint implements DataConstraint {
         foreach ( array_keys( (array)$data->markers ) as $assocStr ) {
             $assocGroup = explode( ' ', $assocStr, 2 )[0];
             if ( !in_array( $assocGroup, $groupIds ) ) {
-                $status->error( self::MESSAGE, "/markers/$assocStr", $assocGroup );
+                $this->emitError( self::MESSAGE, "/markers/$assocStr", $assocGroup );
                 $result = false;
             }
         }

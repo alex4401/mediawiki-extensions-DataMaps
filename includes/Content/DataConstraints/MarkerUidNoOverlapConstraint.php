@@ -5,14 +5,14 @@ use MediaWiki\Extension\DataMaps\Content\MapVersionInfo;
 use Status;
 use stdClass;
 
-class MarkerUidNoOverlapConstraint implements DataConstraint {
+class MarkerUidNoOverlapConstraint extends DataConstraint {
     private const MESSAGE = 'datamap-validate-constraint-muidoverlap';
 
     public function getDependencies(): array {
         return [];
     }
 
-    public function run( Status $status, MapVersionInfo $version, stdClass $data ): bool {
+    public function run( MapVersionInfo $version, stdClass $data ): bool {
         if ( !isset( $data->markers ) ) {
             return true;
         }
@@ -24,7 +24,7 @@ class MarkerUidNoOverlapConstraint implements DataConstraint {
             foreach ( $markers as $index => $marker ) {
                 if ( isset( $marker->id ) ) {
                     if ( $set[$marker->id] ) {
-                        $status->error( self::MESSAGE, "/markers/$assocStr/$index/id", $marker->id );
+                        $this->emitError( self::MESSAGE, "/markers/$assocStr/$index/id", $marker->id );
                         $result = false;
                     }
                     $set[$marker->id] = true;
