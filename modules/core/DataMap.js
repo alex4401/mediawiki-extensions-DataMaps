@@ -709,10 +709,10 @@ class DataMap extends EventEmitter {
                             [ layerBounds._southWest, layerBounds._northEast ],
                             [ layerBounds.getSouthEast(), layerBounds.getNorthWest() ]
                         ] ) {
-                            layerBounds = new Leaflet.LatLngBounds( this.crs.fromBox( 
+                            layerBounds = new Leaflet.LatLngBounds( this.crs.fromBox( [
                                 [ a.lat, a.lng ],
                                 [ b.lat, b.lng ]
-                            ) );
+                            ] ) );
                         }
                     }
                     this._contentBounds.extend( layerBounds );
