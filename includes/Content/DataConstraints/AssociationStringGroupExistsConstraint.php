@@ -23,7 +23,7 @@ class AssociationStringGroupExistsConstraint extends DataConstraint {
         foreach ( array_keys( (array)$data->markers ) as $assocStr ) {
             $assocGroup = explode( ' ', $assocStr, 2 )[0];
             if ( !in_array( $assocGroup, $groupIds ) ) {
-                $this->emitError( self::MESSAGE, "/markers/$assocStr", $assocGroup );
+                $this->emitErrorPermissive( self::MESSAGE, "/markers/$assocStr", $assocGroup );
                 $result = false;
             }
         }
