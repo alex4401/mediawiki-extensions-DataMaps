@@ -42,7 +42,7 @@ class BackgroundLayerExistsConstraint extends DataConstraint {
 
                 if ( count( $badAssocLayers ) > 0 ) {
                     $formatted = implode( ', ', array_map( fn ( $item ) => "<code>$item</code>", $badAssocLayers ) );
-                    $this->emitError( self::MESSAGE, "/markers/$assocStr", $formatted );
+                    $this->emitErrorPermissive( self::MESSAGE, "/markers/$assocStr", $formatted );
                     $result = false;
                 }
             }
