@@ -63,7 +63,9 @@ class MapDataConstraintChecker {
                 }
             }
 
-            $constraintResult = $constraint->run( $this->status, $this->version, $this->data );
+            $constraint->setStatus( $this->status, $this->version->isFragment );
+            $constraintResult = $constraint->run( $this->version, $this->data );
+            $constraint->setStatus( null );
             $individual[$constraint::class] = $constraintResult;
             $result = $result && $constraintResult;
         }

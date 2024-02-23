@@ -6,14 +6,14 @@ use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapFileUtils;
 use Status;
 use stdClass;
 
-class RequiredFilesConstraint implements DataConstraint {
+class RequiredFilesConstraint extends DataConstraint {
     private const MESSAGE = 'datamap-validate-constraint-requiredfile';
 
     public function getDependencies(): array {
         return [];
     }
 
-    public function run( Status $status, MapVersionInfo $version, stdClass $data ): bool {
+    public function run( MapVersionInfo $version, stdClass $data ): bool {
         $results = [];
 
         if ( isset( $data->groups ) ) {
@@ -38,13 +38,13 @@ class RequiredFilesConstraint implements DataConstraint {
                     $results[] = $data->background;
                 }
             } else {
-                $this->checkBackground( $status, $version, $data->background, $results );
+                $this->checkBackground( $version, $data->background, $results );
             }
         }
 
         if ( isset( $data->backgrounds ) ) {
             foreach ( (array)$data->backgrounds as $index => $background ) {
-                $this->checkBackground( $status, $version, $background, $results );
+                $this->checkBackground( $version, $background, $results );
             }
         }
 
@@ -64,7 +64,7 @@ class RequiredFilesConstraint implements DataConstraint {
 
         if ( count( $results ) > 0 ) {
             $formatted = implode( ', ', array_map( fn ( $el ) => "<code>$el</code>", $results ) );
-            $status->error( self::MESSAGE, $formatted );
+            $this->emitError( self::MESSAGE, $formatted );
             return false;
         }
 
@@ -76,7 +76,7 @@ class RequiredFilesConstraint implements DataConstraint {
         return $file && $file->exists();
     }
 
-    private function checkBackground( Status $status, MapVersionInfo $version, stdClass $data, array &$results ): bool {
+    private function checkBackground( MapVersionInfo $version, stdClass $data, array &$results ): bool {
         $result = true;
 
         if ( isset( $data->image ) && !$this->checkFile( $data->image ) ) {

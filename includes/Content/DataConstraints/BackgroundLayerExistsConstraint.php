@@ -5,14 +5,14 @@ use MediaWiki\Extension\DataMaps\Content\MapVersionInfo;
 use Status;
 use stdClass;
 
-class BackgroundLayerExistsConstraint implements DataConstraint {
+class BackgroundLayerExistsConstraint extends DataConstraint {
     private const MESSAGE = 'datamap-validate-constraint-bglayerexists';
 
     public function getDependencies(): array {
         return [];
     }
 
-    public function run( Status $status, MapVersionInfo $version, stdClass $data ): bool {
+    public function run( MapVersionInfo $version, stdClass $data ): bool {
         if ( !isset( $data->markers ) ) {
             return true;
         }
@@ -42,7 +42,7 @@ class BackgroundLayerExistsConstraint implements DataConstraint {
 
                 if ( count( $badAssocLayers ) > 0 ) {
                     $formatted = implode( ', ', array_map( fn ( $item ) => "<code>$item</code>", $badAssocLayers ) );
-                    $status->error( self::MESSAGE, "/markers/$assocStr", $formatted );
+                    $this->emitError( self::MESSAGE, "/markers/$assocStr", $formatted );
                     $result = false;
                 }
             }

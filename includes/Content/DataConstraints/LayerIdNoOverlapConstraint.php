@@ -5,7 +5,7 @@ use MediaWiki\Extension\DataMaps\Content\MapVersionInfo;
 use Status;
 use stdClass;
 
-class LayerIdNoOverlapConstraint implements DataConstraint {
+class LayerIdNoOverlapConstraint extends DataConstraint {
     private const DECLARATION_OVERLAP_MESSAGE = 'datamap-validate-constraint-layerdecloverlap';
     private const MARKER_OVERLAP_MESSAGE = 'datamap-validate-constraint-assocgroupoverlap';
     private const MARKER_NONUNIQUE_MESSAGE = 'datamap-validate-constraint-assocnonuniqoverlap';
@@ -14,7 +14,7 @@ class LayerIdNoOverlapConstraint implements DataConstraint {
         return [];
     }
 
-    public function run( Status $status, MapVersionInfo $version, stdClass $data ): bool {
+    public function run( MapVersionInfo $version, stdClass $data ): bool {
         $result = true;
 
         if ( isset( $data->groups ) && isset( $data->categories ) ) {
@@ -23,7 +23,7 @@ class LayerIdNoOverlapConstraint implements DataConstraint {
                 array_keys( (array)$data->categories )
             );
             foreach ( $overlap as $badLayer ) {
-                $status->error( self::DECLARATION_OVERLAP_MESSAGE, "/groups/$badLayer", "/categories/$badLayer" );
+                $this->emitError( self::DECLARATION_OVERLAP_MESSAGE, "/groups/$badLayer", "/categories/$badLayer" );
                 $result = false;
             }
         }
@@ -35,14 +35,14 @@ class LayerIdNoOverlapConstraint implements DataConstraint {
                 $assocLayers = explode( ' ', $assocStr );
 
                 if ( count( array_unique( $assocLayers ) ) !== count( $assocLayers ) ) {
-                    $status->error( self::MARKER_NONUNIQUE_MESSAGE, "/markers/$assocStr" );
+                    $this->emitError( self::MARKER_NONUNIQUE_MESSAGE, "/markers/$assocStr" );
                     $result = false;
                 }
 
                 $assocGroups = array_filter( $assocLayers, fn ( $item ) => in_array( $item, $groupIds ) );
                 if ( count( $assocGroups ) > 1 ) {
                     $formatted = implode( ', ', array_map( fn ( $item ) => "<code>$item</code>", $assocGroups ) );
-                    $status->error( self::MARKER_OVERLAP_MESSAGE, "/markers/$assocStr", $formatted );
+                    $this->emitError( self::MARKER_OVERLAP_MESSAGE, "/markers/$assocStr", $formatted );
                     $result = false;
                 }
             }

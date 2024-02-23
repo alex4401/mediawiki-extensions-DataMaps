@@ -5,14 +5,14 @@ use MediaWiki\Extension\DataMaps\Content\MapVersionInfo;
 use Status;
 use stdClass;
 
-class SearchDependentPropertiesConstraint implements DataConstraint {
+class SearchDependentPropertiesConstraint extends DataConstraint {
     private const MESSAGE = 'datamap-validate-constraint-searchdisabled';
 
     public function getDependencies(): array {
         return [];
     }
 
-    public function run( Status $status, MapVersionInfo $version, stdClass $data ): bool {
+    public function run( MapVersionInfo $version, stdClass $data ): bool {
         if ( !isset( $data->settings ) ) {
             return true;
         }
@@ -29,7 +29,7 @@ class SearchDependentPropertiesConstraint implements DataConstraint {
                 ] );
                 if ( count( $fields ) > 0 ) {
                     $formatted = implode( ', ', array_map( fn ( $item ) => "<code>$item</code>", $fields ) );
-                    $status->warning( self::MESSAGE, "/groups/$groupId", $formatted );
+                    $this->emitWarning( self::MESSAGE, "/groups/$groupId", $formatted );
                 }
             }
         }
