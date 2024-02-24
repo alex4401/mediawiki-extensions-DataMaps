@@ -13,6 +13,7 @@ use MediaWiki\Extension\DataMaps\Content\DataConstraints\LayerIdNoOverlapConstra
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\MarkerUidNoOverlapConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\RequiredFilesConstraint;
 use MediaWiki\Extension\DataMaps\Content\DataConstraints\SearchDependentPropertiesConstraint;
+use MediaWiki\Extension\DataMaps\Content\DataConstraints\ZoomMinMaxConstraint;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Utils\UrlUtils;
 use stdClass;
