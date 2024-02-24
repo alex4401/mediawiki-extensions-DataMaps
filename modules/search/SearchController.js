@@ -227,12 +227,16 @@ class SearchController {
         this._inputBox.setValue( '', true );
         this.toggle( false );
         item.map.openMarkerPopup( item.leafletMarker, true );
-        const tabber = /** @type {HTMLElement?} */ ( this._isLinked && item.map !== this._map
-            ? getNonNull( Util.TabberNeue.getOwningTabber( item.map.rootElement ) ).querySelector( '#' + getNonNull(
-                Util.TabberNeue.getOwningPanel( item.map.rootElement ) ).getAttribute( 'aria-labelledby' ) )
-            : null );
-        if ( tabber ) {
-            tabber.click();
+
+        if ( this._isLinked && item.map !== this._map ) {
+            const tabber = document.getElementById(
+                getNonNull(
+                    getNonNull( Util.TabberNeue.getOwningPanel( item.map.rootElement ) ).getAttribute( 'aria-labelledby' )
+                )
+            );
+            if ( tabber ) {
+                tabber.click();
+            }
         }
     }
 
