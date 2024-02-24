@@ -72,6 +72,11 @@ class SearchController {
         this._ignoreTimeout = null;
         /**
          * @private
+         * @type {number?}
+         */
+        this._commitTimeoutId = null;
+        /**
+         * @private
          * @type {HTMLElement}
          */
         this._listElement = createDomElement( 'ul', {
@@ -103,7 +108,7 @@ class SearchController {
                 ? /** @type {InstanceType<SearchIndex.ChildIndex>} */ ( this._ownedIndex ).parent
                 : this._ownedIndex
         );
-        this.addExistingMarkersToOwnIndex();
+
         // Set up event handlers
         this._inputBox.$input.on( 'mousedown', () => this.toggle( true ) );
         this._inputBox.$input[ 0 ].addEventListener( 'keydown', event => this._handleInputKeyDownEvent( event ) );
@@ -111,7 +116,9 @@ class SearchController {
         this._listElement.addEventListener( 'click', () => this._inputBox.$input[ 0 ].focus() );
         Util.getNonNull( this._map.viewport ).getLeafletMap().on( 'click', () => this.toggle( false ), this );
         this._map.on( 'markerReady', this.addMarker, this );
-        this._map.on( 'chunkStreamingDone', this._onChunkStreamed, this );
+
+        // Immediately index markers that have already been added to the map
+        this._indexExisting();
     }
 
 
@@ -168,7 +175,7 @@ class SearchController {
     /**
      * Inserts markers from the map to the index owned by this control.
      */
-    addExistingMarkersToOwnIndex() {
+    _indexExisting() {
         for ( const leafletMarker of this._map.layerManager.markers ) {
             this._ownedIndex.add( this._map, leafletMarker );
         }
@@ -183,14 +190,9 @@ class SearchController {
      */
     addMarker( leafletMarker ) {
         this._ownedIndex.add( this._map, leafletMarker );
-    }
-
-
-    /**
-     * @private
-     */
-    _onChunkStreamed() {
-        this._ownedIndex.commit();
+        if ( this._commitTimeoutId === null ) {
+            this._commitTimeoutId = setTimeout( () => this._ownedIndex.commit(), 0 );
+        }
     }
 
 
