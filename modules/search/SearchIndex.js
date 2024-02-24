@@ -146,11 +146,16 @@ class SearchIndex extends EventEmitter {
 
 
     commit() {
-        this.fire( 'precommit', this._queue );
-        this.items = this.items.concat( this._queue );
-        this.items.sort( ( a, b ) => a.label.localeCompare( b.label ) );
-        this._queue = [];
-        this.fire( 'commit' );
+        const alreadyIndexed = new Set( this.items.map( el => el.leafletMarker ) );
+        this._queue = this._queue.filter( el => !alreadyIndexed.has( el.leafletMarker ) );
+
+        if ( this._queue.length > 0 ) {
+            this.fire( 'precommit', this._queue );
+            this.items = this.items.concat( this._queue );
+            this.items.sort( ( a, b ) => a.label.localeCompare( b.label ) );
+            this._queue = [];
+            this.fire( 'commit' );
+        }
     }
 
 
