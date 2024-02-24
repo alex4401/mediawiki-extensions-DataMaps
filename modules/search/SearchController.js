@@ -123,6 +123,14 @@ class SearchController {
 
 
     /**
+     * @return {boolean}
+     */
+    isLinked() {
+        return this._isLinked;
+    }
+
+
+    /**
      * @private
      * @param {KeyboardEvent} event
      */
