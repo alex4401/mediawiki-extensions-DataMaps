@@ -4,6 +4,7 @@ const {
     createDomElement,
     getNonNull,
     preventMapInterference,
+    TabberNeue,
 } = require( './Util.js' );
 
 
@@ -342,16 +343,26 @@ class SearchHost extends MapControl {
                 } );
                 this._inputBox.$element.appendTo( this.element );
 
-                this._inputBox.$element.one( 'click', () => this._loadSearch() );
+                this._inputBox.$element.one( 'click', () => this._loadSearch( true ) );
             }
         );
+
+        map.on( 'linkedEvent', event => {
+            if ( event.type === 'initLinkedSearch' && event.tabber === TabberNeue.getOwningTabber( map.rootElement ) ) {
+                this._loadSearch( false );
+            }
+        } );
     }
 
 
     /**
      * @private
      */
-    _loadSearch() {
+    _loadSearch( canFocus ) {
+        if ( this.moduleInstance ) {
+            return;
+        }
+
         const spinner = createDomElement( 'div', {
             classes: [ 'ext-datamaps-control-search-spinner' ],
             appendTo: this._inputBox.$element[ 0 ]
@@ -365,7 +376,19 @@ class SearchHost extends MapControl {
                 );
                 spinner.remove();
 
-                this.moduleInstance.toggle( true );
+                if ( canFocus ) {
+                    this.moduleInstance.toggle( true );
+                }
+
+                // If linked, initialise search in other tabs
+                if ( canFocus && this.moduleInstance.isLinked() ) {
+                    setTimeout( () => {
+                        this.map.fire( 'sendLinkedEvent', {
+                            type: 'initLinkedSearch',
+                            tabber: TabberNeue.getOwningTabber( this.map.rootElement )
+                        } );
+                    }, 0 );
+                }
             } );
         } );
     }
