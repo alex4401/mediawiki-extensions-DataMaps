@@ -384,7 +384,7 @@ class SearchController {
      * @return {[ name: string, current: boolean ]?}
      */
     _getItemBadge( item ) {
-        if ( this._isLinked && item.map !== this._map ) {
+        if ( this._isLinked ) {
             const title = getNonNull( Util.TabberNeue.getOwningPanel( item.map.rootElement ) ).getAttribute( 'data-title' );
             return title ? [ title, false ] : null;
         }
