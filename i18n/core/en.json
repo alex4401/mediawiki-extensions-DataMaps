@@ -43,6 +43,7 @@
     "datamap-validate-constraint-assocnonuniqoverlap": "A group or a category has been specified more than once for marker list <code>$1</code>.",
     "datamap-validate-constraint-deprecated-instead": "Property <code>$3</code> was deprecated in schema revision $1 and will no longer be supported in $2. Use property <code>$4</code> instead.",
     "datamap-validate-constraint-deprecated-noalt": "Property <code>$3</code> was deprecated in schema revision $1 and will no longer be supported in $2. No alternatives are available.",
+    "datamap-validate-constraint-zoomminmax": "The value of property <code>$1</code> must not be lower than that of <code>$2</code>.",
     "datamap-error-validatespec-map-bad-mixin": "Fragment page \"<code>$1</code>\" must exist, use the <code>Interactive Data Map</code> content model, and be valid syntax- and structure-wise.",
     "datamap-error-validatespec-map-mixin-with-mixins": "Other fragments may not be referenced in a fragment.",
     "datamap-error-render-unsupported-displaymode": "Display mode $1 has been reported for a marker, but support is missing for it. This is a bug in the extension's code.",

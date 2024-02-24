@@ -45,6 +45,7 @@ class MapDataConstraintChecker {
             new AssociationStringGroupExistsConstraint(),
             new LayerIdNoOverlapConstraint(),
             new MarkerUidNoOverlapConstraint(),
+            new ZoomMinMaxConstraint(),
             new RequiredFilesConstraint(),
             new CollectibleDependentPropertiesConstraint(),
             new SearchDependentPropertiesConstraint(),
