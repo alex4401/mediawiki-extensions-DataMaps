@@ -126,8 +126,11 @@ mw.dataMaps = {
             // Check if any inline data has been included. This is used for edit previews.
             const dataNode = /** @type {HTMLElement?} */ ( rootElement.querySelector( INLINE_MARKERS_SELECTOR ) );
             if ( dataNode ) {
-                const data = JSON.parse( dataNode.innerText );
-                map.streaming.instantiateMarkers( data );
+                map.on( 'leafletLoaded', () => {
+                    const data = JSON.parse( dataNode.innerText );
+                    map.streaming.instantiateMarkers( data );
+                    map.fireMemorised( 'chunkStreamingDone' );
+                } );
             }
         }
 
