@@ -2,7 +2,7 @@
 namespace MediaWiki\Extension\DataMaps\Content\DataConstraints;
 
 use MediaWiki\Extension\DataMaps\Content\MapVersionInfo;
-use Status;
+use MediaWiki\Extension\DataMaps\Content\StatusUtils;
 use stdClass;
 
 class LayerIdNoOverlapConstraint extends DataConstraint {
@@ -41,7 +41,7 @@ class LayerIdNoOverlapConstraint extends DataConstraint {
 
                 $assocGroups = array_filter( $assocLayers, fn ( $item ) => in_array( $item, $groupIds ) );
                 if ( count( $assocGroups ) > 1 ) {
-                    $formatted = implode( ', ', array_map( fn ( $item ) => "<code>$item</code>", $assocGroups ) );
+                    $formatted = StatusUtils::formatArray( $assocGroups );
                     $this->emitError( self::MARKER_OVERLAP_MESSAGE, "/markers/$assocStr", $formatted );
                     $result = false;
                 }

@@ -2,7 +2,7 @@
 namespace MediaWiki\Extension\DataMaps\Content\DataConstraints;
 
 use MediaWiki\Extension\DataMaps\Content\MapVersionInfo;
-use Status;
+use MediaWiki\Extension\DataMaps\Content\StatusUtils;
 use stdClass;
 
 class CollectibleDependentPropertiesConstraint extends DataConstraint {
@@ -28,8 +28,7 @@ class CollectibleDependentPropertiesConstraint extends DataConstraint {
                     'autoNumberInChecklist',
                 ] );
                 if ( count( $fields ) > 0 ) {
-                    $formatted = implode( ', ', array_map( fn ( $item ) => "<code>$item</code>", $fields ) );
-                    $this->emitWarning( self::MESSAGE, "/groups/$groupId", $formatted );
+                    $this->emitWarning( self::MESSAGE, "/groups/$groupId", StatusUtils::formatArray( $fields ) );
                 }
             }
         }

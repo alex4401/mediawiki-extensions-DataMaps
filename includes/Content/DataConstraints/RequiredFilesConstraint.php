@@ -2,8 +2,8 @@
 namespace MediaWiki\Extension\DataMaps\Content\DataConstraints;
 
 use MediaWiki\Extension\DataMaps\Content\MapVersionInfo;
+use MediaWiki\Extension\DataMaps\Content\StatusUtils;
 use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapFileUtils;
-use Status;
 use stdClass;
 
 class RequiredFilesConstraint extends DataConstraint {
@@ -63,8 +63,7 @@ class RequiredFilesConstraint extends DataConstraint {
         }
 
         if ( count( $results ) > 0 ) {
-            $formatted = implode( ', ', array_map( fn ( $el ) => "<code>$el</code>", $results ) );
-            $this->emitError( self::MESSAGE, $formatted );
+            $this->emitError( self::MESSAGE, StatusUtils::formatArray( $results ) );
             return false;
         }
 
