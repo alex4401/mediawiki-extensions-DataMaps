@@ -9,9 +9,9 @@ const
     SearchIndex = require( './SearchIndex.js' );
 
 /**
- * @type {Record<string, SearchIndex>}
+ * @type {[HTMLElement, SearchIndex][]}
  */
-const linkedIndexMap = {};
+const linkedIndexMap = [];
 
 
 /**
@@ -21,13 +21,18 @@ const linkedIndexMap = {};
 function getOrCreateIndexFor( map ) {
     const isLinked = map.checkFeatureFlag( MapFlags.LinkedSearch );
 
-    let tabberId = null;
+    /** @type {HTMLElement?} */
+    let tabberNode = null;
     if ( isLinked ) {
-        tabberId = Util.TabberNeue.getOwningId( map.rootElement );
+        tabberNode = Util.TabberNeue.getOwningTabber( map.rootElement );
     }
 
-    if ( tabberId ) {
-        const masterIndex = linkedIndexMap[ tabberId ] = linkedIndexMap[ tabberId ] || new SearchIndex();
+    if ( tabberNode ) {
+        let masterIndex = ( linkedIndexMap.find( el => el[ 0 ] === tabberNode ) || [ null, null ] )[ 1 ];
+        if ( !masterIndex ) {
+            masterIndex = new SearchIndex();
+            linkedIndexMap.push( [ tabberNode, masterIndex ] );
+        }
         return new SearchIndex.ChildIndex( masterIndex );
     }
 
