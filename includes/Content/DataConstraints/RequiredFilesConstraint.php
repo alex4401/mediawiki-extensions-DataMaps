@@ -1,10 +1,13 @@
 <?php
 namespace MediaWiki\Extension\DataMaps\Content\DataConstraints;
 
+use Html;
 use MediaWiki\Extension\DataMaps\Content\MapVersionInfo;
 use MediaWiki\Extension\DataMaps\Content\StatusUtils;
 use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapFileUtils;
+use SpecialPage;
 use stdClass;
+use Title;
 
 class RequiredFilesConstraint extends DataConstraint {
     private const MESSAGE = 'datamap-validate-constraint-requiredfile';
@@ -63,7 +66,17 @@ class RequiredFilesConstraint extends DataConstraint {
         }
 
         if ( count( $results ) > 0 ) {
-            $this->emitError( self::MESSAGE, StatusUtils::formatArray( $results ) );
+            $uploadTitle = SpecialPage::getTitleFor( 'Upload' );
+            $preformatted = array_map(
+                static function ( $el ) use ( $uploadTitle ) {
+                    $fileTitle = Title::makeTitleSafe( NS_FILE, $el );
+                    return '[' . $uploadTitle->getFullURL( [
+                                'wpDestFile' => $fileTitle->getText()
+                            ] ) . ' ' . $fileTitle->getPrefixedText() . ']';
+                },
+                $results
+            );
+            $this->emitError( self::MESSAGE, StatusUtils::formatArrayUnescaped( $preformatted ) );
             return false;
         }
 
