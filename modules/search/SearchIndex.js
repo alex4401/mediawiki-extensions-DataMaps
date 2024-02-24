@@ -201,7 +201,7 @@ class ChildIndex extends SearchIndex {
         this._queue.push( info );
 
         const tabber = CoreUtil.getNonNull( CoreUtil.TabberNeue.getOwningPanel( info.map.rootElement ) ),
-            tabberTitle = CoreUtil.getNonNull( tabber.getAttribute( 'title' ) );
+            tabberTitle = CoreUtil.getNonNull( tabber.getAttribute( 'data-title' ) || tabber.getAttribute( 'title' ) );
         // Propagate the entry to the master index: copy it, push tabber title to its keywords, enqueue.
         const copy = Object.assign( {}, info );
         copy.keywords = Array.from( info.keywords );
