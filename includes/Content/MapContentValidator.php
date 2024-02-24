@@ -173,11 +173,14 @@ class MapContentValidator {
             );
             $result->fatal( 'datamap-validate-bad-schema', new RawMessage( $formatted ) );
             return false;
-        } elseif ( !$validator->isValid() ) {
-            $version = new MapVersionInfo(
-                $this->schemaVersionMap[$data->{'$schema'}],
-                $isFragment
-            );
+        }
+
+        $version = new MapVersionInfo(
+            $this->schemaVersionMap[$data->{'$schema'}],
+            $isFragment
+        );
+
+        if ( !$validator->isValid() ) {
 
             $this->formatJsonSchemaErrors(
                 $result,
