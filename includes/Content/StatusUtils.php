@@ -1,0 +1,17 @@
+<?php
+namespace MediaWiki\Extension\DataMaps\Content;
+
+use RawMessage;
+
+final class StatusUtils {
+    public static function formatArray( array $data, string $wrapperTag = 'code' ): RawMessage {
+        $formatted = implode(
+            ', ',
+            array_map(
+                fn ( $el ) => "<$wrapperTag>" . wfEscapeWikiText( $el ) . "</$wrapperTag>",
+                $data
+            )
+        );
+        return new RawMessage( $formatted );
+    }
+}

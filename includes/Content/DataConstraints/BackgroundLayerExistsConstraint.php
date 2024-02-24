@@ -2,7 +2,7 @@
 namespace MediaWiki\Extension\DataMaps\Content\DataConstraints;
 
 use MediaWiki\Extension\DataMaps\Content\MapVersionInfo;
-use Status;
+use MediaWiki\Extension\DataMaps\Content\StatusUtils;
 use stdClass;
 
 class BackgroundLayerExistsConstraint extends DataConstraint {
@@ -20,9 +20,9 @@ class BackgroundLayerExistsConstraint extends DataConstraint {
         $validLayers = [];
         if ( isset( $data->background ) && is_string( $data->background ) ) {
             $validLayers[] = 'bg:0';
-        } else if ( isset( $data->background ) ) {
+        } elseif ( isset( $data->background ) ) {
             $validLayers[] = 'bg:' . ( $data->associatedLayer ?? '0' );
-        } else if ( isset( $data->backgrounds ) ) {
+        } elseif ( isset( $data->backgrounds ) ) {
             foreach ( $data->backgrounds as $index => $background ) {
                 $validLayers[] = 'bg:' . ( $background->associatedLayer ?? $index );
             }
@@ -41,7 +41,7 @@ class BackgroundLayerExistsConstraint extends DataConstraint {
                 );
 
                 if ( count( $badAssocLayers ) > 0 ) {
-                    $formatted = implode( ', ', array_map( fn ( $item ) => "<code>$item</code>", $badAssocLayers ) );
+                    $formatted = StatusUtils::formatArray( $badAssocLayers );
                     $this->emitErrorPermissive( self::MESSAGE, "/markers/$assocStr", $formatted );
                     $result = false;
                 }
