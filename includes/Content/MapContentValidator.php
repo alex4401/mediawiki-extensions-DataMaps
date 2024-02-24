@@ -184,11 +184,9 @@ class MapContentValidator {
                 $version,
                 $validator->getErrors( Validator::ERROR_DOCUMENT_VALIDATION )
             );
-
-            return false;
         }
 
-        return true;
+        return $result->isOK();
     }
 
     private function formatJsonSchemaErrors( Status $status, MapVersionInfo $version, array $errors ) {
