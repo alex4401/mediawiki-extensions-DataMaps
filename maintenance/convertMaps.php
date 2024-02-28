@@ -61,7 +61,7 @@ class ConvertMaps extends Maintenance {
             $this->output( "  ... " . $pageRow->page_title . "\n" );
             $this->dbw->update(
                 'page',
-                [ 'page_content_model' => ARK_CONTENT_MODEL_DATAMAP ],
+                [ 'page_content_model' => CONTENT_MODEL_DATAMAPS ],
                 [ 'page_id' => $pageRow->page_id ],
                 __METHOD__
             );
@@ -70,7 +70,7 @@ class ConvertMaps extends Maintenance {
 
         // Get content model IDs ahead of time
         $contentModelStore = MediaWikiServices::getInstance()->getContentModelStore();
-        $cmDataMapId = $contentModelStore->acquireId( ARK_CONTENT_MODEL_DATAMAP );
+        $cmDataMapId = $contentModelStore->acquireId( CONTENT_MODEL_DATAMAPS );
         $cmJsonId = $contentModelStore->acquireId( CONTENT_MODEL_JSON );
         // In case there's redirection pages:
         $cmWikitextId = $contentModelStore->acquireId( CONTENT_MODEL_WIKITEXT );
