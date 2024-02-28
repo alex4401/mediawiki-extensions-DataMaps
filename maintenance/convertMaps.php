@@ -1,5 +1,6 @@
 <?php
 use MediaWiki\Extension\DataMaps\Content\DataMapContent;
+use MediaWiki\Extension\DataMaps\Content\SchemaProvider;
 use MediaWiki\Extension\DataMaps\Rendering\Utils\DataMapFileUtils;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
@@ -193,7 +194,8 @@ class ConvertMaps extends Maintenance {
         // Create a new object that will contain the output
         $dmData = new stdclass();
         // Set schema
-        $dmData->{'$schema'} = DataMapContent::getPublicSchemaUrl( 'v17' );
+        $schemaProvider = MediaWikiServices::getInstance()->getService( SchemaProvider::SERVICE_NAME );
+        $dmData->{'$schema'} = $schemaProvider->makePublicUrl( 'v17' );
         // Retrieve coordinate system information
         $coordOrder = $fmData->coordinateOrder;
         $coordSpace = $fmData->mapBounds;
