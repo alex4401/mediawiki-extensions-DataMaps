@@ -12,6 +12,7 @@
 	"datamap-validate-constraint-required": "Zahtevana lastnost manjka: <code>$1</code>.",
 	"datamap-validate-constraint-unexpected": "Podana je bila nepričakovana lastnost: <code>$1</code>.",
 	"datamap-validate-constraint-fallback": "Pri preverjanju lastnosti je prišlo do neznane napake: <code>$1</code>. Prosimo, [$2 prijavite to težavo] razvijalcem.",
+	"datamap-validate-constraint-zoomminmax": "Vrednost lastnosti <code>$1</code> ne sme biti manjša od vrednosti <code>$2</code>.",
 	"datamap-error-map-validation-fail": "[[$1|Izvorna koda podatkovne karte]] ne prestane več preverjanja podatkov. Odpravite napake.",
 	"datamap-legend-label": "Celine",
 	"datamap-javascript-required": "Za delovanje te karte mora biti omogočen JavaScript. Če je spodaj ne vidite, to verjetno pomeni, da imate onemogočen JavaScript.",
