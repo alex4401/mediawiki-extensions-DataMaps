@@ -3,6 +3,7 @@
 		"authors": [
 			"BlueCamille",
 			"Chatmaigre888",
+			"MacOS Weed",
 			"Valmontin",
 			"Wladek92"
 		]
@@ -16,7 +17,7 @@
 	"datamap-category-maps-failing-validation": "Cartes dont les données ne sont plus validées",
 	"datamap-mapsrcinfo-heading-errors": "'''Erreurs:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''Avertissements:''' $1",
-	"datamap-mapsrcinfo-docslink": "Vérifiez la [https://github.com/alex4401/mediawiki-extensions-DataMaps extension's documentation] pour plus d'informations sur la bonne structure.",
+	"datamap-mapsrcinfo-docslink": "Vous pouvez consulter la [$1 documentation de l'extension] si nécessaire ou [$2 créer un rapport d'erreur ou une demande de fonctionnalité] si vous pensez que des choses ont besoin de modifications.",
 	"datamap-error-validate-invalid-json": "Ceci n'est pas un document JSON valide.",
 	"datamap-error-validatespec-map-bad-mixin": "Le fragment-source réutilisable \"<code>$1</code>\" doit exister, utiliser le modèle de contenu d'une <code>Carte de données interactive</code> et avoir une syntaxe et une structure valides.",
 	"datamap-error-validatespec-map-mixin-with-mixins": "Un fragment-source réutilisable ne peut pas être associé à d'autres fragments-sources réutilisables.",
