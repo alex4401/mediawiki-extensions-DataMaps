@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"McDutchie"
+			"McDutchie",
+			"Siebrand"
 		]
 	},
 	"datamap-desc": "Maakt het insluiten van interactieve kaarten in wikipagina’s mogelijk.",
@@ -17,14 +18,14 @@
 	"datamap-mapsrcinfo-status-errors": "Deze kaart doorstaat de validatie van de broncode niet.",
 	"datamap-mapsrcinfo-heading-errors": "'''Fouten:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''Waarschuwingen:''' $1",
-	"datamap-mapsrcinfo-docslink": "U kunt de [$1 documentatie van de extensie $1] raadplegen, of [$2 een ticket aanmaken] als u denkt dat er wijzigingen nodig zijn.",
+	"datamap-mapsrcinfo-docslink": "U kunt de [$1 documentatie van de extensie $1] raadplegen, of [$2 een probleemmelding aanmaken of nieuwe functie aanvragen] als u denkt dat er wijzigingen nodig zijn.",
 	"datamap-error-validate-invalid-json": "Dit is geen geldig JSON-document.",
-	"datamap-validate-bad-schema": "De eigenschap <code>$schema</code> van deze kaart verwijst niet naar een ondersteunde indelingsdefinitie.<br/>Hieronder worden ondersteunde schemaversies (en acceptabele locaties) vermeld: $1",
+	"datamap-validate-bad-schema": "De eigenschap <code>$schema</code> van deze kaart verwijst niet naar een ondersteunde indelingsdefinitie.\n\nOndersteunde schemaversies:\n$1",
 	"datamap-validate-constraint-required": "Er ontbreekt een vereiste eigenschap: <code>$1</code>.",
 	"datamap-validate-constraint-unexpected": "Er werd een onverwachte eigenschap gegeven: <code>$1</code>.",
 	"datamap-validate-constraint-fallback": "Er is een onbekende fout opgetreden tijdens het valideren van de eigenschap: <code>$1</code>. Gelieve [$2 dit probleem aan de ontwikkelaars te rapporteren].",
-	"datamap-error-validatespec-map-bad-mixin": "De mix-in “<code>$1</code>” moet bestaan, het inhoudsmodel <code>Interactive gegevenskaart</code> gebruiken en qua syntaxis en structuur geldig zijn.",
-	"datamap-error-validatespec-map-mixin-with-mixins": "Een mix-in mag geen andere mix-ins gebruiken.",
+	"datamap-error-validatespec-map-bad-mixin": "De fragmentpagina “<code>$1</code>” moet bestaan, het inhoudsmodel <code>Interactive gegevenskaart</code> gebruiken en qua syntaxis en structuur geldig zijn.",
+	"datamap-error-validatespec-map-mixin-with-mixins": "In een fragment mag niet naar andere fragmenten worden verwezen.",
 	"datamap-error-render-unsupported-displaymode": "De weergavemodus $1 is gemeld voor een markering, maar de ondersteuning hiervoor ontbreekt. Dit is een fout in de code van de uitbreiding.",
 	"datamap-error-pf-page-does-not-exist": "De gegevenskaartpagina “[[$1]]” bestaat niet.",
 	"datamap-error-pf-page-invalid-content-model": "Het inhoudsmodel van de pagina “[[$1]]” is niet <code>Interactieve gegevenskaart</code>.",
