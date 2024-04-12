@@ -186,7 +186,8 @@ class Viewport extends EventEmitter {
                 min: 0.05,
                 lock: this.map.checkFeatureFlag( MapFlags.DisableZoom ),
                 max: 6,
-                auto: true
+                auto: true,
+                scrollSpeed: 1,
             };
         }
 
@@ -211,7 +212,7 @@ class Viewport extends EventEmitter {
             // Zoom settings
             zoomSnap: 0,
             zoomDelta: 0.25,
-            wheelPxPerZoomLevel: 90,
+            wheelPxPerZoomLevel: 90 / ( mapConfig.zoom.scrollSpeed || 1 ),
             maxZoom: mapConfig.zoom.max,
             minZoom: mapConfig.zoom.min,
             // Zoom animations cause some awkward locking as Leaflet waits for the animation to finish before processing more

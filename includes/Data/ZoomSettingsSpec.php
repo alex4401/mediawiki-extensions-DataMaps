@@ -36,4 +36,8 @@ class ZoomSettingsSpec extends DataModel {
     public function getMaximum(): float {
         return $this->raw->max ?? self::DEFAULT_MAXIMUM;
     }
+
+    public function getScrollSpeed(): float {
+        return $this->raw->scrollSpeed ?? 1.0;
+    }
 }
