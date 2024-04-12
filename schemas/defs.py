@@ -312,6 +312,15 @@ class XyMarker(_Marker):
     y: float
 
 
+MarkerGroup = CircularMarkerGroup|PinMarkerGroup|IconMarkerGroup
+class MarkerGroupCollection(BaseModelEx):
+    collection: str = Field(
+        ...,
+        title='Collection name',
+    )
+    groups: dict[LayerId, MarkerGroup]
+
+
 ##% Main
 class DataMap(BaseModelEx):
     #if FRAGMENT:
@@ -329,7 +338,7 @@ class DataMap(BaseModelEx):
     )
     background: str|ImageBackground|TiledBackground
     backgrounds: list[ImageBackground|TiledBackground]
-    groups: dict[LayerId, CircularMarkerGroup|PinMarkerGroup|IconMarkerGroup] = dict()
+    groups: dict[LayerId, MarkerGroup]|list[dict[str, MarkerGroup]|MarkerGroupCollection] = dict()
     categories: dict[LayerId, MarkerCategory] = dict()
     disclaimer: Optional[NonEmptyString] = None
     markers: dict[LayerAssociationStr, list[LatLonMarker|XyMarker]] = dict()
