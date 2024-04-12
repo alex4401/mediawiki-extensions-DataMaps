@@ -96,8 +96,9 @@ class DataMapContentHandler extends JsonContentHandler {
                 ->addTrackingCategory( $parserOutput, 'datamap-category-maps-failing-validation', $pageRef );
         }
 
-        // If this is a fragment, record so in the page properties
-        if ( $content->isFragment() ) {
+        // If this is a fragment, record so in the page properties. This branch must also not run if the JSON is not
+        // valid.
+        if ( $content->getData()->isGood() && $content->isFragment() ) {
             $parserOutput->setPageProperty( Constants::PAGEPROP_IS_MIXIN, true );
             $parserOutput->setPageProperty( Constants::PAGEPROP_DISABLE_VE, true );
         }
