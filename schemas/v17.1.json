@@ -1633,6 +1633,13 @@
 					"description": "\n            If set to `true`, zoom level will be fixed at the specified `min` value. All zoom controls on the viewer's\n            side will be disabled.\n        ",
 					"title": "Locked?",
 					"type": "boolean"
+				},
+				"scrollSpeed": {
+					"default": 1.0,
+					"exclusiveMaximum": 5.0,
+					"exclusiveMinimum": 0.0,
+					"title": "Scroll speed scaler",
+					"type": "number"
 				}
 			},
 			"title": "ZoomSettings",
