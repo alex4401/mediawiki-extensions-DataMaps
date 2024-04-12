@@ -285,7 +285,7 @@ class DataMap extends EventEmitter {
             const mId = Util.getMarkerId( leafletMarker );
             // Check both exact match and match with an `M` prefix for legacy pre-v0.16 link support
             if ( mId === idToOpen || `M${mId}` === idToOpen ) {
-                this.openMarkerPopup( leafletMarker, true );
+                this.openMarkerPopup( leafletMarker, true, true );
                 this.off( 'markerReady', handler, this );
             }
         } );
@@ -603,9 +603,10 @@ class DataMap extends EventEmitter {
      * Opens a marker's popup, while respecting its background ties.
      *
      * @param {LeafletModule.AnyMarker} leafletMarker
-     * @param {boolean} [centreMapOver]
+     * @param {boolean} [centreMapOver=false]
+     * @param {boolean} [centreMapOverInstantly=false]
      */
-    openMarkerPopup( leafletMarker, centreMapOver ) {
+    openMarkerPopup( leafletMarker, centreMapOver, centreMapOverInstantly ) {
         const properties = leafletMarker.assignedProperties;
         if ( properties && properties.bg !== undefined ) {
             const backgroundIndex = this.config.backgrounds.findIndex( x => x.layer === properties.bg );
@@ -618,7 +619,7 @@ class DataMap extends EventEmitter {
 
         const viewport = Util.getNonNull( this.viewport );
         if ( centreMapOver && viewport.getLeafletMap().options.uriPopupZoom !== false ) {
-            viewport.flyToMarker( leafletMarker );
+            viewport.flyToMarker( leafletMarker, centreMapOverInstantly );
         }
     }
 
