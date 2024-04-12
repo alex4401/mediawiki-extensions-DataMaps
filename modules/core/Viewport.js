@@ -329,10 +329,14 @@ class Viewport extends EventEmitter {
      * Flies over to a marker, putting it in the viewport's centre at a reasonable zoom level.
      *
      * @param {LeafletModule.AnyMarker} leafletMarker
+     * @param {boolean} [doInstant=false]
      */
-    flyToMarker( leafletMarker ) {
-        this._leaflet.flyTo( leafletMarker.getLatLng(), this._leaflet.options.uriPopupZoom
+    flyToMarker( leafletMarker, doInstant ) {
+        const targetCentre = ( leafletMarker.getLatLng(), this._leaflet.options.uriPopupZoom
             || ( this._leaflet.options.maxZoom - this._leaflet.options.minZoom ) / 5 * 4 );
+        this._leaflet.flyTo( targetCentre, undefined, {
+            animate: !doInstant,
+        } );
     }
 
 
