@@ -93,6 +93,18 @@ class DataMapContent extends JsonContent {
         return $content;
     }
 
+    /**
+     * Decodes the JSON string.
+     *
+     * @return Status
+     */
+    public function getData() {
+        if ( $this->jsonParse === null ) {
+            $this->jsonParse = FormatJson::parse( $this->getText(), FormatJson::TRY_FIXING );
+        }
+        return $this->jsonParse;
+    }
+
     public function isFragment(): bool {
         return DataMapSpec::staticIsFragment( $this->getData()->getValue() );
     }
