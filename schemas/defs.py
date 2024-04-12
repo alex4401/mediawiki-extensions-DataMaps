@@ -141,6 +141,12 @@ class ZoomSettings(BaseModelEx):
             side will be disabled.
         '''
     )
+    scrollSpeed: float = Field(
+        1.0,
+        gt=0,
+        lt=5,
+        title='Scroll speed scaler',
+    )
 # DEPRECATED from v17 pending removal in v18, no replacement
 LeafletSettings = dict[str, Any]
 class Settings(BaseModelEx):
