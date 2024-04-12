@@ -37,7 +37,7 @@ final class EmbedMapFunction {
 
         // Register page's dependency on the data map
         $parser->getOutput()->addTemplate( $title, $title->getArticleId(),
-            $parser->fetchCurrentRevisionRecordOfTitle( $title )->getId() );
+            $parser->fetchCurrentRevisionRecordOfTitle( $title )?->getId() ?? 0 );
 
         // Add the page to a tracking category
         $parser->addTrackingCategory( 'datamap-category-pages-including-maps' );
