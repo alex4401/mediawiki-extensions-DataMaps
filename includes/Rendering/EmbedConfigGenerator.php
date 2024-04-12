@@ -61,6 +61,7 @@ class EmbedConfigGenerator {
         // Required to query the API for marker clusters
         if ( !$this->useInlineData && !$this->forVisualEditor ) {
             $out['version'] = $this->title->getLatestRevID();
+            $out['lastPurgeTimestamp'] = $this->title->getTouched();
         }
         $out['cOrder'] = $coordOrder = $this->data->getCoordinateSystem()->getOrder();
         $out['cRot'] = $this->data->getCoordinateSystem()->getRotation();

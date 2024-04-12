@@ -86,6 +86,7 @@ module.exports = class MarkerStreamingManager {
         if ( start !== null && start !== undefined ) query.continue = start;
         if ( limit ) query.limit = limit;
         if ( sector ) query.sector = sector;
+        query.cb = this.map.config.lastPurgeTimestamp || 0;
         /* eslint-enable curly */
         return this.callApiReliable( query );
     }
