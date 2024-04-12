@@ -83,6 +83,7 @@ class EmbedConfigGenerator {
             'auto' => $zoom->isMinimumAutomatic(),
             'min' => $zoom->getMinimum(),
             'max' => $zoom->getMaximum(),
+            'scrollSpeed' => $zoom->getScrollSpeed(),
         ];
         // Backgrounds
         $out['backgrounds'] = array_map( function ( MapBackgroundSpec $spec ) use ( $coordOrder ) {
