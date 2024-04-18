@@ -39,7 +39,7 @@
 	"datamap-validate-constraint-assocgroupoverlap": "Само една група може да се укаже за список на бележници <code>$1</code>, пронајдов: $2.",
 	"datamap-validate-constraint-assocnonuniqoverlap": "Во списокот на бележници <code>$1</code> е укажана е група или категорија повеќе од еднаш.",
 	"datamap-validate-constraint-deprecated-instead": "Својството <code>$3</code> е застарено во преработката $1 на шемата и повеќе не е поддржано на $2. Наместо него користете го својството <code>$4</code>.",
-	"datamap-validate-constraint-deprecated-noalt": "Својството <code>$3</code> е застарено во преработката $1 на шемата и повеќе не е поддржано на $2. Нема расположиви алтернативи.",
+	"datamap-validate-constraint-deprecated-noalt": "Својството <code>$3</code> е застарено во преработката $1 на шемата и повеќе не е поддржано на $2. Нема расположливи алтернативи.",
 	"datamap-validate-constraint-zoomminmax": "Вредноста на својството <code>$1</code> не може да биде пониска од онаа на <code>$2</code>.",
 	"datamap-error-validatespec-map-bad-mixin": "Одломената страница „<code>$1</code>“ мора да постои. Сполужете се со податотечниот модел <code>Интерактивна податочна карта</code> и внимавајте синтаксата и структурата да бидат исправни.",
 	"datamap-error-validatespec-map-mixin-with-mixins": "Во одломка не може да се повикуваат други одломки.",
