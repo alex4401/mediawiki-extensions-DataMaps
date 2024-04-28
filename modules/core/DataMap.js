@@ -726,6 +726,7 @@ class DataMap extends EventEmitter {
         const viewportWidth = document.documentElement.clientWidth;
         if (
             this.checkFeatureFlag( MapFlags.HideLegend )
+            || this.checkFeatureFlag( MapFlags.CollapseLegend )
             // Check if viewport width is within our frame
             || viewportWidth < DataMap.LEGEND_AFFECTS_BOUNDS_FIT_VIEWPORT_WIDTH[ 0 ]
             || viewportWidth > DataMap.LEGEND_AFFECTS_BOUNDS_FIT_VIEWPORT_WIDTH[ 1 ]

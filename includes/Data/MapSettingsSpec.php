@@ -19,6 +19,10 @@ class MapSettingsSpec extends DataModel {
     public const IRT_DOM = 1;
     public const IRT_CANVAS = 2;
 
+    public const LM_DEFAULT = 0;
+    public const LM_HIDDEN = 1;
+    public const LM_COLLAPSED = 2;
+
     public function allowsFullscreen(): bool {
         return $this->raw->allowFullscreen ?? true;
     }
@@ -68,8 +72,18 @@ class MapSettingsSpec extends DataModel {
         return ( $this->raw->interactionModel ?? 'keybinds' ) === 'sleep';
     }
 
+    public function getLegendVisibilityMode(): int {
+        $value = $this->raw->hideLegend ?? false;
+        if ( $value === true ) {
+            return self::LM_HIDDEN;
+        } elseif ( $value === 'collapsed' ) {
+            return self::LM_COLLAPSED;
+        }
+        return self::LM_DEFAULT;
+    }
+
     public function isLegendDisabled(): bool {
-        return $this->raw->hideLegend ?? false;
+        return $this->getLegendVisibilityMode() === self::LM_HIDDEN;
     }
 
     public function requiresMarkerIDs(): bool {

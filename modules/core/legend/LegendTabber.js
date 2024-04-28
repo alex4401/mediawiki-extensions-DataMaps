@@ -1,7 +1,8 @@
 /** @typedef {import( '../DataMap.js' )} DataMap */
 /** @typedef {import( '../controls.js' ).ControlButtonOptions} ControlButtonOptions */
 const Util = require( '../Util.js' ),
-    { MapControl } = require( '../controls.js' );
+    { MapControl } = require( '../controls.js' ),
+    { MapFlags } = require( '../enums.js' );
 
 
 /**
@@ -44,6 +45,10 @@ class LegendTabber {
         }, this._tabs.$element[ 0 ] );
         Util.preventMapInterference( this._control.element );
         this.rootElement.appendChild( this._control.element );
+
+        if ( map.checkFeatureFlag( MapFlags.CollapseLegend ) ) {
+            this._control.setExpanded( false );
+        }
     }
 
 
