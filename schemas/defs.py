@@ -347,7 +347,8 @@ class DataMap(BaseModelEx):
     )
     background: str|ImageBackground|TiledBackground
     backgrounds: list[ImageBackground|TiledBackground]
-    groups: dict[LayerId, MarkerGroup]|list[dict[str, MarkerGroup]|MarkerGroupCollection] = dict()
+    #groups: dict[LayerId, MarkerGroup]|list[dict[str, MarkerGroup]|MarkerGroupCollection] = dict()
+    groups: dict[LayerId, MarkerGroup] = dict()
     categories: dict[LayerId, MarkerCategory] = dict()
     disclaimer: Optional[NonEmptyString] = None
     markers: dict[LayerAssociationStr, list[LatLonMarker|XyMarker]] = dict()

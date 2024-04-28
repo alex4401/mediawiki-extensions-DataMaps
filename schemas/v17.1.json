@@ -992,40 +992,6 @@
 			"title": "MarkerCategory",
 			"type": "object"
 		},
-		"MarkerGroupCollection": {
-			"additionalProperties": false,
-			"properties": {
-				"collection": {
-					"title": "Collection name",
-					"type": "string"
-				},
-				"groups": {
-					"patternProperties": {
-						"^[\\w\\d\\-\\._]+$": {
-							"anyOf": [
-								{
-									"$ref": "#/$defs/CircularMarkerGroup"
-								},
-								{
-									"$ref": "#/$defs/PinMarkerGroup"
-								},
-								{
-									"$ref": "#/$defs/IconMarkerGroup"
-								}
-							]
-						}
-					},
-					"title": "Groups",
-					"type": "object"
-				}
-			},
-			"required": [
-				"collection",
-				"groups"
-			],
-			"title": "MarkerGroupCollection",
-			"type": "object"
-		},
 		"NamedPoint": {
 			"additionalProperties": false,
 			"properties": {
@@ -2018,54 +1984,24 @@
 			"type": "array"
 		},
 		"groups": {
-			"anyOf": [
-				{
-					"patternProperties": {
-						"^[\\w\\d\\-\\._]+$": {
-							"anyOf": [
-								{
-									"$ref": "#/$defs/CircularMarkerGroup"
-								},
-								{
-									"$ref": "#/$defs/PinMarkerGroup"
-								},
-								{
-									"$ref": "#/$defs/IconMarkerGroup"
-								}
-							]
-						}
-					},
-					"type": "object"
-				},
-				{
-					"items": {
-						"anyOf": [
-							{
-								"additionalProperties": {
-									"anyOf": [
-										{
-											"$ref": "#/$defs/CircularMarkerGroup"
-										},
-										{
-											"$ref": "#/$defs/PinMarkerGroup"
-										},
-										{
-											"$ref": "#/$defs/IconMarkerGroup"
-										}
-									]
-								},
-								"type": "object"
-							},
-							{
-								"$ref": "#/$defs/MarkerGroupCollection"
-							}
-						]
-					},
-					"type": "array"
-				}
-			],
 			"default": {},
-			"title": "Groups"
+			"patternProperties": {
+				"^[\\w\\d\\-\\._]+$": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/CircularMarkerGroup"
+						},
+						{
+							"$ref": "#/$defs/PinMarkerGroup"
+						},
+						{
+							"$ref": "#/$defs/IconMarkerGroup"
+						}
+					]
+				}
+			},
+			"title": "Groups",
+			"type": "object"
 		},
 		"categories": {
 			"default": {},
