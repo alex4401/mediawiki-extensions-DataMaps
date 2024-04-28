@@ -275,6 +275,7 @@ class EmbedConfigGenerator {
                 $out |= 1 << 5;
                 break;
         }
+        $out |= !$spec->isSwitchable() ? 1 << 6 : 0;
         return $out;
     }
 
