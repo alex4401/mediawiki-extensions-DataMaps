@@ -235,6 +235,12 @@
 					],
 					"title": "Iscollectible"
 				},
+				"isSwitchable": {
+					"default": true,
+					"description": "\n            If set to false, this group will not be shown in the legend.\n        ",
+					"title": "Can be switched?",
+					"type": "boolean"
+				},
 				"autoNumberInChecklist": {
 					"default": false,
 					"title": "Autonumberinchecklist",
@@ -536,6 +542,12 @@
 						"globalGroup"
 					],
 					"title": "Iscollectible"
+				},
+				"isSwitchable": {
+					"default": true,
+					"description": "\n            If set to false, this group will not be shown in the legend.\n        ",
+					"title": "Can be switched?",
+					"type": "boolean"
 				},
 				"autoNumberInChecklist": {
 					"default": false,
@@ -1096,6 +1108,12 @@
 						"globalGroup"
 					],
 					"title": "Iscollectible"
+				},
+				"isSwitchable": {
+					"default": true,
+					"description": "\n            If set to false, this group will not be shown in the legend.\n        ",
+					"title": "Can be switched?",
+					"type": "boolean"
 				},
 				"autoNumberInChecklist": {
 					"default": false,

@@ -275,6 +275,13 @@ class _BaseMarkerGroup(BaseModelEx):
     )
     isDefault: bool = True
     isCollectible: Literal[False, True, 'individual', 'group', 'globalGroup'] = False
+    isSwitchable: bool = Field(
+        True,
+        title='Can be switched?',
+        description='''
+            If set to false, this group will not be shown in the legend.
+        '''
+    )
     autoNumberInChecklist: bool = False
     canSearchFor: bool = True
 class CircularMarkerGroup(_BaseMarkerGroup):
