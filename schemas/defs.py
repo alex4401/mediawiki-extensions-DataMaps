@@ -276,15 +276,15 @@ class _BaseMarkerGroup(BaseModelEx):
     autoNumberInChecklist: bool = False
     canSearchFor: bool = True
 class CircularMarkerGroup(_BaseMarkerGroup):
-    fillColor: Rgb
+    fillColor: Rgba
     size: float = 12.5
     extraMinZoomSize: Optional[float] = None
-    strokeColor: Optional[Rgb] = None
+    strokeColor: Optional[Rgba] = None
     strokeWidth: float = 1
 class PinMarkerGroup(_BaseMarkerGroup):
-    pinColor: Rgb
+    pinColor: Rgba
     size: float = 32
-    strokeColor: Optional[Rgb] = None
+    strokeColor: Optional[Rgba] = None
     strokeWidth: float = 1
 class IconMarkerGroup(_BaseMarkerGroup):
     icon: str
