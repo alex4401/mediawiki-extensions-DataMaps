@@ -43,7 +43,11 @@ module.exports = {
         /**
          * @since 0.16.3
          */
-        PopupTooltips: 1 << 11
+        PopupTooltips: 1 << 11,
+        /**
+         * @since 0.17.4
+         */
+        CollapseLegend: 1 << 12
     },
 
     /**

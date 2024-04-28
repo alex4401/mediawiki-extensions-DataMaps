@@ -125,7 +125,7 @@ class EmbedConfigGenerator {
         $settings = $this->data->getSettings();
         $out = 0;
         $out |= $settings->shouldShowCoordinates() ? 1 << 0 : 0;
-        $out |= $settings->isLegendDisabled() ? 1 << 1 : 0;
+        $out |= ( $settings->getLegendVisibilityMode() === MapSettingsSpec::LM_HIDDEN ) ? 1 << 1 : 0;
         // TODO: legacy option, drop in v0.17
         $out |= $settings->isZoomDisabled() ? 1 << 2 : 0;
         $out |= $settings->getSearchMode() ? 1 << 3 : 0;
@@ -136,6 +136,7 @@ class EmbedConfigGenerator {
         $out |= $settings->allowsFullscreen() ? 1 << 9 : 0;
         $out |= $settings->isSleepBasedInteractionModel() ? 1 << 10 : 0;
         $out |= $settings->areTooltipPopupsEnabled() ? 1 << 11 : 0;
+        $out |= ( $settings->getLegendVisibilityMode() === MapSettingsSpec::LM_COLLAPSED ) ? 1 << 12 : 0;
 
         $markerCount = 0;
         $this->data->iterateRawMarkerMap( static function ( string $_, array $rawCollection ) use ( &$markerCount ) {
