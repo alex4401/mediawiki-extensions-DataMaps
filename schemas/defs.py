@@ -28,7 +28,7 @@ _FloatMax1 = Annotated[float, Field(ge=0, le=1)]
 Rgb = tuple[_IntMax255, _IntMax255, _IntMax255]|Annotated[str, Field(
     pattern=r'^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$'
 )]
-Rgba = tuple[_IntMax255, _IntMax255, _IntMax255, _FloatMax1]|Annotated[str, Field(
+Rgba = Rgb|tuple[_IntMax255, _IntMax255, _IntMax255, _FloatMax1]|Annotated[str, Field(
     pattern=r'^#([a-fA-F0-9]{4}|[a-fA-F0-9]{8})$'
 )]
 NonEmptyString = Annotated[str, Field(min_length=1)]
