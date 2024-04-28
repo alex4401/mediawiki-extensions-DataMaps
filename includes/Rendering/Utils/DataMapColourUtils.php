@@ -35,7 +35,7 @@ class DataMapColourUtils {
             } elseif ( $len === 8 ) {
                 $input = str_split( $input, 2 );
             } else {
-                return null;
+                return self::decode( $input );
             }
 
             list( $r, $g, $b, $a ) = array_map( fn ( $c ) => hexdec( str_pad( $c, 2, $c ) ), $input );
