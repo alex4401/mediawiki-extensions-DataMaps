@@ -148,6 +148,10 @@ class MarkerGroupSpec extends DataModel {
         return null;
     }
 
+    public function isSwitchable(): bool {
+        return $this->raw->isSwitchable ?? true;
+    }
+
     public function wantsChecklistNumbering(): bool {
         return isset( $this->raw->autoNumberInChecklist ) ? $this->raw->autoNumberInChecklist : false;
     }

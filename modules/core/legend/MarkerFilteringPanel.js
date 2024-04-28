@@ -176,6 +176,10 @@ class MarkerFilteringPanel extends LegendTabber.Tab {
      * @param {DataMaps.Configuration.MarkerGroup} group
      */
     addMarkerGroupToggle( groupId, group ) {
+        if ( Util.isBitSet( group.flags, MarkerGroupFlags.IsUnswitchable ) ) {
+            return;
+        }
+
         this.groupToggles[ groupId ] = new MarkerFilteringPanel.MarkerGroupRow( this, groupId, group );
         this.setVisible( true );
     }
