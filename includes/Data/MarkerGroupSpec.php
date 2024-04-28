@@ -84,16 +84,16 @@ class MarkerGroupSpec extends DataModel {
     }
 
     public function getFillColour(): array {
-        return DataMapColourUtils::decode( $this->getRawFillColour() );
+        return DataMapColourUtils::decode4( $this->getRawFillColour() );
     }
 
     public function getPinColour(): array {
-        return DataMapColourUtils::decode( $this->getRawPinColour() );
+        return DataMapColourUtils::decode4( $this->getRawPinColour() );
     }
 
     public function getStrokeColour(): array {
         if ( $this->getRawStrokeColour() != null ) {
-            return DataMapColourUtils::decode( $this->getRawStrokeColour() );
+            return DataMapColourUtils::decode4( $this->getRawStrokeColour() );
         }
 
         return $this->getFillColour();
