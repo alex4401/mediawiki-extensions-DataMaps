@@ -45,10 +45,6 @@ class LegendTabber {
         }, this._tabs.$element[ 0 ] );
         Util.preventMapInterference( this._control.element );
         this.rootElement.appendChild( this._control.element );
-
-        if ( map.checkFeatureFlag( MapFlags.CollapseLegend ) ) {
-            this._control.setExpanded( false );
-        }
     }
 
 

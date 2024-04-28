@@ -769,7 +769,7 @@ class DataMap extends EventEmitter {
      */
     _onOOUILoaded() {
         const container = /** @type {HTMLElement} */ ( Util.getNonNull( this.viewport ).legendAnchor );
-        this.legend = new LegendTabber( this, container ).setExpanded( true );
+        this.legend = new LegendTabber( this, container ).setExpanded( this.checkFeatureFlag( MapFlags.CollapseLegend ) );
         this.fireMemorised( 'legendManager' );
     }
 
