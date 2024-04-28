@@ -20,7 +20,7 @@ class CollectibleDependentPropertiesConstraint extends DataConstraint {
         if ( isset( $data->groups ) ) {
             foreach ( (array)$data->groups as $groupId => $group ) {
                 $isCollectible = ( $group->isCollectible ?? false ) !== false;
-                if ( !$isCollectible ) {
+                if ( $isCollectible ) {
                     continue;
                 }
 
