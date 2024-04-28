@@ -222,8 +222,8 @@
 				"fillColor": {
 					"anyOf": [
 						{
-							"maxItems": 3,
-							"minItems": 3,
+							"maxItems": 4,
+							"minItems": 4,
 							"prefixItems": [
 								{
 									"maximum": 255,
@@ -239,12 +239,17 @@
 									"maximum": 255,
 									"minimum": 0,
 									"type": "integer"
+								},
+								{
+									"maximum": 1.0,
+									"minimum": 0.0,
+									"type": "number"
 								}
 							],
 							"type": "array"
 						},
 						{
-							"pattern": "^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$",
+							"pattern": "^#([a-fA-F0-9]{4}|[a-fA-F0-9]{8})$",
 							"type": "string"
 						}
 					],
@@ -270,8 +275,8 @@
 				"strokeColor": {
 					"anyOf": [
 						{
-							"maxItems": 3,
-							"minItems": 3,
+							"maxItems": 4,
+							"minItems": 4,
 							"prefixItems": [
 								{
 									"maximum": 255,
@@ -287,12 +292,17 @@
 									"maximum": 255,
 									"minimum": 0,
 									"type": "integer"
+								},
+								{
+									"maximum": 1.0,
+									"minimum": 0.0,
+									"type": "number"
 								}
 							],
 							"type": "array"
 						},
 						{
-							"pattern": "^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$",
+							"pattern": "^#([a-fA-F0-9]{4}|[a-fA-F0-9]{8})$",
 							"type": "string"
 						},
 						{
@@ -1022,8 +1032,8 @@
 				"pinColor": {
 					"anyOf": [
 						{
-							"maxItems": 3,
-							"minItems": 3,
+							"maxItems": 4,
+							"minItems": 4,
 							"prefixItems": [
 								{
 									"maximum": 255,
@@ -1039,12 +1049,17 @@
 									"maximum": 255,
 									"minimum": 0,
 									"type": "integer"
+								},
+								{
+									"maximum": 1.0,
+									"minimum": 0.0,
+									"type": "number"
 								}
 							],
 							"type": "array"
 						},
 						{
-							"pattern": "^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$",
+							"pattern": "^#([a-fA-F0-9]{4}|[a-fA-F0-9]{8})$",
 							"type": "string"
 						}
 					],
@@ -1058,8 +1073,8 @@
 				"strokeColor": {
 					"anyOf": [
 						{
-							"maxItems": 3,
-							"minItems": 3,
+							"maxItems": 4,
+							"minItems": 4,
 							"prefixItems": [
 								{
 									"maximum": 255,
@@ -1075,12 +1090,17 @@
 									"maximum": 255,
 									"minimum": 0,
 									"type": "integer"
+								},
+								{
+									"maximum": 1.0,
+									"minimum": 0.0,
+									"type": "number"
 								}
 							],
 							"type": "array"
 						},
 						{
-							"pattern": "^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$",
+							"pattern": "^#([a-fA-F0-9]{4}|[a-fA-F0-9]{8})$",
 							"type": "string"
 						},
 						{
