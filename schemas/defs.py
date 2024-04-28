@@ -183,10 +183,12 @@ class Settings(BaseModelEx):
             TODO: document modes
         '''
     )
-    hideLegend: bool = Field(
+    hideLegend: Literal[False, True, 'collapsed'] = Field(
         False,
         description='''
             Forces the legend (collectible checklists and marker filters) to not be loaded on this map.
+
+            If set to 'collapsed', the legend will be loaded, but will not be expanded on load.
         '''
     )
     interactionModel: Literal['keybinds', 'sleep'] = Field(

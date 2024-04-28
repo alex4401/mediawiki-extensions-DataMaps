@@ -1440,9 +1440,13 @@
 				},
 				"hideLegend": {
 					"default": false,
-					"description": "\n            Forces the legend (collectible checklists and marker filters) to not be loaded on this map.\n        ",
-					"title": "Hidelegend",
-					"type": "boolean"
+					"description": "\n            Forces the legend (collectible checklists and marker filters) to not be loaded on this map.\n\n            If set to 'collapsed', the legend will be loaded, but will not be expanded on load.\n        ",
+					"enum": [
+						false,
+						true,
+						"collapsed"
+					],
+					"title": "Hidelegend"
 				},
 				"interactionModel": {
 					"default": "keybinds",
