@@ -51,7 +51,7 @@
 	"datamap-error-map-validation-fail": "[[$1|קוד המקור של מפת הנתונים]] כבר לא עובר בדיקת תקינות נתונים. נא לתקן את השגיאות.",
 	"datamap-background-name-fallback": "ללא כותרת",
 	"datamap-legend-label": "תוכן",
-	"datamap-javascript-required": "תמיכה ב־JavaScript חייבת להיות מופעלצ כדי שהמפה הזאת תעבוד. אם אינך רואה את זה למטה, זה כנראה אומר ש־JavaScript מושבת אצלך.",
+	"datamap-javascript-required": "תמיכה ב־JavaScript חייבת להיות מופעלת כדי שהמפה הזאת תעבוד. אם אינך רואה את זה למטה, זה כנראה אומר ש־JavaScript כבוי אצלך.",
 	"datamap-loading-js": "טעינת סקריפטים",
 	"datamap-loading-data": "הנתונים להצגה נטענים",
 	"datamap-error-dataload": "<b>לא היה אפשר לטעון נתונים</b><br/>נא לרענן או לנסות שוב מאוחר יותר",
