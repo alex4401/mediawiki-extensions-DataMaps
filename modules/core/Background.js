@@ -130,7 +130,7 @@ class Background extends EventEmitter {
             } );
         } else if ( overlay.path ) {
             // Construct a polyline
-            result = new Leaflet.Polyline( overlay.path.map( p => this.map.crs.fromBox( p ) ), {
+            result = new Leaflet.Polyline( overlay.path.map( p => this.map.crs.fromPoint( p ) ), {
                 color: overlay.colour || Leaflet.Path.prototype.options.color,
                 weight: overlay.thickness || Leaflet.Path.prototype.options.weight
             } );
