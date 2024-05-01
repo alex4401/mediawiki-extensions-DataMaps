@@ -25,12 +25,14 @@ Point1 = float|Point
 Box = tuple[Point, Point]
 _IntMax255 = Annotated[int, Field(ge=0, le=255)]
 _FloatMax1 = Annotated[float, Field(ge=0, le=1)]
-Rgb = tuple[_IntMax255, _IntMax255, _IntMax255]|Annotated[str, Field(
+_StrictRgb = tuple[_IntMax255, _IntMax255, _IntMax255]|Annotated[str, Field(
     pattern=r'^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$'
 )]
-Rgba = Rgb|tuple[_IntMax255, _IntMax255, _IntMax255, _FloatMax1]|Annotated[str, Field(
+_StrictRgba = tuple[_IntMax255, _IntMax255, _IntMax255, _FloatMax1]|Annotated[str, Field(
     pattern=r'^#([a-fA-F0-9]{4}|[a-fA-F0-9]{8})$'
 )]
+Rgb = _StrictRgb
+Rgba = _StrictRgba|_StrictRgb
 NonEmptyString = Annotated[str, Field(min_length=1)]
 MultilineString = list[str]|NonEmptyString
 LayerId = Annotated[str, Field(
