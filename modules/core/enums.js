@@ -52,6 +52,13 @@ module.exports = {
 
     /**
      * @readonly
+     * @since 0.17.5
+     */
+    PresentationFlags: {
+    },
+
+    /**
+     * @readonly
      */
     MarkerGroupFlags: {
         IsNumberedInChecklists: 1 << 0,

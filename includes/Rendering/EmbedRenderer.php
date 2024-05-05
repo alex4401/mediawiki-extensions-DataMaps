@@ -149,6 +149,15 @@ class EmbedRenderer {
         } );
     }
 
+    private function makeEmbedConfig( EmbedRenderOptions $options ): string {
+        $data = [
+            'id' => $this->getId(),
+            'presentationFlags' => 0,
+        ];
+
+        return FormatJson::encode( $data, false, FormatJson::UTF8_OK );
+    }
+
     public function getHtml( EmbedRenderOptions $options ): string {
         $titleFormatter = MediaWikiServices::getInstance()->getTitleFormatter();
 
@@ -185,6 +194,7 @@ class EmbedRenderer {
         $containerMain->setAttributes( [
             'data-datamap-id' => $this->getId(),
             'data-mw-datamaps' => 'map',
+            'data-mw-datamaps-configure' => $this->makeEmbedConfig( $options ),
         ] );
 
         // Set width CSS

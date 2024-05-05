@@ -1,5 +1,5 @@
 const MapStorage = require( './MapStorage.js' ),
-    { MapFlags, MarkerGroupFlags } = require( './enums.js' ),
+    { MapFlags, MarkerGroupFlags, PresentationFlags } = require( './enums.js' ),
     MarkerLayerManager = require( './MarkerLayerManager.js' ),
     MarkerPopup = require( './MarkerPopup.js' ),
     MarkerStreamingManager = require( './MarkerStreamingManager.js' ),
@@ -26,8 +26,9 @@ class DataMap extends EventEmitter {
      * @param {number} id
      * @param {HTMLElement} rootElement
      * @param {DataMaps.Configuration.Map} config
+     * @param {Record<string, any>} embedConfig
      */
-    constructor( id, rootElement, config ) {
+    constructor( id, rootElement, config, embedConfig ) {
         super();
 
         /**
@@ -55,12 +56,16 @@ class DataMap extends EventEmitter {
          */
         this.config = config;
         /**
+         * @type {Record<string, any>}
+         */
+        this._embedConfig = embedConfig;
+        /**
          * Feature flag bitmask.
          *
          * @private
          * @type {number}
          */
-        this._flags = config.flags;
+        this._flags = config.flags | ( this._embedConfig.presentationFlags || 0 );
         /**
          * Local map storage interface.
          *
