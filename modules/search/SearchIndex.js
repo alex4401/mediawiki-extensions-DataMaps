@@ -94,11 +94,12 @@ class SearchIndex extends EventEmitter {
         const state = leafletMarker.apiInstance[ 2 ];
         const group = map.config.groups[ leafletMarker.attachedLayers[ 0 ] ];
         const label = state.label || group.name;
+        const stripped = Util.decodePartial( Util.extractText( label ) );
 
         let keywords = state.search;
         // If no keywords were provided by the API, generate them from label and description
         if ( !keywords ) {
-            keywords = [ [ Util.decodePartial( Util.extractText( label ) ), 1.5 ] ];
+            keywords = [ [ stripped, 1.5 ] ];
             if ( state.desc ) {
                 keywords.push( [ state.desc, 0.75 ] );
             }
@@ -116,6 +117,7 @@ class SearchIndex extends EventEmitter {
             leafletMarker,
             keywords,
             label,
+            stripped,
             map
         };
     }
@@ -152,7 +154,7 @@ class SearchIndex extends EventEmitter {
         if ( this._queue.length > 0 ) {
             this.fire( 'precommit', this._queue );
             this.items = this.items.concat( this._queue );
-            this.items.sort( ( a, b ) => a.label.localeCompare( b.label ) );
+            this.items.sort( ( a, b ) => a.stripped.localeCompare( b.stripped ) );
             this._queue = [];
             this.fire( 'commit' );
         }
