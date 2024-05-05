@@ -101,7 +101,7 @@ class SearchIndex extends EventEmitter {
         if ( !keywords ) {
             keywords = [ [ stripped, 1.5 ] ];
             if ( state.desc ) {
-                keywords.push( [ state.desc, 0.75 ] );
+                keywords.push( [ Util.decodePartial( Util.extractText( state.desc ) ), 0.75 ] );
             }
         }
         // If string was provided by the API, turn into a pair
