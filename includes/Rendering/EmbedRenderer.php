@@ -155,6 +155,11 @@ class EmbedRenderer {
             'presentationFlags' => 0,
         ];
 
+        if ( $options->markerIdToCentreOn || $options->markerIdToOpen ) {
+            $data['focusedMarker'] = $options->markerIdToCentreOn ?? $options->markerIdToOpen;
+            $data['presentationFlags'] |= $options->markerIdToCentreOn ? 1 << 30 : 0;
+        }
+
         return FormatJson::encode( $data, false, FormatJson::UTF8_OK );
     }
 

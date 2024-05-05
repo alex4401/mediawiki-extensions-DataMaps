@@ -55,6 +55,10 @@ module.exports = {
      * @since 0.17.5
      */
     PresentationFlags: {
+        /**
+         * @since 0.17.5
+         */
+        CentreOverFocusedMarker: 1 << 30
     },
 
     /**
