@@ -273,6 +273,7 @@ class DataMap extends EventEmitter {
         const tabberId = Util.TabberNeue.getOwningId( this.rootElement );
         if ( tabberId !== null && mw.loader.getState( Util.TabberNeue.module ) !== 'ready' ) {
             mw.loader.using( Util.TabberNeue.module, () => this._setUpUriMarkerHandler() );
+            return;
         }
 
         // If in a tabber, check if the hash location matches
