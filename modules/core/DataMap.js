@@ -268,7 +268,8 @@ class DataMap extends EventEmitter {
      * @private
      */
     _setUpUriMarkerHandler() {
-        const idToOpen = this.rootElement.getAttribute( 'data-focused-marker' ) || Util.getQueryParameter( 'marker' );
+        const focusedId = this.rootElement.getAttribute( 'data-focused-marker' );
+        const idToOpen = focusedId || Util.getQueryParameter( 'marker' );
         if ( !idToOpen ) {
             return;
         }
@@ -291,7 +292,8 @@ class DataMap extends EventEmitter {
             const mId = Util.getMarkerId( leafletMarker );
             // Check both exact match and match with an `M` prefix for legacy pre-v0.16 link support
             if ( mId === idToOpen || `M${mId}` === idToOpen ) {
-                this.openMarkerPopup( leafletMarker, true, true );
+                this.openMarkerPopup( leafletMarker, true, true,
+                    focusedId ? !this.checkFeatureFlag( PresentationFlags.CentreOverFocusedMarker ) : true );
                 this.off( 'markerReady', handler, this );
             }
         } );
@@ -611,8 +613,9 @@ class DataMap extends EventEmitter {
      * @param {LeafletModule.AnyMarker} leafletMarker
      * @param {boolean} [centreMapOver=false]
      * @param {boolean} [centreMapOverInstantly=false]
+     * @param {boolean} [noPopup=false]
      */
-    openMarkerPopup( leafletMarker, centreMapOver, centreMapOverInstantly ) {
+    openMarkerPopup( leafletMarker, centreMapOver, centreMapOverInstantly, noPopup ) {
         const properties = leafletMarker.assignedProperties;
         if ( properties && properties.bg !== undefined ) {
             const backgroundIndex = this.config.backgrounds.findIndex( x => x.layer === properties.bg );
@@ -621,7 +624,9 @@ class DataMap extends EventEmitter {
             }
         }
 
-        leafletMarker.openPopup();
+        if ( !noPopup ) {
+            leafletMarker.openPopup();
+        }
 
         const viewport = Util.getNonNull( this.viewport );
         if ( centreMapOver && viewport.getLeafletMap().options.uriPopupZoom !== false ) {
