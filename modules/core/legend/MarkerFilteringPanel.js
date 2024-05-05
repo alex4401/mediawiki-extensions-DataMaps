@@ -244,6 +244,13 @@ MarkerFilteringPanel.MarkerGroupRow = class MarkerGroupRow {
          */
         this.pin = null;
         /**
+         * @type {HTMLElement?}
+         */
+        this.iconWrapper = Util.createDomElement( 'span', {
+            classes: [ 'ext-datamaps-legend-icon-wrapper' ],
+            prependTo: this.field.$header[ 0 ]
+        } );
+        /**
          * @private
          * @type {HTMLElement?}
          */
@@ -258,19 +265,19 @@ MarkerFilteringPanel.MarkerGroupRow = class MarkerGroupRow {
         // Add a coloured circle if circle marker group
         if ( 'fillColor' in group ) {
             this.circle = Util.Groups.createCircleElement( group );
-            this.field.$header.prepend( this.circle );
+            this.iconWrapper.appendChild( this.circle );
         }
 
         // Add a pin icon if pin marker group
         if ( 'pinColor' in group ) {
             this.pin = Util.Groups.createPinIconElement( group );
-            this.field.$header.prepend( this.pin );
+            this.iconWrapper.appendChild( this.pin );
         }
 
         // Add an icon if one is specified in the group
         if ( group.legendIcon ) {
             this.icon = Util.Groups.createIconElement( group );
-            this.field.$header.prepend( this.icon );
+            this.iconWrapper.appendChild( this.icon );
         }
     }
 

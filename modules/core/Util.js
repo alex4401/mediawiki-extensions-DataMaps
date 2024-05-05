@@ -193,7 +193,7 @@ module.exports = Object.freeze( {
          */
         createIconElement( group ) {
             return module.exports.createDomElement( 'img', {
-                classes: [ 'ext-datamaps-legend-group-icon' ],
+                classes: [ 'ext-datamaps-legend-group-icon', 'ext-datamaps-legend-image-icon' ],
                 attributes: {
                     width: module.exports.MAX_GROUP_ICON_SIZE,
                     height: module.exports.MAX_GROUP_ICON_SIZE,
