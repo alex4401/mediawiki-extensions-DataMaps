@@ -29,6 +29,8 @@ final class EmbedMapFunction {
             'class' => null,
             'layout' => 'full',
             'marker' => null,
+            'over-marker' => null,
+            'open-marker' => null,
         ] );
 
         $config = MediaWikiServices::getInstance()->get( ExtensionConfig::SERVICE_NAME );
@@ -104,7 +106,15 @@ final class EmbedMapFunction {
         }
 
         if ( $params['marker'] ) {
-            $result->markerIdToCentreOn = $params['marker'];
+            $params['open-marker'] = $params['marker'];
+        }
+
+        if ( $params['open-marker'] ) {
+            $result->markerIdToOpen = $params['open-marker'];
+        }
+
+        if ( $params['over-marker'] ) {
+            $result->markerIdToCentreOn = $params['over-marker'];
         }
 
         return $result;

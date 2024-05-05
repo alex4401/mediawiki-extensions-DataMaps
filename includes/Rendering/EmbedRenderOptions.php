@@ -7,4 +7,5 @@ class EmbedRenderOptions {
     public ?array $classes = null;
     public bool $miniStyle = false;
     public ?string $markerIdToCentreOn = null;
+    public ?string $markerIdToOpen = null;
 }

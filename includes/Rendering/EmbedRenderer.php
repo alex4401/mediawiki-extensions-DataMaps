@@ -205,9 +205,9 @@ class EmbedRenderer {
         }
 
         // Pass the focused marker ID to the client
-        if ( $options->markerIdToCentreOn ) {
+        if ( $options->markerIdToCentreOn || $options->markerIdToOpen ) {
             $containerMain->setAttributes( [
-                'data-focused-marker' => $options->markerIdToCentreOn,
+                'data-focused-marker' => $options->markerIdToCentreOn ?? $options->markerIdToOpen,
             ] );
         }
 
