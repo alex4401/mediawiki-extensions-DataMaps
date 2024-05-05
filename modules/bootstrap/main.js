@@ -82,8 +82,10 @@ mw.dataMaps = {
      * @return {InstanceType<DataMap>}
      */
     initialiseMapWithConfig( id, rootElement, config ) {
+        const embedConfig = JSON.parse( rootElement.dataset.mwDatamapsConfigure || '{}' );
+
         // Set the map up
-        const map = new DataMap( id, rootElement, config );
+        const map = new DataMap( id, rootElement, config, embedConfig );
 
         // Push onto internal tracking list
         initialisedMaps.push( map );
