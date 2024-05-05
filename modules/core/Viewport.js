@@ -333,11 +333,14 @@ class Viewport extends EventEmitter {
      * @param {boolean} [doInstant=false]
      */
     flyToMarker( leafletMarker, doInstant ) {
-        const targetCentre = ( leafletMarker.getLatLng(), this._leaflet.options.uriPopupZoom
-            || ( this._leaflet.options.maxZoom - this._leaflet.options.minZoom ) / 5 * 4 );
-        this._leaflet.flyTo( targetCentre, undefined, {
-            animate: !doInstant,
-        } );
+        this._leaflet.flyTo(
+            leafletMarker.getLatLng(),
+            ( this._leaflet.options.uriPopupZoom || ( this._leaflet.options.maxZoom - this._leaflet.options.minZoom )
+                / 5 * 4 ),
+            {
+                animate: !doInstant,
+            }
+        );
     }
 
 
