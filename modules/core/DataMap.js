@@ -610,12 +610,35 @@ class DataMap extends EventEmitter {
     /**
      * Opens a marker's popup, while respecting its background ties.
      *
+     * @deprecated since v0.17.5, to be removed in v0.18.0. Use navigateToMarker.
      * @param {LeafletModule.AnyMarker} leafletMarker
      * @param {boolean} [centreMapOver=false]
      * @param {boolean} [centreMapOverInstantly=false]
      * @param {boolean} [noPopup=false]
      */
     openMarkerPopup( leafletMarker, centreMapOver, centreMapOverInstantly, noPopup ) {
+        this.navigateToMarker( leafletMarker, {
+            centreOver: centreMapOver,
+            skipAnimations: centreMapOverInstantly,
+            openPopup: !noPopup
+        } );
+    }
+
+
+    /**
+     * Opens a marker's popup, while respecting its background ties.
+     *
+     * @param {LeafletModule.AnyMarker} leafletMarker
+     * @param {Object} params
+     * @param {boolean} [params.centreOver=false]
+     * @param {boolean} [params.skipAnimations=false]
+     * @param {boolean} [params.openPopup=true]
+     */
+    navigateToMarker( leafletMarker, {
+        centreOver = false,
+        skipAnimations = false,
+        openPopup = true
+    } ) {
         const properties = leafletMarker.assignedProperties;
         if ( properties && properties.bg !== undefined ) {
             const backgroundIndex = this.config.backgrounds.findIndex( x => x.layer === properties.bg );
@@ -624,13 +647,13 @@ class DataMap extends EventEmitter {
             }
         }
 
-        if ( !noPopup ) {
+        if ( openPopup ) {
             leafletMarker.openPopup();
         }
 
         const viewport = Util.getNonNull( this.viewport );
-        if ( centreMapOver && viewport.getLeafletMap().options.uriPopupZoom !== false ) {
-            viewport.flyToMarker( leafletMarker, centreMapOverInstantly );
+        if ( centreOver && viewport.getLeafletMap().options.uriPopupZoom !== false ) {
+            viewport.flyToMarker( leafletMarker, skipAnimations );
         }
     }
 
