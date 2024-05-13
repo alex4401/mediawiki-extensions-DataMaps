@@ -292,8 +292,11 @@ class DataMap extends EventEmitter {
             const mId = Util.getMarkerId( leafletMarker );
             // Check both exact match and match with an `M` prefix for legacy pre-v0.16 link support
             if ( mId === idToOpen || `M${mId}` === idToOpen ) {
-                this.openMarkerPopup( leafletMarker, true, true,
-                    focusedId ? !this.checkFeatureFlag( PresentationFlags.CentreOverFocusedMarker ) : true );
+                this.navigateToMarker( leafletMarker, {
+                    centreOver: true,
+                    skipAnimations: true,
+                    openPopup: focusedId ? !this.checkFeatureFlag( PresentationFlags.CentreOverFocusedMarker ) : true
+                } );
                 this.off( 'markerReady', handler, this );
             }
         } );

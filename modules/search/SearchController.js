@@ -226,7 +226,10 @@ class SearchController {
     _handleItemChoice( item ) {
         this._inputBox.setValue( '', true );
         this.toggle( false );
-        item.map.openMarkerPopup( item.leafletMarker, true );
+        item.map.navigateToMarker( item.leafletMarker, {
+            centreOver: true,
+            openPopup: true
+        } );
 
         if ( this._isLinked && item.map !== this._map ) {
             const tabber = document.getElementById(
