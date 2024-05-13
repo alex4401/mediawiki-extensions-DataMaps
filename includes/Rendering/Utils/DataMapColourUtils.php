@@ -26,6 +26,7 @@ class DataMapColourUtils {
     public static function decode4( /*string|array*/ $input ): ?array {
         if ( is_array( $input ) && count( $input ) == 4
             && is_numeric( $input[0] ) && is_numeric( $input[1] ) && is_numeric( $input[2] ) && is_numeric( $input[3] ) ) {
+            $input[3] *= 255;
             return $input;
         } elseif ( is_string( $input ) ) {
             $input = ltrim( $input, '#' );
