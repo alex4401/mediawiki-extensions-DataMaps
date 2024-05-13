@@ -244,10 +244,11 @@ MarkerFilteringPanel.MarkerGroupRow = class MarkerGroupRow {
          */
         this.pin = null;
         /**
-         * @type {HTMLElement?}
+         * @private
+         * @type {HTMLElement}
          */
-        this.iconWrapper = Util.createDomElement( 'span', {
-            classes: [ 'ext-datamaps-legend-icon-wrapper' ],
+        this._iconWrapper = Util.createDomElement( 'span', {
+            classes: [ 'ext-datamaps-legend-icons' ],
             prependTo: this.field.$header[ 0 ]
         } );
         /**
@@ -264,21 +265,34 @@ MarkerFilteringPanel.MarkerGroupRow = class MarkerGroupRow {
 
         // Add a coloured circle if circle marker group
         if ( 'fillColor' in group ) {
-            this.circle = Util.Groups.createCircleElement( group );
-            this.iconWrapper.appendChild( this.circle );
+            this.circle = this._addIconElement( Util.Groups.createCircleElement( group ) );
         }
 
         // Add a pin icon if pin marker group
         if ( 'pinColor' in group ) {
-            this.pin = Util.Groups.createPinIconElement( group );
-            this.iconWrapper.appendChild( this.pin );
+            this.pin = this._addIconElement( Util.Groups.createPinIconElement( group ) );
         }
 
         // Add an icon if one is specified in the group
         if ( group.legendIcon ) {
-            this.icon = Util.Groups.createIconElement( group );
-            this.iconWrapper.appendChild( this.icon );
+            this.icon = this._addIconElement( Util.Groups.createIconElement( group ) );
         }
+    }
+
+
+    /**
+     * @private
+     * @template {HTMLElement|SVGElement} T
+     * @param {T} element
+     * @return {T}
+     */
+    _addIconElement( element ) {
+        Util.createDomElement( 'span', {
+            classes: [ 'ext-datamaps-legend-icon-wrapper' ],
+            html: element,
+            prependTo: this._iconWrapper
+        } );
+        return element;
     }
 
 
