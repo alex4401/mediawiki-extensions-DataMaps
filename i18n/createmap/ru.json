@@ -1,0 +1,22 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kareyac",
+			"SuperYwx9"
+		]
+	},
+	"datamap-vec-title": "Создать карту",
+	"datamap-ve-skip": "Пропустить",
+	"datamap-vec-intro": "Приведите следующую информацию в соответствие с вашими потребностями, чтобы мы могли подготовить базовую карту, прежде чем вы перейдете к ее редактированию",
+	"datamap-vec-select-crs": "Система координат",
+	"datamap-vec-crs-percent": "В процентах (0-100%)",
+	"datamap-vec-crs-image": "Совпадение координат изображений",
+	"datamap-vec-crs-custom": "Пользовательские",
+	"datamap-vec-select-background": "Фоновое изображение",
+	"datamap-vec-note-image-size": "Размер: $1 × $2",
+	"datamap-vec-extra-options": "Дополнительные опции",
+	"datamap-vec-toggle-zoom": "Включить масштабирование",
+	"datamap-vec-toggle-search": "Включить поиск маркеров",
+	"datamap-vec-example-group-id": "пример",
+	"datamap-vec-example-marker": "Пример маркера"
+}
