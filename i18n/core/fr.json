@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Alien333",
 			"BlueCamille",
 			"Chatmaigre888",
 			"MacOS Weed",
@@ -19,8 +20,8 @@
 	"datamap-mapsrcinfo-heading-warnings": "'''Avertissements:''' $1",
 	"datamap-mapsrcinfo-docslink": "Vous pouvez consulter la [$1 documentation de l'extension] si nécessaire ou [$2 créer un rapport d'erreur ou une demande de fonctionnalité] si vous pensez que des choses ont besoin de modifications.",
 	"datamap-error-validate-invalid-json": "Ceci n'est pas un document JSON valide.",
-	"datamap-error-validatespec-map-bad-mixin": "Le fragment-source réutilisable \"<code>$1</code>\" doit exister, utiliser le modèle de contenu d'une <code>Carte de données interactive</code> et avoir une syntaxe et une structure valides.",
-	"datamap-error-validatespec-map-mixin-with-mixins": "Un fragment-source réutilisable ne peut pas être associé à d'autres fragments-sources réutilisables.",
+	"datamap-error-validatespec-map-bad-mixin": "La page de fragment \"<code>$1</code>\" doit exister, utiliser le modèle de contenu d'une <code>Carte de données interactive</code> et avoir une syntaxe et une structure valides.",
+	"datamap-error-validatespec-map-mixin-with-mixins": "D'autres fragments ne peuvent pas être référencés dans un fragment.",
 	"datamap-error-render-unsupported-displaymode": "Le mode d'affichage $1 a été notifié comme étant un marqueur, mais n'est pas prise en charge. Il s'agit d'un bug dans le code de l'extension.",
 	"datamap-error-pf-page-does-not-exist": "La page de carte de données \"[[$1]]\" n'existe pas.",
 	"datamap-error-pf-page-invalid-content-model": "Le modèle de contenu de la page \"[[$1]]\" n'est pas <code>datamap</code>.",
