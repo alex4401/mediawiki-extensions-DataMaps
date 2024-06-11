@@ -1,0 +1,17 @@
+{
+	"@metadata": {
+		"authors": [
+			"Champ0999"
+		]
+	},
+	"datamap-vec-title": "Crea una mappa",
+	"datamap-ve-skip": "Salta",
+	"datamap-vec-crs-top-left": "In alto a sinistra",
+	"datamap-vec-crs-bottom-left": "In basso a sinistra",
+	"datamap-vec-select-crs": "Sistema di coordinate",
+	"datamap-vec-crs-percent": "Percentuale (0-100%)",
+	"datamap-vec-select-background": "Immagine di sfondo",
+	"datamap-vec-extra-options": "Opzioni aggiuntive",
+	"datamap-vec-submit": "Procedi",
+	"datamap-vec-example-group-id": "esempio"
+}

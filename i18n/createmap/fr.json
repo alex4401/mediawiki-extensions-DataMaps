@@ -2,10 +2,12 @@
 	"@metadata": {
 		"authors": [
 			"BlueCamille",
-			"Chatmaigre888"
+			"Chatmaigre888",
+			"SleaY"
 		]
 	},
 	"datamap-vec-title": "Créer une carte",
+	"datamap-ve-skip": "Sauter",
 	"datamap-vec-intro": "Ajustez les informations suivantes selon vos besoins afin que nous puissions préparer une carte de base que vous pourrez éditer",
 	"datamap-vec-select-crs-origin": "(0, 0) coin de coordonnée",
 	"datamap-vec-crs-top-left": "Haut gauche",
@@ -25,5 +27,7 @@
 	"datamap-vec-toggle-search-tabber": "Partager les données de recherche dans un tableau",
 	"datamap-vec-toggle-uid-requirement": "Nécessite une ID de marqueur unique",
 	"datamap-vec-submit": "Poursuivre",
-	"datamap-vec-example-group-id": "exemple"
+	"datamap-vec-example-group-id": "exemple",
+	"datamap-vec-example-group-name": "Exemple de groupe",
+	"datamap-vec-example-marker": "Exemple de marqueur"
 }

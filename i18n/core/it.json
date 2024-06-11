@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Beta16",
+			"Champ0999",
 			"McDutchie",
 			"Zaffira"
 		]
@@ -20,6 +21,7 @@
 	"datamap-error-render-unsupported-displaymode": "La modalità di visualizzazione $1 è stata segnalata per un indicatore, ma manca il supporto per esso. Questo è un bug nel codice dell'estensione.",
 	"datamap-error-pf-page-does-not-exist": "La pagina della mappa dati \"[[$1]]\" non esiste.",
 	"datamap-error-pf-page-invalid-content-model": "Il modello di contenuto della pagina \"[[$1]]\" non è <code>Mappa dati interattiva</code>.",
+	"datamap-background-name-fallback": "Senza titolo",
 	"datamap-legend-label": "Leggenda",
 	"datamap-javascript-required": "Le mappe interattive dei dati richiedono l'abilitazione di JavaScript.",
 	"datamap-loading-js": "Attendere, caricamento dati",
@@ -31,6 +33,7 @@
 	"datamap-layer-control": "Attiva/disattiva",
 	"datamap-legend-tab-checklist": "Liste di controllo",
 	"datamap-checklist-prelude": "Questi sono gli elementi che si possono contrassegnare come raccolti:",
+	"datamap-interact-touch": "Usa due dita per spostare la mappa",
 	"datamap-layer-surface": "Superficie",
 	"datamap-layer-cave": "Caverne",
 	"datamap-popup-related-article": "Vedi altro",
@@ -39,8 +42,11 @@
 	"datamap-popup-marker-link-get": "Ottieni un link condivisibile",
 	"datamap-popup-marker-link-copied": "Link copiato negli appunti.",
 	"datamap-coordinate-control-text": "lat $1, lon $2",
+	"datamap-control-zoom-in": "Ingrandisci",
+	"datamap-control-zoom-out": "Rimpicciolisci",
 	"datamap-control-reset-view": "Ripristina la visualizzazione predefinita",
 	"datamap-control-centre-view": "Centra la vista al livello di zoom corrente",
 	"datamap-control-search": "Clicca e inizia a digitare per cercare...",
+	"datamap-control-search-toggle-sharing": "Tutte le mappe",
 	"datamap-control-search-no-results": "Nessun risultato trovato."
 }

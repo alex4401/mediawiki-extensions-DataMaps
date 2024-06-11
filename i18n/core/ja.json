@@ -1,12 +1,15 @@
 {
 	"@metadata": {
 		"authors": [
+			"Kokage si",
 			"num9852453"
 		]
 	},
 	"datamap-doc-page-does-not-exist": "''このデータページのドキュメントは、[[$1]]で作成できます''",
 	"datamap-doc-page-header": "'''これは[[$1]]のドキュメントページです'''",
 	"datamap-category-pages-including-maps": "データマップを含むページ",
+	"datamap-mapsrcinfo-heading-errors": "'''エラー:''' $1",
+	"datamap-mapsrcinfo-heading-warnings": "'''警告:''' $1",
 	"datamap-legend-label": "凡例",
 	"datamap-javascript-required": "インタラクティブデータマップを表示するには、JavaScriptを有効にする必要があります。",
 	"datamap-legend-tab-locations": "マーク",
