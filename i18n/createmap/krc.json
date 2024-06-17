@@ -1,0 +1,29 @@
+{
+	"@metadata": {
+		"authors": [
+			"Къарачайлы"
+		]
+	},
+	"datamap-vec-title": "Карта болдур",
+	"datamap-ve-skip": "Атлат",
+	"datamap-vec-intro": "Тамал картаны хазырларча, эмда аны тюзетиуюне кёчгюнчю, келген информацияны сизге керекли халгъа келтиригиз.",
+	"datamap-vec-select-crs-origin": "(0, 0) координат мюйюш",
+	"datamap-vec-crs-top-left": "Огъары сол",
+	"datamap-vec-crs-bottom-left": "Тёбен сол",
+	"datamap-vec-select-crs": "Координат система",
+	"datamap-vec-crs-percent": "Процентледе (0-100%)",
+	"datamap-vec-crs-image": "Сурат координатланы келишгени",
+	"datamap-vec-crs-custom": "Джарашдырылырча",
+	"datamap-vec-select-background": "Аркъа план сурат",
+	"datamap-vec-note-image-size": "Ёлчем: $1 × $2",
+	"datamap-vec-error-bad-file-type": "($1) файл тип дагъансызды; JPEG, PNG, GIF неда SVG сайларыгъызны тилейбиз.",
+	"datamap-vec-error-poor-file-type": "Бу файл тип чеклендирилген аулаулада аман ишлерге боллукъду. Бир мадар бла JPEG хайырландырыгъыз.",
+	"datamap-vec-extra-options": "Къошакъ опцияла",
+	"datamap-vec-toggle-coord-display": "Курсорну тюбюнде координатланы кёргюз",
+	"datamap-vec-toggle-zoom": "Масштабландырыуну джандыр",
+	"datamap-vec-toggle-search": "Белгилеучю излеуню джандыр",
+	"datamap-vec-submit": "Бардыр",
+	"datamap-vec-example-group-id": "юлгю",
+	"datamap-vec-example-group-name": "Юлгю къауум",
+	"datamap-vec-example-marker": "Юлгю маркер"
+}

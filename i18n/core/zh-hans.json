@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"HighSierra0820",
 			"Lakejason0",
 			"yanstime"
 		]
@@ -9,6 +10,15 @@
 	"content-model-datamap": "交互式数据地图",
 	"datamap-doc-page-does-not-exist": "''此地图的文档可在 [[$1]] 中创建。''",
 	"datamap-doc-page-header": "'''此页面是 [[$1]] 的文档。'''",
+	"datamap-category-pages-including-maps": "包含数据地图的页面",
+	"datamap-category-pages-including-broken-maps": "包含未通过验证的数据地图的页面",
+	"datamap-category-maps-failing-validation": "未通过数据认证的地图",
+	"datamap-mapsrcinfo-internal-page": "此页面包含地图源代码，不适合直接访问，也不会在网络搜寻引擎里显示。相反，它应被嵌入到条目中。",
+	"datamap-mapsrcinfo-status-ok": "在此地图的源码里未发现问题。",
+	"datamap-mapsrcinfo-status-meh": "在此地图的源码里有一些小问题。",
+	"datamap-mapsrcinfo-status-errors": "此地图未通过源代码验证。",
+	"datamap-mapsrcinfo-heading-errors": "'''错误：''' $1",
+	"datamap-mapsrcinfo-heading-warnings": "'''警告：''' $1",
 	"datamap-mapsrcinfo-docslink": "如有需要，您可以查阅[$1 扩展文档]；如果您认为扩展的运作方式可能需要一些更改，请[$2 创建工单]。",
 	"datamap-error-validate-invalid-json": "不是合法的 JSON 格式。",
 	"datamap-legend-label": "内容",

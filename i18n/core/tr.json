@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"FellowEsin",
-			"Hedda"
+			"Hedda",
+			"RuzDD"
 		]
 	},
 	"datamap-desc": "Etkileşimli haritaların viki sayfalarına yerleştirilmesine izin verir.",
@@ -12,6 +13,7 @@
 	"datamap-category-pages-including-maps": "Veri haritalarını içeren sayfalar",
 	"datamap-category-pages-including-broken-maps": "Doğrulanamayan veri haritalarını içeren sayfalar",
 	"datamap-category-maps-failing-validation": "Haritalar, veri doğrulamada başarısız oluyor",
+	"datamap-mapsrcinfo-internal-page": "Bu sayfa bir haritanın kaynak kodunu içerir. Doğrudan görüntülenmesi amaçlanmamıştır, ve web arama motorlarında görünmeyecektir. Onun yerine, bir makaleye gömülmelidir",
 	"datamap-mapsrcinfo-status-ok": "Bu haritanın kaynak kodunda sorun bulunamadı.",
 	"datamap-mapsrcinfo-status-meh": "Bu haritanın kaynak kodunda küçük sorunlar bulundu.",
 	"datamap-mapsrcinfo-status-errors": "Bu harita, kaynak kodu doğrulamasını geçemiyor.",

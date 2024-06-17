@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Alien333",
 			"BlueCamille",
 			"SleaY"
 		]
@@ -11,6 +12,8 @@
 	"datamap-ve-needs-fallback-to-source": "Cette page de carte ne peut pas être modifiée avec l'éditeur visuel. Veuillez utiliser l'[$1 éditeur de source] à la place.",
 	"datamap-ve-experimental": "L'éditeur visuel de carte est encore expérimental",
 	"datamap-ve-experimental-close": "Fermer",
+	"datamap-userpref-enable-ve": "Activer l'éditeur visuel pour les cartes de données quand il sera stable",
+	"datamap-userpref-enable-ve-beta": "M'inscrire aux tests de l'éditeur visuel de cartes",
 	"datamap-ve-edit-source-action": "Modifier le wikicode",
 	"datamap-ve-beta-notice": "Cet éditeur visuel en est à ses premiers stades de développement. Veuillez signaler les problèmes sur <a href=\"https://github.com/alex4401/mediawiki-extensions-DataMaps/issues/new\" class=\"external\">GitHub</a> .",
 	"datamap-ve-limited-preview-notice": "Certaines fonctionnalités ne sont pas disponibles lors de la prévisualisation de la carte dans l'éditeur visuel.",
@@ -53,12 +56,14 @@
 	"datamap-ve-workflow-marker-set-association": "[PH] Attribution des couches",
 	"datamap-ve-workflow-marker-field-group": "Groupe",
 	"datamap-ve-workflow-marker-field-categories": "Catégories",
+	"datamap-ve-workflow-marker-field-categories-disabled": "Vous ne pouvez pas ajouter de catégories à un marqueur lorsqu'aucune catégorie n'existe.",
 	"datamap-ve-workflow-marker-field-background": "Visible uniquement en arrière-plan",
 	"datamap-ve-workflow-marker-field-background-disabled": "Cela nécessite plus d’un arrière-plan.",
 	"datamap-ve-workflow-marker-set-behaviour": "Liens permanents",
 	"datamap-ve-workflow-marker-field-id": "Identifiant unique",
 	"datamap-ve-workflow-marker-field-name": "Titre",
 	"datamap-ve-workflow-marker-field-desc": "Description",
+	"datamap-ve-workflow-marker-field-image": "Miniature de l'image",
 	"datamap-ve-workflow-marker-field-article": "Lien vers l'article",
 	"datamap-ve-workflow-marker-field-article-label": "Libellé du lien",
 	"datamap-ve-workflow-marker-panel-search": "Lors d'une recherche",

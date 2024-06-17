@@ -3,6 +3,7 @@
 		"authors": [
 			"Brettchenweber",
 			"Magiczocker",
+			"McDutchie",
 			"TiiaAurora",
 			"TomatoCake"
 		]
@@ -36,7 +37,7 @@
 	"datamap-validate-constraint-searchdisabled": "Die folgenden Eigenschaften in <code>$1</code> haben keine Auswirkung, da die Markierungssuche nicht aktiviert ist: $2.",
 	"datamap-validate-constraint-requiredfile": "Auf diese nicht existierenden Dateien wird verwiesen: $1",
 	"datamap-validate-constraint-muidoverlap": "Markierung mit bereits verwendeter Kennung gefunden: <code>$1</code> (UID ist <code>$2</code>).",
-	"datamap-validate-constraint-groupexists": "Für Markierungsliste <code>$1</code> wird auf eine nicht existierende Gruppe verwiesen: <code>$2</code> .",
+	"datamap-validate-constraint-groupexists": "Für Markierungsliste <code>$1</code> wird auf eine nicht existierende Gruppe verwiesen: <code>$2</code>.",
 	"datamap-validate-constraint-bglayerexists": "Für Markierungsliste <code>$1</code> referenzierte, aber nicht deklarierte Hintergrundebene(n): <code>$2</code>.",
 	"datamap-validate-constraint-layerdecloverlap": "Gruppen und Kategorien können keinen gemeinsamen Namen haben: <code>$1</code> , <code>$2</code> .",
 	"datamap-validate-constraint-assocgroupoverlap": "Für eine Markierungsliste kann nur eine Gruppe angegeben werden <code>$1</code>, gefunden: $2.",
