@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Hubaishan"
+		]
+	},
+	"datamap-vec-title": "إنشاء خريطة",
+	"datamap-ve-skip": "تجاوز",
+	"datamap-vec-crs-custom": "مخصص",
+	"datamap-vec-submit": "تابع",
+	"datamap-vec-example-group-id": "مثال",
+	"datamap-vec-example-group-name": "مجموعة المثال",
+	"datamap-vec-example-marker": "علامة المثال"
+}
