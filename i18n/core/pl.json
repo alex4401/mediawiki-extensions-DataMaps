@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Alex4401",
-			"Rail"
+			"Rail",
+			"WaldiSt"
 		]
 	},
 	"datamap-desc": "Umożliwia osadzanie interaktywnych map na stronach wiki.",
@@ -18,10 +19,14 @@
 	"datamap-mapsrcinfo-status-errors": "Ta mapa nie przechodzi weryfikacji kodu źródłowego.",
 	"datamap-mapsrcinfo-heading-errors": "'''Błędy:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''Ostrzeżenia:''' $1",
-	"datamap-mapsrcinfo-docslink": "Sprawdź [https://github.com/alex4401/mediawiki-extensions-DataMaps dokumentację rozszerzenia], aby dowiedzieć się o prawidłowej strukturze.",
+	"datamap-mapsrcinfo-docslink": "W razie potrzeby możesz zapoznać się z [$1 dokumentacja rozszerzenia] lub [$2 utworzyć raport o błędzie lub zgłoszenie żądania funkcji], jeśli uważasz, że coś wymaga zmian.",
 	"datamap-error-validate-invalid-json": "To nie jest prawidłowy dokument JSON.",
+	"datamap-validate-bad-schema": "Właściwość <code>$schema</code> tej mapy nie wskazuje na obsługiwaną definicję formatu.\n\nObsługiwane wersje schematu:\n$1",
+	"datamap-validate-constraint-required": "Brakuje wymaganej własności: <code>$1</code>.",
+	"datamap-validate-constraint-type": "Właściwość ma nieoczekiwany format: <code>$1</code> .",
 	"datamap-error-pf-page-does-not-exist": "Strona mapy danych „[[$1]]” nie istnieje.",
 	"datamap-error-pf-page-invalid-content-model": "Model zawartości strony „[[$1]]” to nie <code>Interaktywna mapa danych</code>.",
+	"datamap-background-name-fallback": "Bez tytułu",
 	"datamap-legend-label": "Zawartość",
 	"datamap-javascript-required": "Aby ta mapa działała, JavaScript musi być włączony. Jeśli mapa nie została wyświetlona poniżej, prawdopodobnie oznacza to, że wyłączono obsługę JavaScript.",
 	"datamap-loading-js": "Ładowanie skryptów",

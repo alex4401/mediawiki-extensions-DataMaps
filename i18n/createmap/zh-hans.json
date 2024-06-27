@@ -1,0 +1,31 @@
+{
+	"@metadata": {
+		"authors": [
+			"Lakejason0"
+		]
+	},
+	"datamap-vec-title": "创建地图",
+	"datamap-ve-skip": "跳过",
+	"datamap-vec-intro": "请根据您的需要调整以下信息，以便我们在您开始编辑之前准备一张基本地图",
+	"datamap-vec-select-crs-origin": "(0, 0) 坐标角点",
+	"datamap-vec-crs-top-left": "左上方",
+	"datamap-vec-crs-bottom-left": "左下方",
+	"datamap-vec-select-crs": "坐标系",
+	"datamap-vec-crs-percent": "百分比（0-100%）",
+	"datamap-vec-crs-image": "匹配图像坐标",
+	"datamap-vec-crs-custom": "自定义",
+	"datamap-vec-select-background": "背景图片",
+	"datamap-vec-note-image-size": "尺寸：$1 × $2",
+	"datamap-vec-error-bad-file-type": "文件类型（$1）不受支持；请选择JPEG、PNG、GIF或SVG文件。",
+	"datamap-vec-error-poor-file-type": "此文件类型在速率受限的网络上可能表现不佳。请尽可能使用JPEG。",
+	"datamap-vec-extra-options": "额外选项",
+	"datamap-vec-toggle-coord-display": "显示光标下的坐标",
+	"datamap-vec-toggle-zoom": "启用缩放",
+	"datamap-vec-toggle-search": "启用标记搜索",
+	"datamap-vec-toggle-search-tabber": "在tabber内共享搜索数据",
+	"datamap-vec-toggle-uid-requirement": "需要唯一的标记ID",
+	"datamap-vec-submit": "继续",
+	"datamap-vec-example-group-id": "示例",
+	"datamap-vec-example-group-name": "示例组",
+	"datamap-vec-example-marker": "示例标记"
+}

@@ -1,0 +1,38 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kareyac",
+			"Okras",
+			"SuperYwx9"
+		]
+	},
+	"datamap-ve-to-load": "Пожалуйста, подождите, пока загрузится визуальный редактор...",
+	"datamap-ve-experimental": "Визуальный редактор карт все еще находится в стадии эксперимента",
+	"datamap-ve-experimental-close": "Закрыть",
+	"datamap-userpref-enable-ve": "Включите визуальный редактор для карт данных, когда он будет работать стабильно",
+	"datamap-ve-generic-cancel": "Отмена",
+	"datamap-ve-panel-msettings": "Настройки",
+	"datamap-ve-panel-msettings-field-coordorder": "Система координат",
+	"datamap-ve-panel-msettings-field-coordorder-latlon": "Широта, затем долгота",
+	"datamap-ve-panel-msettings-field-coordorder-xy": "X, затем Y",
+	"datamap-ve-panel-msettings-field-crs": "Координатное пространство",
+	"datamap-ve-panel-msettings-set-view": "Просмотр",
+	"datamap-ve-panel-msettings-set-edit": "Редактор",
+	"datamap-ve-panel-mgroups": "Группы",
+	"datamap-ve-panel-mcats": "Категории",
+	"datamap-ve-workflow-marker": "Маркер",
+	"datamap-ve-workflow-marker-create": "Создать",
+	"datamap-ve-workflow-marker-edit": "Сохранить",
+	"datamap-ve-workflow-marker-panel-setup": "На карте",
+	"datamap-ve-workflow-marker-field-lon": "Долгота",
+	"datamap-ve-workflow-marker-field-lat": "Широта",
+	"datamap-ve-workflow-marker-field-group": "Группа",
+	"datamap-ve-workflow-marker-field-categories": "Категории",
+	"datamap-ve-workflow-marker-set-behaviour": "Постоянные ссылки",
+	"datamap-ve-workflow-marker-field-name": "Заголовок",
+	"datamap-ve-workflow-marker-field-desc": "Описание",
+	"datamap-ve-workflow-marker-field-image": "Миниатюра изображения",
+	"datamap-ve-workflow-marker-field-article": "Ссылка на статью",
+	"datamap-ve-workflow-save": "Сохранить изменения",
+	"datamap-ve-workflow-save-submit": "Опубликовать изменения"
+}
