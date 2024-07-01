@@ -3,6 +3,7 @@
 		"authors": [
 			"Alien333",
 			"BlueCamille",
+			"Oujon",
 			"SleaY"
 		]
 	},
@@ -11,6 +12,7 @@
 	"datamap-ve-error-cannot-open-validation-errors": "<b>L'éditeur visuel n'est pas disponible en raison d'erreurs dans le code source de la carte :</b><br/> $1",
 	"datamap-ve-needs-fallback-to-source": "Cette page de carte ne peut pas être modifiée avec l'éditeur visuel. Veuillez utiliser l'[$1 éditeur de source] à la place.",
 	"datamap-ve-experimental": "L'éditeur visuel de carte est encore expérimental",
+	"datamap-ve-experimental-content": "<p>Vous pouvez vous désinscrire à tout moment via vos préférences utilisateur MediaWiki dans la section <i>Édition</i> .</p> \n<p> Sachez que certaines fonctionnalités peuvent être indisponibles et que des bugs peuvent survenir - pour une liste ou pour créer un rapport, visitez <a class=\"external\" href=\"https://github.com/alex4401/mediawiki-extensions-DataMaps/issues/149\">le numéro 149 sur le référentiel DataMaps GitHub</a> .</p>",
 	"datamap-ve-experimental-close": "Fermer",
 	"datamap-userpref-enable-ve": "Activer l'éditeur visuel pour les cartes de données quand il sera stable",
 	"datamap-userpref-enable-ve-beta": "M'inscrire aux tests de l'éditeur visuel de cartes",
@@ -34,6 +36,7 @@
 	"datamap-ve-panel-msettings-field-search-enabled": "Activé (seulement dans cette carte)",
 	"datamap-ve-panel-msettings-field-search-tabber": "Activé (dans l'ensemble du tableau)",
 	"datamap-ve-panel-msettings-field-legend": "Masquer la légende de la carte et les contrôles de visibilité",
+	"datamap-ve-panel-msettings-field-sortchecklists": "Tri des listes de contrôle à collectionner",
 	"datamap-ve-panel-msettings-field-sortchecklists-default": "Suivre l'ordre de définition du groupe",
 	"datamap-ve-panel-msettings-field-sortchecklists-amount": "Par nombre de marqueurs répertoriés",
 	"datamap-ve-panel-msettings-field-coordinates": "Afficher les coordonnées dans le coin inférieur gauche",
@@ -44,8 +47,10 @@
 	"datamap-ve-panel-msettings-field-backdrop-colour": "Couleur de la toile de fond",
 	"datamap-ve-panel-msettings-set-edit": "Rédacteur",
 	"datamap-ve-panel-msettings-field-requireids": "Requiert des identifiants de marqueurs explicites.",
+	"datamap-ve-panel-msettings-field-requireids-desc": "Les identifiants de marqueurs sont utilisés pour les liens de marqueur permanents et la fonctionnalité de collectibles. Par défaut, les identifiants sont générés automatiquement à partir de couches et de localisations attribuées.",
 	"datamap-ve-panel-mgroups": "Groupes",
 	"datamap-ve-panel-mcats": "Catégories",
+	"datamap-ve-workflow-marker": "Marqueur",
 	"datamap-ve-workflow-marker-create": "Créer",
 	"datamap-ve-workflow-marker-edit": "Enregistrer",
 	"datamap-ve-workflow-marker-delete": "Supprimer ce marqueur définitivement (impossible d'annuler)",
@@ -55,12 +60,15 @@
 	"datamap-ve-workflow-marker-field-lat": "Latitude",
 	"datamap-ve-workflow-marker-set-association": "[PH] Attribution des couches",
 	"datamap-ve-workflow-marker-field-group": "Groupe",
+	"datamap-ve-workflow-marker-field-group-desc": "Chaque marqueur doit appartenir à un groupe de marqueurs, qui décide principalement de la manière dont ses marqueurs seront affichés sur la carte. Les groupes sont également utilisés comme principal moyen de contrôler la visibilité, ce que le spectateur peut faire via le panneau de filtres.",
 	"datamap-ve-workflow-marker-field-categories": "Catégories",
 	"datamap-ve-workflow-marker-field-categories-disabled": "Vous ne pouvez pas ajouter de catégories à un marqueur lorsqu'aucune catégorie n'existe.",
 	"datamap-ve-workflow-marker-field-background": "Visible uniquement en arrière-plan",
 	"datamap-ve-workflow-marker-field-background-disabled": "Cela nécessite plus d’un arrière-plan.",
 	"datamap-ve-workflow-marker-set-behaviour": "Liens permanents",
 	"datamap-ve-workflow-marker-field-id": "Identifiant unique",
+	"datamap-ve-workflow-marker-field-id-desc": "Celui-ci sera généré automatiquement selon les paramètres de la carte.",
+	"datamap-ve-workflow-marker-panel-popup": "Information pop up",
 	"datamap-ve-workflow-marker-field-name": "Titre",
 	"datamap-ve-workflow-marker-field-desc": "Description",
 	"datamap-ve-workflow-marker-field-image": "Miniature de l'image",
@@ -74,5 +82,7 @@
 	"datamap-ve-group-id": "[PH] Identifiant unique",
 	"datamap-ve-group-id-cannot-modify": "[PH] Actuellement, le renommage des groupes n'est pas pris en charge par l'éditeur visuel",
 	"datamap-ve-group-article-link": "[PH] Lien par défaut vers l'article",
+	"datamap-ve-group-article-link-subtext": "Cela peut être annulé sur les marqueurs individuels.",
+	"datamap-ve-group-collectible-mode": "[PH] Type de collection",
 	"datamap-ve-group-confirm-delete": "[PH] Etes-vous sûr de vouloir détruire définitivement le groupe de marqueurs $1 ? Cette action est irréversible."
 }
