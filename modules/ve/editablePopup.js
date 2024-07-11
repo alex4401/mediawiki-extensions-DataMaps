@@ -152,7 +152,8 @@ class EditableMarkerPopup extends MarkerPopup {
             this.image = createDomElement( 'img', {
                 classes: [ 'ext-datamaps-popup-image' ],
                 attributes: {
-                    width: 250
+                    width: 250,
+                    loading: 'lazy'
                 },
                 appendTo: element
             } );
