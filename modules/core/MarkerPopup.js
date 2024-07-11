@@ -225,7 +225,8 @@ module.exports = class MarkerPopup {
                             width: this.slots.image[ 4 ] ? this.slots.image[ 4 ] : Math.min( this.slots.image[ 1 ], 288 ),
                             height: this.slots.image[ 3 ],
                             'data-file-width': this.slots.image[ 1 ],
-                            'data-file-height': this.slots.image[ 2 ]
+                            'data-file-height': this.slots.image[ 2 ],
+                            loading: 'lazy'
                         }
                     } )
                 ),

@@ -197,7 +197,8 @@ module.exports = Object.freeze( {
                 attributes: {
                     width: module.exports.MAX_GROUP_ICON_SIZE,
                     height: module.exports.MAX_GROUP_ICON_SIZE,
-                    src: module.exports.getNonNull( group.legendIcon )
+                    src: module.exports.getNonNull( group.legendIcon ),
+                    loading: 'lazy'
                 }
             } );
         },

@@ -348,7 +348,8 @@ class SearchController {
                             attributes: {
                                 width: 16,
                                 height: 16,
-                                src: icon.options.iconUrl
+                                src: icon.options.iconUrl,
+                                loading: 'lazy'
                             }
                         } );
                     }
