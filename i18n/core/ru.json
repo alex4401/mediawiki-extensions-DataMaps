@@ -3,6 +3,7 @@
 		"authors": [
 			"HvitCrow",
 			"Kareyac",
+			"Okras",
 			"SuperYwx9"
 		]
 	},
@@ -37,6 +38,7 @@
 	"datamap-loading-js": "Загрузка скриптов",
 	"datamap-loading-data": "Загрузка данных для отображения",
 	"datamap-error-dataload": "<b>Не удалось загрузить данные</b><br/>пожалуйста, обновите страницу или повторите попытку позже",
+	"datamap-lazy-click-to-load": "Нажмите, чтобы загрузить карту данных",
 	"datamap-legend-tab-locations": "Маркеры",
 	"datamap-toggle-show-all": "Показать все",
 	"datamap-toggle-hide-all": "Скрыть все",
@@ -51,8 +53,10 @@
 	"datamap-popup-related-article": "Узнать больше",
 	"datamap-popup-dismissed": "Собрано",
 	"datamap-popup-mark-as-dismissed": "Отметить как собранный",
+	"datamap-popup-marker-link-copied": "Ссылка скопирована в буфер обмена.",
 	"datamap-coordinate-control-text": "широта $1, долгота $2",
 	"datamap-control-zoom-in": "Приблизить",
+	"datamap-control-zoom-out": "Отдалить",
 	"datamap-control-toggle-legend": "Нажмите, чтобы развернуть легенду для переключения маркеров",
 	"datamap-control-reset-view": "Восстановить вид по умолчанию",
 	"datamap-control-centre-view": "Вид по центру при текущем уровне масштабирования",

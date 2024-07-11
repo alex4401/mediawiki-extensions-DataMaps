@@ -17,6 +17,8 @@
 	"datamap-ve-panel-msettings-field-coordorder-xy": "X, затем Y",
 	"datamap-ve-panel-msettings-field-crs": "Координатное пространство",
 	"datamap-ve-panel-msettings-set-view": "Просмотр",
+	"datamap-ve-panel-msettings-field-coordinates": "Отображать координаты в левом нижнем углу",
+	"datamap-ve-panel-msettings-field-popupbehaviour-click": "Показать по клику",
 	"datamap-ve-panel-msettings-set-edit": "Редактор",
 	"datamap-ve-panel-mgroups": "Группы",
 	"datamap-ve-panel-mcats": "Категории",
@@ -34,5 +36,6 @@
 	"datamap-ve-workflow-marker-field-image": "Миниатюра изображения",
 	"datamap-ve-workflow-marker-field-article": "Ссылка на статью",
 	"datamap-ve-workflow-save": "Сохранить изменения",
-	"datamap-ve-workflow-save-submit": "Опубликовать изменения"
+	"datamap-ve-workflow-save-submit": "Опубликовать изменения",
+	"datamap-ve-workflow-save-summary-desc": "Опишите внесённые изменения"
 }
