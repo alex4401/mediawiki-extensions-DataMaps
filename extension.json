@@ -502,7 +502,7 @@
 		},
 		"ApiCaching": {
 			"value": {
-				"type": -1,
+				"type": 1,
 				"ttl": 86400,
 				"ttlExtensionThreshold": 43200,
 				"ttlExtensionValue": 57600
