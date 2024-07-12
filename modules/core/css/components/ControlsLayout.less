@@ -2,38 +2,13 @@
     > .leaflet-top.leaflet-left {
         bottom: 10%;
         display: flex;
-        max-width: 100%;
+        max-width: ~'calc( 100% - 84px )'; // Reserve space for top right button
         box-sizing: border-box;
         padding-right: 10px;
     }
 
     .ext-datamaps-control-group {
         display: flex;
-    }
-
-    @media screen and ( max-width: calc( @width-breakpoint-tablet * 0.8 ) ) {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        .leaflet-top {
-            position: unset;
-        }
-
-        .leaflet-top.leaflet-right {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: start;
-            justify-content: center;
-            margin-left: 10px;
-        }
-
-        .leaflet-control-zoom,
-        .ext-datamaps-control-viewcontrols {
-            display: flex;
-            flex-wrap: wrap;
-            order: -1;
-        }
     }
 }
 
