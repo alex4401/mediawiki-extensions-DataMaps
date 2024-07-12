@@ -163,4 +163,12 @@ class MarkerGroupSpec extends DataModel {
     public function isDefault(): bool {
         return isset( $this->raw->isDefault ) ? $this->raw->isDefault : true;
     }
+
+    /**
+     * @since 0.17.8
+     * @return bool
+     */
+    public function isStaticCircle(): bool {
+        return $this->raw->static ?? false;
+    }
 }

@@ -1,3 +1,4 @@
+import inspect
 import json
 import sys
 from pydantic import BaseModel, Field, RootModel
@@ -292,6 +293,14 @@ class CircularMarkerGroup(_BaseMarkerGroup):
     extraMinZoomSize: Optional[float] = None
     strokeColor: Optional[Rgba] = None
     strokeWidth: float = 1
+    if REV >= 17.2:
+        static: bool = Field(
+            False,
+            title='Is static?',
+            description='''
+                If set to true, these circles will not change size when zooming in or out.
+            '''
+        )
 class PinMarkerGroup(_BaseMarkerGroup):
     pinColor: Rgba
     size: float = 32
@@ -365,7 +374,19 @@ class DataMap(BaseModelEx):
             'required': {}
         }
 
+
+##% Utility function to reformat descriptions
+def clean_schema_dict_text(d):
+    if 'description' in d and isinstance(d['description'], str):
+        d['description'] = inspect.cleandoc(d['description'])
+
+    for v in d.values():
+        if isinstance(v, dict):
+            clean_schema_dict_text(v)
+
+
 ##% Write to file
 schema = DataMap.model_json_schema()
+clean_schema_dict_text(schema)
 with open(OUTPUT, 'wt') as fp:
     json.dump(schema, fp, indent="\t")

@@ -556,7 +556,9 @@ class DataMap extends EventEmitter {
             leafletMarker = new Cls( position, markerOptions );
         } else {
             // Circular marker
-            const Cls = Leaflet.CircleMarker,
+            const
+                useStaticCircles = Util.isBitSet( group.flags, MarkerGroupFlags.Circle_IsStatic ),
+                Cls = ( useStaticCircles ? Leaflet.Circle : Leaflet.CircleMarker ),
                 markerOptions = {
                     radius: ( sizeScale ? group.size * sizeScale : group.size ) / 2,
                     zoomScaleFactor: group.zoomScaleFactor,

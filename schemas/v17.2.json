@@ -400,6 +400,12 @@
 					"default": 1,
 					"title": "Strokewidth",
 					"type": "number"
+				},
+				"static": {
+					"default": false,
+					"description": "If set to true, these circles will not change size when zooming in or out.",
+					"title": "Is static?",
+					"type": "boolean"
 				}
 			},
 			"required": [
