@@ -293,6 +293,14 @@ class CircularMarkerGroup(_BaseMarkerGroup):
     extraMinZoomSize: Optional[float] = None
     strokeColor: Optional[Rgba] = None
     strokeWidth: float = 1
+    if REV >= 17.2:
+        static: bool = Field(
+            False,
+            title='Is static?',
+            description='''
+                If set to true, these circles will not change size when zooming in or out.
+            '''
+        )
 class PinMarkerGroup(_BaseMarkerGroup):
     pinColor: Rgba
     size: float = 32
