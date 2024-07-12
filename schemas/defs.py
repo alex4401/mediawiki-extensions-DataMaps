@@ -1,3 +1,4 @@
+import inspect
 import json
 import sys
 from pydantic import BaseModel, Field, RootModel
@@ -365,7 +366,19 @@ class DataMap(BaseModelEx):
             'required': {}
         }
 
+
+##% Utility function to reformat descriptions
+def clean_schema_dict_text(d):
+    if 'description' in d and isinstance(d['description'], str):
+        d['description'] = inspect.cleandoc(d['description'])
+
+    for v in d.values():
+        if isinstance(v, dict):
+            clean_schema_dict_text(v)
+
+
 ##% Write to file
 schema = DataMap.model_json_schema()
+clean_schema_dict_text(schema)
 with open(OUTPUT, 'wt') as fp:
     json.dump(schema, fp, indent="\t")

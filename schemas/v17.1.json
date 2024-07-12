@@ -190,7 +190,7 @@
 						}
 					],
 					"default": null,
-					"description": "\n            Shown in the legend right under.\n        ",
+					"description": "Shown in the legend right under.",
 					"title": "Description"
 				},
 				"icon": {
@@ -203,7 +203,7 @@
 						}
 					],
 					"default": null,
-					"description": "\n            Shown in the legend.\n        ",
+					"description": "Shown in the legend.",
 					"title": "Icon"
 				},
 				"article": {
@@ -216,7 +216,7 @@
 						}
 					],
 					"default": null,
-					"description": "\n            If set, all markers in this group will link to this article.\n        ",
+					"description": "If set, all markers in this group will link to this article.",
 					"title": "Related article"
 				},
 				"isDefault": {
@@ -237,7 +237,7 @@
 				},
 				"isSwitchable": {
 					"default": true,
-					"description": "\n            If set to false, this group will not be shown in the legend.\n        ",
+					"description": "If set to false, this group will not be shown in the legend.",
 					"title": "Can be switched?",
 					"type": "boolean"
 				},
@@ -507,7 +507,7 @@
 						}
 					],
 					"default": null,
-					"description": "\n            Shown in the legend right under.\n        ",
+					"description": "Shown in the legend right under.",
 					"title": "Description"
 				},
 				"icon": {
@@ -524,7 +524,7 @@
 						}
 					],
 					"default": null,
-					"description": "\n            If set, all markers in this group will link to this article.\n        ",
+					"description": "If set, all markers in this group will link to this article.",
 					"title": "Related article"
 				},
 				"isDefault": {
@@ -545,7 +545,7 @@
 				},
 				"isSwitchable": {
 					"default": true,
-					"description": "\n            If set to false, this group will not be shown in the legend.\n        ",
+					"description": "If set to false, this group will not be shown in the legend.",
 					"title": "Can be switched?",
 					"type": "boolean"
 				},
@@ -605,7 +605,7 @@
 						}
 					],
 					"default": null,
-					"description": "\n            This name will be shown to a viewer in the background selection dropdown.\n        ",
+					"description": "This name will be shown to a viewer in the background selection dropdown.",
 					"title": "Display name"
 				},
 				"associatedLayer": {
@@ -703,7 +703,7 @@
 						}
 					],
 					"default": null,
-					"description": "\n            Bounds to fit the image in.\n        ",
+					"description": "Bounds to fit the image in.",
 					"title": "Bounds"
 				}
 			},
@@ -1030,7 +1030,7 @@
 						}
 					],
 					"default": null,
-					"description": "\n            Shown in the legend right under.\n        ",
+					"description": "Shown in the legend right under.",
 					"title": "Description"
 				},
 				"icon": {
@@ -1043,7 +1043,7 @@
 						}
 					],
 					"default": null,
-					"description": "\n            Shown in the legend.\n        ",
+					"description": "Shown in the legend.",
 					"title": "Icon"
 				},
 				"article": {
@@ -1056,7 +1056,7 @@
 						}
 					],
 					"default": null,
-					"description": "\n            If set, all markers in this group will link to this article.\n        ",
+					"description": "If set, all markers in this group will link to this article.",
 					"title": "Related article"
 				},
 				"isDefault": {
@@ -1077,7 +1077,7 @@
 				},
 				"isSwitchable": {
 					"default": true,
-					"description": "\n            If set to false, this group will not be shown in the legend.\n        ",
+					"description": "If set to false, this group will not be shown in the legend.",
 					"title": "Can be switched?",
 					"type": "boolean"
 				},
@@ -1366,7 +1366,7 @@
 			"properties": {
 				"allowFullscreen": {
 					"default": true,
-					"description": "\n            Whether full-screen toggle will be shown to the user on this map.\n\n            TODO: \"whether the option to view the map in fullscreen will be offered\"\n        ",
+					"description": "Whether full-screen toggle will be shown to the user on this map.\n\nTODO: \"whether the option to view the map in fullscreen will be offered\"",
 					"title": "Allowfullscreen",
 					"type": "boolean"
 				},
@@ -1403,18 +1403,18 @@
 						}
 					],
 					"default": null,
-					"description": "\n            The backdrop colour, i.e. the one filling areas with no background image over them.\n\n            TODO: wording\n        ",
+					"description": "The backdrop colour, i.e. the one filling areas with no background image over them.\n\nTODO: wording",
 					"title": "Backdropcolor"
 				},
 				"enableTooltipPopups": {
 					"default": false,
-					"description": "\n            Whether simply moving mouse cursor over a marker should cause its popup to become visible.\n\n            Such popup will be partially translucent. The user still has to click on the marker for the address bar to update with a\n            permanent link.\n        ",
+					"description": "Whether simply moving mouse cursor over a marker should cause its popup to become visible.\n\nSuch popup will be partially translucent. The user still has to click on the marker for the address bar to update with a\npermanent link.",
 					"title": "Enabletooltippopups",
 					"type": "boolean"
 				},
 				"enableSearch": {
 					"default": true,
-					"description": "\n            Whether marker search will be enabled for this map.\n\n            TODO: document modes\n        ",
+					"description": "Whether marker search will be enabled for this map.\n\nTODO: document modes",
 					"enum": [
 						false,
 						true,
@@ -1424,7 +1424,7 @@
 				},
 				"hideLegend": {
 					"default": false,
-					"description": "\n            Forces the legend (collectible checklists and marker filters) to not be loaded on this map.\n\n            If set to 'collapsed', the legend will be loaded, but will not be expanded on load.\n        ",
+					"description": "Forces the legend (collectible checklists and marker filters) to not be loaded on this map.\n\nIf set to 'collapsed', the legend will be loaded, but will not be expanded on load.",
 					"enum": [
 						false,
 						true,
@@ -1434,7 +1434,7 @@
 				},
 				"interactionModel": {
 					"default": "keybinds",
-					"description": "\n            Changes interaction delay model. Keybinds require extra keys to be held to zoom in (CTRL/Super), sleep is primarily\n            time-based.\n        ",
+					"description": "Changes interaction delay model. Keybinds require extra keys to be held to zoom in (CTRL/Super), sleep is primarily\ntime-based.",
 					"enum": [
 						"keybinds",
 						"sleep"
@@ -1444,7 +1444,7 @@
 				},
 				"iconRenderer": {
 					"default": "auto",
-					"description": "\n            Renderer preference for graphical icons using images from this wiki (not circular icons or pins).\n\n            - DOM renderer provides best reactivity for a small data set (roughly 500 icons), but performance degrades with\n              more markers. However, it comes with animation support for GIFs.\n            - Canvas renderer provides best performance at a cost of zoom update latency, and supports only static icons. This works\n              best for bigger data sets (above 500 icons), and is automatically enabled for such sets (if this option is set to\n              'auto').\n\n            Pins always use the DOM renderer.\n        ",
+					"description": "Renderer preference for graphical icons using images from this wiki (not circular icons or pins).\n\n- DOM renderer provides best reactivity for a small data set (roughly 500 icons), but performance degrades with\n  more markers. However, it comes with animation support for GIFs.\n- Canvas renderer provides best performance at a cost of zoom update latency, and supports only static icons. This works\n  best for bigger data sets (above 500 icons), and is automatically enabled for such sets (if this option is set to\n  'auto').\n\nPins always use the DOM renderer.",
 					"enum": [
 						"auto",
 						"DOM",
@@ -1455,19 +1455,19 @@
 				},
 				"requireCustomMarkerIDs": {
 					"default": false,
-					"description": "\n            Makes data validation disallow automatically generated marker IDs - the `id` property will need to be specified for each\n            marker manually.\n\n            These identifiers are used for persistent links and collectible progress tracking. By default, group and layers the marker\n            is attached to along with its location on map are used to generate the identifier.\n        ",
+					"description": "Makes data validation disallow automatically generated marker IDs - the `id` property will need to be specified for each\nmarker manually.\n\nThese identifiers are used for persistent links and collectible progress tracking. By default, group and layers the marker\nis attached to along with its location on map are used to generate the identifier.",
 					"title": "Requirecustommarkerids",
 					"type": "boolean"
 				},
 				"showCoordinates": {
 					"default": true,
-					"description": "\n            Whether coordinates from under the mouse cursor will be shown on this map in the bottom-left corner.\n        ",
+					"description": "Whether coordinates from under the mouse cursor will be shown on this map in the bottom-left corner.",
 					"title": "Show coordinates?",
 					"type": "boolean"
 				},
 				"sortChecklistsBy": {
 					"default": "groupDeclaration",
-					"description": "\n            Specifies marker group checklist sort order.\n\n            - 'groupDeclaration': Follows the order in which marker groups are declared in source data.\n            - 'amount':           Follows the number of markers inside each group.\n        ",
+					"description": "Specifies marker group checklist sort order.\n\n- 'groupDeclaration': Follows the order in which marker groups are declared in source data.\n- 'amount':           Follows the number of markers inside each group.",
 					"enum": [
 						"groupDeclaration",
 						"amount"
@@ -1489,7 +1489,7 @@
 				},
 				"leaflet": {
 					"default": false,
-					"description": "\n            Check https://leafletjs.com/reference.html#map-option for reference. Some options are not supported.\n        ",
+					"description": "Check https://leafletjs.com/reference.html#map-option for reference. Some options are not supported.",
 					"title": "Custom Leaflet parameters",
 					"type": "object"
 				}
@@ -1522,7 +1522,7 @@
 							"$ref": "#/$defs/NamedPoint"
 						}
 					],
-					"description": "\n                Position in this tile in the grid.\n\n                1 unit is one tile as big as the size specified.\n            ",
+					"description": "Position in this tile in the grid.\n\n1 unit is one tile as big as the size specified.",
 					"title": "Position"
 				},
 				"image": {
@@ -1550,7 +1550,7 @@
 						}
 					],
 					"default": null,
-					"description": "\n            This name will be shown to a viewer in the background selection dropdown.\n        ",
+					"description": "This name will be shown to a viewer in the background selection dropdown.",
 					"title": "Display name"
 				},
 				"associatedLayer": {
@@ -1828,7 +1828,7 @@
 				},
 				"lock": {
 					"default": false,
-					"description": "\n            If set to `true`, zoom level will be fixed at the specified `min` value. All zoom controls on the viewer's\n            side will be disabled.\n        ",
+					"description": "If set to `true`, zoom level will be fixed at the specified `min` value. All zoom controls on the viewer's\nside will be disabled.",
 					"title": "Locked?",
 					"type": "boolean"
 				},
