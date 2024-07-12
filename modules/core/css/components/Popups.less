@@ -87,14 +87,17 @@
         list-style: none;
 
         li {
+            margin-bottom: 0;
+        }
+
+        a {
             padding: 0.2em 0.5em;
             border: 1px solid #7776;
             border-radius: 4px;
-            margin-bottom: 0;
+            text-decoration: none;
             transition: background @transition-duration-base;
 
             &:hover {
-                border-radius: 2px;
                 background: #a0a7aa54;
             }
         }
