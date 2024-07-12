@@ -120,7 +120,7 @@ class Viewport extends EventEmitter {
          *
          * @type {Controls.ExtraViewControls?}
          */
-        this.viewControls = this.addControl( Viewport.anchors.topRight, new Controls.ExtraViewControls( this.map ) );
+        this.viewControls = this.addControl( Viewport.anchors.bottomRight, new Controls.ExtraViewControls( this.map ) );
         /**
          * Fullscreen mode switcher control.
          *
@@ -241,7 +241,7 @@ class Viewport extends EventEmitter {
             markerZoomScaleFactor: 1.8,
             // Zoom control
             zoomControlOptions: {
-                position: 'topright',
+                position: 'bottomright',
                 zoomInTitle: mw.msg( 'datamap-control-zoom-in' ),
                 zoomOutTitle: mw.msg( 'datamap-control-zoom-out' )
             },
