@@ -81,7 +81,7 @@
 		},
 
 		"ext.datamaps.icons": {
-			"class": "ResourceLoaderOOUIIconPackModule",
+			"class": "MediaWiki\\ResourceLoader\\OOUIIconPackModule",
 			"icons": [
 				"exitFullscreen",
 				"fullScreen",
@@ -225,7 +225,7 @@
 		},
 
 		"ext.datamaps.ve.icons": {
-			"class": "ResourceLoaderOOUIIconPackModule",
+			"class": "MediaWiki\\ResourceLoader\\OOUIIconPackModule",
 			"icons": [
 				"mapPin",
 				"trash",
