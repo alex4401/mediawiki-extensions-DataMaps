@@ -130,7 +130,6 @@ class Background extends EventEmitter {
 
     _constructTiles( tiles, tileSize ) {
         const Leaflet = Util.getLeaflet();
-        console.log( tiles );
 
         const getImageUrlByPosition = ( position ) => {
             // Loop through each tile object
@@ -145,7 +144,7 @@ class Background extends EventEmitter {
             return null;
         }
 
-        Leaflet.GridLayer.DataMapsTile = Leaflet.GridLayer.extend( {
+        const dataMapsTile = Leaflet.GridLayer.extend( {
             createTile: function( coords ) {
                 // FIXME: Set coord order from config
                 const position = [
@@ -172,8 +171,8 @@ class Background extends EventEmitter {
                 return tile;
             }
         } );
-        console.log( this.map.config );
-        return new Leaflet.GridLayer.DataMapsTile( {
+
+        return new dataMapsTile( {
             className: this.isPixelated ? 'ext-datamaps-pixelated-image' : undefined,
             maxZoom: this.map.config.zoom.max,
             minZoom: this.map.config.zoom.min,
