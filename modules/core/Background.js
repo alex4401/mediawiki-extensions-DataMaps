@@ -153,9 +153,6 @@ class Background extends EventEmitter {
                     coords.y
                 ];
                 const tile = Leaflet.DomUtil.create( 'canvas', 'leaflet-tile' );
-                if ( this.isPixelated ) {
-                    tile.classList.add( 'ext-datamaps-pixelated-image' );
-                }
                 tile.setAttribute( 'src', getImageUrlByPosition( position ) );
 
                 tile.width = tileSize[ 0 ];
@@ -175,8 +172,14 @@ class Background extends EventEmitter {
                 return tile;
             }
         } );
-        console.log( this.map.config.crs );
-        return new Leaflet.GridLayer.DataMapsTile();
+        console.log( this.map.config );
+        return new Leaflet.GridLayer.DataMapsTile( {
+            className: this.isPixelated ? 'ext-datamaps-pixelated-image' : undefined,
+            maxZoom: this.map.config.zoom.max,
+            minZoom: this.map.config.zoom.min,
+            maxNativeZoom: this.map.config.zoom.max,
+            minNativeZoom: this.map.config.zoom.min
+        } );
     }
 
 
