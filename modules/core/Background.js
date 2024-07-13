@@ -152,7 +152,10 @@ class Background extends EventEmitter {
                     coords.x,
                     coords.y
                 ];
-                const tile = Leaflet.DomUtil.create('canvas', 'leaflet-tile');
+                const tile = Leaflet.DomUtil.create( 'canvas', 'leaflet-tile' );
+                if ( this.isPixelated ) {
+                    tile.classList.add( 'ext-datamaps-pixelated-image' );
+                }
                 tile.setAttribute( 'src', getImageUrlByPosition( position ) );
 
                 tile.width = tileSize[ 0 ];
@@ -172,6 +175,7 @@ class Background extends EventEmitter {
                 return tile;
             }
         } );
+        console.log( this.map.config.crs );
         return new Leaflet.GridLayer.DataMapsTile();
     }
 
