@@ -182,11 +182,12 @@ class EmbedConfigGenerator {
             // Translate all tiles into overlays
             $tileOffset = CoordinateSystem::normalisePoint( $spec->getTilePlacementOffset() ?? [ 0, 0 ], $coordOrder );
             $tileSize = CoordinateSystem::normalisePoint( $spec->getTileSize(), $coordOrder );
+            $out['tileSize'] = $tileSize;
             $pixelated = $spec->isPixelated();
             $spec->iterateTiles( function ( MapBackgroundTileSpec $tile ) use (
-                &$out, &$tileOffset, &$tileSize, $coordOrder, $pixelated
+                &$out, &$tileOffset, $coordOrder, $pixelated
             ) {
-                $out['overlays'][] = $this->convertBackgroundTile( $tile, $tileOffset, $tileSize, $coordOrder, $pixelated );
+                $out['tiles'][] = $this->convertTile( $tile, $tileOffset, $coordOrder, $pixelated );
             } );
         }
         if ( $spec->hasOverlays() ) {
@@ -235,23 +236,22 @@ class EmbedConfigGenerator {
         return $result;
     }
 
-    private function convertBackgroundTile(
+    private function convertTile(
         MapBackgroundTileSpec $spec,
         array $tileOffset,
-        array $tileSize,
         int $coordOrder,
         bool $pixelated
     ) {
         $result = [];
 
-        $at = CoordinateSystem::normalisePoint( $spec->getPlacementLocation(), $coordOrder );
-        $at = [
-            [ $at[0] * $tileSize[0] + $tileOffset[0], $at[1] * $tileSize[1] + $tileOffset[1] ],
-            [ ( $at[0] + 1 ) * $tileSize[0] + $tileOffset[0], ( $at[1] + 1 ) * $tileSize[1] + $tileOffset[1] ]
+        $position = CoordinateSystem::normalisePoint( $spec->getPlacementLocation(), $coordOrder );
+        $position = [
+            $position[0] + $tileOffset[0],
+            $position[1] + $tileOffset[1]
         ];
 
         $result['image'] = DataMapFileUtils::getRequiredFile( $spec->getImageName() )->getURL();
-        $result['at'] = $at;
+        $result['position'] = $position;
         $result['aa'] = 1;
         if ( $pixelated ) {
             $result['pixelated'] = true;

@@ -53,6 +53,13 @@ class Background extends EventEmitter {
         this.image = config.image || null;
 
         /**
+         * Tile size
+         *
+         * @type {array?}
+         */
+        this.tileSize = config.tileSize || null;
+
+        /**
          * Whether the browser should scale this image in pixel-art mode.
          *
          * @type {boolean}
@@ -74,6 +81,14 @@ class Background extends EventEmitter {
          * @type {DataMaps.Configuration.BackgroundOverlay[]?}
          */
         this._overlayConfigs = config.overlays || null;
+
+        /**
+         * Attached overlays.
+         *
+         * @private
+         * @type {DataMaps.Configuration.BackgroundOverlay[]?}
+         */
+        this._tilesConfigs = config.tiles || null;
     }
 
 
@@ -81,6 +96,9 @@ class Background extends EventEmitter {
         const results = [];
         if ( this.image ) {
             results.push( this._constructMainLayer() );
+        }
+        if ( this._tilesConfigs ) {
+            results.push( this._constructTiles( this._tilesConfigs, this.tileSize ) );
         }
         if ( this._overlayConfigs ) {
             for ( const config of this._overlayConfigs ) {
@@ -108,6 +126,53 @@ class Background extends EventEmitter {
                 antiAliasing: this._needsFractionalSizing ? 0.51 : 0
             }
         );
+    }
+
+    _constructTiles( tiles, tileSize ) {
+        const Leaflet = Util.getLeaflet();
+        console.log( tiles );
+
+        const getImageUrlByPosition = ( position ) => {
+            // Loop through each tile object
+            for ( const tile of tiles ) {
+                // Check if the position of the current tile matches the provided position
+                if ( JSON.stringify( tile.position ) === JSON.stringify( position ) ) {
+                    // Return the image URL if positions match
+                    return tile.image;
+                }
+            }
+            // Return null if no matching position is found
+            return null;
+        }
+
+        Leaflet.GridLayer.DataMapsTile = Leaflet.GridLayer.extend( {
+            createTile: function( coords ) {
+                // FIXME: Set coord order from config
+                const position = [
+                    coords.x,
+                    coords.y
+                ];
+                const tile = Leaflet.DomUtil.create('canvas', 'leaflet-tile');
+                tile.setAttribute( 'src', getImageUrlByPosition( position ) );
+
+                tile.width = tileSize[ 0 ];
+                tile.height = tileSize[ 1 ];
+
+                const ctx = tile.getContext( '2d' );
+                const imgSrc = getImageUrlByPosition( position );
+
+                if ( imgSrc ) {
+                    const img = new Image();
+                    img.addEventListener( 'load', () => {
+                        ctx.drawImage( img, 0, 0 );
+                    } );
+                    img.src = imgSrc;
+                }
+
+                return tile;
+            }
+        } );
+        return new Leaflet.GridLayer.DataMapsTile();
     }
 
 
