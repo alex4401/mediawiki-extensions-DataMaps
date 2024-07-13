@@ -53,6 +53,13 @@ class Background extends EventEmitter {
         this.image = config.image || null;
 
         /**
+         * Tile offset
+         *
+         * @type {array?}
+         */
+        this.tileOffset = config.tileOffset || null;
+
+        /**
          * Tile size
          *
          * @type {array?}
@@ -98,7 +105,7 @@ class Background extends EventEmitter {
             results.push( this._constructMainLayer() );
         }
         if ( this._tilesConfigs ) {
-            results.push( this._constructTiles( this._tilesConfigs, this.tileSize ) );
+            results.push( this._constructTiles( this._tilesConfigs, this.tileOffset, this.tileSize ) );
         }
         if ( this._overlayConfigs ) {
             for ( const config of this._overlayConfigs ) {
@@ -128,7 +135,7 @@ class Background extends EventEmitter {
         );
     }
 
-    _constructTiles( tiles, tileSize ) {
+    _constructTiles( tiles, offset, size ) {
         const Leaflet = Util.getLeaflet();
 
         const getImageUrlByPosition = ( position ) => {
@@ -148,14 +155,14 @@ class Background extends EventEmitter {
             createTile: function( coords ) {
                 // FIXME: Set coord order from config
                 const position = [
-                    coords.x,
-                    coords.y
+                    offset[0] + coords.x,
+                    offset[1] + coords.y
                 ];
                 const tile = Leaflet.DomUtil.create( 'canvas', 'leaflet-tile' );
                 tile.setAttribute( 'src', getImageUrlByPosition( position ) );
 
-                tile.width = tileSize[ 0 ];
-                tile.height = tileSize[ 1 ];
+                tile.width = size[ 0 ];
+                tile.height = size[ 1 ];
 
                 const ctx = tile.getContext( '2d' );
                 const imgSrc = getImageUrlByPosition( position );

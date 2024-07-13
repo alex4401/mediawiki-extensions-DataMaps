@@ -181,13 +181,14 @@ class EmbedConfigGenerator {
             $out['aa'] = 1;
             // Translate all tiles into overlays
             $tileOffset = CoordinateSystem::normalisePoint( $spec->getTilePlacementOffset() ?? [ 0, 0 ], $coordOrder );
+            $out['tileOffset'] = $tileOffset;
             $tileSize = CoordinateSystem::normalisePoint( $spec->getTileSize(), $coordOrder );
             $out['tileSize'] = $tileSize;
             $pixelated = $spec->isPixelated();
             $spec->iterateTiles( function ( MapBackgroundTileSpec $tile ) use (
-                &$out, &$tileOffset, $coordOrder, $pixelated
+                &$out, $coordOrder, $pixelated
             ) {
-                $out['tiles'][] = $this->convertTile( $tile, $tileOffset, $coordOrder, $pixelated );
+                $out['tiles'][] = $this->convertTile( $tile, $coordOrder, $pixelated );
             } );
         }
         if ( $spec->hasOverlays() ) {
@@ -238,20 +239,13 @@ class EmbedConfigGenerator {
 
     private function convertTile(
         MapBackgroundTileSpec $spec,
-        array $tileOffset,
         int $coordOrder,
         bool $pixelated
     ) {
         $result = [];
 
-        $position = CoordinateSystem::normalisePoint( $spec->getPlacementLocation(), $coordOrder );
-        $position = [
-            $position[0] + $tileOffset[0],
-            $position[1] + $tileOffset[1]
-        ];
-
         $result['image'] = DataMapFileUtils::getRequiredFile( $spec->getImageName() )->getURL();
-        $result['position'] = $position;
+        $result['position'] =CoordinateSystem::normalisePoint( $spec->getPlacementLocation(), $coordOrder );
         $result['aa'] = 1;
         if ( $pixelated ) {
             $result['pixelated'] = true;
