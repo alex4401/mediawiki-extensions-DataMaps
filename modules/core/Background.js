@@ -153,10 +153,9 @@ class Background extends EventEmitter {
 
         const dataMapsTile = Leaflet.GridLayer.extend( {
             createTile: function( coords ) {
-                // FIXME: Set coord order from config
                 const position = [
-                    offset[0] + coords.x,
-                    offset[1] + coords.y
+                    offset[0] + coords.y,
+                    offset[1] + coords.x
                 ];
                 const tile = Leaflet.DomUtil.create( 'canvas', 'leaflet-tile' );
                 tile.setAttribute( 'src', getImageUrlByPosition( position ) );
