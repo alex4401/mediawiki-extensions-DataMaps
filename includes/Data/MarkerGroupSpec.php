@@ -165,10 +165,10 @@ class MarkerGroupSpec extends DataModel {
     }
 
     /**
-     * @since 0.17.8
+     * @since 0.17.10
      * @return bool
      */
-    public function isStaticCircle(): bool {
+    public function isStaticallySized(): bool {
         return $this->raw->static ?? false;
     }
 }

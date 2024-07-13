@@ -530,7 +530,8 @@ class DataMap extends EventEmitter {
         const instance = /** @type {DataMaps.ApiMarkerInstance} */ ( uncheckedInstance ),
             group = this.config.groups[ layers[ 0 ] ],
             position = this.crs.fromPoint( instance ),
-            sizeScale = instance[ 2 ].scale;
+            sizeScale = instance[ 2 ].scale,
+            useStaticSize = Util.isBitSet( group.flags, MarkerGroupFlags.IsStaticallySized );
 
         // Construct the marker
         let /** @type {LeafletModule.AnyMarker|undefined} */ leafletMarker;
@@ -551,14 +552,16 @@ class DataMap extends EventEmitter {
                         } )
                         : this.getIconFromLayers( layers )
                 ),
-                markerOptions = { icon };
+                markerOptions = {
+                    icon,
+                    static: useStaticSize
+                };
             this.fire( 'modifyMarkerOptions', Cls, instance, markerOptions );
             leafletMarker = new Cls( position, markerOptions );
         } else {
             // Circular marker
             const
-                useStaticCircles = Util.isBitSet( group.flags, MarkerGroupFlags.Circle_IsStatic ),
-                Cls = ( useStaticCircles ? Leaflet.Circle : Leaflet.CircleMarker ),
+                Cls = ( useStaticSize ? Leaflet.Circle : Leaflet.CircleMarker ),
                 markerOptions = {
                     radius: ( sizeScale ? group.size * sizeScale : group.size ) / 2,
                     zoomScaleFactor: group.zoomScaleFactor,

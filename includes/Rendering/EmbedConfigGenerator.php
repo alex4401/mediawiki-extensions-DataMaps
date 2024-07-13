@@ -276,7 +276,7 @@ class EmbedConfigGenerator {
                 break;
         }
         $out |= !$spec->isSwitchable() ? 1 << 6 : 0;
-        $out |= $spec->isStaticCircle() ? 1 << 7 : 0;
+        $out |= $spec->isStaticallySized() ? 1 << 7 : 0;
         return $out;
     }
 

@@ -77,8 +77,8 @@ module.exports = {
          */
         IsUnswitchable: 1 << 6,
         /**
-         * @since 0.17.8
+         * @since 0.17.10
          */
-        Circle_IsStatic: 1 << 7
+        IsStaticallySized: 1 << 7
     }
 };
