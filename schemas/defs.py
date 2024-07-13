@@ -269,6 +269,14 @@ class _BaseMarkerGroup(BaseModelEx):
             Shown in the legend.
         '''
     )
+    if 17.3 <= REV:
+        static: bool = Field(
+            False,
+            title='Is static?',
+            description='''
+                If set to true, these circles will not change size when zooming in or out.
+            '''
+        )
     article: Optional[str] = Field(
         None,
         title='Related article',
@@ -293,7 +301,7 @@ class CircularMarkerGroup(_BaseMarkerGroup):
     extraMinZoomSize: Optional[float] = None
     strokeColor: Optional[Rgba] = None
     strokeWidth: float = 1
-    if REV >= 17.2:
+    if 17.2 <= REV < 17.3:
         static: bool = Field(
             False,
             title='Is static?',
