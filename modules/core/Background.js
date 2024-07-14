@@ -149,7 +149,7 @@ class Background extends EventEmitter {
             if ( matchedImage ) {
                 return matchedImage;
             }
-        }
+        };
 
         const dataMapsTile = Leaflet.GridLayer.extend( {
             createTile: function( coords ) {
