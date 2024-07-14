@@ -138,17 +138,17 @@ class Background extends EventEmitter {
     _constructTiles( tiles, offset, size ) {
         const Leaflet = Util.getLeaflet();
 
+        const positionImageMap = tiles.reduce( ( map, tile ) => {
+            const [ x, y ] = tile.position;
+            map[ `${x},${y}` ] = tile.image;
+            return map;
+        }, {} );
+
         const getImageUrlByPosition = ( position ) => {
-            // Loop through each tile object
-            for ( const tile of tiles ) {
-                // Check if the position of the current tile matches the provided position
-                if ( JSON.stringify( tile.position ) === JSON.stringify( position ) ) {
-                    // Return the image URL if positions match
-                    return tile.image;
-                }
+            const matchedImage = positionImageMap[ `${position[0]},${position[1]}`];
+            if ( matchedImage ) {
+                return matchedImage;
             }
-            // Return null if no matching position is found
-            return null;
         }
 
         const dataMapsTile = Leaflet.GridLayer.extend( {
