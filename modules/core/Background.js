@@ -183,7 +183,9 @@ class Background extends EventEmitter {
             maxZoom: this.map.config.zoom.max,
             minZoom: this.map.config.zoom.min,
             maxNativeZoom: 1,
-            minNativeZoom: 1
+            minNativeZoom: 1,
+            // Leaflet points are (X, Y) but our representation is (Y, X) for uniformness with map geometry
+            tileSize: new Leaflet.Point( this.tileSize[ 1 ], this.tileSize[ 0 ] ),
         } );
     }
 
