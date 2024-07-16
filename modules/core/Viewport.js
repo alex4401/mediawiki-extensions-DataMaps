@@ -128,7 +128,7 @@ class Viewport extends EventEmitter {
          */
         this.fullscreenToggle = null;
         if ( this.map.checkFeatureFlag( MapFlags.AllowFullscreen ) ) {
-            this.fullscreenToggle = this.addControl( Viewport.anchors.topRightInline, new Controls.ToggleFullscreen(
+            this.fullscreenToggle = this.addControl( Viewport.anchors.topRight, new Controls.ToggleFullscreen(
                 this.map ) );
         }
         /**
@@ -141,7 +141,7 @@ class Viewport extends EventEmitter {
             !this.map.checkFeatureFlag( MapFlags.IsPreview ) && ( mw.config.get( 'wgUserName' ) !== null
                 || Util.canAnonsEdit )
         ) {
-            this.editControl = this.addControl( Viewport.anchors.topRightInline, new Controls.EditButton( this.map ) );
+            this.editControl = this.addControl( Viewport.anchors.topRight, new Controls.EditButton( this.map ) );
         }
         /**
          * Control that'll host marker search, if it is enabled.
