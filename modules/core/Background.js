@@ -138,14 +138,14 @@ class Background extends EventEmitter {
     _constructTiles( tiles, offset, size ) {
         const Leaflet = Util.getLeaflet();
 
+        // Create a map of positions to tiles for a fast lookup of image URLs
         const positionImageMap = tiles.reduce( ( map, tile ) => {
-            const [ x, y ] = tile.position;
-            map[ `${x},${y}` ] = tile.image;
+            const [ y, x ] = tile.position;
+            map[ `${y},${x}` ] = tile.image;
             return map;
         }, {} );
-
         const getImageUrlByPosition = ( position ) => {
-            const matchedImage = positionImageMap[ `${position[ 0 ]},${position[ 1 ]}`];
+            const matchedImage = positionImageMap[ `${position.y},${position.x}`];
             if ( matchedImage ) {
                 return matchedImage;
             }
