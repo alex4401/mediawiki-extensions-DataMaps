@@ -182,8 +182,8 @@ class Background extends EventEmitter {
             className: this.isPixelated ? 'ext-datamaps-pixelated-image' : undefined,
             maxZoom: this.map.config.zoom.max,
             minZoom: this.map.config.zoom.min,
-            maxNativeZoom: this.map.config.zoom.max,
-            minNativeZoom: this.map.config.zoom.min
+            maxNativeZoom: 1,
+            minNativeZoom: 1
         } );
     }
 
