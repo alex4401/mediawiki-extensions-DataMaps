@@ -149,6 +149,7 @@ class Background extends EventEmitter {
             if ( matchedImage ) {
                 return matchedImage;
             }
+            return null;
         };
 
         const dataMapsTile = Leaflet.GridLayer.extend( {
