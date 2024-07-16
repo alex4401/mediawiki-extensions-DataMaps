@@ -170,6 +170,8 @@ class Background extends EventEmitter {
                         doneCallback( event, tile );
                     } );
                     img.src = imageUrl;
+                } else {
+                    console.warn( `Leaflet wants a tile for undefined position: ${coords}` );
                 }
 
                 return tile;
