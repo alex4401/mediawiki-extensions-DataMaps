@@ -154,15 +154,15 @@ class Background extends EventEmitter {
         const dataMapsTile = Leaflet.GridLayer.extend( {
             createTile( coords, doneCallback ) {
                 const tile = document.createElement( 'canvas' ),
-                    tileSize = this.getTileSize();
+                    tileSize = this.getTileSize(),
+                    imageUrl = getImageUrlByPosition( coords );
                 tile.width = tileSize.x;
                 tile.height = tileSize.y;
-                tile.setAttribute( 'src', getImageUrlByPosition( coords ) );
+                tile.setAttribute( 'src', imageUrl );
 
                 const ctx = tile.getContext( '2d' );
-                const imgSrc = getImageUrlByPosition( coords );
 
-                if ( imgSrc ) {
+                if ( imageUrl ) {
                     const img = new Image();
                     img.addEventListener( 'load', () => {
                         ctx.drawImage( img, 0, 0 );
@@ -171,7 +171,7 @@ class Background extends EventEmitter {
                     img.addEventListener( 'error', event => {
                         doneCallback( event, tile );
                     } );
-                    img.src = imgSrc;
+                    img.src = imageUrl;
                 }
 
                 return tile;
