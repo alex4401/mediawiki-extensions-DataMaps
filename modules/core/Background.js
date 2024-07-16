@@ -145,14 +145,14 @@ class Background extends EventEmitter {
         }, {} );
 
         const getImageUrlByPosition = ( position ) => {
-            const matchedImage = positionImageMap[ `${position[0]},${position[1]}`];
+            const matchedImage = positionImageMap[ `${position[ 0 ]},${position[ 1 ]}`];
             if ( matchedImage ) {
                 return matchedImage;
             }
         };
 
         const dataMapsTile = Leaflet.GridLayer.extend( {
-            createTile: function( coords ) {
+            createTile( coords, doneCallback ) {
                 const position = [
                     offset[0] + coords.y,
                     offset[1] + coords.x
@@ -170,6 +170,10 @@ class Background extends EventEmitter {
                     const img = new Image();
                     img.addEventListener( 'load', () => {
                         ctx.drawImage( img, 0, 0 );
+                        doneCallback( undefined, tile );
+                    } );
+                    img.addEventListener( 'error', event => {
+                        doneCallback( event, tile );
                     } );
                     img.src = imgSrc;
                 }
