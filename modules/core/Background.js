@@ -160,12 +160,10 @@ class Background extends EventEmitter {
                 tile.height = tileSize.y;
                 tile.setAttribute( 'src', imageUrl );
 
-                const ctx = tile.getContext( '2d' );
-
                 if ( imageUrl ) {
                     const img = new Image();
                     img.addEventListener( 'load', () => {
-                        ctx.drawImage( img, 0, 0 );
+                        tile.getContext( '2d' ).drawImage( img, 0, 0 );
                         doneCallback( undefined, tile );
                     } );
                     img.addEventListener( 'error', event => {
