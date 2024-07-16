@@ -153,18 +153,14 @@ class Background extends EventEmitter {
 
         const dataMapsTile = Leaflet.GridLayer.extend( {
             createTile( coords, doneCallback ) {
-                const position = [
-                    offset[0] + coords.y,
-                    offset[1] + coords.x
-                ];
                 const tile = Leaflet.DomUtil.create( 'canvas', 'leaflet-tile' );
-                tile.setAttribute( 'src', getImageUrlByPosition( position ) );
+                tile.setAttribute( 'src', getImageUrlByPosition( coords ) );
 
                 tile.width = size[ 0 ];
                 tile.height = size[ 1 ];
 
                 const ctx = tile.getContext( '2d' );
-                const imgSrc = getImageUrlByPosition( position );
+                const imgSrc = getImageUrlByPosition( coords );
 
                 if ( imgSrc ) {
                     const img = new Image();
