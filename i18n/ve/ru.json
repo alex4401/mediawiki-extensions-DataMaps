@@ -31,6 +31,7 @@
 	"datamap-ve-workflow-marker-field-group": "Группа",
 	"datamap-ve-workflow-marker-field-categories": "Категории",
 	"datamap-ve-workflow-marker-set-behaviour": "Постоянные ссылки",
+	"datamap-ve-workflow-marker-field-id": "Уникальный идентификатор",
 	"datamap-ve-workflow-marker-field-name": "Заголовок",
 	"datamap-ve-workflow-marker-field-desc": "Описание",
 	"datamap-ve-workflow-marker-field-image": "Миниатюра изображения",

@@ -29,6 +29,8 @@
 	"datamap-validate-constraint-minimum": "Энчиликни номерли магъанасы $2 аслам болургъа керекди: <code>$1</code>.",
 	"datamap-validate-constraint-maximum": "Энчиликни номерли магъанасы $2 аз болургъа керекди: <code>$1</code>.",
 	"datamap-validate-constraint-fallback": "Энчиликни тинтиуюнде белгиленмеген халат болгъанды: <code>$1</code>. Тилейбиз, [$2 бу проблеманы юсюнден] джарашдырыучулагъа билдиригиз.",
+	"datamap-validate-constraint-notcollectible": "<code>$1</code> къауумдагъы сора келген энчиликле эффектсиздиле, аланы джыяргъа болмагъаны себели: $2.",
+	"datamap-validate-constraint-searchdisabled": "Мында <code>$1</code> сора келген энчиликле эффектсиздиле, белгиле бла излеу джандырылмагъаны себели: $2.",
 	"datamap-background-name-fallback": "Башлыкъсыз",
 	"datamap-legend-label": "Ичиндегиле",
 	"datamap-loading-js": "Скриптле джюклене турадыла",

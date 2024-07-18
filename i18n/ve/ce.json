@@ -1,0 +1,33 @@
+{
+	"@metadata": {
+		"authors": [
+			"Умар"
+		]
+	},
+	"datamap-ve-experimental-close": "ДӀачӀагӀа",
+	"datamap-ve-generic-cancel": "Йухайаккхар",
+	"datamap-ve-panel-msettings": "Нисдаран гӀирс",
+	"datamap-ve-panel-msettings-field-coordorder": "Координатийн система",
+	"datamap-ve-panel-msettings-field-coordorder-latlon": "Шоралла, цул тӀаьхьа дохалла",
+	"datamap-ve-panel-msettings-field-coordorder-xy": "X, цул тӀаьхьа Y",
+	"datamap-ve-panel-msettings-field-crs": "Координатийн меттиг",
+	"datamap-ve-panel-msettings-set-view": "Хьажар",
+	"datamap-ve-panel-msettings-set-edit": "Редактор",
+	"datamap-ve-panel-mgroups": "Тобанаш",
+	"datamap-ve-panel-mcats": "Категореш",
+	"datamap-ve-workflow-marker": "Маркер",
+	"datamap-ve-workflow-marker-create": "Кхолла",
+	"datamap-ve-workflow-marker-edit": "Ӏалашйан",
+	"datamap-ve-workflow-marker-panel-setup": "Картин тӀехь",
+	"datamap-ve-workflow-marker-field-lon": "Дохалла",
+	"datamap-ve-workflow-marker-field-lat": "Шоралла",
+	"datamap-ve-workflow-marker-field-group": "Тоба",
+	"datamap-ve-workflow-marker-field-categories": "Категореш",
+	"datamap-ve-workflow-marker-field-name": "Корта",
+	"datamap-ve-workflow-marker-field-desc": "Цуьнах лаьцна",
+	"datamap-ve-workflow-marker-field-image": "Суьртан миниатюра",
+	"datamap-ve-workflow-marker-field-article": "Йаззаман тӀе хьажорг",
+	"datamap-ve-workflow-save": "Хийцамаш дӀаӀалашбан",
+	"datamap-ve-workflow-save-submit": "Хийцамаш дӀайазбан",
+	"datamap-ve-workflow-save-summary-desc": "ДӀайазде айхьа хийцинарг"
+}

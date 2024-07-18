@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Mirage",
-			"No se"
+			"No se",
+			"Qwrop"
 		]
 	},
 	"datamap-desc": "Permite insertar mapas interactivos en las páginas de la wiki.",
@@ -12,6 +13,7 @@
 	"datamap-category-pages-including-maps": "Páginas incluyendo los mapas de datos",
 	"datamap-category-pages-including-broken-maps": "Páginas que incluyen mapas de datos con fallos de validación",
 	"datamap-category-maps-failing-validation": "Mapas con fallos en la validación de datos",
+	"datamap-mapsrcinfo-heading-errors": "'''Errores:''' $1",
 	"datamap-mapsrcinfo-docslink": "Consulta la [https://github.com/alex4401/mediawiki-extensions-DataMaps documentación de la extensión] para más información sobre la estructura adecuada.",
 	"datamap-error-validate-invalid-json": "Este documento no es un archivo JSON válido.",
 	"datamap-error-validatespec-map-bad-mixin": "El mixin \"<code>$1</code>\" debe existir, debe usar el modelo de contenido del <code>mapa de datos interactivos</code>, y debe ser válido en cuanto a sintaxis y estructura.",
@@ -21,6 +23,7 @@
 	"datamap-error-pf-page-invalid-content-model": "El modelo de contenido de la página \"[[$1]]\" no es <code>datamap</code>.",
 	"datamap-error-pf-max-width-invalid": "El ancho máximo de la inserción del mapa debe ser un número entero mayor que cero.",
 	"datamap-error-map-validation-fail": "El [[$1|código fuente del mapa de datos]] ya no supera la validación de datos. Por favor, corrige los errores asociados.",
+	"datamap-background-name-fallback": "Sin título",
 	"datamap-legend-label": "Leyenda",
 	"datamap-javascript-required": "JavaScript debe estar habilitado para que este mapa funcione. Si no lo ve a continuación, probablemente significa que tienes el JavaScript deshabilitado.",
 	"datamap-loading-js": "Espera. Cargando datos",

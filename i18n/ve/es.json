@@ -1,16 +1,28 @@
 {
 	"@metadata": {
 		"authors": [
-			"No se"
+			"No se",
+			"Qwrop"
 		]
 	},
 	"datamap-ve-to-load": "Espere mientras el editor visual se está cargando...",
 	"datamap-ve-experimental-close": "Cerrar",
 	"datamap-ve-edit-source-action": "Editar código",
+	"datamap-ve-background-default-name": "Sin título",
+	"datamap-ve-generic-cancel": "Cancelar",
+	"datamap-ve-panel-msettings-field-coordorder": "Sistema de coordenadas",
 	"datamap-ve-panel-msettings-field-coordinates": "Mostrar coordenadas en la esquina inferior izquierda",
 	"datamap-ve-workflow-marker": "Marcador",
+	"datamap-ve-workflow-marker-edit": "Guardar",
+	"datamap-ve-workflow-marker-delete": "Eliminar este marcador de forma permanente (no se puede deshacer)",
+	"datamap-ve-workflow-marker-panel-setup": "En el mapa",
+	"datamap-ve-workflow-marker-field-lon": "Longitud",
+	"datamap-ve-workflow-marker-field-group": "Grupo",
+	"datamap-ve-workflow-marker-field-categories": "Categorías",
 	"datamap-ve-workflow-marker-field-name": "Título",
 	"datamap-ve-workflow-marker-panel-search": "Cuando es buscado",
+	"datamap-ve-workflow-save-submit": "Publicar cambios",
+	"datamap-ve-workflow-save-summary": "Resumen de edición",
 	"datamap-ve-workflow-save-summary-desc": "Describe lo que has cambiado",
 	"datamap-ve-group-article-link-subtext": "[PH] Esto se puede anular en marcadores individuales."
 }
