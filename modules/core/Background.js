@@ -146,7 +146,7 @@ class Background extends EventEmitter {
      * ]}
      */
     _prepareTileImages( tiles ) {
-        const [ tileY, tileX ] = this.tileSize;
+        const [ tileY, tileX ] = this._physicalTileSize;
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
 
         const map = tiles.reduce( ( map, tile ) => {
