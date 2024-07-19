@@ -62,9 +62,10 @@ class Background extends EventEmitter {
         /**
          * Tile size
          *
+         * @private
          * @type {array?}
          */
-        this.tileSize = config.tileSize || null;
+        this._physicalTileSize = config.tileSize || null;
 
         /**
          * Whether the browser should scale this image in pixel-art mode.
@@ -135,36 +136,75 @@ class Background extends EventEmitter {
         );
     }
 
-    _constructTiles( tiles, offset, size ) {
+
+    /**
+     * @param {any} tiles
+     * @return {[
+     *      bounds: LeafletModule.LatLngBounds,
+     *      map: Record<string, string>,
+     *      maxY: number
+     * ]}
+     */
+    _prepareTileImages( tiles, tileSize ) {
+        const [ tileY, tileX ] = tileSize;
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+
+        const map = tiles.reduce( ( map, tile ) => {
+            const [ y, x ] = tile.position;
+            map[ `${y},${x}` ] = tile.image;
+
+            // Update boundary tracking
+            minX = Math.min( x, minX );
+            minY = Math.min( y, minY );
+            maxX = Math.max( x, maxX );
+            maxY = Math.max( y, maxY );
+
+            return map;
+        }, {} );
+
+        maxX++;
+        maxY++;
+
+        return [
+            new ( Util.getLeaflet().LatLngBounds )(
+                this.map.crs.fromPoint( [ minY * tileY, minX * tileX ] ),
+                this.map.crs.fromPoint( [ maxY * tileY, maxX * tileX ] )
+            ),
+            map,
+            maxY
+        ];
+    }
+
+
+    _constructTiles( tiles ) {
         const Leaflet = Util.getLeaflet();
 
         // Create a map of positions to tiles for a fast lookup of image URLs
-        const positionImageMap = tiles.reduce( ( map, tile ) => {
-            const [ y, x ] = tile.position;
-            map[ `${y},${x}` ] = tile.image;
-            return map;
-        }, {} );
+        const [ bounds, positionImageMap, maxY ] = this._prepareTileImages( tiles, size );
         const getImageUrlByPosition = ( position ) => {
-            const matchedImage = positionImageMap[ `${position.y},${position.x}`];
+            // Y axis is inverted, with the last element being the first in this notation. Map it.
+            const matchedImage = positionImageMap[ `${maxY + position.y},${position.x}` ];
             if ( matchedImage ) {
                 return matchedImage;
             }
             return null;
         };
 
+        const [ physicalY, physicalX ] = this._physicalTileSize;
+
         const dataMapsTile = Leaflet.GridLayer.extend( {
             createTile( coords, doneCallback ) {
                 const tile = document.createElement( 'canvas' ),
-                    tileSize = this.getTileSize(),
                     imageUrl = getImageUrlByPosition( coords );
-                tile.width = tileSize.x;
-                tile.height = tileSize.y;
+                // Use physical tile size for the canvas. Leaflet will take care of our positioning.
+                tile.width = physicalX;
+                tile.height = physicalY;
                 tile.setAttribute( 'src', imageUrl );
 
                 if ( imageUrl ) {
                     const img = new Image();
                     img.addEventListener( 'load', () => {
-                        tile.getContext( '2d' ).drawImage( img, 0, 0 );
+                        tile.getContext( '2d' ).drawImage( img, 0, 0, physicalX, physicalY );
                         doneCallback( undefined, tile );
                     } );
                     img.addEventListener( 'error', event => {
@@ -176,6 +216,16 @@ class Background extends EventEmitter {
                 }
 
                 return tile;
+            },
+
+
+            /**
+             * A wiring method needed for content bounds calculations.
+             *
+             * @return {LeafletModule.LatLngBounds}
+             */
+            getBounds() {
+                return this.options.bounds;
             }
         } );
 
@@ -185,8 +235,11 @@ class Background extends EventEmitter {
             minZoom: this.map.config.zoom.min,
             maxNativeZoom: 1,
             minNativeZoom: 1,
-            // Leaflet points are (X, Y) but our representation is (Y, X) for uniformness with map geometry
-            tileSize: new Leaflet.Point( this.tileSize[ 1 ], this.tileSize[ 0 ] ),
+            // This has to be set to stop Leaflet from creating tiles where they 100% do not exist, and additionally
+            // enables our internal content bounds measurements.
+            bounds,
+            // Use virtual tile size for the internal grid
+            tileSize: Leaflet.point( this.map.crs.fromPoint( this.tileSize ) )._multiplyBy( 2 ),
         } );
     }
 
