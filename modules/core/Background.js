@@ -106,7 +106,7 @@ class Background extends EventEmitter {
             results.push( this._constructMainLayer() );
         }
         if ( this._tilesConfigs ) {
-            results.push( this._constructTiles( this._tilesConfigs, this.tileOffset, this.tileSize ) );
+            results.push( this._constructTiles( this._tilesConfigs ) );
         }
         if ( this._overlayConfigs ) {
             for ( const config of this._overlayConfigs ) {
@@ -239,7 +239,7 @@ class Background extends EventEmitter {
             // enables our internal content bounds measurements.
             bounds,
             // Use virtual tile size for the internal grid
-            tileSize: Leaflet.point( this.map.crs.fromPoint( this.tileSize ) )._multiplyBy( 2 ),
+            tileSize: Leaflet.point( this.map.crs.fromPoint( this._physicalTileSize ) )._multiplyBy( 2 ),
         } );
     }
 
