@@ -53,6 +53,20 @@ class Background extends EventEmitter {
         this.image = config.image || null;
 
         /**
+         * Tile offset
+         *
+         * @type {array?}
+         */
+        this.tileOffset = config.tileOffset || null;
+
+        /**
+         * Tile size
+         *
+         * @type {array?}
+         */
+        this.tileSize = config.tileSize || null;
+
+        /**
          * Whether the browser should scale this image in pixel-art mode.
          *
          * @type {boolean}
@@ -74,6 +88,14 @@ class Background extends EventEmitter {
          * @type {DataMaps.Configuration.BackgroundOverlay[]?}
          */
         this._overlayConfigs = config.overlays || null;
+
+        /**
+         * Attached overlays.
+         *
+         * @private
+         * @type {DataMaps.Configuration.BackgroundOverlay[]?}
+         */
+        this._tilesConfigs = config.tiles || null;
     }
 
 
@@ -81,6 +103,9 @@ class Background extends EventEmitter {
         const results = [];
         if ( this.image ) {
             results.push( this._constructMainLayer() );
+        }
+        if ( this._tilesConfigs ) {
+            results.push( this._constructTiles( this._tilesConfigs, this.tileOffset, this.tileSize ) );
         }
         if ( this._overlayConfigs ) {
             for ( const config of this._overlayConfigs ) {
@@ -108,6 +133,58 @@ class Background extends EventEmitter {
                 antiAliasing: this._needsFractionalSizing ? 0.51 : 0
             }
         );
+    }
+
+    _constructTiles( tiles, offset, size ) {
+        const Leaflet = Util.getLeaflet();
+
+        const positionImageMap = tiles.reduce( ( map, tile ) => {
+            const [ x, y ] = tile.position;
+            map[ `${x},${y}` ] = tile.image;
+            return map;
+        }, {} );
+
+        const getImageUrlByPosition = ( position ) => {
+            const matchedImage = positionImageMap[ `${position[0]},${position[1]}`];
+            if ( matchedImage ) {
+                return matchedImage;
+            }
+        };
+
+        const dataMapsTile = Leaflet.GridLayer.extend( {
+            createTile: function( coords ) {
+                const position = [
+                    offset[0] + coords.y,
+                    offset[1] + coords.x
+                ];
+                const tile = Leaflet.DomUtil.create( 'canvas', 'leaflet-tile' );
+                tile.setAttribute( 'src', getImageUrlByPosition( position ) );
+
+                tile.width = size[ 0 ];
+                tile.height = size[ 1 ];
+
+                const ctx = tile.getContext( '2d' );
+                const imgSrc = getImageUrlByPosition( position );
+
+                if ( imgSrc ) {
+                    const img = new Image();
+                    img.addEventListener( 'load', () => {
+                        ctx.drawImage( img, 0, 0 );
+                    } );
+                    img.src = imgSrc;
+                }
+
+                return tile;
+            }
+        } );
+
+        return new dataMapsTile( {
+            className: this.isPixelated ? 'ext-datamaps-pixelated-image' : undefined,
+            maxZoom: this.map.config.zoom.max,
+            minZoom: this.map.config.zoom.min,
+            maxNativeZoom: this.map.config.zoom.max,
+            minNativeZoom: this.map.config.zoom.min
+        } );
     }
 
 
