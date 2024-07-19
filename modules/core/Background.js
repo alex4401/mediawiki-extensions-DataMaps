@@ -145,8 +145,8 @@ class Background extends EventEmitter {
      *      maxY: number
      * ]}
      */
-    _prepareTileImages( tiles, tileSize ) {
-        const [ tileY, tileX ] = tileSize;
+    _prepareTileImages( tiles ) {
+        const [ tileY, tileX ] = this.tileSize;
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
 
         const map = tiles.reduce( ( map, tile ) => {
@@ -180,7 +180,7 @@ class Background extends EventEmitter {
         const Leaflet = Util.getLeaflet();
 
         // Create a map of positions to tiles for a fast lookup of image URLs
-        const [ bounds, positionImageMap, maxY ] = this._prepareTileImages( tiles, size );
+        const [ bounds, positionImageMap, maxY ] = this._prepareTileImages( tiles );
         const getImageUrlByPosition = ( position ) => {
             // Y axis is inverted, with the last element being the first in this notation. Map it.
             const matchedImage = positionImageMap[ `${maxY + position.y},${position.x}` ];
