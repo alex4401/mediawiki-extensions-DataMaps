@@ -1,8 +1,10 @@
-const MapStorage = require( './MapStorage.js' ),
+const
+    MapStorage = require( './MapStorage.js' ),
     { MapFlags, MarkerGroupFlags, PresentationFlags } = require( './enums.js' ),
     MarkerLayerManager = require( './MarkerLayerManager.js' ),
     MarkerPopup = require( './MarkerPopup.js' ),
     MarkerStreamingManager = require( './MarkerStreamingManager.js' ),
+    MarkerFactory = require( './MarkerFactory.js' ),
     CoordinateSystem = require( './CoordinateSystem.js' ),
     Viewport = require( './Viewport.js' ),
     Background = require( './Background.js' ),
@@ -84,6 +86,10 @@ class DataMap extends EventEmitter {
          * @type {MarkerLayerManager}
          */
         this.layerManager = new MarkerLayerManager( this );
+        /**
+         * @type {MarkerFactory}
+         */
+        this.markerFactory = new MarkerFactory( this );
         /**
          * Marker data streaming controller.
          *
@@ -522,82 +528,7 @@ class DataMap extends EventEmitter {
      * @return {LeafletModule.AnyMarker} A Leaflet marker instance.
      */
     createMarkerFromApiInstance( layers, uncheckedInstance, properties ) {
-        // Initialise state if it's missing, thus reaching a null-safe state
-        if ( !uncheckedInstance[ 2 ] ) {
-            uncheckedInstance[ 2 ] = {};
-        }
-
-        const instance = /** @type {DataMaps.ApiMarkerInstance} */ ( uncheckedInstance ),
-            group = this.config.groups[ layers[ 0 ] ],
-            position = this.crs.fromPoint( instance ),
-            sizeScale = instance[ 2 ].scale,
-            useStaticSize = Util.isBitSet( group.flags, MarkerGroupFlags.IsStaticallySized );
-
-        // Construct the marker
-        let /** @type {LeafletModule.AnyMarker|undefined} */ leafletMarker;
-        if ( 'markerIcon' in group || 'pinColor' in group ) {
-            // Fancy icon marker
-            const scaledSize = sizeScale
-                ? /** @type {LeafletModule.PointTuple} */ ( [ group.size[ 0 ] * sizeScale, group.size[ 1 ] * sizeScale ] )
-                : group.size;
-
-            const shouldUseCanvas = !( 'pinColor' in group ) && this.shouldRenderIconsOnCanvas(),
-                Cls = shouldUseCanvas ? Leaflet.CanvasIconMarker : Leaflet.Marker,
-                icon = (
-                    'markerIcon' in group && instance[ 2 ].icon
-                        ? new Leaflet.Icon( {
-                            iconUrl: instance[ 2 ].icon,
-                            iconSize: scaledSize,
-                            useWithCanvas: this.shouldRenderIconsOnCanvas()
-                        } )
-                        : this.getIconFromLayers( layers )
-                ),
-                markerOptions = {
-                    icon,
-                    static: useStaticSize
-                };
-            this.fire( 'modifyMarkerOptions', Cls, instance, markerOptions );
-            leafletMarker = new Cls( position, markerOptions );
-        } else {
-            // Circular marker
-            const
-                Cls = ( useStaticSize ? Leaflet.Circle : Leaflet.CircleMarker ),
-                markerOptions = {
-                    radius: ( sizeScale ? group.size * sizeScale : group.size ) / 2,
-                    zoomScaleFactor: group.zoomScaleFactor,
-                    fillColor: group.fillColor,
-                    fillOpacity: 0.7,
-                    color: group.strokeColor || group.fillColor,
-                    weight: group.strokeWidth || 1
-                };
-            this.fire( 'modifyMarkerOptions', Cls, instance, markerOptions );
-            leafletMarker = new Cls( position, markerOptions );
-        }
-        // Persist original coordinates and state
-        leafletMarker.apiInstance = instance;
-        // Extract properties from the ownership string for quicker access
-        if ( properties ) {
-            leafletMarker.assignedProperties = properties;
-        }
-        // Add marker to the layer
-        this.layerManager.addMember( layers, leafletMarker );
-
-        // Update dismissal status if storage says it's been dismissed
-        const collectibleMode = Util.Groups.getCollectibleType( group );
-        if ( collectibleMode ) {
-            const isIndividual = collectibleMode === MarkerGroupFlags.Collectible_Individual,
-                storage = this.getStorageForMarkerGroup( group );
-            leafletMarker.setDismissed( storage.isDismissed( isIndividual ? Util.getMarkerId( leafletMarker ) : layers[ 0 ],
-                !isIndividual ) );
-        }
-
-        // Set up the marker popup
-        MarkerPopup.bindTo( this, leafletMarker );
-
-        // Fire an event so other components may prepare the marker
-        this.fire( 'markerReady', leafletMarker );
-
-        return leafletMarker;
+        return this.markerFactory.DEPRECATED_createMarkerFromApiInstance( layers, uncheckedInstance, properties );
     }
 
 
@@ -611,7 +542,7 @@ class DataMap extends EventEmitter {
      * @return {LeafletModule.AnyMarker} Leaflet marker instance.
      */
     createMarker( layers, position, state, properties ) {
-        return this.createMarkerFromApiInstance( layers, [ position[ 0 ], position[ 1 ], state || null ], properties );
+        return this.markerFactory.DEPRECATED_createMarker( layers, position, state, properties );
     }
 
 

@@ -47,7 +47,13 @@ module.exports = {
         /**
          * @since 0.17.4
          */
-        CollapseLegend: 1 << 12
+        CollapseLegend: 1 << 12,
+        /**
+         * If set, new coordinate system from v0.17.11 will be used without explicit area definitions.
+         *
+         * @since 0.17.11
+         */
+        Coordinates3: 1 << 13
     },
 
     /**
