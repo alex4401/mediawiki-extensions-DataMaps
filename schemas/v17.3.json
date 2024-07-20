@@ -1831,9 +1831,9 @@
 					"type": "boolean"
 				},
 				"min": {
-					"default": 0.05,
+					"default": -16,
 					"exclusiveMaximum": 24.0,
-					"exclusiveMinimum": -15.0,
+					"exclusiveMinimum": -24.0,
 					"title": "Minimum level",
 					"type": "number"
 				},

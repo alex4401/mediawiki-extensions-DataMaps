@@ -183,7 +183,7 @@ class Viewport extends EventEmitter {
         // Ensure the `zoom` section of the config is initialised
         if ( !mapConfig.zoom ) {
             mapConfig.zoom = {
-                min: 0.05,
+                min: -16,
                 lock: this.map.checkFeatureFlag( MapFlags.DisableZoom ),
                 max: 6,
                 auto: true,

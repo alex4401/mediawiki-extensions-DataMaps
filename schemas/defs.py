@@ -125,9 +125,9 @@ class ZoomSettings(BaseModelEx):
         True, # ZoomSettingsSpec::DEFAULT_AUTO
     )
     min: float = Field(
-        0.05,
+        -16,
         lt=24,
-        gt=-15,
+        gt=-24,
         title='Minimum level',
     )
     max: float = Field(

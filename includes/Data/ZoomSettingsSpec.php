@@ -14,7 +14,7 @@ class ZoomSettingsSpec extends DataModel {
     /**
      * @var float
      */
-    public const DEFAULT_MINIMUM = 0.05;
+    public const DEFAULT_MINIMUM = -16;
 
     /**
      * @var float
