@@ -67,7 +67,9 @@ class EmbedConfigGenerator {
         $out['cOrigin'] = $coordOrder = $this->data->getCoordinateSystem()->getOrigin();
         $out['cOrder'] = $coordOrder = $this->data->getCoordinateSystem()->getOrder();
         $out['cRot'] = $this->data->getCoordinateSystem()->getRotation();
-        $out['crs'] = $this->data->getCoordinateSystem()->getNormalisedBox();
+        if ( $this->data->getCoordinateSystem()->isLegacy() ) {
+            $out['crs'] = $this->data->getCoordinateSystem()->getNormalisedBox();
+        }
         // Feature management
         $bitmask = $this->getPublicFeatureBitMask();
         if ( $bitmask != 0 ) {
