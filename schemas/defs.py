@@ -44,7 +44,17 @@ LayerAssociationStr = Annotated[str, Field(min_length=1)]
 
 
 ##% Structs
-class CoordinateSystem(BaseModelEx):
+class CoordinateSettings(BaseModelEx):
+    origin: Literal['topLeft', 'bottomLeft'] = Field(
+        'topLeft',
+    )
+    order: Literal['yx', 'latlon', 'xy'] = Field(
+        'yx',
+    )
+    rotation: Optional[float] = Field(
+        None,
+    )
+class LEGACY_CoordinateSystem(BaseModelEx):
     order: Literal['yx', 'latlon', 'xy'] = Field(
         'yx',
     )
@@ -358,7 +368,11 @@ class DataMap(BaseModelEx):
         None,
         description='List of fragments that must be imported.'
     )
-    crs: CoordinateSystem | Box = Field(
+    if REV >= 17.4:
+        coordinates: CoordinateSettings = Field(
+            CoordinateSettings(),
+        )
+    crs: LEGACY_CoordinateSystem | Box = Field(
         ((0, 0), (100, 100)),
     )
     settings: Optional[Settings] = Field(
