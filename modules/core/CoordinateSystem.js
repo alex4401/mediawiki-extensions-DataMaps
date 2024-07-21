@@ -30,9 +30,7 @@ module.exports = class CoordinateSystem {
      */
     fromPoint( point ) {
         const
-            y = (
-                this.origin === CRSOrigin.TopLeft ? ( this.bottomRight[ 0 ] - point[ 0 ] ) : point[ 0 ]
-            ) * this.scaleY,
+            y = point[ 0 ] * this.scaleY,
             x = point[ 1 ] * this.scaleX;
         return [ x * this.rSin + y * this.rCos, x * this.rCos - y * this.rSin ];
     }
@@ -49,13 +47,9 @@ module.exports = class CoordinateSystem {
      */
     fromBox( box ) {
         const
-            sY = (
-                this.origin === CRSOrigin.TopLeft ? ( this.bottomRight[ 0 ] - box[ 0 ][ 0 ] ) : box[ 0 ][ 0 ]
-            ) * this.scaleY,
+            sY = box[ 0 ][ 0 ] * this.scaleY,
             sX = box[ 0 ][ 1 ] * this.scaleX,
-            eY = (
-                this.origin === CRSOrigin.TopLeft ? ( this.bottomRight[ 0 ] - box[ 1 ][ 0 ] ) : box[ 1 ][ 0 ]
-            ) * this.scaleY,
+            eY = box[ 1 ][ 0 ] * this.scaleY,
             eX = box[ 1 ][ 1 ] * this.scaleX;
         return [
             [ sY, sX ],
@@ -72,9 +66,6 @@ module.exports = class CoordinateSystem {
     fromLeaflet( latlng, round ) {
         let lat = latlng.lat / this.scaleY,
             lon = latlng.lng / this.scaleX;
-        if ( this.origin === CRSOrigin.TopLeft ) {
-            lat = this.bottomRight[ 0 ] - lat;
-        }
 
         if ( this.rotation ) {
             [ lat, lon ] = [
