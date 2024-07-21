@@ -1,5 +1,6 @@
 /** @typedef {import( './DataMap.js' )} DataMap */
 const
+    { CRSOrigin } = require( './enums.js' ),
     EventEmitter = require( './EventEmitter.js' ),
     Util = require( './Util.js' );
 
@@ -182,8 +183,13 @@ class Background extends EventEmitter {
         // Create a map of positions to tiles for a fast lookup of image URLs
         const [ bounds, positionImageMap, maxY ] = this._prepareTileImages( tiles );
         const getImageUrlByPosition = ( position ) => {
-            // Y axis is inverted, with the last element being the first in this notation. Map it.
-            const matchedImage = positionImageMap[ `${maxY + position.y},${position.x}` ];
+            // If origin point is in the bottom-left corner, invert the Y position here
+            let y = position.y;
+            if ( this.map.crs.origin === CRSOrigin.BottomLeft ) {
+                y = maxY + y;
+            }
+
+            const matchedImage = positionImageMap[ `${y},${position.x}` ];
             if ( matchedImage ) {
                 return matchedImage;
             }

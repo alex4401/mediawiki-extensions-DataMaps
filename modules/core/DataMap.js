@@ -1,3 +1,4 @@
+const CoordinateSystemNew = require('./CoordinateSystemNew.js');
 const
     MapStorage = require( './MapStorage.js' ),
     { MapFlags, MarkerGroupFlags, PresentationFlags } = require( './enums.js' ),
@@ -68,6 +69,13 @@ class DataMap extends EventEmitter {
          * @type {number}
          */
         this._flags = config.flags | ( this._embedConfig.presentationFlags || 0 );
+        /**
+         * Coordinate system specification.
+         * @type {CoordinateSystem}
+         */
+        this.crs = this.checkFeatureFlag( MapFlags.Coordinates3 )
+            ? new CoordinateSystemNew( config.cOrigin, config.cOrder, config.cRot )
+            : new CoordinateSystem( config.crs, config.cOrder, config.cRot );
         /**
          * Local map storage interface.
          *
@@ -152,11 +160,6 @@ class DataMap extends EventEmitter {
         this._fullScreenAnchor = null;
 
         this._setUpUriMarkerHandler();
-
-        /**
-         * Coordinate system specification.
-         */
-        this.crs = new CoordinateSystem( config.crs, config.cOrder, config.cRot );
 
         // Force the IconRenderer_Canvas flag if dmfullcanvas in the URL
         if ( Util.getQueryParameter( 'dmfullcanvas' ) ) {

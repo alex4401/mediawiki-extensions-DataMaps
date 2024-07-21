@@ -114,6 +114,7 @@
 				"core/EventEmitter.js",
 				"core/MapStorage.js",
 				"core/CoordinateSystem.js",
+				"core/CoordinateSystemNew.js",
 				"core/MarkerStreamingManager.js",
 				"core/MarkerLayerManager.js",
 				"core/MarkerFactory.js",

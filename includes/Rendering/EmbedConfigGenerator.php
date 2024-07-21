@@ -63,9 +63,10 @@ class EmbedConfigGenerator {
             $out['version'] = $this->title->getLatestRevID();
             $out['lastPurgeTimestamp'] = $this->title->getTouched();
         }
+        // Coordinate transformation
+        $out['cOrigin'] = $coordOrder = $this->data->getCoordinateSystem()->getOrigin();
         $out['cOrder'] = $coordOrder = $this->data->getCoordinateSystem()->getOrder();
         $out['cRot'] = $this->data->getCoordinateSystem()->getRotation();
-        // Coordinate transformation
         $out['crs'] = $this->data->getCoordinateSystem()->getNormalisedBox();
         // Feature management
         $bitmask = $this->getPublicFeatureBitMask();
@@ -137,6 +138,7 @@ class EmbedConfigGenerator {
         $out |= $settings->isSleepBasedInteractionModel() ? 1 << 10 : 0;
         $out |= $settings->areTooltipPopupsEnabled() ? 1 << 11 : 0;
         $out |= ( $settings->getLegendVisibilityMode() === MapSettingsSpec::LM_COLLAPSED ) ? 1 << 12 : 0;
+        $out |= ( !$this->data->getCoordinateSystem()->isLegacy() ) ? 1 << 13 : 0;
 
         $markerCount = 0;
         $this->data->iterateRawMarkerMap( static function ( string $_, array $rawCollection ) use ( &$markerCount ) {

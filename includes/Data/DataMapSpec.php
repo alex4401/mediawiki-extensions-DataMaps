@@ -46,15 +46,20 @@ class DataMapSpec extends DataModel {
      */
     public function getCoordinateSystem(): CoordinateSystem {
         if ( $this->coordinateSystem === null ) {
+            if ( is_object( $this->raw->coordinates ) ) {
+                $this->coordinateSystem = new CoordinateSystem( $this->raw->coordinates );
+                return $this->coordinateSystem;
+            }
+
             if ( is_object( $this->raw->crs ?? null ) ) {
-                $this->coordinateSystem = new CoordinateSystem( $this->raw->crs );
+                $this->coordinateSystem = new CoordinateSystemLegacy( $this->raw->crs );
             } else {
                 $options = [];
                 if ( isset( $this->raw->crs ) ) {
                     $options['topLeft'] = $this->raw->crs[0];
                     $options['bottomRight'] = $this->raw->crs[1];
                 }
-                $this->coordinateSystem = new CoordinateSystem( (object)$options );
+                $this->coordinateSystem = new CoordinateSystemLegacy( (object)$options );
             }
         }
         return $this->coordinateSystem;

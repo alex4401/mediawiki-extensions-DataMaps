@@ -1,7 +1,7 @@
 /** @typedef {import( './DataMap.js' )} DataMap */
 /** @typedef {import( './Background.js' )} Background */
 const
-    { MapFlags } = require( './enums.js' ),
+    { MapFlags, CRSOrigin } = require( './enums.js' ),
     Controls = require( './controls.js' ),
     EventEmitter = require( './EventEmitter.js' ),
     Util = require( './Util.js' ),
@@ -35,7 +35,10 @@ class Viewport extends EventEmitter {
 
         // Specify the coordinate reference system and initialise the renderer
         const leafletConfig = this._makeLeafletConfig( config );
-        leafletConfig.crs = Leaflet.CRS.Simple;
+        leafletConfig.crs = ( {
+            [ CRSOrigin.BottomLeft ]: Leaflet.Ark.BottomLeftPixelCrs,
+            [ CRSOrigin.TopLeft ]: Leaflet.Ark.TopLeftPixelCrs,
+        } )[ this.map.crs.origin ];
         leafletConfig.renderer = new Leaflet.Canvas( leafletConfig.rendererSettings );
 
         /**
