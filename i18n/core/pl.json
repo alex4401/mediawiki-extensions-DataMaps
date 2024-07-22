@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Alex4401",
+			"Frozengeist",
 			"Rail",
 			"WaldiSt"
 		]
@@ -24,6 +25,8 @@
 	"datamap-validate-bad-schema": "Właściwość <code>$schema</code> tej mapy nie wskazuje na obsługiwaną definicję formatu.\n\nObsługiwane wersje schematu:\n$1",
 	"datamap-validate-constraint-required": "Brakuje wymaganej własności: <code>$1</code>.",
 	"datamap-validate-constraint-type": "Właściwość ma nieoczekiwany format: <code>$1</code> .",
+	"datamap-validate-constraint-empty": "Właściwość tekstu nie może być pusta: <code>$1</code>.",
+	"datamap-validate-constraint-minlength": "Właściwość tekstu musi zawierać co najmniej $2 znaki: <code>$1</code>.",
 	"datamap-error-pf-page-does-not-exist": "Strona mapy danych „[[$1]]” nie istnieje.",
 	"datamap-error-pf-page-invalid-content-model": "Model zawartości strony „[[$1]]” to nie <code>Interaktywna mapa danych</code>.",
 	"datamap-background-name-fallback": "Bez tytułu",
