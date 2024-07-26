@@ -241,6 +241,9 @@ class Background extends EventEmitter {
             minZoom: this.map.config.zoom.min,
             maxNativeZoom: 1,
             minNativeZoom: 1,
+            // This option is fairly volatile when asset server has aggressive ratelimiting (this spams network with
+            // cache revalidation requests)
+            keepBuffer: 16,
             // This has to be set to stop Leaflet from creating tiles where they 100% do not exist, and additionally
             // enables our internal content bounds measurements.
             bounds,
