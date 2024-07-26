@@ -127,4 +127,17 @@ module.exports = class EventEmitter {
         this.fire.apply( this, [ event ].concat( this._autoFiringEvents[ event ] ) );
         this.off( event );
     }
+
+
+    /**
+     * @template {Extract<keyof Signatures, string>} EventId
+     * @param {EventId} event
+     * @param {InstanceType<EventEmitter>} target
+     */
+    createEventProxyOn( event, target ) {
+        this.on( event, function forwardedEventCall( ...params ) {
+            const fireMethod = this._autoFiringEvents[ event ] ? 'fireMemorised' : 'fire';
+            target[ fireMethod ].apply( target, [ event, ...params ] );
+        }, this );
+    }
 };

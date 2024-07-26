@@ -181,6 +181,9 @@ class DataMap extends EventEmitter {
             }
         }
 
+        // Proxy MarkerFactory events on this class for backwards compatibility (v0.17.10)
+        this.markerFactory.createEventProxyOn( 'modifyMarkerOptions', this );
+        this.markerFactory.createEventProxyOn( 'markerReady', this );
         // Set up internal event handlers
         this.on( 'linkedEvent', this._onLinkedEventReceived, this );
         this.on( 'legendManager', this._initialiseFiltersPanel, this );
