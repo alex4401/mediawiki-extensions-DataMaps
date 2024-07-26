@@ -210,7 +210,7 @@ class Background extends EventEmitter {
                 if ( imageUrl ) {
                     const img = new Image();
                     img.addEventListener( 'load', () => {
-                        tile.getContext( '2d' ).drawImage( img, 0, 0, physicalX, physicalY );
+                        tile.getContext( '2d' ).drawImage( img, 0, 0 );
                         doneCallback( undefined, tile );
                     } );
                     img.addEventListener( 'error', event => {
