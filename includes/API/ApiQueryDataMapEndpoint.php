@@ -27,7 +27,7 @@ class ApiQueryDataMapEndpoint extends ApiBase {
     // - if major version becomes higher than zero, the first digit should be the major version;
     // - next two digits should be the minor version;
     // - next two digits should be the patch version, or two zeroes instead.
-    public const GENERATION = 1600;
+    public const GENERATION = 1711;
     // Key prefix for every cache key produced by this endpoint. Prior to v0.12.0 this was 'ARKDataMapQuery'.
     private const CACHE_NAMESPACE = 'ExtDataMap::Query';
 

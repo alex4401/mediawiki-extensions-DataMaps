@@ -104,7 +104,11 @@ class MarkerProcessor {
 
         // Custom persistent ID
         if ( $marker->getCustomPersistentId() != null ) {
-            $slots['uid'] = $marker->getCustomPersistentId();
+            $pid = $marker->getCustomPersistentId();
+            if ( is_integer( $pid ) ) {
+                $pid = (string)$pid;
+            }
+            $slots['uid'] = $pid;
         }
 
         // Popup title
