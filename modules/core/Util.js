@@ -51,6 +51,14 @@ module.exports = Object.freeze( {
     canAnonsEdit: serverSettings.CanAnonsEdit,
 
     /**
+     * Whether maps will be loaded lazily, i.e. when they come into view.
+     *
+     * @constant
+     * @type {boolean}
+     */
+    isMapLazyLoadingEnabled: serverSettings.IsMapLazyLoadingEnabled,
+
+    /**
      * Throws an exception if the value is null or undefined. Returns it back otherwise. This exists primarily to satisfy
      * TypeScript's type checking.
      *

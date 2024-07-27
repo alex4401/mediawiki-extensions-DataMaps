@@ -243,6 +243,7 @@ final class HookHandler implements
         return [
             'IsBleedingEdge' => $extConfig->hasExperimentalFeatures(),
             'IsVisualEditorEnabled' => $extConfig->isVisualEditorEnabled(),
+            'IsMapLazyLoadingEnabled' => $extConfig->isMapLazyLoadingEnabled(),
             'TabberNeueModule' =>
                 ExtensionRegistry::getInstance()->isLoaded( 'TabberNeue', '>= 1.8.0' )
                     ? ( $config->get( 'TabberNeueUseCodex' ) ? 'ext.tabberNeue.codex' : 'ext.tabberNeue.legacy' )

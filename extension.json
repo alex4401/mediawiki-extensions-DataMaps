@@ -532,6 +532,10 @@
 		"FullLinksUpdateBudget": {
 			"value": 0.5
 		},
+		"EnableMapLazyLoading": {
+			"description": "Temporary feature flag so it's easier to disable lazy-loading if the world gets set on fire",
+			"value": true
+		},
 		"EnableVisualEditor": {
 			"value": true
 		},

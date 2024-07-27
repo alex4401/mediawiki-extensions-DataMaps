@@ -18,6 +18,7 @@ class ExtensionConfig {
         ConfigNames::ParserExpansionLimit,
         ConfigNames::UseInProcessParserCache,
         ConfigNames::LinksUpdateBudget,
+        ConfigNames::EnableMapLazyLoading,
         ConfigNames::EnableTransclusionAlias,
         ConfigNames::EnableVisualEditor,
         ConfigNames::EnableCreateMap,
@@ -103,6 +104,10 @@ class ExtensionConfig {
 
     public function isVisualEditorEnabled(): bool {
         return $this->hasExperimentalFeatures() && $this->options->get( ConfigNames::EnableVisualEditor );
+    }
+
+    public function isMapLazyLoadingEnabled(): bool {
+        return $this->options->get( ConfigNames::EnableMapLazyLoading );
     }
 
     public function isCreateMapEnabled(): bool {

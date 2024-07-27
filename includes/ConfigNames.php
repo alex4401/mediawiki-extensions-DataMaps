@@ -71,6 +71,11 @@ class ConfigNames {
 
     /**
      * Name constant. For use in ExtensionConfig.
+     */
+    public const EnableMapLazyLoading = 'DataMapsEnableMapLazyLoading';
+
+    /**
+     * Name constant. For use in ExtensionConfig.
      *
      * @unstable to be finalised in GH#98.
      */
