@@ -22,6 +22,10 @@ module.exports = Object.assign( {}, Leaflet, {
          */
         TopLeftPixelCrs: Leaflet.Util.extend( {}, Leaflet.CRS.Simple, {
             transformation: new Leaflet.Transformation( 1, 0, 1, 0 )
-        } )
+        } ),
+        /**
+         * @since 0.17.11
+         */
+        TileManager: require( './TileManager.js' ),
     }
 } );

@@ -146,7 +146,7 @@ class Background extends EventEmitter {
      *      maxY: number
      * ]}
      */
-    _prepareTileImages( tiles ) {
+    _compileTileData( tiles ) {
         const [ tileY, tileX ] = this._physicalTileSize;
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
 
@@ -181,66 +181,29 @@ class Background extends EventEmitter {
         const Leaflet = Util.getLeaflet();
 
         // Create a map of positions to tiles for a fast lookup of image URLs
-        const [ bounds, positionImageMap, maxY ] = this._prepareTileImages( tiles );
-        const getImageUrlByPosition = ( position ) => {
+        const [ bounds, imageLut, maxY ] = this._compileTileData( tiles );
+        const imageLookup = ( coords ) => {
             // If origin point is in the bottom-left corner, invert the Y position here
-            let y = position.y;
+            let y = coords.y;
             if ( this.map.crs.origin === CRSOrigin.BottomLeft ) {
                 y = maxY + y;
             }
 
-            const matchedImage = positionImageMap[ `${y},${position.x}` ];
+            const matchedImage = imageLut[ `${y},${coords.x}` ];
             if ( matchedImage ) {
                 return matchedImage;
             }
             return null;
         };
 
-        const [ physicalY, physicalX ] = this._physicalTileSize;
-
-        const dataMapsTile = Leaflet.GridLayer.extend( {
-            createTile( coords, doneCallback ) {
-                const tile = document.createElement( 'canvas' ),
-                    imageUrl = getImageUrlByPosition( coords );
-                // Use physical tile size for the canvas. Leaflet will take care of our positioning.
-                tile.width = physicalX;
-                tile.height = physicalY;
-                tile.setAttribute( 'src', imageUrl );
-
-                if ( imageUrl ) {
-                    const img = new Image();
-                    img.addEventListener( 'load', () => {
-                        tile.getContext( '2d' ).drawImage( img, 0, 0 );
-                        doneCallback( undefined, tile );
-                    } );
-                    img.addEventListener( 'error', event => {
-                        doneCallback( event, tile );
-                    } );
-                    img.src = imageUrl;
-                } else {
-                    console.warn( `Leaflet wants a tile for undefined position: ${coords}` );
-                }
-
-                return tile;
-            },
-
-
-            /**
-             * A wiring method needed for content bounds calculations.
-             *
-             * @return {LeafletModule.LatLngBounds}
-             */
-            getBounds() {
-                return this.options.bounds;
-            }
-        } );
-
-        return new dataMapsTile( {
+        return new Leaflet.Ark.TileManager( {
             className: this.isPixelated ? 'ext-datamaps-pixelated-image' : undefined,
             maxZoom: this.map.config.zoom.max,
             minZoom: this.map.config.zoom.min,
             maxNativeZoom: 1,
             minNativeZoom: 1,
+            // LUT binding
+            imageLookup,
             // This option is fairly volatile when asset server has aggressive ratelimiting (this spams network with
             // cache revalidation requests)
             keepBuffer: 16,
@@ -249,6 +212,9 @@ class Background extends EventEmitter {
             bounds,
             // Use virtual tile size for the internal grid
             tileSize: Leaflet.point( this.map.crs.fromPoint( this._physicalTileSize ) )._multiplyBy( 2 ),
+            // Use physical tile size for canvas dimensions
+            physicalWidth: this._physicalTileSize[ 1 ],
+            physicalHeight: this._physicalTileSize[ 0 ],
         } );
     }
 
