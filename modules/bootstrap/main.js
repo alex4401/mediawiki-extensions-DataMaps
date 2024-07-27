@@ -139,6 +139,27 @@ mw.dataMaps = {
         return map;
     },
 
+    
+    /**
+     * @param {number} id
+     * @param {HTMLElement} rootElement
+     * @param {DataMaps.Configuration.Map} config
+     */
+    lazyInitialiseMapWithConfig( id, rootElement, config ) {
+        const observer = new IntersectionObserver(
+            ( entries, observer ) => {
+                if ( entries[ 0 ].isIntersecting ) {
+                    mw.dataMaps.initialiseMapWithConfig( id, rootElement, config );
+                    observer.disconnect();
+                }
+            },
+            {
+                threshold: 0.03,
+            }
+        );
+        observer.observe( rootElement );
+    },
+
 
     /**
      * @param {( map: InstanceType<DataMap> ) => void} callback
@@ -176,11 +197,12 @@ mw.dataMaps = {
 // Begin initialisation once the document is loaded
 mw.hook( 'wikipage.content' ).add( $content => {
     // Run initialisation for every map, followed by events for gadgets to listen to
+    const initMethod = Util.isMapLazyLoadingEnabled ? 'lazyInitialiseMapWithConfig' : 'initialiseMapWithConfig';
     for ( const rootElement of /** @type {HTMLElement[]} */ ( $content.find( MAP_CONTAINER_SELECTOR ) ) ) {
         const id = parseInt( Util.getNonNull( rootElement.dataset.datamapId ) ),
             config = getConfig( rootElement );
         if ( config ) {
-            mw.dataMaps.initialiseMapWithConfig( id, rootElement, config );
+            mw.dataMaps[ initMethod ]( id, rootElement, config );
         }
     }
 } );
