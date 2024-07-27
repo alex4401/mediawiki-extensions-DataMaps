@@ -54,7 +54,7 @@ class DataMap extends EventEmitter {
         /**
          * Setup configuration.
          *
-         * @deprecated since 0.16.5; will be removed in 0.18.0. Alternatives will be made over the v0.17 cycle.
+         * @deprecated since 0.16.5; will be removed in 0.20.0. Alternatives will be made over the v0.17 cycle.
          * @type {DataMaps.Configuration.Map}
          */
         this.config = config;
