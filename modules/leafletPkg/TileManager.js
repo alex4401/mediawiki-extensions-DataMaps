@@ -13,7 +13,7 @@ module.exports = Leaflet.GridLayer.extend( {
         if ( imageUrl ) {
             const img = new Image();
             img.addEventListener( 'load', () => {
-                tile.getContext( '2d' ).drawImage( img, 0, 0 );
+                tile.getContext( '2d' ).drawImage( img, 0, 0, tile.width, tile.height );
                 doneCallback( undefined, tile );
             } );
             img.addEventListener( 'error', event => {
