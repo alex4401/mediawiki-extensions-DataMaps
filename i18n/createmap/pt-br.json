@@ -1,0 +1,27 @@
+{
+	"@metadata": {
+		"authors": [
+			"Flaviane da Silva"
+		]
+	},
+	"datamap-vec-title": "Criar um mapa",
+	"datamap-ve-skip": "Pular",
+	"datamap-vec-intro": "Ajuste a informação a seguir com base nas suas necessidades para que possamos prepara o mapa básico, para que então você possa edita-lo.",
+	"datamap-vec-select-crs-origin": "(0, 0) canto da coordenada",
+	"datamap-vec-crs-top-left": "Superior esquerdo",
+	"datamap-vec-crs-bottom-left": "Inferior esquerdo",
+	"datamap-vec-crs-percent": "Porcentagem (0-100%)",
+	"datamap-vec-crs-custom": "Personalizado",
+	"datamap-vec-select-background": "Imagem de fundo",
+	"datamap-vec-note-image-size": "Tamanho: $1 x $2",
+	"datamap-vec-error-bad-file-type": "Tipo de arquivo ($1) não é suportado; por favor selecione um arquivo JPEG, PNG, GIF ou SVG.",
+	"datamap-vec-error-poor-file-type": "Esse tipo de arquivo pode performar mal em networks com limitação. Use JPEG sempre que possivel.",
+	"datamap-vec-extra-options": "Opções extras:",
+	"datamap-vec-toggle-coord-display": "Mostrar coordenadas abaixo do cursor",
+	"datamap-vec-toggle-zoom": "Permitir zoom",
+	"datamap-vec-toggle-search": "Permitir busca de marcador",
+	"datamap-vec-toggle-search-tabber": "Compartilhar dados da pesquisa dentro do tabulador",
+	"datamap-vec-submit": "Avançar",
+	"datamap-vec-example-group-name": "Grupo de exemplo",
+	"datamap-vec-example-marker": "Exemplo de marcador"
+}

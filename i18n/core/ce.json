@@ -1,0 +1,33 @@
+{
+	"@metadata": {
+		"authors": [
+			"Умар"
+		]
+	},
+	"datamap-desc": "Вики-агӀонаш чу интерактиван картанаш чудаха аьтто бо.",
+	"content-model-datamap": "Интерактиван хаамийн карта",
+	"datamap-doc-page-does-not-exist": "''ХӀокху хаамийн агӀонан документаци кхолла йиш йу [[$1]] тӀехь''",
+	"datamap-doc-page-header": "'''ХӀара документацин агӀо йу [[$1]]'''",
+	"datamap-category-pages-including-maps": "АгӀонаш, йукъахь хаамийн картанаш а",
+	"datamap-mapsrcinfo-status-ok": "Проблемаш ца карийра хӀокху картин йуьхьанцара кодехь.",
+	"datamap-mapsrcinfo-status-meh": "ХӀокху картин йуьхьанцара кодехь кегий проблемаш карийна.",
+	"datamap-mapsrcinfo-status-errors": "ХӀара карта йуьхьанцара код теллина чекх ца долу.",
+	"datamap-mapsrcinfo-heading-errors": "'''ГӀалаташ:''' $1",
+	"datamap-mapsrcinfo-heading-warnings": "'''ДӀахьедарш:''' $1",
+	"datamap-mapsrcinfo-docslink": "Оьшуш хилча, хьажа мегар ду [$1 шуьйра документаци] йа [$2 кхолла проблеман хаам йа функцин дехаран тикет] нагахь санна хьуна цхьаъ хийца деза аьлла хетахь.",
+	"datamap-validate-constraint-required": "Оьшуш йолу билгало ца тоьу: <code>$1</code>.",
+	"datamap-validate-constraint-type": "Билгало дагахь йоцу формат йолуш йу: <code>$1</code>.",
+	"datamap-validate-constraint-unexpected": "Дагахь йоцу билгало кхаьчна: <code>$1</code>.",
+	"datamap-background-name-fallback": "ЦӀе йоцуш",
+	"datamap-legend-label": "Чулацам",
+	"datamap-loading-js": "Скрипташ чуйахар",
+	"datamap-legend-tab-locations": "Маркерш",
+	"datamap-toggle-show-all": "Гайта йерриге",
+	"datamap-toggle-hide-all": "Къайлайаха йерриге",
+	"datamap-legend-tab-checklist": "Контролан могӀам",
+	"datamap-layer-surface": "ТӀехуле",
+	"datamap-layer-cave": "Хьехарш",
+	"datamap-popup-related-article": "Кхин дӀа хаа",
+	"datamap-popup-dismissed": "Гулдина",
+	"datamap-control-search-toggle-sharing": "Дерриге а карташ"
+}

@@ -1,0 +1,26 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ykhwong"
+		]
+	},
+	"datamap-vec-title": "지도 만들기",
+	"datamap-ve-skip": "건너뛰기",
+	"datamap-vec-select-crs-origin": "(0, 0) 좌표 모서리",
+	"datamap-vec-crs-top-left": "위-왼쪽",
+	"datamap-vec-crs-bottom-left": "아래-왼쪽",
+	"datamap-vec-select-crs": "좌표계",
+	"datamap-vec-crs-percent": "백분율 (0-100%)",
+	"datamap-vec-crs-image": "이미지 좌표 일치",
+	"datamap-vec-crs-custom": "사용자 지정",
+	"datamap-vec-select-background": "배경 이미지",
+	"datamap-vec-note-image-size": "크기: $1 × $2",
+	"datamap-vec-extra-options": "추가 옵션",
+	"datamap-vec-toggle-zoom": "크기 조절 사용",
+	"datamap-vec-toggle-search": "마커 검색 사용",
+	"datamap-vec-toggle-uid-requirement": "고유한 마커 ID가 필요합니다",
+	"datamap-vec-submit": "진행",
+	"datamap-vec-example-group-id": "예시",
+	"datamap-vec-example-group-name": "예시 그룹",
+	"datamap-vec-example-marker": "예시 마커"
+}
