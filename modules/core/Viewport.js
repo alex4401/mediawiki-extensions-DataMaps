@@ -279,9 +279,13 @@ class Viewport extends EventEmitter {
      * Updates map options regarding our custom marker scaling behaviour.
      */
     updateScaling() {
-        const zoomPercent = Math.round( this._leaflet.getZoom() / this._leaflet.options.maxZoom * 100 ) / 100;
-        this._leaflet.options.vecMarkerScale = zoomPercent * Viewport.VECTOR_ZOOM_SCALING_MAX;
-        this._leaflet.options.iconMarkerScale = zoomPercent * Viewport.ICON_ZOOM_SCALING_MAX;
+        const
+            minimumScale = 0.05,
+            zoomNormalisedVal = this._leaflet.getZoom() - this._leaflet.options.minZoom,
+            zoomNormalisedMax = this._leaflet.options.maxZoom - this._leaflet.options.minZoom,
+            zoomPercent = Math.round( zoomNormalisedVal / zoomNormalisedMax * 100 ) / 100;
+        this._leaflet.options.vecMarkerScale = Math.max( minimumScale, zoomPercent * Viewport.VECTOR_ZOOM_SCALING_MAX );
+        this._leaflet.options.iconMarkerScale = Math.max( minimumScale, zoomPercent * Viewport.ICON_ZOOM_SCALING_MAX );
     }
 
 
