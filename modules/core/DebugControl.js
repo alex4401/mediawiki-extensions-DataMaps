@@ -28,7 +28,8 @@ class DebugControl extends MapControl {
             `zoom: ${leaflet.getZoom()}`,
             `north-east: (${bounds._northEast.lat}, ${bounds._northEast.lng})`,
             `south-west: (${bounds._southWest.lat}, ${bounds._southWest.lng})`,
-            `scale: (${this.map.crs.scaleX}, ${this.map.crs.scaleY})`,
+            `coordinate scale: (${this.map.crs.scaleX}, ${this.map.crs.scaleY})`,
+            `marker scale: v${leaflet.options.vecMarkerScale}, i${leaflet.options.iconMarkerScale}`
         ].join( '<br/>' );
     }
 }
