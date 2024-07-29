@@ -211,7 +211,7 @@ class Background extends EventEmitter {
             // enables our internal content bounds measurements.
             bounds,
             // Use virtual tile size for the internal grid
-            tileSize: Leaflet.point( this.map.crs.fromPoint( this._physicalTileSize ) )._multiplyBy( 2 ),
+            tileSize: Leaflet.point( this._physicalTileSize ),
             // Use physical tile size for canvas dimensions
             physicalWidth: this._physicalTileSize[ 1 ],
             physicalHeight: this._physicalTileSize[ 0 ],
