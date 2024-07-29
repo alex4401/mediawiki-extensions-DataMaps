@@ -3,6 +3,7 @@
 const
     { MapFlags, CRSOrigin } = require( './enums.js' ),
     Controls = require( './controls.js' ),
+    DebugControl = require( './DebugControl.js' ),
     EventEmitter = require( './EventEmitter.js' ),
     Util = require( './Util.js' ),
     { createDomElement } = Util;
@@ -154,6 +155,13 @@ class Viewport extends EventEmitter {
         this.searchHost = null;
         if ( !this.map.checkFeatureFlag( MapFlags.VisualEditor ) && this.map.checkFeatureFlag( MapFlags.Search ) ) {
             this.searchHost = this.addControl( Viewport.anchors.legend, new Controls.SearchHost( this.map ) );
+        }
+        /**
+         * @type {DebugControl?}
+         */
+        this.debugControl = null;
+        if ( mw.config.get( 'debug' ) ) {
+            this.debugControl = this.addControl( Viewport.anchors.bottomLeft, new DebugControl( this.map ) );
         }
 
         this._updateBackgroundLayers(

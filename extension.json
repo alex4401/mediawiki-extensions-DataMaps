@@ -123,6 +123,7 @@
 				"core/Viewport.js",
 				"core/DataMap.js",
 				"core/controls.js",
+				"core/DebugControl.js",
 				"core/MarkerPopup.js",
 				"core/Util.js",
 
