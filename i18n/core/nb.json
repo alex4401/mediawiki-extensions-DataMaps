@@ -1,0 +1,32 @@
+{
+	"@metadata": {
+		"authors": [
+			"EdoAug"
+		]
+	},
+	"datamap-desc": "Tillater innebygde, interaktive kart på wikisider.",
+	"content-model-datamap": "Interaktivt datakart",
+	"datamap-doc-page-does-not-exist": "''Dokumentasjon for dette kartet kan opprettes på [[$1]]''",
+	"datamap-doc-page-header": "'''Dette er dokumentasjonssiden for [[$1]]'''",
+	"datamap-category-pages-including-maps": "Sider som inneholder datakart",
+	"datamap-category-pages-including-broken-maps": "Sider som inneholder datakart med feilaktig validering",
+	"datamap-category-maps-failing-validation": "Kart med feilaktig validering",
+	"datamap-mapsrcinfo-internal-page": "Denne siden inneholder kildekoden til et kart. Det er ikke ment til å besøkes direkte og dukker ikke opp hos søkemotorer på nett. Det bør istedenfor bygges inn i en artikkel.",
+	"datamap-mapsrcinfo-status-ok": "Ingen problemer funnet i dette kartets kildekode.",
+	"datamap-mapsrcinfo-status-meh": "Mindre problemer funnet i dette kartets kildekode.",
+	"datamap-mapsrcinfo-status-errors": "Dette kartets kildekode kan ikke valideres.",
+	"datamap-mapsrcinfo-heading-errors": "'''Feil:''' $1",
+	"datamap-mapsrcinfo-heading-warnings": "'''Advarsler:''' $1",
+	"datamap-mapsrcinfo-docslink": "Du kan sjekke [$1 dokumentasjonen til utvidelsen] om det trengs eller [$2 opprette en problemrapport eller funksjonsforespørselssak] om du tenker at det er behov for endringer.",
+	"datamap-error-validate-invalid-json": "Dette er ikke et gyldig JSON-dokument.",
+	"datamap-background-name-fallback": "Uten navn",
+	"datamap-legend-label": "Innhold",
+	"datamap-toggle-show-all": "Vis alt",
+	"datamap-toggle-hide-all": "Skjul alt",
+	"datamap-layer-control": "Veksle",
+	"datamap-legend-tab-checklist": "Sjekklister",
+	"datamap-checklist-prelude": "Disse er elementene du kan markere som samlet:",
+	"datamap-interact-touch": "Bruk to fingre for å flytte på kartet",
+	"datamap-control-zoom-in": "Forstørr",
+	"datamap-control-zoom-out": "Forminsk"
+}

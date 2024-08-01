@@ -3,7 +3,8 @@
 		"authors": [
 			"Kareyac",
 			"Okras",
-			"SuperYwx9"
+			"SuperYwx9",
+			"Yurina Tatiana"
 		]
 	},
 	"datamap-ve-to-load": "Пожалуйста, подождите, пока загрузится визуальный редактор...",
@@ -38,5 +39,6 @@
 	"datamap-ve-workflow-marker-field-article": "Ссылка на статью",
 	"datamap-ve-workflow-save": "Сохранить изменения",
 	"datamap-ve-workflow-save-submit": "Опубликовать изменения",
+	"datamap-ve-workflow-save-summary": "Описание изменений",
 	"datamap-ve-workflow-save-summary-desc": "Опишите внесённые изменения"
 }
