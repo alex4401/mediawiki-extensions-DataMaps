@@ -3,6 +3,7 @@
 		"authors": [
 			"Hideki Yoshida",
 			"Kokage si",
+			"TAKAHASHI Shuuji",
 			"num9852453",
 			"もなー(偽物)"
 		]
@@ -36,5 +37,6 @@
 	"datamap-coordinate-control-text": "緯度 $1、経度 $2",
 	"datamap-control-zoom-in": "拡大",
 	"datamap-control-zoom-out": "縮小",
-	"datamap-control-reset-view": "デフォルト表示に戻す"
+	"datamap-control-reset-view": "デフォルト表示に戻す",
+	"datamap-control-edit": "地図データを編集する"
 }

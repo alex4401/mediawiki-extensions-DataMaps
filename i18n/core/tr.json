@@ -3,7 +3,8 @@
 		"authors": [
 			"FellowEsin",
 			"Hedda",
-			"RuzDD"
+			"RuzDD",
+			"Tarkovsky"
 		]
 	},
 	"datamap-desc": "Etkileşimli haritaların viki sayfalarına yerleştirilmesine izin verir.",
@@ -19,6 +20,7 @@
 	"datamap-mapsrcinfo-status-errors": "Bu harita, kaynak kodu doğrulamasını geçemiyor.",
 	"datamap-mapsrcinfo-heading-errors": "'''Hatalar:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''Uyarılar:''' $1",
+	"datamap-mapsrcinfo-docslink": "Eğer gerekiyorsa [$1 eklenti belgesi]'nden yardım alabilirsiniz veya bir şeylerin değişime ihtiyacı olduğunu düşünüyorsanız [$2 sorun raporunu veya özellik talep bileti oluştur]abilirsiniz.",
 	"datamap-error-validate-invalid-json": "Bu, geçerli bir JSON belgesi değil.",
 	"datamap-legend-label": "İçindekiler",
 	"datamap-loading-js": "Kodlar yükleniyor",
