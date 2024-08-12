@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Flaviane da Silva"
+			"Flaviane da Silva",
+			"Fúlvio"
 		]
 	},
 	"datamap-desc": "Permite embeber mapas interativos nas páginas da wiki.",
@@ -40,18 +41,24 @@
 	"datamap-layer-control": "Alternar",
 	"datamap-legend-tab-checklist": "Lista de verificação",
 	"datamap-checklist-prelude": "Esses são os itens que você marcou como coletados:",
+	"datamap-interact-touch": "Use dois dedos para mover o mapa",
 	"datamap-interact-scroll": "Use CTRL + Scroll para ampliar o mapa",
 	"datamap-interact-scroll-mac": "Use ⌘ + Scroll para ampliar o mapa",
 	"datamap-layer-surface": "Superficie",
 	"datamap-layer-cave": "Cavernas",
+	"datamap-popup-related-article": "Saiba mais",
 	"datamap-popup-dismissed": "Colecionados",
+	"datamap-popup-mark-as-dismissed": "Marcar como coletado",
 	"datamap-popup-marker-link-get": "Obtenha um link compartilhável",
+	"datamap-popup-marker-link-copied": "Ligação copiada para a sua área de transferência.",
 	"datamap-coordinate-control-text": "Latitude $1, Longitude $2",
 	"datamap-control-zoom-in": "Ampliar",
+	"datamap-control-zoom-out": "Diminuir o zoom",
 	"datamap-control-toggle-legend": "Toque para expandir a legenda para alternar marcadores",
 	"datamap-control-reset-view": "Restaurar visualização padrão",
 	"datamap-control-centre-view": "Centralizar a vizualização no nivel de amplicação atual",
 	"datamap-control-edit": "Editar dados do mapa",
+	"datamap-control-search": "Digite aqui para pesquisar marcadores…",
 	"datamap-control-search-toggle-sharing": "Todos os mapas",
 	"datamap-control-search-no-results": "Nenhum resultado encontrado.",
 	"datamap-control-fullscreen": "Ativar ou desativar a tela cheia"

@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"*Youngjin",
 			"Ykhwong"
 		]
 	},
@@ -15,6 +16,7 @@
 	"datamap-layer-control": "토글",
 	"datamap-legend-tab-checklist": "체크리스트",
 	"datamap-popup-related-article": "더 읽어보기",
+	"datamap-popup-dismissed": "수집됨",
 	"datamap-popup-marker-link-get": "공유 링크 가져오기",
 	"datamap-popup-marker-link-copied": "링크가 클립보드에 복사되었습니다.",
 	"datamap-coordinate-control-text": "위도 $1, 경도 $2",

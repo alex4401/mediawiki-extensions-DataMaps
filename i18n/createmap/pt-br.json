@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Flaviane da Silva"
+			"Flaviane da Silva",
+			"Fúlvio"
 		]
 	},
 	"datamap-vec-title": "Criar um mapa",
@@ -10,7 +11,9 @@
 	"datamap-vec-select-crs-origin": "(0, 0) canto da coordenada",
 	"datamap-vec-crs-top-left": "Superior esquerdo",
 	"datamap-vec-crs-bottom-left": "Inferior esquerdo",
+	"datamap-vec-select-crs": "Sistema de coordenadas",
 	"datamap-vec-crs-percent": "Porcentagem (0-100%)",
+	"datamap-vec-crs-image": "Combinar coordenadas da imagem",
 	"datamap-vec-crs-custom": "Personalizado",
 	"datamap-vec-select-background": "Imagem de fundo",
 	"datamap-vec-note-image-size": "Tamanho: $1 x $2",
@@ -21,7 +24,9 @@
 	"datamap-vec-toggle-zoom": "Permitir zoom",
 	"datamap-vec-toggle-search": "Permitir busca de marcador",
 	"datamap-vec-toggle-search-tabber": "Compartilhar dados da pesquisa dentro do tabulador",
+	"datamap-vec-toggle-uid-requirement": "Exigir IDs de marcadores exclusivos",
 	"datamap-vec-submit": "Avançar",
+	"datamap-vec-example-group-id": "exemplo",
 	"datamap-vec-example-group-name": "Grupo de exemplo",
 	"datamap-vec-example-marker": "Exemplo de marcador"
 }

@@ -1,0 +1,30 @@
+{
+	"@metadata": {
+		"authors": [
+			"Flaviane da Silva",
+			"Fúlvio"
+		]
+	},
+	"datamap-ve-to-load": "Por favor aguarde enquanto o editor vizual está carregando...",
+	"datamap-ve-experimental-close": "Fechar",
+	"datamap-userpref-enable-ve": "Ativar o editor visual para mapas de dados quando estiver estável",
+	"datamap-userpref-enable-ve-beta": "Inscreva-me nos testes do editor visual de mapa",
+	"datamap-ve-edit-source-action": "Editar fonte",
+	"datamap-ve-beta-notice": "Este editor visual está em estágio inicial de desenvolvimento. Por favor, informe problemas no <a href=\"https://github.com/alex4401/mediawiki-extensions-DataMaps/issues/new\" class=\"external\">GitHub</a>.",
+	"datamap-ve-limited-preview-notice": "Certos recursos não estão disponíveis ao visualizar o mapa no editor visual.",
+	"tag-datamaps-visualeditor": "Edição do mapa visual",
+	"datamap-ve-background-default-name": "Sem título",
+	"datamap-ve-generic-cancel": "Cancelar",
+	"datamap-ve-panel-msettings": "Configurações",
+	"datamap-ve-panel-msettings-field-coordorder": "Sistema de coordenadas",
+	"datamap-ve-panel-msettings-field-coordorder-latlon": "Latitude e longitude",
+	"datamap-ve-panel-msettings-field-coordorder-xy": "X e Y",
+	"datamap-ve-panel-msettings-field-crs": "Coordenar espaço",
+	"datamap-ve-panel-msettings-set-view": "Visualização",
+	"datamap-ve-panel-msettings-field-search-disabled": "Desativado",
+	"datamap-ve-panel-msettings-field-search-enabled": "Ativado (somente neste mapa)",
+	"datamap-ve-panel-msettings-field-search-tabber": "Ativado (em todo o mapa)",
+	"datamap-ve-panel-msettings-field-legend": "Ocultar legenda do mapa e controles de visibilidade",
+	"datamap-ve-panel-msettings-field-popupbehaviour-click": "Mostrar ao clicar",
+	"datamap-ve-panel-msettings-set-edit": "Editor"
+}
