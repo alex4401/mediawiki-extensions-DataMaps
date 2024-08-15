@@ -4,7 +4,12 @@
 			"Умар"
 		]
 	},
+	"datamap-ve-to-load": "Дехар до, собар де, бӀаьра редактор дӀайолалуш...",
+	"datamap-ve-experimental": "Картанийн бӀаьра редактор хӀинца а экспериментехь йу",
 	"datamap-ve-experimental-close": "ДӀачӀагӀа",
+	"datamap-userpref-enable-ve": "Цкъа стабилан хилча хаамийн картанийн бӀаьра редактор дӀахӀоттайе",
+	"datamap-ve-edit-source-action": "Хьост нисйан",
+	"tag-datamaps-visualeditor-description": "Хийцам бина «DataMaps» бӀаьра редакторца",
 	"datamap-ve-generic-cancel": "Йухайаккхар",
 	"datamap-ve-panel-msettings": "Нисдаран гӀирс",
 	"datamap-ve-panel-msettings-field-coordorder": "Координатийн система",
@@ -12,6 +17,10 @@
 	"datamap-ve-panel-msettings-field-coordorder-xy": "X, цул тӀаьхьа Y",
 	"datamap-ve-panel-msettings-field-crs": "Координатийн меттиг",
 	"datamap-ve-panel-msettings-set-view": "Хьажар",
+	"datamap-ve-panel-msettings-field-search": "Маркер лехар",
+	"datamap-ve-panel-msettings-field-search-disabled": "ДӀайайъа",
+	"datamap-ve-panel-msettings-field-coordinates": "Координаташ гойту лахарчу аьтту агӀор",
+	"datamap-ve-panel-msettings-field-popupbehaviour-click": "Гойту кликца",
 	"datamap-ve-panel-msettings-set-edit": "Редактор",
 	"datamap-ve-panel-mgroups": "Тобанаш",
 	"datamap-ve-panel-mcats": "Категореш",
@@ -23,11 +32,16 @@
 	"datamap-ve-workflow-marker-field-lat": "Шоралла",
 	"datamap-ve-workflow-marker-field-group": "Тоба",
 	"datamap-ve-workflow-marker-field-categories": "Категореш",
+	"datamap-ve-workflow-marker-set-behaviour": "Цахийцалун хьажоргаш",
+	"datamap-ve-workflow-marker-field-id": "Уникалан идентификатор",
 	"datamap-ve-workflow-marker-field-name": "Корта",
 	"datamap-ve-workflow-marker-field-desc": "Цуьнах лаьцна",
 	"datamap-ve-workflow-marker-field-image": "Суьртан миниатюра",
 	"datamap-ve-workflow-marker-field-article": "Йаззаман тӀе хьажорг",
+	"datamap-ve-workflow-marker-field-article-label": "Хьажорган билгало",
 	"datamap-ve-workflow-save": "Хийцамаш дӀаӀалашбан",
 	"datamap-ve-workflow-save-submit": "Хийцамаш дӀайазбан",
-	"datamap-ve-workflow-save-summary-desc": "ДӀайазде айхьа хийцинарг"
+	"datamap-ve-workflow-save-summary": "Хийцамах лаьцна",
+	"datamap-ve-workflow-save-summary-desc": "ДӀайазде айхьа хийцинарг",
+	"datamap-ve-group-id": "[PH] Уникалан идентификатор"
 }
