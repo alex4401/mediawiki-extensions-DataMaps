@@ -23,11 +23,14 @@ class DebugControl extends MapControl {
 
     _updateText() {
         const leaflet = getNonNull( this.map.viewport ).getLeafletMap(),
-            bounds = this.map.getCurrentContentBounds();
+            bounds = this.map.getCurrentContentBounds(),
+            viewport = leaflet.getBounds();
         this.element.innerHTML = [
             `zoom: ${leaflet.getZoom()}`,
-            `north-east: (${bounds._northEast.lat}, ${bounds._northEast.lng})`,
-            `south-west: (${bounds._southWest.lat}, ${bounds._southWest.lng})`,
+            `content NE: (${bounds._northEast.lat}, ${bounds._northEast.lng})`,
+            `content SW: (${bounds._southWest.lat}, ${bounds._southWest.lng})`,
+            `viewport NE: (${viewport._northEast.lat}, ${viewport._northEast.lng})`,
+            `viewport SW: (${viewport._southWest.lat}, ${viewport._southWest.lng})`,
             `coordinate scale: (${this.map.crs.scaleX}, ${this.map.crs.scaleY})`,
             `marker scale: v${leaflet.options.vecMarkerScale}, i${leaflet.options.iconMarkerScale}`
         ].join( '<br/>' );
