@@ -31,6 +31,7 @@ class DebugControl extends MapControl {
             `content SW: (${bounds._southWest.lat}, ${bounds._southWest.lng})`,
             `viewport NE: (${viewport._northEast.lat}, ${viewport._northEast.lng})`,
             `viewport SW: (${viewport._southWest.lat}, ${viewport._southWest.lng})`,
+            `offset width: ${this.map.getMapOffsetWidth()}`,
             `coordinate scale: (${this.map.crs.scaleX}, ${this.map.crs.scaleY})`,
             `marker scale: v${leaflet.options.vecMarkerScale}, i${leaflet.options.iconMarkerScale}`
         ].join( '<br/>' );
