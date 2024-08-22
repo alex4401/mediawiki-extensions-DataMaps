@@ -106,10 +106,6 @@ class ImageBackground(_Background):
         '''
     )
 class TiledBackground(_Background):
-    at: Point = Field(
-        (0, 0),
-        title='Starting position of the tile set'
-    )
     tileSize: Point1 = Field(
         ...,
         title='Size of an individual tile'

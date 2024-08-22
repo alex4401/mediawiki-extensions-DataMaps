@@ -1646,31 +1646,6 @@
 					"title": "Overlays",
 					"type": "array"
 				},
-				"at": {
-					"anyOf": [
-						{
-							"maxItems": 2,
-							"minItems": 2,
-							"prefixItems": [
-								{
-									"type": "number"
-								},
-								{
-									"type": "number"
-								}
-							],
-							"type": "array"
-						},
-						{
-							"$ref": "#/$defs/NamedPoint"
-						}
-					],
-					"default": [
-						0,
-						0
-					],
-					"title": "Starting position of the tile set"
-				},
 				"tileSize": {
 					"anyOf": [
 						{
