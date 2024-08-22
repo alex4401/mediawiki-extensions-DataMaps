@@ -342,6 +342,17 @@ class Viewport extends EventEmitter {
 
 
     /**
+     * Returns zoom level for automatically opened marker popups.
+     *
+     * @return {number}
+     */
+    getPopupZoom() {
+        return ( this._leaflet.options.uriPopupZoom || ( this._leaflet.options.maxZoom - this._leaflet.options.minZoom )
+            / 5 * 4 );
+    }
+
+
+    /**
      * Flies over to a marker, putting it in the viewport's centre at a reasonable zoom level.
      *
      * @param {LeafletModule.AnyMarker} leafletMarker
@@ -350,8 +361,7 @@ class Viewport extends EventEmitter {
     flyToMarker( leafletMarker, doInstant ) {
         this._leaflet.flyTo(
             leafletMarker.getLatLng(),
-            ( this._leaflet.options.uriPopupZoom || ( this._leaflet.options.maxZoom - this._leaflet.options.minZoom )
-                / 5 * 4 ),
+            this.getPopupZoom(),
             {
                 animate: !doInstant,
             }
