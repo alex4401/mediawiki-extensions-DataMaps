@@ -41,16 +41,19 @@ class DebugControl extends MapControl {
 
 
     _updateText() {
-        const leaflet = getNonNull( this.map.viewport ).getLeafletMap(),
-            bounds = this.map.getCurrentContentBounds(),
-            viewport = leaflet.getBounds();
+        const
+            viewport = getNonNull( this.map.viewport ),
+            leaflet = viewport.getLeafletMap(),
+            contentBounds = this.map.getCurrentContentBounds(),
+            viewportBounds = leaflet.getBounds();
         this.element.innerHTML = [
             `zoom: ${leaflet.getZoom()}`,
-            `content NE: (${bounds._northEast.lat}, ${bounds._northEast.lng})`,
-            `content SW: (${bounds._southWest.lat}, ${bounds._southWest.lng})`,
-            `viewport NE: (${viewport._northEast.lat}, ${viewport._northEast.lng})`,
-            `viewport SW: (${viewport._southWest.lat}, ${viewport._southWest.lng})`,
+            `content NE: (${contentBounds._northEast.lat}, ${contentBounds._northEast.lng})`,
+            `content SW: (${contentBounds._southWest.lat}, ${contentBounds._southWest.lng})`,
+            `viewport NE: (${viewportBounds._northEast.lat}, ${viewportBounds._northEast.lng})`,
+            `viewport SW: (${viewportBounds._southWest.lat}, ${viewportBounds._southWest.lng})`,
             `offset width: ${this.map.getMapOffsetWidth()}`,
+            `popup zoom: ${viewport.getPopupZoom()}`,
             `coordinate scale: (${this.map.crs.scaleX}, ${this.map.crs.scaleY})`,
             `marker scale: v${leaflet.options.vecMarkerScale}, i${leaflet.options.iconMarkerScale}`
         ].join( '<br/>' );
