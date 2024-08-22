@@ -33,6 +33,7 @@
 	"datamap-error-render-unsupported-displaymode": "Для маркера был указан режим отображения $1, но для него отсутствует поддержка. Это ошибка в коде расширения.",
 	"datamap-error-pf-page-does-not-exist": "Страница карты данных \"[[$1]]\" не существует.",
 	"datamap-error-pf-page-invalid-content-model": "Модель содержимого страницы \"[[$1]]\" не является <code>datamap</code>.",
+	"datamap-background-name-fallback": "Без названия",
 	"datamap-legend-label": "Легенда",
 	"datamap-javascript-required": "Интерактивные карты данных требуют включения JavaScript.",
 	"datamap-loading-js": "Загрузка скриптов",
@@ -53,6 +54,7 @@
 	"datamap-popup-related-article": "Узнать больше",
 	"datamap-popup-dismissed": "Собрано",
 	"datamap-popup-mark-as-dismissed": "Отметить как собранный",
+	"datamap-popup-marker-link-get": "Получить ссылку, чтоб поделиться",
 	"datamap-popup-marker-link-copied": "Ссылка скопирована в буфер обмена.",
 	"datamap-coordinate-control-text": "широта $1, долгота $2",
 	"datamap-control-zoom-in": "Приблизить",
@@ -63,5 +65,6 @@
 	"datamap-control-edit": "Редактировать данные карты",
 	"datamap-control-search": "Введите здесь для поиска маркеров…",
 	"datamap-control-search-toggle-sharing": "Все карты",
+	"datamap-control-search-no-results": "Ничего не найдено.",
 	"datamap-control-fullscreen": "Включить полноэкранный режим"
 }
