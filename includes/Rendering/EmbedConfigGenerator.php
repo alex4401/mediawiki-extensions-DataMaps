@@ -167,7 +167,7 @@ class EmbedConfigGenerator {
         if ( !$spec->hasTiles() ) {
             $out['image'] = DataMapFileUtils::getRequiredFile( $spec->getImageName() )->getURL();
         }
-        $out['name'] = $spec->getName() ?? wfMessage( 'datamap-background-name-fallback' )->inContentLanguage();
+        $out['name'] = $spec->getName() ?? wfMessage( 'datamap-background-name-fallback' )->inContentLanguage()->text();
         if ( $spec->getPlacementLocation() !== null ) {
             $out['at'] = CoordinateSystem::normaliseBox( $spec->getPlacementLocation(), $coordOrder );
         }
