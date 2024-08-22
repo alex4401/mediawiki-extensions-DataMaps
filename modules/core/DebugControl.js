@@ -47,7 +47,7 @@ class DebugControl extends MapControl {
             contentBounds = this.map.getCurrentContentBounds(),
             viewportBounds = leaflet.getBounds();
         this.element.innerHTML = [
-            `zoom: ${leaflet.getZoom()}`,
+            `zoom: [${leaflet.getMinZoom()}; ${leaflet.getMaxZoom()}] ${leaflet.getZoom()}`,
             `content NE: (${contentBounds._northEast.lat}, ${contentBounds._northEast.lng})`,
             `content SW: (${contentBounds._southWest.lat}, ${contentBounds._southWest.lng})`,
             `viewport NE: (${viewportBounds._northEast.lat}, ${viewportBounds._northEast.lng})`,
