@@ -347,8 +347,15 @@ class Viewport extends EventEmitter {
      * @return {number}
      */
     getPopupZoom() {
-        return ( this._leaflet.options.uriPopupZoom || ( this._leaflet.options.maxZoom - this._leaflet.options.minZoom )
-            / 5 * 4 );
+        if ( this._leaflet.options.uriPopupZoom ) {
+            return this._leaflet.options.uriPopupZoom;
+        }
+
+        const
+            min = this._leaflet.options.minZoom,
+            max = this._leaflet.options.maxZoom,
+            result = Math.pow( ( max - min + 3.5 ), 0.75 ) / 5 * 3 + min;
+        return result;
     }
 
 
