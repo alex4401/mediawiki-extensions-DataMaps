@@ -168,8 +168,8 @@ class Background extends EventEmitter {
 
         return [
             new ( Util.getLeaflet().LatLngBounds )(
-                this.map.crs.fromPoint( [ minY * tileY, minX * tileX ] ),
-                this.map.crs.fromPoint( [ maxY * tileY, maxX * tileX ] )
+                this.map.crs.fromPoint( [ minY / 2 * tileY, minX / 2 * tileX ] ),
+                this.map.crs.fromPoint( [ maxY / 2 * tileY, maxX / 2 * tileX ] )
             ),
             map,
             maxY
