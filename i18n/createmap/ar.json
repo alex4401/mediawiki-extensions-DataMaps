@@ -1,11 +1,15 @@
 {
 	"@metadata": {
 		"authors": [
-			"Hubaishan"
+			"Hubaishan",
+			"Mohammed Qays"
 		]
 	},
 	"datamap-vec-title": "إنشاء خريطة",
 	"datamap-ve-skip": "تجاوز",
+	"datamap-vec-crs-top-left": "أعلى اليسار",
+	"datamap-vec-crs-bottom-left": "أسفل اليسار",
+	"datamap-vec-select-crs": "نظام الإحداثيات",
 	"datamap-vec-crs-custom": "مخصص",
 	"datamap-vec-submit": "تابع",
 	"datamap-vec-example-group-id": "مثال",

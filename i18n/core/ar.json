@@ -1,0 +1,33 @@
+{
+	"@metadata": {
+		"authors": [
+			"Hubaishan",
+			"Mohammed Qays"
+		]
+	},
+	"content-model-datamap": "خريطة البيانات التفاعلية",
+	"datamap-category-pages-including-maps": "الصفحات التي تحتوي على خرائط البيانات",
+	"datamap-mapsrcinfo-heading-errors": "'''الأخطاء:''' $1",
+	"datamap-mapsrcinfo-heading-warnings": "'''تحذيرات:''' $1",
+	"datamap-legend-label": "المحتويات",
+	"datamap-loading-js": "تحميل البرامج النصية",
+	"datamap-loading-data": "تحميل البيانات لعرضها",
+	"datamap-toggle-show-all": "اعرض الكل",
+	"datamap-toggle-hide-all": "أخف الكل",
+	"datamap-layer-control": "تبديل",
+	"datamap-legend-tab-checklist": "قائمة التحقق",
+	"datamap-checklist-prelude": "هذه هي العناصر التي يمكنك وضع علامة عليها كمجمعة:",
+	"datamap-interact-touch": "استخدم إصبعين لتحريك الخريطة",
+	"datamap-interact-scroll": "استخدم CTRL + Scroll لتكبير الخريطة",
+	"datamap-interact-scroll-mac": "استخدم ⌘ + Scroll لتكبير الخريطة",
+	"datamap-layer-surface": "سطح",
+	"datamap-layer-cave": "الكهوف",
+	"datamap-popup-related-article": "اقرأ المزيد",
+	"datamap-popup-dismissed": "تم جمعها",
+	"datamap-popup-mark-as-dismissed": "علِّم بمجمع",
+	"datamap-popup-marker-link-get": "احصل على رابط قابل للمشاركة",
+	"datamap-control-zoom-in": "تكبير",
+	"datamap-control-zoom-out": "تصغير",
+	"datamap-control-edit": "تعديل بيانات الخريطة",
+	"datamap-control-search-toggle-sharing": "جميع الخرائط"
+}

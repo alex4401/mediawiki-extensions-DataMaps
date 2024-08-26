@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Ciencia Al Poder",
 			"EmicraftNoob",
 			"Mirage",
 			"No se",
@@ -16,7 +17,7 @@
 	"datamap-category-maps-failing-validation": "Mapas con fallos en la validación de datos",
 	"datamap-mapsrcinfo-heading-errors": "'''Errores:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''Advertencias:''' $1",
-	"datamap-mapsrcinfo-docslink": "Consulta la [https://github.com/alex4401/mediawiki-extensions-DataMaps documentación de la extensión] para más información sobre la estructura adecuada.",
+	"datamap-mapsrcinfo-docslink": "Si lo necesitas, puedes consultar la [$1 documentación de la extensión], o [$2 crear un reporte de incidencia o solicitud de funcionalidad] si crees que necesita de algún cambio.",
 	"datamap-error-validate-invalid-json": "Este documento no es un archivo JSON válido.",
 	"datamap-error-validatespec-map-bad-mixin": "El mixin \"<code>$1</code>\" debe existir, debe usar el modelo de contenido del <code>mapa de datos interactivos</code>, y debe ser válido en cuanto a sintaxis y estructura.",
 	"datamap-error-validatespec-map-mixin-with-mixins": "Un mixin no puede usar otros mixins.",
