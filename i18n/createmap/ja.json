@@ -1,0 +1,33 @@
+{
+	"@metadata": {
+		"authors": [
+			"Apple TD",
+			"Hideki Yoshida",
+			"Yukkuri Shambis"
+		]
+	},
+	"datamap-vec-title": "地図の作成",
+	"datamap-ve-skip": "スキップ",
+	"datamap-vec-intro": "編集に映る前に、下地となる地図を準備するため、以下の情報を必要に応じて調整してください。",
+	"datamap-vec-select-crs-origin": "(0, 0) 座標の角",
+	"datamap-vec-crs-top-left": "左上",
+	"datamap-vec-crs-bottom-left": "左下",
+	"datamap-vec-select-crs": "座標システム",
+	"datamap-vec-crs-percent": "割合（0-100%）",
+	"datamap-vec-crs-image": "画像の座標を一致させる",
+	"datamap-vec-crs-custom": "カスタム",
+	"datamap-vec-select-background": "バックグラウンド画像",
+	"datamap-vec-note-image-size": "大きさ：$1 × $2",
+	"datamap-vec-error-bad-file-type": "ファイル形式（$1）には対応していません。JPEG、PNG、GIF、もしくはSVGファイルを選択してください。",
+	"datamap-vec-error-poor-file-type": "このファイル形式は、制限下のネットワークでパフォーマンスが低下する可能性があります。可能な限りJPEGを使用してください。",
+	"datamap-vec-extra-options": "追加の設定",
+	"datamap-vec-toggle-coord-display": "カーソルの下の座標を表示",
+	"datamap-vec-toggle-zoom": "ズームを有効にする",
+	"datamap-vec-toggle-search": "マーカーの検索を有効にする",
+	"datamap-vec-toggle-search-tabber": "タバー内で検索データを共有する",
+	"datamap-vec-toggle-uid-requirement": "固有のマーカーIDを要求する",
+	"datamap-vec-submit": "続行",
+	"datamap-vec-example-group-id": "例",
+	"datamap-vec-example-group-name": "グループの例",
+	"datamap-vec-example-marker": "マーカーの例"
+}
