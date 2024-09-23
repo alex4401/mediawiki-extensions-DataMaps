@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Aphaia",
 			"Hideki Yoshida",
 			"Kokage si",
 			"TAKAHASHI Shuuji",
@@ -81,9 +82,9 @@
 	"datamap-control-zoom-out": "縮小",
 	"datamap-control-toggle-legend": "タップして凡例を拡大し、マーカーを切り替えます",
 	"datamap-control-reset-view": "デフォルト表示に戻す",
-	"datamap-control-centre-view": "現在の大きさで中央を表示",
+	"datamap-control-centre-view": "現在のズームレベルで中央を表示",
 	"datamap-control-edit": "地図データを編集する",
-	"datamap-control-search": "マーカーを検索するにはここに入力…",
+	"datamap-control-search": "マーカーを検索するにはここに入力してください…",
 	"datamap-control-search-toggle-sharing": "全ての地図",
 	"datamap-control-search-no-results": "見つかりませんでした。",
 	"datamap-control-fullscreen": "全画面モードに切り替え"

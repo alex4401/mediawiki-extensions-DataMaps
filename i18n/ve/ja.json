@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Aphaia",
 			"Apple TD",
 			"Chqaz",
 			"Hideki Yoshida",
@@ -15,7 +16,7 @@
 	"datamap-ve-experimental-content": "<p><i>編集</i>セクションのMediaWikiの利用者設定からいつでもオプトアウトできます。</p>\n<p>一部の機能が利用できなくなったり、バグが発生する可能性があることに留意してください。報告の作成やリストは<a class=\"external\" href=\"https://github.com/alex4401/mediawiki-extensions-DataMaps/issues/149\">issue #149 on DataMaps GitHub repository</a>を参照してください。</p>",
 	"datamap-ve-experimental-close": "閉じる",
 	"datamap-userpref-enable-ve": "データ地図のビジュアルエディターが安定化したら有効にする。",
-	"datamap-userpref-enable-ve-beta": "地図のビジュアルエディターの試験に参加する",
+	"datamap-userpref-enable-ve-beta": "地図のビジュアルエディターのテストに参加する",
 	"datamap-ve-edit-source-action": "ソースを編集",
 	"datamap-ve-beta-notice": "このビジュアルエディターは開発初期の段階にあります。問題が発生した場合は、<a href=\"https://github.com/alex4401/mediawiki-extensions-DataMaps/issues/new\" class=\"external\">GitHub</a>で報告してください。",
 	"datamap-ve-limited-preview-notice": "ビジュアルエディターで地図をプレビューする場合、一部の機能が利用できません。",
@@ -34,8 +35,8 @@
 	"datamap-ve-panel-msettings-field-search": "マーカー検索",
 	"datamap-ve-panel-msettings-field-search-disabled": "無効",
 	"datamap-ve-panel-msettings-field-search-enabled": "有効（この地図内でのみ）",
-	"datamap-ve-panel-msettings-field-search-tabber": "有効（全てのタバー内で）",
-	"datamap-ve-panel-msettings-field-legend": "地図の判例と表示の制御を隠す",
+	"datamap-ve-panel-msettings-field-search-tabber": "有効（タバー内全体で）",
+	"datamap-ve-panel-msettings-field-legend": "地図の凡例と表示の制御を非表示にする",
 	"datamap-ve-panel-msettings-field-sortchecklists": "収集可能なチェックリストの並べ替え",
 	"datamap-ve-panel-msettings-field-sortchecklists-default": "グループの定義順に従う",
 	"datamap-ve-panel-msettings-field-sortchecklists-amount": "リストされたマーカーの数による",
@@ -67,7 +68,7 @@
 	"datamap-ve-workflow-marker-field-background-disabled": "これには背景が1つ以上必要です。",
 	"datamap-ve-workflow-marker-set-behaviour": "固定リンク",
 	"datamap-ve-workflow-marker-field-id": "固有の識別子",
-	"datamap-ve-workflow-marker-field-id-desc": "これは地図の設定によって自動的に生死絵されます。",
+	"datamap-ve-workflow-marker-field-id-desc": "これは地図の設定によって自動的に生成されます。",
 	"datamap-ve-workflow-marker-panel-popup": "ポップアップ情報",
 	"datamap-ve-workflow-marker-field-name": "タイトル",
 	"datamap-ve-workflow-marker-field-desc": "説明",

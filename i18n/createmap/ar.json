@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Hubaishan",
-			"Mohammed Qays"
+			"Mohammed Qays",
+			"محمد أحمد عبد الفتاح"
 		]
 	},
 	"datamap-vec-title": "إنشاء خريطة",
@@ -11,6 +12,7 @@
 	"datamap-vec-crs-bottom-left": "أسفل اليسار",
 	"datamap-vec-select-crs": "نظام الإحداثيات",
 	"datamap-vec-crs-custom": "مخصص",
+	"datamap-vec-extra-options": "خيارات إضافية",
 	"datamap-vec-submit": "تابع",
 	"datamap-vec-example-group-id": "مثال",
 	"datamap-vec-example-group-name": "مجموعة المثال",

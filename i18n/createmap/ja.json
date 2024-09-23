@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Aphaia",
 			"Apple TD",
 			"Hideki Yoshida",
 			"Yukkuri Shambis"
@@ -8,7 +9,7 @@
 	},
 	"datamap-vec-title": "地図の作成",
 	"datamap-ve-skip": "スキップ",
-	"datamap-vec-intro": "編集に映る前に、下地となる地図を準備するため、以下の情報を必要に応じて調整してください。",
+	"datamap-vec-intro": "編集を始める前に下地となる地図を準備できるように、以下の情報を必要に応じて調整してください。",
 	"datamap-vec-select-crs-origin": "(0, 0) 座標の角",
 	"datamap-vec-crs-top-left": "左上",
 	"datamap-vec-crs-bottom-left": "左下",

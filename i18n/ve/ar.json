@@ -1,0 +1,35 @@
+{
+	"@metadata": {
+		"authors": [
+			"Hubaishan",
+			"MRidhaAJ",
+			"Mohammed Qays",
+			"محمد أحمد عبد الفتاح"
+		]
+	},
+	"datamap-ve-experimental-close": "أغلق",
+	"datamap-ve-edit-source-action": "عدل المصدر",
+	"datamap-ve-generic-cancel": "ألغ",
+	"datamap-ve-panel-msettings": "الإعدادات",
+	"datamap-ve-panel-msettings-field-coordorder": "نظام الإحداثيات",
+	"datamap-ve-panel-msettings-field-coordorder-latlon": "خط العرض ثم خط الطول",
+	"datamap-ve-panel-msettings-field-coordorder-xy": "X ثم Y",
+	"datamap-ve-panel-msettings-field-crs": "مساحة الإحداثيات",
+	"datamap-ve-panel-msettings-set-view": "المعاينة",
+	"datamap-ve-panel-msettings-set-edit": "محرر",
+	"datamap-ve-panel-mcats": "تصنيفات",
+	"datamap-ve-workflow-marker-create": "أنشئ",
+	"datamap-ve-workflow-marker-edit": "احفظ",
+	"datamap-ve-workflow-marker-field-lon": "خط الطول",
+	"datamap-ve-workflow-marker-field-lat": "خط العرض",
+	"datamap-ve-workflow-marker-field-group": "مجموعة",
+	"datamap-ve-workflow-marker-field-name": "العنوان",
+	"datamap-ve-workflow-marker-field-desc": "الوصف",
+	"datamap-ve-workflow-marker-field-image": "صورة مصغرة",
+	"datamap-ve-workflow-marker-field-article": "وصلة المقالة",
+	"datamap-ve-workflow-marker-field-article-label": "وصلة تسمية",
+	"datamap-ve-workflow-marker-panel-search": "عند البحث",
+	"datamap-ve-workflow-save": "حفظ تغييراتك",
+	"datamap-ve-workflow-save-submit": "نشر التغييرات",
+	"datamap-ve-workflow-save-summary": "ملخص التعديل"
+}
