@@ -1,0 +1,29 @@
+{
+	"@metadata": {
+		"authors": [
+			"Tofeiku"
+		]
+	},
+	"datamap-ve-experimental-close": "Tutup",
+	"datamap-ve-edit-source-action": "Sunting sumber",
+	"datamap-ve-panel-msettings": "Tetapan",
+	"datamap-ve-panel-msettings-field-coordorder": "Sistem koordinat",
+	"datamap-ve-panel-msettings-field-coordorder-latlon": "Latitud kemudian longitud",
+	"datamap-ve-panel-msettings-field-coordorder-xy": "X kemudian Y",
+	"datamap-ve-panel-msettings-field-crs": "Ruang koordinat",
+	"datamap-ve-panel-msettings-set-edit": "Penyunting",
+	"datamap-ve-panel-mgroups": "Kumpulan",
+	"datamap-ve-panel-mcats": "Kategori",
+	"datamap-ve-workflow-marker": "Penanda",
+	"datamap-ve-workflow-marker-create": "Cipta",
+	"datamap-ve-workflow-marker-edit": "Simpan",
+	"datamap-ve-workflow-marker-field-group": "Kumpulan",
+	"datamap-ve-workflow-marker-field-categories": "Kategori",
+	"datamap-ve-workflow-marker-set-behaviour": "Pautan kekal",
+	"datamap-ve-workflow-marker-field-id": "Pengenal pasti unik",
+	"datamap-ve-workflow-marker-field-name": "Tajuk",
+	"datamap-ve-workflow-marker-field-desc": "Keterangan",
+	"datamap-ve-workflow-save": "Simpan perubahan anda",
+	"datamap-ve-workflow-save-submit": "Terbit perubahan",
+	"datamap-ve-workflow-save-summary": "Ringkasan suntingan"
+}

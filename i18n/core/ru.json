@@ -18,6 +18,7 @@
 	"datamap-mapsrcinfo-heading-errors": "'''Ошибки:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''Предупреждения:''' $1",
 	"datamap-mapsrcinfo-docslink": "При необходимости вы можете обратиться к [$1 документации по расширению] или [$2 создать отчет о проблеме или тикет запроса функции], если вы считаете, что нужно что-то изменить.",
+	"datamap-error-validate-invalid-json": "Это недопустимый JSON-документ.",
 	"datamap-validate-constraint-required": "Отсутствует необходимое свойство: <code>$1</code>.",
 	"datamap-validate-constraint-type": "Свойство имеет неожиданный формат: <code>$1</code>.",
 	"datamap-validate-constraint-unexpected": "Неожиданное свойство было получено: <code>$1</code>.",

@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Tofeiku"
+		]
+	},
+	"datamap-vec-title": "Cipta peta",
+	"datamap-ve-skip": "Langkau",
+	"datamap-vec-select-background": "Imej latar belakang",
+	"datamap-vec-note-image-size": "Saiz: $1 × $2",
+	"datamap-vec-submit": "Teruskan",
+	"datamap-vec-example-group-id": "contoh",
+	"datamap-vec-example-group-name": "Kumpulan contoh"
+}
