@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Alex4401"
+			"Alex4401",
+			"ShaggyCZ - Main"
 		]
 	},
 	"datamap-vec-title": "Title of the dialog.",
@@ -10,6 +11,17 @@
 	"datamap-vec-select-crs-origin": "Label of the row with coordinate system's origin point selection.\n\nIts options are:\n* {{mw-msg|datamap-vec-crs-top-left}}\n* {{mw-msg|datamap-vec-crs-bottom-left}}",
 	"datamap-vec-crs-top-left": "Coordinate system origin point option. The dropdown's label is {{mw-msg|datamap-vec-select-crs-origin}}.",
 	"datamap-vec-crs-bottom-left": "Coordinate system origin point option. The dropdown's label is {{mw-msg|datamap-vec-select-crs-origin}}.",
+	"datamap-vec-select-crs": "Systém souřadnic",
+	"datamap-vec-crs-percent": "Procentuální (0-100 %)",
+	"datamap-vec-crs-custom": "Vlastní",
+	"datamap-vec-select-background": "Obrázek na pozadí",
+	"datamap-vec-note-image-size": "Velikost: $1 × $2",
+	"datamap-vec-error-bad-file-type": "Typ souboru ($1) není podporován; zvolte prosím soubor JPEG, PNG, GIF nebo SVG.",
+	"datamap-vec-error-poor-file-type": "Tento typ souboru může v omezených sítích fungovat špatně. Používejte JPEGy, kdykoli je to možné.",
+	"datamap-vec-extra-options": "Další možnosti",
+	"datamap-vec-toggle-coord-display": "Zobrazit souřadnice pod kurzorem",
+	"datamap-vec-toggle-zoom": "Povolit přibližování",
+	"datamap-vec-toggle-search": "Povolit vyhledávání značek",
 	"datamap-vec-submit": "Label of the button to proceed to the source editor, with a preset generated from user's data.\n{{Identical|Proceed}}",
 	"datamap-vec-example-group-id": "ID of the default, example marker group. Do not use spaces. This will appear in the generated source code.\n{{Identical|Example}}",
 	"datamap-vec-example-group-name": "Name of the default, example marker group. This will appear in the generated source code.",

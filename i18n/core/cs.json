@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"MasterStudioCZ"
+			"MasterStudioCZ",
+			"ShaggyCZ - Main"
 		]
 	},
 	"datamap-desc": "Umožňuje vkládání interaktivních map do wiki stránek.",
@@ -22,9 +23,23 @@
 	"datamap-loading-js": "Načítání skriptů",
 	"datamap-loading-data": "Načítání dat k zobrazení",
 	"datamap-error-dataload": "<b>Data se nepodařilo načíst</b><br/> obnovte stránku nebo to zkuste znovu později",
+	"datamap-lazy-click-to-load": "Klikněte pro načtení mapy dat",
 	"datamap-legend-tab-locations": "Značky",
 	"datamap-toggle-show-all": "Zobrazit vše",
 	"datamap-toggle-hide-all": "Skrýt vše",
+	"datamap-layer-control": "Přepínač",
+	"datamap-legend-tab-checklist": "Kontrolní seznamy",
+	"datamap-checklist-prelude": "Níže jsou uvedeny objekty, které můžete označit jako shromážděné:",
+	"datamap-interact-touch": "Pomocí dvou prstů posouvejte mapu",
+	"datamap-interact-scroll": "Použijte CTRL + kolečko myši pro přiblížení mapy",
+	"datamap-interact-scroll-mac": "Použijte ⌘ + kolečko myši pro přiblížení mapy",
+	"datamap-layer-surface": "Povrch",
+	"datamap-layer-cave": "Jeskyně",
+	"datamap-popup-related-article": "Více informací",
+	"datamap-popup-dismissed": "Shromážděno",
+	"datamap-popup-mark-as-dismissed": "Označit jako shromážděné",
+	"datamap-popup-marker-link-get": "Získejte odkaz ke sdílení",
+	"datamap-coordinate-control-text": "zeměpisná šířka $1, zeměpisná délka $2",
 	"datamap-control-zoom-in": "Přiblížit",
 	"datamap-control-zoom-out": "Oddálit"
 }
