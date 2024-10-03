@@ -39,5 +39,6 @@
 	"datamap-ve-workflow-marker-panel-popup": "팝업 정보",
 	"datamap-ve-workflow-marker-field-name": "제목",
 	"datamap-ve-workflow-marker-field-desc": "설명",
-	"datamap-ve-workflow-marker-field-image": "이미지 섬네일"
+	"datamap-ve-workflow-marker-field-image": "이미지 섬네일",
+	"datamap-ve-workflow-save-summary": "편집 요약"
 }
