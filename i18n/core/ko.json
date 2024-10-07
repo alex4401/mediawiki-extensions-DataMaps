@@ -5,6 +5,10 @@
 			"Ykhwong"
 		]
 	},
+	"datamap-doc-page-header": "'''이 문서는 [[$1]]에 대한 설명문서입니다.'''",
+	"datamap-category-pages-including-maps": "데이터 맵을 포함하는 문서",
+	"datamap-category-pages-including-broken-maps": "유효성 검사에 실패한 데이터 맵이 포함된 문서",
+	"datamap-category-maps-failing-validation": "데이터 검증에 실패한 지도",
 	"datamap-mapsrcinfo-heading-errors": "'''오류:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''경고:''' $1",
 	"datamap-error-validate-invalid-json": "유효한 JSON 문서가 아닙니다.",
