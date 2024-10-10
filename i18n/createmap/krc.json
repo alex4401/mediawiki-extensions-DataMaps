@@ -22,6 +22,8 @@
 	"datamap-vec-toggle-coord-display": "Курсорну тюбюнде координатланы кёргюз",
 	"datamap-vec-toggle-zoom": "Масштабландырыуну джандыр",
 	"datamap-vec-toggle-search": "Белгилеучю излеуню джандыр",
+	"datamap-vec-toggle-search-tabber": "Излеуню билгилерин салгъычда юлюшлегиз",
+	"datamap-vec-toggle-uid-requirement": "Маркерлени энчи идентификаторларын даула",
 	"datamap-vec-submit": "Бардыр",
 	"datamap-vec-example-group-id": "юлгю",
 	"datamap-vec-example-group-name": "Юлгю къауум",

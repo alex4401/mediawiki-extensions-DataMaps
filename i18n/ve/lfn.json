@@ -1,0 +1,27 @@
+{
+	"@metadata": {
+		"authors": [
+			"Elefentiste"
+		]
+	},
+	"datamap-ve-experimental-close": "Clui",
+	"datamap-ve-edit-source-action": "Edita la fonte",
+	"datamap-ve-panel-msettings-field-coordorder": "Sistem de coordinadas",
+	"datamap-ve-panel-msettings-field-coordorder-latlon": "Latitude alora lonjitude",
+	"datamap-ve-panel-msettings-field-coordorder-xy": "X alora Y",
+	"datamap-ve-panel-msettings-field-search-disabled": "Descomutada",
+	"datamap-ve-panel-msettings-field-search-enabled": "Comutada (en sola esta mapa)",
+	"datamap-ve-workflow-marker-create": "Crea",
+	"datamap-ve-workflow-marker-edit": "Fisa",
+	"datamap-ve-workflow-marker-field-lon": "Lonjitude",
+	"datamap-ve-workflow-marker-field-lat": "Latitude",
+	"datamap-ve-workflow-marker-field-group": "Grupo",
+	"datamap-ve-workflow-marker-field-categories": "Categorias",
+	"datamap-ve-workflow-marker-field-name": "Titulo",
+	"datamap-ve-workflow-marker-field-desc": "Descrive",
+	"datamap-ve-workflow-marker-field-image": "Imajeta",
+	"datamap-ve-workflow-marker-field-article": "Lia a article",
+	"datamap-ve-workflow-marker-field-article-label": "Eticeta de lia",
+	"datamap-ve-workflow-save-submit": "Publici cambias",
+	"datamap-ve-workflow-save-summary-desc": "Descrive lo cual tu ia cambia"
+}
