@@ -16,6 +16,7 @@
 	"datamap-vec-select-background": "배경 이미지",
 	"datamap-vec-note-image-size": "크기: $1 × $2",
 	"datamap-vec-extra-options": "추가 옵션",
+	"datamap-vec-toggle-coord-display": "커서 아래에 좌표 표시",
 	"datamap-vec-toggle-zoom": "크기 조절 사용",
 	"datamap-vec-toggle-search": "마커 검색 사용",
 	"datamap-vec-toggle-uid-requirement": "고유한 마커 ID가 필요합니다",

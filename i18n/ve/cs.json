@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"MasterStudioCZ"
+			"MasterStudioCZ",
+			"ShaggyCZ - Main"
 		]
 	},
 	"datamap-ve-to-load": "Počkejte prosím, než se načte vizuální editor...",
@@ -16,6 +17,9 @@
 	"datamap-ve-panel-msettings-field-coordorder-latlon": "Zeměpisná šířka, poté délka",
 	"datamap-ve-panel-msettings-field-coordorder-xy": "X, poté Y",
 	"datamap-ve-panel-msettings-field-search": "Vyhledávání značek",
+	"datamap-ve-panel-msettings-field-search-disabled": "Zakázáno",
+	"datamap-ve-panel-msettings-field-search-enabled": "Povoleno (pouze v rámci této mapy)",
+	"datamap-ve-panel-msettings-field-search-tabber": "Povoleno (v rámci celé záložky)",
 	"datamap-ve-panel-msettings-field-sortchecklists-amount": "Podle množství uvedených značek",
 	"datamap-ve-panel-msettings-set-edit": "Editor",
 	"datamap-ve-panel-mgroups": "Skupiny",

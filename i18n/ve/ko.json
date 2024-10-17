@@ -22,6 +22,7 @@
 	"datamap-ve-panel-msettings-field-coordorder-latlon": "위도, 경도",
 	"datamap-ve-panel-msettings-field-coordorder-xy": "X, Y",
 	"datamap-ve-panel-msettings-field-crs": "좌표 공간",
+	"datamap-ve-panel-msettings-set-view": "보기",
 	"datamap-ve-panel-msettings-field-search": "마커 검색",
 	"datamap-ve-panel-msettings-field-search-disabled": "비활성화됨",
 	"datamap-ve-panel-msettings-field-search-enabled": "활성화됨 (이 맵에서만)",
@@ -38,6 +39,7 @@
 	"datamap-ve-workflow-marker-field-group": "그룹",
 	"datamap-ve-workflow-marker-field-categories": "분류",
 	"datamap-ve-workflow-marker-field-categories-disabled": "분류가 없는 상황에서 마커에 분류를 추가할 수 없습니다.",
+	"datamap-ve-workflow-marker-field-background": "배경에만 표시",
 	"datamap-ve-workflow-marker-field-background-disabled": "하나 이상의 배경이 필요합니다.",
 	"datamap-ve-workflow-marker-set-behaviour": "고유 링크",
 	"datamap-ve-workflow-marker-field-id": "고유 식별자",
@@ -48,8 +50,13 @@
 	"datamap-ve-workflow-marker-field-image": "이미지 섬네일",
 	"datamap-ve-workflow-marker-field-article": "문서 링크",
 	"datamap-ve-workflow-marker-field-article-label": "링크 레이블",
+	"datamap-ve-workflow-marker-panel-search": "검색 시",
 	"datamap-ve-workflow-save": "바뀐 내용 저장하기",
 	"datamap-ve-workflow-save-submit": "변경사항 게시",
 	"datamap-ve-workflow-save-summary": "편집 요약",
-	"datamap-ve-workflow-save-summary-desc": "바꾼 내용 설명"
+	"datamap-ve-workflow-save-summary-desc": "바꾼 내용 설명",
+	"datamap-ve-group-id": "[PH] 고유 식별자",
+	"datamap-ve-group-id-cannot-modify": "[PH] 현재 시각 편집기에서는 그룹 이름 변경이 지원되지 않습니다",
+	"datamap-ve-group-article-link": "[PH] 문서의 기본 링크",
+	"datamap-ve-group-article-link-subtext": "[PH] 이것은 개별 마커에서 재정의될 수 있습니다."
 }
