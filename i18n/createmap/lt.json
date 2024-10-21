@@ -1,0 +1,30 @@
+{
+	"@metadata": {
+		"authors": [
+			"Nokeoo"
+		]
+	},
+	"datamap-vec-title": "Sukurti žemėlapį",
+	"datamap-ve-skip": "Praleisti",
+	"datamap-vec-intro": "Pakoreguokite šią informaciją pagal savo poreikius, kad galėtume paruošti pagrindinį žemėlapį, prieš pradedant jį redaguoti",
+	"datamap-vec-select-crs-origin": "(0, 0) koordinačių kampas",
+	"datamap-vec-crs-top-left": "Viršuje kairėje",
+	"datamap-vec-crs-bottom-left": "Apačioje kairėje",
+	"datamap-vec-select-crs": "Koordinačių sistema",
+	"datamap-vec-crs-percent": "Procentai (0–100%)",
+	"datamap-vec-crs-image": "Suderinti paveikslėlio koordinates",
+	"datamap-vec-crs-custom": "Pasirinktinis",
+	"datamap-vec-select-background": "Fono paveikslėlis",
+	"datamap-vec-note-image-size": "Dydis: $1 × $2",
+	"datamap-vec-error-bad-file-type": "Failo tipas ($1) nepalaikomas; pasirinkite JPEG, PNG, GIF arba SVG failą.",
+	"datamap-vec-error-poor-file-type": "Šio tipo failas gali prastai veikti kai kuriuose tinkluose. Kai įmanoma, naudokite JPEG.",
+	"datamap-vec-extra-options": "Papildomos parinktys",
+	"datamap-vec-toggle-coord-display": "Rodyti koordinates po žymekliu",
+	"datamap-vec-toggle-zoom": "Įgalinti priartinimą",
+	"datamap-vec-toggle-search": "Įgalinti žymeklių paiešką",
+	"datamap-vec-toggle-uid-requirement": "Reikalauti unikalių žymeklių ID",
+	"datamap-vec-submit": "Tęsti",
+	"datamap-vec-example-group-id": "pavyzdys",
+	"datamap-vec-example-group-name": "Pavyzdinė grupė",
+	"datamap-vec-example-marker": "Pavyzdinis žymeklis"
+}

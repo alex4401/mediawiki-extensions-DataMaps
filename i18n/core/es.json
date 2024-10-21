@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"AnupamM",
 			"Ciencia Al Poder",
 			"EmicraftNoob",
 			"Mirage",
@@ -15,10 +16,17 @@
 	"datamap-category-pages-including-maps": "Páginas incluyendo los mapas de datos",
 	"datamap-category-pages-including-broken-maps": "Páginas que incluyen mapas de datos con fallos de validación",
 	"datamap-category-maps-failing-validation": "Mapas con fallos en la validación de datos",
+	"datamap-mapsrcinfo-status-ok": "No se encontraron problemas en el código fuente de este mapa.",
+	"datamap-mapsrcinfo-status-meh": "Se encontraron problemas menores en el código fuente de este mapa.",
+	"datamap-mapsrcinfo-status-errors": "Este mapa no pasa la validación del código fuente.",
 	"datamap-mapsrcinfo-heading-errors": "'''Errores:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''Advertencias:''' $1",
 	"datamap-mapsrcinfo-docslink": "Si lo necesitas, puedes consultar la [$1 documentación de la extensión], o [$2 crear un reporte de incidencia o solicitud de funcionalidad] si crees que necesita de algún cambio.",
 	"datamap-error-validate-invalid-json": "Este documento no es un archivo JSON válido.",
+	"datamap-validate-constraint-required": "Falta una propiedad requerida: <code>$1</code>.",
+	"datamap-validate-constraint-type": "Una propiedad tiene un formato inesperado: <code>$1</code>.",
+	"datamap-validate-constraint-unexpected": "Se dio una propiedad inesperada: <code>$1</code>.",
+	"datamap-validate-constraint-requiredfile": "Se hace referencia a los siguientes archivos pero no existen: $1",
 	"datamap-error-validatespec-map-bad-mixin": "El mixin \"<code>$1</code>\" debe existir, debe usar el modelo de contenido del <code>mapa de datos interactivos</code>, y debe ser válido en cuanto a sintaxis y estructura.",
 	"datamap-error-validatespec-map-mixin-with-mixins": "Un mixin no puede usar otros mixins.",
 	"datamap-error-render-unsupported-displaymode": "El modo de pantalla $1 se ha identificado como un marcador, pero no existe compatibilidad para el mismo. Esto se debe a un error en el código de extensión.",

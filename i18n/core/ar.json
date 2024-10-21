@@ -3,11 +3,13 @@
 		"authors": [
 			"Hubaishan",
 			"Mohammed Qays",
+			"جودت",
 			"محمد أحمد عبد الفتاح"
 		]
 	},
 	"content-model-datamap": "خريطة البيانات التفاعلية",
 	"datamap-category-pages-including-maps": "الصفحات التي تحتوي على خرائط البيانات",
+	"datamap-mapsrcinfo-status-ok": "لم يتم العثور على أي مشاكل في شيفرة المصدر لهذه الخريطة.",
 	"datamap-mapsrcinfo-heading-errors": "'''الأخطاء:''' $1",
 	"datamap-mapsrcinfo-heading-warnings": "'''تحذيرات:''' $1",
 	"datamap-background-name-fallback": "غير معنون",

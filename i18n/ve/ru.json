@@ -20,6 +20,8 @@
 	"datamap-ve-panel-msettings-field-coordorder-xy": "X, затем Y",
 	"datamap-ve-panel-msettings-field-crs": "Координатное пространство",
 	"datamap-ve-panel-msettings-set-view": "Просмотр",
+	"datamap-ve-panel-msettings-field-search-disabled": "Отключён",
+	"datamap-ve-panel-msettings-field-search-enabled": "Включен (только в этой карте)",
 	"datamap-ve-panel-msettings-field-coordinates": "Отображать координаты в левом нижнем углу",
 	"datamap-ve-panel-msettings-field-popupbehaviour-click": "Показать по клику",
 	"datamap-ve-panel-msettings-set-edit": "Редактор",

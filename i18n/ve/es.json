@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"AnupamM",
 			"EmicraftNoob",
 			"No se",
 			"Qwrop"
@@ -9,14 +10,18 @@
 	"datamap-ve-to-load": "Espere mientras el editor visual se está cargando...",
 	"datamap-ve-experimental-close": "Cerrar",
 	"datamap-ve-edit-source-action": "Editar código",
+	"tag-datamaps-visualeditor": "Edición de mapa visual",
+	"tag-datamaps-visualeditor-description": "Editar hecho con el editor visual de Datamaps",
 	"datamap-ve-background-default-name": "Sin título",
 	"datamap-ve-generic-cancel": "Cancelar",
 	"datamap-ve-panel-msettings": "Ajustes",
 	"datamap-ve-panel-msettings-field-coordorder": "Sistema de coordenadas",
+	"datamap-ve-panel-msettings-field-coordorder-latlon": "Latitud luego longitud",
 	"datamap-ve-panel-msettings-field-coordorder-xy": "X y luego Y",
 	"datamap-ve-panel-msettings-set-view": "Visualización",
 	"datamap-ve-panel-msettings-field-search-disabled": "Desactivado",
 	"datamap-ve-panel-msettings-field-coordinates": "Mostrar coordenadas en la esquina inferior izquierda",
+	"datamap-ve-panel-msettings-field-popupbehaviour-click": "Mostrar al hacer clic",
 	"datamap-ve-panel-msettings-set-edit": "Editor",
 	"datamap-ve-panel-mgroups": "Grupos",
 	"datamap-ve-panel-mcats": "Categorías",
