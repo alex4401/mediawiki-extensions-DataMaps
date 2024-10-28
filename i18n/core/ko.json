@@ -33,6 +33,7 @@
 	"datamap-toggle-hide-all": "모두 숨기기",
 	"datamap-layer-control": "토글",
 	"datamap-legend-tab-checklist": "체크리스트",
+	"datamap-interact-scroll-mac": "⌘ + 스크롤을 사용하여 지도를 확대/축소",
 	"datamap-popup-related-article": "더 읽어보기",
 	"datamap-popup-dismissed": "수집됨",
 	"datamap-popup-marker-link-get": "공유 링크 가져오기",
