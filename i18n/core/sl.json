@@ -76,7 +76,10 @@
 	"datamap-control-zoom-out": "Oddalji",
 	"datamap-control-toggle-legend": "Tapnite, da razširite legendo in preklapljate med oznakami",
 	"datamap-control-reset-view": "Ponastavi na privzeto",
+	"datamap-control-centre-view": "Osredinjeni pogled na trenutni ravni povečave",
 	"datamap-control-edit": "Uredi podatkovno karto",
+	"datamap-control-search": "Za iskanje oznak vtipkajte tukaj ...",
 	"datamap-control-search-toggle-sharing": "Vsi zemljevidi",
-	"datamap-control-search-no-results": "Ni najdenih zadetkov."
+	"datamap-control-search-no-results": "Ni najdenih zadetkov.",
+	"datamap-control-fullscreen": "Preklopi celozaslonski način"
 }
