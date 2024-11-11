@@ -12,6 +12,7 @@
 	"datamap-vec-crs-bottom-left": "أسفل اليسار",
 	"datamap-vec-select-crs": "نظام الإحداثيات",
 	"datamap-vec-crs-custom": "مخصص",
+	"datamap-vec-select-background": "صورة الخلفية",
 	"datamap-vec-note-image-size": "الحجم: $1 × $2",
 	"datamap-vec-extra-options": "خيارات إضافية",
 	"datamap-vec-submit": "تابع",

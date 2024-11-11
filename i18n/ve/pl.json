@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Darellur",
 			"Kaper365",
 			"Rail",
 			"WaldiSt"
@@ -12,17 +13,25 @@
 	"datamap-ve-background-default-name": "Bez tytułu",
 	"datamap-ve-generic-cancel": "Anuluj",
 	"datamap-ve-panel-msettings": "Ustawienia",
+	"datamap-ve-panel-msettings-field-coordorder": "Układ współrzędnych",
+	"datamap-ve-panel-msettings-field-coordorder-latlon": "Szerokość, a potem długość geograficzna",
+	"datamap-ve-panel-msettings-field-coordorder-xy": "X, potem Y",
 	"datamap-ve-panel-msettings-field-search-disabled": "Wyłączone",
 	"datamap-ve-panel-msettings-field-search-enabled": "Włączone (tylko w tej mapie)",
+	"datamap-ve-panel-msettings-field-popupbehaviour-click": "Pokaż po kliknięciu",
 	"datamap-ve-panel-msettings-set-edit": "Edytor",
 	"datamap-ve-panel-mgroups": "Grupy",
 	"datamap-ve-panel-mcats": "Kategorie",
 	"datamap-ve-workflow-marker-create": "Utwórz",
 	"datamap-ve-workflow-marker-edit": "Zapisz",
+	"datamap-ve-workflow-marker-panel-setup": "Na mapie",
+	"datamap-ve-workflow-marker-set-coordinates": "Umieszczenie",
 	"datamap-ve-workflow-marker-field-lon": "Długość geograficzna",
 	"datamap-ve-workflow-marker-field-lat": "Szerokość geograficzna",
 	"datamap-ve-workflow-marker-field-group": "Grupa",
 	"datamap-ve-workflow-marker-field-categories": "Kategorie",
+	"datamap-ve-workflow-marker-set-behaviour": "Stałe linki",
+	"datamap-ve-workflow-marker-field-id": "Unikalny identyfikator",
 	"datamap-ve-workflow-marker-field-name": "Tytuł",
 	"datamap-ve-workflow-marker-field-desc": "Opis",
 	"datamap-ve-workflow-marker-field-image": "Miniatura obrazu",

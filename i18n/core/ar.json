@@ -32,6 +32,7 @@
 	"datamap-popup-marker-link-get": "احصل على رابط قابل للمشاركة",
 	"datamap-control-zoom-in": "تكبير",
 	"datamap-control-zoom-out": "تصغير",
+	"datamap-control-reset-view": "استعادة العرض الافتراضي",
 	"datamap-control-edit": "تعديل بيانات الخريطة",
 	"datamap-control-search-toggle-sharing": "جميع الخرائط"
 }
