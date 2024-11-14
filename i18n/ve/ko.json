@@ -27,6 +27,7 @@
 	"datamap-ve-panel-msettings-field-search-disabled": "비활성화됨",
 	"datamap-ve-panel-msettings-field-search-enabled": "활성화됨 (이 맵에서만)",
 	"datamap-ve-panel-msettings-field-search-tabber": "활성화된 (전체 탭에서만)",
+	"datamap-ve-panel-msettings-field-allowfullscreen": "전체 화면으로 전환하기 위한 버튼 표시",
 	"datamap-ve-panel-msettings-field-popupbehaviour-click": "클릭 시 보기",
 	"datamap-ve-panel-msettings-set-edit": "편집기",
 	"datamap-ve-panel-mgroups": "그룹",
