@@ -24,6 +24,7 @@
 	"datamap-ve-panel-msettings-field-search-enabled": "Включен (только в этой карте)",
 	"datamap-ve-panel-msettings-field-coordinates": "Отображать координаты в левом нижнем углу",
 	"datamap-ve-panel-msettings-field-popupbehaviour-click": "Показать по клику",
+	"datamap-ve-panel-msettings-field-backdrop-colour": "Цвет фона",
 	"datamap-ve-panel-msettings-set-edit": "Редактор",
 	"datamap-ve-panel-mgroups": "Группы",
 	"datamap-ve-panel-mcats": "Категории",
