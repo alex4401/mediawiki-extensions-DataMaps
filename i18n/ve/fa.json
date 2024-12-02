@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Darafsh",
 			"Rulebased"
 		]
 	},
@@ -16,6 +17,7 @@
 	"datamap-ve-panel-msettings-field-search-disabled": "غیرفعال",
 	"datamap-ve-panel-msettings-field-search-enabled": "فعال‌شده(تنها برای این نقشه)",
 	"datamap-ve-panel-msettings-field-backdrop-colour": "رنگ پس‌زمینه",
+	"datamap-ve-panel-msettings-set-edit": "ویراستار",
 	"datamap-ve-workflow-marker-create": "ایجاد",
 	"datamap-ve-workflow-marker-edit": "ذخیره",
 	"datamap-ve-workflow-marker-panel-setup": "روی نقشه",

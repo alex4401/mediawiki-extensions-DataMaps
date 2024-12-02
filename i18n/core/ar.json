@@ -34,5 +34,7 @@
 	"datamap-control-zoom-out": "تصغير",
 	"datamap-control-reset-view": "استعادة العرض الافتراضي",
 	"datamap-control-edit": "تعديل بيانات الخريطة",
-	"datamap-control-search-toggle-sharing": "جميع الخرائط"
+	"datamap-control-search-toggle-sharing": "جميع الخرائط",
+	"datamap-control-search-no-results": "لم يتم العثور على نتائج.",
+	"datamap-control-fullscreen": "تبديل وضع ملء الشاشة"
 }
