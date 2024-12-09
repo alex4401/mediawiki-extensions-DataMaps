@@ -4,7 +4,8 @@
 			"FellowEsin",
 			"Hedda",
 			"RuzDD",
-			"Tarkovsky"
+			"Tarkovsky",
+			"İmmortalance"
 		]
 	},
 	"datamap-desc": "Etkileşimli haritaların viki sayfalarına yerleştirilmesine izin verir.",
@@ -22,6 +23,10 @@
 	"datamap-mapsrcinfo-heading-warnings": "'''Uyarılar:''' $1",
 	"datamap-mapsrcinfo-docslink": "Eğer gerekiyorsa [$1 eklenti belgesi]'nden yardım alabilirsiniz veya bir şeylerin değişime ihtiyacı olduğunu düşünüyorsanız [$2 sorun raporunu veya özellik talep bileti oluştur]abilirsiniz.",
 	"datamap-error-validate-invalid-json": "Bu, geçerli bir JSON belgesi değil.",
+	"datamap-validate-bad-schema": "Bu haritadaki <code>$schema</code> özelliği desteklenen bir biçim tanımını göstermez. \n\n Desteklenen şema değişiklikleri: $1",
+	"datamap-validate-constraint-required": "Gerekli bir özellik eksik: <code>$1</code> .",
+	"datamap-validate-constraint-type": "Bir özellik beklenmeyen biçimdedir: <code>$1</code> .",
+	"datamap-validate-constraint-regex": "Metin özelliği beklenen biçime uymuyor: <code>$1</code> .",
 	"datamap-background-name-fallback": "Adsız",
 	"datamap-legend-label": "İçindekiler",
 	"datamap-javascript-required": "Bu haritanın çalışması için JavaScript'in etkin olması gerekir. Eğer aşağıda onu görmüyorsanız, bu muhtemelen JavaScript'in tarafınızda etkin olmadığı anlamına gelir.",
