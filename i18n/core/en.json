@@ -34,6 +34,7 @@
     "datamap-validate-constraint-fallback": "An unknown error occured while validating property: <code>$1</code>. Please [$2 report this problem] to the developers.",
     "datamap-validate-constraint-notcollectible": "The following properties in group <code>$1</code> have no effect because it is not collectible: $2.",
     "datamap-validate-constraint-searchdisabled": "The following properties in <code>$1</code> have no effect because marker search is not enabled: $2.",
+    "datamap-validate-constraint-badfiletitle": "The following file names are referenced but not valid file page names: $1",
     "datamap-validate-constraint-requiredfile": "The following files are referenced but do not exist: $1",
     "datamap-validate-constraint-muidoverlap": "Marker found with an identifier already used: <code>$1</code> (UID is <code>$2</code>).",
     "datamap-validate-constraint-groupexists": "Group referenced for marker list <code>$1</code> but does not exist: <code>$2</code>.",

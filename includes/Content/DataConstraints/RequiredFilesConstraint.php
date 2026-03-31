@@ -9,36 +9,42 @@ use MediaWiki\Title\Title;
 use stdClass;
 
 class RequiredFilesConstraint extends DataConstraint {
-    private const MESSAGE = 'datamap-validate-constraint-requiredfile';
+    private const MESSAGE_BAD = 'datamap-validate-constraint-badfiletitle';
+    private const MESSAGE_MISSING = 'datamap-validate-constraint-requiredfile';
 
     public function getDependencies(): array {
         return [];
     }
 
     public function run( MapVersionInfo $version, stdClass $data ): bool {
-        $results = [];
+        // Collection of of bad titles and missing files. This should be populated by helper methods handling specific
+        // structures, such as `checkFile` or `checkBackground`.
+        $results = [
+            // All string titles, because Title objects can't exist for these
+            'bad' => [],
+            // Actual titles
+            'missing' => [],
+        ];
 
         if ( isset( $data->groups ) ) {
             foreach ( (array)$data->groups as $_ => $group ) {
-                if ( isset( $group->icon ) && !$this->checkFile( $group->icon ) ) {
-                    $results[] = $group->icon;
+                if ( isset( $group->icon ) ) {
+                    $this->checkFile( $group->icon, $results );
                 }
             }
         }
 
         if ( isset( $data->categories ) ) {
             foreach ( (array)$data->categories as $_ => $category ) {
-                if ( isset( $category->overrideIcon ) && !$this->checkFile( $category->overrideIcon ) ) {
-                    $results[] = $category->overrideIcon;
+                if ( isset( $category->overrideIcon ) ) {
+                    $this->checkFile( $category->overrideIcon, $results );
                 }
             }
         }
 
         if ( isset( $data->background ) ) {
             if ( is_string( $data->background ) ) {
-                if ( !$this->checkFile( $data->background ) ) {
-                    $results[] = $data->background;
-                }
+                $this->checkFile( $data->background, $results );
             } else {
                 $this->checkBackground( $version, $data->background, $results );
             }
@@ -53,18 +59,26 @@ class RequiredFilesConstraint extends DataConstraint {
         if ( isset( $data->markers ) ) {
             foreach ( (array)$data->markers as $assocStr => $markers ) {
                 foreach ( $markers as $index => $marker ) {
-                    if ( isset( $marker->icon ) && !$this->checkFile( $marker->icon ) ) {
-                        $results[] = $marker->icon;
+                    if ( isset( $marker->icon ) ) {
+                        $this->checkFile( $marker->icon, $results );
                     }
 
-                    if ( isset( $marker->image ) && !$this->checkFile( $marker->image ) ) {
-                        $results[] = $marker->image;
+                    if ( isset( $marker->image ) ) {
+                        $this->checkFile( $marker->image, $results );
                     }
                 }
             }
         }
 
-        if ( count( $results ) > 0 ) {
+        // Display user hints
+        $retval = true;
+
+        if ( !$results['bad'] ) {
+            $this->emitError( self::MESSAGE_BAD, StatusUtils::formatArrayUnescaped( $results['bad'] ) );
+            $retval = false;
+        }
+
+        if ( !$results['missing'] ) {
             $uploadTitle = SpecialPage::getTitleFor( 'Upload' );
             $preformatted = array_map(
                 static function ( $el ) use ( $uploadTitle ) {
@@ -75,23 +89,36 @@ class RequiredFilesConstraint extends DataConstraint {
                 },
                 $results
             );
-            $this->emitError( self::MESSAGE, StatusUtils::formatArrayUnescaped( $preformatted ) );
+            $this->emitError( self::MESSAGE_MISSING, StatusUtils::formatArrayUnescaped( $preformatted ) );
+            $retval = false;
+        }
+
+        return $retval;
+    }
+
+    private function checkFile( string $fileName, array &$results ): bool {
+        // Check if a valid file namespace title
+        $title = Title::newFromText( $fileName, NS_FILE );
+        if ( !$title || !$title->inNamespace( NS_FILE ) ) {
+            $results['bad'][] = $fileName;
+            return false;
+        }
+
+        // Check if missing
+        $file = DataMapFileUtils::getFile( $title->getDBkey() );
+        if ( !$file || !$file->exists() ) {
+            $results['missing'][] = $title;
             return false;
         }
 
         return true;
     }
 
-    private function checkFile( $fileName ): bool {
-        $file = DataMapFileUtils::getFile( $fileName );
-        return $file && $file->exists();
-    }
-
     private function checkBackground( MapVersionInfo $version, stdClass $data, array &$results ): bool {
         $result = true;
 
-        if ( isset( $data->image ) && !$this->checkFile( $data->image ) ) {
-            $results[] = $data->image;
+        if ( isset( $data->image ) ) {
+            $this->checkFile( $data->image, $results );
         }
 
         // TODO: tiles
